@@ -16,7 +16,7 @@ import {
   isDevEnv,
   isProdEnv,
 } from "lib/config/env.config";
-import { cryptoRoutes } from "lib/crypto";
+import { cryptoRoutes, lotRoutes } from "lib/crypto";
 import { dbPool, pgPool } from "lib/db/db";
 import createGraphqlContext from "lib/graphql/createGraphqlContext";
 import { armorPlugin, authenticationPlugin } from "lib/graphql/plugins";
@@ -69,6 +69,7 @@ const app = new Elysia()
   })
   .use(plaidRoutes)
   .use(cryptoRoutes)
+  .use(lotRoutes)
   .use(mantleWebhook)
   // Report REST endpoints
   .get("/api/reports/profit-and-loss", async ({ query }) => {
