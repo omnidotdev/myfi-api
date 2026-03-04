@@ -3,7 +3,7 @@ import { yoga } from "@elysiajs/graphql-yoga";
 import { useParserCache } from "@envelop/parser-cache";
 import { useValidationCache } from "@envelop/validation-cache";
 import { useDisableIntrospection } from "@graphql-yoga/plugin-disable-introspection";
-import { sql } from "drizzle-orm";
+import { asc, eq, sql } from "drizzle-orm";
 import { Elysia } from "elysia";
 import { schema } from "generated/graphql/schema.executable";
 import { useGrafast } from "grafast/envelop";
@@ -18,6 +18,7 @@ import {
 } from "lib/config/env.config";
 import { cryptoRoutes, lotRoutes } from "lib/crypto";
 import { dbPool, pgPool } from "lib/db/db";
+import { accountTable } from "lib/db/schema";
 import createGraphqlContext from "lib/graphql/createGraphqlContext";
 import { armorPlugin, authenticationPlugin } from "lib/graphql/plugins";
 import { mantleWebhook } from "lib/mantle";
@@ -28,6 +29,8 @@ import {
 import plaidRoutes from "lib/plaid/plaidRoutes";
 import {
   generateBalanceSheet,
+  generateCashFlow,
+  generateGeneralLedger,
   generateProfitAndLoss,
   generateTrialBalance,
 } from "lib/reports";
@@ -115,6 +118,30 @@ const app = new Elysia()
     }
     return generateTrialBalance({ bookId, startDate, endDate });
   })
+  .get("/api/reports/cash-flow", async ({ query }) => {
+    const { bookId, startDate, endDate } = query;
+    if (!bookId || !startDate || !endDate) {
+      return new Response(
+        JSON.stringify({
+          error: "bookId, startDate, and endDate are required",
+        }),
+        { status: 400, headers: { "Content-Type": "application/json" } },
+      );
+    }
+    return generateCashFlow({ bookId, startDate, endDate });
+  })
+  .get("/api/reports/general-ledger", async ({ query }) => {
+    const { bookId, accountId, startDate, endDate } = query;
+    if (!bookId || !accountId || !startDate || !endDate) {
+      return new Response(
+        JSON.stringify({
+          error: "bookId, accountId, startDate, and endDate are required",
+        }),
+        { status: 400, headers: { "Content-Type": "application/json" } },
+      );
+    }
+    return generateGeneralLedger({ bookId, accountId, startDate, endDate });
+  })
   .get("/api/budgets/tracking", async ({ query }) => {
     const { bookId, period } = query;
     if (!bookId) {
@@ -181,6 +208,28 @@ const app = new Elysia()
       });
     }
     return saveNetWorthSnapshot({ bookId });
+  })
+  // Account list endpoint (for report pickers)
+  .get("/api/accounts", async ({ query }) => {
+    const { bookId } = query;
+    if (!bookId) {
+      return new Response(JSON.stringify({ error: "bookId is required" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+    const accounts = await dbPool
+      .select({
+        id: accountTable.id,
+        name: accountTable.name,
+        code: accountTable.code,
+        type: accountTable.type,
+        subType: accountTable.subType,
+      })
+      .from(accountTable)
+      .where(eq(accountTable.bookId, bookId))
+      .orderBy(asc(accountTable.code));
+    return { accounts };
   });
 
 app.use(
