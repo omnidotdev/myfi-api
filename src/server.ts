@@ -20,6 +20,7 @@ import createGraphqlContext from "lib/graphql/createGraphqlContext";
 import { armorPlugin, authenticationPlugin } from "lib/graphql/plugins";
 import { mantleWebhook } from "lib/mantle";
 import plaidRoutes from "lib/plaid/plaidRoutes";
+import generateBudgetTracking from "lib/budgets/budgetTracking";
 import {
   generateBalanceSheet,
   generateProfitAndLoss,
@@ -101,6 +102,16 @@ const app = new Elysia()
       );
     }
     return generateTrialBalance({ bookId, startDate, endDate });
+  })
+  .get("/api/budgets/tracking", async ({ query }) => {
+    const { bookId, period } = query;
+    if (!bookId) {
+      return new Response(
+        JSON.stringify({ error: "bookId is required" }),
+        { status: 400, headers: { "Content-Type": "application/json" } },
+      );
+    }
+    return generateBudgetTracking({ bookId, period });
   });
 
 app.use(
