@@ -31,6 +31,11 @@ import {
   generateProfitAndLoss,
   generateTrialBalance,
 } from "lib/reports";
+import {
+  detectRecurringTransactions,
+  getSpendingByCategory,
+  getSpendingTrends,
+} from "lib/spending";
 
 /**
  * Elysia server.
@@ -119,6 +124,42 @@ const app = new Elysia()
       });
     }
     return generateBudgetTracking({ bookId, period });
+  })
+  // Spending analysis endpoints
+  .get("/api/spending/categories", async ({ query }) => {
+    const { bookId, startDate, endDate } = query;
+    if (!bookId || !startDate || !endDate) {
+      return new Response(
+        JSON.stringify({
+          error: "bookId, startDate, and endDate are required",
+        }),
+        { status: 400, headers: { "Content-Type": "application/json" } },
+      );
+    }
+    return getSpendingByCategory({ bookId, startDate, endDate });
+  })
+  .get("/api/spending/trends", async ({ query }) => {
+    const { bookId, months } = query;
+    if (!bookId) {
+      return new Response(JSON.stringify({ error: "bookId is required" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+    return getSpendingTrends({
+      bookId,
+      months: months ? Number.parseInt(months, 10) : 12,
+    });
+  })
+  .get("/api/spending/recurring", async ({ query }) => {
+    const { bookId } = query;
+    if (!bookId) {
+      return new Response(JSON.stringify({ error: "bookId is required" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+    return detectRecurringTransactions({ bookId });
   })
   // Net worth endpoints
   .get("/api/net-worth", async ({ query }) => {
