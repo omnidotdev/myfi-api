@@ -18,6 +18,7 @@ import {
 import { dbPool, pgPool } from "lib/db/db";
 import createGraphqlContext from "lib/graphql/createGraphqlContext";
 import { armorPlugin, authenticationPlugin } from "lib/graphql/plugins";
+import plaidRoutes from "lib/plaid/plaidRoutes";
 import {
   generateBalanceSheet,
   generateProfitAndLoss,
@@ -63,6 +64,7 @@ const app = new Elysia()
       };
     }
   })
+  .use(plaidRoutes)
   // Report REST endpoints
   .get("/api/reports/profit-and-loss", async ({ query }) => {
     const { bookId, startDate, endDate } = query;
