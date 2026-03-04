@@ -18,7 +18,7 @@ import {
 } from "lib/config/env.config";
 import { cryptoRoutes, lotRoutes } from "lib/crypto";
 import { dbPool, pgPool } from "lib/db/db";
-import { accountTable } from "lib/db/schema";
+import { accountTable, bookTable } from "lib/db/schema";
 import createGraphqlContext from "lib/graphql/createGraphqlContext";
 import { armorPlugin, authenticationPlugin } from "lib/graphql/plugins";
 import { mantleWebhook } from "lib/mantle";
@@ -258,6 +258,21 @@ const app = new Elysia()
       });
     }
     return generateTaxLossHarvesting({ bookId });
+  })
+  // Book list endpoint (for book picker)
+  .get("/api/books", async ({ query }) => {
+    const { organizationId } = query;
+    if (!organizationId) {
+      return new Response(
+        JSON.stringify({ error: "organizationId is required" }),
+        { status: 400, headers: { "Content-Type": "application/json" } },
+      );
+    }
+    const books = await dbPool
+      .select()
+      .from(bookTable)
+      .where(eq(bookTable.organizationId, organizationId));
+    return { books };
   })
   // Account list endpoint (for report pickers)
   .get("/api/accounts", async ({ query }) => {
