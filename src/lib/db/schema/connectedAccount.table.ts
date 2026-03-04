@@ -7,8 +7,8 @@ import {
   uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
-import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 
+import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 import { accountTable } from "./account.table";
 import { bookTable } from "./book.table";
 
@@ -19,10 +19,11 @@ export const connectedAccountProviderEnum = pgEnum(
   ["plaid", "mx", "wallet_connect", "exchange_api", "manual"],
 );
 
-export const connectedAccountStatusEnum = pgEnum(
-  "connected_account_status",
-  ["active", "disconnected", "error"],
-);
+export const connectedAccountStatusEnum = pgEnum("connected_account_status", [
+  "active",
+  "disconnected",
+  "error",
+]);
 
 export const connectedAccountTable = pgTable(
   "connected_account",

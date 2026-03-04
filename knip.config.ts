@@ -8,10 +8,7 @@ const config: KnipConfig = {
   ],
   project: ["src/**/*.ts"],
   ignore: ["src/generated/**"],
-  ignoreDependencies: [
-    "jose",
-    "@envelop/types",
-  ],
+  ignoreDependencies: ["jose", "@envelop/types"],
   ignoreBinaries: ["createdb"],
 };
 

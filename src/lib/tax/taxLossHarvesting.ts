@@ -50,10 +50,8 @@ const generateTaxLossHarvesting = async (params: {
       cryptoAssetId: cryptoAssetTable.id,
       symbol: cryptoAssetTable.symbol,
       name: cryptoAssetTable.name,
-      totalQuantity:
-        sql<string>`coalesce(sum(${cryptoLotTable.remainingQuantity}), 0)`,
-      totalCostBasis:
-        sql<string>`coalesce(sum(${cryptoLotTable.remainingQuantity} * ${cryptoLotTable.costPerUnit}), 0)`,
+      totalQuantity: sql<string>`coalesce(sum(${cryptoLotTable.remainingQuantity}), 0)`,
+      totalCostBasis: sql<string>`coalesce(sum(${cryptoLotTable.remainingQuantity} * ${cryptoLotTable.costPerUnit}), 0)`,
     })
     .from(cryptoLotTable)
     .innerJoin(
@@ -135,7 +133,9 @@ const generateTaxLossHarvesting = async (params: {
     bookId,
     assets,
     totalUnrealizedLoss: (-totalUnrealizedLoss).toFixed(2),
-    totalPotentialSavings: (totalUnrealizedLoss * ESTIMATED_TAX_RATE).toFixed(2),
+    totalPotentialSavings: (totalUnrealizedLoss * ESTIMATED_TAX_RATE).toFixed(
+      2,
+    ),
     estimatedTaxRate: ESTIMATED_TAX_RATE,
     generatedAt: new Date().toISOString(),
   };

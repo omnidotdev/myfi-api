@@ -6,6 +6,7 @@ import {
   text,
   uniqueIndex,
 } from "drizzle-orm/pg-core";
+
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";

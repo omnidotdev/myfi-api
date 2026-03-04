@@ -159,7 +159,9 @@ const generateCashFlow = async (params: {
       items: financing,
       total: financingTotal.toFixed(4),
     },
-    netCashChange: (operatingTotal + investingTotal + financingTotal).toFixed(4),
+    netCashChange: (operatingTotal + investingTotal + financingTotal).toFixed(
+      4,
+    ),
     generatedAt: new Date().toISOString(),
   };
 };

@@ -8,8 +8,8 @@ import {
   uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
-import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 
+import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 import { bookTable } from "./book.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";

@@ -1,12 +1,6 @@
-import {
-  index,
-  pgTable,
-  text,
-  uniqueIndex,
-  uuid,
-} from "drizzle-orm/pg-core";
-import { generateDefaultDate, generateDefaultId } from "lib/db/util";
+import { index, pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 
+import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 import { accountTable } from "./account.table";
 import { bookTable } from "./book.table";
 
@@ -36,9 +30,5 @@ export const accountMappingTable = pgTable(
   ],
 );
 
-export type InsertAccountMapping = InferInsertModel<
-  typeof accountMappingTable
->;
-export type SelectAccountMapping = InferSelectModel<
-  typeof accountMappingTable
->;
+export type InsertAccountMapping = InferInsertModel<typeof accountMappingTable>;
+export type SelectAccountMapping = InferSelectModel<typeof accountMappingTable>;

@@ -108,9 +108,17 @@ const deriveExpenseCategory = (
     return "taxes_and_licenses";
   if (name.includes("travel")) return "travel";
   if (name.includes("meal") || name.includes("food")) return "meals";
-  if (name.includes("utilit") || name.includes("electric") || name.includes("phone"))
+  if (
+    name.includes("utilit") ||
+    name.includes("electric") ||
+    name.includes("phone")
+  )
     return "utilities";
-  if (name.includes("wage") || name.includes("salary") || name.includes("payroll"))
+  if (
+    name.includes("wage") ||
+    name.includes("salary") ||
+    name.includes("payroll")
+  )
     return "wages";
 
   // Fall back to sub-type
@@ -155,11 +163,7 @@ const generateScheduleC = async (params: {
         sql`${accountTable.type} in ('revenue', 'expense')`,
       ),
     )
-    .groupBy(
-      accountTable.name,
-      accountTable.type,
-      accountTable.subType,
-    );
+    .groupBy(accountTable.name, accountTable.type, accountTable.subType);
 
   let grossIncome = 0;
   const categoryTotals = new Map<IrsExpenseCategory, number>();

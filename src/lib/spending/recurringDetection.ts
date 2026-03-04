@@ -59,10 +59,9 @@ const detectRecurringTransactions = async (params: {
     .select({
       memo: journalEntryTable.memo,
       occurrences: sql<number>`count(*)`,
-      avgAmount:
-        sql<string>`coalesce(avg(${journalLineTable.debit}), 0)`.as(
-          "avg_amount",
-        ),
+      avgAmount: sql<string>`coalesce(avg(${journalLineTable.debit}), 0)`.as(
+        "avg_amount",
+      ),
       lastDate: sql<string>`max(${journalEntryTable.date})`.as("last_date"),
       // Average gap between transactions in days
       avgGapDays: sql<number>`

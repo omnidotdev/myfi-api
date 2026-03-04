@@ -6,8 +6,8 @@ import {
   uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
-import { generateDefaultId } from "lib/db/util";
 
+import { generateDefaultId } from "lib/db/util";
 import { accountTable } from "./account.table";
 import { journalEntryTable } from "./journalEntry.table";
 

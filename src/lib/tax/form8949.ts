@@ -60,11 +60,7 @@ const generateForm8949 = async (params: {
         eq(cryptoAssetTable.bookId, bookId),
         isNotNull(cryptoLotTable.disposedAt),
         isNotNull(cryptoLotTable.proceedsPerUnit),
-        between(
-          sql`${cryptoLotTable.disposedAt}`,
-          startDate,
-          endDate,
-        ),
+        between(sql`${cryptoLotTable.disposedAt}`, startDate, endDate),
       ),
     );
 

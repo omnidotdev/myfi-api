@@ -72,7 +72,8 @@ const lotRoutes = new Elysia({ prefix: "/api/crypto/lots" })
         set.status = 400;
 
         return {
-          error: "cryptoAssetId and currentPriceUsd query parameters are required",
+          error:
+            "cryptoAssetId and currentPriceUsd query parameters are required",
         };
       }
 

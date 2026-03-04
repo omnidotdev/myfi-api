@@ -127,16 +127,13 @@ const getSpendingTrends = async (params: {
   const { bookId, months } = params;
 
   const now = new Date();
-  const startDate = new Date(
-    now.getFullYear(),
-    now.getMonth() - months + 1,
-    1,
-  );
+  const startDate = new Date(now.getFullYear(), now.getMonth() - months + 1, 1);
 
   const results = await dbPool
     .select({
-      month:
-        sql<string>`to_char(${journalEntryTable.date}, 'YYYY-MM')`.as("month"),
+      month: sql<string>`to_char(${journalEntryTable.date}, 'YYYY-MM')`.as(
+        "month",
+      ),
       debitTotal: sql<string>`coalesce(sum(${journalLineTable.debit}), 0)`,
       creditTotal: sql<string>`coalesce(sum(${journalLineTable.credit}), 0)`,
     })
@@ -169,11 +166,7 @@ const getSpendingTrends = async (params: {
   const monthsList: MonthlyTotal[] = [];
 
   for (let i = 0; i < months; i++) {
-    const d = new Date(
-      startDate.getFullYear(),
-      startDate.getMonth() + i,
-      1,
-    );
+    const d = new Date(startDate.getFullYear(), startDate.getMonth() + i, 1);
     const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
     monthsList.push({
       month: key,

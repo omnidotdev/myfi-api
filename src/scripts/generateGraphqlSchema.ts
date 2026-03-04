@@ -2,8 +2,9 @@ import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 
 import { exportSchema } from "graphile-export";
 import { printSchema } from "graphql";
-import graphilePreset from "lib/config/graphile.config";
 import { makeSchema } from "postgraphile";
+
+import graphilePreset from "lib/config/graphile.config";
 
 /**
  * Generate a GraphQL schema from a Postgres database.

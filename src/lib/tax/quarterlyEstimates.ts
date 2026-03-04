@@ -32,7 +32,7 @@ type QuarterlyEstimatesReport = {
 };
 
 /** Self-employment tax rate (Social Security 12.4% + Medicare 2.9%) */
-const SE_TAX_RATE = 0.153;
+const _SE_TAX_RATE = 0.153;
 
 /** SE income factor (92.35% of net earnings subject to SE tax) */
 const SE_INCOME_FACTOR = 0.9235;
@@ -78,8 +78,7 @@ const calculateIncomeTax = (taxableIncome: number): number => {
   for (const bracket of TAX_BRACKETS) {
     if (taxableIncome <= bracket.min) break;
 
-    const taxableInBracket =
-      Math.min(taxableIncome, bracket.max) - bracket.min;
+    const taxableInBracket = Math.min(taxableIncome, bracket.max) - bracket.min;
     tax += taxableInBracket * bracket.rate;
   }
 
