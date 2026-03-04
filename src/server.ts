@@ -18,6 +18,11 @@ import {
 import { dbPool, pgPool } from "lib/db/db";
 import createGraphqlContext from "lib/graphql/createGraphqlContext";
 import { armorPlugin, authenticationPlugin } from "lib/graphql/plugins";
+import {
+  generateBalanceSheet,
+  generateProfitAndLoss,
+  generateTrialBalance,
+} from "lib/reports";
 
 /**
  * Elysia server.
@@ -57,6 +62,41 @@ const app = new Elysia()
         timestamp: Date.now(),
       };
     }
+  })
+  // Report REST endpoints
+  .get("/api/reports/profit-and-loss", async ({ query }) => {
+    const { bookId, startDate, endDate } = query;
+    if (!bookId || !startDate || !endDate) {
+      return new Response(
+        JSON.stringify({
+          error: "bookId, startDate, and endDate are required",
+        }),
+        { status: 400, headers: { "Content-Type": "application/json" } },
+      );
+    }
+    return generateProfitAndLoss({ bookId, startDate, endDate });
+  })
+  .get("/api/reports/balance-sheet", async ({ query }) => {
+    const { bookId, asOfDate } = query;
+    if (!bookId || !asOfDate) {
+      return new Response(
+        JSON.stringify({ error: "bookId and asOfDate are required" }),
+        { status: 400, headers: { "Content-Type": "application/json" } },
+      );
+    }
+    return generateBalanceSheet({ bookId, asOfDate });
+  })
+  .get("/api/reports/trial-balance", async ({ query }) => {
+    const { bookId, startDate, endDate } = query;
+    if (!bookId || !startDate || !endDate) {
+      return new Response(
+        JSON.stringify({
+          error: "bookId, startDate, and endDate are required",
+        }),
+        { status: 400, headers: { "Content-Type": "application/json" } },
+      );
+    }
+    return generateTrialBalance({ bookId, startDate, endDate });
   });
 
 app.use(
