@@ -11,6 +11,8 @@ export const {
   PLAID_CLIENT_ID,
   PLAID_SECRET,
   PLAID_ENV = "sandbox",
+  TOKEN_ENCRYPTION_KEY,
+  MANTLE_WEBHOOK_SECRET,
 } = process.env;
 
 export const isDevEnv = NODE_ENV === "development",

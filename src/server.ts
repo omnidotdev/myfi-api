@@ -4,7 +4,7 @@ import { useParserCache } from "@envelop/parser-cache";
 import { useValidationCache } from "@envelop/validation-cache";
 import { useDisableIntrospection } from "@graphql-yoga/plugin-disable-introspection";
 import { sql } from "drizzle-orm";
-import { Elysia } from "elysia";
+import { Elysia, t } from "elysia";
 import { schema } from "generated/graphql/schema.executable";
 import { useGrafast } from "grafast/envelop";
 
@@ -220,16 +220,15 @@ const app = new Elysia()
     }
     return computeNetWorth({ bookId });
   })
-  .post("/api/net-worth/snapshot", async ({ body }) => {
-    const { bookId } = (body as { bookId?: string }) ?? {};
-    if (!bookId) {
-      return new Response(JSON.stringify({ error: "bookId is required" }), {
-        status: 400,
-        headers: { "Content-Type": "application/json" },
-      });
-    }
-    return saveNetWorthSnapshot({ bookId });
-  })
+  .post(
+    "/api/net-worth/snapshot",
+    async ({ body }) => {
+      return saveNetWorthSnapshot({ bookId: body.bookId });
+    },
+    {
+      body: t.Object({ bookId: t.String() }),
+    },
+  )
   // Tax report endpoints
   .get("/api/tax/schedule-c", async ({ query }) => {
     const { bookId, year } = query;

@@ -7,6 +7,7 @@ import {
   journalEntryTable,
   journalLineTable,
 } from "lib/db/schema";
+import { decryptToken } from "lib/encryption/tokenEncryption";
 import plaidClient from "./plaidClient";
 
 import type { SelectConnectedAccount } from "lib/db/schema";
@@ -47,13 +48,15 @@ const syncTransactions = async (
     throw new Error("Connected account has no access token");
   }
 
+  const accessToken = decryptToken(connectedAccount.accessToken);
+
   let cursor: string | undefined;
   let hasMore = true;
   let addedCount = 0;
 
   while (hasMore) {
     const response = await plaidClient.transactionsSync({
-      access_token: connectedAccount.accessToken,
+      access_token: accessToken,
       cursor,
     });
 

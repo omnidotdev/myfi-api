@@ -1,9 +1,10 @@
-import { Elysia, t } from "elysia";
 import { eq } from "drizzle-orm";
+import { Elysia, t } from "elysia";
 import { CountryCode, Products } from "plaid";
 
 import { dbPool } from "lib/db/db";
 import { connectedAccountTable } from "lib/db/schema";
+import { encryptToken } from "lib/encryption/tokenEncryption";
 import plaidClient from "./plaidClient";
 import syncTransactions from "./syncTransactions";
 
@@ -41,7 +42,7 @@ const plaidRoutes = new Elysia({ prefix: "/api/plaid" })
         public_token: publicToken,
       });
 
-      const accessToken = response.data.access_token;
+      const accessToken = encryptToken(response.data.access_token);
       const itemId = response.data.item_id;
 
       const [connected] = await dbPool
