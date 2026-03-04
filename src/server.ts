@@ -3,7 +3,7 @@ import { yoga } from "@elysiajs/graphql-yoga";
 import { useParserCache } from "@envelop/parser-cache";
 import { useValidationCache } from "@envelop/validation-cache";
 import { useDisableIntrospection } from "@graphql-yoga/plugin-disable-introspection";
-import { asc, eq, sql } from "drizzle-orm";
+import { sql } from "drizzle-orm";
 import { Elysia } from "elysia";
 import { schema } from "generated/graphql/schema.executable";
 import { useGrafast } from "grafast/envelop";
@@ -18,7 +18,6 @@ import {
 } from "lib/config/env.config";
 import { cryptoRoutes, lotRoutes } from "lib/crypto";
 import { dbPool, pgPool } from "lib/db/db";
-import { accountTable, bookTable } from "lib/db/schema";
 import createGraphqlContext from "lib/graphql/createGraphqlContext";
 import { armorPlugin, authenticationPlugin } from "lib/graphql/plugins";
 import { mantleWebhook } from "lib/mantle";
@@ -34,6 +33,14 @@ import {
   generateProfitAndLoss,
   generateTrialBalance,
 } from "lib/reports";
+import accountRoutes from "lib/routes/accountRoutes";
+import bookRoutes from "lib/routes/bookRoutes";
+import budgetRoutes from "lib/routes/budgetRoutes";
+import connectionRoutes from "lib/routes/connectionRoutes";
+import journalRoutes from "lib/routes/journalRoutes";
+import mappingRoutes from "lib/routes/mappingRoutes";
+import reconciliationRoutes from "lib/routes/reconciliationRoutes";
+import savingsRoutes from "lib/routes/savingsRoutes";
 import {
   detectRecurringTransactions,
   getSpendingByCategory,
@@ -59,7 +66,7 @@ const app = new Elysia()
   .use(
     cors({
       origin: CORS_ALLOWED_ORIGINS?.split(",") ?? [],
-      methods: ["GET", "POST", "OPTIONS"],
+      methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     }),
   )
   .get("/health", () => ({
@@ -89,6 +96,14 @@ const app = new Elysia()
   .use(cryptoRoutes)
   .use(lotRoutes)
   .use(mantleWebhook)
+  .use(bookRoutes)
+  .use(accountRoutes)
+  .use(journalRoutes)
+  .use(budgetRoutes)
+  .use(savingsRoutes)
+  .use(reconciliationRoutes)
+  .use(connectionRoutes)
+  .use(mappingRoutes)
   // Report REST endpoints
   .get("/api/reports/profit-and-loss", async ({ query }) => {
     const { bookId, startDate, endDate } = query;
@@ -258,43 +273,6 @@ const app = new Elysia()
       });
     }
     return generateTaxLossHarvesting({ bookId });
-  })
-  // Book list endpoint (for book picker)
-  .get("/api/books", async ({ query }) => {
-    const { organizationId } = query;
-    if (!organizationId) {
-      return new Response(
-        JSON.stringify({ error: "organizationId is required" }),
-        { status: 400, headers: { "Content-Type": "application/json" } },
-      );
-    }
-    const books = await dbPool
-      .select()
-      .from(bookTable)
-      .where(eq(bookTable.organizationId, organizationId));
-    return { books };
-  })
-  // Account list endpoint (for report pickers)
-  .get("/api/accounts", async ({ query }) => {
-    const { bookId } = query;
-    if (!bookId) {
-      return new Response(JSON.stringify({ error: "bookId is required" }), {
-        status: 400,
-        headers: { "Content-Type": "application/json" },
-      });
-    }
-    const accounts = await dbPool
-      .select({
-        id: accountTable.id,
-        name: accountTable.name,
-        code: accountTable.code,
-        type: accountTable.type,
-        subType: accountTable.subType,
-      })
-      .from(accountTable)
-      .where(eq(accountTable.bookId, bookId))
-      .orderBy(asc(accountTable.code));
-    return { accounts };
   });
 
 app.use(
