@@ -39,6 +39,12 @@ import {
   getSpendingByCategory,
   getSpendingTrends,
 } from "lib/spending";
+import {
+  generateForm8949,
+  generateQuarterlyEstimates,
+  generateScheduleC,
+  generateTaxLossHarvesting,
+} from "lib/tax";
 
 /**
  * Elysia server.
@@ -208,6 +214,50 @@ const app = new Elysia()
       });
     }
     return saveNetWorthSnapshot({ bookId });
+  })
+  // Tax report endpoints
+  .get("/api/tax/schedule-c", async ({ query }) => {
+    const { bookId, year } = query;
+    if (!bookId || !year) {
+      return new Response(
+        JSON.stringify({ error: "bookId and year are required" }),
+        { status: 400, headers: { "Content-Type": "application/json" } },
+      );
+    }
+    return generateScheduleC({ bookId, year: Number.parseInt(year, 10) });
+  })
+  .get("/api/tax/form-8949", async ({ query }) => {
+    const { bookId, year } = query;
+    if (!bookId || !year) {
+      return new Response(
+        JSON.stringify({ error: "bookId and year are required" }),
+        { status: 400, headers: { "Content-Type": "application/json" } },
+      );
+    }
+    return generateForm8949({ bookId, year: Number.parseInt(year, 10) });
+  })
+  .get("/api/tax/quarterly-estimates", async ({ query }) => {
+    const { bookId, year } = query;
+    if (!bookId || !year) {
+      return new Response(
+        JSON.stringify({ error: "bookId and year are required" }),
+        { status: 400, headers: { "Content-Type": "application/json" } },
+      );
+    }
+    return generateQuarterlyEstimates({
+      bookId,
+      year: Number.parseInt(year, 10),
+    });
+  })
+  .get("/api/tax/loss-harvesting", async ({ query }) => {
+    const { bookId } = query;
+    if (!bookId) {
+      return new Response(JSON.stringify({ error: "bookId is required" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+    return generateTaxLossHarvesting({ bookId });
   })
   // Account list endpoint (for report pickers)
   .get("/api/accounts", async ({ query }) => {
