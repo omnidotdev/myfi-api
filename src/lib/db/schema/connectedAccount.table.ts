@@ -1,0 +1,60 @@
+import {
+  index,
+  pgEnum,
+  pgTable,
+  text,
+  timestamp,
+  uniqueIndex,
+  uuid,
+} from "drizzle-orm/pg-core";
+import { generateDefaultDate, generateDefaultId } from "lib/db/util";
+
+import { accountTable } from "./account.table";
+import { bookTable } from "./book.table";
+
+import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
+
+export const connectedAccountProviderEnum = pgEnum(
+  "connected_account_provider",
+  ["plaid", "mx", "wallet_connect", "exchange_api", "manual"],
+);
+
+export const connectedAccountStatusEnum = pgEnum(
+  "connected_account_status",
+  ["active", "disconnected", "error"],
+);
+
+export const connectedAccountTable = pgTable(
+  "connected_account",
+  {
+    id: generateDefaultId(),
+    bookId: uuid("book_id")
+      .notNull()
+      .references(() => bookTable.id, { onDelete: "cascade" }),
+    provider: connectedAccountProviderEnum().notNull(),
+    providerAccountId: text("provider_account_id"),
+    accountId: uuid("account_id").references(() => accountTable.id),
+    institutionName: text("institution_name"),
+    mask: text(),
+    status: connectedAccountStatusEnum().notNull().default("active"),
+    accessToken: text("access_token"),
+    lastSyncedAt: timestamp("last_synced_at", {
+      precision: 6,
+      mode: "string",
+      withTimezone: true,
+    }),
+    createdAt: generateDefaultDate(),
+  },
+  (table) => [
+    uniqueIndex().on(table.id),
+    index("connected_account_book_id_idx").on(table.bookId),
+    index("connected_account_provider_idx").on(table.provider),
+  ],
+);
+
+export type InsertConnectedAccount = InferInsertModel<
+  typeof connectedAccountTable
+>;
+export type SelectConnectedAccount = InferSelectModel<
+  typeof connectedAccountTable
+>;
