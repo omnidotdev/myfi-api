@@ -21,6 +21,10 @@ import { dbPool, pgPool } from "lib/db/db";
 import createGraphqlContext from "lib/graphql/createGraphqlContext";
 import { armorPlugin, authenticationPlugin } from "lib/graphql/plugins";
 import { mantleWebhook } from "lib/mantle";
+import {
+  computeNetWorth,
+  saveNetWorthSnapshot,
+} from "lib/netWorth/netWorthService";
 import plaidRoutes from "lib/plaid/plaidRoutes";
 import {
   generateBalanceSheet,
@@ -115,6 +119,27 @@ const app = new Elysia()
       });
     }
     return generateBudgetTracking({ bookId, period });
+  })
+  // Net worth endpoints
+  .get("/api/net-worth", async ({ query }) => {
+    const { bookId } = query;
+    if (!bookId) {
+      return new Response(JSON.stringify({ error: "bookId is required" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+    return computeNetWorth({ bookId });
+  })
+  .post("/api/net-worth/snapshot", async ({ body }) => {
+    const { bookId } = (body as { bookId?: string }) ?? {};
+    if (!bookId) {
+      return new Response(JSON.stringify({ error: "bookId is required" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+    return saveNetWorthSnapshot({ bookId });
   });
 
 app.use(
