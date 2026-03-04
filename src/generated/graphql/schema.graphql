@@ -1,0 +1,6099 @@
+"""The root query type which gives access points into the data universe."""
+type Query implements Node {
+  """
+  Exposes the root query type nested one level down. This is helpful for Relay 1
+  which can only query top level fields if they are in a particular form.
+  """
+  query: Query!
+
+  """
+  The root query type must be a `Node` to work well with Relay 1 mutations. This just resolves to `query`.
+  """
+  id: ID!
+
+  """Fetches an object given its globally unique `ID`."""
+  node(
+    """The globally unique `ID`."""
+    id: ID!
+  ): Node
+
+  """Get a single `AccountMapping`."""
+  accountMapping(rowId: UUID!): AccountMapping
+
+  """Get a single `JournalLine`."""
+  journalLine(rowId: UUID!): JournalLine
+
+  """Get a single `SavingsGoal`."""
+  savingsGoal(rowId: UUID!): SavingsGoal
+
+  """Get a single `NetWorthSnapshot`."""
+  netWorthSnapshot(rowId: UUID!): NetWorthSnapshot
+
+  """Get a single `ReconciliationQueue`."""
+  reconciliationQueue(rowId: UUID!): ReconciliationQueue
+
+  """Get a single `CryptoLot`."""
+  cryptoLot(rowId: UUID!): CryptoLot
+
+  """Get a single `Book`."""
+  book(rowId: UUID!): Book
+
+  """Get a single `Budget`."""
+  budget(rowId: UUID!): Budget
+
+  """Get a single `CryptoAsset`."""
+  cryptoAsset(rowId: UUID!): CryptoAsset
+
+  """Get a single `JournalEntry`."""
+  journalEntry(rowId: UUID!): JournalEntry
+
+  """Get a single `RecurringTransaction`."""
+  recurringTransaction(rowId: UUID!): RecurringTransaction
+
+  """Get a single `Account`."""
+  account(rowId: UUID!): Account
+
+  """Get a single `ConnectedAccount`."""
+  connectedAccount(rowId: UUID!): ConnectedAccount
+
+  """Reads a single `AccountMapping` using its globally unique `ID`."""
+  accountMappingById(
+    """
+    The globally unique `ID` to be used in selecting a single `AccountMapping`.
+    """
+    id: ID!
+  ): AccountMapping
+
+  """Reads a single `JournalLine` using its globally unique `ID`."""
+  journalLineById(
+    """
+    The globally unique `ID` to be used in selecting a single `JournalLine`.
+    """
+    id: ID!
+  ): JournalLine
+
+  """Reads a single `SavingsGoal` using its globally unique `ID`."""
+  savingsGoalById(
+    """
+    The globally unique `ID` to be used in selecting a single `SavingsGoal`.
+    """
+    id: ID!
+  ): SavingsGoal
+
+  """Reads a single `NetWorthSnapshot` using its globally unique `ID`."""
+  netWorthSnapshotById(
+    """
+    The globally unique `ID` to be used in selecting a single `NetWorthSnapshot`.
+    """
+    id: ID!
+  ): NetWorthSnapshot
+
+  """Reads a single `ReconciliationQueue` using its globally unique `ID`."""
+  reconciliationQueueById(
+    """
+    The globally unique `ID` to be used in selecting a single `ReconciliationQueue`.
+    """
+    id: ID!
+  ): ReconciliationQueue
+
+  """Reads a single `CryptoLot` using its globally unique `ID`."""
+  cryptoLotById(
+    """The globally unique `ID` to be used in selecting a single `CryptoLot`."""
+    id: ID!
+  ): CryptoLot
+
+  """Reads a single `Book` using its globally unique `ID`."""
+  bookById(
+    """The globally unique `ID` to be used in selecting a single `Book`."""
+    id: ID!
+  ): Book
+
+  """Reads a single `Budget` using its globally unique `ID`."""
+  budgetById(
+    """The globally unique `ID` to be used in selecting a single `Budget`."""
+    id: ID!
+  ): Budget
+
+  """Reads a single `CryptoAsset` using its globally unique `ID`."""
+  cryptoAssetById(
+    """
+    The globally unique `ID` to be used in selecting a single `CryptoAsset`.
+    """
+    id: ID!
+  ): CryptoAsset
+
+  """Reads a single `JournalEntry` using its globally unique `ID`."""
+  journalEntryById(
+    """
+    The globally unique `ID` to be used in selecting a single `JournalEntry`.
+    """
+    id: ID!
+  ): JournalEntry
+
+  """Reads a single `RecurringTransaction` using its globally unique `ID`."""
+  recurringTransactionById(
+    """
+    The globally unique `ID` to be used in selecting a single `RecurringTransaction`.
+    """
+    id: ID!
+  ): RecurringTransaction
+
+  """Reads a single `Account` using its globally unique `ID`."""
+  accountById(
+    """The globally unique `ID` to be used in selecting a single `Account`."""
+    id: ID!
+  ): Account
+
+  """Reads a single `ConnectedAccount` using its globally unique `ID`."""
+  connectedAccountById(
+    """
+    The globally unique `ID` to be used in selecting a single `ConnectedAccount`.
+    """
+    id: ID!
+  ): ConnectedAccount
+
+  """Reads and enables pagination through a set of `AccountMapping`."""
+  accountMappings(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AccountMappingCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: AccountMappingFilter
+
+    """The method to use when ordering `AccountMapping`."""
+    orderBy: [AccountMappingOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AccountMappingConnection
+
+  """Reads and enables pagination through a set of `JournalLine`."""
+  journalLines(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: JournalLineCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: JournalLineFilter
+
+    """The method to use when ordering `JournalLine`."""
+    orderBy: [JournalLineOrderBy!] = [PRIMARY_KEY_ASC]
+  ): JournalLineConnection
+
+  """Reads and enables pagination through a set of `SavingsGoal`."""
+  savingsGoals(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: SavingsGoalCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: SavingsGoalFilter
+
+    """The method to use when ordering `SavingsGoal`."""
+    orderBy: [SavingsGoalOrderBy!] = [PRIMARY_KEY_ASC]
+  ): SavingsGoalConnection
+
+  """Reads and enables pagination through a set of `NetWorthSnapshot`."""
+  netWorthSnapshots(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: NetWorthSnapshotCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: NetWorthSnapshotFilter
+
+    """The method to use when ordering `NetWorthSnapshot`."""
+    orderBy: [NetWorthSnapshotOrderBy!] = [PRIMARY_KEY_ASC]
+  ): NetWorthSnapshotConnection
+
+  """Reads and enables pagination through a set of `ReconciliationQueue`."""
+  reconciliationQueues(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ReconciliationQueueCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ReconciliationQueueFilter
+
+    """The method to use when ordering `ReconciliationQueue`."""
+    orderBy: [ReconciliationQueueOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ReconciliationQueueConnection
+
+  """Reads and enables pagination through a set of `CryptoLot`."""
+  cryptoLots(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CryptoLotCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CryptoLotFilter
+
+    """The method to use when ordering `CryptoLot`."""
+    orderBy: [CryptoLotOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CryptoLotConnection
+
+  """Reads and enables pagination through a set of `Book`."""
+  books(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: BookCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: BookFilter
+
+    """The method to use when ordering `Book`."""
+    orderBy: [BookOrderBy!] = [PRIMARY_KEY_ASC]
+  ): BookConnection
+
+  """Reads and enables pagination through a set of `Budget`."""
+  budgets(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: BudgetCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: BudgetFilter
+
+    """The method to use when ordering `Budget`."""
+    orderBy: [BudgetOrderBy!] = [PRIMARY_KEY_ASC]
+  ): BudgetConnection
+
+  """Reads and enables pagination through a set of `CryptoAsset`."""
+  cryptoAssets(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CryptoAssetCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CryptoAssetFilter
+
+    """The method to use when ordering `CryptoAsset`."""
+    orderBy: [CryptoAssetOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CryptoAssetConnection
+
+  """Reads and enables pagination through a set of `JournalEntry`."""
+  journalEntries(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: JournalEntryCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: JournalEntryFilter
+
+    """The method to use when ordering `JournalEntry`."""
+    orderBy: [JournalEntryOrderBy!] = [PRIMARY_KEY_ASC]
+  ): JournalEntryConnection
+
+  """Reads and enables pagination through a set of `RecurringTransaction`."""
+  recurringTransactions(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: RecurringTransactionCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: RecurringTransactionFilter
+
+    """The method to use when ordering `RecurringTransaction`."""
+    orderBy: [RecurringTransactionOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RecurringTransactionConnection
+
+  """Reads and enables pagination through a set of `Account`."""
+  accounts(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AccountCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: AccountFilter
+
+    """The method to use when ordering `Account`."""
+    orderBy: [AccountOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AccountConnection
+
+  """Reads and enables pagination through a set of `ConnectedAccount`."""
+  connectedAccounts(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ConnectedAccountCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ConnectedAccountFilter
+
+    """The method to use when ordering `ConnectedAccount`."""
+    orderBy: [ConnectedAccountOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ConnectedAccountConnection
+}
+
+"""An object with a globally unique `ID`."""
+interface Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+}
+
+type AccountMapping implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  eventType: String!
+  debitAccountId: UUID!
+  creditAccountId: UUID!
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """Reads a single `Book` that is related to this `AccountMapping`."""
+  book: Book
+
+  """Reads a single `Account` that is related to this `AccountMapping`."""
+  creditAccount: Account
+
+  """Reads a single `Account` that is related to this `AccountMapping`."""
+  debitAccount: Account
+}
+
+"""
+A universally unique identifier as defined by [RFC 4122](https://tools.ietf.org/html/rfc4122).
+"""
+scalar UUID
+
+"""
+A point in time as described by the [ISO
+8601](https://en.wikipedia.org/wiki/ISO_8601) and, if it has a timezone, [RFC
+3339](https://datatracker.ietf.org/doc/html/rfc3339) standards. Input values
+that do not conform to both ISO 8601 and RFC 3339 may be coerced, which may lead
+to unexpected results.
+"""
+scalar Datetime
+
+type Book implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  organizationId: String!
+  name: String!
+  type: BookType!
+  currency: String!
+  fiscalYearStartMonth: Int!
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """Reads and enables pagination through a set of `Account`."""
+  accounts(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AccountCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: AccountFilter
+
+    """The method to use when ordering `Account`."""
+    orderBy: [AccountOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AccountConnection!
+
+  """Reads and enables pagination through a set of `AccountMapping`."""
+  accountMappings(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AccountMappingCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: AccountMappingFilter
+
+    """The method to use when ordering `AccountMapping`."""
+    orderBy: [AccountMappingOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AccountMappingConnection!
+
+  """Reads and enables pagination through a set of `Budget`."""
+  budgets(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: BudgetCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: BudgetFilter
+
+    """The method to use when ordering `Budget`."""
+    orderBy: [BudgetOrderBy!] = [PRIMARY_KEY_ASC]
+  ): BudgetConnection!
+
+  """Reads and enables pagination through a set of `ConnectedAccount`."""
+  connectedAccounts(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ConnectedAccountCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ConnectedAccountFilter
+
+    """The method to use when ordering `ConnectedAccount`."""
+    orderBy: [ConnectedAccountOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ConnectedAccountConnection!
+
+  """Reads and enables pagination through a set of `CryptoAsset`."""
+  cryptoAssets(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CryptoAssetCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CryptoAssetFilter
+
+    """The method to use when ordering `CryptoAsset`."""
+    orderBy: [CryptoAssetOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CryptoAssetConnection!
+
+  """Reads and enables pagination through a set of `JournalEntry`."""
+  journalEntries(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: JournalEntryCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: JournalEntryFilter
+
+    """The method to use when ordering `JournalEntry`."""
+    orderBy: [JournalEntryOrderBy!] = [PRIMARY_KEY_ASC]
+  ): JournalEntryConnection!
+
+  """Reads and enables pagination through a set of `NetWorthSnapshot`."""
+  netWorthSnapshots(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: NetWorthSnapshotCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: NetWorthSnapshotFilter
+
+    """The method to use when ordering `NetWorthSnapshot`."""
+    orderBy: [NetWorthSnapshotOrderBy!] = [PRIMARY_KEY_ASC]
+  ): NetWorthSnapshotConnection!
+
+  """Reads and enables pagination through a set of `ReconciliationQueue`."""
+  reconciliationQueues(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ReconciliationQueueCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ReconciliationQueueFilter
+
+    """The method to use when ordering `ReconciliationQueue`."""
+    orderBy: [ReconciliationQueueOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ReconciliationQueueConnection!
+
+  """Reads and enables pagination through a set of `RecurringTransaction`."""
+  recurringTransactions(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: RecurringTransactionCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: RecurringTransactionFilter
+
+    """The method to use when ordering `RecurringTransaction`."""
+    orderBy: [RecurringTransactionOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RecurringTransactionConnection!
+
+  """Reads and enables pagination through a set of `SavingsGoal`."""
+  savingsGoals(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: SavingsGoalCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: SavingsGoalFilter
+
+    """The method to use when ordering `SavingsGoal`."""
+    orderBy: [SavingsGoalOrderBy!] = [PRIMARY_KEY_ASC]
+  ): SavingsGoalConnection!
+}
+
+enum BookType {
+  business
+  personal
+}
+
+"""A connection to a list of `Account` values."""
+type AccountConnection {
+  """A list of `Account` objects."""
+  nodes: [Account]!
+
+  """
+  A list of edges which contains the `Account` and cursor to aid in pagination.
+  """
+  edges: [AccountEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Account` you could get from the connection."""
+  totalCount: Int!
+}
+
+type Account implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  parentId: UUID
+  name: String!
+  code: String
+  type: AccountType!
+  subType: AccountSubType
+  isPlaceholder: Boolean!
+  isActive: Boolean!
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """Reads a single `Book` that is related to this `Account`."""
+  book: Book
+
+  """Reads a single `Account` that is related to this `Account`."""
+  parent: Account
+
+  """Reads and enables pagination through a set of `Account`."""
+  childAccounts(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AccountCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: AccountFilter
+
+    """The method to use when ordering `Account`."""
+    orderBy: [AccountOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AccountConnection!
+
+  """Reads and enables pagination through a set of `Budget`."""
+  budgets(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: BudgetCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: BudgetFilter
+
+    """The method to use when ordering `Budget`."""
+    orderBy: [BudgetOrderBy!] = [PRIMARY_KEY_ASC]
+  ): BudgetConnection!
+
+  """Reads and enables pagination through a set of `JournalLine`."""
+  journalLines(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: JournalLineCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: JournalLineFilter
+
+    """The method to use when ordering `JournalLine`."""
+    orderBy: [JournalLineOrderBy!] = [PRIMARY_KEY_ASC]
+  ): JournalLineConnection!
+}
+
+enum AccountType {
+  asset
+  liability
+  equity
+  revenue
+  expense
+}
+
+enum AccountSubType {
+  cash
+  bank
+  accounts_receivable
+  inventory
+  crypto_wallet
+  investment
+  fixed_asset
+  other_asset
+  credit_card
+  accounts_payable
+  loan
+  mortgage
+  other_liability
+  owners_equity
+  retained_earnings
+  other_equity
+  sales
+  service_revenue
+  interest_income
+  crypto_gains
+  other_revenue
+  cost_of_goods
+  operating_expense
+  payroll
+  tax_expense
+  crypto_losses
+  other_expense
+}
+
+"""A location in a connection that can be used for resuming pagination."""
+scalar Cursor
+
+"""
+A condition to be used against `Account` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input AccountCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `bookId` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s `parentId` field."""
+  parentId: UUID
+
+  """Checks for equality with the object’s `type` field."""
+  type: AccountType
+}
+
+"""
+A filter to be used against `Account` object types. All fields are combined with a logical ‘and.’
+"""
+input AccountFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `bookId` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s `parentId` field."""
+  parentId: UUIDFilter
+
+  """Filter by the object’s `type` field."""
+  type: AccountTypeFilter
+
+  """Filter by the object’s `childAccounts` relation."""
+  childAccounts: AccountToManyAccountFilter
+
+  """Some related `childAccounts` exist."""
+  childAccountsExist: Boolean
+
+  """Filter by the object’s `budgets` relation."""
+  budgets: AccountToManyBudgetFilter
+
+  """Some related `budgets` exist."""
+  budgetsExist: Boolean
+
+  """Filter by the object’s `journalLines` relation."""
+  journalLines: AccountToManyJournalLineFilter
+
+  """Some related `journalLines` exist."""
+  journalLinesExist: Boolean
+
+  """Filter by the object’s `book` relation."""
+  book: BookFilter
+
+  """Filter by the object’s `parent` relation."""
+  parent: AccountFilter
+
+  """A related `parent` exists."""
+  parentExists: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [AccountFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [AccountFilter!]
+
+  """Negates the expression."""
+  not: AccountFilter
+}
+
+"""
+A filter to be used against UUID fields. All fields are combined with a logical ‘and.’
+"""
+input UUIDFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: UUID
+
+  """Not equal to the specified value."""
+  notEqualTo: UUID
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: UUID
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: UUID
+
+  """Included in the specified list."""
+  in: [UUID!]
+
+  """Not included in the specified list."""
+  notIn: [UUID!]
+
+  """Less than the specified value."""
+  lessThan: UUID
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: UUID
+
+  """Greater than the specified value."""
+  greaterThan: UUID
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: UUID
+}
+
+"""
+A filter to be used against AccountType fields. All fields are combined with a logical ‘and.’
+"""
+input AccountTypeFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: AccountType
+
+  """Not equal to the specified value."""
+  notEqualTo: AccountType
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: AccountType
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: AccountType
+
+  """Included in the specified list."""
+  in: [AccountType!]
+
+  """Not included in the specified list."""
+  notIn: [AccountType!]
+
+  """Less than the specified value."""
+  lessThan: AccountType
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: AccountType
+
+  """Greater than the specified value."""
+  greaterThan: AccountType
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: AccountType
+}
+
+"""
+A filter to be used against many `Account` object types. All fields are combined with a logical ‘and.’
+"""
+input AccountToManyAccountFilter {
+  """
+  Every related `Account` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: AccountFilter
+
+  """
+  Some related `Account` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: AccountFilter
+
+  """
+  No related `Account` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: AccountFilter
+}
+
+"""
+A filter to be used against many `Budget` object types. All fields are combined with a logical ‘and.’
+"""
+input AccountToManyBudgetFilter {
+  """
+  Every related `Budget` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: BudgetFilter
+
+  """
+  Some related `Budget` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: BudgetFilter
+
+  """
+  No related `Budget` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: BudgetFilter
+}
+
+"""
+A filter to be used against `Budget` object types. All fields are combined with a logical ‘and.’
+"""
+input BudgetFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `bookId` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s `accountId` field."""
+  accountId: UUIDFilter
+
+  """Filter by the object’s `account` relation."""
+  account: AccountFilter
+
+  """Filter by the object’s `book` relation."""
+  book: BookFilter
+
+  """Checks for all expressions in this list."""
+  and: [BudgetFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [BudgetFilter!]
+
+  """Negates the expression."""
+  not: BudgetFilter
+}
+
+"""
+A filter to be used against `Book` object types. All fields are combined with a logical ‘and.’
+"""
+input BookFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `organizationId` field."""
+  organizationId: StringFilter
+
+  """Filter by the object’s `accounts` relation."""
+  accounts: BookToManyAccountFilter
+
+  """Some related `accounts` exist."""
+  accountsExist: Boolean
+
+  """Filter by the object’s `accountMappings` relation."""
+  accountMappings: BookToManyAccountMappingFilter
+
+  """Some related `accountMappings` exist."""
+  accountMappingsExist: Boolean
+
+  """Filter by the object’s `budgets` relation."""
+  budgets: BookToManyBudgetFilter
+
+  """Some related `budgets` exist."""
+  budgetsExist: Boolean
+
+  """Filter by the object’s `connectedAccounts` relation."""
+  connectedAccounts: BookToManyConnectedAccountFilter
+
+  """Some related `connectedAccounts` exist."""
+  connectedAccountsExist: Boolean
+
+  """Filter by the object’s `cryptoAssets` relation."""
+  cryptoAssets: BookToManyCryptoAssetFilter
+
+  """Some related `cryptoAssets` exist."""
+  cryptoAssetsExist: Boolean
+
+  """Filter by the object’s `journalEntries` relation."""
+  journalEntries: BookToManyJournalEntryFilter
+
+  """Some related `journalEntries` exist."""
+  journalEntriesExist: Boolean
+
+  """Filter by the object’s `netWorthSnapshots` relation."""
+  netWorthSnapshots: BookToManyNetWorthSnapshotFilter
+
+  """Some related `netWorthSnapshots` exist."""
+  netWorthSnapshotsExist: Boolean
+
+  """Filter by the object’s `reconciliationQueues` relation."""
+  reconciliationQueues: BookToManyReconciliationQueueFilter
+
+  """Some related `reconciliationQueues` exist."""
+  reconciliationQueuesExist: Boolean
+
+  """Filter by the object’s `recurringTransactions` relation."""
+  recurringTransactions: BookToManyRecurringTransactionFilter
+
+  """Some related `recurringTransactions` exist."""
+  recurringTransactionsExist: Boolean
+
+  """Filter by the object’s `savingsGoals` relation."""
+  savingsGoals: BookToManySavingsGoalFilter
+
+  """Some related `savingsGoals` exist."""
+  savingsGoalsExist: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [BookFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [BookFilter!]
+
+  """Negates the expression."""
+  not: BookFilter
+}
+
+"""
+A filter to be used against String fields. All fields are combined with a logical ‘and.’
+"""
+input StringFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: String
+
+  """Not equal to the specified value."""
+  notEqualTo: String
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: String
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: String
+
+  """Included in the specified list."""
+  in: [String!]
+
+  """Not included in the specified list."""
+  notIn: [String!]
+
+  """Less than the specified value."""
+  lessThan: String
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: String
+
+  """Greater than the specified value."""
+  greaterThan: String
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: String
+
+  """Contains the specified string (case-sensitive)."""
+  includes: String
+
+  """Does not contain the specified string (case-sensitive)."""
+  notIncludes: String
+
+  """Contains the specified string (case-insensitive)."""
+  includesInsensitive: String
+
+  """Does not contain the specified string (case-insensitive)."""
+  notIncludesInsensitive: String
+
+  """Starts with the specified string (case-sensitive)."""
+  startsWith: String
+
+  """Does not start with the specified string (case-sensitive)."""
+  notStartsWith: String
+
+  """Starts with the specified string (case-insensitive)."""
+  startsWithInsensitive: String
+
+  """Does not start with the specified string (case-insensitive)."""
+  notStartsWithInsensitive: String
+
+  """Ends with the specified string (case-sensitive)."""
+  endsWith: String
+
+  """Does not end with the specified string (case-sensitive)."""
+  notEndsWith: String
+
+  """Ends with the specified string (case-insensitive)."""
+  endsWithInsensitive: String
+
+  """Does not end with the specified string (case-insensitive)."""
+  notEndsWithInsensitive: String
+
+  """
+  Matches the specified pattern (case-sensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters.
+  """
+  like: String
+
+  """
+  Does not match the specified pattern (case-sensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters.
+  """
+  notLike: String
+
+  """
+  Matches the specified pattern (case-insensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters.
+  """
+  likeInsensitive: String
+
+  """
+  Does not match the specified pattern (case-insensitive). An underscore (_) matches any single character; a percent sign (%) matches any sequence of zero or more characters.
+  """
+  notLikeInsensitive: String
+
+  """Equal to the specified value (case-insensitive)."""
+  equalToInsensitive: String
+
+  """Not equal to the specified value (case-insensitive)."""
+  notEqualToInsensitive: String
+
+  """
+  Not equal to the specified value, treating null like an ordinary value (case-insensitive).
+  """
+  distinctFromInsensitive: String
+
+  """
+  Equal to the specified value, treating null like an ordinary value (case-insensitive).
+  """
+  notDistinctFromInsensitive: String
+
+  """Included in the specified list (case-insensitive)."""
+  inInsensitive: [String!]
+
+  """Not included in the specified list (case-insensitive)."""
+  notInInsensitive: [String!]
+
+  """Less than the specified value (case-insensitive)."""
+  lessThanInsensitive: String
+
+  """Less than or equal to the specified value (case-insensitive)."""
+  lessThanOrEqualToInsensitive: String
+
+  """Greater than the specified value (case-insensitive)."""
+  greaterThanInsensitive: String
+
+  """Greater than or equal to the specified value (case-insensitive)."""
+  greaterThanOrEqualToInsensitive: String
+}
+
+"""
+A filter to be used against many `Account` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyAccountFilter {
+  """
+  Every related `Account` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: AccountFilter
+
+  """
+  Some related `Account` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: AccountFilter
+
+  """
+  No related `Account` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: AccountFilter
+}
+
+"""
+A filter to be used against many `AccountMapping` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyAccountMappingFilter {
+  """
+  Every related `AccountMapping` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: AccountMappingFilter
+
+  """
+  Some related `AccountMapping` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: AccountMappingFilter
+
+  """
+  No related `AccountMapping` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: AccountMappingFilter
+}
+
+"""
+A filter to be used against `AccountMapping` object types. All fields are combined with a logical ‘and.’
+"""
+input AccountMappingFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `bookId` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s `eventType` field."""
+  eventType: StringFilter
+
+  """Filter by the object’s `book` relation."""
+  book: BookFilter
+
+  """Filter by the object’s `creditAccount` relation."""
+  creditAccount: AccountFilter
+
+  """Filter by the object’s `debitAccount` relation."""
+  debitAccount: AccountFilter
+
+  """Checks for all expressions in this list."""
+  and: [AccountMappingFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [AccountMappingFilter!]
+
+  """Negates the expression."""
+  not: AccountMappingFilter
+}
+
+"""
+A filter to be used against many `Budget` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyBudgetFilter {
+  """
+  Every related `Budget` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: BudgetFilter
+
+  """
+  Some related `Budget` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: BudgetFilter
+
+  """
+  No related `Budget` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: BudgetFilter
+}
+
+"""
+A filter to be used against many `ConnectedAccount` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyConnectedAccountFilter {
+  """
+  Every related `ConnectedAccount` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: ConnectedAccountFilter
+
+  """
+  Some related `ConnectedAccount` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: ConnectedAccountFilter
+
+  """
+  No related `ConnectedAccount` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: ConnectedAccountFilter
+}
+
+"""
+A filter to be used against `ConnectedAccount` object types. All fields are combined with a logical ‘and.’
+"""
+input ConnectedAccountFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `bookId` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s `provider` field."""
+  provider: ConnectedAccountProviderFilter
+
+  """Filter by the object’s `account` relation."""
+  account: AccountFilter
+
+  """A related `account` exists."""
+  accountExists: Boolean
+
+  """Filter by the object’s `book` relation."""
+  book: BookFilter
+
+  """Checks for all expressions in this list."""
+  and: [ConnectedAccountFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [ConnectedAccountFilter!]
+
+  """Negates the expression."""
+  not: ConnectedAccountFilter
+}
+
+"""
+A filter to be used against ConnectedAccountProvider fields. All fields are combined with a logical ‘and.’
+"""
+input ConnectedAccountProviderFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: ConnectedAccountProvider
+
+  """Not equal to the specified value."""
+  notEqualTo: ConnectedAccountProvider
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: ConnectedAccountProvider
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: ConnectedAccountProvider
+
+  """Included in the specified list."""
+  in: [ConnectedAccountProvider!]
+
+  """Not included in the specified list."""
+  notIn: [ConnectedAccountProvider!]
+
+  """Less than the specified value."""
+  lessThan: ConnectedAccountProvider
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: ConnectedAccountProvider
+
+  """Greater than the specified value."""
+  greaterThan: ConnectedAccountProvider
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: ConnectedAccountProvider
+}
+
+enum ConnectedAccountProvider {
+  plaid
+  mx
+  wallet_connect
+  exchange_api
+  manual
+}
+
+"""
+A filter to be used against many `CryptoAsset` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyCryptoAssetFilter {
+  """
+  Every related `CryptoAsset` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: CryptoAssetFilter
+
+  """
+  Some related `CryptoAsset` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: CryptoAssetFilter
+
+  """
+  No related `CryptoAsset` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: CryptoAssetFilter
+}
+
+"""
+A filter to be used against `CryptoAsset` object types. All fields are combined with a logical ‘and.’
+"""
+input CryptoAssetFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `bookId` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s `symbol` field."""
+  symbol: StringFilter
+
+  """Filter by the object’s `cryptoLots` relation."""
+  cryptoLots: CryptoAssetToManyCryptoLotFilter
+
+  """Some related `cryptoLots` exist."""
+  cryptoLotsExist: Boolean
+
+  """Filter by the object’s `book` relation."""
+  book: BookFilter
+
+  """Checks for all expressions in this list."""
+  and: [CryptoAssetFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [CryptoAssetFilter!]
+
+  """Negates the expression."""
+  not: CryptoAssetFilter
+}
+
+"""
+A filter to be used against many `CryptoLot` object types. All fields are combined with a logical ‘and.’
+"""
+input CryptoAssetToManyCryptoLotFilter {
+  """
+  Every related `CryptoLot` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: CryptoLotFilter
+
+  """
+  Some related `CryptoLot` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: CryptoLotFilter
+
+  """
+  No related `CryptoLot` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: CryptoLotFilter
+}
+
+"""
+A filter to be used against `CryptoLot` object types. All fields are combined with a logical ‘and.’
+"""
+input CryptoLotFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `cryptoAssetId` field."""
+  cryptoAssetId: UUIDFilter
+
+  """Filter by the object’s `cryptoAsset` relation."""
+  cryptoAsset: CryptoAssetFilter
+
+  """Filter by the object’s `journalEntry` relation."""
+  journalEntry: JournalEntryFilter
+
+  """A related `journalEntry` exists."""
+  journalEntryExists: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [CryptoLotFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [CryptoLotFilter!]
+
+  """Negates the expression."""
+  not: CryptoLotFilter
+}
+
+"""
+A filter to be used against `JournalEntry` object types. All fields are combined with a logical ‘and.’
+"""
+input JournalEntryFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `bookId` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s `date` field."""
+  date: DatetimeFilter
+
+  """Filter by the object’s `source` field."""
+  source: JournalEntrySourceFilter
+
+  """Filter by the object’s `sourceReferenceId` field."""
+  sourceReferenceId: StringFilter
+
+  """Filter by the object’s `journalLines` relation."""
+  journalLines: JournalEntryToManyJournalLineFilter
+
+  """Some related `journalLines` exist."""
+  journalLinesExist: Boolean
+
+  """Filter by the object’s `book` relation."""
+  book: BookFilter
+
+  """Checks for all expressions in this list."""
+  and: [JournalEntryFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [JournalEntryFilter!]
+
+  """Negates the expression."""
+  not: JournalEntryFilter
+}
+
+"""
+A filter to be used against Datetime fields. All fields are combined with a logical ‘and.’
+"""
+input DatetimeFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: Datetime
+
+  """Not equal to the specified value."""
+  notEqualTo: Datetime
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: Datetime
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: Datetime
+
+  """Included in the specified list."""
+  in: [Datetime!]
+
+  """Not included in the specified list."""
+  notIn: [Datetime!]
+
+  """Less than the specified value."""
+  lessThan: Datetime
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: Datetime
+
+  """Greater than the specified value."""
+  greaterThan: Datetime
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: Datetime
+}
+
+"""
+A filter to be used against JournalEntrySource fields. All fields are combined with a logical ‘and.’
+"""
+input JournalEntrySourceFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: JournalEntrySource
+
+  """Not equal to the specified value."""
+  notEqualTo: JournalEntrySource
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: JournalEntrySource
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: JournalEntrySource
+
+  """Included in the specified list."""
+  in: [JournalEntrySource!]
+
+  """Not included in the specified list."""
+  notIn: [JournalEntrySource!]
+
+  """Less than the specified value."""
+  lessThan: JournalEntrySource
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: JournalEntrySource
+
+  """Greater than the specified value."""
+  greaterThan: JournalEntrySource
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: JournalEntrySource
+}
+
+enum JournalEntrySource {
+  manual
+  mantle_sync
+  plaid_import
+  crypto_sync
+  recurring
+}
+
+"""
+A filter to be used against many `JournalLine` object types. All fields are combined with a logical ‘and.’
+"""
+input JournalEntryToManyJournalLineFilter {
+  """
+  Every related `JournalLine` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: JournalLineFilter
+
+  """
+  Some related `JournalLine` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: JournalLineFilter
+
+  """
+  No related `JournalLine` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: JournalLineFilter
+}
+
+"""
+A filter to be used against `JournalLine` object types. All fields are combined with a logical ‘and.’
+"""
+input JournalLineFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `journalEntryId` field."""
+  journalEntryId: UUIDFilter
+
+  """Filter by the object’s `accountId` field."""
+  accountId: UUIDFilter
+
+  """Filter by the object’s `account` relation."""
+  account: AccountFilter
+
+  """Filter by the object’s `journalEntry` relation."""
+  journalEntry: JournalEntryFilter
+
+  """Checks for all expressions in this list."""
+  and: [JournalLineFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [JournalLineFilter!]
+
+  """Negates the expression."""
+  not: JournalLineFilter
+}
+
+"""
+A filter to be used against many `JournalEntry` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyJournalEntryFilter {
+  """
+  Every related `JournalEntry` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: JournalEntryFilter
+
+  """
+  Some related `JournalEntry` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: JournalEntryFilter
+
+  """
+  No related `JournalEntry` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: JournalEntryFilter
+}
+
+"""
+A filter to be used against many `NetWorthSnapshot` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyNetWorthSnapshotFilter {
+  """
+  Every related `NetWorthSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: NetWorthSnapshotFilter
+
+  """
+  Some related `NetWorthSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: NetWorthSnapshotFilter
+
+  """
+  No related `NetWorthSnapshot` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: NetWorthSnapshotFilter
+}
+
+"""
+A filter to be used against `NetWorthSnapshot` object types. All fields are combined with a logical ‘and.’
+"""
+input NetWorthSnapshotFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `bookId` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s `date` field."""
+  date: DatetimeFilter
+
+  """Filter by the object’s `book` relation."""
+  book: BookFilter
+
+  """Checks for all expressions in this list."""
+  and: [NetWorthSnapshotFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [NetWorthSnapshotFilter!]
+
+  """Negates the expression."""
+  not: NetWorthSnapshotFilter
+}
+
+"""
+A filter to be used against many `ReconciliationQueue` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyReconciliationQueueFilter {
+  """
+  Every related `ReconciliationQueue` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: ReconciliationQueueFilter
+
+  """
+  Some related `ReconciliationQueue` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: ReconciliationQueueFilter
+
+  """
+  No related `ReconciliationQueue` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: ReconciliationQueueFilter
+}
+
+"""
+A filter to be used against `ReconciliationQueue` object types. All fields are combined with a logical ‘and.’
+"""
+input ReconciliationQueueFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `bookId` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s `status` field."""
+  status: ReconciliationStatusFilter
+
+  """Filter by the object’s `book` relation."""
+  book: BookFilter
+
+  """Filter by the object’s `journalEntry` relation."""
+  journalEntry: JournalEntryFilter
+
+  """Checks for all expressions in this list."""
+  and: [ReconciliationQueueFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [ReconciliationQueueFilter!]
+
+  """Negates the expression."""
+  not: ReconciliationQueueFilter
+}
+
+"""
+A filter to be used against ReconciliationStatus fields. All fields are combined with a logical ‘and.’
+"""
+input ReconciliationStatusFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: ReconciliationStatus
+
+  """Not equal to the specified value."""
+  notEqualTo: ReconciliationStatus
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: ReconciliationStatus
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: ReconciliationStatus
+
+  """Included in the specified list."""
+  in: [ReconciliationStatus!]
+
+  """Not included in the specified list."""
+  notIn: [ReconciliationStatus!]
+
+  """Less than the specified value."""
+  lessThan: ReconciliationStatus
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: ReconciliationStatus
+
+  """Greater than the specified value."""
+  greaterThan: ReconciliationStatus
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: ReconciliationStatus
+}
+
+enum ReconciliationStatus {
+  pending_review
+  approved
+  adjusted
+  rejected
+}
+
+"""
+A filter to be used against many `RecurringTransaction` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyRecurringTransactionFilter {
+  """
+  Every related `RecurringTransaction` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: RecurringTransactionFilter
+
+  """
+  Some related `RecurringTransaction` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: RecurringTransactionFilter
+
+  """
+  No related `RecurringTransaction` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: RecurringTransactionFilter
+}
+
+"""
+A filter to be used against `RecurringTransaction` object types. All fields are combined with a logical ‘and.’
+"""
+input RecurringTransactionFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `bookId` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s `account` relation."""
+  account: AccountFilter
+
+  """Filter by the object’s `book` relation."""
+  book: BookFilter
+
+  """Filter by the object’s `counterAccount` relation."""
+  counterAccount: AccountFilter
+
+  """A related `counterAccount` exists."""
+  counterAccountExists: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [RecurringTransactionFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [RecurringTransactionFilter!]
+
+  """Negates the expression."""
+  not: RecurringTransactionFilter
+}
+
+"""
+A filter to be used against many `SavingsGoal` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManySavingsGoalFilter {
+  """
+  Every related `SavingsGoal` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: SavingsGoalFilter
+
+  """
+  Some related `SavingsGoal` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: SavingsGoalFilter
+
+  """
+  No related `SavingsGoal` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: SavingsGoalFilter
+}
+
+"""
+A filter to be used against `SavingsGoal` object types. All fields are combined with a logical ‘and.’
+"""
+input SavingsGoalFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `bookId` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s `account` relation."""
+  account: AccountFilter
+
+  """Filter by the object’s `book` relation."""
+  book: BookFilter
+
+  """Checks for all expressions in this list."""
+  and: [SavingsGoalFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [SavingsGoalFilter!]
+
+  """Negates the expression."""
+  not: SavingsGoalFilter
+}
+
+"""
+A filter to be used against many `JournalLine` object types. All fields are combined with a logical ‘and.’
+"""
+input AccountToManyJournalLineFilter {
+  """
+  Every related `JournalLine` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: JournalLineFilter
+
+  """
+  Some related `JournalLine` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: JournalLineFilter
+
+  """
+  No related `JournalLine` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: JournalLineFilter
+}
+
+"""Methods to use when ordering `Account`."""
+enum AccountOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+  PARENT_ID_ASC
+  PARENT_ID_DESC
+}
+
+"""A connection to a list of `Budget` values."""
+type BudgetConnection {
+  """A list of `Budget` objects."""
+  nodes: [Budget]!
+
+  """
+  A list of edges which contains the `Budget` and cursor to aid in pagination.
+  """
+  edges: [BudgetEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Budget` you could get from the connection."""
+  totalCount: Int!
+}
+
+type Budget implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  accountId: UUID!
+  amount: BigFloat!
+  period: BudgetPeriod!
+  rollover: Boolean!
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """Reads a single `Account` that is related to this `Budget`."""
+  account: Account
+
+  """Reads a single `Book` that is related to this `Budget`."""
+  book: Book
+}
+
+"""
+A floating point number that requires more precision than IEEE 754 binary 64
+"""
+scalar BigFloat
+
+enum BudgetPeriod {
+  monthly
+  quarterly
+  yearly
+}
+
+"""A `Budget` edge in the connection."""
+type BudgetEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Budget` at the end of the edge."""
+  node: Budget
+}
+
+"""Information about pagination in a connection."""
+type PageInfo {
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: Cursor
+
+  """When paginating forwards, the cursor to continue."""
+  endCursor: Cursor
+}
+
+"""
+A condition to be used against `Budget` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input BudgetCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `bookId` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s `accountId` field."""
+  accountId: UUID
+}
+
+"""Methods to use when ordering `Budget`."""
+enum BudgetOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+  ACCOUNT_ID_ASC
+  ACCOUNT_ID_DESC
+}
+
+"""A connection to a list of `JournalLine` values."""
+type JournalLineConnection {
+  """A list of `JournalLine` objects."""
+  nodes: [JournalLine]!
+
+  """
+  A list of edges which contains the `JournalLine` and cursor to aid in pagination.
+  """
+  edges: [JournalLineEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `JournalLine` you could get from the connection."""
+  totalCount: Int!
+}
+
+type JournalLine implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  journalEntryId: UUID!
+  accountId: UUID!
+  debit: BigFloat!
+  credit: BigFloat!
+  memo: String
+
+  """Reads a single `Account` that is related to this `JournalLine`."""
+  account: Account
+
+  """Reads a single `JournalEntry` that is related to this `JournalLine`."""
+  journalEntry: JournalEntry
+}
+
+type JournalEntry implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  date: Datetime!
+  memo: String
+  source: JournalEntrySource!
+  sourceReferenceId: String
+  isReviewed: Boolean!
+  isReconciled: Boolean!
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """Reads a single `Book` that is related to this `JournalEntry`."""
+  book: Book
+
+  """Reads and enables pagination through a set of `JournalLine`."""
+  journalLines(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: JournalLineCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: JournalLineFilter
+
+    """The method to use when ordering `JournalLine`."""
+    orderBy: [JournalLineOrderBy!] = [PRIMARY_KEY_ASC]
+  ): JournalLineConnection!
+}
+
+"""
+A condition to be used against `JournalLine` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input JournalLineCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `journalEntryId` field."""
+  journalEntryId: UUID
+
+  """Checks for equality with the object’s `accountId` field."""
+  accountId: UUID
+}
+
+"""Methods to use when ordering `JournalLine`."""
+enum JournalLineOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  JOURNAL_ENTRY_ID_ASC
+  JOURNAL_ENTRY_ID_DESC
+  ACCOUNT_ID_ASC
+  ACCOUNT_ID_DESC
+}
+
+"""A `JournalLine` edge in the connection."""
+type JournalLineEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `JournalLine` at the end of the edge."""
+  node: JournalLine
+}
+
+"""A `Account` edge in the connection."""
+type AccountEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Account` at the end of the edge."""
+  node: Account
+}
+
+"""A connection to a list of `AccountMapping` values."""
+type AccountMappingConnection {
+  """A list of `AccountMapping` objects."""
+  nodes: [AccountMapping]!
+
+  """
+  A list of edges which contains the `AccountMapping` and cursor to aid in pagination.
+  """
+  edges: [AccountMappingEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `AccountMapping` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `AccountMapping` edge in the connection."""
+type AccountMappingEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `AccountMapping` at the end of the edge."""
+  node: AccountMapping
+}
+
+"""
+A condition to be used against `AccountMapping` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input AccountMappingCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `bookId` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s `eventType` field."""
+  eventType: String
+}
+
+"""Methods to use when ordering `AccountMapping`."""
+enum AccountMappingOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+  EVENT_TYPE_ASC
+  EVENT_TYPE_DESC
+}
+
+"""A connection to a list of `ConnectedAccount` values."""
+type ConnectedAccountConnection {
+  """A list of `ConnectedAccount` objects."""
+  nodes: [ConnectedAccount]!
+
+  """
+  A list of edges which contains the `ConnectedAccount` and cursor to aid in pagination.
+  """
+  edges: [ConnectedAccountEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `ConnectedAccount` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+type ConnectedAccount implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  provider: ConnectedAccountProvider!
+  providerAccountId: String
+  accountId: UUID
+  institutionName: String
+  mask: String
+  status: ConnectedAccountStatus!
+  accessToken: String
+  lastSyncedAt: Datetime
+  createdAt: Datetime
+
+  """Reads a single `Account` that is related to this `ConnectedAccount`."""
+  account: Account
+
+  """Reads a single `Book` that is related to this `ConnectedAccount`."""
+  book: Book
+}
+
+enum ConnectedAccountStatus {
+  active
+  disconnected
+  error
+}
+
+"""A `ConnectedAccount` edge in the connection."""
+type ConnectedAccountEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `ConnectedAccount` at the end of the edge."""
+  node: ConnectedAccount
+}
+
+"""
+A condition to be used against `ConnectedAccount` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input ConnectedAccountCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `bookId` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s `provider` field."""
+  provider: ConnectedAccountProvider
+}
+
+"""Methods to use when ordering `ConnectedAccount`."""
+enum ConnectedAccountOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+}
+
+"""A connection to a list of `CryptoAsset` values."""
+type CryptoAssetConnection {
+  """A list of `CryptoAsset` objects."""
+  nodes: [CryptoAsset]!
+
+  """
+  A list of edges which contains the `CryptoAsset` and cursor to aid in pagination.
+  """
+  edges: [CryptoAssetEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `CryptoAsset` you could get from the connection."""
+  totalCount: Int!
+}
+
+type CryptoAsset implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  symbol: String!
+  name: String!
+  walletAddress: String
+  network: String
+  balance: BigFloat!
+  costBasisMethod: CostBasisMethod!
+  lastSyncedAt: Datetime
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """Reads a single `Book` that is related to this `CryptoAsset`."""
+  book: Book
+
+  """Reads and enables pagination through a set of `CryptoLot`."""
+  cryptoLots(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CryptoLotCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CryptoLotFilter
+
+    """The method to use when ordering `CryptoLot`."""
+    orderBy: [CryptoLotOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CryptoLotConnection!
+}
+
+enum CostBasisMethod {
+  fifo
+  lifo
+  hifo
+  acb
+}
+
+"""A connection to a list of `CryptoLot` values."""
+type CryptoLotConnection {
+  """A list of `CryptoLot` objects."""
+  nodes: [CryptoLot]!
+
+  """
+  A list of edges which contains the `CryptoLot` and cursor to aid in pagination.
+  """
+  edges: [CryptoLotEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `CryptoLot` you could get from the connection."""
+  totalCount: Int!
+}
+
+type CryptoLot implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  cryptoAssetId: UUID!
+  acquiredAt: Datetime!
+  quantity: BigFloat!
+  costPerUnit: BigFloat!
+  remainingQuantity: BigFloat!
+  disposedAt: Datetime
+  proceedsPerUnit: BigFloat
+  journalEntryId: UUID
+  createdAt: Datetime
+
+  """Reads a single `CryptoAsset` that is related to this `CryptoLot`."""
+  cryptoAsset: CryptoAsset
+
+  """Reads a single `JournalEntry` that is related to this `CryptoLot`."""
+  journalEntry: JournalEntry
+}
+
+"""A `CryptoLot` edge in the connection."""
+type CryptoLotEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `CryptoLot` at the end of the edge."""
+  node: CryptoLot
+}
+
+"""
+A condition to be used against `CryptoLot` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input CryptoLotCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `cryptoAssetId` field."""
+  cryptoAssetId: UUID
+}
+
+"""Methods to use when ordering `CryptoLot`."""
+enum CryptoLotOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  CRYPTO_ASSET_ID_ASC
+  CRYPTO_ASSET_ID_DESC
+}
+
+"""A `CryptoAsset` edge in the connection."""
+type CryptoAssetEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `CryptoAsset` at the end of the edge."""
+  node: CryptoAsset
+}
+
+"""
+A condition to be used against `CryptoAsset` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input CryptoAssetCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `bookId` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s `symbol` field."""
+  symbol: String
+}
+
+"""Methods to use when ordering `CryptoAsset`."""
+enum CryptoAssetOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+  SYMBOL_ASC
+  SYMBOL_DESC
+}
+
+"""A connection to a list of `JournalEntry` values."""
+type JournalEntryConnection {
+  """A list of `JournalEntry` objects."""
+  nodes: [JournalEntry]!
+
+  """
+  A list of edges which contains the `JournalEntry` and cursor to aid in pagination.
+  """
+  edges: [JournalEntryEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `JournalEntry` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `JournalEntry` edge in the connection."""
+type JournalEntryEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `JournalEntry` at the end of the edge."""
+  node: JournalEntry
+}
+
+"""
+A condition to be used against `JournalEntry` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input JournalEntryCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `bookId` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s `date` field."""
+  date: Datetime
+
+  """Checks for equality with the object’s `source` field."""
+  source: JournalEntrySource
+
+  """Checks for equality with the object’s `sourceReferenceId` field."""
+  sourceReferenceId: String
+}
+
+"""Methods to use when ordering `JournalEntry`."""
+enum JournalEntryOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+  DATE_ASC
+  DATE_DESC
+  SOURCE_REFERENCE_ID_ASC
+  SOURCE_REFERENCE_ID_DESC
+}
+
+"""A connection to a list of `NetWorthSnapshot` values."""
+type NetWorthSnapshotConnection {
+  """A list of `NetWorthSnapshot` objects."""
+  nodes: [NetWorthSnapshot]!
+
+  """
+  A list of edges which contains the `NetWorthSnapshot` and cursor to aid in pagination.
+  """
+  edges: [NetWorthSnapshotEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `NetWorthSnapshot` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+type NetWorthSnapshot implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  date: Datetime!
+  totalAssets: BigFloat!
+  totalLiabilities: BigFloat!
+  netWorth: BigFloat!
+  breakdown: String
+  createdAt: Datetime
+
+  """Reads a single `Book` that is related to this `NetWorthSnapshot`."""
+  book: Book
+}
+
+"""A `NetWorthSnapshot` edge in the connection."""
+type NetWorthSnapshotEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `NetWorthSnapshot` at the end of the edge."""
+  node: NetWorthSnapshot
+}
+
+"""
+A condition to be used against `NetWorthSnapshot` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input NetWorthSnapshotCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `bookId` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s `date` field."""
+  date: Datetime
+}
+
+"""Methods to use when ordering `NetWorthSnapshot`."""
+enum NetWorthSnapshotOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+  DATE_ASC
+  DATE_DESC
+}
+
+"""A connection to a list of `ReconciliationQueue` values."""
+type ReconciliationQueueConnection {
+  """A list of `ReconciliationQueue` objects."""
+  nodes: [ReconciliationQueue]!
+
+  """
+  A list of edges which contains the `ReconciliationQueue` and cursor to aid in pagination.
+  """
+  edges: [ReconciliationQueueEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `ReconciliationQueue` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+type ReconciliationQueue implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  journalEntryId: UUID!
+  status: ReconciliationStatus!
+  reviewedAt: Datetime
+  reviewedBy: String
+  createdAt: Datetime
+
+  """Reads a single `Book` that is related to this `ReconciliationQueue`."""
+  book: Book
+
+  """
+  Reads a single `JournalEntry` that is related to this `ReconciliationQueue`.
+  """
+  journalEntry: JournalEntry
+}
+
+"""A `ReconciliationQueue` edge in the connection."""
+type ReconciliationQueueEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `ReconciliationQueue` at the end of the edge."""
+  node: ReconciliationQueue
+}
+
+"""
+A condition to be used against `ReconciliationQueue` object types. All fields
+are tested for equality and combined with a logical ‘and.’
+"""
+input ReconciliationQueueCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `bookId` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s `status` field."""
+  status: ReconciliationStatus
+}
+
+"""Methods to use when ordering `ReconciliationQueue`."""
+enum ReconciliationQueueOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+}
+
+"""A connection to a list of `RecurringTransaction` values."""
+type RecurringTransactionConnection {
+  """A list of `RecurringTransaction` objects."""
+  nodes: [RecurringTransaction]!
+
+  """
+  A list of edges which contains the `RecurringTransaction` and cursor to aid in pagination.
+  """
+  edges: [RecurringTransactionEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `RecurringTransaction` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+type RecurringTransaction implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  name: String!
+  amount: BigFloat!
+  frequency: RecurringFrequency!
+  accountId: UUID!
+  counterAccountId: UUID
+  isAutoDetected: Boolean!
+  isActive: Boolean!
+  nextExpectedDate: Datetime
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """
+  Reads a single `Account` that is related to this `RecurringTransaction`.
+  """
+  account: Account
+
+  """Reads a single `Book` that is related to this `RecurringTransaction`."""
+  book: Book
+
+  """
+  Reads a single `Account` that is related to this `RecurringTransaction`.
+  """
+  counterAccount: Account
+}
+
+enum RecurringFrequency {
+  weekly
+  biweekly
+  monthly
+  quarterly
+  yearly
+}
+
+"""A `RecurringTransaction` edge in the connection."""
+type RecurringTransactionEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `RecurringTransaction` at the end of the edge."""
+  node: RecurringTransaction
+}
+
+"""
+A condition to be used against `RecurringTransaction` object types. All fields
+are tested for equality and combined with a logical ‘and.’
+"""
+input RecurringTransactionCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `bookId` field."""
+  bookId: UUID
+}
+
+"""Methods to use when ordering `RecurringTransaction`."""
+enum RecurringTransactionOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+}
+
+"""A connection to a list of `SavingsGoal` values."""
+type SavingsGoalConnection {
+  """A list of `SavingsGoal` objects."""
+  nodes: [SavingsGoal]!
+
+  """
+  A list of edges which contains the `SavingsGoal` and cursor to aid in pagination.
+  """
+  edges: [SavingsGoalEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `SavingsGoal` you could get from the connection."""
+  totalCount: Int!
+}
+
+type SavingsGoal implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  accountId: UUID!
+  name: String!
+  targetAmount: BigFloat!
+  targetDate: Datetime
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """Reads a single `Account` that is related to this `SavingsGoal`."""
+  account: Account
+
+  """Reads a single `Book` that is related to this `SavingsGoal`."""
+  book: Book
+}
+
+"""A `SavingsGoal` edge in the connection."""
+type SavingsGoalEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `SavingsGoal` at the end of the edge."""
+  node: SavingsGoal
+}
+
+"""
+A condition to be used against `SavingsGoal` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input SavingsGoalCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `bookId` field."""
+  bookId: UUID
+}
+
+"""Methods to use when ordering `SavingsGoal`."""
+enum SavingsGoalOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+}
+
+"""A connection to a list of `Book` values."""
+type BookConnection {
+  """A list of `Book` objects."""
+  nodes: [Book]!
+
+  """
+  A list of edges which contains the `Book` and cursor to aid in pagination.
+  """
+  edges: [BookEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Book` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `Book` edge in the connection."""
+type BookEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Book` at the end of the edge."""
+  node: Book
+}
+
+"""
+A condition to be used against `Book` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input BookCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `organizationId` field."""
+  organizationId: String
+}
+
+"""Methods to use when ordering `Book`."""
+enum BookOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  ORGANIZATION_ID_ASC
+  ORGANIZATION_ID_DESC
+}
+
+"""
+The root mutation type which contains root level fields which mutate data.
+"""
+type Mutation {
+  """Creates a single `AccountMapping`."""
+  createAccountMapping(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateAccountMappingInput!
+  ): CreateAccountMappingPayload
+
+  """Creates a single `JournalLine`."""
+  createJournalLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateJournalLineInput!
+  ): CreateJournalLinePayload
+
+  """Creates a single `SavingsGoal`."""
+  createSavingsGoal(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateSavingsGoalInput!
+  ): CreateSavingsGoalPayload
+
+  """Creates a single `NetWorthSnapshot`."""
+  createNetWorthSnapshot(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateNetWorthSnapshotInput!
+  ): CreateNetWorthSnapshotPayload
+
+  """Creates a single `ReconciliationQueue`."""
+  createReconciliationQueue(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateReconciliationQueueInput!
+  ): CreateReconciliationQueuePayload
+
+  """Creates a single `CryptoLot`."""
+  createCryptoLot(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateCryptoLotInput!
+  ): CreateCryptoLotPayload
+
+  """Creates a single `Book`."""
+  createBook(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateBookInput!
+  ): CreateBookPayload
+
+  """Creates a single `Budget`."""
+  createBudget(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateBudgetInput!
+  ): CreateBudgetPayload
+
+  """Creates a single `CryptoAsset`."""
+  createCryptoAsset(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateCryptoAssetInput!
+  ): CreateCryptoAssetPayload
+
+  """Creates a single `JournalEntry`."""
+  createJournalEntry(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateJournalEntryInput!
+  ): CreateJournalEntryPayload
+
+  """Creates a single `RecurringTransaction`."""
+  createRecurringTransaction(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateRecurringTransactionInput!
+  ): CreateRecurringTransactionPayload
+
+  """Creates a single `Account`."""
+  createAccount(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateAccountInput!
+  ): CreateAccountPayload
+
+  """Creates a single `ConnectedAccount`."""
+  createConnectedAccount(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateConnectedAccountInput!
+  ): CreateConnectedAccountPayload
+
+  """
+  Updates a single `AccountMapping` using its globally unique id and a patch.
+  """
+  updateAccountMappingById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateAccountMappingByIdInput!
+  ): UpdateAccountMappingPayload
+
+  """Updates a single `AccountMapping` using a unique key and a patch."""
+  updateAccountMapping(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateAccountMappingInput!
+  ): UpdateAccountMappingPayload
+
+  """
+  Updates a single `JournalLine` using its globally unique id and a patch.
+  """
+  updateJournalLineById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateJournalLineByIdInput!
+  ): UpdateJournalLinePayload
+
+  """Updates a single `JournalLine` using a unique key and a patch."""
+  updateJournalLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateJournalLineInput!
+  ): UpdateJournalLinePayload
+
+  """
+  Updates a single `SavingsGoal` using its globally unique id and a patch.
+  """
+  updateSavingsGoalById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateSavingsGoalByIdInput!
+  ): UpdateSavingsGoalPayload
+
+  """Updates a single `SavingsGoal` using a unique key and a patch."""
+  updateSavingsGoal(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateSavingsGoalInput!
+  ): UpdateSavingsGoalPayload
+
+  """
+  Updates a single `NetWorthSnapshot` using its globally unique id and a patch.
+  """
+  updateNetWorthSnapshotById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateNetWorthSnapshotByIdInput!
+  ): UpdateNetWorthSnapshotPayload
+
+  """Updates a single `NetWorthSnapshot` using a unique key and a patch."""
+  updateNetWorthSnapshot(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateNetWorthSnapshotInput!
+  ): UpdateNetWorthSnapshotPayload
+
+  """
+  Updates a single `ReconciliationQueue` using its globally unique id and a patch.
+  """
+  updateReconciliationQueueById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateReconciliationQueueByIdInput!
+  ): UpdateReconciliationQueuePayload
+
+  """Updates a single `ReconciliationQueue` using a unique key and a patch."""
+  updateReconciliationQueue(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateReconciliationQueueInput!
+  ): UpdateReconciliationQueuePayload
+
+  """Updates a single `CryptoLot` using its globally unique id and a patch."""
+  updateCryptoLotById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateCryptoLotByIdInput!
+  ): UpdateCryptoLotPayload
+
+  """Updates a single `CryptoLot` using a unique key and a patch."""
+  updateCryptoLot(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateCryptoLotInput!
+  ): UpdateCryptoLotPayload
+
+  """Updates a single `Book` using its globally unique id and a patch."""
+  updateBookById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateBookByIdInput!
+  ): UpdateBookPayload
+
+  """Updates a single `Book` using a unique key and a patch."""
+  updateBook(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateBookInput!
+  ): UpdateBookPayload
+
+  """Updates a single `Budget` using its globally unique id and a patch."""
+  updateBudgetById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateBudgetByIdInput!
+  ): UpdateBudgetPayload
+
+  """Updates a single `Budget` using a unique key and a patch."""
+  updateBudget(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateBudgetInput!
+  ): UpdateBudgetPayload
+
+  """
+  Updates a single `CryptoAsset` using its globally unique id and a patch.
+  """
+  updateCryptoAssetById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateCryptoAssetByIdInput!
+  ): UpdateCryptoAssetPayload
+
+  """Updates a single `CryptoAsset` using a unique key and a patch."""
+  updateCryptoAsset(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateCryptoAssetInput!
+  ): UpdateCryptoAssetPayload
+
+  """
+  Updates a single `JournalEntry` using its globally unique id and a patch.
+  """
+  updateJournalEntryById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateJournalEntryByIdInput!
+  ): UpdateJournalEntryPayload
+
+  """Updates a single `JournalEntry` using a unique key and a patch."""
+  updateJournalEntry(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateJournalEntryInput!
+  ): UpdateJournalEntryPayload
+
+  """
+  Updates a single `RecurringTransaction` using its globally unique id and a patch.
+  """
+  updateRecurringTransactionById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateRecurringTransactionByIdInput!
+  ): UpdateRecurringTransactionPayload
+
+  """
+  Updates a single `RecurringTransaction` using a unique key and a patch.
+  """
+  updateRecurringTransaction(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateRecurringTransactionInput!
+  ): UpdateRecurringTransactionPayload
+
+  """Updates a single `Account` using its globally unique id and a patch."""
+  updateAccountById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateAccountByIdInput!
+  ): UpdateAccountPayload
+
+  """Updates a single `Account` using a unique key and a patch."""
+  updateAccount(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateAccountInput!
+  ): UpdateAccountPayload
+
+  """
+  Updates a single `ConnectedAccount` using its globally unique id and a patch.
+  """
+  updateConnectedAccountById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateConnectedAccountByIdInput!
+  ): UpdateConnectedAccountPayload
+
+  """Updates a single `ConnectedAccount` using a unique key and a patch."""
+  updateConnectedAccount(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateConnectedAccountInput!
+  ): UpdateConnectedAccountPayload
+
+  """Deletes a single `AccountMapping` using its globally unique id."""
+  deleteAccountMappingById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteAccountMappingByIdInput!
+  ): DeleteAccountMappingPayload
+
+  """Deletes a single `AccountMapping` using a unique key."""
+  deleteAccountMapping(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteAccountMappingInput!
+  ): DeleteAccountMappingPayload
+
+  """Deletes a single `JournalLine` using its globally unique id."""
+  deleteJournalLineById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteJournalLineByIdInput!
+  ): DeleteJournalLinePayload
+
+  """Deletes a single `JournalLine` using a unique key."""
+  deleteJournalLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteJournalLineInput!
+  ): DeleteJournalLinePayload
+
+  """Deletes a single `SavingsGoal` using its globally unique id."""
+  deleteSavingsGoalById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteSavingsGoalByIdInput!
+  ): DeleteSavingsGoalPayload
+
+  """Deletes a single `SavingsGoal` using a unique key."""
+  deleteSavingsGoal(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteSavingsGoalInput!
+  ): DeleteSavingsGoalPayload
+
+  """Deletes a single `NetWorthSnapshot` using its globally unique id."""
+  deleteNetWorthSnapshotById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteNetWorthSnapshotByIdInput!
+  ): DeleteNetWorthSnapshotPayload
+
+  """Deletes a single `NetWorthSnapshot` using a unique key."""
+  deleteNetWorthSnapshot(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteNetWorthSnapshotInput!
+  ): DeleteNetWorthSnapshotPayload
+
+  """Deletes a single `ReconciliationQueue` using its globally unique id."""
+  deleteReconciliationQueueById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteReconciliationQueueByIdInput!
+  ): DeleteReconciliationQueuePayload
+
+  """Deletes a single `ReconciliationQueue` using a unique key."""
+  deleteReconciliationQueue(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteReconciliationQueueInput!
+  ): DeleteReconciliationQueuePayload
+
+  """Deletes a single `CryptoLot` using its globally unique id."""
+  deleteCryptoLotById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCryptoLotByIdInput!
+  ): DeleteCryptoLotPayload
+
+  """Deletes a single `CryptoLot` using a unique key."""
+  deleteCryptoLot(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCryptoLotInput!
+  ): DeleteCryptoLotPayload
+
+  """Deletes a single `Book` using its globally unique id."""
+  deleteBookById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteBookByIdInput!
+  ): DeleteBookPayload
+
+  """Deletes a single `Book` using a unique key."""
+  deleteBook(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteBookInput!
+  ): DeleteBookPayload
+
+  """Deletes a single `Budget` using its globally unique id."""
+  deleteBudgetById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteBudgetByIdInput!
+  ): DeleteBudgetPayload
+
+  """Deletes a single `Budget` using a unique key."""
+  deleteBudget(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteBudgetInput!
+  ): DeleteBudgetPayload
+
+  """Deletes a single `CryptoAsset` using its globally unique id."""
+  deleteCryptoAssetById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCryptoAssetByIdInput!
+  ): DeleteCryptoAssetPayload
+
+  """Deletes a single `CryptoAsset` using a unique key."""
+  deleteCryptoAsset(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCryptoAssetInput!
+  ): DeleteCryptoAssetPayload
+
+  """Deletes a single `JournalEntry` using its globally unique id."""
+  deleteJournalEntryById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteJournalEntryByIdInput!
+  ): DeleteJournalEntryPayload
+
+  """Deletes a single `JournalEntry` using a unique key."""
+  deleteJournalEntry(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteJournalEntryInput!
+  ): DeleteJournalEntryPayload
+
+  """Deletes a single `RecurringTransaction` using its globally unique id."""
+  deleteRecurringTransactionById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteRecurringTransactionByIdInput!
+  ): DeleteRecurringTransactionPayload
+
+  """Deletes a single `RecurringTransaction` using a unique key."""
+  deleteRecurringTransaction(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteRecurringTransactionInput!
+  ): DeleteRecurringTransactionPayload
+
+  """Deletes a single `Account` using its globally unique id."""
+  deleteAccountById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteAccountByIdInput!
+  ): DeleteAccountPayload
+
+  """Deletes a single `Account` using a unique key."""
+  deleteAccount(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteAccountInput!
+  ): DeleteAccountPayload
+
+  """Deletes a single `ConnectedAccount` using its globally unique id."""
+  deleteConnectedAccountById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteConnectedAccountByIdInput!
+  ): DeleteConnectedAccountPayload
+
+  """Deletes a single `ConnectedAccount` using a unique key."""
+  deleteConnectedAccount(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteConnectedAccountInput!
+  ): DeleteConnectedAccountPayload
+}
+
+"""The output of our create `AccountMapping` mutation."""
+type CreateAccountMappingPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `AccountMapping` that was created by this mutation."""
+  accountMapping: AccountMapping
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `AccountMapping`. May be used by Relay 1."""
+  accountMappingEdge(
+    """The method to use when ordering `AccountMapping`."""
+    orderBy: [AccountMappingOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): AccountMappingEdge
+}
+
+"""All input for the create `AccountMapping` mutation."""
+input CreateAccountMappingInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `AccountMapping` to be created by this mutation."""
+  accountMapping: AccountMappingInput!
+}
+
+"""An input for mutations affecting `AccountMapping`"""
+input AccountMappingInput {
+  rowId: UUID
+  bookId: UUID!
+  eventType: String!
+  debitAccountId: UUID!
+  creditAccountId: UUID!
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""The output of our create `JournalLine` mutation."""
+type CreateJournalLinePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `JournalLine` that was created by this mutation."""
+  journalLine: JournalLine
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `JournalLine`. May be used by Relay 1."""
+  journalLineEdge(
+    """The method to use when ordering `JournalLine`."""
+    orderBy: [JournalLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): JournalLineEdge
+}
+
+"""All input for the create `JournalLine` mutation."""
+input CreateJournalLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `JournalLine` to be created by this mutation."""
+  journalLine: JournalLineInput!
+}
+
+"""An input for mutations affecting `JournalLine`"""
+input JournalLineInput {
+  rowId: UUID
+  journalEntryId: UUID!
+  accountId: UUID!
+  debit: BigFloat
+  credit: BigFloat
+  memo: String
+}
+
+"""The output of our create `SavingsGoal` mutation."""
+type CreateSavingsGoalPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `SavingsGoal` that was created by this mutation."""
+  savingsGoal: SavingsGoal
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `SavingsGoal`. May be used by Relay 1."""
+  savingsGoalEdge(
+    """The method to use when ordering `SavingsGoal`."""
+    orderBy: [SavingsGoalOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): SavingsGoalEdge
+}
+
+"""All input for the create `SavingsGoal` mutation."""
+input CreateSavingsGoalInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `SavingsGoal` to be created by this mutation."""
+  savingsGoal: SavingsGoalInput!
+}
+
+"""An input for mutations affecting `SavingsGoal`"""
+input SavingsGoalInput {
+  rowId: UUID
+  bookId: UUID!
+  accountId: UUID!
+  name: String!
+  targetAmount: BigFloat!
+  targetDate: Datetime
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""The output of our create `NetWorthSnapshot` mutation."""
+type CreateNetWorthSnapshotPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `NetWorthSnapshot` that was created by this mutation."""
+  netWorthSnapshot: NetWorthSnapshot
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `NetWorthSnapshot`. May be used by Relay 1."""
+  netWorthSnapshotEdge(
+    """The method to use when ordering `NetWorthSnapshot`."""
+    orderBy: [NetWorthSnapshotOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): NetWorthSnapshotEdge
+}
+
+"""All input for the create `NetWorthSnapshot` mutation."""
+input CreateNetWorthSnapshotInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `NetWorthSnapshot` to be created by this mutation."""
+  netWorthSnapshot: NetWorthSnapshotInput!
+}
+
+"""An input for mutations affecting `NetWorthSnapshot`"""
+input NetWorthSnapshotInput {
+  rowId: UUID
+  bookId: UUID!
+  date: Datetime!
+  totalAssets: BigFloat!
+  totalLiabilities: BigFloat!
+  netWorth: BigFloat!
+  breakdown: String
+  createdAt: Datetime
+}
+
+"""The output of our create `ReconciliationQueue` mutation."""
+type CreateReconciliationQueuePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ReconciliationQueue` that was created by this mutation."""
+  reconciliationQueue: ReconciliationQueue
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ReconciliationQueue`. May be used by Relay 1."""
+  reconciliationQueueEdge(
+    """The method to use when ordering `ReconciliationQueue`."""
+    orderBy: [ReconciliationQueueOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ReconciliationQueueEdge
+}
+
+"""All input for the create `ReconciliationQueue` mutation."""
+input CreateReconciliationQueueInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `ReconciliationQueue` to be created by this mutation."""
+  reconciliationQueue: ReconciliationQueueInput!
+}
+
+"""An input for mutations affecting `ReconciliationQueue`"""
+input ReconciliationQueueInput {
+  rowId: UUID
+  bookId: UUID!
+  journalEntryId: UUID!
+  status: ReconciliationStatus
+  reviewedAt: Datetime
+  reviewedBy: String
+  createdAt: Datetime
+}
+
+"""The output of our create `CryptoLot` mutation."""
+type CreateCryptoLotPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `CryptoLot` that was created by this mutation."""
+  cryptoLot: CryptoLot
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `CryptoLot`. May be used by Relay 1."""
+  cryptoLotEdge(
+    """The method to use when ordering `CryptoLot`."""
+    orderBy: [CryptoLotOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CryptoLotEdge
+}
+
+"""All input for the create `CryptoLot` mutation."""
+input CreateCryptoLotInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `CryptoLot` to be created by this mutation."""
+  cryptoLot: CryptoLotInput!
+}
+
+"""An input for mutations affecting `CryptoLot`"""
+input CryptoLotInput {
+  rowId: UUID
+  cryptoAssetId: UUID!
+  acquiredAt: Datetime!
+  quantity: BigFloat!
+  costPerUnit: BigFloat!
+  remainingQuantity: BigFloat!
+  disposedAt: Datetime
+  proceedsPerUnit: BigFloat
+  journalEntryId: UUID
+  createdAt: Datetime
+}
+
+"""The output of our create `Book` mutation."""
+type CreateBookPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Book` that was created by this mutation."""
+  book: Book
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Book`. May be used by Relay 1."""
+  bookEdge(
+    """The method to use when ordering `Book`."""
+    orderBy: [BookOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BookEdge
+}
+
+"""All input for the create `Book` mutation."""
+input CreateBookInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Book` to be created by this mutation."""
+  book: BookInput!
+}
+
+"""An input for mutations affecting `Book`"""
+input BookInput {
+  rowId: UUID
+  organizationId: String!
+  name: String!
+  type: BookType!
+  currency: String
+  fiscalYearStartMonth: Int
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""The output of our create `Budget` mutation."""
+type CreateBudgetPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Budget` that was created by this mutation."""
+  budget: Budget
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Budget`. May be used by Relay 1."""
+  budgetEdge(
+    """The method to use when ordering `Budget`."""
+    orderBy: [BudgetOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BudgetEdge
+}
+
+"""All input for the create `Budget` mutation."""
+input CreateBudgetInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Budget` to be created by this mutation."""
+  budget: BudgetInput!
+}
+
+"""An input for mutations affecting `Budget`"""
+input BudgetInput {
+  rowId: UUID
+  bookId: UUID!
+  accountId: UUID!
+  amount: BigFloat!
+  period: BudgetPeriod
+  rollover: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""The output of our create `CryptoAsset` mutation."""
+type CreateCryptoAssetPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `CryptoAsset` that was created by this mutation."""
+  cryptoAsset: CryptoAsset
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `CryptoAsset`. May be used by Relay 1."""
+  cryptoAssetEdge(
+    """The method to use when ordering `CryptoAsset`."""
+    orderBy: [CryptoAssetOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CryptoAssetEdge
+}
+
+"""All input for the create `CryptoAsset` mutation."""
+input CreateCryptoAssetInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `CryptoAsset` to be created by this mutation."""
+  cryptoAsset: CryptoAssetInput!
+}
+
+"""An input for mutations affecting `CryptoAsset`"""
+input CryptoAssetInput {
+  rowId: UUID
+  bookId: UUID!
+  symbol: String!
+  name: String!
+  walletAddress: String
+  network: String
+  balance: BigFloat
+  costBasisMethod: CostBasisMethod
+  lastSyncedAt: Datetime
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""The output of our create `JournalEntry` mutation."""
+type CreateJournalEntryPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `JournalEntry` that was created by this mutation."""
+  journalEntry: JournalEntry
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `JournalEntry`. May be used by Relay 1."""
+  journalEntryEdge(
+    """The method to use when ordering `JournalEntry`."""
+    orderBy: [JournalEntryOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): JournalEntryEdge
+}
+
+"""All input for the create `JournalEntry` mutation."""
+input CreateJournalEntryInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `JournalEntry` to be created by this mutation."""
+  journalEntry: JournalEntryInput!
+}
+
+"""An input for mutations affecting `JournalEntry`"""
+input JournalEntryInput {
+  rowId: UUID
+  bookId: UUID!
+  date: Datetime!
+  memo: String
+  source: JournalEntrySource
+  sourceReferenceId: String
+  isReviewed: Boolean
+  isReconciled: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""The output of our create `RecurringTransaction` mutation."""
+type CreateRecurringTransactionPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `RecurringTransaction` that was created by this mutation."""
+  recurringTransaction: RecurringTransaction
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `RecurringTransaction`. May be used by Relay 1."""
+  recurringTransactionEdge(
+    """The method to use when ordering `RecurringTransaction`."""
+    orderBy: [RecurringTransactionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): RecurringTransactionEdge
+}
+
+"""All input for the create `RecurringTransaction` mutation."""
+input CreateRecurringTransactionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `RecurringTransaction` to be created by this mutation."""
+  recurringTransaction: RecurringTransactionInput!
+}
+
+"""An input for mutations affecting `RecurringTransaction`"""
+input RecurringTransactionInput {
+  rowId: UUID
+  bookId: UUID!
+  name: String!
+  amount: BigFloat!
+  frequency: RecurringFrequency!
+  accountId: UUID!
+  counterAccountId: UUID
+  isAutoDetected: Boolean
+  isActive: Boolean
+  nextExpectedDate: Datetime
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""The output of our create `Account` mutation."""
+type CreateAccountPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Account` that was created by this mutation."""
+  account: Account
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Account`. May be used by Relay 1."""
+  accountEdge(
+    """The method to use when ordering `Account`."""
+    orderBy: [AccountOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): AccountEdge
+}
+
+"""All input for the create `Account` mutation."""
+input CreateAccountInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Account` to be created by this mutation."""
+  account: AccountInput!
+}
+
+"""An input for mutations affecting `Account`"""
+input AccountInput {
+  rowId: UUID
+  bookId: UUID!
+  parentId: UUID
+  name: String!
+  code: String
+  type: AccountType!
+  subType: AccountSubType
+  isPlaceholder: Boolean
+  isActive: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""The output of our create `ConnectedAccount` mutation."""
+type CreateConnectedAccountPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ConnectedAccount` that was created by this mutation."""
+  connectedAccount: ConnectedAccount
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ConnectedAccount`. May be used by Relay 1."""
+  connectedAccountEdge(
+    """The method to use when ordering `ConnectedAccount`."""
+    orderBy: [ConnectedAccountOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ConnectedAccountEdge
+}
+
+"""All input for the create `ConnectedAccount` mutation."""
+input CreateConnectedAccountInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `ConnectedAccount` to be created by this mutation."""
+  connectedAccount: ConnectedAccountInput!
+}
+
+"""An input for mutations affecting `ConnectedAccount`"""
+input ConnectedAccountInput {
+  rowId: UUID
+  bookId: UUID!
+  provider: ConnectedAccountProvider!
+  providerAccountId: String
+  accountId: UUID
+  institutionName: String
+  mask: String
+  status: ConnectedAccountStatus
+  accessToken: String
+  lastSyncedAt: Datetime
+  createdAt: Datetime
+}
+
+"""The output of our update `AccountMapping` mutation."""
+type UpdateAccountMappingPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `AccountMapping` that was updated by this mutation."""
+  accountMapping: AccountMapping
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `AccountMapping`. May be used by Relay 1."""
+  accountMappingEdge(
+    """The method to use when ordering `AccountMapping`."""
+    orderBy: [AccountMappingOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): AccountMappingEdge
+}
+
+"""All input for the `updateAccountMappingById` mutation."""
+input UpdateAccountMappingByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `AccountMapping` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `AccountMapping` being updated.
+  """
+  patch: AccountMappingPatch!
+}
+
+"""
+Represents an update to a `AccountMapping`. Fields that are set will be updated.
+"""
+input AccountMappingPatch {
+  rowId: UUID
+  bookId: UUID
+  eventType: String
+  debitAccountId: UUID
+  creditAccountId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the `updateAccountMapping` mutation."""
+input UpdateAccountMappingInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `AccountMapping` being updated.
+  """
+  patch: AccountMappingPatch!
+}
+
+"""The output of our update `JournalLine` mutation."""
+type UpdateJournalLinePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `JournalLine` that was updated by this mutation."""
+  journalLine: JournalLine
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `JournalLine`. May be used by Relay 1."""
+  journalLineEdge(
+    """The method to use when ordering `JournalLine`."""
+    orderBy: [JournalLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): JournalLineEdge
+}
+
+"""All input for the `updateJournalLineById` mutation."""
+input UpdateJournalLineByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `JournalLine` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `JournalLine` being updated.
+  """
+  patch: JournalLinePatch!
+}
+
+"""
+Represents an update to a `JournalLine`. Fields that are set will be updated.
+"""
+input JournalLinePatch {
+  rowId: UUID
+  journalEntryId: UUID
+  accountId: UUID
+  debit: BigFloat
+  credit: BigFloat
+  memo: String
+}
+
+"""All input for the `updateJournalLine` mutation."""
+input UpdateJournalLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `JournalLine` being updated.
+  """
+  patch: JournalLinePatch!
+}
+
+"""The output of our update `SavingsGoal` mutation."""
+type UpdateSavingsGoalPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `SavingsGoal` that was updated by this mutation."""
+  savingsGoal: SavingsGoal
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `SavingsGoal`. May be used by Relay 1."""
+  savingsGoalEdge(
+    """The method to use when ordering `SavingsGoal`."""
+    orderBy: [SavingsGoalOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): SavingsGoalEdge
+}
+
+"""All input for the `updateSavingsGoalById` mutation."""
+input UpdateSavingsGoalByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `SavingsGoal` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `SavingsGoal` being updated.
+  """
+  patch: SavingsGoalPatch!
+}
+
+"""
+Represents an update to a `SavingsGoal`. Fields that are set will be updated.
+"""
+input SavingsGoalPatch {
+  rowId: UUID
+  bookId: UUID
+  accountId: UUID
+  name: String
+  targetAmount: BigFloat
+  targetDate: Datetime
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the `updateSavingsGoal` mutation."""
+input UpdateSavingsGoalInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `SavingsGoal` being updated.
+  """
+  patch: SavingsGoalPatch!
+}
+
+"""The output of our update `NetWorthSnapshot` mutation."""
+type UpdateNetWorthSnapshotPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `NetWorthSnapshot` that was updated by this mutation."""
+  netWorthSnapshot: NetWorthSnapshot
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `NetWorthSnapshot`. May be used by Relay 1."""
+  netWorthSnapshotEdge(
+    """The method to use when ordering `NetWorthSnapshot`."""
+    orderBy: [NetWorthSnapshotOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): NetWorthSnapshotEdge
+}
+
+"""All input for the `updateNetWorthSnapshotById` mutation."""
+input UpdateNetWorthSnapshotByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `NetWorthSnapshot` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `NetWorthSnapshot` being updated.
+  """
+  patch: NetWorthSnapshotPatch!
+}
+
+"""
+Represents an update to a `NetWorthSnapshot`. Fields that are set will be updated.
+"""
+input NetWorthSnapshotPatch {
+  rowId: UUID
+  bookId: UUID
+  date: Datetime
+  totalAssets: BigFloat
+  totalLiabilities: BigFloat
+  netWorth: BigFloat
+  breakdown: String
+  createdAt: Datetime
+}
+
+"""All input for the `updateNetWorthSnapshot` mutation."""
+input UpdateNetWorthSnapshotInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `NetWorthSnapshot` being updated.
+  """
+  patch: NetWorthSnapshotPatch!
+}
+
+"""The output of our update `ReconciliationQueue` mutation."""
+type UpdateReconciliationQueuePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ReconciliationQueue` that was updated by this mutation."""
+  reconciliationQueue: ReconciliationQueue
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ReconciliationQueue`. May be used by Relay 1."""
+  reconciliationQueueEdge(
+    """The method to use when ordering `ReconciliationQueue`."""
+    orderBy: [ReconciliationQueueOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ReconciliationQueueEdge
+}
+
+"""All input for the `updateReconciliationQueueById` mutation."""
+input UpdateReconciliationQueueByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `ReconciliationQueue` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `ReconciliationQueue` being updated.
+  """
+  patch: ReconciliationQueuePatch!
+}
+
+"""
+Represents an update to a `ReconciliationQueue`. Fields that are set will be updated.
+"""
+input ReconciliationQueuePatch {
+  rowId: UUID
+  bookId: UUID
+  journalEntryId: UUID
+  status: ReconciliationStatus
+  reviewedAt: Datetime
+  reviewedBy: String
+  createdAt: Datetime
+}
+
+"""All input for the `updateReconciliationQueue` mutation."""
+input UpdateReconciliationQueueInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `ReconciliationQueue` being updated.
+  """
+  patch: ReconciliationQueuePatch!
+}
+
+"""The output of our update `CryptoLot` mutation."""
+type UpdateCryptoLotPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `CryptoLot` that was updated by this mutation."""
+  cryptoLot: CryptoLot
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `CryptoLot`. May be used by Relay 1."""
+  cryptoLotEdge(
+    """The method to use when ordering `CryptoLot`."""
+    orderBy: [CryptoLotOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CryptoLotEdge
+}
+
+"""All input for the `updateCryptoLotById` mutation."""
+input UpdateCryptoLotByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `CryptoLot` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `CryptoLot` being updated.
+  """
+  patch: CryptoLotPatch!
+}
+
+"""
+Represents an update to a `CryptoLot`. Fields that are set will be updated.
+"""
+input CryptoLotPatch {
+  rowId: UUID
+  cryptoAssetId: UUID
+  acquiredAt: Datetime
+  quantity: BigFloat
+  costPerUnit: BigFloat
+  remainingQuantity: BigFloat
+  disposedAt: Datetime
+  proceedsPerUnit: BigFloat
+  journalEntryId: UUID
+  createdAt: Datetime
+}
+
+"""All input for the `updateCryptoLot` mutation."""
+input UpdateCryptoLotInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `CryptoLot` being updated.
+  """
+  patch: CryptoLotPatch!
+}
+
+"""The output of our update `Book` mutation."""
+type UpdateBookPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Book` that was updated by this mutation."""
+  book: Book
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Book`. May be used by Relay 1."""
+  bookEdge(
+    """The method to use when ordering `Book`."""
+    orderBy: [BookOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BookEdge
+}
+
+"""All input for the `updateBookById` mutation."""
+input UpdateBookByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Book` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `Book` being updated.
+  """
+  patch: BookPatch!
+}
+
+"""Represents an update to a `Book`. Fields that are set will be updated."""
+input BookPatch {
+  rowId: UUID
+  organizationId: String
+  name: String
+  type: BookType
+  currency: String
+  fiscalYearStartMonth: Int
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the `updateBook` mutation."""
+input UpdateBookInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `Book` being updated.
+  """
+  patch: BookPatch!
+}
+
+"""The output of our update `Budget` mutation."""
+type UpdateBudgetPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Budget` that was updated by this mutation."""
+  budget: Budget
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Budget`. May be used by Relay 1."""
+  budgetEdge(
+    """The method to use when ordering `Budget`."""
+    orderBy: [BudgetOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BudgetEdge
+}
+
+"""All input for the `updateBudgetById` mutation."""
+input UpdateBudgetByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Budget` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `Budget` being updated.
+  """
+  patch: BudgetPatch!
+}
+
+"""
+Represents an update to a `Budget`. Fields that are set will be updated.
+"""
+input BudgetPatch {
+  rowId: UUID
+  bookId: UUID
+  accountId: UUID
+  amount: BigFloat
+  period: BudgetPeriod
+  rollover: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the `updateBudget` mutation."""
+input UpdateBudgetInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `Budget` being updated.
+  """
+  patch: BudgetPatch!
+}
+
+"""The output of our update `CryptoAsset` mutation."""
+type UpdateCryptoAssetPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `CryptoAsset` that was updated by this mutation."""
+  cryptoAsset: CryptoAsset
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `CryptoAsset`. May be used by Relay 1."""
+  cryptoAssetEdge(
+    """The method to use when ordering `CryptoAsset`."""
+    orderBy: [CryptoAssetOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CryptoAssetEdge
+}
+
+"""All input for the `updateCryptoAssetById` mutation."""
+input UpdateCryptoAssetByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `CryptoAsset` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `CryptoAsset` being updated.
+  """
+  patch: CryptoAssetPatch!
+}
+
+"""
+Represents an update to a `CryptoAsset`. Fields that are set will be updated.
+"""
+input CryptoAssetPatch {
+  rowId: UUID
+  bookId: UUID
+  symbol: String
+  name: String
+  walletAddress: String
+  network: String
+  balance: BigFloat
+  costBasisMethod: CostBasisMethod
+  lastSyncedAt: Datetime
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the `updateCryptoAsset` mutation."""
+input UpdateCryptoAssetInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `CryptoAsset` being updated.
+  """
+  patch: CryptoAssetPatch!
+}
+
+"""The output of our update `JournalEntry` mutation."""
+type UpdateJournalEntryPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `JournalEntry` that was updated by this mutation."""
+  journalEntry: JournalEntry
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `JournalEntry`. May be used by Relay 1."""
+  journalEntryEdge(
+    """The method to use when ordering `JournalEntry`."""
+    orderBy: [JournalEntryOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): JournalEntryEdge
+}
+
+"""All input for the `updateJournalEntryById` mutation."""
+input UpdateJournalEntryByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `JournalEntry` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `JournalEntry` being updated.
+  """
+  patch: JournalEntryPatch!
+}
+
+"""
+Represents an update to a `JournalEntry`. Fields that are set will be updated.
+"""
+input JournalEntryPatch {
+  rowId: UUID
+  bookId: UUID
+  date: Datetime
+  memo: String
+  source: JournalEntrySource
+  sourceReferenceId: String
+  isReviewed: Boolean
+  isReconciled: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the `updateJournalEntry` mutation."""
+input UpdateJournalEntryInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `JournalEntry` being updated.
+  """
+  patch: JournalEntryPatch!
+}
+
+"""The output of our update `RecurringTransaction` mutation."""
+type UpdateRecurringTransactionPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `RecurringTransaction` that was updated by this mutation."""
+  recurringTransaction: RecurringTransaction
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `RecurringTransaction`. May be used by Relay 1."""
+  recurringTransactionEdge(
+    """The method to use when ordering `RecurringTransaction`."""
+    orderBy: [RecurringTransactionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): RecurringTransactionEdge
+}
+
+"""All input for the `updateRecurringTransactionById` mutation."""
+input UpdateRecurringTransactionByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `RecurringTransaction` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `RecurringTransaction` being updated.
+  """
+  patch: RecurringTransactionPatch!
+}
+
+"""
+Represents an update to a `RecurringTransaction`. Fields that are set will be updated.
+"""
+input RecurringTransactionPatch {
+  rowId: UUID
+  bookId: UUID
+  name: String
+  amount: BigFloat
+  frequency: RecurringFrequency
+  accountId: UUID
+  counterAccountId: UUID
+  isAutoDetected: Boolean
+  isActive: Boolean
+  nextExpectedDate: Datetime
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the `updateRecurringTransaction` mutation."""
+input UpdateRecurringTransactionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `RecurringTransaction` being updated.
+  """
+  patch: RecurringTransactionPatch!
+}
+
+"""The output of our update `Account` mutation."""
+type UpdateAccountPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Account` that was updated by this mutation."""
+  account: Account
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Account`. May be used by Relay 1."""
+  accountEdge(
+    """The method to use when ordering `Account`."""
+    orderBy: [AccountOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): AccountEdge
+}
+
+"""All input for the `updateAccountById` mutation."""
+input UpdateAccountByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Account` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `Account` being updated.
+  """
+  patch: AccountPatch!
+}
+
+"""
+Represents an update to a `Account`. Fields that are set will be updated.
+"""
+input AccountPatch {
+  rowId: UUID
+  bookId: UUID
+  parentId: UUID
+  name: String
+  code: String
+  type: AccountType
+  subType: AccountSubType
+  isPlaceholder: Boolean
+  isActive: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the `updateAccount` mutation."""
+input UpdateAccountInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `Account` being updated.
+  """
+  patch: AccountPatch!
+}
+
+"""The output of our update `ConnectedAccount` mutation."""
+type UpdateConnectedAccountPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ConnectedAccount` that was updated by this mutation."""
+  connectedAccount: ConnectedAccount
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ConnectedAccount`. May be used by Relay 1."""
+  connectedAccountEdge(
+    """The method to use when ordering `ConnectedAccount`."""
+    orderBy: [ConnectedAccountOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ConnectedAccountEdge
+}
+
+"""All input for the `updateConnectedAccountById` mutation."""
+input UpdateConnectedAccountByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `ConnectedAccount` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `ConnectedAccount` being updated.
+  """
+  patch: ConnectedAccountPatch!
+}
+
+"""
+Represents an update to a `ConnectedAccount`. Fields that are set will be updated.
+"""
+input ConnectedAccountPatch {
+  rowId: UUID
+  bookId: UUID
+  provider: ConnectedAccountProvider
+  providerAccountId: String
+  accountId: UUID
+  institutionName: String
+  mask: String
+  status: ConnectedAccountStatus
+  accessToken: String
+  lastSyncedAt: Datetime
+  createdAt: Datetime
+}
+
+"""All input for the `updateConnectedAccount` mutation."""
+input UpdateConnectedAccountInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `ConnectedAccount` being updated.
+  """
+  patch: ConnectedAccountPatch!
+}
+
+"""The output of our delete `AccountMapping` mutation."""
+type DeleteAccountMappingPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `AccountMapping` that was deleted by this mutation."""
+  accountMapping: AccountMapping
+  deletedAccountMappingId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `AccountMapping`. May be used by Relay 1."""
+  accountMappingEdge(
+    """The method to use when ordering `AccountMapping`."""
+    orderBy: [AccountMappingOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): AccountMappingEdge
+}
+
+"""All input for the `deleteAccountMappingById` mutation."""
+input DeleteAccountMappingByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `AccountMapping` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteAccountMapping` mutation."""
+input DeleteAccountMappingInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `JournalLine` mutation."""
+type DeleteJournalLinePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `JournalLine` that was deleted by this mutation."""
+  journalLine: JournalLine
+  deletedJournalLineId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `JournalLine`. May be used by Relay 1."""
+  journalLineEdge(
+    """The method to use when ordering `JournalLine`."""
+    orderBy: [JournalLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): JournalLineEdge
+}
+
+"""All input for the `deleteJournalLineById` mutation."""
+input DeleteJournalLineByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `JournalLine` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteJournalLine` mutation."""
+input DeleteJournalLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `SavingsGoal` mutation."""
+type DeleteSavingsGoalPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `SavingsGoal` that was deleted by this mutation."""
+  savingsGoal: SavingsGoal
+  deletedSavingsGoalId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `SavingsGoal`. May be used by Relay 1."""
+  savingsGoalEdge(
+    """The method to use when ordering `SavingsGoal`."""
+    orderBy: [SavingsGoalOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): SavingsGoalEdge
+}
+
+"""All input for the `deleteSavingsGoalById` mutation."""
+input DeleteSavingsGoalByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `SavingsGoal` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteSavingsGoal` mutation."""
+input DeleteSavingsGoalInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `NetWorthSnapshot` mutation."""
+type DeleteNetWorthSnapshotPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `NetWorthSnapshot` that was deleted by this mutation."""
+  netWorthSnapshot: NetWorthSnapshot
+  deletedNetWorthSnapshotId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `NetWorthSnapshot`. May be used by Relay 1."""
+  netWorthSnapshotEdge(
+    """The method to use when ordering `NetWorthSnapshot`."""
+    orderBy: [NetWorthSnapshotOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): NetWorthSnapshotEdge
+}
+
+"""All input for the `deleteNetWorthSnapshotById` mutation."""
+input DeleteNetWorthSnapshotByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `NetWorthSnapshot` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteNetWorthSnapshot` mutation."""
+input DeleteNetWorthSnapshotInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `ReconciliationQueue` mutation."""
+type DeleteReconciliationQueuePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ReconciliationQueue` that was deleted by this mutation."""
+  reconciliationQueue: ReconciliationQueue
+  deletedReconciliationQueueId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ReconciliationQueue`. May be used by Relay 1."""
+  reconciliationQueueEdge(
+    """The method to use when ordering `ReconciliationQueue`."""
+    orderBy: [ReconciliationQueueOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ReconciliationQueueEdge
+}
+
+"""All input for the `deleteReconciliationQueueById` mutation."""
+input DeleteReconciliationQueueByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `ReconciliationQueue` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteReconciliationQueue` mutation."""
+input DeleteReconciliationQueueInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `CryptoLot` mutation."""
+type DeleteCryptoLotPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `CryptoLot` that was deleted by this mutation."""
+  cryptoLot: CryptoLot
+  deletedCryptoLotId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `CryptoLot`. May be used by Relay 1."""
+  cryptoLotEdge(
+    """The method to use when ordering `CryptoLot`."""
+    orderBy: [CryptoLotOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CryptoLotEdge
+}
+
+"""All input for the `deleteCryptoLotById` mutation."""
+input DeleteCryptoLotByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `CryptoLot` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteCryptoLot` mutation."""
+input DeleteCryptoLotInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `Book` mutation."""
+type DeleteBookPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Book` that was deleted by this mutation."""
+  book: Book
+  deletedBookId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Book`. May be used by Relay 1."""
+  bookEdge(
+    """The method to use when ordering `Book`."""
+    orderBy: [BookOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BookEdge
+}
+
+"""All input for the `deleteBookById` mutation."""
+input DeleteBookByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Book` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteBook` mutation."""
+input DeleteBookInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `Budget` mutation."""
+type DeleteBudgetPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Budget` that was deleted by this mutation."""
+  budget: Budget
+  deletedBudgetId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Budget`. May be used by Relay 1."""
+  budgetEdge(
+    """The method to use when ordering `Budget`."""
+    orderBy: [BudgetOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BudgetEdge
+}
+
+"""All input for the `deleteBudgetById` mutation."""
+input DeleteBudgetByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Budget` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteBudget` mutation."""
+input DeleteBudgetInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `CryptoAsset` mutation."""
+type DeleteCryptoAssetPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `CryptoAsset` that was deleted by this mutation."""
+  cryptoAsset: CryptoAsset
+  deletedCryptoAssetId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `CryptoAsset`. May be used by Relay 1."""
+  cryptoAssetEdge(
+    """The method to use when ordering `CryptoAsset`."""
+    orderBy: [CryptoAssetOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CryptoAssetEdge
+}
+
+"""All input for the `deleteCryptoAssetById` mutation."""
+input DeleteCryptoAssetByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `CryptoAsset` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteCryptoAsset` mutation."""
+input DeleteCryptoAssetInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `JournalEntry` mutation."""
+type DeleteJournalEntryPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `JournalEntry` that was deleted by this mutation."""
+  journalEntry: JournalEntry
+  deletedJournalEntryId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `JournalEntry`. May be used by Relay 1."""
+  journalEntryEdge(
+    """The method to use when ordering `JournalEntry`."""
+    orderBy: [JournalEntryOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): JournalEntryEdge
+}
+
+"""All input for the `deleteJournalEntryById` mutation."""
+input DeleteJournalEntryByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `JournalEntry` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteJournalEntry` mutation."""
+input DeleteJournalEntryInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `RecurringTransaction` mutation."""
+type DeleteRecurringTransactionPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `RecurringTransaction` that was deleted by this mutation."""
+  recurringTransaction: RecurringTransaction
+  deletedRecurringTransactionId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `RecurringTransaction`. May be used by Relay 1."""
+  recurringTransactionEdge(
+    """The method to use when ordering `RecurringTransaction`."""
+    orderBy: [RecurringTransactionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): RecurringTransactionEdge
+}
+
+"""All input for the `deleteRecurringTransactionById` mutation."""
+input DeleteRecurringTransactionByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `RecurringTransaction` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteRecurringTransaction` mutation."""
+input DeleteRecurringTransactionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `Account` mutation."""
+type DeleteAccountPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Account` that was deleted by this mutation."""
+  account: Account
+  deletedAccountId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Account`. May be used by Relay 1."""
+  accountEdge(
+    """The method to use when ordering `Account`."""
+    orderBy: [AccountOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): AccountEdge
+}
+
+"""All input for the `deleteAccountById` mutation."""
+input DeleteAccountByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Account` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteAccount` mutation."""
+input DeleteAccountInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `ConnectedAccount` mutation."""
+type DeleteConnectedAccountPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ConnectedAccount` that was deleted by this mutation."""
+  connectedAccount: ConnectedAccount
+  deletedConnectedAccountId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ConnectedAccount`. May be used by Relay 1."""
+  connectedAccountEdge(
+    """The method to use when ordering `ConnectedAccount`."""
+    orderBy: [ConnectedAccountOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ConnectedAccountEdge
+}
+
+"""All input for the `deleteConnectedAccountById` mutation."""
+input DeleteConnectedAccountByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `ConnectedAccount` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteConnectedAccount` mutation."""
+input DeleteConnectedAccountInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
