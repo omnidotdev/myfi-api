@@ -8,19 +8,20 @@ import { Elysia } from "elysia";
 import { schema } from "generated/graphql/schema.executable";
 import { useGrafast } from "grafast/envelop";
 
+import generateBudgetTracking from "lib/budgets/budgetTracking";
 import appConfig from "lib/config/app.config";
 import {
   CORS_ALLOWED_ORIGINS,
+  PORT,
   isDevEnv,
   isProdEnv,
-  PORT,
 } from "lib/config/env.config";
+import { cryptoRoutes } from "lib/crypto";
 import { dbPool, pgPool } from "lib/db/db";
 import createGraphqlContext from "lib/graphql/createGraphqlContext";
 import { armorPlugin, authenticationPlugin } from "lib/graphql/plugins";
 import { mantleWebhook } from "lib/mantle";
 import plaidRoutes from "lib/plaid/plaidRoutes";
-import generateBudgetTracking from "lib/budgets/budgetTracking";
 import {
   generateBalanceSheet,
   generateProfitAndLoss,
@@ -67,6 +68,7 @@ const app = new Elysia()
     }
   })
   .use(plaidRoutes)
+  .use(cryptoRoutes)
   .use(mantleWebhook)
   // Report REST endpoints
   .get("/api/reports/profit-and-loss", async ({ query }) => {
@@ -106,10 +108,10 @@ const app = new Elysia()
   .get("/api/budgets/tracking", async ({ query }) => {
     const { bookId, period } = query;
     if (!bookId) {
-      return new Response(
-        JSON.stringify({ error: "bookId is required" }),
-        { status: 400, headers: { "Content-Type": "application/json" } },
-      );
+      return new Response(JSON.stringify({ error: "bookId is required" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
     }
     return generateBudgetTracking({ bookId, period });
   });
