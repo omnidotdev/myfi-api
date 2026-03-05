@@ -9,15 +9,19 @@ import type { Observer } from "lib/graphql/plugins/authentication.plugin";
 export type { Observer } from "lib/graphql/plugins/authentication.plugin";
 
 let jwksCache: JWTVerifyGetKey | null = null;
+let jwksWarned = false;
 
 /**
  * Get the JWKS key set, caching it for reuse.
  */
 const getJwks = (): JWTVerifyGetKey | null => {
   if (!AUTH_JWKS_URL) {
-    console.warn(
-      "[Auth] AUTH_JWKS_URL is not configured; token verification is disabled",
-    );
+    if (!jwksWarned) {
+      console.warn(
+        "[Auth] AUTH_JWKS_URL is not configured; token verification is disabled",
+      );
+      jwksWarned = true;
+    }
 
     return null;
   }
