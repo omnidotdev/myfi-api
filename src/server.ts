@@ -21,6 +21,7 @@ import { dbPool, pgPool } from "lib/db/db";
 import createGraphqlContext from "lib/graphql/createGraphqlContext";
 import { armorPlugin, authenticationPlugin } from "lib/graphql/plugins";
 import { mantleWebhook } from "lib/mantle";
+import authMiddleware from "lib/middleware/auth.middleware";
 import {
   computeNetWorth,
   saveNetWorthSnapshot,
@@ -92,10 +93,30 @@ const app = new Elysia()
       };
     }
   })
+  // Public (no auth)
+  .use(mantleWebhook)
+  // GraphQL (has its own @envelop/generic-auth plugin)
+  .use(
+    yoga({
+      schema,
+      context: createGraphqlContext,
+      graphiql: isDevEnv,
+      plugins: [
+        ...armorPlugin,
+        authenticationPlugin,
+        isProdEnv && useDisableIntrospection(),
+        useParserCache(),
+        useValidationCache(),
+        useGrafast(),
+      ],
+    }),
+  )
+  // Auth boundary
+  .use(authMiddleware)
+  // Protected routes
   .use(plaidRoutes)
   .use(cryptoRoutes)
   .use(lotRoutes)
-  .use(mantleWebhook)
   .use(bookRoutes)
   .use(accountRoutes)
   .use(journalRoutes)
@@ -273,22 +294,6 @@ const app = new Elysia()
     }
     return generateTaxLossHarvesting({ bookId });
   });
-
-app.use(
-  yoga({
-    schema,
-    context: createGraphqlContext,
-    graphiql: isDevEnv,
-    plugins: [
-      ...armorPlugin,
-      authenticationPlugin,
-      isProdEnv && useDisableIntrospection(),
-      useParserCache(),
-      useValidationCache(),
-      useGrafast(),
-    ],
-  }),
-);
 
 app.listen(PORT);
 
