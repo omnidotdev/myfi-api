@@ -3,8 +3,9 @@ import { createRemoteJWKSet, jwtVerify } from "jose";
 import { AUTH_JWKS_URL } from "lib/config/env.config";
 
 import type { JWTVerifyGetKey } from "jose";
+import type { Observer } from "lib/graphql/plugins/authentication.plugin";
 
-// Re-export Observer from the GraphQL authentication plugin
+// Re-export Observer for consumers of this module
 export type { Observer } from "lib/graphql/plugins/authentication.plugin";
 
 let jwksCache: JWTVerifyGetKey | null = null;
@@ -13,7 +14,13 @@ let jwksCache: JWTVerifyGetKey | null = null;
  * Get the JWKS key set, caching it for reuse.
  */
 const getJwks = (): JWTVerifyGetKey | null => {
-  if (!AUTH_JWKS_URL) return null;
+  if (!AUTH_JWKS_URL) {
+    console.warn(
+      "[Auth] AUTH_JWKS_URL is not configured; token verification is disabled",
+    );
+
+    return null;
+  }
 
   if (!jwksCache) {
     jwksCache = createRemoteJWKSet(new URL(AUTH_JWKS_URL));
@@ -55,7 +62,7 @@ export const resolveUserFromToken = async (
       name: payload.name as string | undefined,
     };
   } catch (err) {
-    console.error("[Auth] Token verification failed:", err);
+    console.error("[Auth] Token verification failed:", (err as Error).message);
 
     return null;
   }
