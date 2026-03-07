@@ -32,6 +32,43 @@ const syncAllAccounts = async () => {
     }
   }
 
+  // Sync OFX Direct Connect accounts
+  for (const account of accounts) {
+    if (account.provider !== "ofx_direct" || !account.accessToken) continue;
+
+    try {
+      const { decryptToken } = await import("lib/encryption/tokenEncryption");
+      const { fetchOfxTransactions } = await import("lib/ofx/ofxClient");
+      const { importTransactions } = await import("lib/import");
+
+      const config = JSON.parse(decryptToken(account.accessToken));
+      const ninetyDaysAgo = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split("T")[0];
+
+      const transactions = await fetchOfxTransactions(config, ninetyDaysAgo);
+
+      await importTransactions({
+        bookId: account.bookId,
+        source: "ofx_import",
+        transactions,
+      });
+
+      await dbPool
+        .update(connectedAccountTable)
+        .set({ lastSyncedAt: new Date().toISOString() })
+        .where(eq(connectedAccountTable.id, account.id));
+
+      synced++;
+    } catch (err) {
+      errors++;
+      console.error(
+        `[ScheduledSync] Failed to sync OFX account ${account.id}:`,
+        err,
+      );
+    }
+  }
+
   console.info(
     `[ScheduledSync] Complete: ${synced} synced, ${errors} errors`,
   );
