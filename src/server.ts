@@ -18,6 +18,7 @@ import {
 } from "lib/config/env.config";
 import { cryptoRoutes, lotRoutes } from "lib/crypto";
 import { dbPool, pgPool } from "lib/db/db";
+import importRoutes from "lib/import/importRoutes";
 import createGraphqlContext from "lib/graphql/createGraphqlContext";
 import { armorPlugin, authenticationPlugin } from "lib/graphql/plugins";
 import { mantleWebhook } from "lib/mantle";
@@ -128,6 +129,7 @@ const app = new Elysia()
   .use(connectionRoutes)
   .use(mappingRoutes)
   .use(dashboardRoutes)
+  .use(importRoutes)
   // Report REST endpoints
   .get("/api/reports/profit-and-loss", async ({ query }) => {
     const { bookId, startDate, endDate } = query;
