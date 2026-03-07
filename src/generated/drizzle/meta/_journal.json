@@ -15,6 +15,13 @@
       "when": 1772902036862,
       "tag": "0001_sharp_medusa",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1772907247956,
+      "tag": "0002_burly_wildside",
+      "breakpoints": true
     }
   ]
 }

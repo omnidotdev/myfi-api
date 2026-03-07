@@ -16,7 +16,7 @@ import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
 export const connectedAccountProviderEnum = pgEnum(
   "connected_account_provider",
-  ["plaid", "mx", "wallet_connect", "exchange_api", "manual"],
+  ["plaid", "mx", "wallet_connect", "exchange_api", "ofx_direct", "manual"],
 );
 
 export const connectedAccountStatusEnum = pgEnum("connected_account_status", [

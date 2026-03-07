@@ -18,6 +18,8 @@ export const journalEntrySourceEnum = pgEnum("journal_entry_source", [
   "manual",
   "mantle_sync",
   "plaid_import",
+  "csv_import",
+  "ofx_import",
   "crypto_sync",
   "recurring",
 ]);
