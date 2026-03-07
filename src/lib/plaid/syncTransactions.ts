@@ -6,6 +6,7 @@ import {
   connectedAccountTable,
   journalEntryTable,
   journalLineTable,
+  reconciliationQueueTable,
 } from "lib/db/schema";
 import { decryptToken } from "lib/encryption/tokenEncryption";
 import plaidClient from "./plaidClient";
@@ -13,13 +14,66 @@ import plaidClient from "./plaidClient";
 import type { SelectConnectedAccount } from "lib/db/schema";
 
 /**
- * Look up the default debit and credit account IDs for a given event type.
- * Falls back to `null` if no mapping exists.
+ * Find the best account mapping for a Plaid transaction.
+ * Priority: merchant → Plaid category → generic income/expense.
  * @param bookId - Book to look up mappings for.
- * @param eventType - Event type key (e.g. "plaid_expense", "plaid_income").
+ * @param merchantName - Merchant name from Plaid transaction.
+ * @param plaidCategory - Primary personal finance category from Plaid.
+ * @param isIncome - Whether the transaction is income.
  */
-const getAccountMapping = async (bookId: string, eventType: string) => {
-  const [mapping] = await dbPool
+const findBestMapping = async (
+  bookId: string,
+  merchantName: string | null | undefined,
+  plaidCategory: string | null | undefined,
+  isIncome: boolean,
+) => {
+  // 1. Try merchant-specific mapping (e.g. "merchant:stripe")
+  if (merchantName) {
+    const normalized = merchantName.toLowerCase().trim();
+    const [merchantMapping] = await dbPool
+      .select()
+      .from(accountMappingTable)
+      .where(
+        and(
+          eq(accountMappingTable.bookId, bookId),
+          eq(accountMappingTable.eventType, `merchant:${normalized}`),
+        ),
+      );
+    if (merchantMapping) return merchantMapping;
+  }
+
+  // 2. Try Plaid category mapping (e.g. "category:FOOD_AND_DRINK.RESTAURANTS")
+  if (plaidCategory) {
+    const [fullCatMapping] = await dbPool
+      .select()
+      .from(accountMappingTable)
+      .where(
+        and(
+          eq(accountMappingTable.bookId, bookId),
+          eq(accountMappingTable.eventType, `category:${plaidCategory}`),
+        ),
+      );
+    if (fullCatMapping) return fullCatMapping;
+
+    // Try top-level category (e.g. "category:FOOD_AND_DRINK")
+    const topLevel = plaidCategory.split(".")[0];
+    if (topLevel !== plaidCategory) {
+      const [topCatMapping] = await dbPool
+        .select()
+        .from(accountMappingTable)
+        .where(
+          and(
+            eq(accountMappingTable.bookId, bookId),
+            eq(accountMappingTable.eventType, `category:${topLevel}`),
+          ),
+        );
+      if (topCatMapping) return topCatMapping;
+    }
+  }
+
+  // 3. Fall back to generic plaid_income / plaid_expense
+  const eventType = isIncome ? "plaid_income" : "plaid_expense";
+  const [genericMapping] = await dbPool
     .select()
     .from(accountMappingTable)
     .where(
@@ -29,7 +83,7 @@ const getAccountMapping = async (bookId: string, eventType: string) => {
       ),
     );
 
-  return mapping ?? null;
+  return genericMapping ?? null;
 };
 
 /**
@@ -41,7 +95,7 @@ const getAccountMapping = async (bookId: string, eventType: string) => {
 const syncTransactions = async (
   connectedAccount: Pick<
     SelectConnectedAccount,
-    "id" | "bookId" | "accessToken"
+    "id" | "bookId" | "accessToken" | "syncCursor"
   >,
 ) => {
   if (!connectedAccount.accessToken) {
@@ -50,7 +104,7 @@ const syncTransactions = async (
 
   const accessToken = decryptToken(connectedAccount.accessToken);
 
-  let cursor: string | undefined;
+  let cursor: string | undefined = connectedAccount.syncCursor ?? undefined;
   let hasMore = true;
   let addedCount = 0;
 
@@ -80,11 +134,13 @@ const syncTransactions = async (
       const amount = Math.abs(txn.amount);
       // Plaid uses negative values for income
       const isIncome = txn.amount < 0;
-      const eventType = isIncome ? "plaid_income" : "plaid_expense";
+      const plaidCategory = txn.personal_finance_category?.primary ?? null;
 
-      const mapping = await getAccountMapping(
+      const mapping = await findBestMapping(
         connectedAccount.bookId,
-        eventType,
+        txn.merchant_name,
+        plaidCategory,
+        isIncome,
       );
 
       // Skip transaction if no account mapping is configured
@@ -118,6 +174,12 @@ const syncTransactions = async (
         },
       ]);
 
+      await dbPool.insert(reconciliationQueueTable).values({
+        bookId: connectedAccount.bookId,
+        journalEntryId: entry.id,
+        status: "pending_review",
+      });
+
       addedCount++;
     }
 
@@ -128,7 +190,10 @@ const syncTransactions = async (
   // Update last synced timestamp
   await dbPool
     .update(connectedAccountTable)
-    .set({ lastSyncedAt: new Date().toISOString() })
+    .set({
+      lastSyncedAt: new Date().toISOString(),
+      syncCursor: cursor,
+    })
     .where(eq(connectedAccountTable.id, connectedAccount.id));
 
   return { addedCount };

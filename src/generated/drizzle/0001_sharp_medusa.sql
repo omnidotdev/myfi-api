@@ -1,0 +1,1 @@
+ALTER TABLE "connected_account" ADD COLUMN "sync_cursor" text;

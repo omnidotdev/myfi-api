@@ -27,6 +27,7 @@ import {
   saveNetWorthSnapshot,
 } from "lib/netWorth/netWorthService";
 import plaidRoutes from "lib/plaid/plaidRoutes";
+import startScheduledSync from "lib/plaid/scheduledSync";
 import {
   generateBalanceSheet,
   generateCashFlow,
@@ -38,6 +39,7 @@ import accountRoutes from "lib/routes/accountRoutes";
 import bookRoutes from "lib/routes/bookRoutes";
 import budgetRoutes from "lib/routes/budgetRoutes";
 import connectionRoutes from "lib/routes/connectionRoutes";
+import dashboardRoutes from "lib/routes/dashboardRoutes";
 import journalRoutes from "lib/routes/journalRoutes";
 import mappingRoutes from "lib/routes/mappingRoutes";
 import reconciliationRoutes from "lib/routes/reconciliationRoutes";
@@ -125,6 +127,7 @@ const app = new Elysia()
   .use(reconciliationRoutes)
   .use(connectionRoutes)
   .use(mappingRoutes)
+  .use(dashboardRoutes)
   // Report REST endpoints
   .get("/api/reports/profit-and-loss", async ({ query }) => {
     const { bookId, startDate, endDate } = query;
@@ -304,11 +307,14 @@ console.info(
   `🧘 ${appConfig.name} GraphQL Yoga API running at ${app.server?.url}graphql`,
 );
 
+const stopSync = startScheduledSync();
+
 /**
  * Graceful shutdown handler.
  */
 const shutdown = async (signal: string) => {
   console.info(`[Server] Received ${signal}, shutting down gracefully...`);
+  stopSync();
   app.stop();
   await pgPool.end();
   console.info("[Server] Shutdown complete");

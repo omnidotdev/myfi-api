@@ -2713,6 +2713,7 @@ type ConnectedAccount implements Node {
   accessToken: String
   lastSyncedAt: Datetime
   createdAt: Datetime
+  syncCursor: String
 
   """Reads a single `Account` that is related to this `ConnectedAccount`."""
   account: Account
@@ -4538,6 +4539,7 @@ input ConnectedAccountInput {
   accessToken: String
   lastSyncedAt: Datetime
   createdAt: Datetime
+  syncCursor: String
 }
 
 """The output of our update `AccountMapping` mutation."""
@@ -5457,6 +5459,7 @@ input ConnectedAccountPatch {
   accessToken: String
   lastSyncedAt: Datetime
   createdAt: Datetime
+  syncCursor: String
 }
 
 """All input for the `updateConnectedAccount` mutation."""

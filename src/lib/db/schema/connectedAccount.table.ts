@@ -44,6 +44,7 @@ export const connectedAccountTable = pgTable(
       mode: "string",
       withTimezone: true,
     }),
+    syncCursor: text("sync_cursor"),
     createdAt: generateDefaultDate(),
   },
   (table) => [

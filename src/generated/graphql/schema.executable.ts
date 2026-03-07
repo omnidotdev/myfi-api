@@ -1217,6 +1217,170 @@ const spec_journalEntry = {
   executor: executor
 };
 const journalEntryCodec = recordCodec(spec_journalEntry);
+const recurringTransactionIdentifier = sql.identifier("public", "recurring_transaction");
+const recurringFrequencyCodec = enumCodec({
+  name: "recurringFrequency",
+  identifier: sql.identifier("public", "recurring_frequency"),
+  values: ["weekly", "biweekly", "monthly", "quarterly", "yearly"],
+  description: undefined,
+  extensions: {
+    oid: "470028",
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "recurring_frequency"
+    }
+  }
+});
+const spec_recurringTransaction = {
+  name: "recurringTransaction",
+  identifier: recurringTransactionIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    name: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    amount: {
+      codec: TYPES.numeric,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    frequency: {
+      codec: recurringFrequencyCodec,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    account_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    counter_account_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    is_auto_detected: {
+      codec: TYPES.boolean,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    is_active: {
+      codec: TYPES.boolean,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    next_expected_date: {
+      codec: TYPES.timestamptz,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "470216",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "recurring_transaction"
+    }
+  },
+  executor: executor
+};
+const recurringTransactionCodec = recordCodec(spec_recurringTransaction);
 const connectedAccountProviderCodec = enumCodec({
   name: "connectedAccountProvider",
   identifier: sql.identifier("public", "connected_account_provider"),
@@ -1242,20 +1406,6 @@ const accountTypeCodec = enumCodec({
       serviceName: "main",
       schemaName: "public",
       name: "account_type"
-    }
-  }
-});
-const recurringFrequencyCodec = enumCodec({
-  name: "recurringFrequency",
-  identifier: sql.identifier("public", "recurring_frequency"),
-  values: ["weekly", "biweekly", "monthly", "quarterly", "yearly"],
-  description: undefined,
-  extensions: {
-    oid: "470028",
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "recurring_frequency"
     }
   }
 });
@@ -1542,6 +1692,16 @@ const spec_connectedAccount = {
         canUpdate: true,
         isIndexed: false
       }
+    },
+    sync_cursor: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
     }
   },
   extensions: {
@@ -1556,156 +1716,6 @@ const spec_connectedAccount = {
   executor: executor
 };
 const connectedAccountCodec = recordCodec(spec_connectedAccount);
-const recurringTransactionIdentifier = sql.identifier("public", "recurring_transaction");
-const spec_recurringTransaction = {
-  name: "recurringTransaction",
-  identifier: recurringTransactionIdentifier,
-  attributes: {
-    __proto__: null,
-    id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    book_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    name: {
-      codec: TYPES.text,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    amount: {
-      codec: TYPES.numeric,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    frequency: {
-      codec: recurringFrequencyCodec,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    account_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    counter_account_id: {
-      codec: TYPES.uuid,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    is_auto_detected: {
-      codec: TYPES.boolean,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    is_active: {
-      codec: TYPES.boolean,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    next_expected_date: {
-      codec: TYPES.timestamptz,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    created_at: {
-      codec: TYPES.timestamptz,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    updated_at: {
-      codec: TYPES.timestamptz,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    }
-  },
-  extensions: {
-    oid: "470216",
-    isTableLike: true,
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "recurring_transaction"
-    }
-  },
-  executor: executor
-};
-const recurringTransactionCodec = recordCodec(spec_recurringTransaction);
 const account_mappingUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -2033,14 +2043,14 @@ const registryConfig = {
     costBasisMethod: costBasisMethodCodec,
     journalEntry: journalEntryCodec,
     journalEntrySource: journalEntrySourceCodec,
+    recurringTransaction: recurringTransactionCodec,
+    recurringFrequency: recurringFrequencyCodec,
     connectedAccountProvider: connectedAccountProviderCodec,
     accountType: accountTypeCodec,
-    recurringFrequency: recurringFrequencyCodec,
     accountSubType: accountSubTypeCodec,
     connectedAccountStatus: connectedAccountStatusCodec,
     account: accountCodec,
-    connectedAccount: connectedAccountCodec,
-    recurringTransaction: recurringTransactionCodec
+    connectedAccount: connectedAccountCodec
   },
   pgResources: {
     __proto__: null,
@@ -3395,6 +3405,9 @@ function ConnectedAccountInput_maskApply(obj, val, info) {
 }
 function ConnectedAccountInput_accessTokenApply(obj, val, info) {
   obj.set("access_token", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function ConnectedAccountInput_syncCursorApply(obj, val, info) {
+  obj.set("sync_cursor", bakedInputRuntime(info.schema, info.field.type, val));
 }
 export const typeDefs = /* GraphQL */`"""The root query type which gives access points into the data universe."""
 type Query implements Node {
@@ -6111,6 +6124,7 @@ type ConnectedAccount implements Node {
   accessToken: String
   lastSyncedAt: Datetime
   createdAt: Datetime
+  syncCursor: String
 
   """Reads a single \`Account\` that is related to this \`ConnectedAccount\`."""
   account: Account
@@ -7936,6 +7950,7 @@ input ConnectedAccountInput {
   accessToken: String
   lastSyncedAt: Datetime
   createdAt: Datetime
+  syncCursor: String
 }
 
 """The output of our update \`AccountMapping\` mutation."""
@@ -8855,6 +8870,7 @@ input ConnectedAccountPatch {
   accessToken: String
   lastSyncedAt: Datetime
   createdAt: Datetime
+  syncCursor: String
 }
 
 """All input for the \`updateConnectedAccount\` mutation."""
@@ -11084,7 +11100,10 @@ export const objects = {
       providerAccountId($record) {
         return $record.get("provider_account_id");
       },
-      rowId: AccountMapping_rowIdPlan
+      rowId: AccountMapping_rowIdPlan,
+      syncCursor($record) {
+        return $record.get("sync_cursor");
+      }
     },
     planType($specifier) {
       const spec = Object.create(null);
@@ -12541,7 +12560,8 @@ export const inputObjects = {
       provider: ConnectedAccountInput_providerApply,
       providerAccountId: ConnectedAccountInput_providerAccountIdApply,
       rowId: AccountMappingInput_rowIdApply,
-      status: ReconciliationQueueInput_statusApply
+      status: ReconciliationQueueInput_statusApply,
+      syncCursor: ConnectedAccountInput_syncCursorApply
     }
   },
   ConnectedAccountPatch: {
@@ -12557,7 +12577,8 @@ export const inputObjects = {
       provider: ConnectedAccountInput_providerApply,
       providerAccountId: ConnectedAccountInput_providerAccountIdApply,
       rowId: AccountMappingInput_rowIdApply,
-      status: ReconciliationQueueInput_statusApply
+      status: ReconciliationQueueInput_statusApply,
+      syncCursor: ConnectedAccountInput_syncCursorApply
     }
   },
   ConnectedAccountProviderFilter: {
