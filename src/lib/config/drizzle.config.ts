@@ -9,16 +9,11 @@ const drizzleConfig = defineConfig({
   schema: "src/lib/db/schema",
   out: "src/generated/drizzle",
   casing: "snake_case",
+  migrations: {
+    schema: "public",
+  },
   dbCredentials: {
-    url: (() => {
-      const url = process.env.DATABASE_URL;
-
-      if (!url) {
-        throw new Error("DATABASE_URL environment variable is required");
-      }
-
-      return url;
-    })(),
+    url: process.env.DATABASE_URL!,
   },
 });
 
