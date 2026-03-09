@@ -1,7 +1,6 @@
 import {
   boolean,
   index,
-  pgEnum,
   pgTable,
   text,
   timestamp,
@@ -13,16 +12,6 @@ import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 import { bookTable } from "./book.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
-
-export const journalEntrySourceEnum = pgEnum("journal_entry_source", [
-  "manual",
-  "mantle_sync",
-  "plaid_import",
-  "csv_import",
-  "ofx_import",
-  "crypto_sync",
-  "recurring",
-]);
 
 export const journalEntryTable = pgTable(
   "journal_entry",
@@ -37,7 +26,7 @@ export const journalEntryTable = pgTable(
       withTimezone: true,
     }).notNull(),
     memo: text(),
-    source: journalEntrySourceEnum().notNull().default("manual"),
+    source: text().notNull().default("manual"),
     sourceReferenceId: text("source_reference_id"),
     isReviewed: boolean("is_reviewed").notNull().default(false),
     isReconciled: boolean("is_reconciled").notNull().default(false),

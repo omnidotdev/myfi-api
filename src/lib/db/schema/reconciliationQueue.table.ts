@@ -1,6 +1,5 @@
 import {
   index,
-  pgEnum,
   pgTable,
   text,
   timestamp,
@@ -14,13 +13,6 @@ import { journalEntryTable } from "./journalEntry.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
-export const reconciliationStatusEnum = pgEnum("reconciliation_status", [
-  "pending_review",
-  "approved",
-  "adjusted",
-  "rejected",
-]);
-
 export const reconciliationQueueTable = pgTable(
   "reconciliation_queue",
   {
@@ -31,7 +23,7 @@ export const reconciliationQueueTable = pgTable(
     journalEntryId: uuid("journal_entry_id")
       .notNull()
       .references(() => journalEntryTable.id, { onDelete: "cascade" }),
-    status: reconciliationStatusEnum().notNull().default("pending_review"),
+    status: text().notNull().default("pending_review"),
     reviewedAt: timestamp("reviewed_at", {
       precision: 6,
       mode: "string",

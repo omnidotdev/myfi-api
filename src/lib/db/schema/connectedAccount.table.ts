@@ -1,6 +1,5 @@
 import {
   index,
-  pgEnum,
   pgTable,
   text,
   timestamp,
@@ -14,17 +13,6 @@ import { bookTable } from "./book.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
-export const connectedAccountProviderEnum = pgEnum(
-  "connected_account_provider",
-  ["plaid", "mx", "wallet_connect", "exchange_api", "ofx_direct", "manual"],
-);
-
-export const connectedAccountStatusEnum = pgEnum("connected_account_status", [
-  "active",
-  "disconnected",
-  "error",
-]);
-
 export const connectedAccountTable = pgTable(
   "connected_account",
   {
@@ -32,12 +20,12 @@ export const connectedAccountTable = pgTable(
     bookId: uuid("book_id")
       .notNull()
       .references(() => bookTable.id, { onDelete: "cascade" }),
-    provider: connectedAccountProviderEnum().notNull(),
+    provider: text().notNull(),
     providerAccountId: text("provider_account_id"),
     accountId: uuid("account_id").references(() => accountTable.id),
     institutionName: text("institution_name"),
     mask: text(),
-    status: connectedAccountStatusEnum().notNull().default("active"),
+    status: text().notNull().default("active"),
     accessToken: text("access_token"),
     lastSyncedAt: timestamp("last_synced_at", {
       precision: 6,
