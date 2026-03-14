@@ -292,21 +292,4 @@ const listLots = async (cryptoAssetId: string): Promise<SelectCryptoLot[]> =>
     .where(eq(cryptoLotTable.cryptoAssetId, cryptoAssetId))
     .orderBy(asc(cryptoLotTable.acquiredAt));
 
-export {
-  acquireLot,
-  calculateAverageCost,
-  disposeLot,
-  getUnrealizedGains,
-  listLots,
-  selectLots,
-};
-
-export type {
-  AcquireLotParams,
-  CostBasisMethod,
-  DisposalResult,
-  DisposeLotParams,
-  LotDisposal,
-  UnrealizedLot,
-  UnrealizedResult,
-};
+export { acquireLot, disposeLot, getUnrealizedGains, listLots };

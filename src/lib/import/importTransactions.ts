@@ -150,6 +150,6 @@ const importTransactions = async (
   return { addedCount, skippedCount };
 };
 
-export { findBestMapping, importTransactions };
+export { importTransactions };
 
-export type { ImportOptions, ImportResult, ParsedTransaction };
+export type { ParsedTransaction };

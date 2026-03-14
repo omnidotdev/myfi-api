@@ -106,5 +106,3 @@ const fetchWalletBalance = async (
 };
 
 export { fetchWalletBalance, validateWalletAddress };
-
-export type { WalletBalance, WalletValidationResult };

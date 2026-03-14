@@ -134,5 +134,3 @@ const saveNetWorthSnapshot = async (params: {
 };
 
 export { computeNetWorth, saveNetWorthSnapshot };
-
-export default computeNetWorth;

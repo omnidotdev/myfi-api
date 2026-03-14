@@ -93,5 +93,3 @@ const fetchHistoricalPrice = async (
 };
 
 export { fetchHistoricalPrice, fetchPrices };
-
-export type { CoinPrice, HistoricalPriceData, PriceData };

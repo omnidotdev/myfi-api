@@ -1,10 +1,1 @@
-export {
-  findBestMapping,
-  importTransactions,
-} from "./importTransactions";
-
-export type {
-  ImportOptions,
-  ImportResult,
-  ParsedTransaction,
-} from "./importTransactions";
+export { importTransactions } from "./importTransactions";
