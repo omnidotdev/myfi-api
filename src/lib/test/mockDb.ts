@@ -33,7 +33,8 @@ const getNextResult = (): unknown[] => {
 };
 
 // Build a result array that also has chainable Drizzle methods
-const buildResult = (data: unknown[]) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const buildResult = (data: unknown[]): any => {
   const arr = [...data];
 
   return Object.assign(arr, {
@@ -41,9 +42,13 @@ const buildResult = (data: unknown[]) => {
       const result = [...data];
       return Object.assign(result, {
         orderBy: mock(() => [...data]),
+        groupBy: mock(() => [...data]),
       });
     }),
     orderBy: mock(() => [...data]),
+    groupBy: mock(() => [...data]),
+    innerJoin: mock(() => buildResult(data)),
+    leftJoin: mock(() => buildResult(data)),
   });
 };
 

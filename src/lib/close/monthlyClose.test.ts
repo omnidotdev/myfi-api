@@ -23,6 +23,15 @@ mock.module("lib/db/db", () => ({ dbPool: mockDbPool }));
 
 const { default: runMonthlyClose } = await import("./monthlyClose");
 
+const balancedTrialBalance = {
+  totalDebits: "100.0000",
+  totalCredits: "100.0000",
+};
+const unbalancedTrialBalance = {
+  totalDebits: "100.0000",
+  totalCredits: "50.0000",
+};
+
 const makeBook = (overrides: Record<string, unknown> = {}) => ({
   id: "book-1",
   name: "Personal",
@@ -50,12 +59,13 @@ describe("runMonthlyClose", () => {
     expect(mockInsertValues).not.toHaveBeenCalled();
   });
 
-  test("closes period when no pending items", async () => {
+  test("closes period when no pending items and balanced", async () => {
     setSelectResults([
       [makeBook()], // books
       [], // no existing period
       [], // no connected accounts
       [], // no pending items
+      [balancedTrialBalance], // trial balance OK
     ]);
 
     const results = await runMonthlyClose();
@@ -72,6 +82,7 @@ describe("runMonthlyClose", () => {
       [], // no existing period
       [], // no connected accounts
       [{ id: "q-1" }, { id: "q-2" }], // pending items
+      [balancedTrialBalance], // trial balance (still checked)
     ]);
 
     const results = await runMonthlyClose();
@@ -80,6 +91,22 @@ describe("runMonthlyClose", () => {
     expect(results[0]!.status).toBe("blocked");
     expect(results[0]!.blockers?.pendingReviewCount).toBe(2);
     expect(mockInsertValues).toHaveBeenCalled();
+  });
+
+  test("blocks period when trial balance is off", async () => {
+    setSelectResults([
+      [makeBook()], // books
+      [], // no existing period
+      [], // no connected accounts
+      [], // no pending items
+      [unbalancedTrialBalance], // trial balance off
+    ]);
+
+    const results = await runMonthlyClose();
+
+    expect(results).toHaveLength(1);
+    expect(results[0]!.status).toBe("blocked");
+    expect(results[0]!.blockers?.trialBalanceOff).toBe(true);
   });
 
   test("continues processing other books when one sync fails", async () => {
@@ -97,10 +124,12 @@ describe("runMonthlyClose", () => {
         },
       ], // connected accounts
       [], // no pending items
+      [balancedTrialBalance], // trial balance OK
       // Book 2
       [], // no existing period
       [], // no connected accounts
       [], // no pending items
+      [balancedTrialBalance], // trial balance OK
     ]);
 
     mockSyncTransactions.mockRejectedValueOnce(new Error("Sync failed"));
@@ -118,6 +147,7 @@ describe("runMonthlyClose", () => {
       [], // no existing period
       [], // no connected accounts
       [], // no pending items
+      [balancedTrialBalance], // trial balance OK
     ]);
 
     await runMonthlyClose();

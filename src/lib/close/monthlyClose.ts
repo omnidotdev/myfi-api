@@ -1,10 +1,12 @@
-import { and, eq } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 
 import { dbPool } from "lib/db/db";
 import {
   accountingPeriodTable,
   bookTable,
   connectedAccountTable,
+  journalEntryTable,
+  journalLineTable,
   reconciliationQueueTable,
 } from "lib/db/schema";
 import { saveNetWorthSnapshot } from "lib/netWorth/netWorthService";
@@ -16,7 +18,7 @@ type CloseResult = {
   year: number;
   month: number;
   status: "closed" | "blocked";
-  blockers?: { pendingReviewCount: number };
+  blockers?: { pendingReviewCount: number; trialBalanceOff?: boolean };
 };
 
 /**
@@ -115,12 +117,51 @@ const runMonthlyClose = async (): Promise<CloseResult[]> => {
         ),
       );
 
-    if (pendingItems.length > 0) {
-      // Period is blocked by pending review items
-      const blockers = { pendingReviewCount: pendingItems.length };
+    // Check trial balance (debits must equal credits)
+    const startDate = `${year}-${String(month).padStart(2, "0")}-01`;
+    const endDate =
+      month === 12
+        ? `${year + 1}-01-01`
+        : `${year}-${String(month + 1).padStart(2, "0")}-01`;
+
+    const [trialBalance] = await dbPool
+      .select({
+        totalDebits: sql<string>`coalesce(sum(${journalLineTable.debit}), 0)`,
+        totalCredits: sql<string>`coalesce(sum(${journalLineTable.credit}), 0)`,
+      })
+      .from(journalLineTable)
+      .innerJoin(
+        journalEntryTable,
+        eq(journalLineTable.journalEntryId, journalEntryTable.id),
+      )
+      .where(
+        and(
+          eq(journalEntryTable.bookId, book.id),
+          sql`${journalEntryTable.date} >= ${startDate}`,
+          sql`${journalEntryTable.date} < ${endDate}`,
+        ),
+      );
+
+    const trialBalanceOff =
+      trialBalance &&
+      Math.abs(
+        Number(trialBalance.totalDebits) - Number(trialBalance.totalCredits),
+      ) > 0.005;
+
+    if (pendingItems.length > 0 || trialBalanceOff) {
+      // Period is blocked
+      const blockers = {
+        pendingReviewCount: pendingItems.length,
+        ...(trialBalanceOff ? { trialBalanceOff: true } : {}),
+      };
+
+      const reasons = [];
+      if (pendingItems.length > 0)
+        reasons.push(`${pendingItems.length} pending items`);
+      if (trialBalanceOff) reasons.push("trial balance out of balance");
 
       console.info(
-        `[MonthlyClose] Book "${book.name}" blocked: ${blockers.pendingReviewCount} pending items`,
+        `[MonthlyClose] Book "${book.name}" blocked: ${reasons.join(", ")}`,
       );
 
       // Upsert accounting period as open with blockers
