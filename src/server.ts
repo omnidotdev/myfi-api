@@ -9,6 +9,8 @@ import { schema } from "generated/graphql/schema.executable";
 import { useGrafast } from "grafast/envelop";
 
 import generateBudgetTracking from "lib/budgets/budgetTracking";
+import { runMonthlyClose } from "lib/close";
+import startScheduledClose from "lib/close/scheduledClose";
 import appConfig from "lib/config/app.config";
 import {
   CORS_ALLOWED_ORIGINS,
@@ -18,16 +20,16 @@ import {
 } from "lib/config/env.config";
 import { cryptoRoutes, lotRoutes } from "lib/crypto";
 import { dbPool, pgPool } from "lib/db/db";
-import importRoutes from "lib/import/importRoutes";
-import ofxRoutes from "lib/ofx/ofxRoutes";
 import createGraphqlContext from "lib/graphql/createGraphqlContext";
 import { armorPlugin, authenticationPlugin } from "lib/graphql/plugins";
+import importRoutes from "lib/import/importRoutes";
 import { mantleWebhook } from "lib/mantle";
 import authMiddleware from "lib/middleware/auth.middleware";
 import {
   computeNetWorth,
   saveNetWorthSnapshot,
 } from "lib/netWorth/netWorthService";
+import ofxRoutes from "lib/ofx/ofxRoutes";
 import plaidRoutes from "lib/plaid/plaidRoutes";
 import startScheduledSync from "lib/plaid/scheduledSync";
 import {
@@ -304,6 +306,11 @@ const app = new Elysia()
       });
     }
     return generateTaxLossHarvesting({ bookId });
+  })
+  // Job trigger endpoints
+  .post("/api/jobs/monthly-close", async () => {
+    const results = await runMonthlyClose();
+    return { results };
   });
 
 app.listen(PORT);
@@ -316,6 +323,7 @@ console.info(
 );
 
 const stopSync = startScheduledSync();
+const stopClose = startScheduledClose();
 
 /**
  * Graceful shutdown handler.
@@ -323,6 +331,7 @@ const stopSync = startScheduledSync();
 const shutdown = async (signal: string) => {
   console.info(`[Server] Received ${signal}, shutting down gracefully...`);
   stopSync();
+  stopClose();
   app.stop();
   await pgPool.end();
   console.info("[Server] Shutdown complete");
