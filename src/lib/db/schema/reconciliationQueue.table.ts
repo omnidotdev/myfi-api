@@ -1,5 +1,7 @@
 import {
   index,
+  integer,
+  numeric,
   pgTable,
   text,
   timestamp,
@@ -8,6 +10,7 @@ import {
 } from "drizzle-orm/pg-core";
 
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
+import { accountTable } from "./account.table";
 import { bookTable } from "./book.table";
 import { journalEntryTable } from "./journalEntry.table";
 
@@ -30,6 +33,17 @@ export const reconciliationQueueTable = pgTable(
       withTimezone: true,
     }),
     reviewedBy: text("reviewed_by"),
+    categorizationSource: text("categorization_source"),
+    confidence: numeric({ precision: 3, scale: 2 }),
+    suggestedDebitAccountId: uuid("suggested_debit_account_id").references(
+      () => accountTable.id,
+    ),
+    suggestedCreditAccountId: uuid("suggested_credit_account_id").references(
+      () => accountTable.id,
+    ),
+    priority: integer().notNull().default(0),
+    periodYear: integer("period_year"),
+    periodMonth: integer("period_month"),
     createdAt: generateDefaultDate(),
   },
   (table) => [
