@@ -20,7 +20,7 @@ type ParsedTransaction = {
 
 type ImportOptions = {
   bookId: string;
-  source: InsertJournalEntry["source"];
+  source: NonNullable<InsertJournalEntry["source"]>;
   transactions: ParsedTransaction[];
 };
 

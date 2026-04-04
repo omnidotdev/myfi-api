@@ -13,7 +13,7 @@ const plaidRoutes = new Elysia({ prefix: "/api/plaid" })
   .post(
     "/create-link-token",
     async ({ body }) => {
-      const { userId, bookId } = body;
+      const { userId } = body;
 
       const response = await plaidClient.linkTokenCreate({
         user: { client_user_id: userId },
@@ -21,7 +21,6 @@ const plaidRoutes = new Elysia({ prefix: "/api/plaid" })
         products: [Products.Transactions],
         country_codes: [CountryCode.Us],
         language: "en",
-        metadata: { bookId },
       });
 
       return { linkToken: response.data.link_token };

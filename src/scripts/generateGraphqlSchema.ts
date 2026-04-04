@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 
 import { exportSchema } from "graphile-export";
 import { printSchema } from "graphql";
@@ -22,6 +22,10 @@ const generateGraphqlSchema = async () => {
   await exportSchema(schema, schemaFilePath, {
     mode: "typeDefs",
   });
+
+  // prepend @ts-nocheck to suppress TS errors in generated code
+  const content = readFileSync(schemaFilePath, "utf-8");
+  writeFileSync(schemaFilePath, `// @ts-nocheck\n${content}`);
 
   writeFileSync(`${generatedDirectory}/schema.graphql`, printSchema(schema));
 

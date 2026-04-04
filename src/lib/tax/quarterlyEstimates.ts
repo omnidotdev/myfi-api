@@ -31,9 +31,6 @@ type QuarterlyEstimatesReport = {
   generatedAt: string;
 };
 
-/** Self-employment tax rate (Social Security 12.4% + Medicare 2.9%) */
-const _SE_TAX_RATE = 0.153;
-
 /** SE income factor (92.35% of net earnings subject to SE tax) */
 const SE_INCOME_FACTOR = 0.9235;
 
