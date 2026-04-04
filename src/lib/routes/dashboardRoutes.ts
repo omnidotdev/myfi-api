@@ -1,8 +1,9 @@
-import { eq, sql } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { Elysia } from "elysia";
 
 import { dbPool } from "lib/db/db";
 import {
+  accountingPeriodTable,
   accountTable,
   bookTable,
   journalEntryTable,
@@ -87,5 +88,64 @@ const dashboardRoutes = new Elysia({ prefix: "/api/dashboard" }).get(
     };
   },
 );
+
+// Close status for all books in an organization
+dashboardRoutes.get("/close-status", async ({ query, set }) => {
+  const { organizationId } = query;
+
+  if (!organizationId) {
+    set.status = 400;
+    return { error: "organizationId is required" };
+  }
+
+  const books = await dbPool
+    .select()
+    .from(bookTable)
+    .where(eq(bookTable.organizationId, organizationId));
+
+  // Target the previous month
+  const now = new Date();
+  const targetDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+  const year = targetDate.getFullYear();
+  const month = targetDate.getMonth() + 1;
+
+  const statuses = [];
+
+  for (const book of books) {
+    const [period] = await dbPool
+      .select()
+      .from(accountingPeriodTable)
+      .where(
+        and(
+          eq(accountingPeriodTable.bookId, book.id),
+          eq(accountingPeriodTable.year, year),
+          eq(accountingPeriodTable.month, month),
+        ),
+      );
+
+    const [pendingResult] = await dbPool
+      .select({ count: sql<number>`count(*)` })
+      .from(reconciliationQueueTable)
+      .where(
+        and(
+          eq(reconciliationQueueTable.bookId, book.id),
+          eq(reconciliationQueueTable.status, "pending_review"),
+        ),
+      );
+
+    statuses.push({
+      bookId: book.id,
+      bookName: book.name,
+      year,
+      month,
+      periodStatus: period?.status ?? "open",
+      closedAt: period?.closedAt ?? null,
+      pendingReviewCount: Number(pendingResult?.count ?? 0),
+      blockers: period?.blockers ?? null,
+    });
+  }
+
+  return { statuses, year, month };
+});
 
 export default dashboardRoutes;
