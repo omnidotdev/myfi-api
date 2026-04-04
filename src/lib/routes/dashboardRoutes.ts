@@ -3,8 +3,8 @@ import { Elysia } from "elysia";
 
 import { dbPool } from "lib/db/db";
 import {
-  accountingPeriodTable,
   accountTable,
+  accountingPeriodTable,
   bookTable,
   journalEntryTable,
   journalLineTable,

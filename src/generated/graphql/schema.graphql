@@ -17,6 +17,9 @@ type Query implements Node {
     id: ID!
   ): Node
 
+  """Get a single `_DrizzleMigration`."""
+  _drizzleMigration(rowId: Int!): _DrizzleMigration
+
   """Get a single `AccountMapping`."""
   accountMapping(rowId: UUID!): AccountMapping
 
@@ -29,8 +32,8 @@ type Query implements Node {
   """Get a single `NetWorthSnapshot`."""
   netWorthSnapshot(rowId: UUID!): NetWorthSnapshot
 
-  """Get a single `ReconciliationQueue`."""
-  reconciliationQueue(rowId: UUID!): ReconciliationQueue
+  """Get a single `AccountingPeriod`."""
+  accountingPeriod(rowId: UUID!): AccountingPeriod
 
   """Get a single `CryptoLot`."""
   cryptoLot(rowId: UUID!): CryptoLot
@@ -44,17 +47,31 @@ type Query implements Node {
   """Get a single `CryptoAsset`."""
   cryptoAsset(rowId: UUID!): CryptoAsset
 
+  """Get a single `CategorizationRule`."""
+  categorizationRule(rowId: UUID!): CategorizationRule
+
   """Get a single `JournalEntry`."""
   journalEntry(rowId: UUID!): JournalEntry
 
   """Get a single `RecurringTransaction`."""
   recurringTransaction(rowId: UUID!): RecurringTransaction
 
+  """Get a single `ReconciliationQueue`."""
+  reconciliationQueue(rowId: UUID!): ReconciliationQueue
+
   """Get a single `Account`."""
   account(rowId: UUID!): Account
 
   """Get a single `ConnectedAccount`."""
   connectedAccount(rowId: UUID!): ConnectedAccount
+
+  """Reads a single `_DrizzleMigration` using its globally unique `ID`."""
+  _drizzleMigrationById(
+    """
+    The globally unique `ID` to be used in selecting a single `_DrizzleMigration`.
+    """
+    id: ID!
+  ): _DrizzleMigration
 
   """Reads a single `AccountMapping` using its globally unique `ID`."""
   accountMappingById(
@@ -88,13 +105,13 @@ type Query implements Node {
     id: ID!
   ): NetWorthSnapshot
 
-  """Reads a single `ReconciliationQueue` using its globally unique `ID`."""
-  reconciliationQueueById(
+  """Reads a single `AccountingPeriod` using its globally unique `ID`."""
+  accountingPeriodById(
     """
-    The globally unique `ID` to be used in selecting a single `ReconciliationQueue`.
+    The globally unique `ID` to be used in selecting a single `AccountingPeriod`.
     """
     id: ID!
-  ): ReconciliationQueue
+  ): AccountingPeriod
 
   """Reads a single `CryptoLot` using its globally unique `ID`."""
   cryptoLotById(
@@ -122,6 +139,14 @@ type Query implements Node {
     id: ID!
   ): CryptoAsset
 
+  """Reads a single `CategorizationRule` using its globally unique `ID`."""
+  categorizationRuleById(
+    """
+    The globally unique `ID` to be used in selecting a single `CategorizationRule`.
+    """
+    id: ID!
+  ): CategorizationRule
+
   """Reads a single `JournalEntry` using its globally unique `ID`."""
   journalEntryById(
     """
@@ -138,6 +163,14 @@ type Query implements Node {
     id: ID!
   ): RecurringTransaction
 
+  """Reads a single `ReconciliationQueue` using its globally unique `ID`."""
+  reconciliationQueueById(
+    """
+    The globally unique `ID` to be used in selecting a single `ReconciliationQueue`.
+    """
+    id: ID!
+  ): ReconciliationQueue
+
   """Reads a single `Account` using its globally unique `ID`."""
   accountById(
     """The globally unique `ID` to be used in selecting a single `Account`."""
@@ -151,6 +184,40 @@ type Query implements Node {
     """
     id: ID!
   ): ConnectedAccount
+
+  """Reads and enables pagination through a set of `_DrizzleMigration`."""
+  _drizzleMigrations(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: _DrizzleMigrationCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: _DrizzleMigrationFilter
+
+    """The method to use when ordering `_DrizzleMigration`."""
+    orderBy: [_DrizzleMigrationOrderBy!] = [PRIMARY_KEY_ASC]
+  ): _DrizzleMigrationConnection
 
   """Reads and enables pagination through a set of `AccountMapping`."""
   accountMappings(
@@ -288,8 +355,8 @@ type Query implements Node {
     orderBy: [NetWorthSnapshotOrderBy!] = [PRIMARY_KEY_ASC]
   ): NetWorthSnapshotConnection
 
-  """Reads and enables pagination through a set of `ReconciliationQueue`."""
-  reconciliationQueues(
+  """Reads and enables pagination through a set of `AccountingPeriod`."""
+  accountingPeriods(
     """Only read the first `n` values of the set."""
     first: Int
 
@@ -311,16 +378,16 @@ type Query implements Node {
     """
     A condition to be used in determining which values should be returned by the collection.
     """
-    condition: ReconciliationQueueCondition
+    condition: AccountingPeriodCondition
 
     """
     A filter to be used in determining which values should be returned by the collection.
     """
-    filter: ReconciliationQueueFilter
+    filter: AccountingPeriodFilter
 
-    """The method to use when ordering `ReconciliationQueue`."""
-    orderBy: [ReconciliationQueueOrderBy!] = [PRIMARY_KEY_ASC]
-  ): ReconciliationQueueConnection
+    """The method to use when ordering `AccountingPeriod`."""
+    orderBy: [AccountingPeriodOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AccountingPeriodConnection
 
   """Reads and enables pagination through a set of `CryptoLot`."""
   cryptoLots(
@@ -458,6 +525,40 @@ type Query implements Node {
     orderBy: [CryptoAssetOrderBy!] = [PRIMARY_KEY_ASC]
   ): CryptoAssetConnection
 
+  """Reads and enables pagination through a set of `CategorizationRule`."""
+  categorizationRules(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CategorizationRuleCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CategorizationRuleFilter
+
+    """The method to use when ordering `CategorizationRule`."""
+    orderBy: [CategorizationRuleOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CategorizationRuleConnection
+
   """Reads and enables pagination through a set of `JournalEntry`."""
   journalEntries(
     """Only read the first `n` values of the set."""
@@ -525,6 +626,40 @@ type Query implements Node {
     """The method to use when ordering `RecurringTransaction`."""
     orderBy: [RecurringTransactionOrderBy!] = [PRIMARY_KEY_ASC]
   ): RecurringTransactionConnection
+
+  """Reads and enables pagination through a set of `ReconciliationQueue`."""
+  reconciliationQueues(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ReconciliationQueueCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ReconciliationQueueFilter
+
+    """The method to use when ordering `ReconciliationQueue`."""
+    orderBy: [ReconciliationQueueOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ReconciliationQueueConnection
 
   """Reads and enables pagination through a set of `Account`."""
   accounts(
@@ -602,6 +737,23 @@ interface Node {
   """
   id: ID!
 }
+
+type _DrizzleMigration implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: Int!
+  hash: String!
+  createdAt: BigInt
+}
+
+"""
+A signed eight-byte integer. The upper big integer values are greater than the
+max value for a JavaScript number. Therefore all big integers will be output as
+strings and not numbers.
+"""
+scalar BigInt
 
 type AccountMapping implements Node {
   """
@@ -993,6 +1145,74 @@ type Book implements Node {
     """The method to use when ordering `SavingsGoal`."""
     orderBy: [SavingsGoalOrderBy!] = [PRIMARY_KEY_ASC]
   ): SavingsGoalConnection!
+
+  """Reads and enables pagination through a set of `AccountingPeriod`."""
+  accountingPeriods(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AccountingPeriodCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: AccountingPeriodFilter
+
+    """The method to use when ordering `AccountingPeriod`."""
+    orderBy: [AccountingPeriodOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AccountingPeriodConnection!
+
+  """Reads and enables pagination through a set of `CategorizationRule`."""
+  categorizationRules(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CategorizationRuleCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CategorizationRuleFilter
+
+    """The method to use when ordering `CategorizationRule`."""
+    orderBy: [CategorizationRuleOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CategorizationRuleConnection!
 }
 
 enum BookType {
@@ -1476,6 +1696,18 @@ input BookFilter {
 
   """Some related `savingsGoals` exist."""
   savingsGoalsExist: Boolean
+
+  """Filter by the object’s `accountingPeriods` relation."""
+  accountingPeriods: BookToManyAccountingPeriodFilter
+
+  """Some related `accountingPeriods` exist."""
+  accountingPeriodsExist: Boolean
+
+  """Filter by the object’s `categorizationRules` relation."""
+  categorizationRules: BookToManyCategorizationRuleFilter
+
+  """Some related `categorizationRules` exist."""
+  categorizationRulesExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [BookFilter!]
@@ -2198,6 +2430,18 @@ input ReconciliationQueueFilter {
   """Filter by the object’s `journalEntry` relation."""
   journalEntry: JournalEntryFilter
 
+  """Filter by the object’s `suggestedCreditAccount` relation."""
+  suggestedCreditAccount: AccountFilter
+
+  """A related `suggestedCreditAccount` exists."""
+  suggestedCreditAccountExists: Boolean
+
+  """Filter by the object’s `suggestedDebitAccount` relation."""
+  suggestedDebitAccount: AccountFilter
+
+  """A related `suggestedDebitAccount` exists."""
+  suggestedDebitAccountExists: Boolean
+
   """Checks for all expressions in this list."""
   and: [ReconciliationQueueFilter!]
 
@@ -2353,6 +2597,152 @@ input SavingsGoalFilter {
 
   """Negates the expression."""
   not: SavingsGoalFilter
+}
+
+"""
+A filter to be used against many `AccountingPeriod` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyAccountingPeriodFilter {
+  """
+  Every related `AccountingPeriod` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: AccountingPeriodFilter
+
+  """
+  Some related `AccountingPeriod` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: AccountingPeriodFilter
+
+  """
+  No related `AccountingPeriod` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: AccountingPeriodFilter
+}
+
+"""
+A filter to be used against `AccountingPeriod` object types. All fields are combined with a logical ‘and.’
+"""
+input AccountingPeriodFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `bookId` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s `year` field."""
+  year: IntFilter
+
+  """Filter by the object’s `month` field."""
+  month: IntFilter
+
+  """Filter by the object’s `status` field."""
+  status: StringFilter
+
+  """Filter by the object’s `book` relation."""
+  book: BookFilter
+
+  """Checks for all expressions in this list."""
+  and: [AccountingPeriodFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [AccountingPeriodFilter!]
+
+  """Negates the expression."""
+  not: AccountingPeriodFilter
+}
+
+"""
+A filter to be used against Int fields. All fields are combined with a logical ‘and.’
+"""
+input IntFilter {
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: Int
+
+  """Not equal to the specified value."""
+  notEqualTo: Int
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: Int
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: Int
+
+  """Included in the specified list."""
+  in: [Int!]
+
+  """Not included in the specified list."""
+  notIn: [Int!]
+
+  """Less than the specified value."""
+  lessThan: Int
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: Int
+
+  """Greater than the specified value."""
+  greaterThan: Int
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: Int
+}
+
+"""
+A filter to be used against many `CategorizationRule` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyCategorizationRuleFilter {
+  """
+  Every related `CategorizationRule` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: CategorizationRuleFilter
+
+  """
+  Some related `CategorizationRule` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: CategorizationRuleFilter
+
+  """
+  No related `CategorizationRule` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: CategorizationRuleFilter
+}
+
+"""
+A filter to be used against `CategorizationRule` object types. All fields are combined with a logical ‘and.’
+"""
+input CategorizationRuleFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `bookId` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s `matchField` field."""
+  matchField: StringFilter
+
+  """Filter by the object’s `book` relation."""
+  book: BookFilter
+
+  """Filter by the object’s `creditAccount` relation."""
+  creditAccount: AccountFilter
+
+  """Filter by the object’s `debitAccount` relation."""
+  debitAccount: AccountFilter
+
+  """Checks for all expressions in this list."""
+  and: [CategorizationRuleFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [CategorizationRuleFilter!]
+
+  """Negates the expression."""
+  not: CategorizationRuleFilter
 }
 
 """
@@ -3118,6 +3508,13 @@ type ReconciliationQueue implements Node {
   reviewedAt: Datetime
   reviewedBy: String
   createdAt: Datetime
+  categorizationSource: String
+  confidence: BigFloat
+  suggestedDebitAccountId: UUID
+  suggestedCreditAccountId: UUID
+  priority: Int!
+  periodYear: Int
+  periodMonth: Int
 
   """Reads a single `Book` that is related to this `ReconciliationQueue`."""
   book: Book
@@ -3126,6 +3523,16 @@ type ReconciliationQueue implements Node {
   Reads a single `JournalEntry` that is related to this `ReconciliationQueue`.
   """
   journalEntry: JournalEntry
+
+  """
+  Reads a single `Account` that is related to this `ReconciliationQueue`.
+  """
+  suggestedCreditAccount: Account
+
+  """
+  Reads a single `Account` that is related to this `ReconciliationQueue`.
+  """
+  suggestedDebitAccount: Account
 }
 
 """A `ReconciliationQueue` edge in the connection."""
@@ -3324,6 +3731,247 @@ enum SavingsGoalOrderBy {
   BOOK_ID_DESC
 }
 
+"""A connection to a list of `AccountingPeriod` values."""
+type AccountingPeriodConnection {
+  """A list of `AccountingPeriod` objects."""
+  nodes: [AccountingPeriod]!
+
+  """
+  A list of edges which contains the `AccountingPeriod` and cursor to aid in pagination.
+  """
+  edges: [AccountingPeriodEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `AccountingPeriod` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+type AccountingPeriod implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  year: Int!
+  month: Int!
+  status: String!
+  closedAt: Datetime
+  closedBy: String
+  reopenedAt: Datetime
+  blockers: JSON
+  createdAt: Datetime
+
+  """Reads a single `Book` that is related to this `AccountingPeriod`."""
+  book: Book
+}
+
+"""
+Represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+"""A `AccountingPeriod` edge in the connection."""
+type AccountingPeriodEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `AccountingPeriod` at the end of the edge."""
+  node: AccountingPeriod
+}
+
+"""
+A condition to be used against `AccountingPeriod` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input AccountingPeriodCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `bookId` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s `year` field."""
+  year: Int
+
+  """Checks for equality with the object’s `month` field."""
+  month: Int
+
+  """Checks for equality with the object’s `status` field."""
+  status: String
+}
+
+"""Methods to use when ordering `AccountingPeriod`."""
+enum AccountingPeriodOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+  YEAR_ASC
+  YEAR_DESC
+  MONTH_ASC
+  MONTH_DESC
+  STATUS_ASC
+  STATUS_DESC
+}
+
+"""A connection to a list of `CategorizationRule` values."""
+type CategorizationRuleConnection {
+  """A list of `CategorizationRule` objects."""
+  nodes: [CategorizationRule]!
+
+  """
+  A list of edges which contains the `CategorizationRule` and cursor to aid in pagination.
+  """
+  edges: [CategorizationRuleEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `CategorizationRule` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+type CategorizationRule implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  name: String!
+  matchField: String!
+  matchType: String!
+  matchValue: String!
+  amountMin: BigFloat
+  amountMax: BigFloat
+  debitAccountId: UUID!
+  creditAccountId: UUID!
+  confidence: BigFloat!
+  priority: Int!
+  hitCount: Int!
+  lastHitAt: Datetime
+  createdAt: Datetime
+
+  """Reads a single `Book` that is related to this `CategorizationRule`."""
+  book: Book
+
+  """Reads a single `Account` that is related to this `CategorizationRule`."""
+  creditAccount: Account
+
+  """Reads a single `Account` that is related to this `CategorizationRule`."""
+  debitAccount: Account
+}
+
+"""A `CategorizationRule` edge in the connection."""
+type CategorizationRuleEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `CategorizationRule` at the end of the edge."""
+  node: CategorizationRule
+}
+
+"""
+A condition to be used against `CategorizationRule` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input CategorizationRuleCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `bookId` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s `matchField` field."""
+  matchField: String
+}
+
+"""Methods to use when ordering `CategorizationRule`."""
+enum CategorizationRuleOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+  MATCH_FIELD_ASC
+  MATCH_FIELD_DESC
+}
+
+"""A connection to a list of `_DrizzleMigration` values."""
+type _DrizzleMigrationConnection {
+  """A list of `_DrizzleMigration` objects."""
+  nodes: [_DrizzleMigration]!
+
+  """
+  A list of edges which contains the `_DrizzleMigration` and cursor to aid in pagination.
+  """
+  edges: [_DrizzleMigrationEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `_DrizzleMigration` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A `_DrizzleMigration` edge in the connection."""
+type _DrizzleMigrationEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `_DrizzleMigration` at the end of the edge."""
+  node: _DrizzleMigration
+}
+
+"""
+A condition to be used against `_DrizzleMigration` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input _DrizzleMigrationCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: Int
+}
+
+"""
+A filter to be used against `_DrizzleMigration` object types. All fields are combined with a logical ‘and.’
+"""
+input _DrizzleMigrationFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: IntFilter
+
+  """Checks for all expressions in this list."""
+  and: [_DrizzleMigrationFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [_DrizzleMigrationFilter!]
+
+  """Negates the expression."""
+  not: _DrizzleMigrationFilter
+}
+
+"""Methods to use when ordering `_DrizzleMigration`."""
+enum _DrizzleMigrationOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+}
+
 """A connection to a list of `Book` values."""
 type BookConnection {
   """A list of `Book` objects."""
@@ -3376,6 +4024,14 @@ enum BookOrderBy {
 The root mutation type which contains root level fields which mutate data.
 """
 type Mutation {
+  """Creates a single `_DrizzleMigration`."""
+  createDrizzleMigration(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateDrizzleMigrationInput!
+  ): CreateDrizzleMigrationPayload
+
   """Creates a single `AccountMapping`."""
   createAccountMapping(
     """
@@ -3408,13 +4064,13 @@ type Mutation {
     input: CreateNetWorthSnapshotInput!
   ): CreateNetWorthSnapshotPayload
 
-  """Creates a single `ReconciliationQueue`."""
-  createReconciliationQueue(
+  """Creates a single `AccountingPeriod`."""
+  createAccountingPeriod(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: CreateReconciliationQueueInput!
-  ): CreateReconciliationQueuePayload
+    input: CreateAccountingPeriodInput!
+  ): CreateAccountingPeriodPayload
 
   """Creates a single `CryptoLot`."""
   createCryptoLot(
@@ -3448,6 +4104,14 @@ type Mutation {
     input: CreateCryptoAssetInput!
   ): CreateCryptoAssetPayload
 
+  """Creates a single `CategorizationRule`."""
+  createCategorizationRule(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateCategorizationRuleInput!
+  ): CreateCategorizationRulePayload
+
   """Creates a single `JournalEntry`."""
   createJournalEntry(
     """
@@ -3464,6 +4128,14 @@ type Mutation {
     input: CreateRecurringTransactionInput!
   ): CreateRecurringTransactionPayload
 
+  """Creates a single `ReconciliationQueue`."""
+  createReconciliationQueue(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateReconciliationQueueInput!
+  ): CreateReconciliationQueuePayload
+
   """Creates a single `Account`."""
   createAccount(
     """
@@ -3479,6 +4151,24 @@ type Mutation {
     """
     input: CreateConnectedAccountInput!
   ): CreateConnectedAccountPayload
+
+  """
+  Updates a single `_DrizzleMigration` using its globally unique id and a patch.
+  """
+  updateDrizzleMigrationById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateDrizzleMigrationByIdInput!
+  ): UpdateDrizzleMigrationPayload
+
+  """Updates a single `_DrizzleMigration` using a unique key and a patch."""
+  updateDrizzleMigration(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateDrizzleMigrationInput!
+  ): UpdateDrizzleMigrationPayload
 
   """
   Updates a single `AccountMapping` using its globally unique id and a patch.
@@ -3553,22 +4243,22 @@ type Mutation {
   ): UpdateNetWorthSnapshotPayload
 
   """
-  Updates a single `ReconciliationQueue` using its globally unique id and a patch.
+  Updates a single `AccountingPeriod` using its globally unique id and a patch.
   """
-  updateReconciliationQueueById(
+  updateAccountingPeriodById(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: UpdateReconciliationQueueByIdInput!
-  ): UpdateReconciliationQueuePayload
+    input: UpdateAccountingPeriodByIdInput!
+  ): UpdateAccountingPeriodPayload
 
-  """Updates a single `ReconciliationQueue` using a unique key and a patch."""
-  updateReconciliationQueue(
+  """Updates a single `AccountingPeriod` using a unique key and a patch."""
+  updateAccountingPeriod(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: UpdateReconciliationQueueInput!
-  ): UpdateReconciliationQueuePayload
+    input: UpdateAccountingPeriodInput!
+  ): UpdateAccountingPeriodPayload
 
   """Updates a single `CryptoLot` using its globally unique id and a patch."""
   updateCryptoLotById(
@@ -3637,6 +4327,24 @@ type Mutation {
   ): UpdateCryptoAssetPayload
 
   """
+  Updates a single `CategorizationRule` using its globally unique id and a patch.
+  """
+  updateCategorizationRuleById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateCategorizationRuleByIdInput!
+  ): UpdateCategorizationRulePayload
+
+  """Updates a single `CategorizationRule` using a unique key and a patch."""
+  updateCategorizationRule(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateCategorizationRuleInput!
+  ): UpdateCategorizationRulePayload
+
+  """
   Updates a single `JournalEntry` using its globally unique id and a patch.
   """
   updateJournalEntryById(
@@ -3674,6 +4382,24 @@ type Mutation {
     input: UpdateRecurringTransactionInput!
   ): UpdateRecurringTransactionPayload
 
+  """
+  Updates a single `ReconciliationQueue` using its globally unique id and a patch.
+  """
+  updateReconciliationQueueById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateReconciliationQueueByIdInput!
+  ): UpdateReconciliationQueuePayload
+
+  """Updates a single `ReconciliationQueue` using a unique key and a patch."""
+  updateReconciliationQueue(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateReconciliationQueueInput!
+  ): UpdateReconciliationQueuePayload
+
   """Updates a single `Account` using its globally unique id and a patch."""
   updateAccountById(
     """
@@ -3707,6 +4433,22 @@ type Mutation {
     """
     input: UpdateConnectedAccountInput!
   ): UpdateConnectedAccountPayload
+
+  """Deletes a single `_DrizzleMigration` using its globally unique id."""
+  deleteDrizzleMigrationById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteDrizzleMigrationByIdInput!
+  ): DeleteDrizzleMigrationPayload
+
+  """Deletes a single `_DrizzleMigration` using a unique key."""
+  deleteDrizzleMigration(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteDrizzleMigrationInput!
+  ): DeleteDrizzleMigrationPayload
 
   """Deletes a single `AccountMapping` using its globally unique id."""
   deleteAccountMappingById(
@@ -3772,21 +4514,21 @@ type Mutation {
     input: DeleteNetWorthSnapshotInput!
   ): DeleteNetWorthSnapshotPayload
 
-  """Deletes a single `ReconciliationQueue` using its globally unique id."""
-  deleteReconciliationQueueById(
+  """Deletes a single `AccountingPeriod` using its globally unique id."""
+  deleteAccountingPeriodById(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: DeleteReconciliationQueueByIdInput!
-  ): DeleteReconciliationQueuePayload
+    input: DeleteAccountingPeriodByIdInput!
+  ): DeleteAccountingPeriodPayload
 
-  """Deletes a single `ReconciliationQueue` using a unique key."""
-  deleteReconciliationQueue(
+  """Deletes a single `AccountingPeriod` using a unique key."""
+  deleteAccountingPeriod(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: DeleteReconciliationQueueInput!
-  ): DeleteReconciliationQueuePayload
+    input: DeleteAccountingPeriodInput!
+  ): DeleteAccountingPeriodPayload
 
   """Deletes a single `CryptoLot` using its globally unique id."""
   deleteCryptoLotById(
@@ -3852,6 +4594,22 @@ type Mutation {
     input: DeleteCryptoAssetInput!
   ): DeleteCryptoAssetPayload
 
+  """Deletes a single `CategorizationRule` using its globally unique id."""
+  deleteCategorizationRuleById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCategorizationRuleByIdInput!
+  ): DeleteCategorizationRulePayload
+
+  """Deletes a single `CategorizationRule` using a unique key."""
+  deleteCategorizationRule(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCategorizationRuleInput!
+  ): DeleteCategorizationRulePayload
+
   """Deletes a single `JournalEntry` using its globally unique id."""
   deleteJournalEntryById(
     """
@@ -3884,6 +4642,22 @@ type Mutation {
     input: DeleteRecurringTransactionInput!
   ): DeleteRecurringTransactionPayload
 
+  """Deletes a single `ReconciliationQueue` using its globally unique id."""
+  deleteReconciliationQueueById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteReconciliationQueueByIdInput!
+  ): DeleteReconciliationQueuePayload
+
+  """Deletes a single `ReconciliationQueue` using a unique key."""
+  deleteReconciliationQueue(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteReconciliationQueueInput!
+  ): DeleteReconciliationQueuePayload
+
   """Deletes a single `Account` using its globally unique id."""
   deleteAccountById(
     """
@@ -3915,6 +4689,48 @@ type Mutation {
     """
     input: DeleteConnectedAccountInput!
   ): DeleteConnectedAccountPayload
+}
+
+"""The output of our create `_DrizzleMigration` mutation."""
+type CreateDrizzleMigrationPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `_DrizzleMigration` that was created by this mutation."""
+  _drizzleMigration: _DrizzleMigration
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `_DrizzleMigration`. May be used by Relay 1."""
+  _drizzleMigrationEdge(
+    """The method to use when ordering `_DrizzleMigration`."""
+    orderBy: [_DrizzleMigrationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): _DrizzleMigrationEdge
+}
+
+"""All input for the create `_DrizzleMigration` mutation."""
+input CreateDrizzleMigrationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `_DrizzleMigration` to be created by this mutation."""
+  _drizzleMigration: _DrizzleMigrationInput!
+}
+
+"""An input for mutations affecting `_DrizzleMigration`"""
+input _DrizzleMigrationInput {
+  rowId: Int
+  hash: String!
+  createdAt: BigInt
 }
 
 """The output of our create `AccountMapping` mutation."""
@@ -4102,49 +4918,52 @@ input NetWorthSnapshotInput {
   createdAt: Datetime
 }
 
-"""The output of our create `ReconciliationQueue` mutation."""
-type CreateReconciliationQueuePayload {
+"""The output of our create `AccountingPeriod` mutation."""
+type CreateAccountingPeriodPayload {
   """
   The exact same `clientMutationId` that was provided in the mutation input,
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
 
-  """The `ReconciliationQueue` that was created by this mutation."""
-  reconciliationQueue: ReconciliationQueue
+  """The `AccountingPeriod` that was created by this mutation."""
+  accountingPeriod: AccountingPeriod
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
 
-  """An edge for our `ReconciliationQueue`. May be used by Relay 1."""
-  reconciliationQueueEdge(
-    """The method to use when ordering `ReconciliationQueue`."""
-    orderBy: [ReconciliationQueueOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): ReconciliationQueueEdge
+  """An edge for our `AccountingPeriod`. May be used by Relay 1."""
+  accountingPeriodEdge(
+    """The method to use when ordering `AccountingPeriod`."""
+    orderBy: [AccountingPeriodOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): AccountingPeriodEdge
 }
 
-"""All input for the create `ReconciliationQueue` mutation."""
-input CreateReconciliationQueueInput {
+"""All input for the create `AccountingPeriod` mutation."""
+input CreateAccountingPeriodInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
 
-  """The `ReconciliationQueue` to be created by this mutation."""
-  reconciliationQueue: ReconciliationQueueInput!
+  """The `AccountingPeriod` to be created by this mutation."""
+  accountingPeriod: AccountingPeriodInput!
 }
 
-"""An input for mutations affecting `ReconciliationQueue`"""
-input ReconciliationQueueInput {
+"""An input for mutations affecting `AccountingPeriod`"""
+input AccountingPeriodInput {
   rowId: UUID
   bookId: UUID!
-  journalEntryId: UUID!
-  status: ReconciliationStatus
-  reviewedAt: Datetime
-  reviewedBy: String
+  year: Int!
+  month: Int!
+  status: String
+  closedAt: Datetime
+  closedBy: String
+  reopenedAt: Datetime
+  blockers: JSON
   createdAt: Datetime
 }
 
@@ -4341,6 +5160,60 @@ input CryptoAssetInput {
   updatedAt: Datetime
 }
 
+"""The output of our create `CategorizationRule` mutation."""
+type CreateCategorizationRulePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `CategorizationRule` that was created by this mutation."""
+  categorizationRule: CategorizationRule
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `CategorizationRule`. May be used by Relay 1."""
+  categorizationRuleEdge(
+    """The method to use when ordering `CategorizationRule`."""
+    orderBy: [CategorizationRuleOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CategorizationRuleEdge
+}
+
+"""All input for the create `CategorizationRule` mutation."""
+input CreateCategorizationRuleInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `CategorizationRule` to be created by this mutation."""
+  categorizationRule: CategorizationRuleInput!
+}
+
+"""An input for mutations affecting `CategorizationRule`"""
+input CategorizationRuleInput {
+  rowId: UUID
+  bookId: UUID!
+  name: String!
+  matchField: String!
+  matchType: String!
+  matchValue: String!
+  amountMin: BigFloat
+  amountMax: BigFloat
+  debitAccountId: UUID!
+  creditAccountId: UUID!
+  confidence: BigFloat
+  priority: Int
+  hitCount: Int
+  lastHitAt: Datetime
+  createdAt: Datetime
+}
+
 """The output of our create `JournalEntry` mutation."""
 type CreateJournalEntryPayload {
   """
@@ -4439,6 +5312,59 @@ input RecurringTransactionInput {
   nextExpectedDate: Datetime
   createdAt: Datetime
   updatedAt: Datetime
+}
+
+"""The output of our create `ReconciliationQueue` mutation."""
+type CreateReconciliationQueuePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ReconciliationQueue` that was created by this mutation."""
+  reconciliationQueue: ReconciliationQueue
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ReconciliationQueue`. May be used by Relay 1."""
+  reconciliationQueueEdge(
+    """The method to use when ordering `ReconciliationQueue`."""
+    orderBy: [ReconciliationQueueOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ReconciliationQueueEdge
+}
+
+"""All input for the create `ReconciliationQueue` mutation."""
+input CreateReconciliationQueueInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `ReconciliationQueue` to be created by this mutation."""
+  reconciliationQueue: ReconciliationQueueInput!
+}
+
+"""An input for mutations affecting `ReconciliationQueue`"""
+input ReconciliationQueueInput {
+  rowId: UUID
+  bookId: UUID!
+  journalEntryId: UUID!
+  status: ReconciliationStatus
+  reviewedAt: Datetime
+  reviewedBy: String
+  createdAt: Datetime
+  categorizationSource: String
+  confidence: BigFloat
+  suggestedDebitAccountId: UUID
+  suggestedCreditAccountId: UUID
+  priority: Int
+  periodYear: Int
+  periodMonth: Int
 }
 
 """The output of our create `Account` mutation."""
@@ -4540,6 +5466,72 @@ input ConnectedAccountInput {
   lastSyncedAt: Datetime
   createdAt: Datetime
   syncCursor: String
+}
+
+"""The output of our update `_DrizzleMigration` mutation."""
+type UpdateDrizzleMigrationPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `_DrizzleMigration` that was updated by this mutation."""
+  _drizzleMigration: _DrizzleMigration
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `_DrizzleMigration`. May be used by Relay 1."""
+  _drizzleMigrationEdge(
+    """The method to use when ordering `_DrizzleMigration`."""
+    orderBy: [_DrizzleMigrationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): _DrizzleMigrationEdge
+}
+
+"""All input for the `updateDrizzleMigrationById` mutation."""
+input UpdateDrizzleMigrationByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `_DrizzleMigration` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `_DrizzleMigration` being updated.
+  """
+  patch: _DrizzleMigrationPatch!
+}
+
+"""
+Represents an update to a `_DrizzleMigration`. Fields that are set will be updated.
+"""
+input _DrizzleMigrationPatch {
+  rowId: Int
+  hash: String
+  createdAt: BigInt
+}
+
+"""All input for the `updateDrizzleMigration` mutation."""
+input UpdateDrizzleMigrationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: Int!
+
+  """
+  An object where the defined keys will be set on the `_DrizzleMigration` being updated.
+  """
+  patch: _DrizzleMigrationPatch!
 }
 
 """The output of our update `AccountMapping` mutation."""
@@ -4823,31 +5815,31 @@ input UpdateNetWorthSnapshotInput {
   patch: NetWorthSnapshotPatch!
 }
 
-"""The output of our update `ReconciliationQueue` mutation."""
-type UpdateReconciliationQueuePayload {
+"""The output of our update `AccountingPeriod` mutation."""
+type UpdateAccountingPeriodPayload {
   """
   The exact same `clientMutationId` that was provided in the mutation input,
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
 
-  """The `ReconciliationQueue` that was updated by this mutation."""
-  reconciliationQueue: ReconciliationQueue
+  """The `AccountingPeriod` that was updated by this mutation."""
+  accountingPeriod: AccountingPeriod
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
 
-  """An edge for our `ReconciliationQueue`. May be used by Relay 1."""
-  reconciliationQueueEdge(
-    """The method to use when ordering `ReconciliationQueue`."""
-    orderBy: [ReconciliationQueueOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): ReconciliationQueueEdge
+  """An edge for our `AccountingPeriod`. May be used by Relay 1."""
+  accountingPeriodEdge(
+    """The method to use when ordering `AccountingPeriod`."""
+    orderBy: [AccountingPeriodOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): AccountingPeriodEdge
 }
 
-"""All input for the `updateReconciliationQueueById` mutation."""
-input UpdateReconciliationQueueByIdInput {
+"""All input for the `updateAccountingPeriodById` mutation."""
+input UpdateAccountingPeriodByIdInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -4855,31 +5847,34 @@ input UpdateReconciliationQueueByIdInput {
   clientMutationId: String
 
   """
-  The globally unique `ID` which will identify a single `ReconciliationQueue` to be updated.
+  The globally unique `ID` which will identify a single `AccountingPeriod` to be updated.
   """
   id: ID!
 
   """
-  An object where the defined keys will be set on the `ReconciliationQueue` being updated.
+  An object where the defined keys will be set on the `AccountingPeriod` being updated.
   """
-  patch: ReconciliationQueuePatch!
+  patch: AccountingPeriodPatch!
 }
 
 """
-Represents an update to a `ReconciliationQueue`. Fields that are set will be updated.
+Represents an update to a `AccountingPeriod`. Fields that are set will be updated.
 """
-input ReconciliationQueuePatch {
+input AccountingPeriodPatch {
   rowId: UUID
   bookId: UUID
-  journalEntryId: UUID
-  status: ReconciliationStatus
-  reviewedAt: Datetime
-  reviewedBy: String
+  year: Int
+  month: Int
+  status: String
+  closedAt: Datetime
+  closedBy: String
+  reopenedAt: Datetime
+  blockers: JSON
   createdAt: Datetime
 }
 
-"""All input for the `updateReconciliationQueue` mutation."""
-input UpdateReconciliationQueueInput {
+"""All input for the `updateAccountingPeriod` mutation."""
+input UpdateAccountingPeriodInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -4888,9 +5883,9 @@ input UpdateReconciliationQueueInput {
   rowId: UUID!
 
   """
-  An object where the defined keys will be set on the `ReconciliationQueue` being updated.
+  An object where the defined keys will be set on the `AccountingPeriod` being updated.
   """
-  patch: ReconciliationQueuePatch!
+  patch: AccountingPeriodPatch!
 }
 
 """The output of our update `CryptoLot` mutation."""
@@ -5180,6 +6175,84 @@ input UpdateCryptoAssetInput {
   patch: CryptoAssetPatch!
 }
 
+"""The output of our update `CategorizationRule` mutation."""
+type UpdateCategorizationRulePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `CategorizationRule` that was updated by this mutation."""
+  categorizationRule: CategorizationRule
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `CategorizationRule`. May be used by Relay 1."""
+  categorizationRuleEdge(
+    """The method to use when ordering `CategorizationRule`."""
+    orderBy: [CategorizationRuleOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CategorizationRuleEdge
+}
+
+"""All input for the `updateCategorizationRuleById` mutation."""
+input UpdateCategorizationRuleByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `CategorizationRule` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `CategorizationRule` being updated.
+  """
+  patch: CategorizationRulePatch!
+}
+
+"""
+Represents an update to a `CategorizationRule`. Fields that are set will be updated.
+"""
+input CategorizationRulePatch {
+  rowId: UUID
+  bookId: UUID
+  name: String
+  matchField: String
+  matchType: String
+  matchValue: String
+  amountMin: BigFloat
+  amountMax: BigFloat
+  debitAccountId: UUID
+  creditAccountId: UUID
+  confidence: BigFloat
+  priority: Int
+  hitCount: Int
+  lastHitAt: Datetime
+  createdAt: Datetime
+}
+
+"""All input for the `updateCategorizationRule` mutation."""
+input UpdateCategorizationRuleInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `CategorizationRule` being updated.
+  """
+  patch: CategorizationRulePatch!
+}
+
 """The output of our update `JournalEntry` mutation."""
 type UpdateJournalEntryPayload {
   """
@@ -5326,6 +6399,83 @@ input UpdateRecurringTransactionInput {
   An object where the defined keys will be set on the `RecurringTransaction` being updated.
   """
   patch: RecurringTransactionPatch!
+}
+
+"""The output of our update `ReconciliationQueue` mutation."""
+type UpdateReconciliationQueuePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ReconciliationQueue` that was updated by this mutation."""
+  reconciliationQueue: ReconciliationQueue
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ReconciliationQueue`. May be used by Relay 1."""
+  reconciliationQueueEdge(
+    """The method to use when ordering `ReconciliationQueue`."""
+    orderBy: [ReconciliationQueueOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ReconciliationQueueEdge
+}
+
+"""All input for the `updateReconciliationQueueById` mutation."""
+input UpdateReconciliationQueueByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `ReconciliationQueue` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `ReconciliationQueue` being updated.
+  """
+  patch: ReconciliationQueuePatch!
+}
+
+"""
+Represents an update to a `ReconciliationQueue`. Fields that are set will be updated.
+"""
+input ReconciliationQueuePatch {
+  rowId: UUID
+  bookId: UUID
+  journalEntryId: UUID
+  status: ReconciliationStatus
+  reviewedAt: Datetime
+  reviewedBy: String
+  createdAt: Datetime
+  categorizationSource: String
+  confidence: BigFloat
+  suggestedDebitAccountId: UUID
+  suggestedCreditAccountId: UUID
+  priority: Int
+  periodYear: Int
+  periodMonth: Int
+}
+
+"""All input for the `updateReconciliationQueue` mutation."""
+input UpdateReconciliationQueueInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `ReconciliationQueue` being updated.
+  """
+  patch: ReconciliationQueuePatch!
 }
 
 """The output of our update `Account` mutation."""
@@ -5475,6 +6625,54 @@ input UpdateConnectedAccountInput {
   An object where the defined keys will be set on the `ConnectedAccount` being updated.
   """
   patch: ConnectedAccountPatch!
+}
+
+"""The output of our delete `_DrizzleMigration` mutation."""
+type DeleteDrizzleMigrationPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `_DrizzleMigration` that was deleted by this mutation."""
+  _drizzleMigration: _DrizzleMigration
+  deletedDrizzleMigrationId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `_DrizzleMigration`. May be used by Relay 1."""
+  _drizzleMigrationEdge(
+    """The method to use when ordering `_DrizzleMigration`."""
+    orderBy: [_DrizzleMigrationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): _DrizzleMigrationEdge
+}
+
+"""All input for the `deleteDrizzleMigrationById` mutation."""
+input DeleteDrizzleMigrationByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `_DrizzleMigration` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteDrizzleMigration` mutation."""
+input DeleteDrizzleMigrationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: Int!
 }
 
 """The output of our delete `AccountMapping` mutation."""
@@ -5669,32 +6867,32 @@ input DeleteNetWorthSnapshotInput {
   rowId: UUID!
 }
 
-"""The output of our delete `ReconciliationQueue` mutation."""
-type DeleteReconciliationQueuePayload {
+"""The output of our delete `AccountingPeriod` mutation."""
+type DeleteAccountingPeriodPayload {
   """
   The exact same `clientMutationId` that was provided in the mutation input,
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
 
-  """The `ReconciliationQueue` that was deleted by this mutation."""
-  reconciliationQueue: ReconciliationQueue
-  deletedReconciliationQueueId: ID
+  """The `AccountingPeriod` that was deleted by this mutation."""
+  accountingPeriod: AccountingPeriod
+  deletedAccountingPeriodId: ID
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
 
-  """An edge for our `ReconciliationQueue`. May be used by Relay 1."""
-  reconciliationQueueEdge(
-    """The method to use when ordering `ReconciliationQueue`."""
-    orderBy: [ReconciliationQueueOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): ReconciliationQueueEdge
+  """An edge for our `AccountingPeriod`. May be used by Relay 1."""
+  accountingPeriodEdge(
+    """The method to use when ordering `AccountingPeriod`."""
+    orderBy: [AccountingPeriodOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): AccountingPeriodEdge
 }
 
-"""All input for the `deleteReconciliationQueueById` mutation."""
-input DeleteReconciliationQueueByIdInput {
+"""All input for the `deleteAccountingPeriodById` mutation."""
+input DeleteAccountingPeriodByIdInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -5702,13 +6900,13 @@ input DeleteReconciliationQueueByIdInput {
   clientMutationId: String
 
   """
-  The globally unique `ID` which will identify a single `ReconciliationQueue` to be deleted.
+  The globally unique `ID` which will identify a single `AccountingPeriod` to be deleted.
   """
   id: ID!
 }
 
-"""All input for the `deleteReconciliationQueue` mutation."""
-input DeleteReconciliationQueueInput {
+"""All input for the `deleteAccountingPeriod` mutation."""
+input DeleteAccountingPeriodInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -5909,6 +7107,54 @@ input DeleteCryptoAssetInput {
   rowId: UUID!
 }
 
+"""The output of our delete `CategorizationRule` mutation."""
+type DeleteCategorizationRulePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `CategorizationRule` that was deleted by this mutation."""
+  categorizationRule: CategorizationRule
+  deletedCategorizationRuleId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `CategorizationRule`. May be used by Relay 1."""
+  categorizationRuleEdge(
+    """The method to use when ordering `CategorizationRule`."""
+    orderBy: [CategorizationRuleOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CategorizationRuleEdge
+}
+
+"""All input for the `deleteCategorizationRuleById` mutation."""
+input DeleteCategorizationRuleByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `CategorizationRule` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteCategorizationRule` mutation."""
+input DeleteCategorizationRuleInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete `JournalEntry` mutation."""
 type DeleteJournalEntryPayload {
   """
@@ -5997,6 +7243,54 @@ input DeleteRecurringTransactionByIdInput {
 
 """All input for the `deleteRecurringTransaction` mutation."""
 input DeleteRecurringTransactionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `ReconciliationQueue` mutation."""
+type DeleteReconciliationQueuePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ReconciliationQueue` that was deleted by this mutation."""
+  reconciliationQueue: ReconciliationQueue
+  deletedReconciliationQueueId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ReconciliationQueue`. May be used by Relay 1."""
+  reconciliationQueueEdge(
+    """The method to use when ordering `ReconciliationQueue`."""
+    orderBy: [ReconciliationQueueOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ReconciliationQueueEdge
+}
+
+"""All input for the `deleteReconciliationQueueById` mutation."""
+input DeleteReconciliationQueueByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `ReconciliationQueue` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteReconciliationQueue` mutation."""
+input DeleteReconciliationQueueInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.

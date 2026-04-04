@@ -21,7 +21,9 @@ describe("learnRule", () => {
     setSelectResults([[]]);
     await learnRule("book-1", "Spotify", "debit-1", "credit-1");
     expect(mockInsertValues).toHaveBeenCalledTimes(1);
-    const insertArg = (mockInsertValues.mock.calls[0] as unknown[])[0] as Record<string, unknown>;
+    const insertArg = (
+      mockInsertValues.mock.calls[0] as unknown[]
+    )[0] as Record<string, unknown>;
     expect(insertArg.bookId).toBe("book-1");
     expect(insertArg.matchValue).toBe("spotify");
     expect(insertArg.matchField).toBe("merchant_name");
@@ -42,7 +44,9 @@ describe("learnRule", () => {
     setSelectResults([[]]);
     await learnRule("book-1", "  SPOTIFY  ", "debit-1", "credit-1");
     expect(mockInsertValues).toHaveBeenCalledTimes(1);
-    const insertArg = (mockInsertValues.mock.calls[0] as unknown[])[0] as Record<string, unknown>;
+    const insertArg = (
+      mockInsertValues.mock.calls[0] as unknown[]
+    )[0] as Record<string, unknown>;
     expect(insertArg.matchValue).toBe("spotify");
   });
 

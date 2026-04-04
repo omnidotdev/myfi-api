@@ -65,6 +65,57 @@ const executor = new PgExecutor({
     });
   }
 });
+const __drizzleMigrationsIdentifier = sql.identifier("public", "__drizzle_migrations");
+const spec___drizzleMigrations = {
+  name: "__drizzleMigrations",
+  identifier: __drizzleMigrationsIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.int,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    hash: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.bigint,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "496030",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "__drizzle_migrations"
+    }
+  },
+  executor: executor
+};
+const __drizzleMigrationsCodec = recordCodec(spec___drizzleMigrations);
 const accountMappingIdentifier = sql.identifier("public", "account_mapping");
 const spec_accountMapping = {
   name: "accountMapping",
@@ -452,24 +503,10 @@ const spec_netWorthSnapshot = {
   executor: executor
 };
 const netWorthSnapshotCodec = recordCodec(spec_netWorthSnapshot);
-const reconciliationQueueIdentifier = sql.identifier("public", "reconciliation_queue");
-const reconciliationStatusCodec = enumCodec({
-  name: "reconciliationStatus",
-  identifier: sql.identifier("public", "reconciliation_status"),
-  values: ["pending_review", "approved", "adjusted", "rejected"],
-  description: undefined,
-  extensions: {
-    oid: "470018",
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "reconciliation_status"
-    }
-  }
-});
-const spec_reconciliationQueue = {
-  name: "reconciliationQueue",
-  identifier: reconciliationQueueIdentifier,
+const accountingPeriodIdentifier = sql.identifier("public", "accounting_period");
+const spec_accountingPeriod = {
+  name: "accountingPeriod",
+  identifier: accountingPeriodIdentifier,
   attributes: {
     __proto__: null,
     id: {
@@ -493,19 +530,28 @@ const spec_reconciliationQueue = {
         canUpdate: true
       }
     },
-    journal_entry_id: {
-      codec: TYPES.uuid,
+    year: {
+      codec: TYPES.int,
       notNull: true,
       extensions: {
         __proto__: null,
         canSelect: true,
         canInsert: true,
-        canUpdate: true,
-        isIndexed: false
+        canUpdate: true
+      }
+    },
+    month: {
+      codec: TYPES.int,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
       }
     },
     status: {
-      codec: reconciliationStatusCodec,
+      codec: TYPES.text,
       notNull: true,
       hasDefault: true,
       extensions: {
@@ -515,7 +561,7 @@ const spec_reconciliationQueue = {
         canUpdate: true
       }
     },
-    reviewed_at: {
+    closed_at: {
       codec: TYPES.timestamptz,
       extensions: {
         __proto__: null,
@@ -525,8 +571,28 @@ const spec_reconciliationQueue = {
         isIndexed: false
       }
     },
-    reviewed_by: {
+    closed_by: {
       codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    reopened_at: {
+      codec: TYPES.timestamptz,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    blockers: {
+      codec: TYPES.jsonb,
       extensions: {
         __proto__: null,
         canSelect: true,
@@ -548,17 +614,17 @@ const spec_reconciliationQueue = {
     }
   },
   extensions: {
-    oid: "470202",
+    oid: "639585",
     isTableLike: true,
     pg: {
       serviceName: "main",
       schemaName: "public",
-      name: "reconciliation_queue"
+      name: "accounting_period"
     }
   },
   executor: executor
 };
-const reconciliationQueueCodec = recordCodec(spec_reconciliationQueue);
+const accountingPeriodCodec = recordCodec(spec_accountingPeriod);
 const cryptoLotIdentifier = sql.identifier("public", "crypto_lot");
 const spec_cryptoLot = {
   name: "cryptoLot",
@@ -1078,6 +1144,188 @@ const spec_cryptoAsset = {
   executor: executor
 };
 const cryptoAssetCodec = recordCodec(spec_cryptoAsset);
+const categorizationRuleIdentifier = sql.identifier("public", "categorization_rule");
+const spec_categorizationRule = {
+  name: "categorizationRule",
+  identifier: categorizationRuleIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    name: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    match_field: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    match_type: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    match_value: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    amount_min: {
+      codec: TYPES.numeric,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    amount_max: {
+      codec: TYPES.numeric,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    debit_account_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    credit_account_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    confidence: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    priority: {
+      codec: TYPES.int,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    hit_count: {
+      codec: TYPES.int,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    last_hit_at: {
+      codec: TYPES.timestamptz,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "639600",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "categorization_rule"
+    }
+  },
+  executor: executor
+};
+const categorizationRuleCodec = recordCodec(spec_categorizationRule);
 const journalEntryIdentifier = sql.identifier("public", "journal_entry");
 const journalEntrySourceCodec = enumCodec({
   name: "journalEntrySource",
@@ -1393,6 +1641,20 @@ const connectedAccountProviderCodec = enumCodec({
       serviceName: "main",
       schemaName: "public",
       name: "connected_account_provider"
+    }
+  }
+});
+const reconciliationStatusCodec = enumCodec({
+  name: "reconciliationStatus",
+  identifier: sql.identifier("public", "reconciliation_status"),
+  values: ["pending_review", "approved", "adjusted", "rejected"],
+  description: undefined,
+  extensions: {
+    oid: "470018",
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "reconciliation_status"
     }
   }
 });
@@ -1717,6 +1979,175 @@ const spec_connectedAccount = {
   executor: executor
 };
 const connectedAccountCodec = recordCodec(spec_connectedAccount);
+const reconciliationQueueIdentifier = sql.identifier("public", "reconciliation_queue");
+const spec_reconciliationQueue = {
+  name: "reconciliationQueue",
+  identifier: reconciliationQueueIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    journal_entry_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    status: {
+      codec: reconciliationStatusCodec,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    reviewed_at: {
+      codec: TYPES.timestamptz,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    reviewed_by: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    categorization_source: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    confidence: {
+      codec: TYPES.numeric,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    suggested_debit_account_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    suggested_credit_account_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    priority: {
+      codec: TYPES.int,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    period_year: {
+      codec: TYPES.int,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    period_month: {
+      codec: TYPES.int,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "470202",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "reconciliation_queue"
+    }
+  },
+  executor: executor
+};
+const reconciliationQueueCodec = recordCodec(spec_reconciliationQueue);
+const __drizzle_migrationsUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
 const account_mappingUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -1809,28 +2240,28 @@ const net_worth_snapshot_resourceOptionsConfig = {
   },
   uniques: net_worth_snapshotUniques
 };
-const reconciliation_queueUniques = [{
+const accounting_periodUniques = [{
   attributes: ["id"],
   isPrimary: true
 }];
-const reconciliation_queue_resourceOptionsConfig = {
+const accounting_period_resourceOptionsConfig = {
   executor: executor,
-  name: "reconciliation_queue",
-  identifier: "main.public.reconciliation_queue",
-  from: reconciliationQueueIdentifier,
-  codec: reconciliationQueueCodec,
+  name: "accounting_period",
+  identifier: "main.public.accounting_period",
+  from: accountingPeriodIdentifier,
+  codec: accountingPeriodCodec,
   extensions: {
     pg: {
       serviceName: "main",
       schemaName: "public",
-      name: "reconciliation_queue"
+      name: "accounting_period"
     },
     canSelect: true,
     canInsert: true,
     canUpdate: true,
     canDelete: true
   },
-  uniques: reconciliation_queueUniques
+  uniques: accounting_periodUniques
 };
 const crypto_lotUniques = [{
   attributes: ["id"],
@@ -1924,6 +2355,29 @@ const crypto_asset_resourceOptionsConfig = {
   },
   uniques: crypto_assetUniques
 };
+const categorization_ruleUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const categorization_rule_resourceOptionsConfig = {
+  executor: executor,
+  name: "categorization_rule",
+  identifier: "main.public.categorization_rule",
+  from: categorizationRuleIdentifier,
+  codec: categorizationRuleCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "categorization_rule"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: categorization_ruleUniques
+};
 const journal_entryUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -1969,6 +2423,29 @@ const recurring_transaction_resourceOptionsConfig = {
     canDelete: true
   },
   uniques: recurring_transactionUniques
+};
+const reconciliation_queueUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const reconciliation_queue_resourceOptionsConfig = {
+  executor: executor,
+  name: "reconciliation_queue",
+  identifier: "main.public.reconciliation_queue",
+  from: reconciliationQueueIdentifier,
+  codec: reconciliationQueueCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "reconciliation_queue"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: reconciliation_queueUniques
 };
 const accountUniques = [{
   attributes: ["id"],
@@ -2023,49 +2500,75 @@ const registryConfig = {
   },
   pgCodecs: {
     __proto__: null,
+    "__drizzleMigrations": __drizzleMigrationsCodec,
+    int4: TYPES.int,
+    text: TYPES.text,
+    int8: TYPES.bigint,
     accountMapping: accountMappingCodec,
     uuid: TYPES.uuid,
-    text: TYPES.text,
     timestamptz: TYPES.timestamptz,
     journalLine: journalLineCodec,
     numeric: TYPES.numeric,
     savingsGoal: savingsGoalCodec,
     netWorthSnapshot: netWorthSnapshotCodec,
-    reconciliationQueue: reconciliationQueueCodec,
-    reconciliationStatus: reconciliationStatusCodec,
+    accountingPeriod: accountingPeriodCodec,
+    jsonb: TYPES.jsonb,
     cryptoLot: cryptoLotCodec,
     book: bookCodec,
     bookType: bookTypeCodec,
-    int4: TYPES.int,
     budget: budgetCodec,
     budgetPeriod: budgetPeriodCodec,
     bool: TYPES.boolean,
     cryptoAsset: cryptoAssetCodec,
     costBasisMethod: costBasisMethodCodec,
+    categorizationRule: categorizationRuleCodec,
     journalEntry: journalEntryCodec,
     journalEntrySource: journalEntrySourceCodec,
     recurringTransaction: recurringTransactionCodec,
     recurringFrequency: recurringFrequencyCodec,
     connectedAccountProvider: connectedAccountProviderCodec,
+    reconciliationStatus: reconciliationStatusCodec,
     accountType: accountTypeCodec,
     accountSubType: accountSubTypeCodec,
     connectedAccountStatus: connectedAccountStatusCodec,
     account: accountCodec,
-    connectedAccount: connectedAccountCodec
+    connectedAccount: connectedAccountCodec,
+    reconciliationQueue: reconciliationQueueCodec
   },
   pgResources: {
     __proto__: null,
+    "__drizzle_migrations": {
+      executor: executor,
+      name: "__drizzle_migrations",
+      identifier: "main.public.__drizzle_migrations",
+      from: __drizzleMigrationsIdentifier,
+      codec: __drizzleMigrationsCodec,
+      extensions: {
+        pg: {
+          serviceName: "main",
+          schemaName: "public",
+          name: "__drizzle_migrations"
+        },
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        canDelete: true
+      },
+      uniques: __drizzle_migrationsUniques
+    },
     account_mapping: account_mapping_resourceOptionsConfig,
     journal_line: journal_line_resourceOptionsConfig,
     savings_goal: savings_goal_resourceOptionsConfig,
     net_worth_snapshot: net_worth_snapshot_resourceOptionsConfig,
-    reconciliation_queue: reconciliation_queue_resourceOptionsConfig,
+    accounting_period: accounting_period_resourceOptionsConfig,
     crypto_lot: crypto_lot_resourceOptionsConfig,
     book: book_resourceOptionsConfig,
     budget: budget_resourceOptionsConfig,
     crypto_asset: crypto_asset_resourceOptionsConfig,
+    categorization_rule: categorization_rule_resourceOptionsConfig,
     journal_entry: journal_entry_resourceOptionsConfig,
     recurring_transaction: recurring_transaction_resourceOptionsConfig,
+    reconciliation_queue: reconciliation_queue_resourceOptionsConfig,
     account: account_resourceOptionsConfig,
     connected_account: connected_account_resourceOptionsConfig
   },
@@ -2141,6 +2644,28 @@ const registryConfig = {
         remoteAttributes: ["account_id"],
         isReferencee: true
       },
+      reconciliationQueuesByTheirSuggestedCreditAccountId: {
+        localCodec: accountCodec,
+        remoteResourceOptions: reconciliation_queue_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["suggested_credit_account_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
+      },
+      reconciliationQueuesByTheirSuggestedDebitAccountId: {
+        localCodec: accountCodec,
+        remoteResourceOptions: reconciliation_queue_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["suggested_debit_account_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
+      },
       recurringTransactionsByTheirAccountId: {
         localCodec: accountCodec,
         remoteResourceOptions: recurring_transaction_resourceOptionsConfig,
@@ -2173,6 +2698,28 @@ const registryConfig = {
           __proto__: null,
           isIndexed: false
         }
+      },
+      categorizationRulesByTheirCreditAccountId: {
+        localCodec: accountCodec,
+        remoteResourceOptions: categorization_rule_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["credit_account_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
+      },
+      categorizationRulesByTheirDebitAccountId: {
+        localCodec: accountCodec,
+        remoteResourceOptions: categorization_rule_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["debit_account_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
       }
     },
     accountMapping: {
@@ -2195,6 +2742,16 @@ const registryConfig = {
         localCodec: accountMappingCodec,
         remoteResourceOptions: account_resourceOptionsConfig,
         localAttributes: ["debit_account_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      }
+    },
+    accountingPeriod: {
+      __proto__: null,
+      bookByMyBookId: {
+        localCodec: accountingPeriodCodec,
+        remoteResourceOptions: book_resourceOptionsConfig,
+        localAttributes: ["book_id"],
         remoteAttributes: ["id"],
         isUnique: true
       }
@@ -2270,6 +2827,20 @@ const registryConfig = {
         localAttributes: ["id"],
         remoteAttributes: ["book_id"],
         isReferencee: true
+      },
+      accountingPeriodsByTheirBookId: {
+        localCodec: bookCodec,
+        remoteResourceOptions: accounting_period_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["book_id"],
+        isReferencee: true
+      },
+      categorizationRulesByTheirBookId: {
+        localCodec: bookCodec,
+        remoteResourceOptions: categorization_rule_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["book_id"],
+        isReferencee: true
       }
     },
     budget: {
@@ -2285,6 +2856,30 @@ const registryConfig = {
         localCodec: budgetCodec,
         remoteResourceOptions: book_resourceOptionsConfig,
         localAttributes: ["book_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      }
+    },
+    categorizationRule: {
+      __proto__: null,
+      bookByMyBookId: {
+        localCodec: categorizationRuleCodec,
+        remoteResourceOptions: book_resourceOptionsConfig,
+        localAttributes: ["book_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      accountByMyCreditAccountId: {
+        localCodec: categorizationRuleCodec,
+        remoteResourceOptions: account_resourceOptionsConfig,
+        localAttributes: ["credit_account_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      accountByMyDebitAccountId: {
+        localCodec: categorizationRuleCodec,
+        remoteResourceOptions: account_resourceOptionsConfig,
+        localAttributes: ["debit_account_id"],
         remoteAttributes: ["id"],
         isUnique: true
       }
@@ -2421,6 +3016,20 @@ const registryConfig = {
         localAttributes: ["journal_entry_id"],
         remoteAttributes: ["id"],
         isUnique: true
+      },
+      accountByMySuggestedCreditAccountId: {
+        localCodec: reconciliationQueueCodec,
+        remoteResourceOptions: account_resourceOptionsConfig,
+        localAttributes: ["suggested_credit_account_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      accountByMySuggestedDebitAccountId: {
+        localCodec: reconciliationQueueCodec,
+        remoteResourceOptions: account_resourceOptionsConfig,
+        localAttributes: ["suggested_debit_account_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
       }
     },
     recurringTransaction: {
@@ -2467,17 +3076,20 @@ const registryConfig = {
   }
 };
 const registry = makeRegistry(registryConfig);
+const resource___drizzle_migrationsPgResource = registry.pgResources["__drizzle_migrations"];
 const resource_account_mappingPgResource = registry.pgResources["account_mapping"];
 const resource_journal_linePgResource = registry.pgResources["journal_line"];
 const resource_savings_goalPgResource = registry.pgResources["savings_goal"];
 const resource_net_worth_snapshotPgResource = registry.pgResources["net_worth_snapshot"];
-const resource_reconciliation_queuePgResource = registry.pgResources["reconciliation_queue"];
+const resource_accounting_periodPgResource = registry.pgResources["accounting_period"];
 const resource_crypto_lotPgResource = registry.pgResources["crypto_lot"];
 const resource_bookPgResource = registry.pgResources["book"];
 const resource_budgetPgResource = registry.pgResources["budget"];
 const resource_crypto_assetPgResource = registry.pgResources["crypto_asset"];
+const resource_categorization_rulePgResource = registry.pgResources["categorization_rule"];
 const resource_journal_entryPgResource = registry.pgResources["journal_entry"];
 const resource_recurring_transactionPgResource = registry.pgResources["recurring_transaction"];
+const resource_reconciliation_queuePgResource = registry.pgResources["reconciliation_queue"];
 const resource_accountPgResource = registry.pgResources["account"];
 const resource_connected_accountPgResource = registry.pgResources["connected_account"];
 const makeTableNodeIdHandler = ({
@@ -2509,12 +3121,12 @@ const makeTableNodeIdHandler = ({
     deprecationReason
   };
 };
-const nodeIdHandler_AccountMapping = makeTableNodeIdHandler({
-  typeName: "AccountMapping",
-  identifier: "AccountMapping",
+const nodeIdHandler__DrizzleMigration = makeTableNodeIdHandler({
+  typeName: "_DrizzleMigration",
+  identifier: "_DrizzleMigration",
   nodeIdCodec: base64JSONNodeIdCodec,
-  resource: resource_account_mappingPgResource,
-  pk: account_mappingUniques[0].attributes
+  resource: resource___drizzle_migrationsPgResource,
+  pk: __drizzle_migrationsUniques[0].attributes
 });
 const specForHandlerCache = new Map();
 function specForHandler(handler) {
@@ -2531,6 +3143,17 @@ function specForHandler(handler) {
   specForHandlerCache.set(handler, spec);
   return spec;
 }
+const nodeFetcher__DrizzleMigration = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler__DrizzleMigration));
+  return nodeIdHandler__DrizzleMigration.get(nodeIdHandler__DrizzleMigration.getSpec($decoded));
+};
+const nodeIdHandler_AccountMapping = makeTableNodeIdHandler({
+  typeName: "AccountMapping",
+  identifier: "AccountMapping",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_account_mappingPgResource,
+  pk: account_mappingUniques[0].attributes
+});
 const nodeFetcher_AccountMapping = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_AccountMapping));
   return nodeIdHandler_AccountMapping.get(nodeIdHandler_AccountMapping.getSpec($decoded));
@@ -2568,16 +3191,16 @@ const nodeFetcher_NetWorthSnapshot = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_NetWorthSnapshot));
   return nodeIdHandler_NetWorthSnapshot.get(nodeIdHandler_NetWorthSnapshot.getSpec($decoded));
 };
-const nodeIdHandler_ReconciliationQueue = makeTableNodeIdHandler({
-  typeName: "ReconciliationQueue",
-  identifier: "ReconciliationQueue",
+const nodeIdHandler_AccountingPeriod = makeTableNodeIdHandler({
+  typeName: "AccountingPeriod",
+  identifier: "AccountingPeriod",
   nodeIdCodec: base64JSONNodeIdCodec,
-  resource: resource_reconciliation_queuePgResource,
-  pk: reconciliation_queueUniques[0].attributes
+  resource: resource_accounting_periodPgResource,
+  pk: accounting_periodUniques[0].attributes
 });
-const nodeFetcher_ReconciliationQueue = $nodeId => {
-  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_ReconciliationQueue));
-  return nodeIdHandler_ReconciliationQueue.get(nodeIdHandler_ReconciliationQueue.getSpec($decoded));
+const nodeFetcher_AccountingPeriod = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_AccountingPeriod));
+  return nodeIdHandler_AccountingPeriod.get(nodeIdHandler_AccountingPeriod.getSpec($decoded));
 };
 const nodeIdHandler_CryptoLot = makeTableNodeIdHandler({
   typeName: "CryptoLot",
@@ -2623,6 +3246,17 @@ const nodeFetcher_CryptoAsset = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_CryptoAsset));
   return nodeIdHandler_CryptoAsset.get(nodeIdHandler_CryptoAsset.getSpec($decoded));
 };
+const nodeIdHandler_CategorizationRule = makeTableNodeIdHandler({
+  typeName: "CategorizationRule",
+  identifier: "CategorizationRule",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_categorization_rulePgResource,
+  pk: categorization_ruleUniques[0].attributes
+});
+const nodeFetcher_CategorizationRule = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_CategorizationRule));
+  return nodeIdHandler_CategorizationRule.get(nodeIdHandler_CategorizationRule.getSpec($decoded));
+};
 const nodeIdHandler_JournalEntry = makeTableNodeIdHandler({
   typeName: "JournalEntry",
   identifier: "JournalEntry",
@@ -2644,6 +3278,17 @@ const nodeIdHandler_RecurringTransaction = makeTableNodeIdHandler({
 const nodeFetcher_RecurringTransaction = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_RecurringTransaction));
   return nodeIdHandler_RecurringTransaction.get(nodeIdHandler_RecurringTransaction.getSpec($decoded));
+};
+const nodeIdHandler_ReconciliationQueue = makeTableNodeIdHandler({
+  typeName: "ReconciliationQueue",
+  identifier: "ReconciliationQueue",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_reconciliation_queuePgResource,
+  pk: reconciliation_queueUniques[0].attributes
+});
+const nodeFetcher_ReconciliationQueue = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_ReconciliationQueue));
+  return nodeIdHandler_ReconciliationQueue.get(nodeIdHandler_ReconciliationQueue.getSpec($decoded));
 };
 const nodeIdHandler_Account = makeTableNodeIdHandler({
   typeName: "Account",
@@ -2703,7 +3348,7 @@ function assertAllowed(value, mode) {
   }
   if (!false && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-function Query_accountMappingsfilterApplyPlan(_, $connection, fieldArg) {
+function Query__drizzleMigrationsfilterApplyPlan(_, $connection, fieldArg) {
   const $pgSelect = $connection.getSubplan();
   fieldArg.apply($pgSelect, (queryBuilder, value) => {
     assertAllowed(value, "object");
@@ -2719,17 +3364,20 @@ function applyOrderByArgToConnection(parent, $connection, value) {
 const nodeIdHandlerByTypeName = {
   __proto__: null,
   Query: nodeIdHandler_Query,
+  _DrizzleMigration: nodeIdHandler__DrizzleMigration,
   AccountMapping: nodeIdHandler_AccountMapping,
   JournalLine: nodeIdHandler_JournalLine,
   SavingsGoal: nodeIdHandler_SavingsGoal,
   NetWorthSnapshot: nodeIdHandler_NetWorthSnapshot,
-  ReconciliationQueue: nodeIdHandler_ReconciliationQueue,
+  AccountingPeriod: nodeIdHandler_AccountingPeriod,
   CryptoLot: nodeIdHandler_CryptoLot,
   Book: nodeIdHandler_Book,
   Budget: nodeIdHandler_Budget,
   CryptoAsset: nodeIdHandler_CryptoAsset,
+  CategorizationRule: nodeIdHandler_CategorizationRule,
   JournalEntry: nodeIdHandler_JournalEntry,
   RecurringTransaction: nodeIdHandler_RecurringTransaction,
+  ReconciliationQueue: nodeIdHandler_ReconciliationQueue,
   Account: nodeIdHandler_Account,
   ConnectedAccount: nodeIdHandler_ConnectedAccount
 };
@@ -2743,14 +3391,23 @@ function findTypeNameMatch(specifier) {
   console.warn(`Could not find a type that matched the specifier '${inspect(specifier)}'`);
   return null;
 }
-const AccountMapping_rowIdPlan = $record => {
+const _DrizzleMigration_rowIdPlan = $record => {
   return $record.get("id");
 };
+const _DrizzleMigration_createdAtPlan = $record => {
+  return $record.get("created_at");
+};
+function toString(value) {
+  return "" + value;
+}
 const AccountMapping_bookIdPlan = $record => {
   return $record.get("book_id");
 };
-const AccountMapping_createdAtPlan = $record => {
-  return $record.get("created_at");
+const AccountMapping_debitAccountIdPlan = $record => {
+  return $record.get("debit_account_id");
+};
+const AccountMapping_creditAccountIdPlan = $record => {
+  return $record.get("credit_account_id");
 };
 const AccountMapping_updatedAtPlan = $record => {
   return $record.get("updated_at");
@@ -2758,9 +3415,12 @@ const AccountMapping_updatedAtPlan = $record => {
 const AccountMapping_bookPlan = $record => resource_bookPgResource.get({
   id: $record.get("book_id")
 });
-function toString(value) {
-  return "" + value;
-}
+const AccountMapping_creditAccountPlan = $record => resource_accountPgResource.get({
+  id: $record.get("credit_account_id")
+});
+const AccountMapping_debitAccountPlan = $record => resource_accountPgResource.get({
+  id: $record.get("debit_account_id")
+});
 const coerce = string => {
   if (!/^[0-9a-f]{8}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{12}$/i.test(string)) throw new GraphQLError("Invalid UUID, expected 32 hexadecimal characters, optionally with hyphens");
   return string;
@@ -3120,16 +3780,21 @@ const JournalEntryOrderBy_DATE_DESCApply = queryBuilder => {
     direction: "DESC"
   });
 };
+const JSONSerialize = value => value;
 function applyInputToInsert(_, $object) {
+  return $object;
+}
+const specFromArgs__DrizzleMigration = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler__DrizzleMigration, $nodeId);
+};
+function applyInputToUpdateOrDelete(_, $object) {
   return $object;
 }
 const specFromArgs_AccountMapping = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_AccountMapping, $nodeId);
 };
-function applyInputToUpdateOrDelete(_, $object) {
-  return $object;
-}
 const specFromArgs_JournalLine = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_JournalLine, $nodeId);
@@ -3142,9 +3807,9 @@ const specFromArgs_NetWorthSnapshot = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_NetWorthSnapshot, $nodeId);
 };
-const specFromArgs_ReconciliationQueue = args => {
+const specFromArgs_AccountingPeriod = args => {
   const $nodeId = args.getRaw(["input", "id"]);
-  return specFromNodeId(nodeIdHandler_ReconciliationQueue, $nodeId);
+  return specFromNodeId(nodeIdHandler_AccountingPeriod, $nodeId);
 };
 const specFromArgs_CryptoLot = args => {
   const $nodeId = args.getRaw(["input", "id"]);
@@ -3162,6 +3827,10 @@ const specFromArgs_CryptoAsset = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_CryptoAsset, $nodeId);
 };
+const specFromArgs_CategorizationRule = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_CategorizationRule, $nodeId);
+};
 const specFromArgs_JournalEntry = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_JournalEntry, $nodeId);
@@ -3169,6 +3838,10 @@ const specFromArgs_JournalEntry = args => {
 const specFromArgs_RecurringTransaction = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_RecurringTransaction, $nodeId);
+};
+const specFromArgs_ReconciliationQueue = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_ReconciliationQueue, $nodeId);
 };
 const specFromArgs_Account = args => {
   const $nodeId = args.getRaw(["input", "id"]);
@@ -3205,16 +3878,23 @@ const pgMutationPayloadEdge = (resource, pkAttributes, $mutation, fieldArgs) => 
   const $connection = connection($select);
   return new EdgeStep($connection, first($connection));
 };
-const CreateAccountMappingPayload_accountMappingEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_account_mappingPgResource, account_mappingUniques[0].attributes, $mutation, fieldArgs);
+const CreateDrizzleMigrationPayload__drizzleMigrationEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource___drizzle_migrationsPgResource, __drizzle_migrationsUniques[0].attributes, $mutation, fieldArgs);
 function applyClientMutationIdForCreate(qb, val) {
   qb.setMeta("clientMutationId", val);
 }
 function applyCreateFields(qb, arg) {
   if (arg != null) return qb.setBuilder();
 }
-function AccountMappingInput_rowIdApply(obj, val, info) {
+function _DrizzleMigrationInput_rowIdApply(obj, val, info) {
   obj.set("id", bakedInputRuntime(info.schema, info.field.type, val));
 }
+function _DrizzleMigrationInput_hashApply(obj, val, info) {
+  obj.set("hash", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function _DrizzleMigrationInput_createdAtApply(obj, val, info) {
+  obj.set("created_at", bakedInputRuntime(info.schema, info.field.type, val));
+}
+const CreateAccountMappingPayload_accountMappingEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_account_mappingPgResource, account_mappingUniques[0].attributes, $mutation, fieldArgs);
 function AccountMappingInput_bookIdApply(obj, val, info) {
   obj.set("book_id", bakedInputRuntime(info.schema, info.field.type, val));
 }
@@ -3226,9 +3906,6 @@ function AccountMappingInput_debitAccountIdApply(obj, val, info) {
 }
 function AccountMappingInput_creditAccountIdApply(obj, val, info) {
   obj.set("credit_account_id", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function AccountMappingInput_createdAtApply(obj, val, info) {
-  obj.set("created_at", bakedInputRuntime(info.schema, info.field.type, val));
 }
 function AccountMappingInput_updatedAtApply(obj, val, info) {
   obj.set("updated_at", bakedInputRuntime(info.schema, info.field.type, val));
@@ -3275,15 +3952,27 @@ function NetWorthSnapshotInput_netWorthApply(obj, val, info) {
 function NetWorthSnapshotInput_breakdownApply(obj, val, info) {
   obj.set("breakdown", bakedInputRuntime(info.schema, info.field.type, val));
 }
-const CreateReconciliationQueuePayload_reconciliationQueueEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_reconciliation_queuePgResource, reconciliation_queueUniques[0].attributes, $mutation, fieldArgs);
-function ReconciliationQueueInput_statusApply(obj, val, info) {
+const CreateAccountingPeriodPayload_accountingPeriodEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_accounting_periodPgResource, accounting_periodUniques[0].attributes, $mutation, fieldArgs);
+function AccountingPeriodInput_yearApply(obj, val, info) {
+  obj.set("year", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function AccountingPeriodInput_monthApply(obj, val, info) {
+  obj.set("month", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function AccountingPeriodInput_statusApply(obj, val, info) {
   obj.set("status", bakedInputRuntime(info.schema, info.field.type, val));
 }
-function ReconciliationQueueInput_reviewedAtApply(obj, val, info) {
-  obj.set("reviewed_at", bakedInputRuntime(info.schema, info.field.type, val));
+function AccountingPeriodInput_closedAtApply(obj, val, info) {
+  obj.set("closed_at", bakedInputRuntime(info.schema, info.field.type, val));
 }
-function ReconciliationQueueInput_reviewedByApply(obj, val, info) {
-  obj.set("reviewed_by", bakedInputRuntime(info.schema, info.field.type, val));
+function AccountingPeriodInput_closedByApply(obj, val, info) {
+  obj.set("closed_by", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function AccountingPeriodInput_reopenedAtApply(obj, val, info) {
+  obj.set("reopened_at", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function AccountingPeriodInput_blockersApply(obj, val, info) {
+  obj.set("blockers", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateCryptoLotPayload_cryptoLotEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_crypto_lotPgResource, crypto_lotUniques[0].attributes, $mutation, fieldArgs);
 function CryptoLotInput_cryptoAssetIdApply(obj, val, info) {
@@ -3349,6 +4038,34 @@ function CryptoAssetInput_costBasisMethodApply(obj, val, info) {
 function CryptoAssetInput_lastSyncedAtApply(obj, val, info) {
   obj.set("last_synced_at", bakedInputRuntime(info.schema, info.field.type, val));
 }
+const CreateCategorizationRulePayload_categorizationRuleEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_categorization_rulePgResource, categorization_ruleUniques[0].attributes, $mutation, fieldArgs);
+function CategorizationRuleInput_matchFieldApply(obj, val, info) {
+  obj.set("match_field", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function CategorizationRuleInput_matchTypeApply(obj, val, info) {
+  obj.set("match_type", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function CategorizationRuleInput_matchValueApply(obj, val, info) {
+  obj.set("match_value", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function CategorizationRuleInput_amountMinApply(obj, val, info) {
+  obj.set("amount_min", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function CategorizationRuleInput_amountMaxApply(obj, val, info) {
+  obj.set("amount_max", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function CategorizationRuleInput_confidenceApply(obj, val, info) {
+  obj.set("confidence", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function CategorizationRuleInput_priorityApply(obj, val, info) {
+  obj.set("priority", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function CategorizationRuleInput_hitCountApply(obj, val, info) {
+  obj.set("hit_count", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function CategorizationRuleInput_lastHitAtApply(obj, val, info) {
+  obj.set("last_hit_at", bakedInputRuntime(info.schema, info.field.type, val));
+}
 const CreateJournalEntryPayload_journalEntryEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_journal_entryPgResource, journal_entryUniques[0].attributes, $mutation, fieldArgs);
 function JournalEntryInput_sourceApply(obj, val, info) {
   obj.set("source", bakedInputRuntime(info.schema, info.field.type, val));
@@ -3377,6 +4094,28 @@ function RecurringTransactionInput_isActiveApply(obj, val, info) {
 }
 function RecurringTransactionInput_nextExpectedDateApply(obj, val, info) {
   obj.set("next_expected_date", bakedInputRuntime(info.schema, info.field.type, val));
+}
+const CreateReconciliationQueuePayload_reconciliationQueueEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_reconciliation_queuePgResource, reconciliation_queueUniques[0].attributes, $mutation, fieldArgs);
+function ReconciliationQueueInput_reviewedAtApply(obj, val, info) {
+  obj.set("reviewed_at", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function ReconciliationQueueInput_reviewedByApply(obj, val, info) {
+  obj.set("reviewed_by", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function ReconciliationQueueInput_categorizationSourceApply(obj, val, info) {
+  obj.set("categorization_source", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function ReconciliationQueueInput_suggestedDebitAccountIdApply(obj, val, info) {
+  obj.set("suggested_debit_account_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function ReconciliationQueueInput_suggestedCreditAccountIdApply(obj, val, info) {
+  obj.set("suggested_credit_account_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function ReconciliationQueueInput_periodYearApply(obj, val, info) {
+  obj.set("period_year", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function ReconciliationQueueInput_periodMonthApply(obj, val, info) {
+  obj.set("period_month", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateAccountPayload_accountEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_accountPgResource, accountUniques[0].attributes, $mutation, fieldArgs);
 function AccountInput_parentIdApply(obj, val, info) {
@@ -3429,6 +4168,9 @@ type Query implements Node {
     id: ID!
   ): Node
 
+  """Get a single \`_DrizzleMigration\`."""
+  _drizzleMigration(rowId: Int!): _DrizzleMigration
+
   """Get a single \`AccountMapping\`."""
   accountMapping(rowId: UUID!): AccountMapping
 
@@ -3441,8 +4183,8 @@ type Query implements Node {
   """Get a single \`NetWorthSnapshot\`."""
   netWorthSnapshot(rowId: UUID!): NetWorthSnapshot
 
-  """Get a single \`ReconciliationQueue\`."""
-  reconciliationQueue(rowId: UUID!): ReconciliationQueue
+  """Get a single \`AccountingPeriod\`."""
+  accountingPeriod(rowId: UUID!): AccountingPeriod
 
   """Get a single \`CryptoLot\`."""
   cryptoLot(rowId: UUID!): CryptoLot
@@ -3456,17 +4198,31 @@ type Query implements Node {
   """Get a single \`CryptoAsset\`."""
   cryptoAsset(rowId: UUID!): CryptoAsset
 
+  """Get a single \`CategorizationRule\`."""
+  categorizationRule(rowId: UUID!): CategorizationRule
+
   """Get a single \`JournalEntry\`."""
   journalEntry(rowId: UUID!): JournalEntry
 
   """Get a single \`RecurringTransaction\`."""
   recurringTransaction(rowId: UUID!): RecurringTransaction
 
+  """Get a single \`ReconciliationQueue\`."""
+  reconciliationQueue(rowId: UUID!): ReconciliationQueue
+
   """Get a single \`Account\`."""
   account(rowId: UUID!): Account
 
   """Get a single \`ConnectedAccount\`."""
   connectedAccount(rowId: UUID!): ConnectedAccount
+
+  """Reads a single \`_DrizzleMigration\` using its globally unique \`ID\`."""
+  _drizzleMigrationById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`_DrizzleMigration\`.
+    """
+    id: ID!
+  ): _DrizzleMigration
 
   """Reads a single \`AccountMapping\` using its globally unique \`ID\`."""
   accountMappingById(
@@ -3500,13 +4256,13 @@ type Query implements Node {
     id: ID!
   ): NetWorthSnapshot
 
-  """Reads a single \`ReconciliationQueue\` using its globally unique \`ID\`."""
-  reconciliationQueueById(
+  """Reads a single \`AccountingPeriod\` using its globally unique \`ID\`."""
+  accountingPeriodById(
     """
-    The globally unique \`ID\` to be used in selecting a single \`ReconciliationQueue\`.
+    The globally unique \`ID\` to be used in selecting a single \`AccountingPeriod\`.
     """
     id: ID!
-  ): ReconciliationQueue
+  ): AccountingPeriod
 
   """Reads a single \`CryptoLot\` using its globally unique \`ID\`."""
   cryptoLotById(
@@ -3534,6 +4290,14 @@ type Query implements Node {
     id: ID!
   ): CryptoAsset
 
+  """Reads a single \`CategorizationRule\` using its globally unique \`ID\`."""
+  categorizationRuleById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`CategorizationRule\`.
+    """
+    id: ID!
+  ): CategorizationRule
+
   """Reads a single \`JournalEntry\` using its globally unique \`ID\`."""
   journalEntryById(
     """
@@ -3550,6 +4314,14 @@ type Query implements Node {
     id: ID!
   ): RecurringTransaction
 
+  """Reads a single \`ReconciliationQueue\` using its globally unique \`ID\`."""
+  reconciliationQueueById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`ReconciliationQueue\`.
+    """
+    id: ID!
+  ): ReconciliationQueue
+
   """Reads a single \`Account\` using its globally unique \`ID\`."""
   accountById(
     """The globally unique \`ID\` to be used in selecting a single \`Account\`."""
@@ -3563,6 +4335,40 @@ type Query implements Node {
     """
     id: ID!
   ): ConnectedAccount
+
+  """Reads and enables pagination through a set of \`_DrizzleMigration\`."""
+  _drizzleMigrations(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: _DrizzleMigrationCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: _DrizzleMigrationFilter
+
+    """The method to use when ordering \`_DrizzleMigration\`."""
+    orderBy: [_DrizzleMigrationOrderBy!] = [PRIMARY_KEY_ASC]
+  ): _DrizzleMigrationConnection
 
   """Reads and enables pagination through a set of \`AccountMapping\`."""
   accountMappings(
@@ -3700,8 +4506,8 @@ type Query implements Node {
     orderBy: [NetWorthSnapshotOrderBy!] = [PRIMARY_KEY_ASC]
   ): NetWorthSnapshotConnection
 
-  """Reads and enables pagination through a set of \`ReconciliationQueue\`."""
-  reconciliationQueues(
+  """Reads and enables pagination through a set of \`AccountingPeriod\`."""
+  accountingPeriods(
     """Only read the first \`n\` values of the set."""
     first: Int
 
@@ -3723,16 +4529,16 @@ type Query implements Node {
     """
     A condition to be used in determining which values should be returned by the collection.
     """
-    condition: ReconciliationQueueCondition
+    condition: AccountingPeriodCondition
 
     """
     A filter to be used in determining which values should be returned by the collection.
     """
-    filter: ReconciliationQueueFilter
+    filter: AccountingPeriodFilter
 
-    """The method to use when ordering \`ReconciliationQueue\`."""
-    orderBy: [ReconciliationQueueOrderBy!] = [PRIMARY_KEY_ASC]
-  ): ReconciliationQueueConnection
+    """The method to use when ordering \`AccountingPeriod\`."""
+    orderBy: [AccountingPeriodOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AccountingPeriodConnection
 
   """Reads and enables pagination through a set of \`CryptoLot\`."""
   cryptoLots(
@@ -3870,6 +4676,40 @@ type Query implements Node {
     orderBy: [CryptoAssetOrderBy!] = [PRIMARY_KEY_ASC]
   ): CryptoAssetConnection
 
+  """Reads and enables pagination through a set of \`CategorizationRule\`."""
+  categorizationRules(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CategorizationRuleCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CategorizationRuleFilter
+
+    """The method to use when ordering \`CategorizationRule\`."""
+    orderBy: [CategorizationRuleOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CategorizationRuleConnection
+
   """Reads and enables pagination through a set of \`JournalEntry\`."""
   journalEntries(
     """Only read the first \`n\` values of the set."""
@@ -3937,6 +4777,40 @@ type Query implements Node {
     """The method to use when ordering \`RecurringTransaction\`."""
     orderBy: [RecurringTransactionOrderBy!] = [PRIMARY_KEY_ASC]
   ): RecurringTransactionConnection
+
+  """Reads and enables pagination through a set of \`ReconciliationQueue\`."""
+  reconciliationQueues(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ReconciliationQueueCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ReconciliationQueueFilter
+
+    """The method to use when ordering \`ReconciliationQueue\`."""
+    orderBy: [ReconciliationQueueOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ReconciliationQueueConnection
 
   """Reads and enables pagination through a set of \`Account\`."""
   accounts(
@@ -4014,6 +4888,23 @@ interface Node {
   """
   id: ID!
 }
+
+type _DrizzleMigration implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: Int!
+  hash: String!
+  createdAt: BigInt
+}
+
+"""
+A signed eight-byte integer. The upper big integer values are greater than the
+max value for a JavaScript number. Therefore all big integers will be output as
+strings and not numbers.
+"""
+scalar BigInt
 
 type AccountMapping implements Node {
   """
@@ -4405,6 +5296,74 @@ type Book implements Node {
     """The method to use when ordering \`SavingsGoal\`."""
     orderBy: [SavingsGoalOrderBy!] = [PRIMARY_KEY_ASC]
   ): SavingsGoalConnection!
+
+  """Reads and enables pagination through a set of \`AccountingPeriod\`."""
+  accountingPeriods(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AccountingPeriodCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: AccountingPeriodFilter
+
+    """The method to use when ordering \`AccountingPeriod\`."""
+    orderBy: [AccountingPeriodOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AccountingPeriodConnection!
+
+  """Reads and enables pagination through a set of \`CategorizationRule\`."""
+  categorizationRules(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CategorizationRuleCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CategorizationRuleFilter
+
+    """The method to use when ordering \`CategorizationRule\`."""
+    orderBy: [CategorizationRuleOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CategorizationRuleConnection!
 }
 
 enum BookType {
@@ -4888,6 +5847,18 @@ input BookFilter {
 
   """Some related \`savingsGoals\` exist."""
   savingsGoalsExist: Boolean
+
+  """Filter by the object’s \`accountingPeriods\` relation."""
+  accountingPeriods: BookToManyAccountingPeriodFilter
+
+  """Some related \`accountingPeriods\` exist."""
+  accountingPeriodsExist: Boolean
+
+  """Filter by the object’s \`categorizationRules\` relation."""
+  categorizationRules: BookToManyCategorizationRuleFilter
+
+  """Some related \`categorizationRules\` exist."""
+  categorizationRulesExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [BookFilter!]
@@ -5610,6 +6581,18 @@ input ReconciliationQueueFilter {
   """Filter by the object’s \`journalEntry\` relation."""
   journalEntry: JournalEntryFilter
 
+  """Filter by the object’s \`suggestedCreditAccount\` relation."""
+  suggestedCreditAccount: AccountFilter
+
+  """A related \`suggestedCreditAccount\` exists."""
+  suggestedCreditAccountExists: Boolean
+
+  """Filter by the object’s \`suggestedDebitAccount\` relation."""
+  suggestedDebitAccount: AccountFilter
+
+  """A related \`suggestedDebitAccount\` exists."""
+  suggestedDebitAccountExists: Boolean
+
   """Checks for all expressions in this list."""
   and: [ReconciliationQueueFilter!]
 
@@ -5765,6 +6748,152 @@ input SavingsGoalFilter {
 
   """Negates the expression."""
   not: SavingsGoalFilter
+}
+
+"""
+A filter to be used against many \`AccountingPeriod\` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyAccountingPeriodFilter {
+  """
+  Every related \`AccountingPeriod\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: AccountingPeriodFilter
+
+  """
+  Some related \`AccountingPeriod\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: AccountingPeriodFilter
+
+  """
+  No related \`AccountingPeriod\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: AccountingPeriodFilter
+}
+
+"""
+A filter to be used against \`AccountingPeriod\` object types. All fields are combined with a logical ‘and.’
+"""
+input AccountingPeriodFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`bookId\` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s \`year\` field."""
+  year: IntFilter
+
+  """Filter by the object’s \`month\` field."""
+  month: IntFilter
+
+  """Filter by the object’s \`status\` field."""
+  status: StringFilter
+
+  """Filter by the object’s \`book\` relation."""
+  book: BookFilter
+
+  """Checks for all expressions in this list."""
+  and: [AccountingPeriodFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [AccountingPeriodFilter!]
+
+  """Negates the expression."""
+  not: AccountingPeriodFilter
+}
+
+"""
+A filter to be used against Int fields. All fields are combined with a logical ‘and.’
+"""
+input IntFilter {
+  """
+  Is null (if \`true\` is specified) or is not null (if \`false\` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: Int
+
+  """Not equal to the specified value."""
+  notEqualTo: Int
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: Int
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: Int
+
+  """Included in the specified list."""
+  in: [Int!]
+
+  """Not included in the specified list."""
+  notIn: [Int!]
+
+  """Less than the specified value."""
+  lessThan: Int
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: Int
+
+  """Greater than the specified value."""
+  greaterThan: Int
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: Int
+}
+
+"""
+A filter to be used against many \`CategorizationRule\` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyCategorizationRuleFilter {
+  """
+  Every related \`CategorizationRule\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: CategorizationRuleFilter
+
+  """
+  Some related \`CategorizationRule\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: CategorizationRuleFilter
+
+  """
+  No related \`CategorizationRule\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: CategorizationRuleFilter
+}
+
+"""
+A filter to be used against \`CategorizationRule\` object types. All fields are combined with a logical ‘and.’
+"""
+input CategorizationRuleFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`bookId\` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s \`matchField\` field."""
+  matchField: StringFilter
+
+  """Filter by the object’s \`book\` relation."""
+  book: BookFilter
+
+  """Filter by the object’s \`creditAccount\` relation."""
+  creditAccount: AccountFilter
+
+  """Filter by the object’s \`debitAccount\` relation."""
+  debitAccount: AccountFilter
+
+  """Checks for all expressions in this list."""
+  and: [CategorizationRuleFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [CategorizationRuleFilter!]
+
+  """Negates the expression."""
+  not: CategorizationRuleFilter
 }
 
 """
@@ -6530,6 +7659,13 @@ type ReconciliationQueue implements Node {
   reviewedAt: Datetime
   reviewedBy: String
   createdAt: Datetime
+  categorizationSource: String
+  confidence: BigFloat
+  suggestedDebitAccountId: UUID
+  suggestedCreditAccountId: UUID
+  priority: Int!
+  periodYear: Int
+  periodMonth: Int
 
   """Reads a single \`Book\` that is related to this \`ReconciliationQueue\`."""
   book: Book
@@ -6538,6 +7674,16 @@ type ReconciliationQueue implements Node {
   Reads a single \`JournalEntry\` that is related to this \`ReconciliationQueue\`.
   """
   journalEntry: JournalEntry
+
+  """
+  Reads a single \`Account\` that is related to this \`ReconciliationQueue\`.
+  """
+  suggestedCreditAccount: Account
+
+  """
+  Reads a single \`Account\` that is related to this \`ReconciliationQueue\`.
+  """
+  suggestedDebitAccount: Account
 }
 
 """A \`ReconciliationQueue\` edge in the connection."""
@@ -6736,6 +7882,247 @@ enum SavingsGoalOrderBy {
   BOOK_ID_DESC
 }
 
+"""A connection to a list of \`AccountingPeriod\` values."""
+type AccountingPeriodConnection {
+  """A list of \`AccountingPeriod\` objects."""
+  nodes: [AccountingPeriod]!
+
+  """
+  A list of edges which contains the \`AccountingPeriod\` and cursor to aid in pagination.
+  """
+  edges: [AccountingPeriodEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* \`AccountingPeriod\` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+type AccountingPeriod implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  year: Int!
+  month: Int!
+  status: String!
+  closedAt: Datetime
+  closedBy: String
+  reopenedAt: Datetime
+  blockers: JSON
+  createdAt: Datetime
+
+  """Reads a single \`Book\` that is related to this \`AccountingPeriod\`."""
+  book: Book
+}
+
+"""
+Represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+"""A \`AccountingPeriod\` edge in the connection."""
+type AccountingPeriodEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`AccountingPeriod\` at the end of the edge."""
+  node: AccountingPeriod
+}
+
+"""
+A condition to be used against \`AccountingPeriod\` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input AccountingPeriodCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`bookId\` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s \`year\` field."""
+  year: Int
+
+  """Checks for equality with the object’s \`month\` field."""
+  month: Int
+
+  """Checks for equality with the object’s \`status\` field."""
+  status: String
+}
+
+"""Methods to use when ordering \`AccountingPeriod\`."""
+enum AccountingPeriodOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+  YEAR_ASC
+  YEAR_DESC
+  MONTH_ASC
+  MONTH_DESC
+  STATUS_ASC
+  STATUS_DESC
+}
+
+"""A connection to a list of \`CategorizationRule\` values."""
+type CategorizationRuleConnection {
+  """A list of \`CategorizationRule\` objects."""
+  nodes: [CategorizationRule]!
+
+  """
+  A list of edges which contains the \`CategorizationRule\` and cursor to aid in pagination.
+  """
+  edges: [CategorizationRuleEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* \`CategorizationRule\` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+type CategorizationRule implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  name: String!
+  matchField: String!
+  matchType: String!
+  matchValue: String!
+  amountMin: BigFloat
+  amountMax: BigFloat
+  debitAccountId: UUID!
+  creditAccountId: UUID!
+  confidence: BigFloat!
+  priority: Int!
+  hitCount: Int!
+  lastHitAt: Datetime
+  createdAt: Datetime
+
+  """Reads a single \`Book\` that is related to this \`CategorizationRule\`."""
+  book: Book
+
+  """Reads a single \`Account\` that is related to this \`CategorizationRule\`."""
+  creditAccount: Account
+
+  """Reads a single \`Account\` that is related to this \`CategorizationRule\`."""
+  debitAccount: Account
+}
+
+"""A \`CategorizationRule\` edge in the connection."""
+type CategorizationRuleEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`CategorizationRule\` at the end of the edge."""
+  node: CategorizationRule
+}
+
+"""
+A condition to be used against \`CategorizationRule\` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input CategorizationRuleCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`bookId\` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s \`matchField\` field."""
+  matchField: String
+}
+
+"""Methods to use when ordering \`CategorizationRule\`."""
+enum CategorizationRuleOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+  MATCH_FIELD_ASC
+  MATCH_FIELD_DESC
+}
+
+"""A connection to a list of \`_DrizzleMigration\` values."""
+type _DrizzleMigrationConnection {
+  """A list of \`_DrizzleMigration\` objects."""
+  nodes: [_DrizzleMigration]!
+
+  """
+  A list of edges which contains the \`_DrizzleMigration\` and cursor to aid in pagination.
+  """
+  edges: [_DrizzleMigrationEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* \`_DrizzleMigration\` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A \`_DrizzleMigration\` edge in the connection."""
+type _DrizzleMigrationEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`_DrizzleMigration\` at the end of the edge."""
+  node: _DrizzleMigration
+}
+
+"""
+A condition to be used against \`_DrizzleMigration\` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input _DrizzleMigrationCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: Int
+}
+
+"""
+A filter to be used against \`_DrizzleMigration\` object types. All fields are combined with a logical ‘and.’
+"""
+input _DrizzleMigrationFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: IntFilter
+
+  """Checks for all expressions in this list."""
+  and: [_DrizzleMigrationFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [_DrizzleMigrationFilter!]
+
+  """Negates the expression."""
+  not: _DrizzleMigrationFilter
+}
+
+"""Methods to use when ordering \`_DrizzleMigration\`."""
+enum _DrizzleMigrationOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+}
+
 """A connection to a list of \`Book\` values."""
 type BookConnection {
   """A list of \`Book\` objects."""
@@ -6788,6 +8175,14 @@ enum BookOrderBy {
 The root mutation type which contains root level fields which mutate data.
 """
 type Mutation {
+  """Creates a single \`_DrizzleMigration\`."""
+  createDrizzleMigration(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateDrizzleMigrationInput!
+  ): CreateDrizzleMigrationPayload
+
   """Creates a single \`AccountMapping\`."""
   createAccountMapping(
     """
@@ -6820,13 +8215,13 @@ type Mutation {
     input: CreateNetWorthSnapshotInput!
   ): CreateNetWorthSnapshotPayload
 
-  """Creates a single \`ReconciliationQueue\`."""
-  createReconciliationQueue(
+  """Creates a single \`AccountingPeriod\`."""
+  createAccountingPeriod(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: CreateReconciliationQueueInput!
-  ): CreateReconciliationQueuePayload
+    input: CreateAccountingPeriodInput!
+  ): CreateAccountingPeriodPayload
 
   """Creates a single \`CryptoLot\`."""
   createCryptoLot(
@@ -6860,6 +8255,14 @@ type Mutation {
     input: CreateCryptoAssetInput!
   ): CreateCryptoAssetPayload
 
+  """Creates a single \`CategorizationRule\`."""
+  createCategorizationRule(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateCategorizationRuleInput!
+  ): CreateCategorizationRulePayload
+
   """Creates a single \`JournalEntry\`."""
   createJournalEntry(
     """
@@ -6876,6 +8279,14 @@ type Mutation {
     input: CreateRecurringTransactionInput!
   ): CreateRecurringTransactionPayload
 
+  """Creates a single \`ReconciliationQueue\`."""
+  createReconciliationQueue(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateReconciliationQueueInput!
+  ): CreateReconciliationQueuePayload
+
   """Creates a single \`Account\`."""
   createAccount(
     """
@@ -6891,6 +8302,24 @@ type Mutation {
     """
     input: CreateConnectedAccountInput!
   ): CreateConnectedAccountPayload
+
+  """
+  Updates a single \`_DrizzleMigration\` using its globally unique id and a patch.
+  """
+  updateDrizzleMigrationById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateDrizzleMigrationByIdInput!
+  ): UpdateDrizzleMigrationPayload
+
+  """Updates a single \`_DrizzleMigration\` using a unique key and a patch."""
+  updateDrizzleMigration(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateDrizzleMigrationInput!
+  ): UpdateDrizzleMigrationPayload
 
   """
   Updates a single \`AccountMapping\` using its globally unique id and a patch.
@@ -6965,22 +8394,22 @@ type Mutation {
   ): UpdateNetWorthSnapshotPayload
 
   """
-  Updates a single \`ReconciliationQueue\` using its globally unique id and a patch.
+  Updates a single \`AccountingPeriod\` using its globally unique id and a patch.
   """
-  updateReconciliationQueueById(
+  updateAccountingPeriodById(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: UpdateReconciliationQueueByIdInput!
-  ): UpdateReconciliationQueuePayload
+    input: UpdateAccountingPeriodByIdInput!
+  ): UpdateAccountingPeriodPayload
 
-  """Updates a single \`ReconciliationQueue\` using a unique key and a patch."""
-  updateReconciliationQueue(
+  """Updates a single \`AccountingPeriod\` using a unique key and a patch."""
+  updateAccountingPeriod(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: UpdateReconciliationQueueInput!
-  ): UpdateReconciliationQueuePayload
+    input: UpdateAccountingPeriodInput!
+  ): UpdateAccountingPeriodPayload
 
   """Updates a single \`CryptoLot\` using its globally unique id and a patch."""
   updateCryptoLotById(
@@ -7049,6 +8478,24 @@ type Mutation {
   ): UpdateCryptoAssetPayload
 
   """
+  Updates a single \`CategorizationRule\` using its globally unique id and a patch.
+  """
+  updateCategorizationRuleById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateCategorizationRuleByIdInput!
+  ): UpdateCategorizationRulePayload
+
+  """Updates a single \`CategorizationRule\` using a unique key and a patch."""
+  updateCategorizationRule(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateCategorizationRuleInput!
+  ): UpdateCategorizationRulePayload
+
+  """
   Updates a single \`JournalEntry\` using its globally unique id and a patch.
   """
   updateJournalEntryById(
@@ -7086,6 +8533,24 @@ type Mutation {
     input: UpdateRecurringTransactionInput!
   ): UpdateRecurringTransactionPayload
 
+  """
+  Updates a single \`ReconciliationQueue\` using its globally unique id and a patch.
+  """
+  updateReconciliationQueueById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateReconciliationQueueByIdInput!
+  ): UpdateReconciliationQueuePayload
+
+  """Updates a single \`ReconciliationQueue\` using a unique key and a patch."""
+  updateReconciliationQueue(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateReconciliationQueueInput!
+  ): UpdateReconciliationQueuePayload
+
   """Updates a single \`Account\` using its globally unique id and a patch."""
   updateAccountById(
     """
@@ -7119,6 +8584,22 @@ type Mutation {
     """
     input: UpdateConnectedAccountInput!
   ): UpdateConnectedAccountPayload
+
+  """Deletes a single \`_DrizzleMigration\` using its globally unique id."""
+  deleteDrizzleMigrationById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteDrizzleMigrationByIdInput!
+  ): DeleteDrizzleMigrationPayload
+
+  """Deletes a single \`_DrizzleMigration\` using a unique key."""
+  deleteDrizzleMigration(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteDrizzleMigrationInput!
+  ): DeleteDrizzleMigrationPayload
 
   """Deletes a single \`AccountMapping\` using its globally unique id."""
   deleteAccountMappingById(
@@ -7184,21 +8665,21 @@ type Mutation {
     input: DeleteNetWorthSnapshotInput!
   ): DeleteNetWorthSnapshotPayload
 
-  """Deletes a single \`ReconciliationQueue\` using its globally unique id."""
-  deleteReconciliationQueueById(
+  """Deletes a single \`AccountingPeriod\` using its globally unique id."""
+  deleteAccountingPeriodById(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: DeleteReconciliationQueueByIdInput!
-  ): DeleteReconciliationQueuePayload
+    input: DeleteAccountingPeriodByIdInput!
+  ): DeleteAccountingPeriodPayload
 
-  """Deletes a single \`ReconciliationQueue\` using a unique key."""
-  deleteReconciliationQueue(
+  """Deletes a single \`AccountingPeriod\` using a unique key."""
+  deleteAccountingPeriod(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: DeleteReconciliationQueueInput!
-  ): DeleteReconciliationQueuePayload
+    input: DeleteAccountingPeriodInput!
+  ): DeleteAccountingPeriodPayload
 
   """Deletes a single \`CryptoLot\` using its globally unique id."""
   deleteCryptoLotById(
@@ -7264,6 +8745,22 @@ type Mutation {
     input: DeleteCryptoAssetInput!
   ): DeleteCryptoAssetPayload
 
+  """Deletes a single \`CategorizationRule\` using its globally unique id."""
+  deleteCategorizationRuleById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCategorizationRuleByIdInput!
+  ): DeleteCategorizationRulePayload
+
+  """Deletes a single \`CategorizationRule\` using a unique key."""
+  deleteCategorizationRule(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCategorizationRuleInput!
+  ): DeleteCategorizationRulePayload
+
   """Deletes a single \`JournalEntry\` using its globally unique id."""
   deleteJournalEntryById(
     """
@@ -7296,6 +8793,22 @@ type Mutation {
     input: DeleteRecurringTransactionInput!
   ): DeleteRecurringTransactionPayload
 
+  """Deletes a single \`ReconciliationQueue\` using its globally unique id."""
+  deleteReconciliationQueueById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteReconciliationQueueByIdInput!
+  ): DeleteReconciliationQueuePayload
+
+  """Deletes a single \`ReconciliationQueue\` using a unique key."""
+  deleteReconciliationQueue(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteReconciliationQueueInput!
+  ): DeleteReconciliationQueuePayload
+
   """Deletes a single \`Account\` using its globally unique id."""
   deleteAccountById(
     """
@@ -7327,6 +8840,48 @@ type Mutation {
     """
     input: DeleteConnectedAccountInput!
   ): DeleteConnectedAccountPayload
+}
+
+"""The output of our create \`_DrizzleMigration\` mutation."""
+type CreateDrizzleMigrationPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`_DrizzleMigration\` that was created by this mutation."""
+  _drizzleMigration: _DrizzleMigration
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`_DrizzleMigration\`. May be used by Relay 1."""
+  _drizzleMigrationEdge(
+    """The method to use when ordering \`_DrizzleMigration\`."""
+    orderBy: [_DrizzleMigrationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): _DrizzleMigrationEdge
+}
+
+"""All input for the create \`_DrizzleMigration\` mutation."""
+input CreateDrizzleMigrationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`_DrizzleMigration\` to be created by this mutation."""
+  _drizzleMigration: _DrizzleMigrationInput!
+}
+
+"""An input for mutations affecting \`_DrizzleMigration\`"""
+input _DrizzleMigrationInput {
+  rowId: Int
+  hash: String!
+  createdAt: BigInt
 }
 
 """The output of our create \`AccountMapping\` mutation."""
@@ -7514,49 +9069,52 @@ input NetWorthSnapshotInput {
   createdAt: Datetime
 }
 
-"""The output of our create \`ReconciliationQueue\` mutation."""
-type CreateReconciliationQueuePayload {
+"""The output of our create \`AccountingPeriod\` mutation."""
+type CreateAccountingPeriodPayload {
   """
   The exact same \`clientMutationId\` that was provided in the mutation input,
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
 
-  """The \`ReconciliationQueue\` that was created by this mutation."""
-  reconciliationQueue: ReconciliationQueue
+  """The \`AccountingPeriod\` that was created by this mutation."""
+  accountingPeriod: AccountingPeriod
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
 
-  """An edge for our \`ReconciliationQueue\`. May be used by Relay 1."""
-  reconciliationQueueEdge(
-    """The method to use when ordering \`ReconciliationQueue\`."""
-    orderBy: [ReconciliationQueueOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): ReconciliationQueueEdge
+  """An edge for our \`AccountingPeriod\`. May be used by Relay 1."""
+  accountingPeriodEdge(
+    """The method to use when ordering \`AccountingPeriod\`."""
+    orderBy: [AccountingPeriodOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): AccountingPeriodEdge
 }
 
-"""All input for the create \`ReconciliationQueue\` mutation."""
-input CreateReconciliationQueueInput {
+"""All input for the create \`AccountingPeriod\` mutation."""
+input CreateAccountingPeriodInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
 
-  """The \`ReconciliationQueue\` to be created by this mutation."""
-  reconciliationQueue: ReconciliationQueueInput!
+  """The \`AccountingPeriod\` to be created by this mutation."""
+  accountingPeriod: AccountingPeriodInput!
 }
 
-"""An input for mutations affecting \`ReconciliationQueue\`"""
-input ReconciliationQueueInput {
+"""An input for mutations affecting \`AccountingPeriod\`"""
+input AccountingPeriodInput {
   rowId: UUID
   bookId: UUID!
-  journalEntryId: UUID!
-  status: ReconciliationStatus
-  reviewedAt: Datetime
-  reviewedBy: String
+  year: Int!
+  month: Int!
+  status: String
+  closedAt: Datetime
+  closedBy: String
+  reopenedAt: Datetime
+  blockers: JSON
   createdAt: Datetime
 }
 
@@ -7753,6 +9311,60 @@ input CryptoAssetInput {
   updatedAt: Datetime
 }
 
+"""The output of our create \`CategorizationRule\` mutation."""
+type CreateCategorizationRulePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`CategorizationRule\` that was created by this mutation."""
+  categorizationRule: CategorizationRule
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`CategorizationRule\`. May be used by Relay 1."""
+  categorizationRuleEdge(
+    """The method to use when ordering \`CategorizationRule\`."""
+    orderBy: [CategorizationRuleOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CategorizationRuleEdge
+}
+
+"""All input for the create \`CategorizationRule\` mutation."""
+input CreateCategorizationRuleInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`CategorizationRule\` to be created by this mutation."""
+  categorizationRule: CategorizationRuleInput!
+}
+
+"""An input for mutations affecting \`CategorizationRule\`"""
+input CategorizationRuleInput {
+  rowId: UUID
+  bookId: UUID!
+  name: String!
+  matchField: String!
+  matchType: String!
+  matchValue: String!
+  amountMin: BigFloat
+  amountMax: BigFloat
+  debitAccountId: UUID!
+  creditAccountId: UUID!
+  confidence: BigFloat
+  priority: Int
+  hitCount: Int
+  lastHitAt: Datetime
+  createdAt: Datetime
+}
+
 """The output of our create \`JournalEntry\` mutation."""
 type CreateJournalEntryPayload {
   """
@@ -7851,6 +9463,59 @@ input RecurringTransactionInput {
   nextExpectedDate: Datetime
   createdAt: Datetime
   updatedAt: Datetime
+}
+
+"""The output of our create \`ReconciliationQueue\` mutation."""
+type CreateReconciliationQueuePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`ReconciliationQueue\` that was created by this mutation."""
+  reconciliationQueue: ReconciliationQueue
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`ReconciliationQueue\`. May be used by Relay 1."""
+  reconciliationQueueEdge(
+    """The method to use when ordering \`ReconciliationQueue\`."""
+    orderBy: [ReconciliationQueueOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ReconciliationQueueEdge
+}
+
+"""All input for the create \`ReconciliationQueue\` mutation."""
+input CreateReconciliationQueueInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`ReconciliationQueue\` to be created by this mutation."""
+  reconciliationQueue: ReconciliationQueueInput!
+}
+
+"""An input for mutations affecting \`ReconciliationQueue\`"""
+input ReconciliationQueueInput {
+  rowId: UUID
+  bookId: UUID!
+  journalEntryId: UUID!
+  status: ReconciliationStatus
+  reviewedAt: Datetime
+  reviewedBy: String
+  createdAt: Datetime
+  categorizationSource: String
+  confidence: BigFloat
+  suggestedDebitAccountId: UUID
+  suggestedCreditAccountId: UUID
+  priority: Int
+  periodYear: Int
+  periodMonth: Int
 }
 
 """The output of our create \`Account\` mutation."""
@@ -7952,6 +9617,72 @@ input ConnectedAccountInput {
   lastSyncedAt: Datetime
   createdAt: Datetime
   syncCursor: String
+}
+
+"""The output of our update \`_DrizzleMigration\` mutation."""
+type UpdateDrizzleMigrationPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`_DrizzleMigration\` that was updated by this mutation."""
+  _drizzleMigration: _DrizzleMigration
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`_DrizzleMigration\`. May be used by Relay 1."""
+  _drizzleMigrationEdge(
+    """The method to use when ordering \`_DrizzleMigration\`."""
+    orderBy: [_DrizzleMigrationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): _DrizzleMigrationEdge
+}
+
+"""All input for the \`updateDrizzleMigrationById\` mutation."""
+input UpdateDrizzleMigrationByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`_DrizzleMigration\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`_DrizzleMigration\` being updated.
+  """
+  patch: _DrizzleMigrationPatch!
+}
+
+"""
+Represents an update to a \`_DrizzleMigration\`. Fields that are set will be updated.
+"""
+input _DrizzleMigrationPatch {
+  rowId: Int
+  hash: String
+  createdAt: BigInt
+}
+
+"""All input for the \`updateDrizzleMigration\` mutation."""
+input UpdateDrizzleMigrationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: Int!
+
+  """
+  An object where the defined keys will be set on the \`_DrizzleMigration\` being updated.
+  """
+  patch: _DrizzleMigrationPatch!
 }
 
 """The output of our update \`AccountMapping\` mutation."""
@@ -8235,31 +9966,31 @@ input UpdateNetWorthSnapshotInput {
   patch: NetWorthSnapshotPatch!
 }
 
-"""The output of our update \`ReconciliationQueue\` mutation."""
-type UpdateReconciliationQueuePayload {
+"""The output of our update \`AccountingPeriod\` mutation."""
+type UpdateAccountingPeriodPayload {
   """
   The exact same \`clientMutationId\` that was provided in the mutation input,
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
 
-  """The \`ReconciliationQueue\` that was updated by this mutation."""
-  reconciliationQueue: ReconciliationQueue
+  """The \`AccountingPeriod\` that was updated by this mutation."""
+  accountingPeriod: AccountingPeriod
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
 
-  """An edge for our \`ReconciliationQueue\`. May be used by Relay 1."""
-  reconciliationQueueEdge(
-    """The method to use when ordering \`ReconciliationQueue\`."""
-    orderBy: [ReconciliationQueueOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): ReconciliationQueueEdge
+  """An edge for our \`AccountingPeriod\`. May be used by Relay 1."""
+  accountingPeriodEdge(
+    """The method to use when ordering \`AccountingPeriod\`."""
+    orderBy: [AccountingPeriodOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): AccountingPeriodEdge
 }
 
-"""All input for the \`updateReconciliationQueueById\` mutation."""
-input UpdateReconciliationQueueByIdInput {
+"""All input for the \`updateAccountingPeriodById\` mutation."""
+input UpdateAccountingPeriodByIdInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -8267,31 +9998,34 @@ input UpdateReconciliationQueueByIdInput {
   clientMutationId: String
 
   """
-  The globally unique \`ID\` which will identify a single \`ReconciliationQueue\` to be updated.
+  The globally unique \`ID\` which will identify a single \`AccountingPeriod\` to be updated.
   """
   id: ID!
 
   """
-  An object where the defined keys will be set on the \`ReconciliationQueue\` being updated.
+  An object where the defined keys will be set on the \`AccountingPeriod\` being updated.
   """
-  patch: ReconciliationQueuePatch!
+  patch: AccountingPeriodPatch!
 }
 
 """
-Represents an update to a \`ReconciliationQueue\`. Fields that are set will be updated.
+Represents an update to a \`AccountingPeriod\`. Fields that are set will be updated.
 """
-input ReconciliationQueuePatch {
+input AccountingPeriodPatch {
   rowId: UUID
   bookId: UUID
-  journalEntryId: UUID
-  status: ReconciliationStatus
-  reviewedAt: Datetime
-  reviewedBy: String
+  year: Int
+  month: Int
+  status: String
+  closedAt: Datetime
+  closedBy: String
+  reopenedAt: Datetime
+  blockers: JSON
   createdAt: Datetime
 }
 
-"""All input for the \`updateReconciliationQueue\` mutation."""
-input UpdateReconciliationQueueInput {
+"""All input for the \`updateAccountingPeriod\` mutation."""
+input UpdateAccountingPeriodInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -8300,9 +10034,9 @@ input UpdateReconciliationQueueInput {
   rowId: UUID!
 
   """
-  An object where the defined keys will be set on the \`ReconciliationQueue\` being updated.
+  An object where the defined keys will be set on the \`AccountingPeriod\` being updated.
   """
-  patch: ReconciliationQueuePatch!
+  patch: AccountingPeriodPatch!
 }
 
 """The output of our update \`CryptoLot\` mutation."""
@@ -8592,6 +10326,84 @@ input UpdateCryptoAssetInput {
   patch: CryptoAssetPatch!
 }
 
+"""The output of our update \`CategorizationRule\` mutation."""
+type UpdateCategorizationRulePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`CategorizationRule\` that was updated by this mutation."""
+  categorizationRule: CategorizationRule
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`CategorizationRule\`. May be used by Relay 1."""
+  categorizationRuleEdge(
+    """The method to use when ordering \`CategorizationRule\`."""
+    orderBy: [CategorizationRuleOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CategorizationRuleEdge
+}
+
+"""All input for the \`updateCategorizationRuleById\` mutation."""
+input UpdateCategorizationRuleByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`CategorizationRule\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`CategorizationRule\` being updated.
+  """
+  patch: CategorizationRulePatch!
+}
+
+"""
+Represents an update to a \`CategorizationRule\`. Fields that are set will be updated.
+"""
+input CategorizationRulePatch {
+  rowId: UUID
+  bookId: UUID
+  name: String
+  matchField: String
+  matchType: String
+  matchValue: String
+  amountMin: BigFloat
+  amountMax: BigFloat
+  debitAccountId: UUID
+  creditAccountId: UUID
+  confidence: BigFloat
+  priority: Int
+  hitCount: Int
+  lastHitAt: Datetime
+  createdAt: Datetime
+}
+
+"""All input for the \`updateCategorizationRule\` mutation."""
+input UpdateCategorizationRuleInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`CategorizationRule\` being updated.
+  """
+  patch: CategorizationRulePatch!
+}
+
 """The output of our update \`JournalEntry\` mutation."""
 type UpdateJournalEntryPayload {
   """
@@ -8738,6 +10550,83 @@ input UpdateRecurringTransactionInput {
   An object where the defined keys will be set on the \`RecurringTransaction\` being updated.
   """
   patch: RecurringTransactionPatch!
+}
+
+"""The output of our update \`ReconciliationQueue\` mutation."""
+type UpdateReconciliationQueuePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`ReconciliationQueue\` that was updated by this mutation."""
+  reconciliationQueue: ReconciliationQueue
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`ReconciliationQueue\`. May be used by Relay 1."""
+  reconciliationQueueEdge(
+    """The method to use when ordering \`ReconciliationQueue\`."""
+    orderBy: [ReconciliationQueueOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ReconciliationQueueEdge
+}
+
+"""All input for the \`updateReconciliationQueueById\` mutation."""
+input UpdateReconciliationQueueByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`ReconciliationQueue\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`ReconciliationQueue\` being updated.
+  """
+  patch: ReconciliationQueuePatch!
+}
+
+"""
+Represents an update to a \`ReconciliationQueue\`. Fields that are set will be updated.
+"""
+input ReconciliationQueuePatch {
+  rowId: UUID
+  bookId: UUID
+  journalEntryId: UUID
+  status: ReconciliationStatus
+  reviewedAt: Datetime
+  reviewedBy: String
+  createdAt: Datetime
+  categorizationSource: String
+  confidence: BigFloat
+  suggestedDebitAccountId: UUID
+  suggestedCreditAccountId: UUID
+  priority: Int
+  periodYear: Int
+  periodMonth: Int
+}
+
+"""All input for the \`updateReconciliationQueue\` mutation."""
+input UpdateReconciliationQueueInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`ReconciliationQueue\` being updated.
+  """
+  patch: ReconciliationQueuePatch!
 }
 
 """The output of our update \`Account\` mutation."""
@@ -8887,6 +10776,54 @@ input UpdateConnectedAccountInput {
   An object where the defined keys will be set on the \`ConnectedAccount\` being updated.
   """
   patch: ConnectedAccountPatch!
+}
+
+"""The output of our delete \`_DrizzleMigration\` mutation."""
+type DeleteDrizzleMigrationPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`_DrizzleMigration\` that was deleted by this mutation."""
+  _drizzleMigration: _DrizzleMigration
+  deletedDrizzleMigrationId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`_DrizzleMigration\`. May be used by Relay 1."""
+  _drizzleMigrationEdge(
+    """The method to use when ordering \`_DrizzleMigration\`."""
+    orderBy: [_DrizzleMigrationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): _DrizzleMigrationEdge
+}
+
+"""All input for the \`deleteDrizzleMigrationById\` mutation."""
+input DeleteDrizzleMigrationByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`_DrizzleMigration\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteDrizzleMigration\` mutation."""
+input DeleteDrizzleMigrationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: Int!
 }
 
 """The output of our delete \`AccountMapping\` mutation."""
@@ -9081,32 +11018,32 @@ input DeleteNetWorthSnapshotInput {
   rowId: UUID!
 }
 
-"""The output of our delete \`ReconciliationQueue\` mutation."""
-type DeleteReconciliationQueuePayload {
+"""The output of our delete \`AccountingPeriod\` mutation."""
+type DeleteAccountingPeriodPayload {
   """
   The exact same \`clientMutationId\` that was provided in the mutation input,
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
 
-  """The \`ReconciliationQueue\` that was deleted by this mutation."""
-  reconciliationQueue: ReconciliationQueue
-  deletedReconciliationQueueId: ID
+  """The \`AccountingPeriod\` that was deleted by this mutation."""
+  accountingPeriod: AccountingPeriod
+  deletedAccountingPeriodId: ID
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
 
-  """An edge for our \`ReconciliationQueue\`. May be used by Relay 1."""
-  reconciliationQueueEdge(
-    """The method to use when ordering \`ReconciliationQueue\`."""
-    orderBy: [ReconciliationQueueOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): ReconciliationQueueEdge
+  """An edge for our \`AccountingPeriod\`. May be used by Relay 1."""
+  accountingPeriodEdge(
+    """The method to use when ordering \`AccountingPeriod\`."""
+    orderBy: [AccountingPeriodOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): AccountingPeriodEdge
 }
 
-"""All input for the \`deleteReconciliationQueueById\` mutation."""
-input DeleteReconciliationQueueByIdInput {
+"""All input for the \`deleteAccountingPeriodById\` mutation."""
+input DeleteAccountingPeriodByIdInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -9114,13 +11051,13 @@ input DeleteReconciliationQueueByIdInput {
   clientMutationId: String
 
   """
-  The globally unique \`ID\` which will identify a single \`ReconciliationQueue\` to be deleted.
+  The globally unique \`ID\` which will identify a single \`AccountingPeriod\` to be deleted.
   """
   id: ID!
 }
 
-"""All input for the \`deleteReconciliationQueue\` mutation."""
-input DeleteReconciliationQueueInput {
+"""All input for the \`deleteAccountingPeriod\` mutation."""
+input DeleteAccountingPeriodInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -9321,6 +11258,54 @@ input DeleteCryptoAssetInput {
   rowId: UUID!
 }
 
+"""The output of our delete \`CategorizationRule\` mutation."""
+type DeleteCategorizationRulePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`CategorizationRule\` that was deleted by this mutation."""
+  categorizationRule: CategorizationRule
+  deletedCategorizationRuleId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`CategorizationRule\`. May be used by Relay 1."""
+  categorizationRuleEdge(
+    """The method to use when ordering \`CategorizationRule\`."""
+    orderBy: [CategorizationRuleOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CategorizationRuleEdge
+}
+
+"""All input for the \`deleteCategorizationRuleById\` mutation."""
+input DeleteCategorizationRuleByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`CategorizationRule\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteCategorizationRule\` mutation."""
+input DeleteCategorizationRuleInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete \`JournalEntry\` mutation."""
 type DeleteJournalEntryPayload {
   """
@@ -9409,6 +11394,54 @@ input DeleteRecurringTransactionByIdInput {
 
 """All input for the \`deleteRecurringTransaction\` mutation."""
 input DeleteRecurringTransactionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`ReconciliationQueue\` mutation."""
+type DeleteReconciliationQueuePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`ReconciliationQueue\` that was deleted by this mutation."""
+  reconciliationQueue: ReconciliationQueue
+  deletedReconciliationQueueId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`ReconciliationQueue\`. May be used by Relay 1."""
+  reconciliationQueueEdge(
+    """The method to use when ordering \`ReconciliationQueue\`."""
+    orderBy: [ReconciliationQueueOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ReconciliationQueueEdge
+}
+
+"""All input for the \`deleteReconciliationQueueById\` mutation."""
+input DeleteReconciliationQueueByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`ReconciliationQueue\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteReconciliationQueue\` mutation."""
+input DeleteReconciliationQueueInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -9518,6 +11551,32 @@ export const objects = {
       return !0;
     },
     plans: {
+      _drizzleMigration(_$root, {
+        $rowId
+      }) {
+        return resource___drizzle_migrationsPgResource.get({
+          id: $rowId
+        });
+      },
+      _drizzleMigrationById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher__DrizzleMigration($nodeId);
+      },
+      _drizzleMigrations: {
+        plan() {
+          return connection(resource___drizzle_migrationsPgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query__drizzleMigrationsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       account(_$root, {
         $rowId
       }) {
@@ -9528,6 +11587,32 @@ export const objects = {
       accountById(_$parent, args) {
         const $nodeId = args.getRaw("id");
         return nodeFetcher_Account($nodeId);
+      },
+      accountingPeriod(_$root, {
+        $rowId
+      }) {
+        return resource_accounting_periodPgResource.get({
+          id: $rowId
+        });
+      },
+      accountingPeriodById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_AccountingPeriod($nodeId);
+      },
+      accountingPeriods: {
+        plan() {
+          return connection(resource_accounting_periodPgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query__drizzleMigrationsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
       },
       accountMapping(_$root, {
         $rowId
@@ -9551,7 +11636,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_accountMappingsfilterApplyPlan,
+          filter: Query__drizzleMigrationsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -9566,7 +11651,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_accountMappingsfilterApplyPlan,
+          filter: Query__drizzleMigrationsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -9592,7 +11677,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_accountMappingsfilterApplyPlan,
+          filter: Query__drizzleMigrationsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -9618,7 +11703,33 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_accountMappingsfilterApplyPlan,
+          filter: Query__drizzleMigrationsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      categorizationRule(_$root, {
+        $rowId
+      }) {
+        return resource_categorization_rulePgResource.get({
+          id: $rowId
+        });
+      },
+      categorizationRuleById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_CategorizationRule($nodeId);
+      },
+      categorizationRules: {
+        plan() {
+          return connection(resource_categorization_rulePgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query__drizzleMigrationsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -9644,7 +11755,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_accountMappingsfilterApplyPlan,
+          filter: Query__drizzleMigrationsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -9670,7 +11781,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_accountMappingsfilterApplyPlan,
+          filter: Query__drizzleMigrationsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -9696,7 +11807,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_accountMappingsfilterApplyPlan,
+          filter: Query__drizzleMigrationsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -9715,7 +11826,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_accountMappingsfilterApplyPlan,
+          filter: Query__drizzleMigrationsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -9752,7 +11863,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_accountMappingsfilterApplyPlan,
+          filter: Query__drizzleMigrationsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -9778,7 +11889,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_accountMappingsfilterApplyPlan,
+          filter: Query__drizzleMigrationsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -9810,7 +11921,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_accountMappingsfilterApplyPlan,
+          filter: Query__drizzleMigrationsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -9836,7 +11947,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_accountMappingsfilterApplyPlan,
+          filter: Query__drizzleMigrationsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -9862,7 +11973,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_accountMappingsfilterApplyPlan,
+          filter: Query__drizzleMigrationsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       }
@@ -9874,6 +11985,18 @@ export const objects = {
       createAccount: {
         plan(_, args) {
           const $insert = pgInsertSingle(resource_accountPgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
+      createAccountingPeriod: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_accounting_periodPgResource);
           args.apply($insert);
           return object({
             result: $insert
@@ -9919,6 +12042,18 @@ export const objects = {
           input: applyInputToInsert
         }
       },
+      createCategorizationRule: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_categorization_rulePgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
       createConnectedAccount: {
         plan(_, args) {
           const $insert = pgInsertSingle(resource_connected_accountPgResource);
@@ -9946,6 +12081,18 @@ export const objects = {
       createCryptoLot: {
         plan(_, args) {
           const $insert = pgInsertSingle(resource_crypto_lotPgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
+      createDrizzleMigration: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource___drizzle_migrationsPgResource);
           args.apply($insert);
           return object({
             result: $insert
@@ -10053,6 +12200,32 @@ export const objects = {
           input: applyInputToUpdateOrDelete
         }
       },
+      deleteAccountingPeriod: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_accounting_periodPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteAccountingPeriodById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_accounting_periodPgResource, specFromArgs_AccountingPeriod(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
       deleteAccountMapping: {
         plan(_$root, args) {
           const $delete = pgDeleteSingle(resource_account_mappingPgResource, {
@@ -10131,6 +12304,32 @@ export const objects = {
           input: applyInputToUpdateOrDelete
         }
       },
+      deleteCategorizationRule: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_categorization_rulePgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteCategorizationRuleById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_categorization_rulePgResource, specFromArgs_CategorizationRule(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
       deleteConnectedAccount: {
         plan(_$root, args) {
           const $delete = pgDeleteSingle(resource_connected_accountPgResource, {
@@ -10200,6 +12399,32 @@ export const objects = {
       deleteCryptoLotById: {
         plan(_$root, args) {
           const $delete = pgDeleteSingle(resource_crypto_lotPgResource, specFromArgs_CryptoLot(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteDrizzleMigration: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource___drizzle_migrationsPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteDrizzleMigrationById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource___drizzle_migrationsPgResource, specFromArgs__DrizzleMigration(args));
           args.apply($delete);
           return object({
             result: $delete
@@ -10391,6 +12616,32 @@ export const objects = {
           input: applyInputToUpdateOrDelete
         }
       },
+      updateAccountingPeriod: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_accounting_periodPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateAccountingPeriodById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_accounting_periodPgResource, specFromArgs_AccountingPeriod(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
       updateAccountMapping: {
         plan(_$root, args) {
           const $update = pgUpdateSingle(resource_account_mappingPgResource, {
@@ -10469,6 +12720,32 @@ export const objects = {
           input: applyInputToUpdateOrDelete
         }
       },
+      updateCategorizationRule: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_categorization_rulePgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateCategorizationRuleById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_categorization_rulePgResource, specFromArgs_CategorizationRule(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
       updateConnectedAccount: {
         plan(_$root, args) {
           const $update = pgUpdateSingle(resource_connected_accountPgResource, {
@@ -10538,6 +12815,32 @@ export const objects = {
       updateCryptoLotById: {
         plan(_$root, args) {
           const $update = pgUpdateSingle(resource_crypto_lotPgResource, specFromArgs_CryptoLot(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateDrizzleMigration: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource___drizzle_migrationsPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateDrizzleMigrationById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource___drizzle_migrationsPgResource, specFromArgs__DrizzleMigration(args));
           args.apply($update);
           return object({
             result: $update
@@ -10705,6 +13008,28 @@ export const objects = {
       }
     }
   },
+  _DrizzleMigration: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      createdAt: _DrizzleMigration_createdAtPlan,
+      id($parent) {
+        const specifier = nodeIdHandler__DrizzleMigration.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler__DrizzleMigration.codec.name].encode);
+      },
+      rowId: _DrizzleMigration_rowIdPlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of __drizzle_migrationsUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource___drizzle_migrationsPgResource.get(spec);
+    }
+  },
+  _DrizzleMigrationConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
   Account: {
     assertStep: assertPgClassSingleStep,
     plans: {
@@ -10724,7 +13049,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_accountMappingsfilterApplyPlan,
+          filter: Query__drizzleMigrationsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -10742,11 +13067,11 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_accountMappingsfilterApplyPlan,
+          filter: Query__drizzleMigrationsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
-      createdAt: AccountMapping_createdAtPlan,
+      createdAt: _DrizzleMigration_createdAtPlan,
       id($parent) {
         const specifier = nodeIdHandler_Account.plan($parent);
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_Account.codec.name].encode);
@@ -10769,7 +13094,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_accountMappingsfilterApplyPlan,
+          filter: Query__drizzleMigrationsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -10781,7 +13106,7 @@ export const objects = {
       parentId($record) {
         return $record.get("parent_id");
       },
-      rowId: AccountMapping_rowIdPlan,
+      rowId: _DrizzleMigration_rowIdPlan,
       subType($record) {
         return $record.get("sub_type");
       },
@@ -10799,28 +13124,49 @@ export const objects = {
       totalCount: totalCountConnectionPlan
     }
   },
+  AccountingPeriod: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      book: AccountMapping_bookPlan,
+      bookId: AccountMapping_bookIdPlan,
+      closedAt($record) {
+        return $record.get("closed_at");
+      },
+      closedBy($record) {
+        return $record.get("closed_by");
+      },
+      createdAt: _DrizzleMigration_createdAtPlan,
+      id($parent) {
+        const specifier = nodeIdHandler_AccountingPeriod.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_AccountingPeriod.codec.name].encode);
+      },
+      reopenedAt($record) {
+        return $record.get("reopened_at");
+      },
+      rowId: _DrizzleMigration_rowIdPlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of accounting_periodUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_accounting_periodPgResource.get(spec);
+    }
+  },
+  AccountingPeriodConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
   AccountMapping: {
     assertStep: assertPgClassSingleStep,
     plans: {
       book: AccountMapping_bookPlan,
       bookId: AccountMapping_bookIdPlan,
-      createdAt: AccountMapping_createdAtPlan,
-      creditAccount($record) {
-        return resource_accountPgResource.get({
-          id: $record.get("credit_account_id")
-        });
-      },
-      creditAccountId($record) {
-        return $record.get("credit_account_id");
-      },
-      debitAccount($record) {
-        return resource_accountPgResource.get({
-          id: $record.get("debit_account_id")
-        });
-      },
-      debitAccountId($record) {
-        return $record.get("debit_account_id");
-      },
+      createdAt: _DrizzleMigration_createdAtPlan,
+      creditAccount: AccountMapping_creditAccountPlan,
+      creditAccountId: AccountMapping_creditAccountIdPlan,
+      debitAccount: AccountMapping_debitAccountPlan,
+      debitAccountId: AccountMapping_debitAccountIdPlan,
       eventType($record) {
         return $record.get("event_type");
       },
@@ -10828,7 +13174,7 @@ export const objects = {
         const specifier = nodeIdHandler_AccountMapping.plan($parent);
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_AccountMapping.codec.name].encode);
       },
-      rowId: AccountMapping_rowIdPlan,
+      rowId: _DrizzleMigration_rowIdPlan,
       updatedAt: AccountMapping_updatedAtPlan
     },
     planType($specifier) {
@@ -10846,6 +13192,24 @@ export const objects = {
   Book: {
     assertStep: assertPgClassSingleStep,
     plans: {
+      accountingPeriods: {
+        plan($record) {
+          const $records = resource_accounting_periodPgResource.find({
+            book_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query__drizzleMigrationsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       accountMappings: {
         plan($record) {
           const $records = resource_account_mappingPgResource.find({
@@ -10860,7 +13224,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_accountMappingsfilterApplyPlan,
+          filter: Query__drizzleMigrationsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -10878,7 +13242,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_accountMappingsfilterApplyPlan,
+          filter: Query__drizzleMigrationsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -10896,7 +13260,25 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_accountMappingsfilterApplyPlan,
+          filter: Query__drizzleMigrationsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      categorizationRules: {
+        plan($record) {
+          const $records = resource_categorization_rulePgResource.find({
+            book_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query__drizzleMigrationsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -10914,11 +13296,11 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_accountMappingsfilterApplyPlan,
+          filter: Query__drizzleMigrationsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
-      createdAt: AccountMapping_createdAtPlan,
+      createdAt: _DrizzleMigration_createdAtPlan,
       cryptoAssets: {
         plan($record) {
           const $records = resource_crypto_assetPgResource.find({
@@ -10933,7 +13315,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_accountMappingsfilterApplyPlan,
+          filter: Query__drizzleMigrationsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -10958,7 +13340,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_accountMappingsfilterApplyPlan,
+          filter: Query__drizzleMigrationsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -10976,7 +13358,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_accountMappingsfilterApplyPlan,
+          filter: Query__drizzleMigrationsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -10997,7 +13379,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_accountMappingsfilterApplyPlan,
+          filter: Query__drizzleMigrationsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -11015,11 +13397,11 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_accountMappingsfilterApplyPlan,
+          filter: Query__drizzleMigrationsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
-      rowId: AccountMapping_rowIdPlan,
+      rowId: _DrizzleMigration_rowIdPlan,
       savingsGoals: {
         plan($record) {
           const $records = resource_savings_goalPgResource.find({
@@ -11034,7 +13416,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_accountMappingsfilterApplyPlan,
+          filter: Query__drizzleMigrationsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -11059,12 +13441,12 @@ export const objects = {
       accountId: Budget_accountIdPlan,
       book: AccountMapping_bookPlan,
       bookId: AccountMapping_bookIdPlan,
-      createdAt: AccountMapping_createdAtPlan,
+      createdAt: _DrizzleMigration_createdAtPlan,
       id($parent) {
         const specifier = nodeIdHandler_Budget.plan($parent);
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_Budget.codec.name].encode);
       },
-      rowId: AccountMapping_rowIdPlan,
+      rowId: _DrizzleMigration_rowIdPlan,
       updatedAt: AccountMapping_updatedAtPlan
     },
     planType($specifier) {
@@ -11074,6 +13456,55 @@ export const objects = {
     }
   },
   BudgetConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
+  CategorizationRule: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      amountMax($record) {
+        return $record.get("amount_max");
+      },
+      amountMin($record) {
+        return $record.get("amount_min");
+      },
+      book: AccountMapping_bookPlan,
+      bookId: AccountMapping_bookIdPlan,
+      createdAt: _DrizzleMigration_createdAtPlan,
+      creditAccount: AccountMapping_creditAccountPlan,
+      creditAccountId: AccountMapping_creditAccountIdPlan,
+      debitAccount: AccountMapping_debitAccountPlan,
+      debitAccountId: AccountMapping_debitAccountIdPlan,
+      hitCount($record) {
+        return $record.get("hit_count");
+      },
+      id($parent) {
+        const specifier = nodeIdHandler_CategorizationRule.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_CategorizationRule.codec.name].encode);
+      },
+      lastHitAt($record) {
+        return $record.get("last_hit_at");
+      },
+      matchField($record) {
+        return $record.get("match_field");
+      },
+      matchType($record) {
+        return $record.get("match_type");
+      },
+      matchValue($record) {
+        return $record.get("match_value");
+      },
+      rowId: _DrizzleMigration_rowIdPlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of categorization_ruleUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_categorization_rulePgResource.get(spec);
+    }
+  },
+  CategorizationRuleConnection: {
     assertStep: ConnectionStep,
     plans: {
       totalCount: totalCountConnectionPlan
@@ -11089,7 +13520,7 @@ export const objects = {
       accountId: Budget_accountIdPlan,
       book: AccountMapping_bookPlan,
       bookId: AccountMapping_bookIdPlan,
-      createdAt: AccountMapping_createdAtPlan,
+      createdAt: _DrizzleMigration_createdAtPlan,
       id($parent) {
         const specifier = nodeIdHandler_ConnectedAccount.plan($parent);
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_ConnectedAccount.codec.name].encode);
@@ -11101,7 +13532,7 @@ export const objects = {
       providerAccountId($record) {
         return $record.get("provider_account_id");
       },
-      rowId: AccountMapping_rowIdPlan,
+      rowId: _DrizzleMigration_rowIdPlan,
       syncCursor($record) {
         return $record.get("sync_cursor");
       }
@@ -11116,6 +13547,15 @@ export const objects = {
     assertStep: ConnectionStep,
     plans: {
       totalCount: totalCountConnectionPlan
+    }
+  },
+  CreateAccountingPeriodPayload: {
+    assertStep: assertStep,
+    plans: {
+      accountingPeriod: planCreatePayloadResult,
+      accountingPeriodEdge: CreateAccountingPeriodPayload_accountingPeriodEdgePlan,
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan
     }
   },
   CreateAccountMappingPayload: {
@@ -11154,6 +13594,15 @@ export const objects = {
       query: queryPlan
     }
   },
+  CreateCategorizationRulePayload: {
+    assertStep: assertStep,
+    plans: {
+      categorizationRule: planCreatePayloadResult,
+      categorizationRuleEdge: CreateCategorizationRulePayload_categorizationRuleEdgePlan,
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan
+    }
+  },
   CreateConnectedAccountPayload: {
     assertStep: assertStep,
     plans: {
@@ -11178,6 +13627,15 @@ export const objects = {
       clientMutationId: getClientMutationIdForCreatePlan,
       cryptoLot: planCreatePayloadResult,
       cryptoLotEdge: CreateCryptoLotPayload_cryptoLotEdgePlan,
+      query: queryPlan
+    }
+  },
+  CreateDrizzleMigrationPayload: {
+    assertStep: assertStep,
+    plans: {
+      _drizzleMigration: planCreatePayloadResult,
+      _drizzleMigrationEdge: CreateDrizzleMigrationPayload__drizzleMigrationEdgePlan,
+      clientMutationId: getClientMutationIdForCreatePlan,
       query: queryPlan
     }
   },
@@ -11243,7 +13701,7 @@ export const objects = {
       costBasisMethod($record) {
         return $record.get("cost_basis_method");
       },
-      createdAt: AccountMapping_createdAtPlan,
+      createdAt: _DrizzleMigration_createdAtPlan,
       cryptoLots: {
         plan($record) {
           const $records = resource_crypto_lotPgResource.find({
@@ -11258,7 +13716,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_accountMappingsfilterApplyPlan,
+          filter: Query__drizzleMigrationsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -11267,7 +13725,7 @@ export const objects = {
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_CryptoAsset.codec.name].encode);
       },
       lastSyncedAt: ConnectedAccount_lastSyncedAtPlan,
-      rowId: AccountMapping_rowIdPlan,
+      rowId: _DrizzleMigration_rowIdPlan,
       updatedAt: AccountMapping_updatedAtPlan,
       walletAddress($record) {
         return $record.get("wallet_address");
@@ -11294,7 +13752,7 @@ export const objects = {
       costPerUnit($record) {
         return $record.get("cost_per_unit");
       },
-      createdAt: AccountMapping_createdAtPlan,
+      createdAt: _DrizzleMigration_createdAtPlan,
       cryptoAsset($record) {
         return resource_crypto_assetPgResource.get({
           id: $record.get("crypto_asset_id")
@@ -11318,7 +13776,7 @@ export const objects = {
       remainingQuantity($record) {
         return $record.get("remaining_quantity");
       },
-      rowId: AccountMapping_rowIdPlan
+      rowId: _DrizzleMigration_rowIdPlan
     },
     planType($specifier) {
       const spec = Object.create(null);
@@ -11330,6 +13788,20 @@ export const objects = {
     assertStep: ConnectionStep,
     plans: {
       totalCount: totalCountConnectionPlan
+    }
+  },
+  DeleteAccountingPeriodPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      accountingPeriod: planCreatePayloadResult,
+      accountingPeriodEdge: CreateAccountingPeriodPayload_accountingPeriodEdgePlan,
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedAccountingPeriodId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_AccountingPeriod.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      query: queryPlan
     }
   },
   DeleteAccountMappingPayload: {
@@ -11388,6 +13860,20 @@ export const objects = {
       query: queryPlan
     }
   },
+  DeleteCategorizationRulePayload: {
+    assertStep: ObjectStep,
+    plans: {
+      categorizationRule: planCreatePayloadResult,
+      categorizationRuleEdge: CreateCategorizationRulePayload_categorizationRuleEdgePlan,
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedCategorizationRuleId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_CategorizationRule.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      query: queryPlan
+    }
+  },
   DeleteConnectedAccountPayload: {
     assertStep: ObjectStep,
     plans: {
@@ -11425,6 +13911,20 @@ export const objects = {
       deletedCryptoLotId($object) {
         const $record = $object.getStepForKey("result"),
           specifier = nodeIdHandler_CryptoLot.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      query: queryPlan
+    }
+  },
+  DeleteDrizzleMigrationPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      _drizzleMigration: planCreatePayloadResult,
+      _drizzleMigrationEdge: CreateDrizzleMigrationPayload__drizzleMigrationEdgePlan,
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedDrizzleMigrationId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler__DrizzleMigration.plan($record);
         return lambda(specifier, base64JSONNodeIdCodec.encode);
       },
       query: queryPlan
@@ -11519,7 +14019,7 @@ export const objects = {
     plans: {
       book: AccountMapping_bookPlan,
       bookId: AccountMapping_bookIdPlan,
-      createdAt: AccountMapping_createdAtPlan,
+      createdAt: _DrizzleMigration_createdAtPlan,
       id($parent) {
         const specifier = nodeIdHandler_JournalEntry.plan($parent);
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_JournalEntry.codec.name].encode);
@@ -11544,11 +14044,11 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_accountMappingsfilterApplyPlan,
+          filter: Query__drizzleMigrationsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
-      rowId: AccountMapping_rowIdPlan,
+      rowId: _DrizzleMigration_rowIdPlan,
       sourceReferenceId($record) {
         return $record.get("source_reference_id");
       },
@@ -11577,7 +14077,7 @@ export const objects = {
       },
       journalEntry: JournalLine_journalEntryPlan,
       journalEntryId: JournalLine_journalEntryIdPlan,
-      rowId: AccountMapping_rowIdPlan
+      rowId: _DrizzleMigration_rowIdPlan
     },
     planType($specifier) {
       const spec = Object.create(null);
@@ -11596,7 +14096,7 @@ export const objects = {
     plans: {
       book: AccountMapping_bookPlan,
       bookId: AccountMapping_bookIdPlan,
-      createdAt: AccountMapping_createdAtPlan,
+      createdAt: _DrizzleMigration_createdAtPlan,
       id($parent) {
         const specifier = nodeIdHandler_NetWorthSnapshot.plan($parent);
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_NetWorthSnapshot.codec.name].encode);
@@ -11604,7 +14104,7 @@ export const objects = {
       netWorth($record) {
         return $record.get("net_worth");
       },
-      rowId: AccountMapping_rowIdPlan,
+      rowId: _DrizzleMigration_rowIdPlan,
       totalAssets($record) {
         return $record.get("total_assets");
       },
@@ -11629,20 +14129,45 @@ export const objects = {
     plans: {
       book: AccountMapping_bookPlan,
       bookId: AccountMapping_bookIdPlan,
-      createdAt: AccountMapping_createdAtPlan,
+      categorizationSource($record) {
+        return $record.get("categorization_source");
+      },
+      createdAt: _DrizzleMigration_createdAtPlan,
       id($parent) {
         const specifier = nodeIdHandler_ReconciliationQueue.plan($parent);
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_ReconciliationQueue.codec.name].encode);
       },
       journalEntry: JournalLine_journalEntryPlan,
       journalEntryId: JournalLine_journalEntryIdPlan,
+      periodMonth($record) {
+        return $record.get("period_month");
+      },
+      periodYear($record) {
+        return $record.get("period_year");
+      },
       reviewedAt($record) {
         return $record.get("reviewed_at");
       },
       reviewedBy($record) {
         return $record.get("reviewed_by");
       },
-      rowId: AccountMapping_rowIdPlan
+      rowId: _DrizzleMigration_rowIdPlan,
+      suggestedCreditAccount($record) {
+        return resource_accountPgResource.get({
+          id: $record.get("suggested_credit_account_id")
+        });
+      },
+      suggestedCreditAccountId($record) {
+        return $record.get("suggested_credit_account_id");
+      },
+      suggestedDebitAccount($record) {
+        return resource_accountPgResource.get({
+          id: $record.get("suggested_debit_account_id")
+        });
+      },
+      suggestedDebitAccountId($record) {
+        return $record.get("suggested_debit_account_id");
+      }
     },
     planType($specifier) {
       const spec = Object.create(null);
@@ -11671,7 +14196,7 @@ export const objects = {
       counterAccountId($record) {
         return $record.get("counter_account_id");
       },
-      createdAt: AccountMapping_createdAtPlan,
+      createdAt: _DrizzleMigration_createdAtPlan,
       id($parent) {
         const specifier = nodeIdHandler_RecurringTransaction.plan($parent);
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_RecurringTransaction.codec.name].encode);
@@ -11683,7 +14208,7 @@ export const objects = {
       nextExpectedDate($record) {
         return $record.get("next_expected_date");
       },
-      rowId: AccountMapping_rowIdPlan,
+      rowId: _DrizzleMigration_rowIdPlan,
       updatedAt: AccountMapping_updatedAtPlan
     },
     planType($specifier) {
@@ -11705,12 +14230,12 @@ export const objects = {
       accountId: Budget_accountIdPlan,
       book: AccountMapping_bookPlan,
       bookId: AccountMapping_bookIdPlan,
-      createdAt: AccountMapping_createdAtPlan,
+      createdAt: _DrizzleMigration_createdAtPlan,
       id($parent) {
         const specifier = nodeIdHandler_SavingsGoal.plan($parent);
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_SavingsGoal.codec.name].encode);
       },
-      rowId: AccountMapping_rowIdPlan,
+      rowId: _DrizzleMigration_rowIdPlan,
       targetAmount($record) {
         return $record.get("target_amount");
       },
@@ -11729,6 +14254,15 @@ export const objects = {
     assertStep: ConnectionStep,
     plans: {
       totalCount: totalCountConnectionPlan
+    }
+  },
+  UpdateAccountingPeriodPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      accountingPeriod: planCreatePayloadResult,
+      accountingPeriodEdge: CreateAccountingPeriodPayload_accountingPeriodEdgePlan,
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan
     }
   },
   UpdateAccountMappingPayload: {
@@ -11767,6 +14301,15 @@ export const objects = {
       query: queryPlan
     }
   },
+  UpdateCategorizationRulePayload: {
+    assertStep: ObjectStep,
+    plans: {
+      categorizationRule: planCreatePayloadResult,
+      categorizationRuleEdge: CreateCategorizationRulePayload_categorizationRuleEdgePlan,
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan
+    }
+  },
   UpdateConnectedAccountPayload: {
     assertStep: ObjectStep,
     plans: {
@@ -11791,6 +14334,15 @@ export const objects = {
       clientMutationId: getClientMutationIdForCreatePlan,
       cryptoLot: planCreatePayloadResult,
       cryptoLotEdge: CreateCryptoLotPayload_cryptoLotEdgePlan,
+      query: queryPlan
+    }
+  },
+  UpdateDrizzleMigrationPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      _drizzleMigration: planCreatePayloadResult,
+      _drizzleMigrationEdge: CreateDrizzleMigrationPayload__drizzleMigrationEdgePlan,
+      clientMutationId: getClientMutationIdForCreatePlan,
       query: queryPlan
     }
   },
@@ -11864,6 +14416,39 @@ export const interfaces = {
   }
 };
 export const inputObjects = {
+  _DrizzleMigrationCondition: {
+    plans: {
+      rowId($condition, val) {
+        return applyAttributeCondition("id", TYPES.int, $condition, val);
+      }
+    }
+  },
+  _DrizzleMigrationFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec___drizzleMigrations.attributes.id, queryBuilder, value);
+      }
+    }
+  },
+  _DrizzleMigrationInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      createdAt: _DrizzleMigrationInput_createdAtApply,
+      hash: _DrizzleMigrationInput_hashApply,
+      rowId: _DrizzleMigrationInput_rowIdApply
+    }
+  },
+  _DrizzleMigrationPatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      createdAt: _DrizzleMigrationInput_createdAtApply,
+      hash: _DrizzleMigrationInput_hashApply,
+      rowId: _DrizzleMigrationInput_rowIdApply
+    }
+  },
   AccountCondition: {
     plans: {
       bookId: AccountCondition_bookIdApply,
@@ -11976,17 +14561,87 @@ export const inputObjects = {
       }
     }
   },
+  AccountingPeriodCondition: {
+    plans: {
+      bookId: AccountCondition_bookIdApply,
+      month($condition, val) {
+        return applyAttributeCondition("month", TYPES.int, $condition, val);
+      },
+      rowId: AccountCondition_rowIdApply,
+      status($condition, val) {
+        return applyAttributeCondition("status", TYPES.text, $condition, val);
+      },
+      year($condition, val) {
+        return applyAttributeCondition("year", TYPES.int, $condition, val);
+      }
+    }
+  },
+  AccountingPeriodFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      book($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_bookPgResource, bookIdentifier, registryConfig.pgRelations.accountingPeriod.bookByMyBookId.localAttributes, registryConfig.pgRelations.accountingPeriod.bookByMyBookId.remoteAttributes, $where, value);
+      },
+      bookId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("bookId", "book_id", spec_accountingPeriod.attributes.book_id, queryBuilder, value);
+      },
+      month(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("month", "month", spec_accountingPeriod.attributes.month, queryBuilder, value);
+      },
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_accountingPeriod.attributes.id, queryBuilder, value);
+      },
+      status(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("status", "status", spec_accountingPeriod.attributes.status, queryBuilder, value);
+      },
+      year(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("year", "year", spec_accountingPeriod.attributes.year, queryBuilder, value);
+      }
+    }
+  },
+  AccountingPeriodInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      blockers: AccountingPeriodInput_blockersApply,
+      bookId: AccountMappingInput_bookIdApply,
+      closedAt: AccountingPeriodInput_closedAtApply,
+      closedBy: AccountingPeriodInput_closedByApply,
+      createdAt: _DrizzleMigrationInput_createdAtApply,
+      month: AccountingPeriodInput_monthApply,
+      reopenedAt: AccountingPeriodInput_reopenedAtApply,
+      rowId: _DrizzleMigrationInput_rowIdApply,
+      status: AccountingPeriodInput_statusApply,
+      year: AccountingPeriodInput_yearApply
+    }
+  },
+  AccountingPeriodPatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      blockers: AccountingPeriodInput_blockersApply,
+      bookId: AccountMappingInput_bookIdApply,
+      closedAt: AccountingPeriodInput_closedAtApply,
+      closedBy: AccountingPeriodInput_closedByApply,
+      createdAt: _DrizzleMigrationInput_createdAtApply,
+      month: AccountingPeriodInput_monthApply,
+      reopenedAt: AccountingPeriodInput_reopenedAtApply,
+      rowId: _DrizzleMigrationInput_rowIdApply,
+      status: AccountingPeriodInput_statusApply,
+      year: AccountingPeriodInput_yearApply
+    }
+  },
   AccountInput: {
     baked: createObjectAndApplyChildren,
     plans: {
       bookId: AccountMappingInput_bookIdApply,
       code: AccountInput_codeApply,
-      createdAt: AccountMappingInput_createdAtApply,
+      createdAt: _DrizzleMigrationInput_createdAtApply,
       isActive: RecurringTransactionInput_isActiveApply,
       isPlaceholder: AccountInput_isPlaceholderApply,
       name: SavingsGoalInput_nameApply,
       parentId: AccountInput_parentIdApply,
-      rowId: AccountMappingInput_rowIdApply,
+      rowId: _DrizzleMigrationInput_rowIdApply,
       subType: AccountInput_subTypeApply,
       type: BookInput_typeApply,
       updatedAt: AccountMappingInput_updatedAtApply
@@ -12030,11 +14685,11 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       bookId: AccountMappingInput_bookIdApply,
-      createdAt: AccountMappingInput_createdAtApply,
+      createdAt: _DrizzleMigrationInput_createdAtApply,
       creditAccountId: AccountMappingInput_creditAccountIdApply,
       debitAccountId: AccountMappingInput_debitAccountIdApply,
       eventType: AccountMappingInput_eventTypeApply,
-      rowId: AccountMappingInput_rowIdApply,
+      rowId: _DrizzleMigrationInput_rowIdApply,
       updatedAt: AccountMappingInput_updatedAtApply
     }
   },
@@ -12042,11 +14697,11 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       bookId: AccountMappingInput_bookIdApply,
-      createdAt: AccountMappingInput_createdAtApply,
+      createdAt: _DrizzleMigrationInput_createdAtApply,
       creditAccountId: AccountMappingInput_creditAccountIdApply,
       debitAccountId: AccountMappingInput_debitAccountIdApply,
       eventType: AccountMappingInput_eventTypeApply,
-      rowId: AccountMappingInput_rowIdApply,
+      rowId: _DrizzleMigrationInput_rowIdApply,
       updatedAt: AccountMappingInput_updatedAtApply
     }
   },
@@ -12055,12 +14710,12 @@ export const inputObjects = {
     plans: {
       bookId: AccountMappingInput_bookIdApply,
       code: AccountInput_codeApply,
-      createdAt: AccountMappingInput_createdAtApply,
+      createdAt: _DrizzleMigrationInput_createdAtApply,
       isActive: RecurringTransactionInput_isActiveApply,
       isPlaceholder: AccountInput_isPlaceholderApply,
       name: SavingsGoalInput_nameApply,
       parentId: AccountInput_parentIdApply,
-      rowId: AccountMappingInput_rowIdApply,
+      rowId: _DrizzleMigrationInput_rowIdApply,
       subType: AccountInput_subTypeApply,
       type: BookInput_typeApply,
       updatedAt: AccountMappingInput_updatedAtApply
@@ -12112,6 +14767,30 @@ export const inputObjects = {
   },
   BookFilter: {
     plans: {
+      accountingPeriods($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: accountingPeriodIdentifier,
+          alias: resource_accounting_periodPgResource.name,
+          localAttributes: registryConfig.pgRelations.book.accountingPeriodsByTheirBookId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.book.accountingPeriodsByTheirBookId.remoteAttributes
+        };
+        return $rel;
+      },
+      accountingPeriodsExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: accountingPeriodIdentifier,
+          alias: resource_accounting_periodPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.book.accountingPeriodsByTheirBookId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.book.accountingPeriodsByTheirBookId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
       accountMappings($where, value) {
         assertAllowed(value, "object");
         const $rel = $where.andPlan();
@@ -12182,6 +14861,30 @@ export const inputObjects = {
         });
         registryConfig.pgRelations.book.budgetsByTheirBookId.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = registryConfig.pgRelations.book.budgetsByTheirBookId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
+      categorizationRules($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: categorizationRuleIdentifier,
+          alias: resource_categorization_rulePgResource.name,
+          localAttributes: registryConfig.pgRelations.book.categorizationRulesByTheirBookId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.book.categorizationRulesByTheirBookId.remoteAttributes
+        };
+        return $rel;
+      },
+      categorizationRulesExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: categorizationRuleIdentifier,
+          alias: resource_categorization_rulePgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.book.categorizationRulesByTheirBookId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.book.categorizationRulesByTheirBookId.remoteAttributes[i];
           $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
         });
       },
@@ -12366,12 +15069,12 @@ export const inputObjects = {
   BookInput: {
     baked: createObjectAndApplyChildren,
     plans: {
-      createdAt: AccountMappingInput_createdAtApply,
+      createdAt: _DrizzleMigrationInput_createdAtApply,
       currency: BookInput_currencyApply,
       fiscalYearStartMonth: BookInput_fiscalYearStartMonthApply,
       name: SavingsGoalInput_nameApply,
       organizationId: BookInput_organizationIdApply,
-      rowId: AccountMappingInput_rowIdApply,
+      rowId: _DrizzleMigrationInput_rowIdApply,
       type: BookInput_typeApply,
       updatedAt: AccountMappingInput_updatedAtApply
     }
@@ -12379,17 +15082,24 @@ export const inputObjects = {
   BookPatch: {
     baked: createObjectAndApplyChildren,
     plans: {
-      createdAt: AccountMappingInput_createdAtApply,
+      createdAt: _DrizzleMigrationInput_createdAtApply,
       currency: BookInput_currencyApply,
       fiscalYearStartMonth: BookInput_fiscalYearStartMonthApply,
       name: SavingsGoalInput_nameApply,
       organizationId: BookInput_organizationIdApply,
-      rowId: AccountMappingInput_rowIdApply,
+      rowId: _DrizzleMigrationInput_rowIdApply,
       type: BookInput_typeApply,
       updatedAt: AccountMappingInput_updatedAtApply
     }
   },
   BookToManyAccountFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
+  BookToManyAccountingPeriodFilter: {
     plans: {
       every: AccountToManyAccountFilter_everyApply,
       none: AccountToManyAccountFilter_noneApply,
@@ -12404,6 +15114,13 @@ export const inputObjects = {
     }
   },
   BookToManyBudgetFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
+  BookToManyCategorizationRuleFilter: {
     plans: {
       every: AccountToManyAccountFilter_everyApply,
       none: AccountToManyAccountFilter_noneApply,
@@ -12494,10 +15211,10 @@ export const inputObjects = {
       accountId: JournalLineInput_accountIdApply,
       amount: BudgetInput_amountApply,
       bookId: AccountMappingInput_bookIdApply,
-      createdAt: AccountMappingInput_createdAtApply,
+      createdAt: _DrizzleMigrationInput_createdAtApply,
       period: BudgetInput_periodApply,
       rollover: BudgetInput_rolloverApply,
-      rowId: AccountMappingInput_rowIdApply,
+      rowId: _DrizzleMigrationInput_rowIdApply,
       updatedAt: AccountMappingInput_updatedAtApply
     }
   },
@@ -12507,11 +15224,85 @@ export const inputObjects = {
       accountId: JournalLineInput_accountIdApply,
       amount: BudgetInput_amountApply,
       bookId: AccountMappingInput_bookIdApply,
-      createdAt: AccountMappingInput_createdAtApply,
+      createdAt: _DrizzleMigrationInput_createdAtApply,
       period: BudgetInput_periodApply,
       rollover: BudgetInput_rolloverApply,
-      rowId: AccountMappingInput_rowIdApply,
+      rowId: _DrizzleMigrationInput_rowIdApply,
       updatedAt: AccountMappingInput_updatedAtApply
+    }
+  },
+  CategorizationRuleCondition: {
+    plans: {
+      bookId: AccountCondition_bookIdApply,
+      matchField($condition, val) {
+        return applyAttributeCondition("match_field", TYPES.text, $condition, val);
+      },
+      rowId: AccountCondition_rowIdApply
+    }
+  },
+  CategorizationRuleFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      book($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_bookPgResource, bookIdentifier, registryConfig.pgRelations.categorizationRule.bookByMyBookId.localAttributes, registryConfig.pgRelations.categorizationRule.bookByMyBookId.remoteAttributes, $where, value);
+      },
+      bookId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("bookId", "book_id", spec_categorizationRule.attributes.book_id, queryBuilder, value);
+      },
+      creditAccount($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_accountPgResource, accountIdentifier, registryConfig.pgRelations.categorizationRule.accountByMyCreditAccountId.localAttributes, registryConfig.pgRelations.categorizationRule.accountByMyCreditAccountId.remoteAttributes, $where, value);
+      },
+      debitAccount($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_accountPgResource, accountIdentifier, registryConfig.pgRelations.categorizationRule.accountByMyDebitAccountId.localAttributes, registryConfig.pgRelations.categorizationRule.accountByMyDebitAccountId.remoteAttributes, $where, value);
+      },
+      matchField(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("matchField", "match_field", spec_categorizationRule.attributes.match_field, queryBuilder, value);
+      },
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_categorizationRule.attributes.id, queryBuilder, value);
+      }
+    }
+  },
+  CategorizationRuleInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      amountMax: CategorizationRuleInput_amountMaxApply,
+      amountMin: CategorizationRuleInput_amountMinApply,
+      bookId: AccountMappingInput_bookIdApply,
+      confidence: CategorizationRuleInput_confidenceApply,
+      createdAt: _DrizzleMigrationInput_createdAtApply,
+      creditAccountId: AccountMappingInput_creditAccountIdApply,
+      debitAccountId: AccountMappingInput_debitAccountIdApply,
+      hitCount: CategorizationRuleInput_hitCountApply,
+      lastHitAt: CategorizationRuleInput_lastHitAtApply,
+      matchField: CategorizationRuleInput_matchFieldApply,
+      matchType: CategorizationRuleInput_matchTypeApply,
+      matchValue: CategorizationRuleInput_matchValueApply,
+      name: SavingsGoalInput_nameApply,
+      priority: CategorizationRuleInput_priorityApply,
+      rowId: _DrizzleMigrationInput_rowIdApply
+    }
+  },
+  CategorizationRulePatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      amountMax: CategorizationRuleInput_amountMaxApply,
+      amountMin: CategorizationRuleInput_amountMinApply,
+      bookId: AccountMappingInput_bookIdApply,
+      confidence: CategorizationRuleInput_confidenceApply,
+      createdAt: _DrizzleMigrationInput_createdAtApply,
+      creditAccountId: AccountMappingInput_creditAccountIdApply,
+      debitAccountId: AccountMappingInput_debitAccountIdApply,
+      hitCount: CategorizationRuleInput_hitCountApply,
+      lastHitAt: CategorizationRuleInput_lastHitAtApply,
+      matchField: CategorizationRuleInput_matchFieldApply,
+      matchType: CategorizationRuleInput_matchTypeApply,
+      matchValue: CategorizationRuleInput_matchValueApply,
+      name: SavingsGoalInput_nameApply,
+      priority: CategorizationRuleInput_priorityApply,
+      rowId: _DrizzleMigrationInput_rowIdApply
     }
   },
   ConnectedAccountCondition: {
@@ -12554,14 +15345,14 @@ export const inputObjects = {
       accessToken: ConnectedAccountInput_accessTokenApply,
       accountId: JournalLineInput_accountIdApply,
       bookId: AccountMappingInput_bookIdApply,
-      createdAt: AccountMappingInput_createdAtApply,
+      createdAt: _DrizzleMigrationInput_createdAtApply,
       institutionName: ConnectedAccountInput_institutionNameApply,
       lastSyncedAt: CryptoAssetInput_lastSyncedAtApply,
       mask: ConnectedAccountInput_maskApply,
       provider: ConnectedAccountInput_providerApply,
       providerAccountId: ConnectedAccountInput_providerAccountIdApply,
-      rowId: AccountMappingInput_rowIdApply,
-      status: ReconciliationQueueInput_statusApply,
+      rowId: _DrizzleMigrationInput_rowIdApply,
+      status: AccountingPeriodInput_statusApply,
       syncCursor: ConnectedAccountInput_syncCursorApply
     }
   },
@@ -12571,14 +15362,14 @@ export const inputObjects = {
       accessToken: ConnectedAccountInput_accessTokenApply,
       accountId: JournalLineInput_accountIdApply,
       bookId: AccountMappingInput_bookIdApply,
-      createdAt: AccountMappingInput_createdAtApply,
+      createdAt: _DrizzleMigrationInput_createdAtApply,
       institutionName: ConnectedAccountInput_institutionNameApply,
       lastSyncedAt: CryptoAssetInput_lastSyncedAtApply,
       mask: ConnectedAccountInput_maskApply,
       provider: ConnectedAccountInput_providerApply,
       providerAccountId: ConnectedAccountInput_providerAccountIdApply,
-      rowId: AccountMappingInput_rowIdApply,
-      status: ReconciliationQueueInput_statusApply,
+      rowId: _DrizzleMigrationInput_rowIdApply,
+      status: AccountingPeriodInput_statusApply,
       syncCursor: ConnectedAccountInput_syncCursorApply
     }
   },
@@ -12595,6 +15386,12 @@ export const inputObjects = {
       notDistinctFrom: pgAggregatesApply_notDistinctFrom,
       notEqualTo: pgAggregatesApply_notEqualTo,
       notIn: pgAggregatesApply_notIn
+    }
+  },
+  CreateAccountingPeriodInput: {
+    plans: {
+      accountingPeriod: applyCreateFields,
+      clientMutationId: applyClientMutationIdForCreate
     }
   },
   CreateAccountInput: {
@@ -12621,6 +15418,12 @@ export const inputObjects = {
       clientMutationId: applyClientMutationIdForCreate
     }
   },
+  CreateCategorizationRuleInput: {
+    plans: {
+      categorizationRule: applyCreateFields,
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
   CreateConnectedAccountInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
@@ -12637,6 +15440,12 @@ export const inputObjects = {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
       cryptoLot: applyCreateFields
+    }
+  },
+  CreateDrizzleMigrationInput: {
+    plans: {
+      _drizzleMigration: applyCreateFields,
+      clientMutationId: applyClientMutationIdForCreate
     }
   },
   CreateJournalEntryInput: {
@@ -12733,11 +15542,11 @@ export const inputObjects = {
       balance: CryptoAssetInput_balanceApply,
       bookId: AccountMappingInput_bookIdApply,
       costBasisMethod: CryptoAssetInput_costBasisMethodApply,
-      createdAt: AccountMappingInput_createdAtApply,
+      createdAt: _DrizzleMigrationInput_createdAtApply,
       lastSyncedAt: CryptoAssetInput_lastSyncedAtApply,
       name: SavingsGoalInput_nameApply,
       network: CryptoAssetInput_networkApply,
-      rowId: AccountMappingInput_rowIdApply,
+      rowId: _DrizzleMigrationInput_rowIdApply,
       symbol: CryptoAssetInput_symbolApply,
       updatedAt: AccountMappingInput_updatedAtApply,
       walletAddress: CryptoAssetInput_walletAddressApply
@@ -12749,11 +15558,11 @@ export const inputObjects = {
       balance: CryptoAssetInput_balanceApply,
       bookId: AccountMappingInput_bookIdApply,
       costBasisMethod: CryptoAssetInput_costBasisMethodApply,
-      createdAt: AccountMappingInput_createdAtApply,
+      createdAt: _DrizzleMigrationInput_createdAtApply,
       lastSyncedAt: CryptoAssetInput_lastSyncedAtApply,
       name: SavingsGoalInput_nameApply,
       network: CryptoAssetInput_networkApply,
-      rowId: AccountMappingInput_rowIdApply,
+      rowId: _DrizzleMigrationInput_rowIdApply,
       symbol: CryptoAssetInput_symbolApply,
       updatedAt: AccountMappingInput_updatedAtApply,
       walletAddress: CryptoAssetInput_walletAddressApply
@@ -12801,14 +15610,14 @@ export const inputObjects = {
     plans: {
       acquiredAt: CryptoLotInput_acquiredAtApply,
       costPerUnit: CryptoLotInput_costPerUnitApply,
-      createdAt: AccountMappingInput_createdAtApply,
+      createdAt: _DrizzleMigrationInput_createdAtApply,
       cryptoAssetId: CryptoLotInput_cryptoAssetIdApply,
       disposedAt: CryptoLotInput_disposedAtApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       proceedsPerUnit: CryptoLotInput_proceedsPerUnitApply,
       quantity: CryptoLotInput_quantityApply,
       remainingQuantity: CryptoLotInput_remainingQuantityApply,
-      rowId: AccountMappingInput_rowIdApply
+      rowId: _DrizzleMigrationInput_rowIdApply
     }
   },
   CryptoLotPatch: {
@@ -12816,14 +15625,14 @@ export const inputObjects = {
     plans: {
       acquiredAt: CryptoLotInput_acquiredAtApply,
       costPerUnit: CryptoLotInput_costPerUnitApply,
-      createdAt: AccountMappingInput_createdAtApply,
+      createdAt: _DrizzleMigrationInput_createdAtApply,
       cryptoAssetId: CryptoLotInput_cryptoAssetIdApply,
       disposedAt: CryptoLotInput_disposedAtApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       proceedsPerUnit: CryptoLotInput_proceedsPerUnitApply,
       quantity: CryptoLotInput_quantityApply,
       remainingQuantity: CryptoLotInput_remainingQuantityApply,
-      rowId: AccountMappingInput_rowIdApply
+      rowId: _DrizzleMigrationInput_rowIdApply
     }
   },
   DatetimeFilter: {
@@ -12842,6 +15651,16 @@ export const inputObjects = {
     }
   },
   DeleteAccountByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteAccountingPeriodByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteAccountingPeriodInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate
     }
@@ -12881,6 +15700,16 @@ export const inputObjects = {
       clientMutationId: applyClientMutationIdForCreate
     }
   },
+  DeleteCategorizationRuleByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteCategorizationRuleInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
   DeleteConnectedAccountByIdInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate
@@ -12907,6 +15736,16 @@ export const inputObjects = {
     }
   },
   DeleteCryptoLotInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteDrizzleMigrationByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteDrizzleMigrationInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate
     }
@@ -12969,6 +15808,21 @@ export const inputObjects = {
   DeleteSavingsGoalInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  IntFilter: {
+    plans: {
+      distinctFrom: pgAggregatesApply_distinctFrom,
+      equalTo: pgAggregatesApply_equalTo,
+      greaterThan: pgAggregatesApply_greaterThan,
+      greaterThanOrEqualTo: pgAggregatesApply_greaterThanOrEqualTo,
+      in: pgAggregatesApply_in,
+      isNull: pgAggregatesApply_isNull,
+      lessThan: pgAggregatesApply_lessThan,
+      lessThanOrEqualTo: pgAggregatesApply_lessThanOrEqualTo,
+      notDistinctFrom: pgAggregatesApply_notDistinctFrom,
+      notEqualTo: pgAggregatesApply_notEqualTo,
+      notIn: pgAggregatesApply_notIn
     }
   },
   JournalEntryCondition: {
@@ -13037,12 +15891,12 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       bookId: AccountMappingInput_bookIdApply,
-      createdAt: AccountMappingInput_createdAtApply,
+      createdAt: _DrizzleMigrationInput_createdAtApply,
       date: NetWorthSnapshotInput_dateApply,
       isReconciled: JournalEntryInput_isReconciledApply,
       isReviewed: JournalEntryInput_isReviewedApply,
       memo: JournalLineInput_memoApply,
-      rowId: AccountMappingInput_rowIdApply,
+      rowId: _DrizzleMigrationInput_rowIdApply,
       source: JournalEntryInput_sourceApply,
       sourceReferenceId: JournalEntryInput_sourceReferenceIdApply,
       updatedAt: AccountMappingInput_updatedAtApply
@@ -13052,12 +15906,12 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       bookId: AccountMappingInput_bookIdApply,
-      createdAt: AccountMappingInput_createdAtApply,
+      createdAt: _DrizzleMigrationInput_createdAtApply,
       date: NetWorthSnapshotInput_dateApply,
       isReconciled: JournalEntryInput_isReconciledApply,
       isReviewed: JournalEntryInput_isReviewedApply,
       memo: JournalLineInput_memoApply,
-      rowId: AccountMappingInput_rowIdApply,
+      rowId: _DrizzleMigrationInput_rowIdApply,
       source: JournalEntryInput_sourceApply,
       sourceReferenceId: JournalEntryInput_sourceReferenceIdApply,
       updatedAt: AccountMappingInput_updatedAtApply
@@ -13124,7 +15978,7 @@ export const inputObjects = {
       debit: JournalLineInput_debitApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       memo: JournalLineInput_memoApply,
-      rowId: AccountMappingInput_rowIdApply
+      rowId: _DrizzleMigrationInput_rowIdApply
     }
   },
   JournalLinePatch: {
@@ -13135,7 +15989,7 @@ export const inputObjects = {
       debit: JournalLineInput_debitApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       memo: JournalLineInput_memoApply,
-      rowId: AccountMappingInput_rowIdApply
+      rowId: _DrizzleMigrationInput_rowIdApply
     }
   },
   NetWorthSnapshotCondition: {
@@ -13169,10 +16023,10 @@ export const inputObjects = {
     plans: {
       bookId: AccountMappingInput_bookIdApply,
       breakdown: NetWorthSnapshotInput_breakdownApply,
-      createdAt: AccountMappingInput_createdAtApply,
+      createdAt: _DrizzleMigrationInput_createdAtApply,
       date: NetWorthSnapshotInput_dateApply,
       netWorth: NetWorthSnapshotInput_netWorthApply,
-      rowId: AccountMappingInput_rowIdApply,
+      rowId: _DrizzleMigrationInput_rowIdApply,
       totalAssets: NetWorthSnapshotInput_totalAssetsApply,
       totalLiabilities: NetWorthSnapshotInput_totalLiabilitiesApply
     }
@@ -13182,10 +16036,10 @@ export const inputObjects = {
     plans: {
       bookId: AccountMappingInput_bookIdApply,
       breakdown: NetWorthSnapshotInput_breakdownApply,
-      createdAt: AccountMappingInput_createdAtApply,
+      createdAt: _DrizzleMigrationInput_createdAtApply,
       date: NetWorthSnapshotInput_dateApply,
       netWorth: NetWorthSnapshotInput_netWorthApply,
-      rowId: AccountMappingInput_rowIdApply,
+      rowId: _DrizzleMigrationInput_rowIdApply,
       totalAssets: NetWorthSnapshotInput_totalAssetsApply,
       totalLiabilities: NetWorthSnapshotInput_totalLiabilitiesApply
     }
@@ -13218,6 +16072,18 @@ export const inputObjects = {
       },
       status(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("status", "status", spec_reconciliationQueue.attributes.status, queryBuilder, value);
+      },
+      suggestedCreditAccount($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_accountPgResource, accountIdentifier, registryConfig.pgRelations.reconciliationQueue.accountByMySuggestedCreditAccountId.localAttributes, registryConfig.pgRelations.reconciliationQueue.accountByMySuggestedCreditAccountId.remoteAttributes, $where, value);
+      },
+      suggestedCreditAccountExists($where, value) {
+        return pgConnectionFilterApplyForwardRelationExists(resource_accountPgResource, accountIdentifier, registryConfig.pgRelations.reconciliationQueue.accountByMySuggestedCreditAccountId.localAttributes, registryConfig.pgRelations.reconciliationQueue.accountByMySuggestedCreditAccountId.remoteAttributes, $where, value);
+      },
+      suggestedDebitAccount($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_accountPgResource, accountIdentifier, registryConfig.pgRelations.reconciliationQueue.accountByMySuggestedDebitAccountId.localAttributes, registryConfig.pgRelations.reconciliationQueue.accountByMySuggestedDebitAccountId.remoteAttributes, $where, value);
+      },
+      suggestedDebitAccountExists($where, value) {
+        return pgConnectionFilterApplyForwardRelationExists(resource_accountPgResource, accountIdentifier, registryConfig.pgRelations.reconciliationQueue.accountByMySuggestedDebitAccountId.localAttributes, registryConfig.pgRelations.reconciliationQueue.accountByMySuggestedDebitAccountId.remoteAttributes, $where, value);
       }
     }
   },
@@ -13225,24 +16091,38 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       bookId: AccountMappingInput_bookIdApply,
-      createdAt: AccountMappingInput_createdAtApply,
+      categorizationSource: ReconciliationQueueInput_categorizationSourceApply,
+      confidence: CategorizationRuleInput_confidenceApply,
+      createdAt: _DrizzleMigrationInput_createdAtApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
+      periodMonth: ReconciliationQueueInput_periodMonthApply,
+      periodYear: ReconciliationQueueInput_periodYearApply,
+      priority: CategorizationRuleInput_priorityApply,
       reviewedAt: ReconciliationQueueInput_reviewedAtApply,
       reviewedBy: ReconciliationQueueInput_reviewedByApply,
-      rowId: AccountMappingInput_rowIdApply,
-      status: ReconciliationQueueInput_statusApply
+      rowId: _DrizzleMigrationInput_rowIdApply,
+      status: AccountingPeriodInput_statusApply,
+      suggestedCreditAccountId: ReconciliationQueueInput_suggestedCreditAccountIdApply,
+      suggestedDebitAccountId: ReconciliationQueueInput_suggestedDebitAccountIdApply
     }
   },
   ReconciliationQueuePatch: {
     baked: createObjectAndApplyChildren,
     plans: {
       bookId: AccountMappingInput_bookIdApply,
-      createdAt: AccountMappingInput_createdAtApply,
+      categorizationSource: ReconciliationQueueInput_categorizationSourceApply,
+      confidence: CategorizationRuleInput_confidenceApply,
+      createdAt: _DrizzleMigrationInput_createdAtApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
+      periodMonth: ReconciliationQueueInput_periodMonthApply,
+      periodYear: ReconciliationQueueInput_periodYearApply,
+      priority: CategorizationRuleInput_priorityApply,
       reviewedAt: ReconciliationQueueInput_reviewedAtApply,
       reviewedBy: ReconciliationQueueInput_reviewedByApply,
-      rowId: AccountMappingInput_rowIdApply,
-      status: ReconciliationQueueInput_statusApply
+      rowId: _DrizzleMigrationInput_rowIdApply,
+      status: AccountingPeriodInput_statusApply,
+      suggestedCreditAccountId: ReconciliationQueueInput_suggestedCreditAccountIdApply,
+      suggestedDebitAccountId: ReconciliationQueueInput_suggestedDebitAccountIdApply
     }
   },
   ReconciliationStatusFilter: {
@@ -13298,13 +16178,13 @@ export const inputObjects = {
       amount: BudgetInput_amountApply,
       bookId: AccountMappingInput_bookIdApply,
       counterAccountId: RecurringTransactionInput_counterAccountIdApply,
-      createdAt: AccountMappingInput_createdAtApply,
+      createdAt: _DrizzleMigrationInput_createdAtApply,
       frequency: RecurringTransactionInput_frequencyApply,
       isActive: RecurringTransactionInput_isActiveApply,
       isAutoDetected: RecurringTransactionInput_isAutoDetectedApply,
       name: SavingsGoalInput_nameApply,
       nextExpectedDate: RecurringTransactionInput_nextExpectedDateApply,
-      rowId: AccountMappingInput_rowIdApply,
+      rowId: _DrizzleMigrationInput_rowIdApply,
       updatedAt: AccountMappingInput_updatedAtApply
     }
   },
@@ -13315,13 +16195,13 @@ export const inputObjects = {
       amount: BudgetInput_amountApply,
       bookId: AccountMappingInput_bookIdApply,
       counterAccountId: RecurringTransactionInput_counterAccountIdApply,
-      createdAt: AccountMappingInput_createdAtApply,
+      createdAt: _DrizzleMigrationInput_createdAtApply,
       frequency: RecurringTransactionInput_frequencyApply,
       isActive: RecurringTransactionInput_isActiveApply,
       isAutoDetected: RecurringTransactionInput_isAutoDetectedApply,
       name: SavingsGoalInput_nameApply,
       nextExpectedDate: RecurringTransactionInput_nextExpectedDateApply,
-      rowId: AccountMappingInput_rowIdApply,
+      rowId: _DrizzleMigrationInput_rowIdApply,
       updatedAt: AccountMappingInput_updatedAtApply
     }
   },
@@ -13355,9 +16235,9 @@ export const inputObjects = {
     plans: {
       accountId: JournalLineInput_accountIdApply,
       bookId: AccountMappingInput_bookIdApply,
-      createdAt: AccountMappingInput_createdAtApply,
+      createdAt: _DrizzleMigrationInput_createdAtApply,
       name: SavingsGoalInput_nameApply,
-      rowId: AccountMappingInput_rowIdApply,
+      rowId: _DrizzleMigrationInput_rowIdApply,
       targetAmount: SavingsGoalInput_targetAmountApply,
       targetDate: SavingsGoalInput_targetDateApply,
       updatedAt: AccountMappingInput_updatedAtApply
@@ -13368,9 +16248,9 @@ export const inputObjects = {
     plans: {
       accountId: JournalLineInput_accountIdApply,
       bookId: AccountMappingInput_bookIdApply,
-      createdAt: AccountMappingInput_createdAtApply,
+      createdAt: _DrizzleMigrationInput_createdAtApply,
       name: SavingsGoalInput_nameApply,
-      rowId: AccountMappingInput_rowIdApply,
+      rowId: _DrizzleMigrationInput_rowIdApply,
       targetAmount: SavingsGoalInput_targetAmountApply,
       targetDate: SavingsGoalInput_targetDateApply,
       updatedAt: AccountMappingInput_updatedAtApply
@@ -13475,6 +16355,18 @@ export const inputObjects = {
       patch: applyCreateFields
     }
   },
+  UpdateAccountingPeriodByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateAccountingPeriodInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
   UpdateAccountInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
@@ -13517,6 +16409,18 @@ export const inputObjects = {
       patch: applyCreateFields
     }
   },
+  UpdateCategorizationRuleByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateCategorizationRuleInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
   UpdateConnectedAccountByIdInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
@@ -13548,6 +16452,18 @@ export const inputObjects = {
     }
   },
   UpdateCryptoLotInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateDrizzleMigrationByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateDrizzleMigrationInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
       patch: applyCreateFields
@@ -13650,6 +16566,14 @@ export const scalars = {
       throw new GraphQLError(`BigFloat can only parse string values (kind='${ast.kind}')`);
     }
   },
+  BigInt: {
+    serialize: toString,
+    parseValue: toString,
+    parseLiteral(ast) {
+      if (ast.kind === Kind.STRING) return ast.value;
+      throw new GraphQLError(`BigInt can only parse string values (kind='${ast.kind}')`);
+    }
+  },
   Cursor: {
     serialize: toString,
     parseValue: toString,
@@ -13666,6 +16590,42 @@ export const scalars = {
       throw new GraphQLError(`Datetime can only parse string values (kind='${ast.kind}')`);
     }
   },
+  JSON: {
+    serialize: JSONSerialize,
+    parseValue: JSONSerialize,
+    parseLiteral: (() => {
+      const parseLiteralToObject = (ast, variables) => {
+        switch (ast.kind) {
+          case Kind.STRING:
+          case Kind.BOOLEAN:
+            return ast.value;
+          case Kind.INT:
+          case Kind.FLOAT:
+            return parseFloat(ast.value);
+          case Kind.OBJECT:
+            {
+              const value = Object.create(null);
+              ast.fields.forEach(field => {
+                value[field.name.value] = parseLiteralToObject(field.value, variables);
+              });
+              return value;
+            }
+          case Kind.LIST:
+            return ast.values.map(n => parseLiteralToObject(n, variables));
+          case Kind.NULL:
+            return null;
+          case Kind.VARIABLE:
+            {
+              const name = ast.name.value;
+              return variables ? variables[name] : void 0;
+            }
+          default:
+            return;
+        }
+      };
+      return parseLiteralToObject;
+    })()
+  },
   UUID: {
     serialize: toString,
     parseValue(value) {
@@ -13678,6 +16638,92 @@ export const scalars = {
   }
 };
 export const enums = {
+  _DrizzleMigrationOrderBy: {
+    values: {
+      PRIMARY_KEY_ASC(queryBuilder) {
+        __drizzle_migrationsUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        __drizzle_migrationsUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply
+    }
+  },
+  AccountingPeriodOrderBy: {
+    values: {
+      BOOK_ID_ASC: AccountOrderBy_BOOK_ID_ASCApply,
+      BOOK_ID_DESC: AccountOrderBy_BOOK_ID_DESCApply,
+      MONTH_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "month",
+          direction: "ASC"
+        });
+      },
+      MONTH_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "month",
+          direction: "DESC"
+        });
+      },
+      PRIMARY_KEY_ASC(queryBuilder) {
+        accounting_periodUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        accounting_periodUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply,
+      STATUS_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "status",
+          direction: "ASC"
+        });
+      },
+      STATUS_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "status",
+          direction: "DESC"
+        });
+      },
+      YEAR_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "year",
+          direction: "ASC"
+        });
+      },
+      YEAR_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "year",
+          direction: "DESC"
+        });
+      }
+    }
+  },
   AccountMappingOrderBy: {
     values: {
       BOOK_ID_ASC: AccountOrderBy_BOOK_ID_ASCApply,
@@ -13807,6 +16853,44 @@ export const enums = {
       },
       PRIMARY_KEY_DESC(queryBuilder) {
         budgetUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply
+    }
+  },
+  CategorizationRuleOrderBy: {
+    values: {
+      BOOK_ID_ASC: AccountOrderBy_BOOK_ID_ASCApply,
+      BOOK_ID_DESC: AccountOrderBy_BOOK_ID_DESCApply,
+      MATCH_FIELD_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "match_field",
+          direction: "ASC"
+        });
+      },
+      MATCH_FIELD_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "match_field",
+          direction: "DESC"
+        });
+      },
+      PRIMARY_KEY_ASC(queryBuilder) {
+        categorization_ruleUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        categorization_ruleUniques[0].attributes.forEach(attributeName => {
           queryBuilder.orderBy({
             attribute: attributeName,
             direction: "DESC"
