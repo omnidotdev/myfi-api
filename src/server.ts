@@ -40,10 +40,12 @@ import {
 import accountRoutes from "lib/routes/accountRoutes";
 import bookRoutes from "lib/routes/bookRoutes";
 import budgetRoutes from "lib/routes/budgetRoutes";
+import categorizationRuleRoutes from "lib/routes/categorizationRuleRoutes";
 import connectionRoutes from "lib/routes/connectionRoutes";
 import dashboardRoutes from "lib/routes/dashboardRoutes";
 import journalRoutes from "lib/routes/journalRoutes";
 import mappingRoutes from "lib/routes/mappingRoutes";
+import periodRoutes from "lib/routes/periodRoutes";
 import reconciliationRoutes from "lib/routes/reconciliationRoutes";
 import savingsRoutes from "lib/routes/savingsRoutes";
 import {
@@ -129,9 +131,11 @@ const app = new Elysia()
   .use(reconciliationRoutes)
   .use(connectionRoutes)
   .use(mappingRoutes)
+  .use(categorizationRuleRoutes)
   .use(dashboardRoutes)
   .use(importRoutes)
   .use(ofxRoutes)
+  .use(periodRoutes)
   // Report REST endpoints
   .get("/api/reports/profit-and-loss", async ({ query }) => {
     const { bookId, startDate, endDate } = query;

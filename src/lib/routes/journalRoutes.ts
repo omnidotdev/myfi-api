@@ -1,14 +1,40 @@
-import { desc, eq, sql } from "drizzle-orm";
+import { and, desc, eq, sql } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 
 import { dbPool } from "lib/db/db";
 import {
   accountTable,
+  accountingPeriodTable,
   journalEntryTable,
   journalLineTable,
 } from "lib/db/schema";
 
 import type { InsertJournalEntry } from "lib/db/schema";
+
+/**
+ * Check if a date falls within a closed accounting period for the given book
+ */
+const isPeriodLocked = async (
+  bookId: string,
+  date: string,
+): Promise<boolean> => {
+  const d = new Date(date);
+  const year = d.getFullYear();
+  const month = d.getMonth() + 1;
+
+  const [period] = await dbPool
+    .select({ status: accountingPeriodTable.status })
+    .from(accountingPeriodTable)
+    .where(
+      and(
+        eq(accountingPeriodTable.bookId, bookId),
+        eq(accountingPeriodTable.year, year),
+        eq(accountingPeriodTable.month, month),
+      ),
+    );
+
+  return period?.status === "closed";
+};
 
 // Journal entry CRUD routes
 const journalRoutes = new Elysia({ prefix: "/api/journal-entries" })
@@ -74,6 +100,11 @@ const journalRoutes = new Elysia({ prefix: "/api/journal-entries" })
     async ({ body, set }) => {
       const { bookId, date, memo, source, lines } = body;
 
+      if (await isPeriodLocked(bookId, date)) {
+        set.status = 409;
+        return { error: "Cannot create entry in a closed period" };
+      }
+
       const entry = await dbPool.transaction(async (tx) => {
         const [created] = await tx
           .insert(journalEntryTable)
@@ -135,6 +166,19 @@ const journalRoutes = new Elysia({ prefix: "/api/journal-entries" })
       if (!existing) {
         set.status = 404;
         return { error: "Journal entry not found" };
+      }
+
+      const [full] = await dbPool
+        .select({
+          bookId: journalEntryTable.bookId,
+          date: journalEntryTable.date,
+        })
+        .from(journalEntryTable)
+        .where(eq(journalEntryTable.id, id));
+
+      if (full && (await isPeriodLocked(full.bookId, full.date))) {
+        set.status = 409;
+        return { error: "Cannot delete entry in a closed period" };
       }
 
       // Lines cascade-delete via FK constraint
