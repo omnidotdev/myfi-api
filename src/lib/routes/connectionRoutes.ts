@@ -1,6 +1,7 @@
 import { eq } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 
+import { emitAudit } from "lib/audit";
 import { dbPool } from "lib/db/db";
 import { connectedAccountTable } from "lib/db/schema";
 
@@ -38,7 +39,11 @@ const connectionRoutes = new Elysia({ prefix: "/api/connections" })
       const { id } = params;
 
       const [existing] = await dbPool
-        .select({ id: connectedAccountTable.id })
+        .select({
+          id: connectedAccountTable.id,
+          bookId: connectedAccountTable.bookId,
+          institutionName: connectedAccountTable.institutionName,
+        })
         .from(connectedAccountTable)
         .where(eq(connectedAccountTable.id, id));
 
@@ -53,6 +58,17 @@ const connectionRoutes = new Elysia({ prefix: "/api/connections" })
         .set({ status: "disconnected" })
         .where(eq(connectedAccountTable.id, id))
         .returning();
+
+      emitAudit({
+        type: "myfi.connection.unlinked",
+        organizationId: existing.bookId,
+        actor: { id: "unknown" },
+        resource: {
+          type: "connected_account",
+          id: params.id,
+          name: existing.institutionName ?? undefined,
+        },
+      });
 
       return { connection };
     },

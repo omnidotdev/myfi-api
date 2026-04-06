@@ -1,6 +1,7 @@
 import { and, desc, eq } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 
+import { emitAudit } from "lib/audit";
 import { learnRule } from "lib/categorization";
 import { dbPool } from "lib/db/db";
 import {
@@ -134,6 +135,32 @@ const reconciliationRoutes = new Elysia({ prefix: "/api/reconciliation" })
         })
         .where(eq(reconciliationQueueTable.id, id))
         .returning();
+
+      const auditType =
+        body.debitAccountId && body.creditAccountId
+          ? "myfi.reconciliation.corrected"
+          : body.status === "approved"
+            ? "myfi.reconciliation.approved"
+            : body.status === "rejected"
+              ? "myfi.reconciliation.rejected"
+              : "myfi.reconciliation.adjusted";
+
+      emitAudit({
+        type: auditType,
+        organizationId: existing.bookId,
+        actor: body.reviewedBy ? { id: body.reviewedBy } : { id: "unknown" },
+        resource: { type: "reconciliation", id },
+        data: {
+          journalEntryId: existing.journalEntryId,
+          status: body.status,
+          ...(body.debitAccountId
+            ? {
+                debitAccountId: body.debitAccountId,
+                creditAccountId: body.creditAccountId,
+              }
+            : {}),
+        },
+      });
 
       return { item };
     },

@@ -1,6 +1,7 @@
 import { and, eq } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 
+import { emitAudit } from "lib/audit";
 import { dbPool } from "lib/db/db";
 import { accountingPeriodTable, reconciliationQueueTable } from "lib/db/schema";
 
@@ -86,6 +87,18 @@ const periodRoutes = new Elysia({ prefix: "/api/periods" })
             })
             .returning();
 
+      emitAudit({
+        type: "myfi.period.closed",
+        organizationId: body.bookId,
+        actor: { id: body.closedBy ?? "unknown" },
+        resource: { type: "accounting_period", id: period.id },
+        data: {
+          year: body.year,
+          month: body.month,
+          closedBy: body.closedBy ?? "manual",
+        },
+      });
+
       return { period };
     },
     {
@@ -131,6 +144,14 @@ const periodRoutes = new Elysia({ prefix: "/api/periods" })
         })
         .where(eq(accountingPeriodTable.id, existing.id))
         .returning();
+
+      emitAudit({
+        type: "myfi.period.reopened",
+        organizationId: body.bookId,
+        actor: { id: "unknown" },
+        resource: { type: "accounting_period", id: period.id },
+        data: { year: body.year, month: body.month },
+      });
 
       return { period };
     },

@@ -13,6 +13,8 @@ export const {
   PLAID_ENV = "sandbox",
   TOKEN_ENCRYPTION_KEY,
   MANTLE_WEBHOOK_SECRET,
+  VORTEX_API_URL,
+  VORTEX_API_KEY,
 } = process.env;
 
 export const isDevEnv = NODE_ENV === "development",

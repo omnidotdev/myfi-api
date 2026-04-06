@@ -1,6 +1,7 @@
 import { desc, eq } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 
+import { emitAudit } from "lib/audit";
 import { dbPool } from "lib/db/db";
 import { categorizationRuleTable } from "lib/db/schema";
 
@@ -46,6 +47,18 @@ const categorizationRuleRoutes = new Elysia({
 
       set.status = 201;
 
+      emitAudit({
+        type: "myfi.rule.created",
+        organizationId: body.bookId,
+        actor: { id: "unknown" },
+        resource: { type: "categorization_rule", id: rule.id, name: rule.name },
+        data: {
+          matchField: body.matchField,
+          matchType: body.matchType,
+          matchValue: body.matchValue,
+        },
+      });
+
       return { rule };
     },
     {
@@ -70,7 +83,7 @@ const categorizationRuleRoutes = new Elysia({
       const { id } = params;
 
       const [existing] = await dbPool
-        .select({ id: categorizationRuleTable.id })
+        .select()
         .from(categorizationRuleTable)
         .where(eq(categorizationRuleTable.id, id));
 
@@ -84,6 +97,17 @@ const categorizationRuleRoutes = new Elysia({
         .set(body)
         .where(eq(categorizationRuleTable.id, id))
         .returning();
+
+      emitAudit({
+        type: "myfi.rule.updated",
+        organizationId: existing.bookId,
+        actor: { id: "unknown" },
+        resource: {
+          type: "categorization_rule",
+          id: params.id,
+          name: rule.name,
+        },
+      });
 
       return { rule };
     },
@@ -109,7 +133,7 @@ const categorizationRuleRoutes = new Elysia({
       const { id } = params;
 
       const [existing] = await dbPool
-        .select({ id: categorizationRuleTable.id })
+        .select()
         .from(categorizationRuleTable)
         .where(eq(categorizationRuleTable.id, id));
 
@@ -121,6 +145,17 @@ const categorizationRuleRoutes = new Elysia({
       await dbPool
         .delete(categorizationRuleTable)
         .where(eq(categorizationRuleTable.id, id));
+
+      emitAudit({
+        type: "myfi.rule.deleted",
+        organizationId: existing.bookId,
+        actor: { id: "unknown" },
+        resource: {
+          type: "categorization_rule",
+          id: params.id,
+          name: existing.name,
+        },
+      });
 
       return { success: true };
     },

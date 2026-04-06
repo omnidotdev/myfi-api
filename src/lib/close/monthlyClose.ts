@@ -1,5 +1,6 @@
 import { and, eq, sql } from "drizzle-orm";
 
+import { SYSTEM_ACTOR, emitAudit } from "lib/audit";
 import { dbPool } from "lib/db/db";
 import {
   accountingPeriodTable,
@@ -180,6 +181,14 @@ const runMonthlyClose = async (): Promise<CloseResult[]> => {
         });
       }
 
+      emitAudit({
+        type: "myfi.period.blocked",
+        organizationId: book.organizationId,
+        actor: SYSTEM_ACTOR,
+        resource: { type: "accounting_period", id: "auto" },
+        data: { year, month, bookName: book.name, blockers },
+      });
+
       results.push({
         bookId: book.id,
         bookName: book.name,
@@ -225,6 +234,19 @@ const runMonthlyClose = async (): Promise<CloseResult[]> => {
           err,
         );
       }
+
+      emitAudit({
+        type: "myfi.period.closed",
+        organizationId: book.organizationId,
+        actor: SYSTEM_ACTOR,
+        resource: { type: "accounting_period", id: "auto" },
+        data: {
+          year,
+          month,
+          closedBy: "system:monthly_close",
+          bookName: book.name,
+        },
+      });
 
       console.info(`[MonthlyClose] Book "${book.name}" period closed`);
 

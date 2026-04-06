@@ -1,6 +1,7 @@
 import { and, desc, eq, sql } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 
+import { emitAudit } from "lib/audit";
 import { dbPool } from "lib/db/db";
 import {
   accountTable,
@@ -132,6 +133,23 @@ const journalRoutes = new Elysia({ prefix: "/api/journal-entries" })
         return { ...created, lines: insertedLines };
       });
 
+      emitAudit({
+        type: "myfi.journal_entry.created",
+        organizationId: bookId,
+        actor: { id: "unknown" },
+        resource: {
+          type: "journal_entry",
+          id: entry.id,
+          name: memo ?? undefined,
+        },
+        data: {
+          bookId,
+          date,
+          source: source ?? "manual",
+          lineCount: lines.length,
+        },
+      });
+
       set.status = 201;
 
       return { entry };
@@ -172,6 +190,7 @@ const journalRoutes = new Elysia({ prefix: "/api/journal-entries" })
         .select({
           bookId: journalEntryTable.bookId,
           date: journalEntryTable.date,
+          memo: journalEntryTable.memo,
         })
         .from(journalEntryTable)
         .where(eq(journalEntryTable.id, id));
@@ -185,6 +204,16 @@ const journalRoutes = new Elysia({ prefix: "/api/journal-entries" })
       await dbPool
         .delete(journalEntryTable)
         .where(eq(journalEntryTable.id, id));
+
+      if (full) {
+        emitAudit({
+          type: "myfi.journal_entry.deleted",
+          organizationId: full.bookId,
+          actor: { id: "unknown" },
+          resource: { type: "journal_entry", id, name: full.memo ?? undefined },
+          data: { bookId: full.bookId },
+        });
+      }
 
       return { success: true };
     },

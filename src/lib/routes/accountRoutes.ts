@@ -1,6 +1,7 @@
 import { asc, eq } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 
+import { emitAudit } from "lib/audit";
 import { dbPool } from "lib/db/db";
 import { accountTable } from "lib/db/schema";
 
@@ -51,6 +52,14 @@ const accountRoutes = new Elysia({ prefix: "/api/accounts" })
 
       set.status = 201;
 
+      emitAudit({
+        type: "myfi.account.created",
+        organizationId: body.bookId,
+        actor: { id: "unknown" },
+        resource: { type: "account", id: account.id, name: account.name },
+        data: { bookId: body.bookId, accountType: body.type },
+      });
+
       return { account };
     },
     {
@@ -77,7 +86,10 @@ const accountRoutes = new Elysia({ prefix: "/api/accounts" })
       const { id } = params;
 
       const [existing] = await dbPool
-        .select({ id: accountTable.id })
+        .select({
+          id: accountTable.id,
+          bookId: accountTable.bookId,
+        })
         .from(accountTable)
         .where(eq(accountTable.id, id));
 
@@ -99,6 +111,13 @@ const accountRoutes = new Elysia({ prefix: "/api/accounts" })
         })
         .where(eq(accountTable.id, id))
         .returning();
+
+      emitAudit({
+        type: "myfi.account.updated",
+        organizationId: existing.bookId,
+        actor: { id: "unknown" },
+        resource: { type: "account", id: params.id, name: account.name },
+      });
 
       return { account };
     },
@@ -128,7 +147,12 @@ const accountRoutes = new Elysia({ prefix: "/api/accounts" })
       const { id } = params;
 
       const [existing] = await dbPool
-        .select({ id: accountTable.id, isActive: accountTable.isActive })
+        .select({
+          id: accountTable.id,
+          bookId: accountTable.bookId,
+          name: accountTable.name,
+          isActive: accountTable.isActive,
+        })
         .from(accountTable)
         .where(eq(accountTable.id, id));
 
@@ -146,6 +170,15 @@ const accountRoutes = new Elysia({ prefix: "/api/accounts" })
         .where(eq(accountTable.id, id))
         .returning();
 
+      emitAudit({
+        type: existing.isActive
+          ? "myfi.account.deactivated"
+          : "myfi.account.updated",
+        organizationId: existing.bookId,
+        actor: { id: "unknown" },
+        resource: { type: "account", id: params.id, name: existing.name },
+      });
+
       return { account };
     },
     {
@@ -158,7 +191,11 @@ const accountRoutes = new Elysia({ prefix: "/api/accounts" })
       const { id } = params;
 
       const [existing] = await dbPool
-        .select({ id: accountTable.id })
+        .select({
+          id: accountTable.id,
+          bookId: accountTable.bookId,
+          name: accountTable.name,
+        })
         .from(accountTable)
         .where(eq(accountTable.id, id));
 
@@ -168,6 +205,17 @@ const accountRoutes = new Elysia({ prefix: "/api/accounts" })
       }
 
       await dbPool.delete(accountTable).where(eq(accountTable.id, id));
+
+      emitAudit({
+        type: "myfi.account.deleted",
+        organizationId: existing.bookId,
+        actor: { id: "unknown" },
+        resource: {
+          type: "account",
+          id: existing.id,
+          name: existing.name,
+        },
+      });
 
       return { success: true };
     },

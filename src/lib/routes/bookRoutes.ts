@@ -1,6 +1,7 @@
 import { eq } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 
+import { emitAudit } from "lib/audit";
 import { dbPool } from "lib/db/db";
 import { accountTable, bookTable } from "lib/db/schema";
 import {
@@ -106,6 +107,14 @@ const bookRoutes = new Elysia({ prefix: "/api/books" })
 
       set.status = 201;
 
+      emitAudit({
+        type: "myfi.book.created",
+        organizationId: book.organizationId,
+        actor: { id: "unknown" },
+        resource: { type: "book", id: book.id, name: book.name },
+        data: { bookType: book.type },
+      });
+
       return { book };
     },
     {
@@ -125,7 +134,10 @@ const bookRoutes = new Elysia({ prefix: "/api/books" })
       const { id } = params;
 
       const [existing] = await dbPool
-        .select({ id: bookTable.id })
+        .select({
+          id: bookTable.id,
+          organizationId: bookTable.organizationId,
+        })
         .from(bookTable)
         .where(eq(bookTable.id, id));
 
@@ -145,6 +157,13 @@ const bookRoutes = new Elysia({ prefix: "/api/books" })
         })
         .where(eq(bookTable.id, id))
         .returning();
+
+      emitAudit({
+        type: "myfi.book.updated",
+        organizationId: existing.organizationId,
+        actor: { id: "unknown" },
+        resource: { type: "book", id: book.id, name: book.name },
+      });
 
       return { book };
     },
@@ -166,7 +185,11 @@ const bookRoutes = new Elysia({ prefix: "/api/books" })
       const { id } = params;
 
       const [existing] = await dbPool
-        .select({ id: bookTable.id })
+        .select({
+          id: bookTable.id,
+          organizationId: bookTable.organizationId,
+          name: bookTable.name,
+        })
         .from(bookTable)
         .where(eq(bookTable.id, id));
 
@@ -176,6 +199,13 @@ const bookRoutes = new Elysia({ prefix: "/api/books" })
       }
 
       await dbPool.delete(bookTable).where(eq(bookTable.id, id));
+
+      emitAudit({
+        type: "myfi.book.deleted",
+        organizationId: existing.organizationId,
+        actor: { id: "unknown" },
+        resource: { type: "book", id: existing.id, name: existing.name },
+      });
 
       return { success: true };
     },
