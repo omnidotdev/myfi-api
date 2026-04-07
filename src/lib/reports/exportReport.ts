@@ -1,7 +1,11 @@
 import { generate1099Nec } from "lib/tax";
 import generateBalanceSheet from "./balanceSheet";
+import generateCashFlow from "./cashFlow";
+import generateGeneralLedger from "./generalLedger";
 import renderReportHtml from "./htmlRenderer";
+import generatePayrollSummary from "./payrollSummary";
 import generateProfitAndLoss from "./profitAndLoss";
+import generateSalesTaxReport from "./salesTax";
 import generateTrialBalance from "./trialBalance";
 
 type ExportFormat = "html" | "csv";
@@ -15,6 +19,8 @@ type ExportParams = {
   asOfDate?: string;
   year?: string;
   tagIds?: string[];
+  accountId?: string;
+  jurisdictionId?: string;
 };
 
 type ExportResult = {
@@ -61,8 +67,18 @@ const fmt = (value: string): string => {
  * then transforms the result into the requested output format.
  */
 const exportReport = async (params: ExportParams): Promise<ExportResult> => {
-  const { type, bookId, format, startDate, endDate, asOfDate, year, tagIds } =
-    params;
+  const {
+    type,
+    bookId,
+    format,
+    startDate,
+    endDate,
+    asOfDate,
+    year,
+    tagIds,
+    accountId,
+    jurisdictionId,
+  } = params;
 
   let headers: string[];
   let rows: string[][];
@@ -188,6 +204,155 @@ const exportReport = async (params: ExportParams): Promise<ExportResult> => {
       ]);
 
       totals = ["Total", "", fmt(nec.totalAmount)];
+      break;
+    }
+
+    case "cash-flow": {
+      if (!startDate || !endDate) {
+        throw new Error("startDate and endDate are required for cash-flow");
+      }
+
+      const cf = await generateCashFlow({
+        bookId,
+        startDate,
+        endDate,
+        tagIds,
+      });
+
+      title = "Cash Flow Statement";
+      subtitle = `${startDate} to ${endDate}`;
+      filenameBase = `cash-flow_${startDate}_${endDate}`;
+      headers = ["Account", "Category", "Amount"];
+
+      rows = [
+        ...cf.operating.items.map((i) => [
+          i.accountName,
+          "Operating",
+          fmt(i.netAmount),
+        ]),
+        ...cf.investing.items.map((i) => [
+          i.accountName,
+          "Investing",
+          fmt(i.netAmount),
+        ]),
+        ...cf.financing.items.map((i) => [
+          i.accountName,
+          "Financing",
+          fmt(i.netAmount),
+        ]),
+      ];
+
+      totals = ["Net Cash Change", "", fmt(cf.netCashChange)];
+      break;
+    }
+
+    case "general-ledger": {
+      if (!startDate || !endDate || !accountId) {
+        throw new Error(
+          "startDate, endDate, and accountId are required for general-ledger",
+        );
+      }
+
+      const gl = await generateGeneralLedger({
+        bookId,
+        accountId,
+        startDate,
+        endDate,
+        tagIds,
+      });
+
+      title = `General Ledger: ${gl.accountName}`;
+      subtitle = `${startDate} to ${endDate}`;
+      filenameBase = `general-ledger_${startDate}_${endDate}`;
+      headers = ["Date", "Memo", "Source", "Debit", "Credit", "Balance"];
+
+      rows = gl.entries.map((e) => [
+        e.date,
+        e.memo ?? "",
+        e.source,
+        fmt(e.debit),
+        fmt(e.credit),
+        fmt(e.runningBalance),
+      ]);
+
+      totals = [
+        "Totals",
+        "",
+        "",
+        fmt(gl.totalDebits),
+        fmt(gl.totalCredits),
+        fmt(gl.closingBalance),
+      ];
+      break;
+    }
+
+    case "sales-tax": {
+      if (!year) {
+        throw new Error("year is required for sales-tax");
+      }
+
+      const st = await generateSalesTaxReport({
+        bookId,
+        year: Number.parseInt(year, 10),
+        jurisdictionId: jurisdictionId || undefined,
+      });
+
+      title = "Sales Tax Report";
+      subtitle = `Year ${year}`;
+      filenameBase = `sales-tax_${year}`;
+      headers = ["Jurisdiction", "Period", "Collected", "Remitted", "Owed"];
+
+      rows = st.jurisdictions.flatMap((j) =>
+        j.periods.map((p) => [
+          j.name,
+          p.label,
+          fmt(p.collected),
+          fmt(p.remitted),
+          fmt(p.owed),
+        ]),
+      );
+      break;
+    }
+
+    case "payroll": {
+      if (!year) {
+        throw new Error("year is required for payroll");
+      }
+
+      const pr = await generatePayrollSummary({
+        bookId,
+        year: Number.parseInt(year, 10),
+      });
+
+      title = "Payroll Report";
+      subtitle = `Year ${year}`;
+      filenameBase = `payroll_${year}`;
+      headers = [
+        "Date",
+        "Description",
+        "Gross Wages",
+        "Taxes",
+        "Benefits",
+        "Net Pay",
+      ];
+
+      rows = pr.payrolls.map((r) => [
+        r.date,
+        r.memo ?? "",
+        fmt(r.grossWages),
+        fmt(r.taxes),
+        fmt(r.benefits),
+        fmt(r.netPay),
+      ]);
+
+      totals = [
+        "Totals",
+        "",
+        fmt(pr.totals.grossWages),
+        fmt(pr.totals.taxes),
+        fmt(pr.totals.benefits),
+        fmt(pr.totals.netPay),
+      ];
       break;
     }
 

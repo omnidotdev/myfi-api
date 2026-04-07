@@ -434,6 +434,8 @@ const app = new Elysia()
         asOfDate: query.asOfDate,
         year: query.year,
         tagIds,
+        accountId: query.accountId,
+        jurisdictionId: query.jurisdictionId,
       });
 
       set.headers["Content-Type"] = result.contentType;
