@@ -15,12 +15,24 @@ import type { InferInsertModel } from "drizzle-orm";
 type MantleEventBody = {
   event: string;
   data: {
-    organizationId: string;
-    referenceId: string;
-    amount: number;
+    // Legacy format
+    organizationId?: string;
+    referenceId?: string;
+    amount?: number;
     currency?: string;
     memo?: string;
     metadata?: Record<string, unknown>;
+    // Mantle native format
+    id?: string;
+    companyId?: string;
+    contactId?: string;
+    invoiceNumber?: string;
+    status?: string;
+    total?: string | number;
+    issueDate?: string;
+    dueDate?: string;
+    paidAt?: string;
+    paymentReference?: string;
   };
 };
 
@@ -30,7 +42,21 @@ type WebhookResult = {
   error?: string;
 };
 
+/**
+ * Normalized event data used internally after resolving the event format.
+ */
+type NormalizedEvent = {
+  accountingEvent: LegacyEvent;
+  organizationId: string;
+  referenceId: string;
+  amount: number;
+  currency?: string;
+  memo?: string;
+  metadata?: Record<string, unknown>;
+};
+
 const SUPPORTED_EVENTS = [
+  // Legacy format
   "invoice.sent",
   "invoice.paid",
   "invoice.void",
@@ -38,9 +64,44 @@ const SUPPORTED_EVENTS = [
   "bill.paid",
   "bill.void",
   "inventory.adjustment",
+  // Mantle native format
+  "mantle.invoice.created",
+  "mantle.invoice.updated",
+  "mantle.invoice.deleted",
 ] as const;
 
 type SupportedEvent = (typeof SUPPORTED_EVENTS)[number];
+
+// Legacy event types that map to account mappings
+type LegacyEvent = Extract<
+  SupportedEvent,
+  | "invoice.sent"
+  | "invoice.paid"
+  | "invoice.void"
+  | "bill.created"
+  | "bill.paid"
+  | "bill.void"
+  | "inventory.adjustment"
+>;
+
+/**
+ * Map Mantle invoice status to the corresponding legacy accounting event.
+ * Returns undefined for statuses that don't require a journal entry.
+ */
+const statusToLegacyEvent = (
+  status: string | undefined,
+): LegacyEvent | undefined => {
+  switch (status) {
+    case "sent":
+      return "invoice.sent";
+    case "paid":
+      return "invoice.paid";
+    case "void":
+      return "invoice.void";
+    default:
+      return undefined;
+  }
+};
 
 /**
  * Determine if an event type is supported.
@@ -49,12 +110,97 @@ const isSupportedEvent = (event: string): event is SupportedEvent =>
   (SUPPORTED_EVENTS as readonly string[]).includes(event);
 
 /**
+ * Check if an event is a Mantle native event.
+ */
+const isMantleNativeEvent = (
+  event: string,
+): event is
+  | "mantle.invoice.created"
+  | "mantle.invoice.updated"
+  | "mantle.invoice.deleted" => event.startsWith("mantle.");
+
+/**
+ * Normalize a Mantle native event into the internal format used for journal entries.
+ * Returns undefined when no journal entry is needed (e.g. draft status).
+ */
+const normalizeMantleEvent = (
+  body: MantleEventBody,
+): NormalizedEvent | undefined => {
+  const { event, data } = body;
+
+  if (!data.organizationId || !data.id) return undefined;
+
+  if (event === "mantle.invoice.created") {
+    // Only create a journal entry for invoices that are sent on creation
+    const legacyEvent = statusToLegacyEvent(data.status);
+
+    if (!legacyEvent) return undefined;
+
+    return {
+      accountingEvent: legacyEvent,
+      organizationId: data.organizationId,
+      referenceId: data.id,
+      amount: parseTotal(data.total),
+      currency: data.currency,
+      memo:
+        data.memo ?? `Invoice ${data.invoiceNumber ?? data.id} ${data.status}`,
+    };
+  }
+
+  if (event === "mantle.invoice.updated") {
+    const legacyEvent = statusToLegacyEvent(data.status);
+
+    if (!legacyEvent) return undefined;
+
+    return {
+      accountingEvent: legacyEvent,
+      organizationId: data.organizationId,
+      referenceId: data.id,
+      amount: parseTotal(data.total),
+      currency: data.currency,
+      memo:
+        data.memo ?? `Invoice ${data.invoiceNumber ?? data.id} ${data.status}`,
+    };
+  }
+
+  if (event === "mantle.invoice.deleted") {
+    return {
+      accountingEvent: "invoice.void",
+      organizationId: data.organizationId,
+      referenceId: data.id,
+      amount: parseTotal(data.total),
+      currency: data.currency,
+      memo:
+        data.memo ??
+        `Invoice ${data.invoiceNumber ?? data.id} deleted (reversal)`,
+    };
+  }
+
+  return undefined;
+};
+
+/**
+ * Parse total from string or number into a number.
+ */
+const parseTotal = (total: string | number | undefined): number => {
+  if (total === undefined || total === null) return 0;
+  if (typeof total === "number") return total;
+
+  const parsed = Number.parseFloat(total);
+
+  return Number.isNaN(parsed) ? 0 : parsed;
+};
+
+/**
  * Build a memo string for the journal entry based on the event type.
  */
-const buildMemo = (event: SupportedEvent, data: MantleEventBody["data"]) => {
+const buildMemo = (
+  event: LegacyEvent,
+  data: { referenceId: string; memo?: string },
+) => {
   if (data.memo) return data.memo;
 
-  const memoMap: Record<SupportedEvent, string> = {
+  const memoMap: Record<LegacyEvent, string> = {
     "invoice.sent": `Invoice ${data.referenceId} sent`,
     "invoice.paid": `Payment received for invoice ${data.referenceId}`,
     "invoice.void": `Invoice ${data.referenceId} voided (reversal)`,
@@ -68,34 +214,25 @@ const buildMemo = (event: SupportedEvent, data: MantleEventBody["data"]) => {
 };
 
 /**
- * Handle an incoming Mantle event from a Vortex webhook.
- *
- * Looks up the book by `organizationId`, checks for duplicate entries,
- * resolves account mappings, creates a journal entry with balanced lines,
- * and queues the entry for reconciliation review.
+ * Create a journal entry from normalized event data.
  */
-const handleMantleEvent = async (
-  body: MantleEventBody,
+const createJournalEntry = async (
+  normalized: NormalizedEvent,
+  originalEvent: string,
 ): Promise<WebhookResult> => {
-  const { event, data } = body;
-
-  if (!isSupportedEvent(event)) {
-    return {
-      success: false,
-      error: `Unsupported event type: ${event}`,
-    };
-  }
+  const { accountingEvent, organizationId, referenceId, amount, memo } =
+    normalized;
 
   // Look up book by organizationId
   const [book] = await dbPool
     .select()
     .from(bookTable)
-    .where(eq(bookTable.organizationId, data.organizationId));
+    .where(eq(bookTable.organizationId, organizationId));
 
   if (!book) {
     return {
       success: false,
-      error: `No book found for organization ${data.organizationId}`,
+      error: `No book found for organization ${organizationId}`,
     };
   }
 
@@ -106,7 +243,7 @@ const handleMantleEvent = async (
     .where(
       and(
         eq(journalEntryTable.source, "mantle_sync"),
-        eq(journalEntryTable.sourceReferenceId, data.referenceId),
+        eq(journalEntryTable.sourceReferenceId, referenceId),
       ),
     );
 
@@ -118,26 +255,26 @@ const handleMantleEvent = async (
     };
   }
 
-  // Look up account mapping for this event type in this book
+  // Look up account mapping for the accounting event type
   const [mapping] = await dbPool
     .select()
     .from(accountMappingTable)
     .where(
       and(
         eq(accountMappingTable.bookId, book.id),
-        eq(accountMappingTable.eventType, event),
+        eq(accountMappingTable.eventType, accountingEvent),
       ),
     );
 
   if (!mapping) {
     return {
       success: false,
-      error: `No account mapping configured for event "${event}" in book "${book.name}". Configure mappings in the account mapping settings`,
+      error: `No account mapping configured for event "${accountingEvent}" in book "${book.name}". Configure mappings in the account mapping settings`,
     };
   }
 
-  const amount = data.amount.toFixed(4);
-  const memo = buildMemo(event, data);
+  const amountStr = amount.toFixed(4);
+  const entryMemo = memo ?? buildMemo(accountingEvent, { referenceId });
 
   // Create journal entry + lines + reconciliation queue item in a transaction
   const result = await dbPool.transaction(async (tx) => {
@@ -146,10 +283,10 @@ const handleMantleEvent = async (
       .values({
         bookId: book.id,
         date: new Date().toISOString(),
-        memo,
+        memo: entryMemo,
         source: "mantle_sync",
-        sourceReferenceId: data.referenceId,
-        vendorId: (data.metadata?.vendorId as string) ?? null,
+        sourceReferenceId: referenceId,
+        vendorId: (normalized.metadata?.vendorId as string) ?? null,
         isReviewed: false,
         isReconciled: false,
       } satisfies InferInsertModel<typeof journalEntryTable>)
@@ -159,9 +296,9 @@ const handleMantleEvent = async (
     await tx.insert(journalLineTable).values({
       journalEntryId: entry.id,
       accountId: mapping.debitAccountId,
-      debit: amount,
+      debit: amountStr,
       credit: "0",
-      memo,
+      memo: entryMemo,
     } satisfies InferInsertModel<typeof journalLineTable>);
 
     // Credit line
@@ -169,8 +306,8 @@ const handleMantleEvent = async (
       journalEntryId: entry.id,
       accountId: mapping.creditAccountId,
       debit: "0",
-      credit: amount,
-      memo,
+      credit: amountStr,
+      memo: entryMemo,
     } satisfies InferInsertModel<typeof journalLineTable>);
 
     // Queue for reconciliation review
@@ -184,17 +321,77 @@ const handleMantleEvent = async (
   });
 
   emitAudit({
-    type: `myfi.mantle_event.${event}`,
-    organizationId: data.organizationId,
+    type: `myfi.mantle_event.${originalEvent}`,
+    organizationId,
     actor: { id: "system", name: "Mantle Sync" },
     resource: { type: "journal_entry", id: result.id },
-    data: { event, referenceId: data.referenceId, amount: data.amount },
+    data: { event: originalEvent, referenceId, amount },
   });
 
   return {
     success: true,
     journalEntryId: result.id,
   };
+};
+
+/**
+ * Handle an incoming Mantle event from a Vortex webhook.
+ *
+ * Supports both legacy event format (invoice.sent, invoice.paid, etc.) and
+ * Mantle native CloudEvents format (mantle.invoice.created/updated/deleted).
+ *
+ * For Mantle native events, the invoice status determines the accounting action:
+ * - "sent" -> AR recognition (invoice.sent)
+ * - "paid" -> cash receipt (invoice.paid)
+ * - "void" -> reversal (invoice.void)
+ */
+const handleMantleEvent = async (
+  body: MantleEventBody,
+): Promise<WebhookResult> => {
+  const { event, data } = body;
+
+  if (!isSupportedEvent(event)) {
+    return {
+      success: false,
+      error: `Unsupported event type: ${event}`,
+    };
+  }
+
+  // Handle Mantle native events by normalizing to internal format
+  if (isMantleNativeEvent(event)) {
+    const normalized = normalizeMantleEvent(body);
+
+    if (!normalized) {
+      return {
+        success: true,
+        error: "No journal entry needed for this status change",
+      };
+    }
+
+    return createJournalEntry(normalized, event);
+  }
+
+  // Legacy format: data must have organizationId, referenceId, amount
+  if (!data.organizationId || !data.referenceId || data.amount === undefined) {
+    return {
+      success: false,
+      error:
+        "Legacy event format requires organizationId, referenceId, and amount in data",
+    };
+  }
+
+  return createJournalEntry(
+    {
+      accountingEvent: event as LegacyEvent,
+      organizationId: data.organizationId,
+      referenceId: data.referenceId,
+      amount: data.amount,
+      currency: data.currency,
+      memo: data.memo,
+      metadata: data.metadata,
+    },
+    event,
+  );
 };
 
 export default handleMantleEvent;

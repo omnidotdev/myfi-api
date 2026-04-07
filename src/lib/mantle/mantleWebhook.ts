@@ -8,12 +8,24 @@ import handleMantleEvent from "./eventHandlers";
 const mantleWebhookBody = t.Object({
   event: t.String(),
   data: t.Object({
-    organizationId: t.String(),
-    referenceId: t.String(),
-    amount: t.Number(),
+    // Legacy format fields
+    organizationId: t.Optional(t.String()),
+    referenceId: t.Optional(t.String()),
+    amount: t.Optional(t.Number()),
     currency: t.Optional(t.String()),
     memo: t.Optional(t.String()),
     metadata: t.Optional(t.Record(t.String(), t.Unknown())),
+    // Mantle native format fields
+    id: t.Optional(t.String()),
+    companyId: t.Optional(t.String()),
+    contactId: t.Optional(t.String()),
+    invoiceNumber: t.Optional(t.String()),
+    status: t.Optional(t.String()),
+    total: t.Optional(t.Union([t.String(), t.Number()])),
+    issueDate: t.Optional(t.String()),
+    dueDate: t.Optional(t.String()),
+    paidAt: t.Optional(t.String()),
+    paymentReference: t.Optional(t.String()),
   }),
 });
 
