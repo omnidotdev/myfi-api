@@ -18,6 +18,8 @@ export const {
   GUSTO_REDIRECT_URI,
   VORTEX_API_URL,
   VORTEX_API_KEY,
+  RESEND_API_KEY,
+  NOTIFICATION_FROM_EMAIL,
 } = process.env;
 
 export const isDevEnv = NODE_ENV === "development",

@@ -26,6 +26,7 @@ import { armorPlugin, authenticationPlugin } from "lib/graphql/plugins";
 import importRoutes from "lib/import/importRoutes";
 import { mantleWebhook } from "lib/mantle";
 import authMiddleware from "lib/middleware/auth.middleware";
+import bookAccessMiddleware from "lib/middleware/bookAccess.middleware";
 import {
   computeNetWorth,
   saveNetWorthSnapshot,
@@ -133,6 +134,8 @@ const app = new Elysia()
   )
   // Auth boundary
   .use(authMiddleware)
+  // Book access authorization (checks book_access table for role-based permissions)
+  .use(bookAccessMiddleware)
   // Protected routes
   .use(plaidRoutes)
   .use(cryptoRoutes)

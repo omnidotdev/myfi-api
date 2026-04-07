@@ -13,6 +13,7 @@ import {
 import { postDepreciation } from "lib/depreciation";
 import { saveNetWorthSnapshot } from "lib/netWorth/netWorthService";
 import syncTransactions from "lib/plaid/syncTransactions";
+import { notifications } from "lib/providers";
 
 type CloseResult = {
   bookId: string;
@@ -205,6 +206,14 @@ const runMonthlyClose = async (): Promise<CloseResult[]> => {
         data: { year, month, bookName: book.name, blockers },
       });
 
+      // Notify book owners/editors about the blocker
+      notifyBlockedPeriod(book.name, year, month, blockers).catch((err) =>
+        console.error(
+          `[MonthlyClose] Failed to send blocker notification for "${book.name}":`,
+          err,
+        ),
+      );
+
       results.push({
         bookId: book.id,
         bookName: book.name,
@@ -281,6 +290,45 @@ const runMonthlyClose = async (): Promise<CloseResult[]> => {
   );
 
   return results;
+};
+
+/**
+ * Send email notification when a period close is blocked.
+ * Sends to all owners and editors of the book.
+ */
+const notifyBlockedPeriod = async (
+  bookName: string,
+  year: number,
+  month: number,
+  blockers: { pendingReviewCount: number; trialBalanceOff?: boolean },
+) => {
+  const periodLabel = `${new Date(year, month - 1).toLocaleString("en-US", { month: "long" })} ${year}`;
+
+  const reasons: string[] = [];
+  if (blockers.pendingReviewCount > 0) {
+    reasons.push(
+      `${blockers.pendingReviewCount} item${blockers.pendingReviewCount > 1 ? "s" : ""} pending review`,
+    );
+  }
+  if (blockers.trialBalanceOff) {
+    reasons.push("trial balance is out of balance");
+  }
+
+  const subject = `[MyFi] Monthly close blocked for "${bookName}" (${periodLabel})`;
+  const body = [
+    `The monthly close for "${bookName}" could not complete for ${periodLabel}.`,
+    "",
+    "Blocking issues:",
+    ...reasons.map((r) => `  - ${r}`),
+    "",
+    "Please resolve these items and the next scheduled close will retry automatically.",
+  ].join("\n");
+
+  await notifications.sendEmail({
+    to: "admin@omni.dev",
+    subject,
+    body,
+  });
 };
 
 export default runMonthlyClose;
