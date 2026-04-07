@@ -322,6 +322,100 @@ const spec_accountMapping = {
   executor: executor
 };
 const accountMappingCodec = recordCodec(spec_accountMapping);
+const taxJurisdictionIdentifier = sql.identifier("public", "tax_jurisdiction");
+const spec_taxJurisdiction = {
+  name: "taxJurisdiction",
+  identifier: taxJurisdictionIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    name: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    code: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    filing_frequency: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    tax_payable_account_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "639798",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "tax_jurisdiction"
+    }
+  },
+  executor: executor
+};
+const taxJurisdictionCodec = recordCodec(spec_taxJurisdiction);
 const journalLineIdentifier = sql.identifier("public", "journal_line");
 const spec_journalLine = {
   name: "journalLine",
@@ -2787,6 +2881,29 @@ const account_mapping_resourceOptionsConfig = {
   },
   uniques: account_mappingUniques
 };
+const tax_jurisdictionUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const tax_jurisdiction_resourceOptionsConfig = {
+  executor: executor,
+  name: "tax_jurisdiction",
+  identifier: "main.public.tax_jurisdiction",
+  from: taxJurisdictionIdentifier,
+  codec: taxJurisdictionCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "tax_jurisdiction"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: tax_jurisdictionUniques
+};
 const journal_lineUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -3194,6 +3311,7 @@ const registryConfig = {
     int4: TYPES.int,
     int8: TYPES.bigint,
     accountMapping: accountMappingCodec,
+    taxJurisdiction: taxJurisdictionCodec,
     journalLine: journalLineCodec,
     numeric: TYPES.numeric,
     tag: tagCodec,
@@ -3249,6 +3367,7 @@ const registryConfig = {
       uniques: __drizzle_migrationsUniques
     },
     account_mapping: account_mapping_resourceOptionsConfig,
+    tax_jurisdiction: tax_jurisdiction_resourceOptionsConfig,
     journal_line: journal_line_resourceOptionsConfig,
     tag: tag_resourceOptionsConfig,
     savings_goal: savings_goal_resourceOptionsConfig,
@@ -3448,6 +3567,17 @@ const registryConfig = {
           __proto__: null,
           isIndexed: false
         }
+      },
+      taxJurisdictionsByTheirTaxPayableAccountId: {
+        localCodec: accountCodec,
+        remoteResourceOptions: tax_jurisdiction_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["tax_payable_account_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
       }
     },
     accountMapping: {
@@ -3587,6 +3717,13 @@ const registryConfig = {
       vendorsByTheirBookId: {
         localCodec: bookCodec,
         remoteResourceOptions: vendor_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["book_id"],
+        isReferencee: true
+      },
+      taxJurisdictionsByTheirBookId: {
+        localCodec: bookCodec,
+        remoteResourceOptions: tax_jurisdiction_resourceOptionsConfig,
         localAttributes: ["id"],
         remoteAttributes: ["book_id"],
         isReferencee: true
@@ -3936,6 +4073,23 @@ const registryConfig = {
         isReferencee: true
       }
     },
+    taxJurisdiction: {
+      __proto__: null,
+      bookByMyBookId: {
+        localCodec: taxJurisdictionCodec,
+        remoteResourceOptions: book_resourceOptionsConfig,
+        localAttributes: ["book_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      accountByMyTaxPayableAccountId: {
+        localCodec: taxJurisdictionCodec,
+        remoteResourceOptions: account_resourceOptionsConfig,
+        localAttributes: ["tax_payable_account_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      }
+    },
     vendor: {
       __proto__: null,
       bookByMyBookId: {
@@ -3964,6 +4118,7 @@ const resource_journal_line_tagPgResource = registry.pgResources["journal_line_t
 const resource_tag_groupPgResource = registry.pgResources["tag_group"];
 const resource___drizzle_migrationsPgResource = registry.pgResources["__drizzle_migrations"];
 const resource_account_mappingPgResource = registry.pgResources["account_mapping"];
+const resource_tax_jurisdictionPgResource = registry.pgResources["tax_jurisdiction"];
 const resource_journal_linePgResource = registry.pgResources["journal_line"];
 const resource_tagPgResource = registry.pgResources["tag"];
 const resource_savings_goalPgResource = registry.pgResources["savings_goal"];
@@ -4068,6 +4223,17 @@ const nodeIdHandler_AccountMapping = makeTableNodeIdHandler({
 const nodeFetcher_AccountMapping = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_AccountMapping));
   return nodeIdHandler_AccountMapping.get(nodeIdHandler_AccountMapping.getSpec($decoded));
+};
+const nodeIdHandler_TaxJurisdiction = makeTableNodeIdHandler({
+  typeName: "TaxJurisdiction",
+  identifier: "TaxJurisdiction",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_tax_jurisdictionPgResource,
+  pk: tax_jurisdictionUniques[0].attributes
+});
+const nodeFetcher_TaxJurisdiction = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_TaxJurisdiction));
+  return nodeIdHandler_TaxJurisdiction.get(nodeIdHandler_TaxJurisdiction.getSpec($decoded));
 };
 const nodeIdHandler_JournalLine = makeTableNodeIdHandler({
   typeName: "JournalLine",
@@ -4312,6 +4478,7 @@ const nodeIdHandlerByTypeName = {
   TagGroup: nodeIdHandler_TagGroup,
   _DrizzleMigration: nodeIdHandler__DrizzleMigration,
   AccountMapping: nodeIdHandler_AccountMapping,
+  TaxJurisdiction: nodeIdHandler_TaxJurisdiction,
   JournalLine: nodeIdHandler_JournalLine,
   Tag: nodeIdHandler_Tag,
   SavingsGoal: nodeIdHandler_SavingsGoal,
@@ -4761,6 +4928,10 @@ const specFromArgs_AccountMapping = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_AccountMapping, $nodeId);
 };
+const specFromArgs_TaxJurisdiction = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_TaxJurisdiction, $nodeId);
+};
 const specFromArgs_JournalLine = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_JournalLine, $nodeId);
@@ -4899,6 +5070,16 @@ function AccountMappingInput_creditAccountIdApply(obj, val, info) {
 function AccountMappingInput_updatedAtApply(obj, val, info) {
   obj.set("updated_at", bakedInputRuntime(info.schema, info.field.type, val));
 }
+const CreateTaxJurisdictionPayload_taxJurisdictionEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_tax_jurisdictionPgResource, tax_jurisdictionUniques[0].attributes, $mutation, fieldArgs);
+function TaxJurisdictionInput_codeApply(obj, val, info) {
+  obj.set("code", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function TaxJurisdictionInput_filingFrequencyApply(obj, val, info) {
+  obj.set("filing_frequency", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function TaxJurisdictionInput_taxPayableAccountIdApply(obj, val, info) {
+  obj.set("tax_payable_account_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
 const CreateJournalLinePayload_journalLineEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_journal_linePgResource, journal_lineUniques[0].attributes, $mutation, fieldArgs);
 function JournalLineInput_journalEntryIdApply(obj, val, info) {
   obj.set("journal_entry_id", bakedInputRuntime(info.schema, info.field.type, val));
@@ -4918,9 +5099,6 @@ function JournalLineInput_memoApply(obj, val, info) {
 const CreateTagPayload_tagEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_tagPgResource, tagUniques[0].attributes, $mutation, fieldArgs);
 function TagInput_tagGroupIdApply(obj, val, info) {
   obj.set("tag_group_id", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function TagInput_codeApply(obj, val, info) {
-  obj.set("code", bakedInputRuntime(info.schema, info.field.type, val));
 }
 function TagInput_isActiveApply(obj, val, info) {
   obj.set("is_active", bakedInputRuntime(info.schema, info.field.type, val));
@@ -5238,6 +5416,9 @@ type Query implements Node {
   """Get a single \`AccountMapping\`."""
   accountMapping(rowId: UUID!): AccountMapping
 
+  """Get a single \`TaxJurisdiction\`."""
+  taxJurisdiction(rowId: UUID!): TaxJurisdiction
+
   """Get a single \`JournalLine\`."""
   journalLine(rowId: UUID!): JournalLine
 
@@ -5318,6 +5499,14 @@ type Query implements Node {
     """
     id: ID!
   ): AccountMapping
+
+  """Reads a single \`TaxJurisdiction\` using its globally unique \`ID\`."""
+  taxJurisdictionById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`TaxJurisdiction\`.
+    """
+    id: ID!
+  ): TaxJurisdiction
 
   """Reads a single \`JournalLine\` using its globally unique \`ID\`."""
   journalLineById(
@@ -5578,6 +5767,40 @@ type Query implements Node {
     """The method to use when ordering \`AccountMapping\`."""
     orderBy: [AccountMappingOrderBy!] = [PRIMARY_KEY_ASC]
   ): AccountMappingConnection
+
+  """Reads and enables pagination through a set of \`TaxJurisdiction\`."""
+  taxJurisdictions(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TaxJurisdictionCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: TaxJurisdictionFilter
+
+    """The method to use when ordering \`TaxJurisdiction\`."""
+    orderBy: [TaxJurisdictionOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TaxJurisdictionConnection
 
   """Reads and enables pagination through a set of \`JournalLine\`."""
   journalLines(
@@ -6941,6 +7164,40 @@ type Book implements Node {
     """The method to use when ordering \`Vendor\`."""
     orderBy: [VendorOrderBy!] = [PRIMARY_KEY_ASC]
   ): VendorConnection!
+
+  """Reads and enables pagination through a set of \`TaxJurisdiction\`."""
+  taxJurisdictions(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TaxJurisdictionCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: TaxJurisdictionFilter
+
+    """The method to use when ordering \`TaxJurisdiction\`."""
+    orderBy: [TaxJurisdictionOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TaxJurisdictionConnection!
 }
 
 enum BookType {
@@ -7314,6 +7571,12 @@ input BookFilter {
 
   """Some related \`vendors\` exist."""
   vendorsExist: Boolean
+
+  """Filter by the object’s \`taxJurisdictions\` relation."""
+  taxJurisdictions: BookToManyTaxJurisdictionFilter
+
+  """Some related \`taxJurisdictions\` exist."""
+  taxJurisdictionsExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [BookFilter!]
@@ -8632,6 +8895,52 @@ input BookToManyVendorFilter {
   No related \`Vendor\` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
   none: VendorFilter
+}
+
+"""
+A filter to be used against many \`TaxJurisdiction\` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyTaxJurisdictionFilter {
+  """
+  Every related \`TaxJurisdiction\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: TaxJurisdictionFilter
+
+  """
+  Some related \`TaxJurisdiction\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: TaxJurisdictionFilter
+
+  """
+  No related \`TaxJurisdiction\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: TaxJurisdictionFilter
+}
+
+"""
+A filter to be used against \`TaxJurisdiction\` object types. All fields are combined with a logical ‘and.’
+"""
+input TaxJurisdictionFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`bookId\` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s \`book\` relation."""
+  book: BookFilter
+
+  """Filter by the object’s \`taxPayableAccount\` relation."""
+  taxPayableAccount: AccountFilter
+
+  """Checks for all expressions in this list."""
+  and: [TaxJurisdictionFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [TaxJurisdictionFilter!]
+
+  """Negates the expression."""
+  not: TaxJurisdictionFilter
 }
 
 """
@@ -10191,6 +10500,77 @@ enum VendorOrderBy {
   BOOK_ID_DESC
 }
 
+"""A connection to a list of \`TaxJurisdiction\` values."""
+type TaxJurisdictionConnection {
+  """A list of \`TaxJurisdiction\` objects."""
+  nodes: [TaxJurisdiction]!
+
+  """
+  A list of edges which contains the \`TaxJurisdiction\` and cursor to aid in pagination.
+  """
+  edges: [TaxJurisdictionEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* \`TaxJurisdiction\` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+type TaxJurisdiction implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  name: String!
+  code: String
+  filingFrequency: String!
+  taxPayableAccountId: UUID!
+  createdAt: Datetime
+
+  """Reads a single \`Book\` that is related to this \`TaxJurisdiction\`."""
+  book: Book
+
+  """Reads a single \`Account\` that is related to this \`TaxJurisdiction\`."""
+  taxPayableAccount: Account
+}
+
+"""A \`TaxJurisdiction\` edge in the connection."""
+type TaxJurisdictionEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`TaxJurisdiction\` at the end of the edge."""
+  node: TaxJurisdiction
+}
+
+"""
+A condition to be used against \`TaxJurisdiction\` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input TaxJurisdictionCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`bookId\` field."""
+  bookId: UUID
+}
+
+"""Methods to use when ordering \`TaxJurisdiction\`."""
+enum TaxJurisdictionOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+}
+
 type _DrizzleMigration implements Node {
   """
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
@@ -10354,6 +10734,14 @@ type Mutation {
     """
     input: CreateAccountMappingInput!
   ): CreateAccountMappingPayload
+
+  """Creates a single \`TaxJurisdiction\`."""
+  createTaxJurisdiction(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateTaxJurisdictionInput!
+  ): CreateTaxJurisdictionPayload
 
   """Creates a single \`JournalLine\`."""
   createJournalLine(
@@ -10560,6 +10948,24 @@ type Mutation {
     """
     input: UpdateAccountMappingInput!
   ): UpdateAccountMappingPayload
+
+  """
+  Updates a single \`TaxJurisdiction\` using its globally unique id and a patch.
+  """
+  updateTaxJurisdictionById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateTaxJurisdictionByIdInput!
+  ): UpdateTaxJurisdictionPayload
+
+  """Updates a single \`TaxJurisdiction\` using a unique key and a patch."""
+  updateTaxJurisdiction(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateTaxJurisdictionInput!
+  ): UpdateTaxJurisdictionPayload
 
   """
   Updates a single \`JournalLine\` using its globally unique id and a patch.
@@ -10920,6 +11326,22 @@ type Mutation {
     """
     input: DeleteAccountMappingInput!
   ): DeleteAccountMappingPayload
+
+  """Deletes a single \`TaxJurisdiction\` using its globally unique id."""
+  deleteTaxJurisdictionById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteTaxJurisdictionByIdInput!
+  ): DeleteTaxJurisdictionPayload
+
+  """Deletes a single \`TaxJurisdiction\` using a unique key."""
+  deleteTaxJurisdiction(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteTaxJurisdictionInput!
+  ): DeleteTaxJurisdictionPayload
 
   """Deletes a single \`JournalLine\` using its globally unique id."""
   deleteJournalLineById(
@@ -11365,6 +11787,52 @@ input AccountMappingInput {
   creditAccountId: UUID!
   createdAt: Datetime
   updatedAt: Datetime
+}
+
+"""The output of our create \`TaxJurisdiction\` mutation."""
+type CreateTaxJurisdictionPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`TaxJurisdiction\` that was created by this mutation."""
+  taxJurisdiction: TaxJurisdiction
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`TaxJurisdiction\`. May be used by Relay 1."""
+  taxJurisdictionEdge(
+    """The method to use when ordering \`TaxJurisdiction\`."""
+    orderBy: [TaxJurisdictionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): TaxJurisdictionEdge
+}
+
+"""All input for the create \`TaxJurisdiction\` mutation."""
+input CreateTaxJurisdictionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`TaxJurisdiction\` to be created by this mutation."""
+  taxJurisdiction: TaxJurisdictionInput!
+}
+
+"""An input for mutations affecting \`TaxJurisdiction\`"""
+input TaxJurisdictionInput {
+  rowId: UUID
+  bookId: UUID!
+  name: String!
+  code: String
+  filingFrequency: String!
+  taxPayableAccountId: UUID!
+  createdAt: Datetime
 }
 
 """The output of our create \`JournalLine\` mutation."""
@@ -12478,6 +12946,76 @@ input UpdateAccountMappingInput {
   An object where the defined keys will be set on the \`AccountMapping\` being updated.
   """
   patch: AccountMappingPatch!
+}
+
+"""The output of our update \`TaxJurisdiction\` mutation."""
+type UpdateTaxJurisdictionPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`TaxJurisdiction\` that was updated by this mutation."""
+  taxJurisdiction: TaxJurisdiction
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`TaxJurisdiction\`. May be used by Relay 1."""
+  taxJurisdictionEdge(
+    """The method to use when ordering \`TaxJurisdiction\`."""
+    orderBy: [TaxJurisdictionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): TaxJurisdictionEdge
+}
+
+"""All input for the \`updateTaxJurisdictionById\` mutation."""
+input UpdateTaxJurisdictionByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`TaxJurisdiction\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`TaxJurisdiction\` being updated.
+  """
+  patch: TaxJurisdictionPatch!
+}
+
+"""
+Represents an update to a \`TaxJurisdiction\`. Fields that are set will be updated.
+"""
+input TaxJurisdictionPatch {
+  rowId: UUID
+  bookId: UUID
+  name: String
+  code: String
+  filingFrequency: String
+  taxPayableAccountId: UUID
+  createdAt: Datetime
+}
+
+"""All input for the \`updateTaxJurisdiction\` mutation."""
+input UpdateTaxJurisdictionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`TaxJurisdiction\` being updated.
+  """
+  patch: TaxJurisdictionPatch!
 }
 
 """The output of our update \`JournalLine\` mutation."""
@@ -13920,6 +14458,54 @@ input DeleteAccountMappingInput {
   rowId: UUID!
 }
 
+"""The output of our delete \`TaxJurisdiction\` mutation."""
+type DeleteTaxJurisdictionPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`TaxJurisdiction\` that was deleted by this mutation."""
+  taxJurisdiction: TaxJurisdiction
+  deletedTaxJurisdictionId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`TaxJurisdiction\`. May be used by Relay 1."""
+  taxJurisdictionEdge(
+    """The method to use when ordering \`TaxJurisdiction\`."""
+    orderBy: [TaxJurisdictionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): TaxJurisdictionEdge
+}
+
+"""All input for the \`deleteTaxJurisdictionById\` mutation."""
+input DeleteTaxJurisdictionByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`TaxJurisdiction\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteTaxJurisdiction\` mutation."""
+input DeleteTaxJurisdictionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete \`JournalLine\` mutation."""
 type DeleteJournalLinePayload {
   """
@@ -15271,6 +15857,32 @@ export const objects = {
           orderBy: applyOrderByArgToConnection
         }
       },
+      taxJurisdiction(_$root, {
+        $rowId
+      }) {
+        return resource_tax_jurisdictionPgResource.get({
+          id: $rowId
+        });
+      },
+      taxJurisdictionById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_TaxJurisdiction($nodeId);
+      },
+      taxJurisdictions: {
+        plan() {
+          return connection(resource_tax_jurisdictionPgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineTagsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       vendor(_$root, {
         $rowId
       }) {
@@ -15533,6 +16145,18 @@ export const objects = {
       createTagGroup: {
         plan(_, args) {
           const $insert = pgInsertSingle(resource_tag_groupPgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
+      createTaxJurisdiction: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_tax_jurisdictionPgResource);
           args.apply($insert);
           return object({
             result: $insert
@@ -16065,6 +16689,32 @@ export const objects = {
       deleteTagGroupById: {
         plan(_$root, args) {
           const $delete = pgDeleteSingle(resource_tag_groupPgResource, specFromArgs_TagGroup(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteTaxJurisdiction: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_tax_jurisdictionPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteTaxJurisdictionById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_tax_jurisdictionPgResource, specFromArgs_TaxJurisdiction(args));
           args.apply($delete);
           return object({
             result: $delete
@@ -16620,6 +17270,32 @@ export const objects = {
           input: applyInputToUpdateOrDelete
         }
       },
+      updateTaxJurisdiction: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_tax_jurisdictionPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateTaxJurisdictionById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_tax_jurisdictionPgResource, specFromArgs_TaxJurisdiction(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
       updateVendor: {
         plan(_$root, args) {
           const $update = pgUpdateSingle(resource_vendorPgResource, {
@@ -17096,6 +17772,24 @@ export const objects = {
           orderBy: applyOrderByArgToConnection
         }
       },
+      taxJurisdictions: {
+        plan($record) {
+          const $records = resource_tax_jurisdictionPgResource.find({
+            book_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineTagsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       updatedAt: Account_updatedAtPlan,
       vendors: {
         plan($record) {
@@ -17423,6 +18117,15 @@ export const objects = {
       query: queryPlan,
       tag: planCreatePayloadResult,
       tagEdge: CreateTagPayload_tagEdgePlan
+    }
+  },
+  CreateTaxJurisdictionPayload: {
+    assertStep: assertStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan,
+      taxJurisdiction: planCreatePayloadResult,
+      taxJurisdictionEdge: CreateTaxJurisdictionPayload_taxJurisdictionEdgePlan
     }
   },
   CreateVendorPayload: {
@@ -17807,6 +18510,20 @@ export const objects = {
       query: queryPlan,
       tag: planCreatePayloadResult,
       tagEdge: CreateTagPayload_tagEdgePlan
+    }
+  },
+  DeleteTaxJurisdictionPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedTaxJurisdictionId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_TaxJurisdiction.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      query: queryPlan,
+      taxJurisdiction: planCreatePayloadResult,
+      taxJurisdictionEdge: CreateTaxJurisdictionPayload_taxJurisdictionEdgePlan
     }
   },
   DeleteVendorPayload: {
@@ -18283,6 +19000,41 @@ export const objects = {
       totalCount: totalCountConnectionPlan
     }
   },
+  TaxJurisdiction: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      book: Account_bookPlan,
+      bookId: Account_bookIdPlan,
+      createdAt: Account_createdAtPlan,
+      filingFrequency($record) {
+        return $record.get("filing_frequency");
+      },
+      id($parent) {
+        const specifier = nodeIdHandler_TaxJurisdiction.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_TaxJurisdiction.codec.name].encode);
+      },
+      rowId: JournalLineTag_rowIdPlan,
+      taxPayableAccount($record) {
+        return resource_accountPgResource.get({
+          id: $record.get("tax_payable_account_id")
+        });
+      },
+      taxPayableAccountId($record) {
+        return $record.get("tax_payable_account_id");
+      }
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of tax_jurisdictionUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_tax_jurisdictionPgResource.get(spec);
+    }
+  },
+  TaxJurisdictionConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
   UpdateAccountingPeriodPayload: {
     assertStep: ObjectStep,
     plans: {
@@ -18461,6 +19213,15 @@ export const objects = {
       query: queryPlan,
       tag: planCreatePayloadResult,
       tagEdge: CreateTagPayload_tagEdgePlan
+    }
+  },
+  UpdateTaxJurisdictionPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan,
+      taxJurisdiction: planCreatePayloadResult,
+      taxJurisdictionEdge: CreateTaxJurisdictionPayload_taxJurisdictionEdgePlan
     }
   },
   UpdateVendorPayload: {
@@ -18743,7 +19504,7 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       bookId: TagGroupInput_bookIdApply,
-      code: TagInput_codeApply,
+      code: TaxJurisdictionInput_codeApply,
       createdAt: TagGroupInput_createdAtApply,
       isActive: TagInput_isActiveApply,
       isPlaceholder: AccountInput_isPlaceholderApply,
@@ -18817,7 +19578,7 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       bookId: TagGroupInput_bookIdApply,
-      code: TagInput_codeApply,
+      code: TaxJurisdictionInput_codeApply,
       createdAt: TagGroupInput_createdAtApply,
       isActive: TagInput_isActiveApply,
       isPlaceholder: AccountInput_isPlaceholderApply,
@@ -19220,6 +19981,30 @@ export const inputObjects = {
           $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
         });
       },
+      taxJurisdictions($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: taxJurisdictionIdentifier,
+          alias: resource_tax_jurisdictionPgResource.name,
+          localAttributes: registryConfig.pgRelations.book.taxJurisdictionsByTheirBookId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.book.taxJurisdictionsByTheirBookId.remoteAttributes
+        };
+        return $rel;
+      },
+      taxJurisdictionsExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: taxJurisdictionIdentifier,
+          alias: resource_tax_jurisdictionPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.book.taxJurisdictionsByTheirBookId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.book.taxJurisdictionsByTheirBookId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
       vendors($where, value) {
         assertAllowed(value, "object");
         const $rel = $where.andPlan();
@@ -19364,6 +20149,13 @@ export const inputObjects = {
     }
   },
   BookToManyTagGroupFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
+  BookToManyTaxJurisdictionFilter: {
     plans: {
       every: AccountToManyAccountFilter_everyApply,
       none: AccountToManyAccountFilter_noneApply,
@@ -19715,6 +20507,12 @@ export const inputObjects = {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
       tag: applyCreateFields
+    }
+  },
+  CreateTaxJurisdictionInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      taxJurisdiction: applyCreateFields
     }
   },
   CreateVendorInput: {
@@ -20085,6 +20883,16 @@ export const inputObjects = {
     }
   },
   DeleteTagInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteTaxJurisdictionByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteTaxJurisdictionInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate
     }
@@ -20927,7 +21735,7 @@ export const inputObjects = {
   TagInput: {
     baked: createObjectAndApplyChildren,
     plans: {
-      code: TagInput_codeApply,
+      code: TaxJurisdictionInput_codeApply,
       createdAt: TagGroupInput_createdAtApply,
       isActive: TagInput_isActiveApply,
       name: TagGroupInput_nameApply,
@@ -20938,7 +21746,7 @@ export const inputObjects = {
   TagPatch: {
     baked: createObjectAndApplyChildren,
     plans: {
-      code: TagInput_codeApply,
+      code: TaxJurisdictionInput_codeApply,
       createdAt: TagGroupInput_createdAtApply,
       isActive: TagInput_isActiveApply,
       name: TagGroupInput_nameApply,
@@ -20951,6 +21759,55 @@ export const inputObjects = {
       every: AccountToManyAccountFilter_everyApply,
       none: AccountToManyAccountFilter_noneApply,
       some: AccountToManyAccountFilter_someApply
+    }
+  },
+  TaxJurisdictionCondition: {
+    plans: {
+      bookId: AccountCondition_bookIdApply,
+      rowId: AccountCondition_rowIdApply
+    }
+  },
+  TaxJurisdictionFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      book($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_bookPgResource, bookIdentifier, registryConfig.pgRelations.taxJurisdiction.bookByMyBookId.localAttributes, registryConfig.pgRelations.taxJurisdiction.bookByMyBookId.remoteAttributes, $where, value);
+      },
+      bookId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("bookId", "book_id", spec_taxJurisdiction.attributes.book_id, queryBuilder, value);
+      },
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_taxJurisdiction.attributes.id, queryBuilder, value);
+      },
+      taxPayableAccount($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_accountPgResource, accountIdentifier, registryConfig.pgRelations.taxJurisdiction.accountByMyTaxPayableAccountId.localAttributes, registryConfig.pgRelations.taxJurisdiction.accountByMyTaxPayableAccountId.remoteAttributes, $where, value);
+      }
+    }
+  },
+  TaxJurisdictionInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      bookId: TagGroupInput_bookIdApply,
+      code: TaxJurisdictionInput_codeApply,
+      createdAt: TagGroupInput_createdAtApply,
+      filingFrequency: TaxJurisdictionInput_filingFrequencyApply,
+      name: TagGroupInput_nameApply,
+      rowId: JournalLineTagInput_rowIdApply,
+      taxPayableAccountId: TaxJurisdictionInput_taxPayableAccountIdApply
+    }
+  },
+  TaxJurisdictionPatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      bookId: TagGroupInput_bookIdApply,
+      code: TaxJurisdictionInput_codeApply,
+      createdAt: TagGroupInput_createdAtApply,
+      filingFrequency: TaxJurisdictionInput_filingFrequencyApply,
+      name: TagGroupInput_nameApply,
+      rowId: JournalLineTagInput_rowIdApply,
+      taxPayableAccountId: TaxJurisdictionInput_taxPayableAccountIdApply
     }
   },
   UpdateAccountByIdInput: {
@@ -21188,6 +22045,18 @@ export const inputObjects = {
     }
   },
   UpdateTagInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateTaxJurisdictionByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateTaxJurisdictionInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
       patch: applyCreateFields
@@ -22056,6 +22925,32 @@ export const enums = {
           direction: "DESC"
         });
       }
+    }
+  },
+  TaxJurisdictionOrderBy: {
+    values: {
+      BOOK_ID_ASC: AccountOrderBy_BOOK_ID_ASCApply,
+      BOOK_ID_DESC: AccountOrderBy_BOOK_ID_DESCApply,
+      PRIMARY_KEY_ASC(queryBuilder) {
+        tax_jurisdictionUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        tax_jurisdictionUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply
     }
   },
   VendorOrderBy: {
