@@ -17,6 +17,12 @@ type Query implements Node {
     id: ID!
   ): Node
 
+  """Get a single `JournalLineTag`."""
+  journalLineTag(rowId: UUID!): JournalLineTag
+
+  """Get a single `TagGroup`."""
+  tagGroup(rowId: UUID!): TagGroup
+
   """Get a single `_DrizzleMigration`."""
   _drizzleMigration(rowId: Int!): _DrizzleMigration
 
@@ -25,6 +31,9 @@ type Query implements Node {
 
   """Get a single `JournalLine`."""
   journalLine(rowId: UUID!): JournalLine
+
+  """Get a single `Tag`."""
+  tag(rowId: UUID!): Tag
 
   """Get a single `SavingsGoal`."""
   savingsGoal(rowId: UUID!): SavingsGoal
@@ -47,11 +56,11 @@ type Query implements Node {
   """Get a single `CryptoAsset`."""
   cryptoAsset(rowId: UUID!): CryptoAsset
 
-  """Get a single `CategorizationRule`."""
-  categorizationRule(rowId: UUID!): CategorizationRule
-
   """Get a single `JournalEntry`."""
   journalEntry(rowId: UUID!): JournalEntry
+
+  """Get a single `CategorizationRule`."""
+  categorizationRule(rowId: UUID!): CategorizationRule
 
   """Get a single `FixedAsset`."""
   fixedAsset(rowId: UUID!): FixedAsset
@@ -67,6 +76,20 @@ type Query implements Node {
 
   """Get a single `ConnectedAccount`."""
   connectedAccount(rowId: UUID!): ConnectedAccount
+
+  """Reads a single `JournalLineTag` using its globally unique `ID`."""
+  journalLineTagById(
+    """
+    The globally unique `ID` to be used in selecting a single `JournalLineTag`.
+    """
+    id: ID!
+  ): JournalLineTag
+
+  """Reads a single `TagGroup` using its globally unique `ID`."""
+  tagGroupById(
+    """The globally unique `ID` to be used in selecting a single `TagGroup`."""
+    id: ID!
+  ): TagGroup
 
   """Reads a single `_DrizzleMigration` using its globally unique `ID`."""
   _drizzleMigrationById(
@@ -91,6 +114,12 @@ type Query implements Node {
     """
     id: ID!
   ): JournalLine
+
+  """Reads a single `Tag` using its globally unique `ID`."""
+  tagById(
+    """The globally unique `ID` to be used in selecting a single `Tag`."""
+    id: ID!
+  ): Tag
 
   """Reads a single `SavingsGoal` using its globally unique `ID`."""
   savingsGoalById(
@@ -142,14 +171,6 @@ type Query implements Node {
     id: ID!
   ): CryptoAsset
 
-  """Reads a single `CategorizationRule` using its globally unique `ID`."""
-  categorizationRuleById(
-    """
-    The globally unique `ID` to be used in selecting a single `CategorizationRule`.
-    """
-    id: ID!
-  ): CategorizationRule
-
   """Reads a single `JournalEntry` using its globally unique `ID`."""
   journalEntryById(
     """
@@ -157,6 +178,14 @@ type Query implements Node {
     """
     id: ID!
   ): JournalEntry
+
+  """Reads a single `CategorizationRule` using its globally unique `ID`."""
+  categorizationRuleById(
+    """
+    The globally unique `ID` to be used in selecting a single `CategorizationRule`.
+    """
+    id: ID!
+  ): CategorizationRule
 
   """Reads a single `FixedAsset` using its globally unique `ID`."""
   fixedAssetById(
@@ -195,6 +224,74 @@ type Query implements Node {
     """
     id: ID!
   ): ConnectedAccount
+
+  """Reads and enables pagination through a set of `JournalLineTag`."""
+  journalLineTags(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: JournalLineTagCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: JournalLineTagFilter
+
+    """The method to use when ordering `JournalLineTag`."""
+    orderBy: [JournalLineTagOrderBy!] = [PRIMARY_KEY_ASC]
+  ): JournalLineTagConnection
+
+  """Reads and enables pagination through a set of `TagGroup`."""
+  tagGroups(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TagGroupCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: TagGroupFilter
+
+    """The method to use when ordering `TagGroup`."""
+    orderBy: [TagGroupOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TagGroupConnection
 
   """Reads and enables pagination through a set of `_DrizzleMigration`."""
   _drizzleMigrations(
@@ -297,6 +394,40 @@ type Query implements Node {
     """The method to use when ordering `JournalLine`."""
     orderBy: [JournalLineOrderBy!] = [PRIMARY_KEY_ASC]
   ): JournalLineConnection
+
+  """Reads and enables pagination through a set of `Tag`."""
+  tags(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TagCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: TagFilter
+
+    """The method to use when ordering `Tag`."""
+    orderBy: [TagOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TagConnection
 
   """Reads and enables pagination through a set of `SavingsGoal`."""
   savingsGoals(
@@ -536,40 +667,6 @@ type Query implements Node {
     orderBy: [CryptoAssetOrderBy!] = [PRIMARY_KEY_ASC]
   ): CryptoAssetConnection
 
-  """Reads and enables pagination through a set of `CategorizationRule`."""
-  categorizationRules(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: CategorizationRuleCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: CategorizationRuleFilter
-
-    """The method to use when ordering `CategorizationRule`."""
-    orderBy: [CategorizationRuleOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CategorizationRuleConnection
-
   """Reads and enables pagination through a set of `JournalEntry`."""
   journalEntries(
     """Only read the first `n` values of the set."""
@@ -603,6 +700,40 @@ type Query implements Node {
     """The method to use when ordering `JournalEntry`."""
     orderBy: [JournalEntryOrderBy!] = [PRIMARY_KEY_ASC]
   ): JournalEntryConnection
+
+  """Reads and enables pagination through a set of `CategorizationRule`."""
+  categorizationRules(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CategorizationRuleCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CategorizationRuleFilter
+
+    """The method to use when ordering `CategorizationRule`."""
+    orderBy: [CategorizationRuleOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CategorizationRuleConnection
 
   """Reads and enables pagination through a set of `FixedAsset`."""
   fixedAssets(
@@ -783,50 +914,248 @@ interface Node {
   id: ID!
 }
 
-type _DrizzleMigration implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  id: ID!
-  rowId: Int!
-  hash: String!
-  createdAt: BigInt
-}
-
-"""
-A signed eight-byte integer. The upper big integer values are greater than the
-max value for a JavaScript number. Therefore all big integers will be output as
-strings and not numbers.
-"""
-scalar BigInt
-
-type AccountMapping implements Node {
+type JournalLineTag implements Node {
   """
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
   """
   id: ID!
   rowId: UUID!
-  bookId: UUID!
-  eventType: String!
-  debitAccountId: UUID!
-  creditAccountId: UUID!
-  createdAt: Datetime
-  updatedAt: Datetime
+  journalLineId: UUID!
+  tagId: UUID!
 
-  """Reads a single `Book` that is related to this `AccountMapping`."""
-  book: Book
+  """Reads a single `JournalLine` that is related to this `JournalLineTag`."""
+  journalLine: JournalLine
 
-  """Reads a single `Account` that is related to this `AccountMapping`."""
-  creditAccount: Account
-
-  """Reads a single `Account` that is related to this `AccountMapping`."""
-  debitAccount: Account
+  """Reads a single `Tag` that is related to this `JournalLineTag`."""
+  tag: Tag
 }
 
 """
 A universally unique identifier as defined by [RFC 4122](https://tools.ietf.org/html/rfc4122).
 """
 scalar UUID
+
+type JournalLine implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  journalEntryId: UUID!
+  accountId: UUID!
+  debit: BigFloat!
+  credit: BigFloat!
+  memo: String
+
+  """Reads a single `Account` that is related to this `JournalLine`."""
+  account: Account
+
+  """Reads a single `JournalEntry` that is related to this `JournalLine`."""
+  journalEntry: JournalEntry
+
+  """Reads and enables pagination through a set of `JournalLineTag`."""
+  journalLineTags(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: JournalLineTagCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: JournalLineTagFilter
+
+    """The method to use when ordering `JournalLineTag`."""
+    orderBy: [JournalLineTagOrderBy!] = [PRIMARY_KEY_ASC]
+  ): JournalLineTagConnection!
+}
+
+"""
+A floating point number that requires more precision than IEEE 754 binary 64
+"""
+scalar BigFloat
+
+type Account implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  parentId: UUID
+  name: String!
+  code: String
+  type: AccountType!
+  subType: AccountSubType
+  isPlaceholder: Boolean!
+  isActive: Boolean!
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """Reads a single `Book` that is related to this `Account`."""
+  book: Book
+
+  """Reads a single `Account` that is related to this `Account`."""
+  parent: Account
+
+  """Reads and enables pagination through a set of `Account`."""
+  childAccounts(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AccountCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: AccountFilter
+
+    """The method to use when ordering `Account`."""
+    orderBy: [AccountOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AccountConnection!
+
+  """Reads and enables pagination through a set of `Budget`."""
+  budgets(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: BudgetCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: BudgetFilter
+
+    """The method to use when ordering `Budget`."""
+    orderBy: [BudgetOrderBy!] = [PRIMARY_KEY_ASC]
+  ): BudgetConnection!
+
+  """Reads and enables pagination through a set of `JournalLine`."""
+  journalLines(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: JournalLineCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: JournalLineFilter
+
+    """The method to use when ordering `JournalLine`."""
+    orderBy: [JournalLineOrderBy!] = [PRIMARY_KEY_ASC]
+  ): JournalLineConnection!
+}
+
+enum AccountType {
+  asset
+  liability
+  equity
+  revenue
+  expense
+}
+
+enum AccountSubType {
+  cash
+  bank
+  accounts_receivable
+  inventory
+  crypto_wallet
+  investment
+  fixed_asset
+  other_asset
+  credit_card
+  accounts_payable
+  loan
+  mortgage
+  other_liability
+  owners_equity
+  retained_earnings
+  other_equity
+  sales
+  service_revenue
+  interest_income
+  crypto_gains
+  other_revenue
+  cost_of_goods
+  operating_expense
+  payroll
+  tax_expense
+  crypto_losses
+  other_expense
+}
 
 """
 A point in time as described by the [ISO
@@ -1292,6 +1621,40 @@ type Book implements Node {
     """The method to use when ordering `FixedAsset`."""
     orderBy: [FixedAssetOrderBy!] = [PRIMARY_KEY_ASC]
   ): FixedAssetConnection!
+
+  """Reads and enables pagination through a set of `TagGroup`."""
+  tagGroups(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TagGroupCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: TagGroupFilter
+
+    """The method to use when ordering `TagGroup`."""
+    orderBy: [TagGroupOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TagGroupConnection!
 }
 
 enum BookType {
@@ -1316,172 +1679,32 @@ type AccountConnection {
   totalCount: Int!
 }
 
-type Account implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  id: ID!
-  rowId: UUID!
-  bookId: UUID!
-  parentId: UUID
-  name: String!
-  code: String
-  type: AccountType!
-  subType: AccountSubType
-  isPlaceholder: Boolean!
-  isActive: Boolean!
-  createdAt: Datetime
-  updatedAt: Datetime
+"""A `Account` edge in the connection."""
+type AccountEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
 
-  """Reads a single `Book` that is related to this `Account`."""
-  book: Book
-
-  """Reads a single `Account` that is related to this `Account`."""
-  parent: Account
-
-  """Reads and enables pagination through a set of `Account`."""
-  childAccounts(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: AccountCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: AccountFilter
-
-    """The method to use when ordering `Account`."""
-    orderBy: [AccountOrderBy!] = [PRIMARY_KEY_ASC]
-  ): AccountConnection!
-
-  """Reads and enables pagination through a set of `Budget`."""
-  budgets(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: BudgetCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: BudgetFilter
-
-    """The method to use when ordering `Budget`."""
-    orderBy: [BudgetOrderBy!] = [PRIMARY_KEY_ASC]
-  ): BudgetConnection!
-
-  """Reads and enables pagination through a set of `JournalLine`."""
-  journalLines(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: JournalLineCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: JournalLineFilter
-
-    """The method to use when ordering `JournalLine`."""
-    orderBy: [JournalLineOrderBy!] = [PRIMARY_KEY_ASC]
-  ): JournalLineConnection!
-}
-
-enum AccountType {
-  asset
-  liability
-  equity
-  revenue
-  expense
-}
-
-enum AccountSubType {
-  cash
-  bank
-  accounts_receivable
-  inventory
-  crypto_wallet
-  investment
-  fixed_asset
-  other_asset
-  credit_card
-  accounts_payable
-  loan
-  mortgage
-  other_liability
-  owners_equity
-  retained_earnings
-  other_equity
-  sales
-  service_revenue
-  interest_income
-  crypto_gains
-  other_revenue
-  cost_of_goods
-  operating_expense
-  payroll
-  tax_expense
-  crypto_losses
-  other_expense
+  """The `Account` at the end of the edge."""
+  node: Account
 }
 
 """A location in a connection that can be used for resuming pagination."""
 scalar Cursor
+
+"""Information about pagination in a connection."""
+type PageInfo {
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: Cursor
+
+  """When paginating forwards, the cursor to continue."""
+  endCursor: Cursor
+}
 
 """
 A condition to be used against `Account` object types. All fields are tested for equality and combined with a logical ‘and.’
@@ -1793,6 +2016,12 @@ input BookFilter {
 
   """Some related `fixedAssets` exist."""
   fixedAssetsExist: Boolean
+
+  """Filter by the object’s `tagGroups` relation."""
+  tagGroups: BookToManyTagGroupFilter
+
+  """Some related `tagGroups` exist."""
+  tagGroupsExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [BookFilter!]
@@ -2394,6 +2623,12 @@ input JournalLineFilter {
   """Filter by the object’s `accountId` field."""
   accountId: UUIDFilter
 
+  """Filter by the object’s `journalLineTags` relation."""
+  journalLineTags: JournalLineToManyJournalLineTagFilter
+
+  """Some related `journalLineTags` exist."""
+  journalLineTagsExist: Boolean
+
   """Filter by the object’s `account` relation."""
   account: AccountFilter
 
@@ -2408,6 +2643,153 @@ input JournalLineFilter {
 
   """Negates the expression."""
   not: JournalLineFilter
+}
+
+"""
+A filter to be used against many `JournalLineTag` object types. All fields are combined with a logical ‘and.’
+"""
+input JournalLineToManyJournalLineTagFilter {
+  """
+  Every related `JournalLineTag` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: JournalLineTagFilter
+
+  """
+  Some related `JournalLineTag` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: JournalLineTagFilter
+
+  """
+  No related `JournalLineTag` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: JournalLineTagFilter
+}
+
+"""
+A filter to be used against `JournalLineTag` object types. All fields are combined with a logical ‘and.’
+"""
+input JournalLineTagFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `journalLineId` field."""
+  journalLineId: UUIDFilter
+
+  """Filter by the object’s `tagId` field."""
+  tagId: UUIDFilter
+
+  """Filter by the object’s `journalLine` relation."""
+  journalLine: JournalLineFilter
+
+  """Filter by the object’s `tag` relation."""
+  tag: TagFilter
+
+  """Checks for all expressions in this list."""
+  and: [JournalLineTagFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [JournalLineTagFilter!]
+
+  """Negates the expression."""
+  not: JournalLineTagFilter
+}
+
+"""
+A filter to be used against `Tag` object types. All fields are combined with a logical ‘and.’
+"""
+input TagFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `tagGroupId` field."""
+  tagGroupId: UUIDFilter
+
+  """Filter by the object’s `journalLineTags` relation."""
+  journalLineTags: TagToManyJournalLineTagFilter
+
+  """Some related `journalLineTags` exist."""
+  journalLineTagsExist: Boolean
+
+  """Filter by the object’s `tagGroup` relation."""
+  tagGroup: TagGroupFilter
+
+  """Checks for all expressions in this list."""
+  and: [TagFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [TagFilter!]
+
+  """Negates the expression."""
+  not: TagFilter
+}
+
+"""
+A filter to be used against many `JournalLineTag` object types. All fields are combined with a logical ‘and.’
+"""
+input TagToManyJournalLineTagFilter {
+  """
+  Every related `JournalLineTag` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: JournalLineTagFilter
+
+  """
+  Some related `JournalLineTag` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: JournalLineTagFilter
+
+  """
+  No related `JournalLineTag` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: JournalLineTagFilter
+}
+
+"""
+A filter to be used against `TagGroup` object types. All fields are combined with a logical ‘and.’
+"""
+input TagGroupFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `bookId` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s `tags` relation."""
+  tags: TagGroupToManyTagFilter
+
+  """Some related `tags` exist."""
+  tagsExist: Boolean
+
+  """Filter by the object’s `book` relation."""
+  book: BookFilter
+
+  """Checks for all expressions in this list."""
+  and: [TagGroupFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [TagGroupFilter!]
+
+  """Negates the expression."""
+  not: TagGroupFilter
+}
+
+"""
+A filter to be used against many `Tag` object types. All fields are combined with a logical ‘and.’
+"""
+input TagGroupToManyTagFilter {
+  """
+  Every related `Tag` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: TagFilter
+
+  """
+  Some related `Tag` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: TagFilter
+
+  """
+  No related `Tag` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: TagFilter
 }
 
 """
@@ -2820,6 +3202,12 @@ input CategorizationRuleFilter {
   """Filter by the object’s `debitAccount` relation."""
   debitAccount: AccountFilter
 
+  """Filter by the object’s `tag` relation."""
+  tag: TagFilter
+
+  """A related `tag` exists."""
+  tagExists: Boolean
+
   """Checks for all expressions in this list."""
   and: [CategorizationRuleFilter!]
 
@@ -2886,6 +3274,26 @@ input FixedAssetFilter {
 }
 
 """
+A filter to be used against many `TagGroup` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyTagGroupFilter {
+  """
+  Every related `TagGroup` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: TagGroupFilter
+
+  """
+  Some related `TagGroup` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: TagGroupFilter
+
+  """
+  No related `TagGroup` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: TagGroupFilter
+}
+
+"""
 A filter to be used against many `JournalLine` object types. All fields are combined with a logical ‘and.’
 """
 input AccountToManyJournalLineFilter {
@@ -2916,6 +3324,83 @@ enum AccountOrderBy {
   BOOK_ID_DESC
   PARENT_ID_ASC
   PARENT_ID_DESC
+}
+
+"""A connection to a list of `AccountMapping` values."""
+type AccountMappingConnection {
+  """A list of `AccountMapping` objects."""
+  nodes: [AccountMapping]!
+
+  """
+  A list of edges which contains the `AccountMapping` and cursor to aid in pagination.
+  """
+  edges: [AccountMappingEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `AccountMapping` you could get from the connection."""
+  totalCount: Int!
+}
+
+type AccountMapping implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  eventType: String!
+  debitAccountId: UUID!
+  creditAccountId: UUID!
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """Reads a single `Book` that is related to this `AccountMapping`."""
+  book: Book
+
+  """Reads a single `Account` that is related to this `AccountMapping`."""
+  creditAccount: Account
+
+  """Reads a single `Account` that is related to this `AccountMapping`."""
+  debitAccount: Account
+}
+
+"""A `AccountMapping` edge in the connection."""
+type AccountMappingEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `AccountMapping` at the end of the edge."""
+  node: AccountMapping
+}
+
+"""
+A condition to be used against `AccountMapping` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input AccountMappingCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `bookId` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s `eventType` field."""
+  eventType: String
+}
+
+"""Methods to use when ordering `AccountMapping`."""
+enum AccountMappingOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+  EVENT_TYPE_ASC
+  EVENT_TYPE_DESC
 }
 
 """A connection to a list of `Budget` values."""
@@ -2956,11 +3441,6 @@ type Budget implements Node {
   book: Book
 }
 
-"""
-A floating point number that requires more precision than IEEE 754 binary 64
-"""
-scalar BigFloat
-
 enum BudgetPeriod {
   monthly
   quarterly
@@ -2974,21 +3454,6 @@ type BudgetEdge {
 
   """The `Budget` at the end of the edge."""
   node: Budget
-}
-
-"""Information about pagination in a connection."""
-type PageInfo {
-  """When paginating forwards, are there more items?"""
-  hasNextPage: Boolean!
-
-  """When paginating backwards, are there more items?"""
-  hasPreviousPage: Boolean!
-
-  """When paginating backwards, the cursor to continue."""
-  startCursor: Cursor
-
-  """When paginating forwards, the cursor to continue."""
-  endCursor: Cursor
 }
 
 """
@@ -3016,196 +3481,6 @@ enum BudgetOrderBy {
   BOOK_ID_DESC
   ACCOUNT_ID_ASC
   ACCOUNT_ID_DESC
-}
-
-"""A connection to a list of `JournalLine` values."""
-type JournalLineConnection {
-  """A list of `JournalLine` objects."""
-  nodes: [JournalLine]!
-
-  """
-  A list of edges which contains the `JournalLine` and cursor to aid in pagination.
-  """
-  edges: [JournalLineEdge]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `JournalLine` you could get from the connection."""
-  totalCount: Int!
-}
-
-type JournalLine implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  id: ID!
-  rowId: UUID!
-  journalEntryId: UUID!
-  accountId: UUID!
-  debit: BigFloat!
-  credit: BigFloat!
-  memo: String
-
-  """Reads a single `Account` that is related to this `JournalLine`."""
-  account: Account
-
-  """Reads a single `JournalEntry` that is related to this `JournalLine`."""
-  journalEntry: JournalEntry
-}
-
-type JournalEntry implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  id: ID!
-  rowId: UUID!
-  bookId: UUID!
-  date: Datetime!
-  memo: String
-  source: JournalEntrySource!
-  sourceReferenceId: String
-  isReviewed: Boolean!
-  isReconciled: Boolean!
-  createdAt: Datetime
-  updatedAt: Datetime
-
-  """Reads a single `Book` that is related to this `JournalEntry`."""
-  book: Book
-
-  """Reads and enables pagination through a set of `JournalLine`."""
-  journalLines(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: JournalLineCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: JournalLineFilter
-
-    """The method to use when ordering `JournalLine`."""
-    orderBy: [JournalLineOrderBy!] = [PRIMARY_KEY_ASC]
-  ): JournalLineConnection!
-}
-
-"""
-A condition to be used against `JournalLine` object types. All fields are tested
-for equality and combined with a logical ‘and.’
-"""
-input JournalLineCondition {
-  """Checks for equality with the object’s `rowId` field."""
-  rowId: UUID
-
-  """Checks for equality with the object’s `journalEntryId` field."""
-  journalEntryId: UUID
-
-  """Checks for equality with the object’s `accountId` field."""
-  accountId: UUID
-}
-
-"""Methods to use when ordering `JournalLine`."""
-enum JournalLineOrderBy {
-  NATURAL
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-  ROW_ID_ASC
-  ROW_ID_DESC
-  JOURNAL_ENTRY_ID_ASC
-  JOURNAL_ENTRY_ID_DESC
-  ACCOUNT_ID_ASC
-  ACCOUNT_ID_DESC
-}
-
-"""A `JournalLine` edge in the connection."""
-type JournalLineEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `JournalLine` at the end of the edge."""
-  node: JournalLine
-}
-
-"""A `Account` edge in the connection."""
-type AccountEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `Account` at the end of the edge."""
-  node: Account
-}
-
-"""A connection to a list of `AccountMapping` values."""
-type AccountMappingConnection {
-  """A list of `AccountMapping` objects."""
-  nodes: [AccountMapping]!
-
-  """
-  A list of edges which contains the `AccountMapping` and cursor to aid in pagination.
-  """
-  edges: [AccountMappingEdge]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `AccountMapping` you could get from the connection."""
-  totalCount: Int!
-}
-
-"""A `AccountMapping` edge in the connection."""
-type AccountMappingEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `AccountMapping` at the end of the edge."""
-  node: AccountMapping
-}
-
-"""
-A condition to be used against `AccountMapping` object types. All fields are
-tested for equality and combined with a logical ‘and.’
-"""
-input AccountMappingCondition {
-  """Checks for equality with the object’s `rowId` field."""
-  rowId: UUID
-
-  """Checks for equality with the object’s `bookId` field."""
-  bookId: UUID
-
-  """Checks for equality with the object’s `eventType` field."""
-  eventType: String
-}
-
-"""Methods to use when ordering `AccountMapping`."""
-enum AccountMappingOrderBy {
-  NATURAL
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-  ROW_ID_ASC
-  ROW_ID_DESC
-  BOOK_ID_ASC
-  BOOK_ID_DESC
-  EVENT_TYPE_ASC
-  EVENT_TYPE_DESC
 }
 
 """A connection to a list of `ConnectedAccount` values."""
@@ -3410,6 +3685,114 @@ type CryptoLot implements Node {
 
   """Reads a single `JournalEntry` that is related to this `CryptoLot`."""
   journalEntry: JournalEntry
+}
+
+type JournalEntry implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  date: Datetime!
+  memo: String
+  source: JournalEntrySource!
+  sourceReferenceId: String
+  isReviewed: Boolean!
+  isReconciled: Boolean!
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """Reads a single `Book` that is related to this `JournalEntry`."""
+  book: Book
+
+  """Reads and enables pagination through a set of `JournalLine`."""
+  journalLines(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: JournalLineCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: JournalLineFilter
+
+    """The method to use when ordering `JournalLine`."""
+    orderBy: [JournalLineOrderBy!] = [PRIMARY_KEY_ASC]
+  ): JournalLineConnection!
+}
+
+"""A connection to a list of `JournalLine` values."""
+type JournalLineConnection {
+  """A list of `JournalLine` objects."""
+  nodes: [JournalLine]!
+
+  """
+  A list of edges which contains the `JournalLine` and cursor to aid in pagination.
+  """
+  edges: [JournalLineEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `JournalLine` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `JournalLine` edge in the connection."""
+type JournalLineEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `JournalLine` at the end of the edge."""
+  node: JournalLine
+}
+
+"""
+A condition to be used against `JournalLine` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input JournalLineCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `journalEntryId` field."""
+  journalEntryId: UUID
+
+  """Checks for equality with the object’s `accountId` field."""
+  accountId: UUID
+}
+
+"""Methods to use when ordering `JournalLine`."""
+enum JournalLineOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  JOURNAL_ENTRY_ID_ASC
+  JOURNAL_ENTRY_ID_DESC
+  ACCOUNT_ID_ASC
+  ACCOUNT_ID_DESC
 }
 
 """A `CryptoLot` edge in the connection."""
@@ -4001,6 +4384,7 @@ type CategorizationRule implements Node {
   hitCount: Int!
   lastHitAt: Datetime
   createdAt: Datetime
+  tagId: UUID
 
   """Reads a single `Book` that is related to this `CategorizationRule`."""
   book: Book
@@ -4010,6 +4394,209 @@ type CategorizationRule implements Node {
 
   """Reads a single `Account` that is related to this `CategorizationRule`."""
   debitAccount: Account
+
+  """Reads a single `Tag` that is related to this `CategorizationRule`."""
+  tag: Tag
+}
+
+type Tag implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  tagGroupId: UUID!
+  name: String!
+  code: String
+  isActive: Boolean!
+  createdAt: Datetime
+
+  """Reads a single `TagGroup` that is related to this `Tag`."""
+  tagGroup: TagGroup
+
+  """Reads and enables pagination through a set of `JournalLineTag`."""
+  journalLineTags(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: JournalLineTagCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: JournalLineTagFilter
+
+    """The method to use when ordering `JournalLineTag`."""
+    orderBy: [JournalLineTagOrderBy!] = [PRIMARY_KEY_ASC]
+  ): JournalLineTagConnection!
+}
+
+type TagGroup implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  name: String!
+  createdAt: Datetime
+
+  """Reads a single `Book` that is related to this `TagGroup`."""
+  book: Book
+
+  """Reads and enables pagination through a set of `Tag`."""
+  tags(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TagCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: TagFilter
+
+    """The method to use when ordering `Tag`."""
+    orderBy: [TagOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TagConnection!
+}
+
+"""A connection to a list of `Tag` values."""
+type TagConnection {
+  """A list of `Tag` objects."""
+  nodes: [Tag]!
+
+  """
+  A list of edges which contains the `Tag` and cursor to aid in pagination.
+  """
+  edges: [TagEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Tag` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `Tag` edge in the connection."""
+type TagEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Tag` at the end of the edge."""
+  node: Tag
+}
+
+"""
+A condition to be used against `Tag` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input TagCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `tagGroupId` field."""
+  tagGroupId: UUID
+}
+
+"""Methods to use when ordering `Tag`."""
+enum TagOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  TAG_GROUP_ID_ASC
+  TAG_GROUP_ID_DESC
+}
+
+"""A connection to a list of `JournalLineTag` values."""
+type JournalLineTagConnection {
+  """A list of `JournalLineTag` objects."""
+  nodes: [JournalLineTag]!
+
+  """
+  A list of edges which contains the `JournalLineTag` and cursor to aid in pagination.
+  """
+  edges: [JournalLineTagEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `JournalLineTag` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `JournalLineTag` edge in the connection."""
+type JournalLineTagEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `JournalLineTag` at the end of the edge."""
+  node: JournalLineTag
+}
+
+"""
+A condition to be used against `JournalLineTag` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input JournalLineTagCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `journalLineId` field."""
+  journalLineId: UUID
+
+  """Checks for equality with the object’s `tagId` field."""
+  tagId: UUID
+}
+
+"""Methods to use when ordering `JournalLineTag`."""
+enum JournalLineTagOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  JOURNAL_LINE_ID_ASC
+  JOURNAL_LINE_ID_DESC
+  TAG_ID_ASC
+  TAG_ID_DESC
 }
 
 """A `CategorizationRule` edge in the connection."""
@@ -4138,6 +4725,72 @@ enum FixedAssetOrderBy {
   DISPOSED_AT_DESC
 }
 
+"""A connection to a list of `TagGroup` values."""
+type TagGroupConnection {
+  """A list of `TagGroup` objects."""
+  nodes: [TagGroup]!
+
+  """
+  A list of edges which contains the `TagGroup` and cursor to aid in pagination.
+  """
+  edges: [TagGroupEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `TagGroup` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `TagGroup` edge in the connection."""
+type TagGroupEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `TagGroup` at the end of the edge."""
+  node: TagGroup
+}
+
+"""
+A condition to be used against `TagGroup` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input TagGroupCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `bookId` field."""
+  bookId: UUID
+}
+
+"""Methods to use when ordering `TagGroup`."""
+enum TagGroupOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+}
+
+type _DrizzleMigration implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: Int!
+  hash: String!
+  createdAt: BigInt
+}
+
+"""
+A signed eight-byte integer. The upper big integer values are greater than the
+max value for a JavaScript number. Therefore all big integers will be output as
+strings and not numbers.
+"""
+scalar BigInt
+
 """A connection to a list of `_DrizzleMigration` values."""
 type _DrizzleMigrationConnection {
   """A list of `_DrizzleMigration` objects."""
@@ -4253,6 +4906,22 @@ enum BookOrderBy {
 The root mutation type which contains root level fields which mutate data.
 """
 type Mutation {
+  """Creates a single `JournalLineTag`."""
+  createJournalLineTag(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateJournalLineTagInput!
+  ): CreateJournalLineTagPayload
+
+  """Creates a single `TagGroup`."""
+  createTagGroup(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateTagGroupInput!
+  ): CreateTagGroupPayload
+
   """Creates a single `_DrizzleMigration`."""
   createDrizzleMigration(
     """
@@ -4276,6 +4945,14 @@ type Mutation {
     """
     input: CreateJournalLineInput!
   ): CreateJournalLinePayload
+
+  """Creates a single `Tag`."""
+  createTag(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateTagInput!
+  ): CreateTagPayload
 
   """Creates a single `SavingsGoal`."""
   createSavingsGoal(
@@ -4333,14 +5010,6 @@ type Mutation {
     input: CreateCryptoAssetInput!
   ): CreateCryptoAssetPayload
 
-  """Creates a single `CategorizationRule`."""
-  createCategorizationRule(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateCategorizationRuleInput!
-  ): CreateCategorizationRulePayload
-
   """Creates a single `JournalEntry`."""
   createJournalEntry(
     """
@@ -4348,6 +5017,14 @@ type Mutation {
     """
     input: CreateJournalEntryInput!
   ): CreateJournalEntryPayload
+
+  """Creates a single `CategorizationRule`."""
+  createCategorizationRule(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateCategorizationRuleInput!
+  ): CreateCategorizationRulePayload
 
   """Creates a single `FixedAsset`."""
   createFixedAsset(
@@ -4388,6 +5065,40 @@ type Mutation {
     """
     input: CreateConnectedAccountInput!
   ): CreateConnectedAccountPayload
+
+  """
+  Updates a single `JournalLineTag` using its globally unique id and a patch.
+  """
+  updateJournalLineTagById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateJournalLineTagByIdInput!
+  ): UpdateJournalLineTagPayload
+
+  """Updates a single `JournalLineTag` using a unique key and a patch."""
+  updateJournalLineTag(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateJournalLineTagInput!
+  ): UpdateJournalLineTagPayload
+
+  """Updates a single `TagGroup` using its globally unique id and a patch."""
+  updateTagGroupById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateTagGroupByIdInput!
+  ): UpdateTagGroupPayload
+
+  """Updates a single `TagGroup` using a unique key and a patch."""
+  updateTagGroup(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateTagGroupInput!
+  ): UpdateTagGroupPayload
 
   """
   Updates a single `_DrizzleMigration` using its globally unique id and a patch.
@@ -4442,6 +5153,22 @@ type Mutation {
     """
     input: UpdateJournalLineInput!
   ): UpdateJournalLinePayload
+
+  """Updates a single `Tag` using its globally unique id and a patch."""
+  updateTagById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateTagByIdInput!
+  ): UpdateTagPayload
+
+  """Updates a single `Tag` using a unique key and a patch."""
+  updateTag(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateTagInput!
+  ): UpdateTagPayload
 
   """
   Updates a single `SavingsGoal` using its globally unique id and a patch.
@@ -4564,24 +5291,6 @@ type Mutation {
   ): UpdateCryptoAssetPayload
 
   """
-  Updates a single `CategorizationRule` using its globally unique id and a patch.
-  """
-  updateCategorizationRuleById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateCategorizationRuleByIdInput!
-  ): UpdateCategorizationRulePayload
-
-  """Updates a single `CategorizationRule` using a unique key and a patch."""
-  updateCategorizationRule(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateCategorizationRuleInput!
-  ): UpdateCategorizationRulePayload
-
-  """
   Updates a single `JournalEntry` using its globally unique id and a patch.
   """
   updateJournalEntryById(
@@ -4598,6 +5307,24 @@ type Mutation {
     """
     input: UpdateJournalEntryInput!
   ): UpdateJournalEntryPayload
+
+  """
+  Updates a single `CategorizationRule` using its globally unique id and a patch.
+  """
+  updateCategorizationRuleById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateCategorizationRuleByIdInput!
+  ): UpdateCategorizationRulePayload
+
+  """Updates a single `CategorizationRule` using a unique key and a patch."""
+  updateCategorizationRule(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateCategorizationRuleInput!
+  ): UpdateCategorizationRulePayload
 
   """
   Updates a single `FixedAsset` using its globally unique id and a patch.
@@ -4689,6 +5416,38 @@ type Mutation {
     input: UpdateConnectedAccountInput!
   ): UpdateConnectedAccountPayload
 
+  """Deletes a single `JournalLineTag` using its globally unique id."""
+  deleteJournalLineTagById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteJournalLineTagByIdInput!
+  ): DeleteJournalLineTagPayload
+
+  """Deletes a single `JournalLineTag` using a unique key."""
+  deleteJournalLineTag(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteJournalLineTagInput!
+  ): DeleteJournalLineTagPayload
+
+  """Deletes a single `TagGroup` using its globally unique id."""
+  deleteTagGroupById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteTagGroupByIdInput!
+  ): DeleteTagGroupPayload
+
+  """Deletes a single `TagGroup` using a unique key."""
+  deleteTagGroup(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteTagGroupInput!
+  ): DeleteTagGroupPayload
+
   """Deletes a single `_DrizzleMigration` using its globally unique id."""
   deleteDrizzleMigrationById(
     """
@@ -4736,6 +5495,22 @@ type Mutation {
     """
     input: DeleteJournalLineInput!
   ): DeleteJournalLinePayload
+
+  """Deletes a single `Tag` using its globally unique id."""
+  deleteTagById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteTagByIdInput!
+  ): DeleteTagPayload
+
+  """Deletes a single `Tag` using a unique key."""
+  deleteTag(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteTagInput!
+  ): DeleteTagPayload
 
   """Deletes a single `SavingsGoal` using its globally unique id."""
   deleteSavingsGoalById(
@@ -4849,22 +5624,6 @@ type Mutation {
     input: DeleteCryptoAssetInput!
   ): DeleteCryptoAssetPayload
 
-  """Deletes a single `CategorizationRule` using its globally unique id."""
-  deleteCategorizationRuleById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteCategorizationRuleByIdInput!
-  ): DeleteCategorizationRulePayload
-
-  """Deletes a single `CategorizationRule` using a unique key."""
-  deleteCategorizationRule(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteCategorizationRuleInput!
-  ): DeleteCategorizationRulePayload
-
   """Deletes a single `JournalEntry` using its globally unique id."""
   deleteJournalEntryById(
     """
@@ -4880,6 +5639,22 @@ type Mutation {
     """
     input: DeleteJournalEntryInput!
   ): DeleteJournalEntryPayload
+
+  """Deletes a single `CategorizationRule` using its globally unique id."""
+  deleteCategorizationRuleById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCategorizationRuleByIdInput!
+  ): DeleteCategorizationRulePayload
+
+  """Deletes a single `CategorizationRule` using a unique key."""
+  deleteCategorizationRule(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCategorizationRuleInput!
+  ): DeleteCategorizationRulePayload
 
   """Deletes a single `FixedAsset` using its globally unique id."""
   deleteFixedAssetById(
@@ -4960,6 +5735,91 @@ type Mutation {
     """
     input: DeleteConnectedAccountInput!
   ): DeleteConnectedAccountPayload
+}
+
+"""The output of our create `JournalLineTag` mutation."""
+type CreateJournalLineTagPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `JournalLineTag` that was created by this mutation."""
+  journalLineTag: JournalLineTag
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `JournalLineTag`. May be used by Relay 1."""
+  journalLineTagEdge(
+    """The method to use when ordering `JournalLineTag`."""
+    orderBy: [JournalLineTagOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): JournalLineTagEdge
+}
+
+"""All input for the create `JournalLineTag` mutation."""
+input CreateJournalLineTagInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `JournalLineTag` to be created by this mutation."""
+  journalLineTag: JournalLineTagInput!
+}
+
+"""An input for mutations affecting `JournalLineTag`"""
+input JournalLineTagInput {
+  rowId: UUID
+  journalLineId: UUID!
+  tagId: UUID!
+}
+
+"""The output of our create `TagGroup` mutation."""
+type CreateTagGroupPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `TagGroup` that was created by this mutation."""
+  tagGroup: TagGroup
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `TagGroup`. May be used by Relay 1."""
+  tagGroupEdge(
+    """The method to use when ordering `TagGroup`."""
+    orderBy: [TagGroupOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): TagGroupEdge
+}
+
+"""All input for the create `TagGroup` mutation."""
+input CreateTagGroupInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `TagGroup` to be created by this mutation."""
+  tagGroup: TagGroupInput!
+}
+
+"""An input for mutations affecting `TagGroup`"""
+input TagGroupInput {
+  rowId: UUID
+  bookId: UUID!
+  name: String!
+  createdAt: Datetime
 }
 
 """The output of our create `_DrizzleMigration` mutation."""
@@ -5093,6 +5953,51 @@ input JournalLineInput {
   debit: BigFloat
   credit: BigFloat
   memo: String
+}
+
+"""The output of our create `Tag` mutation."""
+type CreateTagPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Tag` that was created by this mutation."""
+  tag: Tag
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Tag`. May be used by Relay 1."""
+  tagEdge(
+    """The method to use when ordering `Tag`."""
+    orderBy: [TagOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): TagEdge
+}
+
+"""All input for the create `Tag` mutation."""
+input CreateTagInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Tag` to be created by this mutation."""
+  tag: TagInput!
+}
+
+"""An input for mutations affecting `Tag`"""
+input TagInput {
+  rowId: UUID
+  tagGroupId: UUID!
+  name: String!
+  code: String
+  isActive: Boolean
+  createdAt: Datetime
 }
 
 """The output of our create `SavingsGoal` mutation."""
@@ -5431,6 +6336,55 @@ input CryptoAssetInput {
   updatedAt: Datetime
 }
 
+"""The output of our create `JournalEntry` mutation."""
+type CreateJournalEntryPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `JournalEntry` that was created by this mutation."""
+  journalEntry: JournalEntry
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `JournalEntry`. May be used by Relay 1."""
+  journalEntryEdge(
+    """The method to use when ordering `JournalEntry`."""
+    orderBy: [JournalEntryOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): JournalEntryEdge
+}
+
+"""All input for the create `JournalEntry` mutation."""
+input CreateJournalEntryInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `JournalEntry` to be created by this mutation."""
+  journalEntry: JournalEntryInput!
+}
+
+"""An input for mutations affecting `JournalEntry`"""
+input JournalEntryInput {
+  rowId: UUID
+  bookId: UUID!
+  date: Datetime!
+  memo: String
+  source: JournalEntrySource
+  sourceReferenceId: String
+  isReviewed: Boolean
+  isReconciled: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
 """The output of our create `CategorizationRule` mutation."""
 type CreateCategorizationRulePayload {
   """
@@ -5483,55 +6437,7 @@ input CategorizationRuleInput {
   hitCount: Int
   lastHitAt: Datetime
   createdAt: Datetime
-}
-
-"""The output of our create `JournalEntry` mutation."""
-type CreateJournalEntryPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `JournalEntry` that was created by this mutation."""
-  journalEntry: JournalEntry
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `JournalEntry`. May be used by Relay 1."""
-  journalEntryEdge(
-    """The method to use when ordering `JournalEntry`."""
-    orderBy: [JournalEntryOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): JournalEntryEdge
-}
-
-"""All input for the create `JournalEntry` mutation."""
-input CreateJournalEntryInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `JournalEntry` to be created by this mutation."""
-  journalEntry: JournalEntryInput!
-}
-
-"""An input for mutations affecting `JournalEntry`"""
-input JournalEntryInput {
-  rowId: UUID
-  bookId: UUID!
-  date: Datetime!
-  memo: String
-  source: JournalEntrySource
-  sourceReferenceId: String
-  isReviewed: Boolean
-  isReconciled: Boolean
-  createdAt: Datetime
-  updatedAt: Datetime
+  tagId: UUID
 }
 
 """The output of our create `FixedAsset` mutation."""
@@ -5794,6 +6700,139 @@ input ConnectedAccountInput {
   syncCursor: String
 }
 
+"""The output of our update `JournalLineTag` mutation."""
+type UpdateJournalLineTagPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `JournalLineTag` that was updated by this mutation."""
+  journalLineTag: JournalLineTag
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `JournalLineTag`. May be used by Relay 1."""
+  journalLineTagEdge(
+    """The method to use when ordering `JournalLineTag`."""
+    orderBy: [JournalLineTagOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): JournalLineTagEdge
+}
+
+"""All input for the `updateJournalLineTagById` mutation."""
+input UpdateJournalLineTagByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `JournalLineTag` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `JournalLineTag` being updated.
+  """
+  patch: JournalLineTagPatch!
+}
+
+"""
+Represents an update to a `JournalLineTag`. Fields that are set will be updated.
+"""
+input JournalLineTagPatch {
+  rowId: UUID
+  journalLineId: UUID
+  tagId: UUID
+}
+
+"""All input for the `updateJournalLineTag` mutation."""
+input UpdateJournalLineTagInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `JournalLineTag` being updated.
+  """
+  patch: JournalLineTagPatch!
+}
+
+"""The output of our update `TagGroup` mutation."""
+type UpdateTagGroupPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `TagGroup` that was updated by this mutation."""
+  tagGroup: TagGroup
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `TagGroup`. May be used by Relay 1."""
+  tagGroupEdge(
+    """The method to use when ordering `TagGroup`."""
+    orderBy: [TagGroupOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): TagGroupEdge
+}
+
+"""All input for the `updateTagGroupById` mutation."""
+input UpdateTagGroupByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `TagGroup` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `TagGroup` being updated.
+  """
+  patch: TagGroupPatch!
+}
+
+"""
+Represents an update to a `TagGroup`. Fields that are set will be updated.
+"""
+input TagGroupPatch {
+  rowId: UUID
+  bookId: UUID
+  name: String
+  createdAt: Datetime
+}
+
+"""All input for the `updateTagGroup` mutation."""
+input UpdateTagGroupInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `TagGroup` being updated.
+  """
+  patch: TagGroupPatch!
+}
+
 """The output of our update `_DrizzleMigration` mutation."""
 type UpdateDrizzleMigrationPayload {
   """
@@ -5997,6 +7036,73 @@ input UpdateJournalLineInput {
   An object where the defined keys will be set on the `JournalLine` being updated.
   """
   patch: JournalLinePatch!
+}
+
+"""The output of our update `Tag` mutation."""
+type UpdateTagPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Tag` that was updated by this mutation."""
+  tag: Tag
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Tag`. May be used by Relay 1."""
+  tagEdge(
+    """The method to use when ordering `Tag`."""
+    orderBy: [TagOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): TagEdge
+}
+
+"""All input for the `updateTagById` mutation."""
+input UpdateTagByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Tag` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `Tag` being updated.
+  """
+  patch: TagPatch!
+}
+
+"""Represents an update to a `Tag`. Fields that are set will be updated."""
+input TagPatch {
+  rowId: UUID
+  tagGroupId: UUID
+  name: String
+  code: String
+  isActive: Boolean
+  createdAt: Datetime
+}
+
+"""All input for the `updateTag` mutation."""
+input UpdateTagInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `Tag` being updated.
+  """
+  patch: TagPatch!
 }
 
 """The output of our update `SavingsGoal` mutation."""
@@ -6501,84 +7607,6 @@ input UpdateCryptoAssetInput {
   patch: CryptoAssetPatch!
 }
 
-"""The output of our update `CategorizationRule` mutation."""
-type UpdateCategorizationRulePayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `CategorizationRule` that was updated by this mutation."""
-  categorizationRule: CategorizationRule
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `CategorizationRule`. May be used by Relay 1."""
-  categorizationRuleEdge(
-    """The method to use when ordering `CategorizationRule`."""
-    orderBy: [CategorizationRuleOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): CategorizationRuleEdge
-}
-
-"""All input for the `updateCategorizationRuleById` mutation."""
-input UpdateCategorizationRuleByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `CategorizationRule` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the `CategorizationRule` being updated.
-  """
-  patch: CategorizationRulePatch!
-}
-
-"""
-Represents an update to a `CategorizationRule`. Fields that are set will be updated.
-"""
-input CategorizationRulePatch {
-  rowId: UUID
-  bookId: UUID
-  name: String
-  matchField: String
-  matchType: String
-  matchValue: String
-  amountMin: BigFloat
-  amountMax: BigFloat
-  debitAccountId: UUID
-  creditAccountId: UUID
-  confidence: BigFloat
-  priority: Int
-  hitCount: Int
-  lastHitAt: Datetime
-  createdAt: Datetime
-}
-
-"""All input for the `updateCategorizationRule` mutation."""
-input UpdateCategorizationRuleInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the `CategorizationRule` being updated.
-  """
-  patch: CategorizationRulePatch!
-}
-
 """The output of our update `JournalEntry` mutation."""
 type UpdateJournalEntryPayload {
   """
@@ -6650,6 +7678,85 @@ input UpdateJournalEntryInput {
   An object where the defined keys will be set on the `JournalEntry` being updated.
   """
   patch: JournalEntryPatch!
+}
+
+"""The output of our update `CategorizationRule` mutation."""
+type UpdateCategorizationRulePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `CategorizationRule` that was updated by this mutation."""
+  categorizationRule: CategorizationRule
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `CategorizationRule`. May be used by Relay 1."""
+  categorizationRuleEdge(
+    """The method to use when ordering `CategorizationRule`."""
+    orderBy: [CategorizationRuleOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CategorizationRuleEdge
+}
+
+"""All input for the `updateCategorizationRuleById` mutation."""
+input UpdateCategorizationRuleByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `CategorizationRule` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `CategorizationRule` being updated.
+  """
+  patch: CategorizationRulePatch!
+}
+
+"""
+Represents an update to a `CategorizationRule`. Fields that are set will be updated.
+"""
+input CategorizationRulePatch {
+  rowId: UUID
+  bookId: UUID
+  name: String
+  matchField: String
+  matchType: String
+  matchValue: String
+  amountMin: BigFloat
+  amountMax: BigFloat
+  debitAccountId: UUID
+  creditAccountId: UUID
+  confidence: BigFloat
+  priority: Int
+  hitCount: Int
+  lastHitAt: Datetime
+  createdAt: Datetime
+  tagId: UUID
+}
+
+"""All input for the `updateCategorizationRule` mutation."""
+input UpdateCategorizationRuleInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `CategorizationRule` being updated.
+  """
+  patch: CategorizationRulePatch!
 }
 
 """The output of our update `FixedAsset` mutation."""
@@ -7032,6 +8139,102 @@ input UpdateConnectedAccountInput {
   patch: ConnectedAccountPatch!
 }
 
+"""The output of our delete `JournalLineTag` mutation."""
+type DeleteJournalLineTagPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `JournalLineTag` that was deleted by this mutation."""
+  journalLineTag: JournalLineTag
+  deletedJournalLineTagId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `JournalLineTag`. May be used by Relay 1."""
+  journalLineTagEdge(
+    """The method to use when ordering `JournalLineTag`."""
+    orderBy: [JournalLineTagOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): JournalLineTagEdge
+}
+
+"""All input for the `deleteJournalLineTagById` mutation."""
+input DeleteJournalLineTagByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `JournalLineTag` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteJournalLineTag` mutation."""
+input DeleteJournalLineTagInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `TagGroup` mutation."""
+type DeleteTagGroupPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `TagGroup` that was deleted by this mutation."""
+  tagGroup: TagGroup
+  deletedTagGroupId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `TagGroup`. May be used by Relay 1."""
+  tagGroupEdge(
+    """The method to use when ordering `TagGroup`."""
+    orderBy: [TagGroupOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): TagGroupEdge
+}
+
+"""All input for the `deleteTagGroupById` mutation."""
+input DeleteTagGroupByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `TagGroup` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteTagGroup` mutation."""
+input DeleteTagGroupInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete `_DrizzleMigration` mutation."""
 type DeleteDrizzleMigrationPayload {
   """
@@ -7168,6 +8371,54 @@ input DeleteJournalLineByIdInput {
 
 """All input for the `deleteJournalLine` mutation."""
 input DeleteJournalLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `Tag` mutation."""
+type DeleteTagPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Tag` that was deleted by this mutation."""
+  tag: Tag
+  deletedTagId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Tag`. May be used by Relay 1."""
+  tagEdge(
+    """The method to use when ordering `Tag`."""
+    orderBy: [TagOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): TagEdge
+}
+
+"""All input for the `deleteTagById` mutation."""
+input DeleteTagByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Tag` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteTag` mutation."""
+input DeleteTagInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -7512,54 +8763,6 @@ input DeleteCryptoAssetInput {
   rowId: UUID!
 }
 
-"""The output of our delete `CategorizationRule` mutation."""
-type DeleteCategorizationRulePayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `CategorizationRule` that was deleted by this mutation."""
-  categorizationRule: CategorizationRule
-  deletedCategorizationRuleId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `CategorizationRule`. May be used by Relay 1."""
-  categorizationRuleEdge(
-    """The method to use when ordering `CategorizationRule`."""
-    orderBy: [CategorizationRuleOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): CategorizationRuleEdge
-}
-
-"""All input for the `deleteCategorizationRuleById` mutation."""
-input DeleteCategorizationRuleByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `CategorizationRule` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the `deleteCategorizationRule` mutation."""
-input DeleteCategorizationRuleInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete `JournalEntry` mutation."""
 type DeleteJournalEntryPayload {
   """
@@ -7600,6 +8803,54 @@ input DeleteJournalEntryByIdInput {
 
 """All input for the `deleteJournalEntry` mutation."""
 input DeleteJournalEntryInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `CategorizationRule` mutation."""
+type DeleteCategorizationRulePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `CategorizationRule` that was deleted by this mutation."""
+  categorizationRule: CategorizationRule
+  deletedCategorizationRuleId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `CategorizationRule`. May be used by Relay 1."""
+  categorizationRuleEdge(
+    """The method to use when ordering `CategorizationRule`."""
+    orderBy: [CategorizationRuleOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CategorizationRuleEdge
+}
+
+"""All input for the `deleteCategorizationRuleById` mutation."""
+input DeleteCategorizationRuleByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `CategorizationRule` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteCategorizationRule` mutation."""
+input DeleteCategorizationRuleInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
