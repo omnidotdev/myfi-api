@@ -44,6 +44,9 @@ type Query implements Node {
   """Get a single `NetWorthSnapshot`."""
   netWorthSnapshot(rowId: UUID!): NetWorthSnapshot
 
+  """Get a single `PayrollConnection`."""
+  payrollConnection(rowId: UUID!): PayrollConnection
+
   """Get a single `AccountingPeriod`."""
   accountingPeriod(rowId: UUID!): AccountingPeriod
 
@@ -150,6 +153,14 @@ type Query implements Node {
     """
     id: ID!
   ): NetWorthSnapshot
+
+  """Reads a single `PayrollConnection` using its globally unique `ID`."""
+  payrollConnectionById(
+    """
+    The globally unique `ID` to be used in selecting a single `PayrollConnection`.
+    """
+    id: ID!
+  ): PayrollConnection
 
   """Reads a single `AccountingPeriod` using its globally unique `ID`."""
   accountingPeriodById(
@@ -550,6 +561,40 @@ type Query implements Node {
     """The method to use when ordering `NetWorthSnapshot`."""
     orderBy: [NetWorthSnapshotOrderBy!] = [PRIMARY_KEY_ASC]
   ): NetWorthSnapshotConnection
+
+  """Reads and enables pagination through a set of `PayrollConnection`."""
+  payrollConnections(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PayrollConnectionCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: PayrollConnectionFilter
+
+    """The method to use when ordering `PayrollConnection`."""
+    orderBy: [PayrollConnectionOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PayrollConnectionConnection
 
   """Reads and enables pagination through a set of `AccountingPeriod`."""
   accountingPeriods(
@@ -1811,6 +1856,40 @@ type Book implements Node {
     """The method to use when ordering `TaxJurisdiction`."""
     orderBy: [TaxJurisdictionOrderBy!] = [PRIMARY_KEY_ASC]
   ): TaxJurisdictionConnection!
+
+  """Reads and enables pagination through a set of `PayrollConnection`."""
+  payrollConnections(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PayrollConnectionCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: PayrollConnectionFilter
+
+    """The method to use when ordering `PayrollConnection`."""
+    orderBy: [PayrollConnectionOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PayrollConnectionConnection!
 }
 
 enum BookType {
@@ -2190,6 +2269,12 @@ input BookFilter {
 
   """Some related `taxJurisdictions` exist."""
   taxJurisdictionsExist: Boolean
+
+  """Filter by the object’s `payrollConnections` relation."""
+  payrollConnections: BookToManyPayrollConnectionFilter
+
+  """Some related `payrollConnections` exist."""
+  payrollConnectionsExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [BookFilter!]
@@ -3554,6 +3639,52 @@ input TaxJurisdictionFilter {
 
   """Negates the expression."""
   not: TaxJurisdictionFilter
+}
+
+"""
+A filter to be used against many `PayrollConnection` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyPayrollConnectionFilter {
+  """
+  Every related `PayrollConnection` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: PayrollConnectionFilter
+
+  """
+  Some related `PayrollConnection` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: PayrollConnectionFilter
+
+  """
+  No related `PayrollConnection` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: PayrollConnectionFilter
+}
+
+"""
+A filter to be used against `PayrollConnection` object types. All fields are combined with a logical ‘and.’
+"""
+input PayrollConnectionFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `bookId` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s `status` field."""
+  status: StringFilter
+
+  """Filter by the object’s `book` relation."""
+  book: BookFilter
+
+  """Checks for all expressions in this list."""
+  and: [PayrollConnectionFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [PayrollConnectionFilter!]
+
+  """Negates the expression."""
+  not: PayrollConnectionFilter
 }
 
 """
@@ -5184,6 +5315,82 @@ enum TaxJurisdictionOrderBy {
   BOOK_ID_DESC
 }
 
+"""A connection to a list of `PayrollConnection` values."""
+type PayrollConnectionConnection {
+  """A list of `PayrollConnection` objects."""
+  nodes: [PayrollConnection]!
+
+  """
+  A list of edges which contains the `PayrollConnection` and cursor to aid in pagination.
+  """
+  edges: [PayrollConnectionEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `PayrollConnection` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+type PayrollConnection implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  provider: String!
+  accessToken: String
+  refreshToken: String
+  companyId: String
+  lastSyncedAt: Datetime
+  syncCursor: String
+  status: String!
+  createdAt: Datetime
+
+  """Reads a single `Book` that is related to this `PayrollConnection`."""
+  book: Book
+}
+
+"""A `PayrollConnection` edge in the connection."""
+type PayrollConnectionEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `PayrollConnection` at the end of the edge."""
+  node: PayrollConnection
+}
+
+"""
+A condition to be used against `PayrollConnection` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input PayrollConnectionCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `bookId` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s `status` field."""
+  status: String
+}
+
+"""Methods to use when ordering `PayrollConnection`."""
+enum PayrollConnectionOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+  STATUS_ASC
+  STATUS_DESC
+}
+
 type _DrizzleMigration implements Node {
   """
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
@@ -5387,6 +5594,14 @@ type Mutation {
     """
     input: CreateNetWorthSnapshotInput!
   ): CreateNetWorthSnapshotPayload
+
+  """Creates a single `PayrollConnection`."""
+  createPayrollConnection(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreatePayrollConnectionInput!
+  ): CreatePayrollConnectionPayload
 
   """Creates a single `AccountingPeriod`."""
   createAccountingPeriod(
@@ -5649,6 +5864,24 @@ type Mutation {
     """
     input: UpdateNetWorthSnapshotInput!
   ): UpdateNetWorthSnapshotPayload
+
+  """
+  Updates a single `PayrollConnection` using its globally unique id and a patch.
+  """
+  updatePayrollConnectionById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdatePayrollConnectionByIdInput!
+  ): UpdatePayrollConnectionPayload
+
+  """Updates a single `PayrollConnection` using a unique key and a patch."""
+  updatePayrollConnection(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdatePayrollConnectionInput!
+  ): UpdatePayrollConnectionPayload
 
   """
   Updates a single `AccountingPeriod` using its globally unique id and a patch.
@@ -6019,6 +6252,22 @@ type Mutation {
     """
     input: DeleteNetWorthSnapshotInput!
   ): DeleteNetWorthSnapshotPayload
+
+  """Deletes a single `PayrollConnection` using its globally unique id."""
+  deletePayrollConnectionById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeletePayrollConnectionByIdInput!
+  ): DeletePayrollConnectionPayload
+
+  """Deletes a single `PayrollConnection` using a unique key."""
+  deletePayrollConnection(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeletePayrollConnectionInput!
+  ): DeletePayrollConnectionPayload
 
   """Deletes a single `AccountingPeriod` using its globally unique id."""
   deleteAccountingPeriodById(
@@ -6629,6 +6878,55 @@ input NetWorthSnapshotInput {
   totalLiabilities: BigFloat!
   netWorth: BigFloat!
   breakdown: String
+  createdAt: Datetime
+}
+
+"""The output of our create `PayrollConnection` mutation."""
+type CreatePayrollConnectionPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `PayrollConnection` that was created by this mutation."""
+  payrollConnection: PayrollConnection
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `PayrollConnection`. May be used by Relay 1."""
+  payrollConnectionEdge(
+    """The method to use when ordering `PayrollConnection`."""
+    orderBy: [PayrollConnectionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): PayrollConnectionEdge
+}
+
+"""All input for the create `PayrollConnection` mutation."""
+input CreatePayrollConnectionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `PayrollConnection` to be created by this mutation."""
+  payrollConnection: PayrollConnectionInput!
+}
+
+"""An input for mutations affecting `PayrollConnection`"""
+input PayrollConnectionInput {
+  rowId: UUID
+  bookId: UUID!
+  provider: String!
+  accessToken: String
+  refreshToken: String
+  companyId: String
+  lastSyncedAt: Datetime
+  syncCursor: String
+  status: String
   createdAt: Datetime
 }
 
@@ -7907,6 +8205,79 @@ input UpdateNetWorthSnapshotInput {
   An object where the defined keys will be set on the `NetWorthSnapshot` being updated.
   """
   patch: NetWorthSnapshotPatch!
+}
+
+"""The output of our update `PayrollConnection` mutation."""
+type UpdatePayrollConnectionPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `PayrollConnection` that was updated by this mutation."""
+  payrollConnection: PayrollConnection
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `PayrollConnection`. May be used by Relay 1."""
+  payrollConnectionEdge(
+    """The method to use when ordering `PayrollConnection`."""
+    orderBy: [PayrollConnectionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): PayrollConnectionEdge
+}
+
+"""All input for the `updatePayrollConnectionById` mutation."""
+input UpdatePayrollConnectionByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `PayrollConnection` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `PayrollConnection` being updated.
+  """
+  patch: PayrollConnectionPatch!
+}
+
+"""
+Represents an update to a `PayrollConnection`. Fields that are set will be updated.
+"""
+input PayrollConnectionPatch {
+  rowId: UUID
+  bookId: UUID
+  provider: String
+  accessToken: String
+  refreshToken: String
+  companyId: String
+  lastSyncedAt: Datetime
+  syncCursor: String
+  status: String
+  createdAt: Datetime
+}
+
+"""All input for the `updatePayrollConnection` mutation."""
+input UpdatePayrollConnectionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `PayrollConnection` being updated.
+  """
+  patch: PayrollConnectionPatch!
 }
 
 """The output of our update `AccountingPeriod` mutation."""
@@ -9303,6 +9674,54 @@ input DeleteNetWorthSnapshotByIdInput {
 
 """All input for the `deleteNetWorthSnapshot` mutation."""
 input DeleteNetWorthSnapshotInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `PayrollConnection` mutation."""
+type DeletePayrollConnectionPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `PayrollConnection` that was deleted by this mutation."""
+  payrollConnection: PayrollConnection
+  deletedPayrollConnectionId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `PayrollConnection`. May be used by Relay 1."""
+  payrollConnectionEdge(
+    """The method to use when ordering `PayrollConnection`."""
+    orderBy: [PayrollConnectionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): PayrollConnectionEdge
+}
+
+"""All input for the `deletePayrollConnectionById` mutation."""
+input DeletePayrollConnectionByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `PayrollConnection` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deletePayrollConnection` mutation."""
+input DeletePayrollConnectionInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.

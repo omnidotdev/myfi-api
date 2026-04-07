@@ -793,6 +793,129 @@ const spec_netWorthSnapshot = {
   executor: executor
 };
 const netWorthSnapshotCodec = recordCodec(spec_netWorthSnapshot);
+const payrollConnectionIdentifier = sql.identifier("public", "payroll_connection");
+const spec_payrollConnection = {
+  name: "payrollConnection",
+  identifier: payrollConnectionIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    provider: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    access_token: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    refresh_token: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    company_id: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    last_synced_at: {
+      codec: TYPES.timestamptz,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    sync_cursor: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    status: {
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "639824",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "payroll_connection"
+    }
+  },
+  executor: executor
+};
+const payrollConnectionCodec = recordCodec(spec_payrollConnection);
 const accountingPeriodIdentifier = sql.identifier("public", "accounting_period");
 const spec_accountingPeriod = {
   name: "accountingPeriod",
@@ -2996,6 +3119,29 @@ const net_worth_snapshot_resourceOptionsConfig = {
   },
   uniques: net_worth_snapshotUniques
 };
+const payroll_connectionUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const payroll_connection_resourceOptionsConfig = {
+  executor: executor,
+  name: "payroll_connection",
+  identifier: "main.public.payroll_connection",
+  from: payrollConnectionIdentifier,
+  codec: payrollConnectionCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "payroll_connection"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: payroll_connectionUniques
+};
 const accounting_periodUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -3318,6 +3464,7 @@ const registryConfig = {
     bool: TYPES.boolean,
     savingsGoal: savingsGoalCodec,
     netWorthSnapshot: netWorthSnapshotCodec,
+    payrollConnection: payrollConnectionCodec,
     accountingPeriod: accountingPeriodCodec,
     jsonb: TYPES.jsonb,
     cryptoLot: cryptoLotCodec,
@@ -3372,6 +3519,7 @@ const registryConfig = {
     tag: tag_resourceOptionsConfig,
     savings_goal: savings_goal_resourceOptionsConfig,
     net_worth_snapshot: net_worth_snapshot_resourceOptionsConfig,
+    payroll_connection: payroll_connection_resourceOptionsConfig,
     accounting_period: accounting_period_resourceOptionsConfig,
     crypto_lot: crypto_lot_resourceOptionsConfig,
     book: book_resourceOptionsConfig,
@@ -3727,6 +3875,13 @@ const registryConfig = {
         localAttributes: ["id"],
         remoteAttributes: ["book_id"],
         isReferencee: true
+      },
+      payrollConnectionsByTheirBookId: {
+        localCodec: bookCodec,
+        remoteResourceOptions: payroll_connection_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["book_id"],
+        isReferencee: true
       }
     },
     budget: {
@@ -3956,6 +4111,16 @@ const registryConfig = {
         isUnique: true
       }
     },
+    payrollConnection: {
+      __proto__: null,
+      bookByMyBookId: {
+        localCodec: payrollConnectionCodec,
+        remoteResourceOptions: book_resourceOptionsConfig,
+        localAttributes: ["book_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      }
+    },
     reconciliationQueue: {
       __proto__: null,
       bookByMyBookId: {
@@ -4123,6 +4288,7 @@ const resource_journal_linePgResource = registry.pgResources["journal_line"];
 const resource_tagPgResource = registry.pgResources["tag"];
 const resource_savings_goalPgResource = registry.pgResources["savings_goal"];
 const resource_net_worth_snapshotPgResource = registry.pgResources["net_worth_snapshot"];
+const resource_payroll_connectionPgResource = registry.pgResources["payroll_connection"];
 const resource_accounting_periodPgResource = registry.pgResources["accounting_period"];
 const resource_crypto_lotPgResource = registry.pgResources["crypto_lot"];
 const resource_bookPgResource = registry.pgResources["book"];
@@ -4278,6 +4444,17 @@ const nodeIdHandler_NetWorthSnapshot = makeTableNodeIdHandler({
 const nodeFetcher_NetWorthSnapshot = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_NetWorthSnapshot));
   return nodeIdHandler_NetWorthSnapshot.get(nodeIdHandler_NetWorthSnapshot.getSpec($decoded));
+};
+const nodeIdHandler_PayrollConnection = makeTableNodeIdHandler({
+  typeName: "PayrollConnection",
+  identifier: "PayrollConnection",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_payroll_connectionPgResource,
+  pk: payroll_connectionUniques[0].attributes
+});
+const nodeFetcher_PayrollConnection = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_PayrollConnection));
+  return nodeIdHandler_PayrollConnection.get(nodeIdHandler_PayrollConnection.getSpec($decoded));
 };
 const nodeIdHandler_AccountingPeriod = makeTableNodeIdHandler({
   typeName: "AccountingPeriod",
@@ -4483,6 +4660,7 @@ const nodeIdHandlerByTypeName = {
   Tag: nodeIdHandler_Tag,
   SavingsGoal: nodeIdHandler_SavingsGoal,
   NetWorthSnapshot: nodeIdHandler_NetWorthSnapshot,
+  PayrollConnection: nodeIdHandler_PayrollConnection,
   AccountingPeriod: nodeIdHandler_AccountingPeriod,
   CryptoLot: nodeIdHandler_CryptoLot,
   Book: nodeIdHandler_Book,
@@ -4886,8 +5064,14 @@ const BudgetOrderBy_ACCOUNT_ID_DESCApply = queryBuilder => {
     direction: "DESC"
   });
 };
+const ConnectedAccount_accessTokenPlan = $record => {
+  return $record.get("access_token");
+};
 const ConnectedAccount_lastSyncedAtPlan = $record => {
   return $record.get("last_synced_at");
+};
+const ConnectedAccount_syncCursorPlan = $record => {
+  return $record.get("sync_cursor");
 };
 const CryptoLot_disposedAtPlan = $record => {
   return $record.get("disposed_at");
@@ -4906,6 +5090,19 @@ const JournalEntryOrderBy_DATE_DESCApply = queryBuilder => {
   });
 };
 const JSONSerialize = value => value;
+const AccountingPeriodCondition_statusApply = ($condition, val) => applyAttributeCondition("status", TYPES.text, $condition, val);
+const AccountingPeriodOrderBy_STATUS_ASCApply = queryBuilder => {
+  queryBuilder.orderBy({
+    attribute: "status",
+    direction: "ASC"
+  });
+};
+const AccountingPeriodOrderBy_STATUS_DESCApply = queryBuilder => {
+  queryBuilder.orderBy({
+    attribute: "status",
+    direction: "DESC"
+  });
+};
 function applyInputToInsert(_, $object) {
   return $object;
 }
@@ -4947,6 +5144,10 @@ const specFromArgs_SavingsGoal = args => {
 const specFromArgs_NetWorthSnapshot = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_NetWorthSnapshot, $nodeId);
+};
+const specFromArgs_PayrollConnection = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_PayrollConnection, $nodeId);
 };
 const specFromArgs_AccountingPeriod = args => {
   const $nodeId = args.getRaw(["input", "id"]);
@@ -5126,15 +5327,34 @@ function NetWorthSnapshotInput_netWorthApply(obj, val, info) {
 function NetWorthSnapshotInput_breakdownApply(obj, val, info) {
   obj.set("breakdown", bakedInputRuntime(info.schema, info.field.type, val));
 }
+const CreatePayrollConnectionPayload_payrollConnectionEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_payroll_connectionPgResource, payroll_connectionUniques[0].attributes, $mutation, fieldArgs);
+function PayrollConnectionInput_providerApply(obj, val, info) {
+  obj.set("provider", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function PayrollConnectionInput_accessTokenApply(obj, val, info) {
+  obj.set("access_token", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function PayrollConnectionInput_refreshTokenApply(obj, val, info) {
+  obj.set("refresh_token", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function PayrollConnectionInput_companyIdApply(obj, val, info) {
+  obj.set("company_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function PayrollConnectionInput_lastSyncedAtApply(obj, val, info) {
+  obj.set("last_synced_at", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function PayrollConnectionInput_syncCursorApply(obj, val, info) {
+  obj.set("sync_cursor", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function PayrollConnectionInput_statusApply(obj, val, info) {
+  obj.set("status", bakedInputRuntime(info.schema, info.field.type, val));
+}
 const CreateAccountingPeriodPayload_accountingPeriodEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_accounting_periodPgResource, accounting_periodUniques[0].attributes, $mutation, fieldArgs);
 function AccountingPeriodInput_yearApply(obj, val, info) {
   obj.set("year", bakedInputRuntime(info.schema, info.field.type, val));
 }
 function AccountingPeriodInput_monthApply(obj, val, info) {
   obj.set("month", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function AccountingPeriodInput_statusApply(obj, val, info) {
-  obj.set("status", bakedInputRuntime(info.schema, info.field.type, val));
 }
 function AccountingPeriodInput_closedAtApply(obj, val, info) {
   obj.set("closed_at", bakedInputRuntime(info.schema, info.field.type, val));
@@ -5239,9 +5459,6 @@ function CryptoAssetInput_balanceApply(obj, val, info) {
 }
 function CryptoAssetInput_costBasisMethodApply(obj, val, info) {
   obj.set("cost_basis_method", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function CryptoAssetInput_lastSyncedAtApply(obj, val, info) {
-  obj.set("last_synced_at", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateJournalEntryPayload_journalEntryEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_journal_entryPgResource, journal_entryUniques[0].attributes, $mutation, fieldArgs);
 function JournalEntryInput_sourceApply(obj, val, info) {
@@ -5367,9 +5584,6 @@ function AccountInput_isPlaceholderApply(obj, val, info) {
   obj.set("is_placeholder", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateConnectedAccountPayload_connectedAccountEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_connected_accountPgResource, connected_accountUniques[0].attributes, $mutation, fieldArgs);
-function ConnectedAccountInput_providerApply(obj, val, info) {
-  obj.set("provider", bakedInputRuntime(info.schema, info.field.type, val));
-}
 function ConnectedAccountInput_providerAccountIdApply(obj, val, info) {
   obj.set("provider_account_id", bakedInputRuntime(info.schema, info.field.type, val));
 }
@@ -5378,12 +5592,6 @@ function ConnectedAccountInput_institutionNameApply(obj, val, info) {
 }
 function ConnectedAccountInput_maskApply(obj, val, info) {
   obj.set("mask", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function ConnectedAccountInput_accessTokenApply(obj, val, info) {
-  obj.set("access_token", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function ConnectedAccountInput_syncCursorApply(obj, val, info) {
-  obj.set("sync_cursor", bakedInputRuntime(info.schema, info.field.type, val));
 }
 export const typeDefs = /* GraphQL */`"""The root query type which gives access points into the data universe."""
 type Query implements Node {
@@ -5430,6 +5638,9 @@ type Query implements Node {
 
   """Get a single \`NetWorthSnapshot\`."""
   netWorthSnapshot(rowId: UUID!): NetWorthSnapshot
+
+  """Get a single \`PayrollConnection\`."""
+  payrollConnection(rowId: UUID!): PayrollConnection
 
   """Get a single \`AccountingPeriod\`."""
   accountingPeriod(rowId: UUID!): AccountingPeriod
@@ -5537,6 +5748,14 @@ type Query implements Node {
     """
     id: ID!
   ): NetWorthSnapshot
+
+  """Reads a single \`PayrollConnection\` using its globally unique \`ID\`."""
+  payrollConnectionById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`PayrollConnection\`.
+    """
+    id: ID!
+  ): PayrollConnection
 
   """Reads a single \`AccountingPeriod\` using its globally unique \`ID\`."""
   accountingPeriodById(
@@ -5937,6 +6156,40 @@ type Query implements Node {
     """The method to use when ordering \`NetWorthSnapshot\`."""
     orderBy: [NetWorthSnapshotOrderBy!] = [PRIMARY_KEY_ASC]
   ): NetWorthSnapshotConnection
+
+  """Reads and enables pagination through a set of \`PayrollConnection\`."""
+  payrollConnections(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PayrollConnectionCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: PayrollConnectionFilter
+
+    """The method to use when ordering \`PayrollConnection\`."""
+    orderBy: [PayrollConnectionOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PayrollConnectionConnection
 
   """Reads and enables pagination through a set of \`AccountingPeriod\`."""
   accountingPeriods(
@@ -7198,6 +7451,40 @@ type Book implements Node {
     """The method to use when ordering \`TaxJurisdiction\`."""
     orderBy: [TaxJurisdictionOrderBy!] = [PRIMARY_KEY_ASC]
   ): TaxJurisdictionConnection!
+
+  """Reads and enables pagination through a set of \`PayrollConnection\`."""
+  payrollConnections(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PayrollConnectionCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: PayrollConnectionFilter
+
+    """The method to use when ordering \`PayrollConnection\`."""
+    orderBy: [PayrollConnectionOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PayrollConnectionConnection!
 }
 
 enum BookType {
@@ -7577,6 +7864,12 @@ input BookFilter {
 
   """Some related \`taxJurisdictions\` exist."""
   taxJurisdictionsExist: Boolean
+
+  """Filter by the object’s \`payrollConnections\` relation."""
+  payrollConnections: BookToManyPayrollConnectionFilter
+
+  """Some related \`payrollConnections\` exist."""
+  payrollConnectionsExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [BookFilter!]
@@ -8941,6 +9234,52 @@ input TaxJurisdictionFilter {
 
   """Negates the expression."""
   not: TaxJurisdictionFilter
+}
+
+"""
+A filter to be used against many \`PayrollConnection\` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyPayrollConnectionFilter {
+  """
+  Every related \`PayrollConnection\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: PayrollConnectionFilter
+
+  """
+  Some related \`PayrollConnection\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: PayrollConnectionFilter
+
+  """
+  No related \`PayrollConnection\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: PayrollConnectionFilter
+}
+
+"""
+A filter to be used against \`PayrollConnection\` object types. All fields are combined with a logical ‘and.’
+"""
+input PayrollConnectionFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`bookId\` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s \`status\` field."""
+  status: StringFilter
+
+  """Filter by the object’s \`book\` relation."""
+  book: BookFilter
+
+  """Checks for all expressions in this list."""
+  and: [PayrollConnectionFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [PayrollConnectionFilter!]
+
+  """Negates the expression."""
+  not: PayrollConnectionFilter
 }
 
 """
@@ -10571,6 +10910,82 @@ enum TaxJurisdictionOrderBy {
   BOOK_ID_DESC
 }
 
+"""A connection to a list of \`PayrollConnection\` values."""
+type PayrollConnectionConnection {
+  """A list of \`PayrollConnection\` objects."""
+  nodes: [PayrollConnection]!
+
+  """
+  A list of edges which contains the \`PayrollConnection\` and cursor to aid in pagination.
+  """
+  edges: [PayrollConnectionEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* \`PayrollConnection\` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+type PayrollConnection implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  provider: String!
+  accessToken: String
+  refreshToken: String
+  companyId: String
+  lastSyncedAt: Datetime
+  syncCursor: String
+  status: String!
+  createdAt: Datetime
+
+  """Reads a single \`Book\` that is related to this \`PayrollConnection\`."""
+  book: Book
+}
+
+"""A \`PayrollConnection\` edge in the connection."""
+type PayrollConnectionEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`PayrollConnection\` at the end of the edge."""
+  node: PayrollConnection
+}
+
+"""
+A condition to be used against \`PayrollConnection\` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input PayrollConnectionCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`bookId\` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s \`status\` field."""
+  status: String
+}
+
+"""Methods to use when ordering \`PayrollConnection\`."""
+enum PayrollConnectionOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+  STATUS_ASC
+  STATUS_DESC
+}
+
 type _DrizzleMigration implements Node {
   """
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
@@ -10774,6 +11189,14 @@ type Mutation {
     """
     input: CreateNetWorthSnapshotInput!
   ): CreateNetWorthSnapshotPayload
+
+  """Creates a single \`PayrollConnection\`."""
+  createPayrollConnection(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreatePayrollConnectionInput!
+  ): CreatePayrollConnectionPayload
 
   """Creates a single \`AccountingPeriod\`."""
   createAccountingPeriod(
@@ -11036,6 +11459,24 @@ type Mutation {
     """
     input: UpdateNetWorthSnapshotInput!
   ): UpdateNetWorthSnapshotPayload
+
+  """
+  Updates a single \`PayrollConnection\` using its globally unique id and a patch.
+  """
+  updatePayrollConnectionById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdatePayrollConnectionByIdInput!
+  ): UpdatePayrollConnectionPayload
+
+  """Updates a single \`PayrollConnection\` using a unique key and a patch."""
+  updatePayrollConnection(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdatePayrollConnectionInput!
+  ): UpdatePayrollConnectionPayload
 
   """
   Updates a single \`AccountingPeriod\` using its globally unique id and a patch.
@@ -11406,6 +11847,22 @@ type Mutation {
     """
     input: DeleteNetWorthSnapshotInput!
   ): DeleteNetWorthSnapshotPayload
+
+  """Deletes a single \`PayrollConnection\` using its globally unique id."""
+  deletePayrollConnectionById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeletePayrollConnectionByIdInput!
+  ): DeletePayrollConnectionPayload
+
+  """Deletes a single \`PayrollConnection\` using a unique key."""
+  deletePayrollConnection(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeletePayrollConnectionInput!
+  ): DeletePayrollConnectionPayload
 
   """Deletes a single \`AccountingPeriod\` using its globally unique id."""
   deleteAccountingPeriodById(
@@ -12016,6 +12473,55 @@ input NetWorthSnapshotInput {
   totalLiabilities: BigFloat!
   netWorth: BigFloat!
   breakdown: String
+  createdAt: Datetime
+}
+
+"""The output of our create \`PayrollConnection\` mutation."""
+type CreatePayrollConnectionPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`PayrollConnection\` that was created by this mutation."""
+  payrollConnection: PayrollConnection
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`PayrollConnection\`. May be used by Relay 1."""
+  payrollConnectionEdge(
+    """The method to use when ordering \`PayrollConnection\`."""
+    orderBy: [PayrollConnectionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): PayrollConnectionEdge
+}
+
+"""All input for the create \`PayrollConnection\` mutation."""
+input CreatePayrollConnectionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`PayrollConnection\` to be created by this mutation."""
+  payrollConnection: PayrollConnectionInput!
+}
+
+"""An input for mutations affecting \`PayrollConnection\`"""
+input PayrollConnectionInput {
+  rowId: UUID
+  bookId: UUID!
+  provider: String!
+  accessToken: String
+  refreshToken: String
+  companyId: String
+  lastSyncedAt: Datetime
+  syncCursor: String
+  status: String
   createdAt: Datetime
 }
 
@@ -13294,6 +13800,79 @@ input UpdateNetWorthSnapshotInput {
   An object where the defined keys will be set on the \`NetWorthSnapshot\` being updated.
   """
   patch: NetWorthSnapshotPatch!
+}
+
+"""The output of our update \`PayrollConnection\` mutation."""
+type UpdatePayrollConnectionPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`PayrollConnection\` that was updated by this mutation."""
+  payrollConnection: PayrollConnection
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`PayrollConnection\`. May be used by Relay 1."""
+  payrollConnectionEdge(
+    """The method to use when ordering \`PayrollConnection\`."""
+    orderBy: [PayrollConnectionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): PayrollConnectionEdge
+}
+
+"""All input for the \`updatePayrollConnectionById\` mutation."""
+input UpdatePayrollConnectionByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`PayrollConnection\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`PayrollConnection\` being updated.
+  """
+  patch: PayrollConnectionPatch!
+}
+
+"""
+Represents an update to a \`PayrollConnection\`. Fields that are set will be updated.
+"""
+input PayrollConnectionPatch {
+  rowId: UUID
+  bookId: UUID
+  provider: String
+  accessToken: String
+  refreshToken: String
+  companyId: String
+  lastSyncedAt: Datetime
+  syncCursor: String
+  status: String
+  createdAt: Datetime
+}
+
+"""All input for the \`updatePayrollConnection\` mutation."""
+input UpdatePayrollConnectionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`PayrollConnection\` being updated.
+  """
+  patch: PayrollConnectionPatch!
 }
 
 """The output of our update \`AccountingPeriod\` mutation."""
@@ -14698,6 +15277,54 @@ input DeleteNetWorthSnapshotInput {
   rowId: UUID!
 }
 
+"""The output of our delete \`PayrollConnection\` mutation."""
+type DeletePayrollConnectionPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`PayrollConnection\` that was deleted by this mutation."""
+  payrollConnection: PayrollConnection
+  deletedPayrollConnectionId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`PayrollConnection\`. May be used by Relay 1."""
+  payrollConnectionEdge(
+    """The method to use when ordering \`PayrollConnection\`."""
+    orderBy: [PayrollConnectionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): PayrollConnectionEdge
+}
+
+"""All input for the \`deletePayrollConnectionById\` mutation."""
+input DeletePayrollConnectionByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`PayrollConnection\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deletePayrollConnection\` mutation."""
+input DeletePayrollConnectionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete \`AccountingPeriod\` mutation."""
 type DeleteAccountingPeriodPayload {
   """
@@ -15724,6 +16351,32 @@ export const objects = {
       node(_$root, fieldArgs) {
         return fieldArgs.getRaw("id");
       },
+      payrollConnection(_$root, {
+        $rowId
+      }) {
+        return resource_payroll_connectionPgResource.get({
+          id: $rowId
+        });
+      },
+      payrollConnectionById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_PayrollConnection($nodeId);
+      },
+      payrollConnections: {
+        plan() {
+          return connection(resource_payroll_connectionPgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineTagsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       query() {
         return rootValue();
       },
@@ -16085,6 +16738,18 @@ export const objects = {
       createNetWorthSnapshot: {
         plan(_, args) {
           const $insert = pgInsertSingle(resource_net_worth_snapshotPgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
+      createPayrollConnection: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_payroll_connectionPgResource);
           args.apply($insert);
           return object({
             result: $insert
@@ -16559,6 +17224,32 @@ export const objects = {
       deleteNetWorthSnapshotById: {
         plan(_$root, args) {
           const $delete = pgDeleteSingle(resource_net_worth_snapshotPgResource, specFromArgs_NetWorthSnapshot(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deletePayrollConnection: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_payroll_connectionPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deletePayrollConnectionById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_payroll_connectionPgResource, specFromArgs_PayrollConnection(args));
           args.apply($delete);
           return object({
             result: $delete
@@ -17140,6 +17831,32 @@ export const objects = {
           input: applyInputToUpdateOrDelete
         }
       },
+      updatePayrollConnection: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_payroll_connectionPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updatePayrollConnectionById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_payroll_connectionPgResource, specFromArgs_PayrollConnection(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
       updateReconciliationQueue: {
         plan(_$root, args) {
           const $update = pgUpdateSingle(resource_reconciliation_queuePgResource, {
@@ -17699,6 +18416,24 @@ export const objects = {
       organizationId($record) {
         return $record.get("organization_id");
       },
+      payrollConnections: {
+        plan($record) {
+          const $records = resource_payroll_connectionPgResource.find({
+            book_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineTagsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       reconciliationQueues: {
         plan($record) {
           const $records = resource_reconciliation_queuePgResource.find({
@@ -17903,9 +18638,7 @@ export const objects = {
   ConnectedAccount: {
     assertStep: assertPgClassSingleStep,
     plans: {
-      accessToken($record) {
-        return $record.get("access_token");
-      },
+      accessToken: ConnectedAccount_accessTokenPlan,
       account: JournalLine_accountPlan,
       accountId: JournalLine_accountIdPlan,
       book: Account_bookPlan,
@@ -17923,9 +18656,7 @@ export const objects = {
         return $record.get("provider_account_id");
       },
       rowId: JournalLineTag_rowIdPlan,
-      syncCursor($record) {
-        return $record.get("sync_cursor");
-      }
+      syncCursor: ConnectedAccount_syncCursorPlan
     },
     planType($specifier) {
       const spec = Object.create(null);
@@ -18071,6 +18802,15 @@ export const objects = {
       clientMutationId: getClientMutationIdForCreatePlan,
       netWorthSnapshot: planCreatePayloadResult,
       netWorthSnapshotEdge: CreateNetWorthSnapshotPayload_netWorthSnapshotEdgePlan,
+      query: queryPlan
+    }
+  },
+  CreatePayrollConnectionPayload: {
+    assertStep: assertStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      payrollConnection: planCreatePayloadResult,
+      payrollConnectionEdge: CreatePayrollConnectionPayload_payrollConnectionEdgePlan,
       query: queryPlan
     }
   },
@@ -18442,6 +19182,20 @@ export const objects = {
       query: queryPlan
     }
   },
+  DeletePayrollConnectionPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedPayrollConnectionId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_PayrollConnection.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      payrollConnection: planCreatePayloadResult,
+      payrollConnectionEdge: CreatePayrollConnectionPayload_payrollConnectionEdgePlan,
+      query: queryPlan
+    }
+  },
   DeleteReconciliationQueuePayload: {
     assertStep: ObjectStep,
     plans: {
@@ -18772,6 +19526,39 @@ export const objects = {
     }
   },
   NetWorthSnapshotConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
+  PayrollConnection: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      accessToken: ConnectedAccount_accessTokenPlan,
+      book: Account_bookPlan,
+      bookId: Account_bookIdPlan,
+      companyId($record) {
+        return $record.get("company_id");
+      },
+      createdAt: Account_createdAtPlan,
+      id($parent) {
+        const specifier = nodeIdHandler_PayrollConnection.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_PayrollConnection.codec.name].encode);
+      },
+      lastSyncedAt: ConnectedAccount_lastSyncedAtPlan,
+      refreshToken($record) {
+        return $record.get("refresh_token");
+      },
+      rowId: JournalLineTag_rowIdPlan,
+      syncCursor: ConnectedAccount_syncCursorPlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of payroll_connectionUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_payroll_connectionPgResource.get(spec);
+    }
+  },
+  PayrollConnectionConnection: {
     assertStep: ConnectionStep,
     plans: {
       totalCount: totalCountConnectionPlan
@@ -19170,6 +19957,15 @@ export const objects = {
       query: queryPlan
     }
   },
+  UpdatePayrollConnectionPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      payrollConnection: planCreatePayloadResult,
+      payrollConnectionEdge: CreatePayrollConnectionPayload_payrollConnectionEdgePlan,
+      query: queryPlan
+    }
+  },
   UpdateReconciliationQueuePayload: {
     assertStep: ObjectStep,
     plans: {
@@ -19437,9 +20233,7 @@ export const inputObjects = {
         return applyAttributeCondition("month", TYPES.int, $condition, val);
       },
       rowId: AccountCondition_rowIdApply,
-      status($condition, val) {
-        return applyAttributeCondition("status", TYPES.text, $condition, val);
-      },
+      status: AccountingPeriodCondition_statusApply,
       year($condition, val) {
         return applyAttributeCondition("year", TYPES.int, $condition, val);
       }
@@ -19481,7 +20275,7 @@ export const inputObjects = {
       month: AccountingPeriodInput_monthApply,
       reopenedAt: AccountingPeriodInput_reopenedAtApply,
       rowId: JournalLineTagInput_rowIdApply,
-      status: AccountingPeriodInput_statusApply,
+      status: PayrollConnectionInput_statusApply,
       year: AccountingPeriodInput_yearApply
     }
   },
@@ -19496,7 +20290,7 @@ export const inputObjects = {
       month: AccountingPeriodInput_monthApply,
       reopenedAt: AccountingPeriodInput_reopenedAtApply,
       rowId: JournalLineTagInput_rowIdApply,
-      status: AccountingPeriodInput_statusApply,
+      status: PayrollConnectionInput_statusApply,
       year: AccountingPeriodInput_yearApply
     }
   },
@@ -19882,6 +20676,30 @@ export const inputObjects = {
       organizationId(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("organizationId", "organization_id", spec_book.attributes.organization_id, queryBuilder, value);
       },
+      payrollConnections($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: payrollConnectionIdentifier,
+          alias: resource_payroll_connectionPgResource.name,
+          localAttributes: registryConfig.pgRelations.book.payrollConnectionsByTheirBookId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.book.payrollConnectionsByTheirBookId.remoteAttributes
+        };
+        return $rel;
+      },
+      payrollConnectionsExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: payrollConnectionIdentifier,
+          alias: resource_payroll_connectionPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.book.payrollConnectionsByTheirBookId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.book.payrollConnectionsByTheirBookId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
       reconciliationQueues($where, value) {
         assertAllowed(value, "object");
         const $rel = $where.andPlan();
@@ -20127,6 +20945,13 @@ export const inputObjects = {
       some: AccountToManyAccountFilter_someApply
     }
   },
+  BookToManyPayrollConnectionFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
   BookToManyReconciliationQueueFilter: {
     plans: {
       every: AccountToManyAccountFilter_everyApply,
@@ -20343,35 +21168,35 @@ export const inputObjects = {
   ConnectedAccountInput: {
     baked: createObjectAndApplyChildren,
     plans: {
-      accessToken: ConnectedAccountInput_accessTokenApply,
+      accessToken: PayrollConnectionInput_accessTokenApply,
       accountId: JournalLineInput_accountIdApply,
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
       institutionName: ConnectedAccountInput_institutionNameApply,
-      lastSyncedAt: CryptoAssetInput_lastSyncedAtApply,
+      lastSyncedAt: PayrollConnectionInput_lastSyncedAtApply,
       mask: ConnectedAccountInput_maskApply,
-      provider: ConnectedAccountInput_providerApply,
+      provider: PayrollConnectionInput_providerApply,
       providerAccountId: ConnectedAccountInput_providerAccountIdApply,
       rowId: JournalLineTagInput_rowIdApply,
-      status: AccountingPeriodInput_statusApply,
-      syncCursor: ConnectedAccountInput_syncCursorApply
+      status: PayrollConnectionInput_statusApply,
+      syncCursor: PayrollConnectionInput_syncCursorApply
     }
   },
   ConnectedAccountPatch: {
     baked: createObjectAndApplyChildren,
     plans: {
-      accessToken: ConnectedAccountInput_accessTokenApply,
+      accessToken: PayrollConnectionInput_accessTokenApply,
       accountId: JournalLineInput_accountIdApply,
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
       institutionName: ConnectedAccountInput_institutionNameApply,
-      lastSyncedAt: CryptoAssetInput_lastSyncedAtApply,
+      lastSyncedAt: PayrollConnectionInput_lastSyncedAtApply,
       mask: ConnectedAccountInput_maskApply,
-      provider: ConnectedAccountInput_providerApply,
+      provider: PayrollConnectionInput_providerApply,
       providerAccountId: ConnectedAccountInput_providerAccountIdApply,
       rowId: JournalLineTagInput_rowIdApply,
-      status: AccountingPeriodInput_statusApply,
-      syncCursor: ConnectedAccountInput_syncCursorApply
+      status: PayrollConnectionInput_statusApply,
+      syncCursor: PayrollConnectionInput_syncCursorApply
     }
   },
   ConnectedAccountProviderFilter: {
@@ -20479,6 +21304,12 @@ export const inputObjects = {
       netWorthSnapshot: applyCreateFields
     }
   },
+  CreatePayrollConnectionInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      payrollConnection: applyCreateFields
+    }
+  },
   CreateReconciliationQueueInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
@@ -20580,7 +21411,7 @@ export const inputObjects = {
       bookId: TagGroupInput_bookIdApply,
       costBasisMethod: CryptoAssetInput_costBasisMethodApply,
       createdAt: TagGroupInput_createdAtApply,
-      lastSyncedAt: CryptoAssetInput_lastSyncedAtApply,
+      lastSyncedAt: PayrollConnectionInput_lastSyncedAtApply,
       name: TagGroupInput_nameApply,
       network: CryptoAssetInput_networkApply,
       rowId: JournalLineTagInput_rowIdApply,
@@ -20596,7 +21427,7 @@ export const inputObjects = {
       bookId: TagGroupInput_bookIdApply,
       costBasisMethod: CryptoAssetInput_costBasisMethodApply,
       createdAt: TagGroupInput_createdAtApply,
-      lastSyncedAt: CryptoAssetInput_lastSyncedAtApply,
+      lastSyncedAt: PayrollConnectionInput_lastSyncedAtApply,
       name: TagGroupInput_nameApply,
       network: CryptoAssetInput_networkApply,
       rowId: JournalLineTagInput_rowIdApply,
@@ -20833,6 +21664,16 @@ export const inputObjects = {
     }
   },
   DeleteNetWorthSnapshotInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeletePayrollConnectionByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeletePayrollConnectionInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate
     }
@@ -21308,6 +22149,62 @@ export const inputObjects = {
       totalLiabilities: NetWorthSnapshotInput_totalLiabilitiesApply
     }
   },
+  PayrollConnectionCondition: {
+    plans: {
+      bookId: AccountCondition_bookIdApply,
+      rowId: AccountCondition_rowIdApply,
+      status: AccountingPeriodCondition_statusApply
+    }
+  },
+  PayrollConnectionFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      book($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_bookPgResource, bookIdentifier, registryConfig.pgRelations.payrollConnection.bookByMyBookId.localAttributes, registryConfig.pgRelations.payrollConnection.bookByMyBookId.remoteAttributes, $where, value);
+      },
+      bookId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("bookId", "book_id", spec_payrollConnection.attributes.book_id, queryBuilder, value);
+      },
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_payrollConnection.attributes.id, queryBuilder, value);
+      },
+      status(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("status", "status", spec_payrollConnection.attributes.status, queryBuilder, value);
+      }
+    }
+  },
+  PayrollConnectionInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      accessToken: PayrollConnectionInput_accessTokenApply,
+      bookId: TagGroupInput_bookIdApply,
+      companyId: PayrollConnectionInput_companyIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      lastSyncedAt: PayrollConnectionInput_lastSyncedAtApply,
+      provider: PayrollConnectionInput_providerApply,
+      refreshToken: PayrollConnectionInput_refreshTokenApply,
+      rowId: JournalLineTagInput_rowIdApply,
+      status: PayrollConnectionInput_statusApply,
+      syncCursor: PayrollConnectionInput_syncCursorApply
+    }
+  },
+  PayrollConnectionPatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      accessToken: PayrollConnectionInput_accessTokenApply,
+      bookId: TagGroupInput_bookIdApply,
+      companyId: PayrollConnectionInput_companyIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      lastSyncedAt: PayrollConnectionInput_lastSyncedAtApply,
+      provider: PayrollConnectionInput_providerApply,
+      refreshToken: PayrollConnectionInput_refreshTokenApply,
+      rowId: JournalLineTagInput_rowIdApply,
+      status: PayrollConnectionInput_statusApply,
+      syncCursor: PayrollConnectionInput_syncCursorApply
+    }
+  },
   ReconciliationQueueCondition: {
     plans: {
       bookId: AccountCondition_bookIdApply,
@@ -21365,7 +22262,7 @@ export const inputObjects = {
       reviewedAt: ReconciliationQueueInput_reviewedAtApply,
       reviewedBy: ReconciliationQueueInput_reviewedByApply,
       rowId: JournalLineTagInput_rowIdApply,
-      status: AccountingPeriodInput_statusApply,
+      status: PayrollConnectionInput_statusApply,
       suggestedCreditAccountId: ReconciliationQueueInput_suggestedCreditAccountIdApply,
       suggestedDebitAccountId: ReconciliationQueueInput_suggestedDebitAccountIdApply
     }
@@ -21384,7 +22281,7 @@ export const inputObjects = {
       reviewedAt: ReconciliationQueueInput_reviewedAtApply,
       reviewedBy: ReconciliationQueueInput_reviewedByApply,
       rowId: JournalLineTagInput_rowIdApply,
-      status: AccountingPeriodInput_statusApply,
+      status: PayrollConnectionInput_statusApply,
       suggestedCreditAccountId: ReconciliationQueueInput_suggestedCreditAccountIdApply,
       suggestedDebitAccountId: ReconciliationQueueInput_suggestedDebitAccountIdApply
     }
@@ -21990,6 +22887,18 @@ export const inputObjects = {
       patch: applyCreateFields
     }
   },
+  UpdatePayrollConnectionByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdatePayrollConnectionInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
   UpdateReconciliationQueueByIdInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
@@ -22291,18 +23200,8 @@ export const enums = {
       },
       ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
       ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply,
-      STATUS_ASC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "status",
-          direction: "ASC"
-        });
-      },
-      STATUS_DESC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "status",
-          direction: "DESC"
-        });
-      },
+      STATUS_ASC: AccountingPeriodOrderBy_STATUS_ASCApply,
+      STATUS_DESC: AccountingPeriodOrderBy_STATUS_DESCApply,
       YEAR_ASC(queryBuilder) {
         queryBuilder.orderBy({
           attribute: "year",
@@ -22785,6 +23684,34 @@ export const enums = {
       },
       ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
       ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply
+    }
+  },
+  PayrollConnectionOrderBy: {
+    values: {
+      BOOK_ID_ASC: AccountOrderBy_BOOK_ID_ASCApply,
+      BOOK_ID_DESC: AccountOrderBy_BOOK_ID_DESCApply,
+      PRIMARY_KEY_ASC(queryBuilder) {
+        payroll_connectionUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        payroll_connectionUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply,
+      STATUS_ASC: AccountingPeriodOrderBy_STATUS_ASCApply,
+      STATUS_DESC: AccountingPeriodOrderBy_STATUS_DESCApply
     }
   },
   ReconciliationQueueOrderBy: {
