@@ -52,12 +52,14 @@ import periodRoutes from "lib/routes/periodRoutes";
 import reconciliationRoutes from "lib/routes/reconciliationRoutes";
 import savingsRoutes from "lib/routes/savingsRoutes";
 import tagRoutes from "lib/routes/tagRoutes";
+import vendorRoutes from "lib/routes/vendorRoutes";
 import {
   detectRecurringTransactions,
   getSpendingByCategory,
   getSpendingTrends,
 } from "lib/spending";
 import {
+  generate1099Nec,
   generateForm8949,
   generateQuarterlyEstimates,
   generateScheduleC,
@@ -142,6 +144,7 @@ const app = new Elysia()
   .use(ofxRoutes)
   .use(periodRoutes)
   .use(tagRoutes)
+  .use(vendorRoutes)
   // Report REST endpoints
   .get("/api/reports/profit-and-loss", async ({ query }) => {
     const { bookId, startDate, endDate } = query;
@@ -289,6 +292,16 @@ const app = new Elysia()
     },
   )
   // Tax report endpoints
+  .get("/api/tax/1099-nec", async ({ query }) => {
+    const { bookId, year } = query;
+    if (!bookId || !year) {
+      return new Response(
+        JSON.stringify({ error: "bookId and year are required" }),
+        { status: 400, headers: { "Content-Type": "application/json" } },
+      );
+    }
+    return generate1099Nec({ bookId, year: Number.parseInt(year, 10) });
+  })
   .get("/api/tax/schedule-c", async ({ query }) => {
     const { bookId, year } = query;
     if (!bookId || !year) {

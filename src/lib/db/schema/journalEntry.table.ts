@@ -10,6 +10,7 @@ import {
 
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 import { bookTable } from "./book.table";
+import { vendorTable } from "./vendor.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
@@ -30,6 +31,9 @@ export const journalEntryTable = pgTable(
     sourceReferenceId: text("source_reference_id"),
     isReviewed: boolean("is_reviewed").notNull().default(false),
     isReconciled: boolean("is_reconciled").notNull().default(false),
+    vendorId: uuid("vendor_id").references(() => vendorTable.id, {
+      onDelete: "set null",
+    }),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },

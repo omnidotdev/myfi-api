@@ -50,6 +50,13 @@
       "when": 1775533784287,
       "tag": "0006_supreme_bullseye",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1775535225792,
+      "tag": "0007_clear_warlock",
+      "breakpoints": true
     }
   ]
 }

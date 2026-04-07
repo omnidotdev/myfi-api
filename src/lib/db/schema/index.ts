@@ -17,3 +17,4 @@ export * from "./recurringTransaction.table";
 export * from "./savingsGoal.table";
 export * from "./tag.table";
 export * from "./tagGroup.table";
+export * from "./vendor.table";
