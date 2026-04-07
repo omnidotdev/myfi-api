@@ -71,6 +71,13 @@
       "when": 1775538904598,
       "tag": "0009_concerned_pride",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1775578649478,
+      "tag": "0010_glossy_mathemanic",
+      "breakpoints": true
     }
   ]
 }

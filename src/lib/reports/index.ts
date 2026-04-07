@@ -1,5 +1,6 @@
 export { default as generateBalanceSheet } from "./balanceSheet";
 export { default as generateCashFlow } from "./cashFlow";
+export { default as exportReport } from "./exportReport";
 export { default as generateGeneralLedger } from "./generalLedger";
 export { default as generatePayrollSummary } from "./payrollSummary";
 export { default as generateProfitAndLoss } from "./profitAndLoss";

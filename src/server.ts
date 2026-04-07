@@ -34,6 +34,7 @@ import { payrollCallbackRoute, payrollRoutes } from "lib/payroll";
 import plaidRoutes from "lib/plaid/plaidRoutes";
 import startScheduledSync from "lib/plaid/scheduledSync";
 import {
+  exportReport,
   generateBalanceSheet,
   generateCashFlow,
   generateGeneralLedger,
@@ -43,6 +44,7 @@ import {
   generateTrialBalance,
 } from "lib/reports";
 import accountRoutes from "lib/routes/accountRoutes";
+import bookAccessRoutes from "lib/routes/bookAccessRoutes";
 import bookRoutes from "lib/routes/bookRoutes";
 import budgetRoutes from "lib/routes/budgetRoutes";
 import categorizationRuleRoutes from "lib/routes/categorizationRuleRoutes";
@@ -135,6 +137,7 @@ const app = new Elysia()
   .use(cryptoRoutes)
   .use(lotRoutes)
   .use(bookRoutes)
+  .use(bookAccessRoutes)
   .use(accountRoutes)
   .use(journalRoutes)
   .use(budgetRoutes)
@@ -378,6 +381,56 @@ const app = new Elysia()
       });
     }
     return generateTaxLossHarvesting({ bookId });
+  })
+  // Report export (HTML for print-to-PDF, CSV for download)
+  .get("/api/reports/export", async ({ query, set }) => {
+    const { type, format, bookId } = query;
+
+    if (!type || !format || !bookId) {
+      return new Response(
+        JSON.stringify({
+          error: "type, format, and bookId are required",
+        }),
+        { status: 400, headers: { "Content-Type": "application/json" } },
+      );
+    }
+
+    if (format !== "html" && format !== "csv") {
+      return new Response(
+        JSON.stringify({ error: "format must be html or csv" }),
+        { status: 400, headers: { "Content-Type": "application/json" } },
+      );
+    }
+
+    try {
+      const tagIds = query.tagIds
+        ? query.tagIds.split(",").filter(Boolean)
+        : undefined;
+
+      const result = await exportReport({
+        type,
+        format,
+        bookId,
+        startDate: query.startDate,
+        endDate: query.endDate,
+        asOfDate: query.asOfDate,
+        year: query.year,
+        tagIds,
+      });
+
+      set.headers["Content-Type"] = result.contentType;
+      set.headers["Content-Disposition"] =
+        `attachment; filename="${result.filename}"`;
+
+      return result.content;
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Export failed";
+
+      return new Response(JSON.stringify({ error: message }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
   })
   // Job trigger endpoints
   .post("/api/jobs/monthly-close", async () => {
