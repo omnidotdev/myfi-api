@@ -3,7 +3,7 @@ import { yoga } from "@elysiajs/graphql-yoga";
 import { useParserCache } from "@envelop/parser-cache";
 import { useValidationCache } from "@envelop/validation-cache";
 import { useDisableIntrospection } from "@graphql-yoga/plugin-disable-introspection";
-import { sql } from "drizzle-orm";
+import { desc, eq, sql } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 import { schema } from "generated/graphql/schema.executable";
 import { useGrafast } from "grafast/envelop";
@@ -20,6 +20,7 @@ import {
 } from "lib/config/env.config";
 import { cryptoRoutes, lotRoutes } from "lib/crypto";
 import { dbPool, pgPool } from "lib/db/db";
+import { netWorthSnapshotTable } from "lib/db/schema";
 import createGraphqlContext from "lib/graphql/createGraphqlContext";
 import { armorPlugin, authenticationPlugin } from "lib/graphql/plugins";
 import importRoutes from "lib/import/importRoutes";
@@ -328,6 +329,23 @@ const app = new Elysia()
       body: t.Object({ bookId: t.String() }),
     },
   )
+  .get("/api/net-worth/history", async ({ query }) => {
+    const { bookId, limit } = query;
+    if (!bookId) {
+      return new Response(JSON.stringify({ error: "bookId is required" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+    const take = limit ? Number.parseInt(limit, 10) : 24;
+    const snapshots = await dbPool
+      .select()
+      .from(netWorthSnapshotTable)
+      .where(eq(netWorthSnapshotTable.bookId, bookId))
+      .orderBy(desc(netWorthSnapshotTable.date))
+      .limit(take);
+    return { snapshots: snapshots.reverse() };
+  })
   // Tax report endpoints
   .get("/api/tax/1099-nec", async ({ query }) => {
     const { bookId, year } = query;
