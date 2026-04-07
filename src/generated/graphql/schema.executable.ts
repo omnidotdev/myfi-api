@@ -1466,6 +1466,196 @@ const spec_journalEntry = {
   executor: executor
 };
 const journalEntryCodec = recordCodec(spec_journalEntry);
+const fixedAssetIdentifier = sql.identifier("public", "fixed_asset");
+const spec_fixedAsset = {
+  name: "fixedAsset",
+  identifier: fixedAssetIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    name: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    description: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    asset_account_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    depreciation_expense_account_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    accumulated_depreciation_account_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    acquisition_date: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    acquisition_cost: {
+      codec: TYPES.numeric,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    salvage_value: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    useful_life_months: {
+      codec: TYPES.int,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    depreciation_method: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    macrs_class: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    disposed_at: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    disposal_proceeds: {
+      codec: TYPES.numeric,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "639661",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "fixed_asset"
+    }
+  },
+  executor: executor
+};
+const fixedAssetCodec = recordCodec(spec_fixedAsset);
 const recurringTransactionIdentifier = sql.identifier("public", "recurring_transaction");
 const recurringFrequencyCodec = enumCodec({
   name: "recurringFrequency",
@@ -1630,20 +1820,7 @@ const spec_recurringTransaction = {
   executor: executor
 };
 const recurringTransactionCodec = recordCodec(spec_recurringTransaction);
-const connectedAccountProviderCodec = enumCodec({
-  name: "connectedAccountProvider",
-  identifier: sql.identifier("public", "connected_account_provider"),
-  values: ["plaid", "mx", "wallet_connect", "exchange_api", "manual"],
-  description: undefined,
-  extensions: {
-    oid: "469976",
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "connected_account_provider"
-    }
-  }
-});
+const reconciliationQueueIdentifier = sql.identifier("public", "reconciliation_queue");
 const reconciliationStatusCodec = enumCodec({
   name: "reconciliationStatus",
   identifier: sql.identifier("public", "reconciliation_status"),
@@ -1655,6 +1832,184 @@ const reconciliationStatusCodec = enumCodec({
       serviceName: "main",
       schemaName: "public",
       name: "reconciliation_status"
+    }
+  }
+});
+const spec_reconciliationQueue = {
+  name: "reconciliationQueue",
+  identifier: reconciliationQueueIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    journal_entry_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    status: {
+      codec: reconciliationStatusCodec,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    reviewed_at: {
+      codec: TYPES.timestamptz,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    reviewed_by: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    categorization_source: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    confidence: {
+      codec: TYPES.numeric,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    suggested_debit_account_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    suggested_credit_account_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    priority: {
+      codec: TYPES.int,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    period_year: {
+      codec: TYPES.int,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    period_month: {
+      codec: TYPES.int,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "470202",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "reconciliation_queue"
+    }
+  },
+  executor: executor
+};
+const reconciliationQueueCodec = recordCodec(spec_reconciliationQueue);
+const connectedAccountProviderCodec = enumCodec({
+  name: "connectedAccountProvider",
+  identifier: sql.identifier("public", "connected_account_provider"),
+  values: ["plaid", "mx", "wallet_connect", "exchange_api", "manual"],
+  description: undefined,
+  extensions: {
+    oid: "469976",
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "connected_account_provider"
     }
   }
 });
@@ -1979,171 +2334,6 @@ const spec_connectedAccount = {
   executor: executor
 };
 const connectedAccountCodec = recordCodec(spec_connectedAccount);
-const reconciliationQueueIdentifier = sql.identifier("public", "reconciliation_queue");
-const spec_reconciliationQueue = {
-  name: "reconciliationQueue",
-  identifier: reconciliationQueueIdentifier,
-  attributes: {
-    __proto__: null,
-    id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    book_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    journal_entry_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    status: {
-      codec: reconciliationStatusCodec,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    reviewed_at: {
-      codec: TYPES.timestamptz,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    reviewed_by: {
-      codec: TYPES.text,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    created_at: {
-      codec: TYPES.timestamptz,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    categorization_source: {
-      codec: TYPES.text,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    confidence: {
-      codec: TYPES.numeric,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    suggested_debit_account_id: {
-      codec: TYPES.uuid,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    suggested_credit_account_id: {
-      codec: TYPES.uuid,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    priority: {
-      codec: TYPES.int,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    period_year: {
-      codec: TYPES.int,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    period_month: {
-      codec: TYPES.int,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    }
-  },
-  extensions: {
-    oid: "470202",
-    isTableLike: true,
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "reconciliation_queue"
-    }
-  },
-  executor: executor
-};
-const reconciliationQueueCodec = recordCodec(spec_reconciliationQueue);
 const __drizzle_migrationsUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -2401,6 +2591,29 @@ const journal_entry_resourceOptionsConfig = {
   },
   uniques: journal_entryUniques
 };
+const fixed_assetUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const fixed_asset_resourceOptionsConfig = {
+  executor: executor,
+  name: "fixed_asset",
+  identifier: "main.public.fixed_asset",
+  from: fixedAssetIdentifier,
+  codec: fixedAssetCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "fixed_asset"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: fixed_assetUniques
+};
 const recurring_transactionUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -2524,16 +2737,17 @@ const registryConfig = {
     categorizationRule: categorizationRuleCodec,
     journalEntry: journalEntryCodec,
     journalEntrySource: journalEntrySourceCodec,
+    fixedAsset: fixedAssetCodec,
     recurringTransaction: recurringTransactionCodec,
     recurringFrequency: recurringFrequencyCodec,
-    connectedAccountProvider: connectedAccountProviderCodec,
+    reconciliationQueue: reconciliationQueueCodec,
     reconciliationStatus: reconciliationStatusCodec,
+    connectedAccountProvider: connectedAccountProviderCodec,
     accountType: accountTypeCodec,
     accountSubType: accountSubTypeCodec,
     connectedAccountStatus: connectedAccountStatusCodec,
     account: accountCodec,
-    connectedAccount: connectedAccountCodec,
-    reconciliationQueue: reconciliationQueueCodec
+    connectedAccount: connectedAccountCodec
   },
   pgResources: {
     __proto__: null,
@@ -2567,6 +2781,7 @@ const registryConfig = {
     crypto_asset: crypto_asset_resourceOptionsConfig,
     categorization_rule: categorization_rule_resourceOptionsConfig,
     journal_entry: journal_entry_resourceOptionsConfig,
+    fixed_asset: fixed_asset_resourceOptionsConfig,
     recurring_transaction: recurring_transaction_resourceOptionsConfig,
     reconciliation_queue: reconciliation_queue_resourceOptionsConfig,
     account: account_resourceOptionsConfig,
@@ -2720,6 +2935,39 @@ const registryConfig = {
           __proto__: null,
           isIndexed: false
         }
+      },
+      fixedAssetsByTheirAccumulatedDepreciationAccountId: {
+        localCodec: accountCodec,
+        remoteResourceOptions: fixed_asset_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["accumulated_depreciation_account_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
+      },
+      fixedAssetsByTheirAssetAccountId: {
+        localCodec: accountCodec,
+        remoteResourceOptions: fixed_asset_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["asset_account_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
+      },
+      fixedAssetsByTheirDepreciationExpenseAccountId: {
+        localCodec: accountCodec,
+        remoteResourceOptions: fixed_asset_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["depreciation_expense_account_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
       }
     },
     accountMapping: {
@@ -2841,6 +3089,13 @@ const registryConfig = {
         localAttributes: ["id"],
         remoteAttributes: ["book_id"],
         isReferencee: true
+      },
+      fixedAssetsByTheirBookId: {
+        localCodec: bookCodec,
+        remoteResourceOptions: fixed_asset_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["book_id"],
+        isReferencee: true
       }
     },
     budget: {
@@ -2931,6 +3186,37 @@ const registryConfig = {
         localCodec: cryptoLotCodec,
         remoteResourceOptions: journal_entry_resourceOptionsConfig,
         localAttributes: ["journal_entry_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      }
+    },
+    fixedAsset: {
+      __proto__: null,
+      accountByMyAccumulatedDepreciationAccountId: {
+        localCodec: fixedAssetCodec,
+        remoteResourceOptions: account_resourceOptionsConfig,
+        localAttributes: ["accumulated_depreciation_account_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      accountByMyAssetAccountId: {
+        localCodec: fixedAssetCodec,
+        remoteResourceOptions: account_resourceOptionsConfig,
+        localAttributes: ["asset_account_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      bookByMyBookId: {
+        localCodec: fixedAssetCodec,
+        remoteResourceOptions: book_resourceOptionsConfig,
+        localAttributes: ["book_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      accountByMyDepreciationExpenseAccountId: {
+        localCodec: fixedAssetCodec,
+        remoteResourceOptions: account_resourceOptionsConfig,
+        localAttributes: ["depreciation_expense_account_id"],
         remoteAttributes: ["id"],
         isUnique: true
       }
@@ -3088,6 +3374,7 @@ const resource_budgetPgResource = registry.pgResources["budget"];
 const resource_crypto_assetPgResource = registry.pgResources["crypto_asset"];
 const resource_categorization_rulePgResource = registry.pgResources["categorization_rule"];
 const resource_journal_entryPgResource = registry.pgResources["journal_entry"];
+const resource_fixed_assetPgResource = registry.pgResources["fixed_asset"];
 const resource_recurring_transactionPgResource = registry.pgResources["recurring_transaction"];
 const resource_reconciliation_queuePgResource = registry.pgResources["reconciliation_queue"];
 const resource_accountPgResource = registry.pgResources["account"];
@@ -3268,6 +3555,17 @@ const nodeFetcher_JournalEntry = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_JournalEntry));
   return nodeIdHandler_JournalEntry.get(nodeIdHandler_JournalEntry.getSpec($decoded));
 };
+const nodeIdHandler_FixedAsset = makeTableNodeIdHandler({
+  typeName: "FixedAsset",
+  identifier: "FixedAsset",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_fixed_assetPgResource,
+  pk: fixed_assetUniques[0].attributes
+});
+const nodeFetcher_FixedAsset = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_FixedAsset));
+  return nodeIdHandler_FixedAsset.get(nodeIdHandler_FixedAsset.getSpec($decoded));
+};
 const nodeIdHandler_RecurringTransaction = makeTableNodeIdHandler({
   typeName: "RecurringTransaction",
   identifier: "RecurringTransaction",
@@ -3376,6 +3674,7 @@ const nodeIdHandlerByTypeName = {
   CryptoAsset: nodeIdHandler_CryptoAsset,
   CategorizationRule: nodeIdHandler_CategorizationRule,
   JournalEntry: nodeIdHandler_JournalEntry,
+  FixedAsset: nodeIdHandler_FixedAsset,
   RecurringTransaction: nodeIdHandler_RecurringTransaction,
   ReconciliationQueue: nodeIdHandler_ReconciliationQueue,
   Account: nodeIdHandler_Account,
@@ -3767,6 +4066,9 @@ const JournalLine_journalEntryPlan = $record => resource_journal_entryPgResource
 const ConnectedAccount_lastSyncedAtPlan = $record => {
   return $record.get("last_synced_at");
 };
+const CryptoLot_disposedAtPlan = $record => {
+  return $record.get("disposed_at");
+};
 const JournalEntryCondition_dateApply = ($condition, val) => applyAttributeCondition("date", TYPES.timestamptz, $condition, val);
 const JournalEntryOrderBy_DATE_ASCApply = queryBuilder => {
   queryBuilder.orderBy({
@@ -3834,6 +4136,10 @@ const specFromArgs_CategorizationRule = args => {
 const specFromArgs_JournalEntry = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_JournalEntry, $nodeId);
+};
+const specFromArgs_FixedAsset = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_FixedAsset, $nodeId);
 };
 const specFromArgs_RecurringTransaction = args => {
   const $nodeId = args.getRaw(["input", "id"]);
@@ -4079,6 +4385,40 @@ function JournalEntryInput_isReviewedApply(obj, val, info) {
 function JournalEntryInput_isReconciledApply(obj, val, info) {
   obj.set("is_reconciled", bakedInputRuntime(info.schema, info.field.type, val));
 }
+const CreateFixedAssetPayload_fixedAssetEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_fixed_assetPgResource, fixed_assetUniques[0].attributes, $mutation, fieldArgs);
+function FixedAssetInput_descriptionApply(obj, val, info) {
+  obj.set("description", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function FixedAssetInput_assetAccountIdApply(obj, val, info) {
+  obj.set("asset_account_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function FixedAssetInput_depreciationExpenseAccountIdApply(obj, val, info) {
+  obj.set("depreciation_expense_account_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function FixedAssetInput_accumulatedDepreciationAccountIdApply(obj, val, info) {
+  obj.set("accumulated_depreciation_account_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function FixedAssetInput_acquisitionDateApply(obj, val, info) {
+  obj.set("acquisition_date", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function FixedAssetInput_acquisitionCostApply(obj, val, info) {
+  obj.set("acquisition_cost", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function FixedAssetInput_salvageValueApply(obj, val, info) {
+  obj.set("salvage_value", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function FixedAssetInput_usefulLifeMonthsApply(obj, val, info) {
+  obj.set("useful_life_months", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function FixedAssetInput_depreciationMethodApply(obj, val, info) {
+  obj.set("depreciation_method", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function FixedAssetInput_macrsClassApply(obj, val, info) {
+  obj.set("macrs_class", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function FixedAssetInput_disposalProceedsApply(obj, val, info) {
+  obj.set("disposal_proceeds", bakedInputRuntime(info.schema, info.field.type, val));
+}
 const CreateRecurringTransactionPayload_recurringTransactionEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_recurring_transactionPgResource, recurring_transactionUniques[0].attributes, $mutation, fieldArgs);
 function RecurringTransactionInput_frequencyApply(obj, val, info) {
   obj.set("frequency", bakedInputRuntime(info.schema, info.field.type, val));
@@ -4204,6 +4544,9 @@ type Query implements Node {
   """Get a single \`JournalEntry\`."""
   journalEntry(rowId: UUID!): JournalEntry
 
+  """Get a single \`FixedAsset\`."""
+  fixedAsset(rowId: UUID!): FixedAsset
+
   """Get a single \`RecurringTransaction\`."""
   recurringTransaction(rowId: UUID!): RecurringTransaction
 
@@ -4305,6 +4648,14 @@ type Query implements Node {
     """
     id: ID!
   ): JournalEntry
+
+  """Reads a single \`FixedAsset\` using its globally unique \`ID\`."""
+  fixedAssetById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`FixedAsset\`.
+    """
+    id: ID!
+  ): FixedAsset
 
   """Reads a single \`RecurringTransaction\` using its globally unique \`ID\`."""
   recurringTransactionById(
@@ -4743,6 +5094,40 @@ type Query implements Node {
     """The method to use when ordering \`JournalEntry\`."""
     orderBy: [JournalEntryOrderBy!] = [PRIMARY_KEY_ASC]
   ): JournalEntryConnection
+
+  """Reads and enables pagination through a set of \`FixedAsset\`."""
+  fixedAssets(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: FixedAssetCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: FixedAssetFilter
+
+    """The method to use when ordering \`FixedAsset\`."""
+    orderBy: [FixedAssetOrderBy!] = [PRIMARY_KEY_ASC]
+  ): FixedAssetConnection
 
   """Reads and enables pagination through a set of \`RecurringTransaction\`."""
   recurringTransactions(
@@ -5364,6 +5749,40 @@ type Book implements Node {
     """The method to use when ordering \`CategorizationRule\`."""
     orderBy: [CategorizationRuleOrderBy!] = [PRIMARY_KEY_ASC]
   ): CategorizationRuleConnection!
+
+  """Reads and enables pagination through a set of \`FixedAsset\`."""
+  fixedAssets(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: FixedAssetCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: FixedAssetFilter
+
+    """The method to use when ordering \`FixedAsset\`."""
+    orderBy: [FixedAssetOrderBy!] = [PRIMARY_KEY_ASC]
+  ): FixedAssetConnection!
 }
 
 enum BookType {
@@ -5859,6 +6278,12 @@ input BookFilter {
 
   """Some related \`categorizationRules\` exist."""
   categorizationRulesExist: Boolean
+
+  """Filter by the object’s \`fixedAssets\` relation."""
+  fixedAssets: BookToManyFixedAssetFilter
+
+  """Some related \`fixedAssets\` exist."""
+  fixedAssetsExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [BookFilter!]
@@ -6894,6 +7319,61 @@ input CategorizationRuleFilter {
 
   """Negates the expression."""
   not: CategorizationRuleFilter
+}
+
+"""
+A filter to be used against many \`FixedAsset\` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyFixedAssetFilter {
+  """
+  Every related \`FixedAsset\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: FixedAssetFilter
+
+  """
+  Some related \`FixedAsset\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: FixedAssetFilter
+
+  """
+  No related \`FixedAsset\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: FixedAssetFilter
+}
+
+"""
+A filter to be used against \`FixedAsset\` object types. All fields are combined with a logical ‘and.’
+"""
+input FixedAssetFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`bookId\` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s \`disposedAt\` field."""
+  disposedAt: StringFilter
+
+  """Filter by the object’s \`accumulatedDepreciationAccount\` relation."""
+  accumulatedDepreciationAccount: AccountFilter
+
+  """Filter by the object’s \`assetAccount\` relation."""
+  assetAccount: AccountFilter
+
+  """Filter by the object’s \`book\` relation."""
+  book: BookFilter
+
+  """Filter by the object’s \`depreciationExpenseAccount\` relation."""
+  depreciationExpenseAccount: AccountFilter
+
+  """Checks for all expressions in this list."""
+  and: [FixedAssetFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [FixedAssetFilter!]
+
+  """Negates the expression."""
+  not: FixedAssetFilter
 }
 
 """
@@ -8060,6 +8540,95 @@ enum CategorizationRuleOrderBy {
   MATCH_FIELD_DESC
 }
 
+"""A connection to a list of \`FixedAsset\` values."""
+type FixedAssetConnection {
+  """A list of \`FixedAsset\` objects."""
+  nodes: [FixedAsset]!
+
+  """
+  A list of edges which contains the \`FixedAsset\` and cursor to aid in pagination.
+  """
+  edges: [FixedAssetEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* \`FixedAsset\` you could get from the connection."""
+  totalCount: Int!
+}
+
+type FixedAsset implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  name: String!
+  description: String
+  assetAccountId: UUID!
+  depreciationExpenseAccountId: UUID!
+  accumulatedDepreciationAccountId: UUID!
+  acquisitionDate: String!
+  acquisitionCost: BigFloat!
+  salvageValue: BigFloat!
+  usefulLifeMonths: Int!
+  depreciationMethod: String!
+  macrsClass: String
+  disposedAt: String
+  disposalProceeds: BigFloat
+  createdAt: Datetime
+
+  """Reads a single \`Account\` that is related to this \`FixedAsset\`."""
+  accumulatedDepreciationAccount: Account
+
+  """Reads a single \`Account\` that is related to this \`FixedAsset\`."""
+  assetAccount: Account
+
+  """Reads a single \`Book\` that is related to this \`FixedAsset\`."""
+  book: Book
+
+  """Reads a single \`Account\` that is related to this \`FixedAsset\`."""
+  depreciationExpenseAccount: Account
+}
+
+"""A \`FixedAsset\` edge in the connection."""
+type FixedAssetEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`FixedAsset\` at the end of the edge."""
+  node: FixedAsset
+}
+
+"""
+A condition to be used against \`FixedAsset\` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input FixedAssetCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`bookId\` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s \`disposedAt\` field."""
+  disposedAt: String
+}
+
+"""Methods to use when ordering \`FixedAsset\`."""
+enum FixedAssetOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+  DISPOSED_AT_ASC
+  DISPOSED_AT_DESC
+}
+
 """A connection to a list of \`_DrizzleMigration\` values."""
 type _DrizzleMigrationConnection {
   """A list of \`_DrizzleMigration\` objects."""
@@ -8270,6 +8839,14 @@ type Mutation {
     """
     input: CreateJournalEntryInput!
   ): CreateJournalEntryPayload
+
+  """Creates a single \`FixedAsset\`."""
+  createFixedAsset(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateFixedAssetInput!
+  ): CreateFixedAssetPayload
 
   """Creates a single \`RecurringTransaction\`."""
   createRecurringTransaction(
@@ -8512,6 +9089,24 @@ type Mutation {
     """
     input: UpdateJournalEntryInput!
   ): UpdateJournalEntryPayload
+
+  """
+  Updates a single \`FixedAsset\` using its globally unique id and a patch.
+  """
+  updateFixedAssetById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateFixedAssetByIdInput!
+  ): UpdateFixedAssetPayload
+
+  """Updates a single \`FixedAsset\` using a unique key and a patch."""
+  updateFixedAsset(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateFixedAssetInput!
+  ): UpdateFixedAssetPayload
 
   """
   Updates a single \`RecurringTransaction\` using its globally unique id and a patch.
@@ -8776,6 +9371,22 @@ type Mutation {
     """
     input: DeleteJournalEntryInput!
   ): DeleteJournalEntryPayload
+
+  """Deletes a single \`FixedAsset\` using its globally unique id."""
+  deleteFixedAssetById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteFixedAssetByIdInput!
+  ): DeleteFixedAssetPayload
+
+  """Deletes a single \`FixedAsset\` using a unique key."""
+  deleteFixedAsset(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteFixedAssetInput!
+  ): DeleteFixedAssetPayload
 
   """Deletes a single \`RecurringTransaction\` using its globally unique id."""
   deleteRecurringTransactionById(
@@ -9412,6 +10023,61 @@ input JournalEntryInput {
   isReconciled: Boolean
   createdAt: Datetime
   updatedAt: Datetime
+}
+
+"""The output of our create \`FixedAsset\` mutation."""
+type CreateFixedAssetPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`FixedAsset\` that was created by this mutation."""
+  fixedAsset: FixedAsset
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`FixedAsset\`. May be used by Relay 1."""
+  fixedAssetEdge(
+    """The method to use when ordering \`FixedAsset\`."""
+    orderBy: [FixedAssetOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): FixedAssetEdge
+}
+
+"""All input for the create \`FixedAsset\` mutation."""
+input CreateFixedAssetInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`FixedAsset\` to be created by this mutation."""
+  fixedAsset: FixedAssetInput!
+}
+
+"""An input for mutations affecting \`FixedAsset\`"""
+input FixedAssetInput {
+  rowId: UUID
+  bookId: UUID!
+  name: String!
+  description: String
+  assetAccountId: UUID!
+  depreciationExpenseAccountId: UUID!
+  accumulatedDepreciationAccountId: UUID!
+  acquisitionDate: String!
+  acquisitionCost: BigFloat!
+  salvageValue: BigFloat
+  usefulLifeMonths: Int!
+  depreciationMethod: String!
+  macrsClass: String
+  disposedAt: String
+  disposalProceeds: BigFloat
+  createdAt: Datetime
 }
 
 """The output of our create \`RecurringTransaction\` mutation."""
@@ -10477,6 +11143,85 @@ input UpdateJournalEntryInput {
   patch: JournalEntryPatch!
 }
 
+"""The output of our update \`FixedAsset\` mutation."""
+type UpdateFixedAssetPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`FixedAsset\` that was updated by this mutation."""
+  fixedAsset: FixedAsset
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`FixedAsset\`. May be used by Relay 1."""
+  fixedAssetEdge(
+    """The method to use when ordering \`FixedAsset\`."""
+    orderBy: [FixedAssetOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): FixedAssetEdge
+}
+
+"""All input for the \`updateFixedAssetById\` mutation."""
+input UpdateFixedAssetByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`FixedAsset\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`FixedAsset\` being updated.
+  """
+  patch: FixedAssetPatch!
+}
+
+"""
+Represents an update to a \`FixedAsset\`. Fields that are set will be updated.
+"""
+input FixedAssetPatch {
+  rowId: UUID
+  bookId: UUID
+  name: String
+  description: String
+  assetAccountId: UUID
+  depreciationExpenseAccountId: UUID
+  accumulatedDepreciationAccountId: UUID
+  acquisitionDate: String
+  acquisitionCost: BigFloat
+  salvageValue: BigFloat
+  usefulLifeMonths: Int
+  depreciationMethod: String
+  macrsClass: String
+  disposedAt: String
+  disposalProceeds: BigFloat
+  createdAt: Datetime
+}
+
+"""All input for the \`updateFixedAsset\` mutation."""
+input UpdateFixedAssetInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`FixedAsset\` being updated.
+  """
+  patch: FixedAssetPatch!
+}
+
 """The output of our update \`RecurringTransaction\` mutation."""
 type UpdateRecurringTransactionPayload {
   """
@@ -11354,6 +12099,54 @@ input DeleteJournalEntryInput {
   rowId: UUID!
 }
 
+"""The output of our delete \`FixedAsset\` mutation."""
+type DeleteFixedAssetPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`FixedAsset\` that was deleted by this mutation."""
+  fixedAsset: FixedAsset
+  deletedFixedAssetId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`FixedAsset\`. May be used by Relay 1."""
+  fixedAssetEdge(
+    """The method to use when ordering \`FixedAsset\`."""
+    orderBy: [FixedAssetOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): FixedAssetEdge
+}
+
+"""All input for the \`deleteFixedAssetById\` mutation."""
+input DeleteFixedAssetByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`FixedAsset\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteFixedAsset\` mutation."""
+input DeleteFixedAssetInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete \`RecurringTransaction\` mutation."""
 type DeleteRecurringTransactionPayload {
   """
@@ -11811,6 +12604,32 @@ export const objects = {
           orderBy: applyOrderByArgToConnection
         }
       },
+      fixedAsset(_$root, {
+        $rowId
+      }) {
+        return resource_fixed_assetPgResource.get({
+          id: $rowId
+        });
+      },
+      fixedAssetById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_FixedAsset($nodeId);
+      },
+      fixedAssets: {
+        plan() {
+          return connection(resource_fixed_assetPgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query__drizzleMigrationsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       id($parent) {
         const specifier = nodeIdHandler_Query.plan($parent);
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_Query.codec.name].encode);
@@ -12093,6 +12912,18 @@ export const objects = {
       createDrizzleMigration: {
         plan(_, args) {
           const $insert = pgInsertSingle(resource___drizzle_migrationsPgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
+      createFixedAsset: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_fixed_assetPgResource);
           args.apply($insert);
           return object({
             result: $insert
@@ -12425,6 +13256,32 @@ export const objects = {
       deleteDrizzleMigrationById: {
         plan(_$root, args) {
           const $delete = pgDeleteSingle(resource___drizzle_migrationsPgResource, specFromArgs__DrizzleMigration(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteFixedAsset: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_fixed_assetPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteFixedAssetById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_fixed_assetPgResource, specFromArgs_FixedAsset(args));
           args.apply($delete);
           return object({
             result: $delete
@@ -12841,6 +13698,32 @@ export const objects = {
       updateDrizzleMigrationById: {
         plan(_$root, args) {
           const $update = pgUpdateSingle(resource___drizzle_migrationsPgResource, specFromArgs__DrizzleMigration(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateFixedAsset: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_fixed_assetPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateFixedAssetById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_fixed_assetPgResource, specFromArgs_FixedAsset(args));
           args.apply($update);
           return object({
             result: $update
@@ -13322,6 +14205,24 @@ export const objects = {
       fiscalYearStartMonth($record) {
         return $record.get("fiscal_year_start_month");
       },
+      fixedAssets: {
+        plan($record) {
+          const $records = resource_fixed_assetPgResource.find({
+            book_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query__drizzleMigrationsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       id($parent) {
         const specifier = nodeIdHandler_Book.plan($parent);
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_Book.codec.name].encode);
@@ -13639,6 +14540,15 @@ export const objects = {
       query: queryPlan
     }
   },
+  CreateFixedAssetPayload: {
+    assertStep: assertStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      fixedAsset: planCreatePayloadResult,
+      fixedAssetEdge: CreateFixedAssetPayload_fixedAssetEdgePlan,
+      query: queryPlan
+    }
+  },
   CreateJournalEntryPayload: {
     assertStep: assertStep,
     plans: {
@@ -13761,9 +14671,7 @@ export const objects = {
       cryptoAssetId($record) {
         return $record.get("crypto_asset_id");
       },
-      disposedAt($record) {
-        return $record.get("disposed_at");
-      },
+      disposedAt: CryptoLot_disposedAtPlan,
       id($parent) {
         const specifier = nodeIdHandler_CryptoLot.plan($parent);
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_CryptoLot.codec.name].encode);
@@ -13930,6 +14838,20 @@ export const objects = {
       query: queryPlan
     }
   },
+  DeleteFixedAssetPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedFixedAssetId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_FixedAsset.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      fixedAsset: planCreatePayloadResult,
+      fixedAssetEdge: CreateFixedAssetPayload_fixedAssetEdgePlan,
+      query: queryPlan
+    }
+  },
   DeleteJournalEntryPayload: {
     assertStep: ObjectStep,
     plans: {
@@ -14012,6 +14934,76 @@ export const objects = {
       query: queryPlan,
       savingsGoal: planCreatePayloadResult,
       savingsGoalEdge: CreateSavingsGoalPayload_savingsGoalEdgePlan
+    }
+  },
+  FixedAsset: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      accumulatedDepreciationAccount($record) {
+        return resource_accountPgResource.get({
+          id: $record.get("accumulated_depreciation_account_id")
+        });
+      },
+      accumulatedDepreciationAccountId($record) {
+        return $record.get("accumulated_depreciation_account_id");
+      },
+      acquisitionCost($record) {
+        return $record.get("acquisition_cost");
+      },
+      acquisitionDate($record) {
+        return $record.get("acquisition_date");
+      },
+      assetAccount($record) {
+        return resource_accountPgResource.get({
+          id: $record.get("asset_account_id")
+        });
+      },
+      assetAccountId($record) {
+        return $record.get("asset_account_id");
+      },
+      book: AccountMapping_bookPlan,
+      bookId: AccountMapping_bookIdPlan,
+      createdAt: _DrizzleMigration_createdAtPlan,
+      depreciationExpenseAccount($record) {
+        return resource_accountPgResource.get({
+          id: $record.get("depreciation_expense_account_id")
+        });
+      },
+      depreciationExpenseAccountId($record) {
+        return $record.get("depreciation_expense_account_id");
+      },
+      depreciationMethod($record) {
+        return $record.get("depreciation_method");
+      },
+      disposalProceeds($record) {
+        return $record.get("disposal_proceeds");
+      },
+      disposedAt: CryptoLot_disposedAtPlan,
+      id($parent) {
+        const specifier = nodeIdHandler_FixedAsset.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_FixedAsset.codec.name].encode);
+      },
+      macrsClass($record) {
+        return $record.get("macrs_class");
+      },
+      rowId: _DrizzleMigration_rowIdPlan,
+      salvageValue($record) {
+        return $record.get("salvage_value");
+      },
+      usefulLifeMonths($record) {
+        return $record.get("useful_life_months");
+      }
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of fixed_assetUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_fixed_assetPgResource.get(spec);
+    }
+  },
+  FixedAssetConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
     }
   },
   JournalEntry: {
@@ -14343,6 +15335,15 @@ export const objects = {
       _drizzleMigration: planCreatePayloadResult,
       _drizzleMigrationEdge: CreateDrizzleMigrationPayload__drizzleMigrationEdgePlan,
       clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan
+    }
+  },
+  UpdateFixedAssetPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      fixedAsset: planCreatePayloadResult,
+      fixedAssetEdge: CreateFixedAssetPayload_fixedAssetEdgePlan,
       query: queryPlan
     }
   },
@@ -14936,6 +15937,30 @@ export const inputObjects = {
           $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
         });
       },
+      fixedAssets($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: fixedAssetIdentifier,
+          alias: resource_fixed_assetPgResource.name,
+          localAttributes: registryConfig.pgRelations.book.fixedAssetsByTheirBookId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.book.fixedAssetsByTheirBookId.remoteAttributes
+        };
+        return $rel;
+      },
+      fixedAssetsExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: fixedAssetIdentifier,
+          alias: resource_fixed_assetPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.book.fixedAssetsByTheirBookId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.book.fixedAssetsByTheirBookId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
       journalEntries($where, value) {
         assertAllowed(value, "object");
         const $rel = $where.andPlan();
@@ -15135,6 +16160,13 @@ export const inputObjects = {
     }
   },
   BookToManyCryptoAssetFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
+  BookToManyFixedAssetFilter: {
     plans: {
       every: AccountToManyAccountFilter_everyApply,
       none: AccountToManyAccountFilter_noneApply,
@@ -15448,6 +16480,12 @@ export const inputObjects = {
       clientMutationId: applyClientMutationIdForCreate
     }
   },
+  CreateFixedAssetInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      fixedAsset: applyCreateFields
+    }
+  },
   CreateJournalEntryInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
@@ -15750,6 +16788,16 @@ export const inputObjects = {
       clientMutationId: applyClientMutationIdForCreate
     }
   },
+  DeleteFixedAssetByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteFixedAssetInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
   DeleteJournalEntryByIdInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate
@@ -15808,6 +16856,85 @@ export const inputObjects = {
   DeleteSavingsGoalInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  FixedAssetCondition: {
+    plans: {
+      bookId: AccountCondition_bookIdApply,
+      disposedAt($condition, val) {
+        return applyAttributeCondition("disposed_at", TYPES.text, $condition, val);
+      },
+      rowId: AccountCondition_rowIdApply
+    }
+  },
+  FixedAssetFilter: {
+    plans: {
+      accumulatedDepreciationAccount($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_accountPgResource, accountIdentifier, registryConfig.pgRelations.fixedAsset.accountByMyAccumulatedDepreciationAccountId.localAttributes, registryConfig.pgRelations.fixedAsset.accountByMyAccumulatedDepreciationAccountId.remoteAttributes, $where, value);
+      },
+      and: AccountFilter_andApply,
+      assetAccount($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_accountPgResource, accountIdentifier, registryConfig.pgRelations.fixedAsset.accountByMyAssetAccountId.localAttributes, registryConfig.pgRelations.fixedAsset.accountByMyAssetAccountId.remoteAttributes, $where, value);
+      },
+      book($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_bookPgResource, bookIdentifier, registryConfig.pgRelations.fixedAsset.bookByMyBookId.localAttributes, registryConfig.pgRelations.fixedAsset.bookByMyBookId.remoteAttributes, $where, value);
+      },
+      bookId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("bookId", "book_id", spec_fixedAsset.attributes.book_id, queryBuilder, value);
+      },
+      depreciationExpenseAccount($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_accountPgResource, accountIdentifier, registryConfig.pgRelations.fixedAsset.accountByMyDepreciationExpenseAccountId.localAttributes, registryConfig.pgRelations.fixedAsset.accountByMyDepreciationExpenseAccountId.remoteAttributes, $where, value);
+      },
+      disposedAt(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("disposedAt", "disposed_at", spec_fixedAsset.attributes.disposed_at, queryBuilder, value);
+      },
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_fixedAsset.attributes.id, queryBuilder, value);
+      }
+    }
+  },
+  FixedAssetInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      accumulatedDepreciationAccountId: FixedAssetInput_accumulatedDepreciationAccountIdApply,
+      acquisitionCost: FixedAssetInput_acquisitionCostApply,
+      acquisitionDate: FixedAssetInput_acquisitionDateApply,
+      assetAccountId: FixedAssetInput_assetAccountIdApply,
+      bookId: AccountMappingInput_bookIdApply,
+      createdAt: _DrizzleMigrationInput_createdAtApply,
+      depreciationExpenseAccountId: FixedAssetInput_depreciationExpenseAccountIdApply,
+      depreciationMethod: FixedAssetInput_depreciationMethodApply,
+      description: FixedAssetInput_descriptionApply,
+      disposalProceeds: FixedAssetInput_disposalProceedsApply,
+      disposedAt: CryptoLotInput_disposedAtApply,
+      macrsClass: FixedAssetInput_macrsClassApply,
+      name: SavingsGoalInput_nameApply,
+      rowId: _DrizzleMigrationInput_rowIdApply,
+      salvageValue: FixedAssetInput_salvageValueApply,
+      usefulLifeMonths: FixedAssetInput_usefulLifeMonthsApply
+    }
+  },
+  FixedAssetPatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      accumulatedDepreciationAccountId: FixedAssetInput_accumulatedDepreciationAccountIdApply,
+      acquisitionCost: FixedAssetInput_acquisitionCostApply,
+      acquisitionDate: FixedAssetInput_acquisitionDateApply,
+      assetAccountId: FixedAssetInput_assetAccountIdApply,
+      bookId: AccountMappingInput_bookIdApply,
+      createdAt: _DrizzleMigrationInput_createdAtApply,
+      depreciationExpenseAccountId: FixedAssetInput_depreciationExpenseAccountIdApply,
+      depreciationMethod: FixedAssetInput_depreciationMethodApply,
+      description: FixedAssetInput_descriptionApply,
+      disposalProceeds: FixedAssetInput_disposalProceedsApply,
+      disposedAt: CryptoLotInput_disposedAtApply,
+      macrsClass: FixedAssetInput_macrsClassApply,
+      name: SavingsGoalInput_nameApply,
+      rowId: _DrizzleMigrationInput_rowIdApply,
+      salvageValue: FixedAssetInput_salvageValueApply,
+      usefulLifeMonths: FixedAssetInput_usefulLifeMonthsApply
     }
   },
   IntFilter: {
@@ -16469,6 +17596,18 @@ export const inputObjects = {
       patch: applyCreateFields
     }
   },
+  UpdateFixedAssetByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateFixedAssetInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
   UpdateJournalEntryByIdInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
@@ -16991,6 +18130,44 @@ export const enums = {
       },
       PRIMARY_KEY_DESC(queryBuilder) {
         crypto_lotUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply
+    }
+  },
+  FixedAssetOrderBy: {
+    values: {
+      BOOK_ID_ASC: AccountOrderBy_BOOK_ID_ASCApply,
+      BOOK_ID_DESC: AccountOrderBy_BOOK_ID_DESCApply,
+      DISPOSED_AT_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "disposed_at",
+          direction: "ASC"
+        });
+      },
+      DISPOSED_AT_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "disposed_at",
+          direction: "DESC"
+        });
+      },
+      PRIMARY_KEY_ASC(queryBuilder) {
+        fixed_assetUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        fixed_assetUniques[0].attributes.forEach(attributeName => {
           queryBuilder.orderBy({
             attribute: attributeName,
             direction: "DESC"
