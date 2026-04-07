@@ -30,12 +30,14 @@ import {
   saveNetWorthSnapshot,
 } from "lib/netWorth/netWorthService";
 import ofxRoutes from "lib/ofx/ofxRoutes";
+import { payrollCallbackRoute, payrollRoutes } from "lib/payroll";
 import plaidRoutes from "lib/plaid/plaidRoutes";
 import startScheduledSync from "lib/plaid/scheduledSync";
 import {
   generateBalanceSheet,
   generateCashFlow,
   generateGeneralLedger,
+  generatePayrollSummary,
   generateProfitAndLoss,
   generateSalesTaxReport,
   generateTrialBalance,
@@ -109,6 +111,7 @@ const app = new Elysia()
   })
   // Public (no auth)
   .use(mantleWebhook)
+  .use(payrollCallbackRoute)
   // GraphQL (has its own @envelop/generic-auth plugin)
   .use(
     yoga({
@@ -148,6 +151,7 @@ const app = new Elysia()
   .use(tagRoutes)
   .use(taxJurisdictionRoutes)
   .use(vendorRoutes)
+  .use(payrollRoutes)
   // Report REST endpoints
   .get("/api/reports/profit-and-loss", async ({ query }) => {
     const { bookId, startDate, endDate } = query;
@@ -240,6 +244,19 @@ const app = new Elysia()
       bookId,
       year: Number.parseInt(year, 10),
       jurisdictionId: query.jurisdictionId || undefined,
+    });
+  })
+  .get("/api/reports/payroll", async ({ query }) => {
+    const { bookId, year } = query;
+    if (!bookId || !year) {
+      return new Response(
+        JSON.stringify({ error: "bookId and year are required" }),
+        { status: 400, headers: { "Content-Type": "application/json" } },
+      );
+    }
+    return generatePayrollSummary({
+      bookId,
+      year: Number.parseInt(year, 10),
     });
   })
   .get("/api/budgets/tracking", async ({ query }) => {

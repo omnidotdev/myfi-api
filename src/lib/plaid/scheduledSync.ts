@@ -1,7 +1,8 @@
 import { eq } from "drizzle-orm";
 
 import { dbPool } from "lib/db/db";
-import { connectedAccountTable } from "lib/db/schema";
+import { connectedAccountTable, payrollConnectionTable } from "lib/db/schema";
+import { syncPayroll } from "lib/payroll";
 import syncTransactions from "./syncTransactions";
 
 /**
@@ -69,9 +70,26 @@ const syncAllAccounts = async () => {
     }
   }
 
-  console.info(
-    `[ScheduledSync] Complete: ${synced} synced, ${errors} errors`,
-  );
+  // Sync payroll connections
+  const payrollConnections = await dbPool
+    .select()
+    .from(payrollConnectionTable)
+    .where(eq(payrollConnectionTable.status, "active"));
+
+  for (const connection of payrollConnections) {
+    try {
+      await syncPayroll(connection);
+      synced++;
+    } catch (err) {
+      errors++;
+      console.error(
+        `[ScheduledSync] Failed to sync payroll ${connection.id}:`,
+        err,
+      );
+    }
+  }
+
+  console.info(`[ScheduledSync] Complete: ${synced} synced, ${errors} errors`);
 };
 
 /**
