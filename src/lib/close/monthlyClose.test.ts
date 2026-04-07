@@ -19,6 +19,14 @@ mock.module("lib/netWorth/netWorthService", () => ({
   saveNetWorthSnapshot: mockSaveSnapshot,
 }));
 
+// Mock postDepreciation
+const mockPostDepreciation = mock(() =>
+  Promise.resolve({ postedCount: 0, skippedCount: 0 }),
+);
+mock.module("lib/depreciation", () => ({
+  postDepreciation: mockPostDepreciation,
+}));
+
 mock.module("lib/db/db", () => ({ dbPool: mockDbPool }));
 
 const { default: runMonthlyClose } = await import("./monthlyClose");
@@ -46,6 +54,7 @@ describe("runMonthlyClose", () => {
     resetDbMock();
     mockSyncTransactions.mockClear();
     mockSaveSnapshot.mockClear();
+    mockPostDepreciation.mockClear();
   });
 
   test("skips already-closed periods", async () => {

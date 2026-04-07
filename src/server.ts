@@ -45,6 +45,7 @@ import budgetRoutes from "lib/routes/budgetRoutes";
 import categorizationRuleRoutes from "lib/routes/categorizationRuleRoutes";
 import connectionRoutes from "lib/routes/connectionRoutes";
 import dashboardRoutes from "lib/routes/dashboardRoutes";
+import fixedAssetRoutes from "lib/routes/fixedAssetRoutes";
 import journalRoutes from "lib/routes/journalRoutes";
 import mappingRoutes from "lib/routes/mappingRoutes";
 import periodRoutes from "lib/routes/periodRoutes";
@@ -135,6 +136,7 @@ const app = new Elysia()
   .use(mappingRoutes)
   .use(categorizationRuleRoutes)
   .use(dashboardRoutes)
+  .use(fixedAssetRoutes)
   .use(importRoutes)
   .use(ofxRoutes)
   .use(periodRoutes)

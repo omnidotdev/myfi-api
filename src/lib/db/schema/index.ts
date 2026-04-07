@@ -7,6 +7,7 @@ export * from "./categorizationRule.table";
 export * from "./connectedAccount.table";
 export * from "./cryptoAsset.table";
 export * from "./cryptoLot.table";
+export * from "./fixedAsset.table";
 export * from "./journalEntry.table";
 export * from "./journalLine.table";
 export * from "./netWorthSnapshot.table";

@@ -10,6 +10,7 @@ import {
   journalLineTable,
   reconciliationQueueTable,
 } from "lib/db/schema";
+import { postDepreciation } from "lib/depreciation";
 import { saveNetWorthSnapshot } from "lib/netWorth/netWorthService";
 import syncTransactions from "lib/plaid/syncTransactions";
 
@@ -103,6 +104,21 @@ const runMonthlyClose = async (): Promise<CloseResult[]> => {
           err,
         );
       }
+    }
+
+    // Post depreciation entries for the period
+    try {
+      const depResult = await postDepreciation(book.id, year, month);
+      if (depResult.postedCount > 0) {
+        console.info(
+          `[MonthlyClose] Posted ${depResult.postedCount} depreciation entries for "${book.name}"`,
+        );
+      }
+    } catch (err) {
+      console.error(
+        `[MonthlyClose] Failed to post depreciation for "${book.name}":`,
+        err,
+      );
     }
 
     // Check for pending review items in this period
