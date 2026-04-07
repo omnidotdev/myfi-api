@@ -1,5 +1,6 @@
 import { and, eq } from "drizzle-orm";
 
+import { emitAudit } from "lib/audit";
 import { dbPool } from "lib/db/db";
 import {
   accountMappingTable,
@@ -33,6 +34,9 @@ const SUPPORTED_EVENTS = [
   "invoice.sent",
   "invoice.paid",
   "invoice.void",
+  "bill.created",
+  "bill.paid",
+  "bill.void",
   "inventory.adjustment",
 ] as const;
 
@@ -54,6 +58,9 @@ const buildMemo = (event: SupportedEvent, data: MantleEventBody["data"]) => {
     "invoice.sent": `Invoice ${data.referenceId} sent`,
     "invoice.paid": `Payment received for invoice ${data.referenceId}`,
     "invoice.void": `Invoice ${data.referenceId} voided (reversal)`,
+    "bill.created": `Bill ${data.referenceId} received`,
+    "bill.paid": `Payment for bill ${data.referenceId}`,
+    "bill.void": `Bill ${data.referenceId} voided (reversal)`,
     "inventory.adjustment": `Inventory adjustment ${data.referenceId}`,
   };
 
@@ -142,6 +149,7 @@ const handleMantleEvent = async (
         memo,
         source: "mantle_sync",
         sourceReferenceId: data.referenceId,
+        vendorId: (data.metadata?.vendorId as string) ?? null,
         isReviewed: false,
         isReconciled: false,
       } satisfies InferInsertModel<typeof journalEntryTable>)
@@ -173,6 +181,14 @@ const handleMantleEvent = async (
     } satisfies InferInsertModel<typeof reconciliationQueueTable>);
 
     return entry;
+  });
+
+  emitAudit({
+    type: `myfi.mantle_event.${event}`,
+    organizationId: data.organizationId,
+    actor: { id: "system", name: "Mantle Sync" },
+    resource: { type: "journal_entry", id: result.id },
+    data: { event, referenceId: data.referenceId, amount: data.amount },
   });
 
   return {
