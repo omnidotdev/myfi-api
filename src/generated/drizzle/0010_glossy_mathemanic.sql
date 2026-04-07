@@ -1,6 +1,6 @@
 CREATE TABLE "book_access" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"book_id" text NOT NULL,
+	"book_id" uuid NOT NULL,
 	"user_id" text NOT NULL,
 	"role" text NOT NULL,
 	"invited_by" text,

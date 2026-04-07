@@ -4,6 +4,7 @@ import {
   text,
   timestamp,
   uniqueIndex,
+  uuid,
 } from "drizzle-orm/pg-core";
 
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
@@ -15,7 +16,7 @@ export const bookAccessTable = pgTable(
   "book_access",
   {
     id: generateDefaultId(),
-    bookId: text("book_id")
+    bookId: uuid("book_id")
       .notNull()
       .references(() => bookTable.id, { onDelete: "cascade" }),
     userId: text("user_id").notNull(),
