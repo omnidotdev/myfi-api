@@ -37,6 +37,7 @@ import {
   generateCashFlow,
   generateGeneralLedger,
   generateProfitAndLoss,
+  generateSalesTaxReport,
   generateTrialBalance,
 } from "lib/reports";
 import accountRoutes from "lib/routes/accountRoutes";
@@ -52,6 +53,7 @@ import periodRoutes from "lib/routes/periodRoutes";
 import reconciliationRoutes from "lib/routes/reconciliationRoutes";
 import savingsRoutes from "lib/routes/savingsRoutes";
 import tagRoutes from "lib/routes/tagRoutes";
+import taxJurisdictionRoutes from "lib/routes/taxJurisdictionRoutes";
 import vendorRoutes from "lib/routes/vendorRoutes";
 import {
   detectRecurringTransactions,
@@ -144,6 +146,7 @@ const app = new Elysia()
   .use(ofxRoutes)
   .use(periodRoutes)
   .use(tagRoutes)
+  .use(taxJurisdictionRoutes)
   .use(vendorRoutes)
   // Report REST endpoints
   .get("/api/reports/profit-and-loss", async ({ query }) => {
@@ -223,6 +226,20 @@ const app = new Elysia()
       startDate,
       endDate,
       tagIds,
+    });
+  })
+  .get("/api/reports/sales-tax", async ({ query }) => {
+    const { bookId, year } = query;
+    if (!bookId || !year) {
+      return new Response(
+        JSON.stringify({ error: "bookId and year are required" }),
+        { status: 400, headers: { "Content-Type": "application/json" } },
+      );
+    }
+    return generateSalesTaxReport({
+      bookId,
+      year: Number.parseInt(year, 10),
+      jurisdictionId: query.jurisdictionId || undefined,
     });
   })
   .get("/api/budgets/tracking", async ({ query }) => {
