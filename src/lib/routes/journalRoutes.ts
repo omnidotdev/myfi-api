@@ -171,6 +171,110 @@ const journalRoutes = new Elysia({ prefix: "/api/journal-entries" })
       }),
     },
   )
+  .patch(
+    "/:id",
+    async ({ params, body, set }) => {
+      const { id } = params;
+
+      const [existing] = await dbPool
+        .select()
+        .from(journalEntryTable)
+        .where(eq(journalEntryTable.id, id));
+
+      if (!existing) {
+        set.status = 404;
+        return { error: "Journal entry not found" };
+      }
+
+      const effectiveDate = body.date ?? existing.date;
+
+      if (await isPeriodLocked(existing.bookId, effectiveDate)) {
+        set.status = 409;
+        return { error: "Cannot update entry in a closed period" };
+      }
+
+      const entry = await dbPool.transaction(async (tx) => {
+        // Build update payload from provided fields
+        const updates: Partial<InsertJournalEntry> = {};
+        if (body.date !== undefined) updates.date = body.date;
+        if (body.memo !== undefined) updates.memo = body.memo ?? null;
+        if (body.vendorId !== undefined) updates.vendorId = body.vendorId;
+
+        let updated = existing;
+
+        if (Object.keys(updates).length > 0) {
+          const [row] = await tx
+            .update(journalEntryTable)
+            .set(updates)
+            .where(eq(journalEntryTable.id, id))
+            .returning();
+
+          updated = row;
+        }
+
+        let lines: unknown[] = [];
+
+        if (body.lines) {
+          // Delete existing lines, then insert new ones
+          await tx
+            .delete(journalLineTable)
+            .where(eq(journalLineTable.journalEntryId, id));
+
+          const lineRows = body.lines.map((line) => ({
+            journalEntryId: id,
+            accountId: line.accountId,
+            debit: line.debit ?? "0",
+            credit: line.credit ?? "0",
+            memo: line.memo ?? null,
+          }));
+
+          lines = await tx
+            .insert(journalLineTable)
+            .values(lineRows)
+            .returning();
+        }
+
+        return { ...updated, lines };
+      });
+
+      emitAudit({
+        type: "myfi.journal_entry.updated",
+        organizationId: existing.bookId,
+        actor: { id: "unknown" },
+        resource: {
+          type: "journal_entry",
+          id,
+          name: entry.memo ?? undefined,
+        },
+        data: {
+          bookId: existing.bookId,
+          updatedFields: Object.keys(body).filter(
+            (k) => body[k as keyof typeof body] !== undefined,
+          ),
+        },
+      });
+
+      return { entry };
+    },
+    {
+      params: t.Object({ id: t.String() }),
+      body: t.Object({
+        date: t.Optional(t.String()),
+        memo: t.Optional(t.String()),
+        vendorId: t.Optional(t.Nullable(t.String())),
+        lines: t.Optional(
+          t.Array(
+            t.Object({
+              accountId: t.String(),
+              debit: t.Optional(t.String()),
+              credit: t.Optional(t.String()),
+              memo: t.Optional(t.String()),
+            }),
+          ),
+        ),
+      }),
+    },
+  )
   .delete(
     "/:id",
     async ({ params, set }) => {
