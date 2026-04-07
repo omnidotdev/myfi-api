@@ -20,8 +20,7 @@ const baseEvent = {
 const getEmitArg = () =>
   (mockEmit.mock.calls[0] as unknown[])[0] as Record<string, unknown>;
 
-const getEmitData = () =>
-  (getEmitArg().data ?? {}) as Record<string, unknown>;
+const getEmitData = () => (getEmitArg().data ?? {}) as Record<string, unknown>;
 
 describe("emitAudit", () => {
   beforeEach(() => {
