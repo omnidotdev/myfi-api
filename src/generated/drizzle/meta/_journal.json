@@ -43,6 +43,13 @@
       "when": 1775530919413,
       "tag": "0005_flimsy_triton",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1775533784287,
+      "tag": "0006_supreme_bullseye",
+      "breakpoints": true
     }
   ]
 }

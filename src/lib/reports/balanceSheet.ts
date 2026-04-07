@@ -1,10 +1,11 @@
-import { and, eq, lte, sql } from "drizzle-orm";
+import { and, eq, inArray, lte, sql } from "drizzle-orm";
 
 import { dbPool } from "lib/db/db";
 import {
   accountTable,
   journalEntryTable,
   journalLineTable,
+  journalLineTagTable,
 } from "lib/db/schema";
 
 type BalanceSheetLineItem = {
@@ -38,10 +39,11 @@ type BalanceSheetReport = {
 const generateBalanceSheet = async (params: {
   bookId: string;
   asOfDate: string;
+  tagIds?: string[];
 }): Promise<BalanceSheetReport> => {
-  const { bookId, asOfDate } = params;
+  const { bookId, asOfDate, tagIds } = params;
 
-  const results = await dbPool
+  let query = dbPool
     .select({
       accountId: accountTable.id,
       accountCode: accountTable.code,
@@ -58,11 +60,22 @@ const generateBalanceSheet = async (params: {
       eq(journalLineTable.journalEntryId, journalEntryTable.id),
     )
     .innerJoin(accountTable, eq(journalLineTable.accountId, accountTable.id))
+    .$dynamic();
+
+  if (tagIds?.length) {
+    query = query.innerJoin(
+      journalLineTagTable,
+      eq(journalLineTagTable.journalLineId, journalLineTable.id),
+    );
+  }
+
+  const results = await query
     .where(
       and(
         eq(journalEntryTable.bookId, bookId),
         lte(journalEntryTable.date, asOfDate),
         sql`${accountTable.type} in ('asset', 'liability', 'equity')`,
+        tagIds?.length ? inArray(journalLineTagTable.tagId, tagIds) : undefined,
       ),
     )
     .groupBy(

@@ -57,6 +57,7 @@ describe("matchRule", () => {
       creditAccountId: "credit-1",
       confidence: 0.95,
       ruleId: "rule-1",
+      tagId: null,
     });
   });
 

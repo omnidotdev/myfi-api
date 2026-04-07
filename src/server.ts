@@ -51,6 +51,7 @@ import mappingRoutes from "lib/routes/mappingRoutes";
 import periodRoutes from "lib/routes/periodRoutes";
 import reconciliationRoutes from "lib/routes/reconciliationRoutes";
 import savingsRoutes from "lib/routes/savingsRoutes";
+import tagRoutes from "lib/routes/tagRoutes";
 import {
   detectRecurringTransactions,
   getSpendingByCategory,
@@ -140,6 +141,7 @@ const app = new Elysia()
   .use(importRoutes)
   .use(ofxRoutes)
   .use(periodRoutes)
+  .use(tagRoutes)
   // Report REST endpoints
   .get("/api/reports/profit-and-loss", async ({ query }) => {
     const { bookId, startDate, endDate } = query;
@@ -151,7 +153,10 @@ const app = new Elysia()
         { status: 400, headers: { "Content-Type": "application/json" } },
       );
     }
-    return generateProfitAndLoss({ bookId, startDate, endDate });
+    const tagIds = query.tagIds
+      ? query.tagIds.split(",").filter(Boolean)
+      : undefined;
+    return generateProfitAndLoss({ bookId, startDate, endDate, tagIds });
   })
   .get("/api/reports/balance-sheet", async ({ query }) => {
     const { bookId, asOfDate } = query;
@@ -161,7 +166,10 @@ const app = new Elysia()
         { status: 400, headers: { "Content-Type": "application/json" } },
       );
     }
-    return generateBalanceSheet({ bookId, asOfDate });
+    const tagIds = query.tagIds
+      ? query.tagIds.split(",").filter(Boolean)
+      : undefined;
+    return generateBalanceSheet({ bookId, asOfDate, tagIds });
   })
   .get("/api/reports/trial-balance", async ({ query }) => {
     const { bookId, startDate, endDate } = query;
@@ -173,7 +181,10 @@ const app = new Elysia()
         { status: 400, headers: { "Content-Type": "application/json" } },
       );
     }
-    return generateTrialBalance({ bookId, startDate, endDate });
+    const tagIds = query.tagIds
+      ? query.tagIds.split(",").filter(Boolean)
+      : undefined;
+    return generateTrialBalance({ bookId, startDate, endDate, tagIds });
   })
   .get("/api/reports/cash-flow", async ({ query }) => {
     const { bookId, startDate, endDate } = query;
@@ -185,7 +196,10 @@ const app = new Elysia()
         { status: 400, headers: { "Content-Type": "application/json" } },
       );
     }
-    return generateCashFlow({ bookId, startDate, endDate });
+    const tagIds = query.tagIds
+      ? query.tagIds.split(",").filter(Boolean)
+      : undefined;
+    return generateCashFlow({ bookId, startDate, endDate, tagIds });
   })
   .get("/api/reports/general-ledger", async ({ query }) => {
     const { bookId, accountId, startDate, endDate } = query;
@@ -197,7 +211,16 @@ const app = new Elysia()
         { status: 400, headers: { "Content-Type": "application/json" } },
       );
     }
-    return generateGeneralLedger({ bookId, accountId, startDate, endDate });
+    const tagIds = query.tagIds
+      ? query.tagIds.split(",").filter(Boolean)
+      : undefined;
+    return generateGeneralLedger({
+      bookId,
+      accountId,
+      startDate,
+      endDate,
+      tagIds,
+    });
   })
   .get("/api/budgets/tracking", async ({ query }) => {
     const { bookId, period } = query;

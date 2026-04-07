@@ -18,6 +18,7 @@ interface CategorizationResult {
   source: "rule" | "llm";
   reasoning?: string;
   ruleId?: string;
+  tagId?: string | null;
 }
 
 /**
@@ -41,6 +42,7 @@ const categorize = async (
       confidence: ruleMatch.confidence,
       source: "rule",
       ruleId: ruleMatch.ruleId,
+      tagId: ruleMatch.tagId,
     };
   }
 

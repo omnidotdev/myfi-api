@@ -1,10 +1,11 @@
-import { and, asc, between, eq, lt, sql } from "drizzle-orm";
+import { and, asc, between, eq, inArray, lt, sql } from "drizzle-orm";
 
 import { dbPool } from "lib/db/db";
 import {
   accountTable,
   journalEntryTable,
   journalLineTable,
+  journalLineTagTable,
 } from "lib/db/schema";
 
 type GeneralLedgerEntry = {
@@ -40,8 +41,9 @@ const computeOpeningBalance = async (
   accountId: string,
   accountType: string,
   beforeDate: string,
+  tagIds?: string[],
 ): Promise<number> => {
-  const [result] = await dbPool
+  let query = dbPool
     .select({
       debitTotal: sql<string>`coalesce(sum(${journalLineTable.debit}), 0)`,
       creditTotal: sql<string>`coalesce(sum(${journalLineTable.credit}), 0)`,
@@ -51,13 +53,23 @@ const computeOpeningBalance = async (
       journalEntryTable,
       eq(journalLineTable.journalEntryId, journalEntryTable.id),
     )
-    .where(
-      and(
-        eq(journalEntryTable.bookId, bookId),
-        eq(journalLineTable.accountId, accountId),
-        lt(journalEntryTable.date, beforeDate),
-      ),
+    .$dynamic();
+
+  if (tagIds?.length) {
+    query = query.innerJoin(
+      journalLineTagTable,
+      eq(journalLineTagTable.journalLineId, journalLineTable.id),
     );
+  }
+
+  const [result] = await query.where(
+    and(
+      eq(journalEntryTable.bookId, bookId),
+      eq(journalLineTable.accountId, accountId),
+      lt(journalEntryTable.date, beforeDate),
+      tagIds?.length ? inArray(journalLineTagTable.tagId, tagIds) : undefined,
+    ),
+  );
 
   if (!result) return 0;
 
@@ -81,8 +93,9 @@ const generateGeneralLedger = async (params: {
   accountId: string;
   startDate: string;
   endDate: string;
+  tagIds?: string[];
 }): Promise<GeneralLedgerReport> => {
-  const { bookId, accountId, startDate, endDate } = params;
+  const { bookId, accountId, startDate, endDate, tagIds } = params;
 
   // Fetch the account details
   const [account] = await dbPool
@@ -119,10 +132,11 @@ const generateGeneralLedger = async (params: {
     accountId,
     account.type,
     startDate,
+    tagIds,
   );
 
   // Fetch journal lines within the date range for this account
-  const results = await dbPool
+  let entriesQuery = dbPool
     .select({
       date: journalEntryTable.date,
       entryMemo: journalEntryTable.memo,
@@ -136,11 +150,22 @@ const generateGeneralLedger = async (params: {
       journalEntryTable,
       eq(journalLineTable.journalEntryId, journalEntryTable.id),
     )
+    .$dynamic();
+
+  if (tagIds?.length) {
+    entriesQuery = entriesQuery.innerJoin(
+      journalLineTagTable,
+      eq(journalLineTagTable.journalLineId, journalLineTable.id),
+    );
+  }
+
+  const results = await entriesQuery
     .where(
       and(
         eq(journalEntryTable.bookId, bookId),
         eq(journalLineTable.accountId, accountId),
         between(journalEntryTable.date, startDate, endDate),
+        tagIds?.length ? inArray(journalLineTagTable.tagId, tagIds) : undefined,
       ),
     )
     .orderBy(asc(journalEntryTable.date));

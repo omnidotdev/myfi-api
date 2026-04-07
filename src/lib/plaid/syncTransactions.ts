@@ -8,6 +8,7 @@ import {
   connectedAccountTable,
   journalEntryTable,
   journalLineTable,
+  journalLineTagTable,
   reconciliationQueueTable,
 } from "lib/db/schema";
 import { decryptToken } from "lib/encryption/tokenEncryption";
@@ -226,20 +227,33 @@ const syncTransactions = async (
 
       // Only create journal lines when we have categorized accounts
       if (debitAccountId && creditAccountId) {
-        await dbPool.insert(journalLineTable).values([
-          {
-            journalEntryId: entry.id,
-            accountId: debitAccountId,
-            debit: amount.toFixed(4),
-            credit: "0.0000",
-          },
-          {
-            journalEntryId: entry.id,
-            accountId: creditAccountId,
-            debit: "0.0000",
-            credit: amount.toFixed(4),
-          },
-        ]);
+        const insertedLines = await dbPool
+          .insert(journalLineTable)
+          .values([
+            {
+              journalEntryId: entry.id,
+              accountId: debitAccountId,
+              debit: amount.toFixed(4),
+              credit: "0.0000",
+            },
+            {
+              journalEntryId: entry.id,
+              accountId: creditAccountId,
+              debit: "0.0000",
+              credit: amount.toFixed(4),
+            },
+          ])
+          .returning();
+
+        // Auto-tag journal lines if the matched rule has a tag
+        if (catResult?.tagId && insertedLines.length > 0) {
+          await dbPool.insert(journalLineTagTable).values(
+            insertedLines.map((line) => ({
+              journalLineId: line.id,
+              tagId: catResult.tagId!,
+            })),
+          );
+        }
       }
 
       await dbPool.insert(reconciliationQueueTable).values({

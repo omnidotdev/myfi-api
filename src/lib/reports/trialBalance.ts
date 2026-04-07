@@ -1,10 +1,11 @@
-import { and, between, eq, sql } from "drizzle-orm";
+import { and, between, eq, inArray, sql } from "drizzle-orm";
 
 import { dbPool } from "lib/db/db";
 import {
   accountTable,
   journalEntryTable,
   journalLineTable,
+  journalLineTagTable,
 } from "lib/db/schema";
 
 type TrialBalanceLineItem = {
@@ -37,10 +38,11 @@ const generateTrialBalance = async (params: {
   bookId: string;
   startDate: string;
   endDate: string;
+  tagIds?: string[];
 }): Promise<TrialBalanceReport> => {
-  const { bookId, startDate, endDate } = params;
+  const { bookId, startDate, endDate, tagIds } = params;
 
-  const results = await dbPool
+  let query = dbPool
     .select({
       accountId: accountTable.id,
       accountCode: accountTable.code,
@@ -56,10 +58,21 @@ const generateTrialBalance = async (params: {
       eq(journalLineTable.journalEntryId, journalEntryTable.id),
     )
     .innerJoin(accountTable, eq(journalLineTable.accountId, accountTable.id))
+    .$dynamic();
+
+  if (tagIds?.length) {
+    query = query.innerJoin(
+      journalLineTagTable,
+      eq(journalLineTagTable.journalLineId, journalLineTable.id),
+    );
+  }
+
+  const results = await query
     .where(
       and(
         eq(journalEntryTable.bookId, bookId),
         between(journalEntryTable.date, startDate, endDate),
+        tagIds?.length ? inArray(journalLineTagTable.tagId, tagIds) : undefined,
       ),
     )
     .groupBy(

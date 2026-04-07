@@ -62,6 +62,7 @@ const matchRule = async (
   creditAccountId: string;
   confidence: number;
   ruleId: string;
+  tagId: string | null;
 } | null> => {
   const rules = await dbPool
     .select()
@@ -99,6 +100,7 @@ const matchRule = async (
       creditAccountId: rule.creditAccountId,
       confidence,
       ruleId: rule.id,
+      tagId: rule.tagId ?? null,
     };
   }
 

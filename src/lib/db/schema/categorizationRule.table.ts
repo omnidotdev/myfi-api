@@ -12,6 +12,7 @@ import {
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 import { accountTable } from "./account.table";
 import { bookTable } from "./book.table";
+import { tagTable } from "./tag.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
@@ -34,6 +35,7 @@ export const categorizationRuleTable = pgTable(
     creditAccountId: uuid("credit_account_id")
       .notNull()
       .references(() => accountTable.id),
+    tagId: uuid("tag_id").references(() => tagTable.id),
     confidence: numeric({ precision: 3, scale: 2 }).notNull().default("1.00"),
     priority: integer().notNull().default(0),
     hitCount: integer("hit_count").notNull().default(0),
