@@ -1189,6 +1189,170 @@ const spec_budget = {
   executor: executor
 };
 const budgetCodec = recordCodec(spec_budget);
+const vendorIdentifier = sql.identifier("public", "vendor");
+const spec_vendor = {
+  name: "vendor",
+  identifier: vendorIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    name: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    business_name: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    tax_id_type: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    tax_id: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    address: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    city: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    state: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    zip: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    email: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    is_1099_eligible: {
+      codec: TYPES.boolean,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    threshold: {
+      codec: TYPES.numeric,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "639772",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "vendor"
+    }
+  },
+  executor: executor
+};
+const vendorCodec = recordCodec(spec_vendor);
 const cryptoAssetIdentifier = sql.identifier("public", "crypto_asset");
 const costBasisMethodCodec = enumCodec({
   name: "costBasisMethod",
@@ -1459,6 +1623,16 @@ const spec_journalEntry = {
     updated_at: {
       codec: TYPES.timestamptz,
       hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    vendor_id: {
+      codec: TYPES.uuid,
       extensions: {
         __proto__: null,
         canSelect: true,
@@ -2797,6 +2971,29 @@ const budget_resourceOptionsConfig = {
   },
   uniques: budgetUniques
 };
+const vendorUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const vendor_resourceOptionsConfig = {
+  executor: executor,
+  name: "vendor",
+  identifier: "main.public.vendor",
+  from: vendorIdentifier,
+  codec: vendorCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "vendor"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: vendorUniques
+};
 const crypto_assetUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -3010,6 +3207,7 @@ const registryConfig = {
     bookType: bookTypeCodec,
     budget: budgetCodec,
     budgetPeriod: budgetPeriodCodec,
+    vendor: vendorCodec,
     cryptoAsset: cryptoAssetCodec,
     costBasisMethod: costBasisMethodCodec,
     journalEntry: journalEntryCodec,
@@ -3059,6 +3257,7 @@ const registryConfig = {
     crypto_lot: crypto_lot_resourceOptionsConfig,
     book: book_resourceOptionsConfig,
     budget: budget_resourceOptionsConfig,
+    vendor: vendor_resourceOptionsConfig,
     crypto_asset: crypto_asset_resourceOptionsConfig,
     journal_entry: journal_entry_resourceOptionsConfig,
     categorization_rule: categorization_rule_resourceOptionsConfig,
@@ -3384,6 +3583,13 @@ const registryConfig = {
         localAttributes: ["id"],
         remoteAttributes: ["book_id"],
         isReferencee: true
+      },
+      vendorsByTheirBookId: {
+        localCodec: bookCodec,
+        remoteResourceOptions: vendor_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["book_id"],
+        isReferencee: true
       }
     },
     budget: {
@@ -3522,6 +3728,13 @@ const registryConfig = {
         localCodec: journalEntryCodec,
         remoteResourceOptions: book_resourceOptionsConfig,
         localAttributes: ["book_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      vendorByMyVendorId: {
+        localCodec: journalEntryCodec,
+        remoteResourceOptions: vendor_resourceOptionsConfig,
+        localAttributes: ["vendor_id"],
         remoteAttributes: ["id"],
         isUnique: true
       },
@@ -3722,6 +3935,27 @@ const registryConfig = {
         remoteAttributes: ["tag_group_id"],
         isReferencee: true
       }
+    },
+    vendor: {
+      __proto__: null,
+      bookByMyBookId: {
+        localCodec: vendorCodec,
+        remoteResourceOptions: book_resourceOptionsConfig,
+        localAttributes: ["book_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      journalEntriesByTheirVendorId: {
+        localCodec: vendorCodec,
+        remoteResourceOptions: journal_entry_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["vendor_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
+      }
     }
   }
 };
@@ -3738,6 +3972,7 @@ const resource_accounting_periodPgResource = registry.pgResources["accounting_pe
 const resource_crypto_lotPgResource = registry.pgResources["crypto_lot"];
 const resource_bookPgResource = registry.pgResources["book"];
 const resource_budgetPgResource = registry.pgResources["budget"];
+const resource_vendorPgResource = registry.pgResources["vendor"];
 const resource_crypto_assetPgResource = registry.pgResources["crypto_asset"];
 const resource_journal_entryPgResource = registry.pgResources["journal_entry"];
 const resource_categorization_rulePgResource = registry.pgResources["categorization_rule"];
@@ -3922,6 +4157,17 @@ const nodeFetcher_Budget = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Budget));
   return nodeIdHandler_Budget.get(nodeIdHandler_Budget.getSpec($decoded));
 };
+const nodeIdHandler_Vendor = makeTableNodeIdHandler({
+  typeName: "Vendor",
+  identifier: "Vendor",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_vendorPgResource,
+  pk: vendorUniques[0].attributes
+});
+const nodeFetcher_Vendor = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Vendor));
+  return nodeIdHandler_Vendor.get(nodeIdHandler_Vendor.getSpec($decoded));
+};
 const nodeIdHandler_CryptoAsset = makeTableNodeIdHandler({
   typeName: "CryptoAsset",
   identifier: "CryptoAsset",
@@ -4074,6 +4320,7 @@ const nodeIdHandlerByTypeName = {
   CryptoLot: nodeIdHandler_CryptoLot,
   Book: nodeIdHandler_Book,
   Budget: nodeIdHandler_Budget,
+  Vendor: nodeIdHandler_Vendor,
   CryptoAsset: nodeIdHandler_CryptoAsset,
   JournalEntry: nodeIdHandler_JournalEntry,
   CategorizationRule: nodeIdHandler_CategorizationRule,
@@ -4546,6 +4793,10 @@ const specFromArgs_Budget = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Budget, $nodeId);
 };
+const specFromArgs_Vendor = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_Vendor, $nodeId);
+};
 const specFromArgs_CryptoAsset = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_CryptoAsset, $nodeId);
@@ -4764,6 +5015,37 @@ function BudgetInput_periodApply(obj, val, info) {
 function BudgetInput_rolloverApply(obj, val, info) {
   obj.set("rollover", bakedInputRuntime(info.schema, info.field.type, val));
 }
+const CreateVendorPayload_vendorEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_vendorPgResource, vendorUniques[0].attributes, $mutation, fieldArgs);
+function VendorInput_businessNameApply(obj, val, info) {
+  obj.set("business_name", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function VendorInput_taxIdTypeApply(obj, val, info) {
+  obj.set("tax_id_type", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function VendorInput_taxIdApply(obj, val, info) {
+  obj.set("tax_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function VendorInput_addressApply(obj, val, info) {
+  obj.set("address", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function VendorInput_cityApply(obj, val, info) {
+  obj.set("city", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function VendorInput_stateApply(obj, val, info) {
+  obj.set("state", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function VendorInput_zipApply(obj, val, info) {
+  obj.set("zip", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function VendorInput_emailApply(obj, val, info) {
+  obj.set("email", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function VendorInput_is1099EligibleApply(obj, val, info) {
+  obj.set("is_1099_eligible", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function VendorInput_thresholdApply(obj, val, info) {
+  obj.set("threshold", bakedInputRuntime(info.schema, info.field.type, val));
+}
 const CreateCryptoAssetPayload_cryptoAssetEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_crypto_assetPgResource, crypto_assetUniques[0].attributes, $mutation, fieldArgs);
 function CryptoAssetInput_symbolApply(obj, val, info) {
   obj.set("symbol", bakedInputRuntime(info.schema, info.field.type, val));
@@ -4795,6 +5077,9 @@ function JournalEntryInput_isReviewedApply(obj, val, info) {
 }
 function JournalEntryInput_isReconciledApply(obj, val, info) {
   obj.set("is_reconciled", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function JournalEntryInput_vendorIdApply(obj, val, info) {
+  obj.set("vendor_id", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateCategorizationRulePayload_categorizationRuleEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_categorization_rulePgResource, categorization_ruleUniques[0].attributes, $mutation, fieldArgs);
 function CategorizationRuleInput_matchFieldApply(obj, val, info) {
@@ -4977,6 +5262,9 @@ type Query implements Node {
   """Get a single \`Budget\`."""
   budget(rowId: UUID!): Budget
 
+  """Get a single \`Vendor\`."""
+  vendor(rowId: UUID!): Vendor
+
   """Get a single \`CryptoAsset\`."""
   cryptoAsset(rowId: UUID!): CryptoAsset
 
@@ -5086,6 +5374,12 @@ type Query implements Node {
     """The globally unique \`ID\` to be used in selecting a single \`Budget\`."""
     id: ID!
   ): Budget
+
+  """Reads a single \`Vendor\` using its globally unique \`ID\`."""
+  vendorById(
+    """The globally unique \`ID\` to be used in selecting a single \`Vendor\`."""
+    id: ID!
+  ): Vendor
 
   """Reads a single \`CryptoAsset\` using its globally unique \`ID\`."""
   cryptoAssetById(
@@ -5556,6 +5850,40 @@ type Query implements Node {
     """The method to use when ordering \`Budget\`."""
     orderBy: [BudgetOrderBy!] = [PRIMARY_KEY_ASC]
   ): BudgetConnection
+
+  """Reads and enables pagination through a set of \`Vendor\`."""
+  vendors(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: VendorCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: VendorFilter
+
+    """The method to use when ordering \`Vendor\`."""
+    orderBy: [VendorOrderBy!] = [PRIMARY_KEY_ASC]
+  ): VendorConnection
 
   """Reads and enables pagination through a set of \`CryptoAsset\`."""
   cryptoAssets(
@@ -6579,6 +6907,40 @@ type Book implements Node {
     """The method to use when ordering \`TagGroup\`."""
     orderBy: [TagGroupOrderBy!] = [PRIMARY_KEY_ASC]
   ): TagGroupConnection!
+
+  """Reads and enables pagination through a set of \`Vendor\`."""
+  vendors(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: VendorCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: VendorFilter
+
+    """The method to use when ordering \`Vendor\`."""
+    orderBy: [VendorOrderBy!] = [PRIMARY_KEY_ASC]
+  ): VendorConnection!
 }
 
 enum BookType {
@@ -6946,6 +7308,12 @@ input BookFilter {
 
   """Some related \`tagGroups\` exist."""
   tagGroupsExist: Boolean
+
+  """Filter by the object’s \`vendors\` relation."""
+  vendors: BookToManyVendorFilter
+
+  """Some related \`vendors\` exist."""
+  vendorsExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [BookFilter!]
@@ -7412,6 +7780,12 @@ input JournalEntryFilter {
   """Filter by the object’s \`book\` relation."""
   book: BookFilter
 
+  """Filter by the object’s \`vendor\` relation."""
+  vendor: VendorFilter
+
+  """A related \`vendor\` exists."""
+  vendorExists: Boolean
+
   """Checks for all expressions in this list."""
   and: [JournalEntryFilter!]
 
@@ -7714,6 +8088,29 @@ input TagGroupToManyTagFilter {
   No related \`Tag\` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
   none: TagFilter
+}
+
+"""
+A filter to be used against \`Vendor\` object types. All fields are combined with a logical ‘and.’
+"""
+input VendorFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`bookId\` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s \`book\` relation."""
+  book: BookFilter
+
+  """Checks for all expressions in this list."""
+  and: [VendorFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [VendorFilter!]
+
+  """Negates the expression."""
+  not: VendorFilter
 }
 
 """
@@ -8218,6 +8615,26 @@ input BookToManyTagGroupFilter {
 }
 
 """
+A filter to be used against many \`Vendor\` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyVendorFilter {
+  """
+  Every related \`Vendor\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: VendorFilter
+
+  """
+  Some related \`Vendor\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: VendorFilter
+
+  """
+  No related \`Vendor\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: VendorFilter
+}
+
+"""
 A filter to be used against many \`JournalLine\` object types. All fields are combined with a logical ‘and.’
 """
 input AccountToManyJournalLineFilter {
@@ -8626,9 +9043,13 @@ type JournalEntry implements Node {
   isReconciled: Boolean!
   createdAt: Datetime
   updatedAt: Datetime
+  vendorId: UUID
 
   """Reads a single \`Book\` that is related to this \`JournalEntry\`."""
   book: Book
+
+  """Reads a single \`Vendor\` that is related to this \`JournalEntry\`."""
+  vendor: Vendor
 
   """Reads and enables pagination through a set of \`JournalLine\`."""
   journalLines(
@@ -8663,6 +9084,30 @@ type JournalEntry implements Node {
     """The method to use when ordering \`JournalLine\`."""
     orderBy: [JournalLineOrderBy!] = [PRIMARY_KEY_ASC]
   ): JournalLineConnection!
+}
+
+type Vendor implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  name: String!
+  businessName: String
+  taxIdType: String
+  taxId: String
+  address: String
+  city: String
+  state: String
+  zip: String
+  email: String
+  is1099Eligible: Boolean!
+  threshold: BigFloat
+  createdAt: Datetime
+
+  """Reads a single \`Book\` that is related to this \`Vendor\`."""
+  book: Book
 }
 
 """A connection to a list of \`JournalLine\` values."""
@@ -9698,6 +10143,54 @@ enum TagGroupOrderBy {
   BOOK_ID_DESC
 }
 
+"""A connection to a list of \`Vendor\` values."""
+type VendorConnection {
+  """A list of \`Vendor\` objects."""
+  nodes: [Vendor]!
+
+  """
+  A list of edges which contains the \`Vendor\` and cursor to aid in pagination.
+  """
+  edges: [VendorEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* \`Vendor\` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A \`Vendor\` edge in the connection."""
+type VendorEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`Vendor\` at the end of the edge."""
+  node: Vendor
+}
+
+"""
+A condition to be used against \`Vendor\` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input VendorCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`bookId\` field."""
+  bookId: UUID
+}
+
+"""Methods to use when ordering \`Vendor\`."""
+enum VendorOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+}
+
 type _DrizzleMigration implements Node {
   """
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
@@ -9925,6 +10418,14 @@ type Mutation {
     """
     input: CreateBudgetInput!
   ): CreateBudgetPayload
+
+  """Creates a single \`Vendor\`."""
+  createVendor(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateVendorInput!
+  ): CreateVendorPayload
 
   """Creates a single \`CryptoAsset\`."""
   createCryptoAsset(
@@ -10195,6 +10696,22 @@ type Mutation {
     """
     input: UpdateBudgetInput!
   ): UpdateBudgetPayload
+
+  """Updates a single \`Vendor\` using its globally unique id and a patch."""
+  updateVendorById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateVendorByIdInput!
+  ): UpdateVendorPayload
+
+  """Updates a single \`Vendor\` using a unique key and a patch."""
+  updateVendor(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateVendorInput!
+  ): UpdateVendorPayload
 
   """
   Updates a single \`CryptoAsset\` using its globally unique id and a patch.
@@ -10531,6 +11048,22 @@ type Mutation {
     """
     input: DeleteBudgetInput!
   ): DeleteBudgetPayload
+
+  """Deletes a single \`Vendor\` using its globally unique id."""
+  deleteVendorById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteVendorByIdInput!
+  ): DeleteVendorPayload
+
+  """Deletes a single \`Vendor\` using a unique key."""
+  deleteVendor(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteVendorInput!
+  ): DeleteVendorPayload
 
   """Deletes a single \`CryptoAsset\` using its globally unique id."""
   deleteCryptoAssetById(
@@ -11210,6 +11743,59 @@ input BudgetInput {
   updatedAt: Datetime
 }
 
+"""The output of our create \`Vendor\` mutation."""
+type CreateVendorPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Vendor\` that was created by this mutation."""
+  vendor: Vendor
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Vendor\`. May be used by Relay 1."""
+  vendorEdge(
+    """The method to use when ordering \`Vendor\`."""
+    orderBy: [VendorOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): VendorEdge
+}
+
+"""All input for the create \`Vendor\` mutation."""
+input CreateVendorInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`Vendor\` to be created by this mutation."""
+  vendor: VendorInput!
+}
+
+"""An input for mutations affecting \`Vendor\`"""
+input VendorInput {
+  rowId: UUID
+  bookId: UUID!
+  name: String!
+  businessName: String
+  taxIdType: String
+  taxId: String
+  address: String
+  city: String
+  state: String
+  zip: String
+  email: String
+  is1099Eligible: Boolean
+  threshold: BigFloat
+  createdAt: Datetime
+}
+
 """The output of our create \`CryptoAsset\` mutation."""
 type CreateCryptoAssetPayload {
   """
@@ -11307,6 +11893,7 @@ input JournalEntryInput {
   isReconciled: Boolean
   createdAt: Datetime
   updatedAt: Datetime
+  vendorId: UUID
 }
 
 """The output of our create \`CategorizationRule\` mutation."""
@@ -12457,6 +13044,83 @@ input UpdateBudgetInput {
   patch: BudgetPatch!
 }
 
+"""The output of our update \`Vendor\` mutation."""
+type UpdateVendorPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Vendor\` that was updated by this mutation."""
+  vendor: Vendor
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Vendor\`. May be used by Relay 1."""
+  vendorEdge(
+    """The method to use when ordering \`Vendor\`."""
+    orderBy: [VendorOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): VendorEdge
+}
+
+"""All input for the \`updateVendorById\` mutation."""
+input UpdateVendorByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`Vendor\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`Vendor\` being updated.
+  """
+  patch: VendorPatch!
+}
+
+"""
+Represents an update to a \`Vendor\`. Fields that are set will be updated.
+"""
+input VendorPatch {
+  rowId: UUID
+  bookId: UUID
+  name: String
+  businessName: String
+  taxIdType: String
+  taxId: String
+  address: String
+  city: String
+  state: String
+  zip: String
+  email: String
+  is1099Eligible: Boolean
+  threshold: BigFloat
+  createdAt: Datetime
+}
+
+"""All input for the \`updateVendor\` mutation."""
+input UpdateVendorInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`Vendor\` being updated.
+  """
+  patch: VendorPatch!
+}
+
 """The output of our update \`CryptoAsset\` mutation."""
 type UpdateCryptoAssetPayload {
   """
@@ -12587,6 +13251,7 @@ input JournalEntryPatch {
   isReconciled: Boolean
   createdAt: Datetime
   updatedAt: Datetime
+  vendorId: UUID
 }
 
 """All input for the \`updateJournalEntry\` mutation."""
@@ -13639,6 +14304,54 @@ input DeleteBudgetInput {
   rowId: UUID!
 }
 
+"""The output of our delete \`Vendor\` mutation."""
+type DeleteVendorPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Vendor\` that was deleted by this mutation."""
+  vendor: Vendor
+  deletedVendorId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Vendor\`. May be used by Relay 1."""
+  vendorEdge(
+    """The method to use when ordering \`Vendor\`."""
+    orderBy: [VendorOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): VendorEdge
+}
+
+"""All input for the \`deleteVendorById\` mutation."""
+input DeleteVendorByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`Vendor\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteVendor\` mutation."""
+input DeleteVendorInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete \`CryptoAsset\` mutation."""
 type DeleteCryptoAssetPayload {
   """
@@ -14557,6 +15270,32 @@ export const objects = {
           filter: Query_journalLineTagsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
+      },
+      vendor(_$root, {
+        $rowId
+      }) {
+        return resource_vendorPgResource.get({
+          id: $rowId
+        });
+      },
+      vendorById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_Vendor($nodeId);
+      },
+      vendors: {
+        plan() {
+          return connection(resource_vendorPgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineTagsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
       }
     }
   },
@@ -14794,6 +15533,18 @@ export const objects = {
       createTagGroup: {
         plan(_, args) {
           const $insert = pgInsertSingle(resource_tag_groupPgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
+      createVendor: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_vendorPgResource);
           args.apply($insert);
           return object({
             result: $insert
@@ -15323,6 +16074,32 @@ export const objects = {
           input: applyInputToUpdateOrDelete
         }
       },
+      deleteVendor: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_vendorPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteVendorById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_vendorPgResource, specFromArgs_Vendor(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
       updateAccount: {
         plan(_$root, args) {
           const $update = pgUpdateSingle(resource_accountPgResource, {
@@ -15842,6 +16619,32 @@ export const objects = {
         args: {
           input: applyInputToUpdateOrDelete
         }
+      },
+      updateVendor: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_vendorPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateVendorById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_vendorPgResource, specFromArgs_Vendor(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
       }
     }
   },
@@ -16293,7 +17096,25 @@ export const objects = {
           orderBy: applyOrderByArgToConnection
         }
       },
-      updatedAt: Account_updatedAtPlan
+      updatedAt: Account_updatedAtPlan,
+      vendors: {
+        plan($record) {
+          const $records = resource_vendorPgResource.find({
+            book_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineTagsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      }
     },
     planType($specifier) {
       const spec = Object.create(null);
@@ -16602,6 +17423,15 @@ export const objects = {
       query: queryPlan,
       tag: planCreatePayloadResult,
       tagEdge: CreateTagPayload_tagEdgePlan
+    }
+  },
+  CreateVendorPayload: {
+    assertStep: assertStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan,
+      vendor: planCreatePayloadResult,
+      vendorEdge: CreateVendorPayload_vendorEdgePlan
     }
   },
   CryptoAsset: {
@@ -16979,6 +17809,20 @@ export const objects = {
       tagEdge: CreateTagPayload_tagEdgePlan
     }
   },
+  DeleteVendorPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedVendorId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_Vendor.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      query: queryPlan,
+      vendor: planCreatePayloadResult,
+      vendorEdge: CreateVendorPayload_vendorEdgePlan
+    }
+  },
   FixedAsset: {
     assertStep: assertPgClassSingleStep,
     plans: {
@@ -17087,7 +17931,15 @@ export const objects = {
       sourceReferenceId($record) {
         return $record.get("source_reference_id");
       },
-      updatedAt: Account_updatedAtPlan
+      updatedAt: Account_updatedAtPlan,
+      vendor($record) {
+        return resource_vendorPgResource.get({
+          id: $record.get("vendor_id")
+        });
+      },
+      vendorId($record) {
+        return $record.get("vendor_id");
+      }
     },
     planType($specifier) {
       const spec = Object.create(null);
@@ -17609,6 +18461,51 @@ export const objects = {
       query: queryPlan,
       tag: planCreatePayloadResult,
       tagEdge: CreateTagPayload_tagEdgePlan
+    }
+  },
+  UpdateVendorPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan,
+      vendor: planCreatePayloadResult,
+      vendorEdge: CreateVendorPayload_vendorEdgePlan
+    }
+  },
+  Vendor: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      book: Account_bookPlan,
+      bookId: Account_bookIdPlan,
+      businessName($record) {
+        return $record.get("business_name");
+      },
+      createdAt: Account_createdAtPlan,
+      id($parent) {
+        const specifier = nodeIdHandler_Vendor.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_Vendor.codec.name].encode);
+      },
+      is1099Eligible($record) {
+        return $record.get("is_1099_eligible");
+      },
+      rowId: JournalLineTag_rowIdPlan,
+      taxId($record) {
+        return $record.get("tax_id");
+      },
+      taxIdType($record) {
+        return $record.get("tax_id_type");
+      }
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of vendorUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_vendorPgResource.get(spec);
+    }
+  },
+  VendorConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
     }
   }
 };
@@ -18322,6 +19219,30 @@ export const inputObjects = {
           const remoteAttribute = registryConfig.pgRelations.book.tagGroupsByTheirBookId.remoteAttributes[i];
           $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
         });
+      },
+      vendors($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: vendorIdentifier,
+          alias: resource_vendorPgResource.name,
+          localAttributes: registryConfig.pgRelations.book.vendorsByTheirBookId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.book.vendorsByTheirBookId.remoteAttributes
+        };
+        return $rel;
+      },
+      vendorsExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: vendorIdentifier,
+          alias: resource_vendorPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.book.vendorsByTheirBookId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.book.vendorsByTheirBookId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
       }
     }
   },
@@ -18443,6 +19364,13 @@ export const inputObjects = {
     }
   },
   BookToManyTagGroupFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
+  BookToManyVendorFilter: {
     plans: {
       every: AccountToManyAccountFilter_everyApply,
       none: AccountToManyAccountFilter_noneApply,
@@ -18787,6 +19715,12 @@ export const inputObjects = {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
       tag: applyCreateFields
+    }
+  },
+  CreateVendorInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      vendor: applyCreateFields
     }
   },
   CryptoAssetCondition: {
@@ -19155,6 +20089,16 @@ export const inputObjects = {
       clientMutationId: applyClientMutationIdForCreate
     }
   },
+  DeleteVendorByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteVendorInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
   FixedAssetCondition: {
     plans: {
       bookId: AccountCondition_bookIdApply,
@@ -19308,6 +20252,12 @@ export const inputObjects = {
       },
       sourceReferenceId(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("sourceReferenceId", "source_reference_id", spec_journalEntry.attributes.source_reference_id, queryBuilder, value);
+      },
+      vendor($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_vendorPgResource, vendorIdentifier, registryConfig.pgRelations.journalEntry.vendorByMyVendorId.localAttributes, registryConfig.pgRelations.journalEntry.vendorByMyVendorId.remoteAttributes, $where, value);
+      },
+      vendorExists($where, value) {
+        return pgConnectionFilterApplyForwardRelationExists(resource_vendorPgResource, vendorIdentifier, registryConfig.pgRelations.journalEntry.vendorByMyVendorId.localAttributes, registryConfig.pgRelations.journalEntry.vendorByMyVendorId.remoteAttributes, $where, value);
       }
     }
   },
@@ -19323,7 +20273,8 @@ export const inputObjects = {
       rowId: JournalLineTagInput_rowIdApply,
       source: JournalEntryInput_sourceApply,
       sourceReferenceId: JournalEntryInput_sourceReferenceIdApply,
-      updatedAt: AccountMappingInput_updatedAtApply
+      updatedAt: AccountMappingInput_updatedAtApply,
+      vendorId: JournalEntryInput_vendorIdApply
     }
   },
   JournalEntryPatch: {
@@ -19338,7 +20289,8 @@ export const inputObjects = {
       rowId: JournalLineTagInput_rowIdApply,
       source: JournalEntryInput_sourceApply,
       sourceReferenceId: JournalEntryInput_sourceReferenceIdApply,
-      updatedAt: AccountMappingInput_updatedAtApply
+      updatedAt: AccountMappingInput_updatedAtApply,
+      vendorId: JournalEntryInput_vendorIdApply
     }
   },
   JournalEntrySourceFilter: {
@@ -20241,6 +21193,18 @@ export const inputObjects = {
       patch: applyCreateFields
     }
   },
+  UpdateVendorByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateVendorInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
   UUIDFilter: {
     plans: {
       distinctFrom: pgAggregatesApply_distinctFrom,
@@ -20254,6 +21218,66 @@ export const inputObjects = {
       notDistinctFrom: pgAggregatesApply_notDistinctFrom,
       notEqualTo: pgAggregatesApply_notEqualTo,
       notIn: pgAggregatesApply_notIn
+    }
+  },
+  VendorCondition: {
+    plans: {
+      bookId: AccountCondition_bookIdApply,
+      rowId: AccountCondition_rowIdApply
+    }
+  },
+  VendorFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      book($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_bookPgResource, bookIdentifier, registryConfig.pgRelations.vendor.bookByMyBookId.localAttributes, registryConfig.pgRelations.vendor.bookByMyBookId.remoteAttributes, $where, value);
+      },
+      bookId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("bookId", "book_id", spec_vendor.attributes.book_id, queryBuilder, value);
+      },
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_vendor.attributes.id, queryBuilder, value);
+      }
+    }
+  },
+  VendorInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      address: VendorInput_addressApply,
+      bookId: TagGroupInput_bookIdApply,
+      businessName: VendorInput_businessNameApply,
+      city: VendorInput_cityApply,
+      createdAt: TagGroupInput_createdAtApply,
+      email: VendorInput_emailApply,
+      is1099Eligible: VendorInput_is1099EligibleApply,
+      name: TagGroupInput_nameApply,
+      rowId: JournalLineTagInput_rowIdApply,
+      state: VendorInput_stateApply,
+      taxId: VendorInput_taxIdApply,
+      taxIdType: VendorInput_taxIdTypeApply,
+      threshold: VendorInput_thresholdApply,
+      zip: VendorInput_zipApply
+    }
+  },
+  VendorPatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      address: VendorInput_addressApply,
+      bookId: TagGroupInput_bookIdApply,
+      businessName: VendorInput_businessNameApply,
+      city: VendorInput_cityApply,
+      createdAt: TagGroupInput_createdAtApply,
+      email: VendorInput_emailApply,
+      is1099Eligible: VendorInput_is1099EligibleApply,
+      name: TagGroupInput_nameApply,
+      rowId: JournalLineTagInput_rowIdApply,
+      state: VendorInput_stateApply,
+      taxId: VendorInput_taxIdApply,
+      taxIdType: VendorInput_taxIdTypeApply,
+      threshold: VendorInput_thresholdApply,
+      zip: VendorInput_zipApply
     }
   }
 };
@@ -21032,6 +22056,32 @@ export const enums = {
           direction: "DESC"
         });
       }
+    }
+  },
+  VendorOrderBy: {
+    values: {
+      BOOK_ID_ASC: AccountOrderBy_BOOK_ID_ASCApply,
+      BOOK_ID_DESC: AccountOrderBy_BOOK_ID_DESCApply,
+      PRIMARY_KEY_ASC(queryBuilder) {
+        vendorUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        vendorUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply
     }
   }
 };
