@@ -2,8 +2,9 @@ import { eq } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 
 import { emitAudit } from "lib/audit";
+import { extractBearerToken, resolveUserFromToken } from "lib/auth";
 import { dbPool } from "lib/db/db";
-import { accountTable, bookTable } from "lib/db/schema";
+import { accountTable, bookAccessTable, bookTable } from "lib/db/schema";
 import {
   llcTemplate,
   personalTemplate,
@@ -12,6 +13,17 @@ import {
 
 import type { InsertAccount } from "lib/db/schema";
 import type { AccountTemplate } from "lib/db/templates";
+
+/**
+ * Resolve the authenticated user from the request.
+ * Auth middleware has already verified the token, so this is a fast re-parse.
+ */
+const getActor = async (request: Request) => {
+  const token = extractBearerToken(request.headers.get("authorization"));
+  if (!token) return { id: "unknown" };
+  const user = await resolveUserFromToken(token);
+  return user ?? { id: "unknown" };
+};
 
 /**
  * Flatten a hierarchical account template into insert-ready rows.
@@ -58,12 +70,26 @@ const TEMPLATE_MAP: Record<string, AccountTemplate[]> = {
 
 // Book CRUD routes
 const bookRoutes = new Elysia({ prefix: "/api/books" })
-  .get("/", async ({ query, set }) => {
+  .get("/", async ({ query, set, request }) => {
     const { organizationId } = query;
+    const actor = await getActor(request);
 
     if (!organizationId) {
       set.status = 400;
       return { error: "organizationId is required" };
+    }
+
+    // Fetch book IDs the user has access to
+    const accessRecords = await dbPool
+      .select({ bookId: bookAccessTable.bookId })
+      .from(bookAccessTable)
+      .where(eq(bookAccessTable.userId, actor.id));
+
+    const accessibleBookIds = accessRecords.map((r) => r.bookId);
+
+    // If user has no book access, return empty list
+    if (accessibleBookIds.length === 0) {
+      return { books: [] };
     }
 
     const books = await dbPool
@@ -71,11 +97,14 @@ const bookRoutes = new Elysia({ prefix: "/api/books" })
       .from(bookTable)
       .where(eq(bookTable.organizationId, organizationId));
 
-    return { books };
+    // Filter to only books the user has access to
+    const filteredBooks = books.filter((b) => accessibleBookIds.includes(b.id));
+
+    return { books: filteredBooks };
   })
   .post(
     "/",
-    async ({ body, set }) => {
+    async ({ body, set, request }) => {
       const {
         organizationId,
         name,
@@ -84,6 +113,7 @@ const bookRoutes = new Elysia({ prefix: "/api/books" })
         fiscalYearStartMonth,
         template,
       } = body;
+      const actor = await getActor(request);
 
       const [book] = await dbPool
         .insert(bookTable)
@@ -95,6 +125,16 @@ const bookRoutes = new Elysia({ prefix: "/api/books" })
           fiscalYearStartMonth: fiscalYearStartMonth ?? 1,
         })
         .returning();
+
+      // Grant owner access to the creating user
+      await dbPool
+        .insert(bookAccessTable)
+        .values({
+          bookId: book.id,
+          userId: actor.id,
+          role: "owner",
+        })
+        .onConflictDoNothing();
 
       // Seed template accounts if a template was specified
       if (template && TEMPLATE_MAP[template]) {
@@ -110,7 +150,7 @@ const bookRoutes = new Elysia({ prefix: "/api/books" })
       emitAudit({
         type: "myfi.book.created",
         organizationId: book.organizationId,
-        actor: { id: "unknown" },
+        actor: { id: actor.id },
         resource: { type: "book", id: book.id, name: book.name },
         data: { bookType: book.type },
       });
@@ -130,8 +170,9 @@ const bookRoutes = new Elysia({ prefix: "/api/books" })
   )
   .put(
     "/:id",
-    async ({ params, body, set }) => {
+    async ({ params, body, set, request }) => {
       const { id } = params;
+      const actor = await getActor(request);
 
       const [existing] = await dbPool
         .select({
@@ -161,7 +202,7 @@ const bookRoutes = new Elysia({ prefix: "/api/books" })
       emitAudit({
         type: "myfi.book.updated",
         organizationId: existing.organizationId,
-        actor: { id: "unknown" },
+        actor: { id: actor.id },
         resource: { type: "book", id: book.id, name: book.name },
       });
 
@@ -181,8 +222,9 @@ const bookRoutes = new Elysia({ prefix: "/api/books" })
   )
   .delete(
     "/:id",
-    async ({ params, set }) => {
+    async ({ params, set, request }) => {
       const { id } = params;
+      const actor = await getActor(request);
 
       const [existing] = await dbPool
         .select({
@@ -203,7 +245,7 @@ const bookRoutes = new Elysia({ prefix: "/api/books" })
       emitAudit({
         type: "myfi.book.deleted",
         organizationId: existing.organizationId,
-        actor: { id: "unknown" },
+        actor: { id: actor.id },
         resource: { type: "book", id: existing.id, name: existing.name },
       });
 
