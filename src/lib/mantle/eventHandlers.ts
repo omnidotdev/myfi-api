@@ -33,6 +33,9 @@ type MantleEventBody = {
     dueDate?: string;
     paidAt?: string;
     paymentReference?: string;
+    // Quote fields
+    quoteNumber?: string;
+    convertedInvoiceId?: string;
   };
 };
 
@@ -68,6 +71,9 @@ const SUPPORTED_EVENTS = [
   "mantle.invoice.created",
   "mantle.invoice.updated",
   "mantle.invoice.deleted",
+  "mantle.quote.created",
+  "mantle.quote.updated",
+  "mantle.quote.deleted",
 ] as const;
 
 type SupportedEvent = (typeof SUPPORTED_EVENTS)[number];
@@ -112,12 +118,8 @@ const isSupportedEvent = (event: string): event is SupportedEvent =>
 /**
  * Check if an event is a Mantle native event.
  */
-const isMantleNativeEvent = (
-  event: string,
-): event is
-  | "mantle.invoice.created"
-  | "mantle.invoice.updated"
-  | "mantle.invoice.deleted" => event.startsWith("mantle.");
+const isMantleNativeEvent = (event: string): boolean =>
+  event.startsWith("mantle.");
 
 /**
  * Normalize a Mantle native event into the internal format used for journal entries.
@@ -174,6 +176,24 @@ const normalizeMantleEvent = (
         data.memo ??
         `Invoice ${data.invoiceNumber ?? data.id} deleted (reversal)`,
     };
+  }
+
+  // Quote events: only create journal entries for converted quotes
+  // (the resulting invoice event handles the actual AR recognition)
+  if (
+    event === "mantle.quote.updated" &&
+    data.status === "accepted" &&
+    data.convertedInvoiceId
+  ) {
+    // Quote accepted and converted to invoice; record as a pipeline note
+    // No journal entry needed, the mantle.invoice.* event handles accounting
+    return undefined;
+  }
+
+  // Quote created/updated/deleted: no journal entries needed
+  // Quotes are pre-transaction documents with no accounting impact
+  if (event.startsWith("mantle.quote.")) {
+    return undefined;
   }
 
   return undefined;
@@ -359,6 +379,32 @@ const handleMantleEvent = async (
 
   // Handle Mantle native events by normalizing to internal format
   if (isMantleNativeEvent(event)) {
+    // Emit audit trail for quote-to-invoice conversions
+    if (
+      event === "mantle.quote.updated" &&
+      data.status === "converted" &&
+      data.convertedInvoiceId &&
+      data.organizationId
+    ) {
+      emitAudit({
+        type: "myfi.quote.converted_to_invoice",
+        organizationId: data.organizationId,
+        actor: { id: "system", name: "Mantle Sync" },
+        resource: { type: "quote", id: data.id ?? "unknown" },
+        data: {
+          quoteNumber: data.quoteNumber,
+          convertedInvoiceId: data.convertedInvoiceId,
+          total: data.total,
+        },
+      });
+
+      return {
+        success: true,
+        error:
+          "Quote converted to invoice, audit recorded. Invoice event will create journal entry.",
+      };
+    }
+
     const normalized = normalizeMantleEvent(body);
 
     if (!normalized) {

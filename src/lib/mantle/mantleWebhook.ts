@@ -26,6 +26,9 @@ const mantleWebhookBody = t.Object({
     dueDate: t.Optional(t.String()),
     paidAt: t.Optional(t.String()),
     paymentReference: t.Optional(t.String()),
+    // Quote fields
+    quoteNumber: t.Optional(t.String()),
+    convertedInvoiceId: t.Optional(t.String()),
   }),
 });
 
