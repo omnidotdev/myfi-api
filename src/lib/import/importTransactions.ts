@@ -1,12 +1,8 @@
 import { and, eq } from "drizzle-orm";
 
 import { dbPool } from "lib/db/db";
-import {
-  accountMappingTable,
-  journalEntryTable,
-  journalLineTable,
-  reconciliationQueueTable,
-} from "lib/db/schema";
+import { journalEntryTable } from "lib/db/schema";
+import { processTransaction } from "./processTransaction";
 
 import type { InsertJournalEntry } from "lib/db/schema";
 
@@ -30,48 +26,26 @@ type ImportResult = {
 };
 
 /**
- * Find the best account mapping for a transaction.
- * Priority: merchant → generic income/expense
+ * Generate a deterministic hash for CSV deduplication.
+ * Uses date + amount + normalized memo as the composite key
  */
-const findBestMapping = async (
-  bookId: string,
-  merchantName: string | null | undefined,
-  isIncome: boolean,
-) => {
-  // 1. Try merchant-specific mapping
-  if (merchantName) {
-    const normalized = merchantName.toLowerCase().trim();
-    const [merchantMapping] = await dbPool
-      .select()
-      .from(accountMappingTable)
-      .where(
-        and(
-          eq(accountMappingTable.bookId, bookId),
-          eq(accountMappingTable.eventType, `merchant:${normalized}`),
-        ),
-      );
-    if (merchantMapping) return merchantMapping;
-  }
+const hashTransaction = (
+  date: string,
+  amount: number,
+  memo: string,
+): string => {
+  const normalized = `${date}|${amount}|${memo.toLowerCase().trim()}`;
+  const hasher = new Bun.CryptoHasher("sha256");
+  hasher.update(normalized);
 
-  // 2. Fall back to generic income/expense
-  const eventType = isIncome ? "plaid_income" : "plaid_expense";
-  const [genericMapping] = await dbPool
-    .select()
-    .from(accountMappingTable)
-    .where(
-      and(
-        eq(accountMappingTable.bookId, bookId),
-        eq(accountMappingTable.eventType, eventType),
-      ),
-    );
-
-  return genericMapping ?? null;
+  return hasher.digest("hex").slice(0, 16);
 };
 
 /**
  * Import parsed transactions into the ledger.
- * Creates journal entries, lines, and reconciliation queue entries.
- * Deduplicates via sourceReferenceId when provided.
+ * Runs each transaction through the categorization pipeline (rules + LLM).
+ * Uncategorized transactions are always created and queued for review.
+ * Deduplicates via sourceReferenceId when provided, hash-based for CSV
  */
 const importTransactions = async (
   options: ImportOptions,
@@ -81,7 +55,7 @@ const importTransactions = async (
   let skippedCount = 0;
 
   for (const txn of transactions) {
-    // Deduplicate if referenceId is provided
+    // Deduplicate by referenceId
     if (txn.referenceId) {
       const [existing] = await dbPool
         .select({ id: journalEntryTable.id })
@@ -100,7 +74,7 @@ const importTransactions = async (
       }
     }
 
-    // For transactions without referenceId (e.g. CSV), use hash-based dedup
+    // Hash-based dedup for transactions without referenceId (CSV)
     if (!txn.referenceId) {
       const hash = hashTransaction(txn.date, txn.amount, txn.memo);
       const [existing] = await dbPool
@@ -119,74 +93,14 @@ const importTransactions = async (
         continue;
       }
 
-      // Store hash as sourceReferenceId for future dedup
       txn.referenceId = `hash:${hash}`;
     }
 
-    const amount = Math.abs(txn.amount);
-    const isIncome = txn.amount < 0;
-
-    const mapping = await findBestMapping(bookId, txn.merchantName, isIncome);
-
-    if (!mapping) {
-      skippedCount++;
-      continue;
-    }
-
-    const [entry] = await dbPool
-      .insert(journalEntryTable)
-      .values({
-        bookId,
-        date: txn.date,
-        memo: txn.memo,
-        source,
-        sourceReferenceId: txn.referenceId ?? null,
-        isReviewed: false,
-        isReconciled: false,
-      })
-      .returning();
-
-    await dbPool.insert(journalLineTable).values([
-      {
-        journalEntryId: entry.id,
-        accountId: mapping.debitAccountId,
-        debit: amount.toFixed(4),
-        credit: "0.0000",
-      },
-      {
-        journalEntryId: entry.id,
-        accountId: mapping.creditAccountId,
-        debit: "0.0000",
-        credit: amount.toFixed(4),
-      },
-    ]);
-
-    await dbPool.insert(reconciliationQueueTable).values({
-      bookId,
-      journalEntryId: entry.id,
-      status: "pending_review",
-    });
-
+    await processTransaction(txn, { bookId, source });
     addedCount++;
   }
 
   return { addedCount, skippedCount };
-};
-
-/**
- * Generate a deterministic hash for CSV deduplication.
- * Uses date + amount + normalized memo as the composite key.
- */
-const hashTransaction = (
-  date: string,
-  amount: number,
-  memo: string,
-): string => {
-  const normalized = `${date}|${amount}|${memo.toLowerCase().trim()}`;
-  const hasher = new Bun.CryptoHasher("sha256");
-  hasher.update(normalized);
-
-  return hasher.digest("hex").slice(0, 16);
 };
 
 export { hashTransaction, importTransactions };
