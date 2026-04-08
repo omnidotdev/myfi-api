@@ -90,12 +90,9 @@ describe("syncPayroll", () => {
     mockFetchPayrolls.mockClear();
     mockEmitAudit.mockClear();
     // Make insert().values() return an object with returning()
-    mockInsertValues.mockImplementation(
-      () =>
-        ({
-          returning: mock(() => [{ id: "entry-1" }]),
-        }) as Record<string, unknown>,
-    );
+    mockInsertValues.mockImplementation(() => ({
+      returning: mock(() => [{ id: "entry-1" }]),
+    }));
   });
 
   test("syncs new payroll run", async () => {

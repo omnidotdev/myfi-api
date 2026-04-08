@@ -16,10 +16,12 @@ let selectIndex = 0;
 export const resetDbMock = () => {
   selectIndex = 0;
   selectQueue = [];
+  insertReturningData = [];
   updateReturningData = [];
   mockInsertValues.mockClear();
   mockUpdateWhere.mockClear();
   mockUpdateSet.mockClear();
+  mockDeleteWhere.mockClear();
 };
 
 export const setSelectResults = (results: unknown[][]) => {
@@ -53,7 +55,13 @@ const buildResult = (data: unknown[]): any => {
   });
 };
 
-export const mockInsertValues = mock(() => ({}));
+let insertReturningData: unknown[] = [];
+export const setInsertReturningData = (data: unknown[]) => {
+  insertReturningData = data;
+};
+export const mockInsertValues = mock(() => ({
+  returning: mock(() => insertReturningData),
+}));
 let updateReturningData: unknown[] = [];
 export const setUpdateReturningData = (data: unknown[]) => {
   updateReturningData = data;
@@ -62,6 +70,8 @@ export const mockUpdateWhere = mock(() => ({
   returning: mock(() => updateReturningData),
 }));
 const mockUpdateSet = mock(() => ({ where: mockUpdateWhere }));
+
+export const mockDeleteWhere = mock(() => ({}));
 
 export const mockDbPool = {
   select: mock((..._args: unknown[]) => ({
@@ -72,5 +82,8 @@ export const mockDbPool = {
   })),
   update: mock(() => ({
     set: mockUpdateSet,
+  })),
+  delete: mock(() => ({
+    where: mockDeleteWhere,
   })),
 };

@@ -1,11 +1,22 @@
-import { and, between, eq, sql } from "drizzle-orm";
+import { and, between, eq, like, sql } from "drizzle-orm";
 
 import { dbPool } from "lib/db/db";
 import {
   accountTable,
   journalEntryTable,
   journalLineTable,
+  mileageLogTable,
 } from "lib/db/schema";
+
+// Standard IRS mileage rates by tax year
+const IRS_MILEAGE_RATES: Record<number, number> = {
+  2024: 0.67,
+  2025: 0.7,
+  2026: 0.7,
+};
+
+const getMileageRate = (year: number): number =>
+  IRS_MILEAGE_RATES[year] ?? IRS_MILEAGE_RATES[2025];
 
 /**
  * IRS expense category mapped from account sub-types and names
@@ -184,6 +195,29 @@ const generateScheduleC = async (params: {
         (categoryTotals.get(category) ?? 0) + amount,
       );
     }
+  }
+
+  // Add mileage-based car and truck deduction
+  const [mileageResult] = await dbPool
+    .select({
+      totalMiles: sql<string>`coalesce(sum(${mileageLogTable.distance}), 0)`,
+    })
+    .from(mileageLogTable)
+    .where(
+      and(
+        eq(mileageLogTable.bookId, bookId),
+        like(mileageLogTable.date, `${year}%`),
+      ),
+    );
+
+  const totalMiles = Number(mileageResult?.totalMiles ?? 0);
+
+  if (totalMiles > 0) {
+    const mileageDeduction = totalMiles * getMileageRate(year);
+    categoryTotals.set(
+      "car_and_truck",
+      (categoryTotals.get("car_and_truck") ?? 0) + mileageDeduction,
+    );
   }
 
   const categories: ScheduleCCategory[] = [];
