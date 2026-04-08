@@ -132,12 +132,15 @@ const splitCsvRows = (csv: string): string[][] => {
  * Parse bank CSV content into transactions.
  * Auto-detects column layout from headers.
  */
-const parseCsv = (content: string): ParsedTransaction[] => {
+const parseCsv = (
+  content: string,
+  overrideMap?: CsvColumnMap,
+): ParsedTransaction[] => {
   const rows = splitCsvRows(content);
   if (rows.length < 2) return [];
 
   const headers = rows[0];
-  const columns = detectColumns(headers);
+  const columns = overrideMap ?? detectColumns(headers);
   if (!columns) {
     throw new Error(
       "Could not detect CSV column layout. Expected columns: date, description/memo, amount (or debit/credit)",

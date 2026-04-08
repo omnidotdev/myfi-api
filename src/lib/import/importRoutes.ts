@@ -27,7 +27,7 @@ const importRoutes = new Elysia({ prefix: "/api/import" })
   .post(
     "/file",
     async ({ body, set }) => {
-      const { bookId, file } = body;
+      const { bookId, file, columnMap: rawColumnMap } = body;
 
       const content = await file.text();
       const format = detectFormat(file.name, content);
@@ -44,7 +44,8 @@ const importRoutes = new Elysia({ prefix: "/api/import" })
 
       try {
         if (format === "csv") {
-          transactions = parseCsv(content);
+          const customMap = rawColumnMap ? JSON.parse(rawColumnMap) : undefined;
+          transactions = parseCsv(content, customMap);
           source = "csv_import";
         } else {
           transactions = parseOfx(content);
@@ -78,6 +79,7 @@ const importRoutes = new Elysia({ prefix: "/api/import" })
       body: t.Object({
         bookId: t.String(),
         file: t.File(),
+        columnMap: t.Optional(t.String()),
       }),
     },
   )

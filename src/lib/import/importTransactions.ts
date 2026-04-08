@@ -177,7 +177,11 @@ const importTransactions = async (
  * Generate a deterministic hash for CSV deduplication.
  * Uses date + amount + normalized memo as the composite key.
  */
-const hashTransaction = (date: string, amount: number, memo: string): string => {
+const hashTransaction = (
+  date: string,
+  amount: number,
+  memo: string,
+): string => {
   const normalized = `${date}|${amount}|${memo.toLowerCase().trim()}`;
   const hasher = new Bun.CryptoHasher("sha256");
   hasher.update(normalized);
