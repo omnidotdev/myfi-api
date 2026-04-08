@@ -100,6 +100,29 @@ const importTransactions = async (
       }
     }
 
+    // For transactions without referenceId (e.g. CSV), use hash-based dedup
+    if (!txn.referenceId) {
+      const hash = hashTransaction(txn.date, txn.amount, txn.memo);
+      const [existing] = await dbPool
+        .select({ id: journalEntryTable.id })
+        .from(journalEntryTable)
+        .where(
+          and(
+            eq(journalEntryTable.bookId, bookId),
+            eq(journalEntryTable.source, source),
+            eq(journalEntryTable.sourceReferenceId, `hash:${hash}`),
+          ),
+        );
+
+      if (existing) {
+        skippedCount++;
+        continue;
+      }
+
+      // Store hash as sourceReferenceId for future dedup
+      txn.referenceId = `hash:${hash}`;
+    }
+
     const amount = Math.abs(txn.amount);
     const isIncome = txn.amount < 0;
 
@@ -150,6 +173,18 @@ const importTransactions = async (
   return { addedCount, skippedCount };
 };
 
-export { importTransactions };
+/**
+ * Generate a deterministic hash for CSV deduplication.
+ * Uses date + amount + normalized memo as the composite key.
+ */
+const hashTransaction = (date: string, amount: number, memo: string): string => {
+  const normalized = `${date}|${amount}|${memo.toLowerCase().trim()}`;
+  const hasher = new Bun.CryptoHasher("sha256");
+  hasher.update(normalized);
+
+  return hasher.digest("hex").slice(0, 16);
+};
+
+export { hashTransaction, importTransactions };
 
 export type { ParsedTransaction };
