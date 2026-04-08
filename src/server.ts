@@ -25,6 +25,7 @@ import { netWorthSnapshotTable } from "lib/db/schema";
 import createGraphqlContext from "lib/graphql/createGraphqlContext";
 import { armorPlugin, authenticationPlugin } from "lib/graphql/plugins";
 import importRoutes from "lib/import/importRoutes";
+import profileRoutes from "lib/import/profileRoutes";
 import { mantleWebhook } from "lib/mantle";
 import authMiddleware from "lib/middleware/auth.middleware";
 import bookAccessMiddleware from "lib/middleware/bookAccess.middleware";
@@ -159,6 +160,7 @@ const app = new Elysia()
   .use(dashboardRoutes)
   .use(fixedAssetRoutes)
   .use(importRoutes)
+  .use(profileRoutes)
   .use(ofxRoutes)
   .use(periodRoutes)
   .use(tagRoutes)
