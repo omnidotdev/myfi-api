@@ -11,6 +11,7 @@ import { useGrafast } from "grafast/envelop";
 import generateBudgetTracking from "lib/budgets/budgetTracking";
 import { runMonthlyClose } from "lib/close";
 import startScheduledClose from "lib/close/scheduledClose";
+import runYearEndClose from "lib/close/yearEndClose";
 import appConfig from "lib/config/app.config";
 import {
   CORS_ALLOWED_ORIGINS,
@@ -459,6 +460,25 @@ const app = new Elysia()
   .post("/api/jobs/monthly-close", async () => {
     const results = await runMonthlyClose();
     return { results };
+  })
+  .post("/api/jobs/year-end-close", async ({ query }) => {
+    const { bookId, year } = query;
+    if (!bookId || !year) {
+      return new Response(
+        JSON.stringify({
+          error: "bookId and year are required",
+        }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json" },
+        },
+      );
+    }
+    const result = await runYearEndClose({
+      bookId,
+      year: Number.parseInt(year, 10),
+    });
+    return { result };
   });
 
 app.listen(PORT);

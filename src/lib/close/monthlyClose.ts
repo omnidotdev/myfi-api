@@ -275,6 +275,32 @@ const runMonthlyClose = async (): Promise<CloseResult[]> => {
 
       console.info(`[MonthlyClose] Book "${book.name}" period closed`);
 
+      // If this is the final month of the fiscal year, trigger year-end close
+      const finalMonth =
+        book.fiscalYearStartMonth === 1 ? 12 : book.fiscalYearStartMonth - 1;
+
+      if (month === finalMonth) {
+        try {
+          const { default: runYearEndClose } = await import(
+            "lib/close/yearEndClose"
+          );
+
+          const yeResult = await runYearEndClose({
+            bookId: book.id,
+            year,
+          });
+
+          console.info(
+            `[MonthlyClose] Year-end close for "${book.name}": ${yeResult.status}`,
+          );
+        } catch (err) {
+          console.error(
+            `[MonthlyClose] Year-end close failed for "${book.name}":`,
+            err,
+          );
+        }
+      }
+
       results.push({
         bookId: book.id,
         bookName: book.name,
