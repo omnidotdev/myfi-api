@@ -109,9 +109,7 @@ const bookAccessMiddleware = new Elysia({ name: "book-access-middleware" })
     const role = await checkBookAccess(user.id, bookId, requiredRole);
 
     if (!role) {
-      throw new BookAccessError(
-        `Insufficient permissions for book ${bookId}`,
-      );
+      throw new BookAccessError(`Insufficient permissions for book ${bookId}`);
     }
   });
 

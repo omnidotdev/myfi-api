@@ -29,15 +29,9 @@ describe("role hierarchy", () => {
       owner: 3,
     };
 
-    expect(ROLE_HIERARCHY.viewer).toBeGreaterThanOrEqual(
-      ROLE_HIERARCHY.viewer,
-    );
-    expect(ROLE_HIERARCHY.editor).toBeGreaterThanOrEqual(
-      ROLE_HIERARCHY.viewer,
-    );
-    expect(ROLE_HIERARCHY.owner).toBeGreaterThanOrEqual(
-      ROLE_HIERARCHY.viewer,
-    );
+    expect(ROLE_HIERARCHY.viewer).toBeGreaterThanOrEqual(ROLE_HIERARCHY.viewer);
+    expect(ROLE_HIERARCHY.editor).toBeGreaterThanOrEqual(ROLE_HIERARCHY.viewer);
+    expect(ROLE_HIERARCHY.owner).toBeGreaterThanOrEqual(ROLE_HIERARCHY.viewer);
   });
 
   test("viewer does not meet editor requirement", () => {
@@ -57,12 +51,8 @@ describe("role hierarchy", () => {
       owner: 3,
     };
 
-    expect(ROLE_HIERARCHY.editor).toBeGreaterThanOrEqual(
-      ROLE_HIERARCHY.editor,
-    );
-    expect(ROLE_HIERARCHY.owner).toBeGreaterThanOrEqual(
-      ROLE_HIERARCHY.editor,
-    );
+    expect(ROLE_HIERARCHY.editor).toBeGreaterThanOrEqual(ROLE_HIERARCHY.editor);
+    expect(ROLE_HIERARCHY.owner).toBeGreaterThanOrEqual(ROLE_HIERARCHY.editor);
   });
 
   test("owner meets all requirements", () => {
@@ -72,14 +62,8 @@ describe("role hierarchy", () => {
       owner: 3,
     };
 
-    expect(ROLE_HIERARCHY.owner).toBeGreaterThanOrEqual(
-      ROLE_HIERARCHY.viewer,
-    );
-    expect(ROLE_HIERARCHY.owner).toBeGreaterThanOrEqual(
-      ROLE_HIERARCHY.editor,
-    );
-    expect(ROLE_HIERARCHY.owner).toBeGreaterThanOrEqual(
-      ROLE_HIERARCHY.owner,
-    );
+    expect(ROLE_HIERARCHY.owner).toBeGreaterThanOrEqual(ROLE_HIERARCHY.viewer);
+    expect(ROLE_HIERARCHY.owner).toBeGreaterThanOrEqual(ROLE_HIERARCHY.editor);
+    expect(ROLE_HIERARCHY.owner).toBeGreaterThanOrEqual(ROLE_HIERARCHY.owner);
   });
 });
