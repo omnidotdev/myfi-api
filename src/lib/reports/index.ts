@@ -1,3 +1,4 @@
+export { default as generateAgingReport } from "./aging";
 export { default as generateBalanceSheet } from "./balanceSheet";
 export { default as generateCashFlow } from "./cashFlow";
 export { default as exportReport } from "./exportReport";

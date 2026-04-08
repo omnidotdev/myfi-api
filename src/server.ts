@@ -38,6 +38,7 @@ import plaidRoutes from "lib/plaid/plaidRoutes";
 import startScheduledSync from "lib/plaid/scheduledSync";
 import {
   exportReport,
+  generateAgingReport,
   generateBalanceSheet,
   generateCashFlow,
   generateGeneralLedger,
@@ -267,6 +268,44 @@ const app = new Elysia()
     return generatePayrollSummary({
       bookId,
       year: Number.parseInt(year, 10),
+    });
+  })
+  .get("/api/reports/ap-aging", async ({ query }) => {
+    const { bookId, asOfDate } = query;
+    if (!bookId || !asOfDate) {
+      return new Response(
+        JSON.stringify({
+          error: "bookId and asOfDate are required",
+        }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json" },
+        },
+      );
+    }
+    return generateAgingReport({
+      bookId,
+      asOfDate,
+      accountSubType: "accounts_payable",
+    });
+  })
+  .get("/api/reports/ar-aging", async ({ query }) => {
+    const { bookId, asOfDate } = query;
+    if (!bookId || !asOfDate) {
+      return new Response(
+        JSON.stringify({
+          error: "bookId and asOfDate are required",
+        }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json" },
+        },
+      );
+    }
+    return generateAgingReport({
+      bookId,
+      asOfDate,
+      accountSubType: "accounts_receivable",
     });
   })
   .get("/api/budgets/tracking", async ({ query }) => {
