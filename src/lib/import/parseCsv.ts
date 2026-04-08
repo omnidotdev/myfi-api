@@ -196,3 +196,6 @@ const parseCsv = (content: string): ParsedTransaction[] => {
 };
 
 export default parseCsv;
+
+export { splitCsvRows, detectColumns };
+export type { CsvColumnMap };
