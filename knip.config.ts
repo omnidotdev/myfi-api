@@ -4,7 +4,7 @@ const config: KnipConfig = {
   entry: ["src/lib/config/drizzle.config.ts", "src/scripts/**/*.ts"],
   project: ["src/**/*.ts"],
   ignore: ["src/generated/**"],
-  ignoreDependencies: ["@envelop/types"],
+  ignoreDependencies: [],
 };
 
 export default config;
