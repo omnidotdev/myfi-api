@@ -15,6 +15,7 @@ export * from "./journalLineTag.table";
 export * from "./netWorthSnapshot.table";
 export * from "./payrollConnection.table";
 export * from "./reconciliationQueue.table";
+export * from "./reconciliationStatement.table";
 export * from "./recurringTransaction.table";
 export * from "./savingsGoal.table";
 export * from "./tag.table";

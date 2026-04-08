@@ -1,4 +1,5 @@
 import {
+  boolean,
   index,
   numeric,
   pgTable,
@@ -26,6 +27,7 @@ export const journalLineTable = pgTable(
     debit: numeric({ precision: 19, scale: 4 }).notNull().default("0"),
     credit: numeric({ precision: 19, scale: 4 }).notNull().default("0"),
     memo: text(),
+    cleared: boolean().notNull().default(false),
   },
   (table) => [
     uniqueIndex().on(table.id),

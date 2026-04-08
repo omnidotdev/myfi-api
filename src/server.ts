@@ -59,6 +59,7 @@ import mappingRoutes from "lib/routes/mappingRoutes";
 import periodRoutes from "lib/routes/periodRoutes";
 import reconciliationRoutes from "lib/routes/reconciliationRoutes";
 import savingsRoutes from "lib/routes/savingsRoutes";
+import statementReconciliationRoutes from "lib/routes/statementReconciliationRoutes";
 import tagRoutes from "lib/routes/tagRoutes";
 import taxJurisdictionRoutes from "lib/routes/taxJurisdictionRoutes";
 import vendorRoutes from "lib/routes/vendorRoutes";
@@ -148,6 +149,7 @@ const app = new Elysia()
   .use(budgetRoutes)
   .use(savingsRoutes)
   .use(reconciliationRoutes)
+  .use(statementReconciliationRoutes)
   .use(connectionRoutes)
   .use(mappingRoutes)
   .use(categorizationRuleRoutes)
