@@ -33,6 +33,51 @@ const connectionRoutes = new Elysia({ prefix: "/api/connections" })
 
     return { connections };
   })
+  .patch(
+    "/:id",
+    async ({ params, body, set }) => {
+      const { id } = params;
+
+      const [existing] = await dbPool
+        .select({
+          id: connectedAccountTable.id,
+          bookId: connectedAccountTable.bookId,
+          institutionName: connectedAccountTable.institutionName,
+        })
+        .from(connectedAccountTable)
+        .where(eq(connectedAccountTable.id, id));
+
+      if (!existing) {
+        set.status = 404;
+        return { error: "Connected account not found" };
+      }
+
+      const [connection] = await dbPool
+        .update(connectedAccountTable)
+        .set({ accountId: body.accountId })
+        .where(eq(connectedAccountTable.id, id))
+        .returning();
+
+      emitAudit({
+        type: "myfi.connection.linked",
+        organizationId: existing.bookId,
+        actor: { id: "unknown" },
+        resource: {
+          type: "connected_account",
+          id: params.id,
+          name: existing.institutionName ?? undefined,
+        },
+      });
+
+      return { connection };
+    },
+    {
+      params: t.Object({ id: t.String() }),
+      body: t.Object({
+        accountId: t.Union([t.String(), t.Null()]),
+      }),
+    },
+  )
   .delete(
     "/:id",
     async ({ params, set }) => {
