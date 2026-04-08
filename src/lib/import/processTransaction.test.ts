@@ -55,6 +55,8 @@ describe("processTransaction", () => {
     expect(result).not.toBeNull();
     expect(result!.entryId).toBe("entry-1");
     expect(result!.status).toBe("approved");
+    expect(result!.priority).toBe(0);
+    expect(result!.confidence).toBe(0.95);
     expect(mockCategorize).toHaveBeenCalledTimes(1);
   });
 
@@ -71,6 +73,8 @@ describe("processTransaction", () => {
     expect(result).not.toBeNull();
     expect(result!.entryId).toBe("entry-2");
     expect(result!.status).toBe("pending_review");
+    expect(result!.priority).toBe(100);
+    expect(result!.confidence).toBe(0);
   });
 
   test("sets priority 50 for low-confidence categorized transactions", async () => {
