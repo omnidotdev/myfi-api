@@ -45,6 +45,8 @@ import {
   generateGeneralLedger,
   generatePayrollSummary,
   generateProfitAndLoss,
+  generateProjectPnl,
+  generateProjectSummary,
   generateSalesTaxReport,
   generateTrialBalance,
 } from "lib/reports";
@@ -185,7 +187,10 @@ const app = new Elysia()
     const tagIds = query.tagIds
       ? query.tagIds.split(",").filter(Boolean)
       : undefined;
-    return generateProfitAndLoss({ bookId, startDate, endDate, tagIds });
+    const projectIds = query.projectIds
+      ? query.projectIds.split(",").filter(Boolean)
+      : undefined;
+    return generateProfitAndLoss({ bookId, startDate, endDate, tagIds, projectIds });
   })
   .get("/api/reports/balance-sheet", async ({ query }) => {
     const { bookId, asOfDate } = query;
@@ -198,7 +203,10 @@ const app = new Elysia()
     const tagIds = query.tagIds
       ? query.tagIds.split(",").filter(Boolean)
       : undefined;
-    return generateBalanceSheet({ bookId, asOfDate, tagIds });
+    const projectIds = query.projectIds
+      ? query.projectIds.split(",").filter(Boolean)
+      : undefined;
+    return generateBalanceSheet({ bookId, asOfDate, tagIds, projectIds });
   })
   .get("/api/reports/trial-balance", async ({ query }) => {
     const { bookId, startDate, endDate } = query;
@@ -213,7 +221,10 @@ const app = new Elysia()
     const tagIds = query.tagIds
       ? query.tagIds.split(",").filter(Boolean)
       : undefined;
-    return generateTrialBalance({ bookId, startDate, endDate, tagIds });
+    const projectIds = query.projectIds
+      ? query.projectIds.split(",").filter(Boolean)
+      : undefined;
+    return generateTrialBalance({ bookId, startDate, endDate, tagIds, projectIds });
   })
   .get("/api/reports/cash-flow", async ({ query }) => {
     const { bookId, startDate, endDate } = query;
@@ -228,7 +239,10 @@ const app = new Elysia()
     const tagIds = query.tagIds
       ? query.tagIds.split(",").filter(Boolean)
       : undefined;
-    return generateCashFlow({ bookId, startDate, endDate, tagIds });
+    const projectIds = query.projectIds
+      ? query.projectIds.split(",").filter(Boolean)
+      : undefined;
+    return generateCashFlow({ bookId, startDate, endDate, tagIds, projectIds });
   })
   .get("/api/reports/general-ledger", async ({ query }) => {
     const { bookId, accountId, startDate, endDate } = query;
@@ -243,12 +257,16 @@ const app = new Elysia()
     const tagIds = query.tagIds
       ? query.tagIds.split(",").filter(Boolean)
       : undefined;
+    const projectIds = query.projectIds
+      ? query.projectIds.split(",").filter(Boolean)
+      : undefined;
     return generateGeneralLedger({
       bookId,
       accountId,
       startDate,
       endDate,
       tagIds,
+      projectIds,
     });
   })
   .get("/api/reports/sales-tax", async ({ query }) => {
@@ -277,6 +295,26 @@ const app = new Elysia()
       bookId,
       year: Number.parseInt(year, 10),
     });
+  })
+  .get("/api/reports/project-pnl", async ({ query }) => {
+    const { bookId, projectId, startDate, endDate } = query;
+    if (!bookId || !projectId) {
+      return new Response(
+        JSON.stringify({ error: "bookId and projectId are required" }),
+        { status: 400, headers: { "Content-Type": "application/json" } },
+      );
+    }
+    return generateProjectPnl({ bookId, projectId, startDate, endDate });
+  })
+  .get("/api/reports/project-summary", async ({ query }) => {
+    const { bookId } = query;
+    if (!bookId) {
+      return new Response(
+        JSON.stringify({ error: "bookId is required" }),
+        { status: 400, headers: { "Content-Type": "application/json" } },
+      );
+    }
+    return generateProjectSummary(bookId);
   })
   .get("/api/reports/ap-aging", async ({ query }) => {
     const { bookId, asOfDate } = query;
@@ -477,6 +515,9 @@ const app = new Elysia()
       const tagIds = query.tagIds
         ? query.tagIds.split(",").filter(Boolean)
         : undefined;
+      const projectIds = query.projectIds
+        ? query.projectIds.split(",").filter(Boolean)
+        : undefined;
 
       const result = await exportReport({
         type,
@@ -487,6 +528,8 @@ const app = new Elysia()
         asOfDate: query.asOfDate,
         year: query.year,
         tagIds,
+        projectId: query.projectId,
+        projectIds,
         accountId: query.accountId,
         jurisdictionId: query.jurisdictionId,
       });

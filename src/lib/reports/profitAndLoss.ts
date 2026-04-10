@@ -4,6 +4,7 @@ import { dbPool } from "lib/db/db";
 import {
   accountTable,
   journalEntryTable,
+  journalLineProjectTable,
   journalLineTable,
   journalLineTagTable,
 } from "lib/db/schema";
@@ -43,8 +44,9 @@ const generateProfitAndLoss = async (params: {
   startDate: string;
   endDate: string;
   tagIds?: string[];
+  projectIds?: string[];
 }): Promise<ProfitAndLossReport> => {
-  const { bookId, startDate, endDate, tagIds } = params;
+  const { bookId, startDate, endDate, tagIds, projectIds } = params;
 
   // Query journal lines with account info, filtered by book and date range
   let query = dbPool
@@ -73,6 +75,13 @@ const generateProfitAndLoss = async (params: {
     );
   }
 
+  if (projectIds?.length) {
+    query = query.innerJoin(
+      journalLineProjectTable,
+      eq(journalLineProjectTable.journalLineId, journalLineTable.id),
+    );
+  }
+
   const results = await query
     .where(
       and(
@@ -80,6 +89,9 @@ const generateProfitAndLoss = async (params: {
         between(journalEntryTable.date, startDate, endDate),
         sql`${accountTable.type} in ('revenue', 'expense')`,
         tagIds?.length ? inArray(journalLineTagTable.tagId, tagIds) : undefined,
+        projectIds?.length
+          ? inArray(journalLineProjectTable.projectId, projectIds)
+          : undefined,
       ),
     )
     .groupBy(

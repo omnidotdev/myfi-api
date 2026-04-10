@@ -5,5 +5,6 @@ export { default as exportReport } from "./exportReport";
 export { default as generateGeneralLedger } from "./generalLedger";
 export { default as generatePayrollSummary } from "./payrollSummary";
 export { default as generateProfitAndLoss } from "./profitAndLoss";
+export { generateProjectPnl, generateProjectSummary } from "./projectReport";
 export { default as generateSalesTaxReport } from "./salesTax";
 export { default as generateTrialBalance } from "./trialBalance";

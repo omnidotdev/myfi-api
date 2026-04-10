@@ -4,6 +4,7 @@ import { dbPool } from "lib/db/db";
 import {
   accountTable,
   journalEntryTable,
+  journalLineProjectTable,
   journalLineTable,
   journalLineTagTable,
 } from "lib/db/schema";
@@ -39,8 +40,9 @@ const generateTrialBalance = async (params: {
   startDate: string;
   endDate: string;
   tagIds?: string[];
+  projectIds?: string[];
 }): Promise<TrialBalanceReport> => {
-  const { bookId, startDate, endDate, tagIds } = params;
+  const { bookId, startDate, endDate, tagIds, projectIds } = params;
 
   let query = dbPool
     .select({
@@ -67,12 +69,22 @@ const generateTrialBalance = async (params: {
     );
   }
 
+  if (projectIds?.length) {
+    query = query.innerJoin(
+      journalLineProjectTable,
+      eq(journalLineProjectTable.journalLineId, journalLineTable.id),
+    );
+  }
+
   const results = await query
     .where(
       and(
         eq(journalEntryTable.bookId, bookId),
         between(journalEntryTable.date, startDate, endDate),
         tagIds?.length ? inArray(journalLineTagTable.tagId, tagIds) : undefined,
+        projectIds?.length
+          ? inArray(journalLineProjectTable.projectId, projectIds)
+          : undefined,
       ),
     )
     .groupBy(
