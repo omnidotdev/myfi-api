@@ -5,6 +5,7 @@ export * from "./book.table";
 export * from "./bookAccess.table";
 export * from "./budget.table";
 export * from "./categorizationRule.table";
+export * from "./categorizationRuleSplit.table";
 export * from "./connectedAccount.table";
 export * from "./cryptoAsset.table";
 export * from "./cryptoLot.table";
