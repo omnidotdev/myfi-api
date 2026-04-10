@@ -49,6 +49,24 @@ const validateSplits = (splits: SplitInput[]): SplitValidationResult => {
         error: "Split must have either percentage or fixedAmount",
       };
     }
+    if (hasPct) {
+      const n = Number(s.percentage);
+      if (!Number.isFinite(n) || n <= 0 || n > 100) {
+        return {
+          valid: false,
+          error: `Invalid percentage "${s.percentage}"`,
+        };
+      }
+    }
+    if (hasFixed) {
+      const n = Number(s.fixedAmount);
+      if (!Number.isFinite(n) || n <= 0) {
+        return {
+          valid: false,
+          error: `Invalid fixedAmount "${s.fixedAmount}"`,
+        };
+      }
+    }
   }
 
   const debitSplits = splits.filter((s) => s.side === "debit");
@@ -141,37 +159,41 @@ const categorizationRuleRoutes = new Elysia({
         }
       }
 
-      const [rule] = await dbPool
-        .insert(categorizationRuleTable)
-        .values({
-          bookId: body.bookId,
-          name: body.name,
-          matchField: body.matchField,
-          matchType: body.matchType,
-          matchValue: body.matchValue,
-          debitAccountId: body.debitAccountId,
-          creditAccountId: body.creditAccountId,
-          amountMin: body.amountMin ?? null,
-          amountMax: body.amountMax ?? null,
-          confidence: body.confidence ?? "1.00",
-          priority: body.priority ?? 0,
-        })
-        .returning();
+      const rule = await dbPool.transaction(async (tx) => {
+        const [inserted] = await tx
+          .insert(categorizationRuleTable)
+          .values({
+            bookId: body.bookId,
+            name: body.name,
+            matchField: body.matchField,
+            matchType: body.matchType,
+            matchValue: body.matchValue,
+            debitAccountId: body.debitAccountId,
+            creditAccountId: body.creditAccountId,
+            amountMin: body.amountMin ?? null,
+            amountMax: body.amountMax ?? null,
+            confidence: body.confidence ?? "1.00",
+            priority: body.priority ?? 0,
+          })
+          .returning();
 
-      if (body.splits && body.splits.length >= 2) {
-        await dbPool.insert(categorizationRuleSplitTable).values(
-          body.splits.map((s, i) => ({
-            ruleId: rule.id,
-            accountId: s.accountId,
-            side: s.side,
-            percentage: s.percentage ?? null,
-            fixedAmount: s.fixedAmount ?? null,
-            memo: s.memo ?? null,
-            tagId: s.tagId ?? null,
-            sortOrder: s.sortOrder ?? i,
-          })),
-        );
-      }
+        if (body.splits && body.splits.length >= 2) {
+          await tx.insert(categorizationRuleSplitTable).values(
+            body.splits.map((s, i) => ({
+              ruleId: inserted.id,
+              accountId: s.accountId,
+              side: s.side,
+              percentage: s.percentage ?? null,
+              fixedAmount: s.fixedAmount ?? null,
+              memo: s.memo ?? null,
+              tagId: s.tagId ?? null,
+              sortOrder: s.sortOrder ?? i,
+            })),
+          );
+        }
+
+        return inserted;
+      });
 
       set.status = 201;
 
@@ -231,32 +253,36 @@ const categorizationRuleRoutes = new Elysia({
 
       const { splits, ...ruleUpdates } = body;
 
-      const [rule] = await dbPool
-        .update(categorizationRuleTable)
-        .set(ruleUpdates)
-        .where(eq(categorizationRuleTable.id, id))
-        .returning();
+      const rule = await dbPool.transaction(async (tx) => {
+        const [updated] = await tx
+          .update(categorizationRuleTable)
+          .set(ruleUpdates)
+          .where(eq(categorizationRuleTable.id, id))
+          .returning();
 
-      if (splits !== undefined) {
-        await dbPool
-          .delete(categorizationRuleSplitTable)
-          .where(eq(categorizationRuleSplitTable.ruleId, id));
+        if (splits !== undefined) {
+          await tx
+            .delete(categorizationRuleSplitTable)
+            .where(eq(categorizationRuleSplitTable.ruleId, id));
 
-        if (splits.length >= 2) {
-          await dbPool.insert(categorizationRuleSplitTable).values(
-            splits.map((s, i) => ({
-              ruleId: id,
-              accountId: s.accountId,
-              side: s.side,
-              percentage: s.percentage ?? null,
-              fixedAmount: s.fixedAmount ?? null,
-              memo: s.memo ?? null,
-              tagId: s.tagId ?? null,
-              sortOrder: s.sortOrder ?? i,
-            })),
-          );
+          if (splits.length >= 2) {
+            await tx.insert(categorizationRuleSplitTable).values(
+              splits.map((s, i) => ({
+                ruleId: id,
+                accountId: s.accountId,
+                side: s.side,
+                percentage: s.percentage ?? null,
+                fixedAmount: s.fixedAmount ?? null,
+                memo: s.memo ?? null,
+                tagId: s.tagId ?? null,
+                sortOrder: s.sortOrder ?? i,
+              })),
+            );
+          }
         }
-      }
+
+        return updated;
+      });
 
       emitAudit({
         type: "myfi.rule.updated",
