@@ -1,10 +1,11 @@
-import { and, eq, sql } from "drizzle-orm";
+import { and, eq, inArray, sql } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 
 import { emitAudit } from "lib/audit";
 import { dbPool } from "lib/db/db";
 import {
   accountTable,
+  journalEntryTable,
   journalLineProjectTable,
   journalLineTable,
   projectTable,
@@ -263,7 +264,61 @@ const projectRoutes = new Elysia({ prefix: "/api/projects" })
   )
   .post(
     "/line-assignments",
-    async ({ body }) => {
+    async ({ body, set }) => {
+      /**
+       * Tenancy check: ensure every referenced project and journal line
+       * belong to the same book before inserting. Project rows carry
+       * bookId directly, journal lines inherit it via their parent
+       * journal_entry. Mixing books in a single bulk request would
+       * violate multi-tenant isolation, so we require all ids in the
+       * payload to resolve to exactly one shared bookId.
+       */
+      const projectIds = [
+        ...new Set(body.assignments.map((a) => a.projectId)),
+      ];
+      const journalLineIds = [
+        ...new Set(body.assignments.map((a) => a.journalLineId)),
+      ];
+
+      const [projects, lines] = await Promise.all([
+        dbPool
+          .select({
+            id: projectTable.id,
+            bookId: projectTable.bookId,
+          })
+          .from(projectTable)
+          .where(inArray(projectTable.id, projectIds)),
+        dbPool
+          .select({
+            id: journalLineTable.id,
+            bookId: journalEntryTable.bookId,
+          })
+          .from(journalLineTable)
+          .innerJoin(
+            journalEntryTable,
+            eq(journalLineTable.journalEntryId, journalEntryTable.id),
+          )
+          .where(inArray(journalLineTable.id, journalLineIds)),
+      ]);
+
+      if (
+        projects.length !== projectIds.length ||
+        lines.length !== journalLineIds.length
+      ) {
+        set.status = 400;
+        return { error: "All assignments must be within the same book" };
+      }
+
+      const bookIds = new Set<string>([
+        ...projects.map((p) => p.bookId),
+        ...lines.map((l) => l.bookId),
+      ]);
+
+      if (bookIds.size !== 1) {
+        set.status = 400;
+        return { error: "All assignments must be within the same book" };
+      }
+
       const rows = await dbPool
         .insert(journalLineProjectTable)
         .values(
