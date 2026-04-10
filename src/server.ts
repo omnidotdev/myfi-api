@@ -49,6 +49,7 @@ import {
   generateTrialBalance,
 } from "lib/reports";
 import accountRoutes from "lib/routes/accountRoutes";
+import attachmentRoutes from "lib/routes/attachmentRoutes";
 import bookAccessRoutes from "lib/routes/bookAccessRoutes";
 import bookRoutes from "lib/routes/bookRoutes";
 import budgetRoutes from "lib/routes/budgetRoutes";
@@ -159,6 +160,7 @@ const app = new Elysia()
   .use(categorizationRuleRoutes)
   .use(dashboardRoutes)
   .use(fixedAssetRoutes)
+  .use(attachmentRoutes)
   .use(importRoutes)
   .use(profileRoutes)
   .use(ofxRoutes)
