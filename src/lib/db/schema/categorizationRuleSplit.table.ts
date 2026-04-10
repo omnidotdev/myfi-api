@@ -11,6 +11,7 @@ import {
 import { generateDefaultId } from "lib/db/util";
 import { accountTable } from "./account.table";
 import { categorizationRuleTable } from "./categorizationRule.table";
+import { projectTable } from "./project.table";
 import { tagTable } from "./tag.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
@@ -30,6 +31,7 @@ export const categorizationRuleSplitTable = pgTable(
     fixedAmount: numeric("fixed_amount", { precision: 19, scale: 4 }),
     memo: text(),
     tagId: uuid("tag_id").references(() => tagTable.id),
+    projectId: uuid("project_id").references(() => projectTable.id),
     sortOrder: integer("sort_order").notNull().default(0),
   },
   (table) => [
