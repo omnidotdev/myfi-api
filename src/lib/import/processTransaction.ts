@@ -6,6 +6,7 @@ import {
   bookTable,
   journalEntryTable,
   journalLineTable,
+  journalLineProjectTable,
   journalLineTagTable,
   reconciliationQueueTable,
 } from "lib/db/schema";
@@ -173,6 +174,34 @@ const processTransaction = async (
       if (tagAssignments.length > 0) {
         await dbPool.insert(journalLineTagTable).values(tagAssignments);
       }
+
+      // Auto-assign projects from per-split projectIds, with rule-level fallback
+      const projectAssignments: { journalLineId: string; projectId: string }[] =
+        [];
+      for (let i = 0; i < catResult.splits.length; i++) {
+        const splitProjectId = catResult.splits[i].projectId;
+        if (splitProjectId && insertedLines[i]) {
+          projectAssignments.push({
+            journalLineId: insertedLines[i].id,
+            projectId: splitProjectId,
+          });
+        }
+      }
+      if (catResult.projectId) {
+        for (let i = 0; i < catResult.splits.length; i++) {
+          if (!catResult.splits[i].projectId && insertedLines[i]) {
+            projectAssignments.push({
+              journalLineId: insertedLines[i].id,
+              projectId: catResult.projectId,
+            });
+          }
+        }
+      }
+      if (projectAssignments.length > 0) {
+        await dbPool
+          .insert(journalLineProjectTable)
+          .values(projectAssignments);
+      }
     } else {
       // Standard two-line entry
       const insertedLines = await dbPool
@@ -199,6 +228,16 @@ const processTransaction = async (
           insertedLines.map((line) => ({
             journalLineId: line.id,
             tagId: tagId!,
+          })),
+        );
+      }
+
+      // Auto-assign project if the matched rule has a project
+      if (catResult?.projectId && insertedLines?.length) {
+        await dbPool.insert(journalLineProjectTable).values(
+          insertedLines.map((line) => ({
+            journalLineId: line.id,
+            projectId: catResult.projectId!,
           })),
         );
       }

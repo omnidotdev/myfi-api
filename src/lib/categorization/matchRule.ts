@@ -69,6 +69,7 @@ const matchRule = async (
   confidence: number;
   ruleId: string;
   tagId: string | null;
+  projectId: string | null;
   splits?: SelectCategorizationRuleSplit[];
 } | null> => {
   const rules = await dbPool
@@ -115,6 +116,7 @@ const matchRule = async (
       confidence,
       ruleId: rule.id,
       tagId: rule.tagId ?? null,
+      projectId: rule.projectId ?? null,
       ...(splits.length >= 2 ? { splits } : {}),
     };
   }

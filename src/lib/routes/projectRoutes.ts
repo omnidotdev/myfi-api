@@ -273,9 +273,7 @@ const projectRoutes = new Elysia({ prefix: "/api/projects" })
        * violate multi-tenant isolation, so we require all ids in the
        * payload to resolve to exactly one shared bookId.
        */
-      const projectIds = [
-        ...new Set(body.assignments.map((a) => a.projectId)),
-      ];
+      const projectIds = [...new Set(body.assignments.map((a) => a.projectId))];
       const journalLineIds = [
         ...new Set(body.assignments.map((a) => a.journalLineId)),
       ];

@@ -71,6 +71,7 @@ describe("matchRule", () => {
       confidence: 0.95,
       ruleId: "rule-1",
       tagId: null,
+      projectId: null,
     });
   });
 
