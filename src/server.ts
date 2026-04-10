@@ -61,6 +61,7 @@ import journalRoutes from "lib/routes/journalRoutes";
 import mappingRoutes from "lib/routes/mappingRoutes";
 import mileageRoutes from "lib/routes/mileageRoutes";
 import periodRoutes from "lib/routes/periodRoutes";
+import projectRoutes from "lib/routes/projectRoutes";
 import reconciliationRoutes from "lib/routes/reconciliationRoutes";
 import savingsRoutes from "lib/routes/savingsRoutes";
 import statementReconciliationRoutes from "lib/routes/statementReconciliationRoutes";
@@ -165,6 +166,7 @@ const app = new Elysia()
   .use(profileRoutes)
   .use(ofxRoutes)
   .use(periodRoutes)
+  .use(projectRoutes)
   .use(tagRoutes)
   .use(taxJurisdictionRoutes)
   .use(vendorRoutes)
