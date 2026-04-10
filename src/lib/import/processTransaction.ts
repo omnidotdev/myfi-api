@@ -118,32 +118,90 @@ const processTransaction = async (
 
   // Create journal lines when categorized
   if (debitAccountId && creditAccountId) {
-    const insertedLines = await dbPool
-      .insert(journalLineTable)
-      .values([
-        {
-          journalEntryId: entry.id,
-          accountId: debitAccountId,
-          debit: amount.toFixed(4),
-          credit: "0.0000",
-        },
-        {
-          journalEntryId: entry.id,
-          accountId: creditAccountId,
-          debit: "0.0000",
-          credit: amount.toFixed(4),
-        },
-      ])
-      .returning();
+    if (catResult?.splits && catResult.splits.length >= 2) {
+      // Split transaction: multiple lines per side
+      const splitLines = catResult.splits.map((split) => {
+        const splitAmount = split.percentage
+          ? (amount * Number(split.percentage)) / 100
+          : Number(split.fixedAmount);
 
-    // Auto-tag journal lines if the matched rule has a tag
-    if (tagId && insertedLines.length > 0) {
-      await dbPool.insert(journalLineTagTable).values(
-        insertedLines.map((line) => ({
-          journalLineId: line.id,
-          tagId: tagId!,
-        })),
-      );
+        return {
+          journalEntryId: entry.id,
+          accountId: split.accountId,
+          debit: split.side === "debit" ? splitAmount.toFixed(4) : "0.0000",
+          credit: split.side === "credit" ? splitAmount.toFixed(4) : "0.0000",
+          memo: split.memo,
+        };
+      });
+
+      // Remainder handling: adjust last line of each side to absorb rounding
+      const debitSplits = splitLines.filter((l) => l.debit !== "0.0000");
+      const creditSplits = splitLines.filter((l) => l.credit !== "0.0000");
+
+      const adjustRemainder = (
+        lines: typeof splitLines,
+        field: "debit" | "credit",
+      ) => {
+        if (lines.length === 0) return;
+        const sum = lines.reduce((s, l) => s + Number(l[field]), 0);
+        const diff = amount - sum;
+        if (Math.abs(diff) > 0.0001 && lines.length > 0) {
+          const last = lines[lines.length - 1];
+          last[field] = (Number(last[field]) + diff).toFixed(4);
+        }
+      };
+
+      adjustRemainder(debitSplits, "debit");
+      adjustRemainder(creditSplits, "credit");
+
+      const insertedLines = await dbPool
+        .insert(journalLineTable)
+        .values(splitLines)
+        .returning();
+
+      // Auto-tag split lines using per-split tagIds
+      const tagAssignments: { journalLineId: string; tagId: string }[] = [];
+      for (let i = 0; i < catResult.splits.length; i++) {
+        const splitTagId = catResult.splits[i].tagId;
+        if (splitTagId && insertedLines[i]) {
+          tagAssignments.push({
+            journalLineId: insertedLines[i].id,
+            tagId: splitTagId,
+          });
+        }
+      }
+      if (tagAssignments.length > 0) {
+        await dbPool.insert(journalLineTagTable).values(tagAssignments);
+      }
+    } else {
+      // Standard two-line entry
+      const insertedLines = await dbPool
+        .insert(journalLineTable)
+        .values([
+          {
+            journalEntryId: entry.id,
+            accountId: debitAccountId,
+            debit: amount.toFixed(4),
+            credit: "0.0000",
+          },
+          {
+            journalEntryId: entry.id,
+            accountId: creditAccountId,
+            debit: "0.0000",
+            credit: amount.toFixed(4),
+          },
+        ])
+        .returning();
+
+      // Auto-tag journal lines if the matched rule has a tag
+      if (tagId && insertedLines.length > 0) {
+        await dbPool.insert(journalLineTagTable).values(
+          insertedLines.map((line) => ({
+            journalLineId: line.id,
+            tagId: tagId!,
+          })),
+        );
+      }
     }
   }
 

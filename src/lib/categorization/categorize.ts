@@ -19,6 +19,15 @@ interface CategorizationResult {
   reasoning?: string;
   ruleId?: string;
   tagId?: string | null;
+  splits?: Array<{
+    accountId: string;
+    side: string;
+    percentage: string | null;
+    fixedAmount: string | null;
+    memo: string | null;
+    tagId: string | null;
+    sortOrder: number;
+  }>;
 }
 
 /**
@@ -43,6 +52,7 @@ const categorize = async (
       source: "rule",
       ruleId: ruleMatch.ruleId,
       tagId: ruleMatch.tagId,
+      splits: ruleMatch.splits,
     };
   }
 
