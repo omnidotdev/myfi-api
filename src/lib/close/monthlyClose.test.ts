@@ -27,6 +27,14 @@ mock.module("lib/depreciation", () => ({
   postDepreciation: mockPostDepreciation,
 }));
 
+// Mock postAmortization
+const mockPostAmortization = mock(() =>
+  Promise.resolve({ postedCount: 0, skippedCount: 0 }),
+);
+mock.module("lib/amortization", () => ({
+  postAmortization: mockPostAmortization,
+}));
+
 mock.module("lib/db/db", () => ({ dbPool: mockDbPool }));
 
 const { default: runMonthlyClose } = await import("./monthlyClose");
@@ -55,6 +63,7 @@ describe("runMonthlyClose", () => {
     mockSyncTransactions.mockClear();
     mockSaveSnapshot.mockClear();
     mockPostDepreciation.mockClear();
+    mockPostAmortization.mockClear();
   });
 
   test("skips already-closed periods", async () => {
