@@ -5,6 +5,7 @@ import {
   mockInsertValues,
   mockUpdateWhere,
   resetDbMock,
+  setInsertReturningData,
   setSelectResults,
 } from "lib/test/mockDb";
 
@@ -53,5 +54,18 @@ describe("learnRule", () => {
   test("skips empty merchant name", async () => {
     await learnRule("book-1", "   ", "debit-1", "credit-1");
     expect(mockInsertValues).not.toHaveBeenCalled();
+  });
+
+  test("creates rule with splits when split data provided", async () => {
+    setSelectResults([[]]);
+    setInsertReturningData([{ id: "new-rule-id" }]);
+
+    await learnRule("book-1", "costco", "debit-1", "credit-1", [
+      { accountId: "acct-office", side: "debit", percentage: "70.0000" },
+      { accountId: "acct-snacks", side: "debit", percentage: "30.0000" },
+    ]);
+
+    // Rule insert + splits insert
+    expect(mockInsertValues).toHaveBeenCalledTimes(2);
   });
 });
