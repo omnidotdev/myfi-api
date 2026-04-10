@@ -1,10 +1,11 @@
 import { randomUUID } from "node:crypto";
+
 import { and, eq } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 
 import { emitAudit } from "lib/audit";
 import { dbPool } from "lib/db/db";
-import { attachmentTable } from "lib/db/schema";
+import { attachmentTable, journalEntryTable } from "lib/db/schema";
 import {
   deleteObject,
   generateDownloadUrl,
@@ -21,6 +22,13 @@ const ALLOWED_TYPES = [
   "image/heic",
   "application/pdf",
 ];
+
+// Strip path separators and leading/trailing dots/whitespace to prevent
+// path traversal in storage keys
+const sanitizeFilename = (name: string): string => {
+  const cleaned = name.replace(/[/\\]/g, "_").replace(/^[\s.]+|[\s.]+$/g, "");
+  return cleaned || "file";
+};
 
 // Attachment CRUD routes for managing file uploads via presigned URLs
 const attachmentRoutes = new Elysia({ prefix: "/api/attachments" })
@@ -106,7 +114,8 @@ const attachmentRoutes = new Elysia({ prefix: "/api/attachments" })
         }
       }
 
-      const storageKey = `${body.bookId}/${randomUUID()}/${body.filename}`;
+      const safeFilename = sanitizeFilename(body.filename);
+      const storageKey = `${body.bookId}/${randomUUID()}/${safeFilename}`;
 
       const [attachment] = await dbPool
         .insert(attachmentTable)
@@ -208,16 +217,60 @@ const attachmentRoutes = new Elysia({ prefix: "/api/attachments" })
     async ({ params, body, set }) => {
       const { id } = params;
 
-      const [attachment] = await dbPool
-        .update(attachmentTable)
-        .set({ journalEntryId: body.journalEntryId ?? null })
-        .where(eq(attachmentTable.id, id))
-        .returning();
+      const [current] = await dbPool
+        .select()
+        .from(attachmentTable)
+        .where(eq(attachmentTable.id, id));
 
-      if (!attachment) {
+      if (!current) {
         set.status = 404;
         return { error: "Attachment not found" };
       }
+
+      const nextJournalEntryId = body.journalEntryId ?? null;
+
+      // Validate cross-book links and per-entry cap only when assigning a
+      // new non-null journal entry
+      if (nextJournalEntryId && nextJournalEntryId !== current.journalEntryId) {
+        const [targetEntry] = await dbPool
+          .select({ bookId: journalEntryTable.bookId })
+          .from(journalEntryTable)
+          .where(eq(journalEntryTable.id, nextJournalEntryId));
+
+        if (!targetEntry || targetEntry.bookId !== current.bookId) {
+          set.status = 400;
+          return {
+            error: "Cannot link attachment to entry in a different book",
+          };
+        }
+
+        // Pending attachments do not count toward the cap, they are only
+        // enforced once the upload is confirmed
+        if (current.uploadStatus === "complete") {
+          const existing = await dbPool
+            .select({ id: attachmentTable.id })
+            .from(attachmentTable)
+            .where(
+              and(
+                eq(attachmentTable.journalEntryId, nextJournalEntryId),
+                eq(attachmentTable.uploadStatus, "complete"),
+              ),
+            );
+
+          if (existing.length >= MAX_ATTACHMENTS_PER_ENTRY) {
+            set.status = 400;
+            return {
+              error: `Maximum ${MAX_ATTACHMENTS_PER_ENTRY} attachments per entry`,
+            };
+          }
+        }
+      }
+
+      const [attachment] = await dbPool
+        .update(attachmentTable)
+        .set({ journalEntryId: nextJournalEntryId })
+        .where(eq(attachmentTable.id, id))
+        .returning();
 
       return { attachment };
     },
