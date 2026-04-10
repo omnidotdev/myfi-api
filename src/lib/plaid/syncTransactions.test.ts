@@ -77,7 +77,8 @@ describe("syncTransactions", () => {
     expect(result.addedCount).toBe(1);
     expect(mockProcessTransaction).toHaveBeenCalledTimes(1);
 
-    const [txnArg, optsArg] = mockProcessTransaction.mock.calls[0] as unknown as [
+    const [txnArg, optsArg] = mockProcessTransaction.mock
+      .calls[0] as unknown as [
       Record<string, unknown>,
       Record<string, unknown>,
     ];
