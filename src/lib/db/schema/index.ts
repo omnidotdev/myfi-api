@@ -1,6 +1,7 @@
 export * from "./account.table";
 export * from "./accountingPeriod.table";
 export * from "./accountMapping.table";
+export * from "./amortizationEntry.table";
 export * from "./attachment.table";
 export * from "./book.table";
 export * from "./bookAccess.table";
@@ -16,6 +17,7 @@ export * from "./journalEntry.table";
 export * from "./journalLine.table";
 export * from "./journalLineProject.table";
 export * from "./journalLineTag.table";
+export * from "./loan.table";
 export * from "./mileageLog.table";
 export * from "./netWorthSnapshot.table";
 export * from "./payrollConnection.table";
