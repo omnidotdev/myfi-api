@@ -73,7 +73,8 @@ const mockUpdateSet = mock(() => ({ where: mockUpdateWhere }));
 
 export const mockDeleteWhere = mock(() => ({}));
 
-export const mockDbPool = {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const mockDbPool: any = {
   select: mock((..._args: unknown[]) => ({
     from: mock(() => buildResult(getNextResult())),
   })),
@@ -86,4 +87,7 @@ export const mockDbPool = {
   delete: mock(() => ({
     where: mockDeleteWhere,
   })),
+  transaction: mock(
+    async <T>(cb: (tx: unknown) => Promise<T>): Promise<T> => cb(mockDbPool),
+  ),
 };
