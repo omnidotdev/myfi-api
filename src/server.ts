@@ -3,7 +3,7 @@ import { yoga } from "@elysiajs/graphql-yoga";
 import { useParserCache } from "@envelop/parser-cache";
 import { useValidationCache } from "@envelop/validation-cache";
 import { useDisableIntrospection } from "@graphql-yoga/plugin-disable-introspection";
-import { desc, eq, sql } from "drizzle-orm";
+import { and, desc, eq, sql } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 import { schema } from "generated/graphql/schema.executable";
 import { useGrafast } from "grafast/envelop";
@@ -21,7 +21,11 @@ import {
 } from "lib/config/env.config";
 import { cryptoRoutes, lotRoutes } from "lib/crypto";
 import { dbPool, pgPool } from "lib/db/db";
-import { netWorthSnapshotTable } from "lib/db/schema";
+import {
+  amortizationEntryTable,
+  loanTable,
+  netWorthSnapshotTable,
+} from "lib/db/schema";
 import createGraphqlContext from "lib/graphql/createGraphqlContext";
 import { armorPlugin, authenticationPlugin } from "lib/graphql/plugins";
 import importRoutes from "lib/import/importRoutes";
@@ -59,6 +63,8 @@ import categorizationRuleRoutes from "lib/routes/categorizationRuleRoutes";
 import connectionRoutes from "lib/routes/connectionRoutes";
 import dashboardRoutes from "lib/routes/dashboardRoutes";
 import fixedAssetRoutes from "lib/routes/fixedAssetRoutes";
+import loanRoutes from "lib/routes/loanRoutes";
+import { getCurrentBalance } from "lib/routes/loanRoutes";
 import journalRoutes from "lib/routes/journalRoutes";
 import mappingRoutes from "lib/routes/mappingRoutes";
 import mileageRoutes from "lib/routes/mileageRoutes";
@@ -163,6 +169,7 @@ const app = new Elysia()
   .use(categorizationRuleRoutes)
   .use(dashboardRoutes)
   .use(fixedAssetRoutes)
+  .use(loanRoutes)
   .use(attachmentRoutes)
   .use(importRoutes)
   .use(profileRoutes)
@@ -190,7 +197,13 @@ const app = new Elysia()
     const projectIds = query.projectIds
       ? query.projectIds.split(",").filter(Boolean)
       : undefined;
-    return generateProfitAndLoss({ bookId, startDate, endDate, tagIds, projectIds });
+    return generateProfitAndLoss({
+      bookId,
+      startDate,
+      endDate,
+      tagIds,
+      projectIds,
+    });
   })
   .get("/api/reports/balance-sheet", async ({ query }) => {
     const { bookId, asOfDate } = query;
@@ -224,7 +237,13 @@ const app = new Elysia()
     const projectIds = query.projectIds
       ? query.projectIds.split(",").filter(Boolean)
       : undefined;
-    return generateTrialBalance({ bookId, startDate, endDate, tagIds, projectIds });
+    return generateTrialBalance({
+      bookId,
+      startDate,
+      endDate,
+      tagIds,
+      projectIds,
+    });
   })
   .get("/api/reports/cash-flow", async ({ query }) => {
     const { bookId, startDate, endDate } = query;
@@ -309,10 +328,10 @@ const app = new Elysia()
   .get("/api/reports/project-summary", async ({ query }) => {
     const { bookId } = query;
     if (!bookId) {
-      return new Response(
-        JSON.stringify({ error: "bookId is required" }),
-        { status: 400, headers: { "Content-Type": "application/json" } },
-      );
+      return new Response(JSON.stringify({ error: "bookId is required" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
     }
     return generateProjectSummary(bookId);
   })
@@ -353,6 +372,77 @@ const app = new Elysia()
       asOfDate,
       accountSubType: "accounts_receivable",
     });
+  })
+  .get("/api/reports/loan-summary", async ({ query }) => {
+    const { bookId } = query;
+    if (!bookId) {
+      return new Response(JSON.stringify({ error: "bookId is required" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    const loans = await dbPool
+      .select()
+      .from(loanTable)
+      .where(eq(loanTable.bookId, bookId));
+
+    const summaries = await Promise.all(
+      loans.map(async (loan) => {
+        const currentBalance = await getCurrentBalance(loan);
+
+        // Total interest paid (from posted entries)
+        const [paidResult] = await dbPool
+          .select({
+            total: sql<string>`coalesce(sum(${amortizationEntryTable.interestAmount}::numeric), 0)`,
+          })
+          .from(amortizationEntryTable)
+          .where(
+            and(
+              eq(amortizationEntryTable.loanId, loan.id),
+              eq(amortizationEntryTable.status, "posted"),
+            ),
+          );
+        const totalInterestPaid = Number(paidResult?.total ?? 0);
+
+        // Total interest remaining (from scheduled entries)
+        const [remainingResult] = await dbPool
+          .select({
+            total: sql<string>`coalesce(sum(${amortizationEntryTable.interestAmount}::numeric), 0)`,
+          })
+          .from(amortizationEntryTable)
+          .where(
+            and(
+              eq(amortizationEntryTable.loanId, loan.id),
+              eq(amortizationEntryTable.status, "scheduled"),
+            ),
+          );
+        const totalInterestRemaining = Number(remainingResult?.total ?? 0);
+
+        // Next payment (first scheduled entry)
+        const [nextPayment] = await dbPool
+          .select()
+          .from(amortizationEntryTable)
+          .where(
+            and(
+              eq(amortizationEntryTable.loanId, loan.id),
+              eq(amortizationEntryTable.status, "scheduled"),
+            ),
+          )
+          .orderBy(amortizationEntryTable.sequenceNumber)
+          .limit(1);
+
+        return {
+          ...loan,
+          currentBalance,
+          totalInterestPaid,
+          totalInterestRemaining,
+          nextPayment: nextPayment ?? null,
+        };
+      }),
+    );
+
+    return { loans: summaries };
   })
   .get("/api/budgets/tracking", async ({ query }) => {
     const { bookId, period } = query;
