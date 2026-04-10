@@ -1,6 +1,7 @@
 export * from "./account.table";
 export * from "./accountingPeriod.table";
 export * from "./accountMapping.table";
+export * from "./attachment.table";
 export * from "./book.table";
 export * from "./bookAccess.table";
 export * from "./budget.table";
