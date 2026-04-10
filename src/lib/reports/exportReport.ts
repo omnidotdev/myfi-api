@@ -135,7 +135,12 @@ const exportReport = async (params: ExportParams): Promise<ExportResult> => {
         throw new Error("asOfDate is required for balance-sheet");
       }
 
-      const bs = await generateBalanceSheet({ bookId, asOfDate, tagIds, projectIds });
+      const bs = await generateBalanceSheet({
+        bookId,
+        asOfDate,
+        tagIds,
+        projectIds,
+      });
 
       title = "Balance Sheet";
       subtitle = `As of ${asOfDate}`;
@@ -336,7 +341,8 @@ const exportReport = async (params: ExportParams): Promise<ExportResult> => {
       });
 
       title = `Project P&L: ${ppnl.project.name}`;
-      subtitle = startDate && endDate ? `${startDate} to ${endDate}` : undefined;
+      subtitle =
+        startDate && endDate ? `${startDate} to ${endDate}` : undefined;
       filenameBase = `project-pnl_${ppnl.project.name.replace(/\s+/g, "-")}`;
       headers = ["Account", "Type", "Amount"];
 

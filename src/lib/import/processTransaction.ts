@@ -5,8 +5,8 @@ import { dbPool } from "lib/db/db";
 import {
   bookTable,
   journalEntryTable,
-  journalLineTable,
   journalLineProjectTable,
+  journalLineTable,
   journalLineTagTable,
   reconciliationQueueTable,
 } from "lib/db/schema";
@@ -198,9 +198,7 @@ const processTransaction = async (
         }
       }
       if (projectAssignments.length > 0) {
-        await dbPool
-          .insert(journalLineProjectTable)
-          .values(projectAssignments);
+        await dbPool.insert(journalLineProjectTable).values(projectAssignments);
       }
     } else {
       // Standard two-line entry
