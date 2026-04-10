@@ -25,6 +25,19 @@ const makeRule = (overrides: Record<string, unknown> = {}) => ({
   ...overrides,
 });
 
+const makeSplit = (overrides: Record<string, unknown> = {}) => ({
+  id: "split-1",
+  ruleId: "rule-1",
+  accountId: "acct-split-1",
+  side: "debit",
+  percentage: "70.0000",
+  fixedAmount: null,
+  memo: null,
+  tagId: null,
+  sortOrder: 0,
+  ...overrides,
+});
+
 describe("matchRule", () => {
   beforeEach(() => {
     resetDbMock();
@@ -254,5 +267,45 @@ describe("matchRule", () => {
       0.85,
     );
     expect(result).not.toBeNull();
+  });
+
+  test("returns splits when rule has split lines", async () => {
+    setSelectResults([
+      [makeRule()],
+      [
+        makeSplit({
+          id: "s1",
+          accountId: "acct-office",
+          percentage: "70.0000",
+          sortOrder: 0,
+        }),
+        makeSplit({
+          id: "s2",
+          accountId: "acct-snacks",
+          percentage: "30.0000",
+          sortOrder: 1,
+        }),
+      ],
+    ]);
+    const result = await matchRule(
+      { merchantName: "Spotify", memo: null, plaidCategory: null, amount: 10 },
+      "book-1",
+      0.85,
+    );
+    expect(result).not.toBeNull();
+    expect(result!.splits).toHaveLength(2);
+    expect(result!.splits![0].accountId).toBe("acct-office");
+    expect(result!.splits![0].percentage).toBe("70.0000");
+  });
+
+  test("returns no splits for non-split rules", async () => {
+    setSelectResults([[makeRule()], []]);
+    const result = await matchRule(
+      { merchantName: "Spotify", memo: null, plaidCategory: null, amount: 10 },
+      "book-1",
+      0.85,
+    );
+    expect(result).not.toBeNull();
+    expect(result!.splits).toBeUndefined();
   });
 });

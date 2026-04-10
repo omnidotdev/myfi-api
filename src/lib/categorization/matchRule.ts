@@ -1,9 +1,15 @@
-import { desc, eq, sql } from "drizzle-orm";
+import { asc, desc, eq, sql } from "drizzle-orm";
 
 import { dbPool } from "lib/db/db";
-import { categorizationRuleTable } from "lib/db/schema";
+import {
+  categorizationRuleSplitTable,
+  categorizationRuleTable,
+} from "lib/db/schema";
 
-import type { SelectCategorizationRule } from "lib/db/schema";
+import type {
+  SelectCategorizationRule,
+  SelectCategorizationRuleSplit,
+} from "lib/db/schema";
 
 /** Context extracted from a transaction for rule matching */
 export interface TransactionContext {
@@ -63,6 +69,7 @@ const matchRule = async (
   confidence: number;
   ruleId: string;
   tagId: string | null;
+  splits?: SelectCategorizationRuleSplit[];
 } | null> => {
   const rules = await dbPool
     .select()
@@ -95,12 +102,20 @@ const matchRule = async (
       })
       .where(eq(categorizationRuleTable.id, rule.id));
 
+    // Fetch split lines for this rule, ordered by sortOrder
+    const splits = await dbPool
+      .select()
+      .from(categorizationRuleSplitTable)
+      .where(eq(categorizationRuleSplitTable.ruleId, rule.id))
+      .orderBy(asc(categorizationRuleSplitTable.sortOrder));
+
     return {
       debitAccountId: rule.debitAccountId,
       creditAccountId: rule.creditAccountId,
       confidence,
       ruleId: rule.id,
       tagId: rule.tagId ?? null,
+      ...(splits.length >= 2 ? { splits } : {}),
     };
   }
 
