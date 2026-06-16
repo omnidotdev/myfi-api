@@ -4,8 +4,9 @@ import {
 } from "@omnidotdev/providers";
 
 import {
+  HERALD_API_KEY,
+  HERALD_API_URL,
   NOTIFICATION_FROM_EMAIL,
-  RESEND_API_KEY,
   VORTEX_API_KEY,
   VORTEX_API_URL,
 } from "lib/config/env.config";
@@ -30,19 +31,20 @@ if (!VORTEX_API_URL || !VORTEX_API_KEY) {
 
 /**
  * Shared notification provider instance.
- * Falls back to noop when Resend is not configured
+ * Falls back to noop when Herald is not configured
  */
 const notifications =
-  RESEND_API_KEY && NOTIFICATION_FROM_EMAIL
+  HERALD_API_URL && HERALD_API_KEY
     ? createNotificationProvider({
-        provider: "resend",
-        apiKey: RESEND_API_KEY,
-        defaultFrom: NOTIFICATION_FROM_EMAIL,
+        provider: "herald",
+        apiKey: HERALD_API_KEY,
+        apiUrl: HERALD_API_URL,
+        defaultFrom: NOTIFICATION_FROM_EMAIL ?? "noreply@send.omni.dev",
       })
     : createNotificationProvider({});
 
-if (!RESEND_API_KEY) {
-  console.warn("RESEND_API_KEY not set, email notifications disabled");
+if (!HERALD_API_URL || !HERALD_API_KEY) {
+  console.warn("HERALD_API_URL/HERALD_API_KEY not set, email notifications disabled");
 }
 
 export { events, notifications };
