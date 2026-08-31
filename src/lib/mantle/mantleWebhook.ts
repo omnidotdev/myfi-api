@@ -5,6 +5,8 @@ import { Elysia, t } from "elysia";
 import { MANTLE_WEBHOOK_SECRET, isDevEnv } from "lib/config/env.config";
 import handleMantleEvent from "./eventHandlers";
 
+import type { WebhookResult } from "./eventHandlers";
+
 const mantleWebhookBody = t.Object({
   event: t.String(),
   data: t.Object({
@@ -117,6 +119,21 @@ export const authorizeMantleWebhook = ({
   return { authorized: true };
 };
 
+/**
+ * Map a handler result to the HTTP status returned to Vortex.
+ *
+ * The handler reports outcomes in its result shape rather than throwing, so
+ * without this mapping every outcome returns a default 200: Vortex acks and
+ * never redelivers, permanently losing an event that failed only because its
+ * config was not yet in place. Transient failures (`retryable`) return 503 so
+ * Vortex retries; terminal failures and duplicates return 200 so a genuinely
+ * unprocessable or already-processed event is not retried forever.
+ * @param result - Result returned by `handleMantleEvent`.
+ * @returns HTTP status code to respond with.
+ */
+export const webhookStatusForResult = (result: WebhookResult): number =>
+  result.retryable ? 503 : 200;
+
 // Vortex webhook endpoint for receiving Mantle events
 const mantleWebhook = new Elysia({ prefix: "/api/webhooks" })
   .onBeforeHandle(async ({ request, set }) => {
@@ -138,8 +155,12 @@ const mantleWebhook = new Elysia({ prefix: "/api/webhooks" })
   })
   .post(
     "/mantle",
-    async ({ body }) => {
+    async ({ body, set }) => {
       const result = await handleMantleEvent(body);
+
+      // Map the outcome to an HTTP status so Vortex retries transient failures
+      // instead of acking a lost event (default 200)
+      set.status = webhookStatusForResult(result);
 
       return result;
     },

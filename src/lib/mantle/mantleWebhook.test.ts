@@ -1,7 +1,11 @@
 import { describe, expect, test } from "bun:test";
 import { createHmac } from "node:crypto";
 
-import { authorizeMantleWebhook, verifySignature } from "./mantleWebhook";
+import {
+  authorizeMantleWebhook,
+  verifySignature,
+  webhookStatusForResult,
+} from "./mantleWebhook";
 
 const SECRET = "test-webhook-secret";
 const RAW_BODY = JSON.stringify({
@@ -82,6 +86,43 @@ describe("authorizeMantleWebhook", () => {
     });
 
     expect(result.authorized).toBe(true);
+  });
+});
+
+describe("webhookStatusForResult", () => {
+  test("maps a transient (retryable) failure to 503 so Vortex redelivers", () => {
+    expect(
+      webhookStatusForResult({
+        success: false,
+        retryable: true,
+        error: "No account mapping configured",
+      }),
+    ).toBe(503);
+  });
+
+  test("maps a successful post to 200", () => {
+    expect(
+      webhookStatusForResult({ success: true, journalEntryId: "entry-1" }),
+    ).toBe(200);
+  });
+
+  test("maps a duplicate to 200 (not retried forever)", () => {
+    expect(
+      webhookStatusForResult({
+        success: true,
+        journalEntryId: "entry-1",
+        error: "Duplicate event, entry already exists",
+      }),
+    ).toBe(200);
+  });
+
+  test("maps a terminal (non-retryable) failure to 200", () => {
+    expect(
+      webhookStatusForResult({
+        success: false,
+        error: "Unsupported event type: invoice.exploded",
+      }),
+    ).toBe(200);
   });
 });
 

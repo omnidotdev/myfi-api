@@ -39,10 +39,20 @@ type MantleEventBody = {
   };
 };
 
-type WebhookResult = {
+export type WebhookResult = {
   success: boolean;
   journalEntryId?: string;
   error?: string;
+  /**
+   * Whether the failure is transient and the event should be redelivered.
+   *
+   * Set on config-not-yet-in-place failures (no book for the org, no account
+   * mapping) which routinely happen when an event arrives before an admin has
+   * finished setup. The webhook maps this to a non-2xx so Vortex retries.
+   * Terminal failures (unsupported/malformed events) and duplicates leave it
+   * unset so they return 2xx and are not retried forever.
+   */
+  retryable?: boolean;
 };
 
 /**
@@ -234,6 +244,24 @@ const buildMemo = (
 };
 
 /**
+ * Build the tenant-scoped dedup predicate for a Mantle-sourced journal entry.
+ *
+ * Scoped by book (which resolves 1:1 from the organization) so a legacy
+ * sourceReferenceId shared across organizations does not collide. Kept as a
+ * named helper so the same predicate is reused by the pre-insert check and is
+ * unit-testable independently of a live database.
+ */
+export const mantleDedupCondition = (
+  bookId: string,
+  sourceReferenceId: string,
+) =>
+  and(
+    eq(journalEntryTable.bookId, bookId),
+    eq(journalEntryTable.source, "mantle_sync"),
+    eq(journalEntryTable.sourceReferenceId, sourceReferenceId),
+  );
+
+/**
  * Create a journal entry from normalized event data.
  */
 const createJournalEntry = async (
@@ -260,23 +288,22 @@ const createJournalEntry = async (
     .where(eq(bookTable.organizationId, organizationId));
 
   if (!book) {
+    // Transient: the book may not be provisioned yet. Retry rather than drop
+    // the financial event
     return {
       success: false,
+      retryable: true,
       error: `No book found for organization ${organizationId}`,
     };
   }
 
-  // Duplicate detection: check for existing entry with same source + event-scoped
-  // reference (invoice id + accounting event)
+  // Duplicate detection: check for an existing entry with the same book +
+  // source + event-scoped reference (invoice id + accounting event). Scoping by
+  // book keeps a legacy sourceReferenceId from matching another org's entry
   const [existing] = await dbPool
     .select({ id: journalEntryTable.id })
     .from(journalEntryTable)
-    .where(
-      and(
-        eq(journalEntryTable.source, "mantle_sync"),
-        eq(journalEntryTable.sourceReferenceId, sourceReferenceId),
-      ),
-    );
+    .where(mantleDedupCondition(book.id, sourceReferenceId));
 
   if (existing) {
     return {
@@ -298,8 +325,11 @@ const createJournalEntry = async (
     );
 
   if (!mapping) {
+    // Transient: the mapping is often configured after the first event arrives.
+    // Retry so the event is not silently lost before setup completes
     return {
       success: false,
+      retryable: true,
       error: `No account mapping configured for event "${accountingEvent}" in book "${book.name}". Configure mappings in the account mapping settings`,
     };
   }
@@ -309,6 +339,10 @@ const createJournalEntry = async (
 
   // Create journal entry + lines + reconciliation queue item in a transaction
   const result = await dbPool.transaction(async (tx) => {
+    // onConflictDoNothing on the (book, source, source_reference_id) unique
+    // constraint closes the check-then-insert race: a concurrent identical
+    // event that passed the pre-check above inserts nothing here and returns no
+    // row, so it is treated as a duplicate rather than double-posting
     const [entry] = await tx
       .insert(journalEntryTable)
       .values({
@@ -321,7 +355,18 @@ const createJournalEntry = async (
         isReviewed: false,
         isReconciled: false,
       } satisfies InferInsertModel<typeof journalEntryTable>)
+      .onConflictDoNothing({
+        target: [
+          journalEntryTable.bookId,
+          journalEntryTable.source,
+          journalEntryTable.sourceReferenceId,
+        ],
+      })
       .returning();
+
+    // A concurrent insert won the race and already created this entry; skip the
+    // lines and reconciliation item so nothing is double-written
+    if (!entry) return null;
 
     // Debit line
     await tx.insert(journalLineTable).values({
@@ -350,6 +395,14 @@ const createJournalEntry = async (
 
     return entry;
   });
+
+  // Lost the insert race: the entry already exists, so treat as a duplicate
+  if (!result) {
+    return {
+      success: true,
+      error: "Duplicate event, entry already exists",
+    };
+  }
 
   emitAudit({
     type: `myfi.mantle_event.${originalEvent}`,
