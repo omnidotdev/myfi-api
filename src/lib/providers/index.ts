@@ -44,7 +44,9 @@ const notifications =
     : createNotificationProvider({});
 
 if (!HERALD_API_URL || !HERALD_API_KEY) {
-  console.warn("HERALD_API_URL/HERALD_API_KEY not set, email notifications disabled");
+  console.warn(
+    "HERALD_API_URL/HERALD_API_KEY not set, email notifications disabled",
+  );
 }
 
 export { events, notifications };

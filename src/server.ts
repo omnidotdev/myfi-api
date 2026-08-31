@@ -1,4 +1,5 @@
 import { readFileSync } from "node:fs";
+
 import { cors } from "@elysiajs/cors";
 import { yoga } from "@elysiajs/graphql-yoga";
 import { useParserCache } from "@envelop/parser-cache";
@@ -80,7 +81,13 @@ import {
   generateTaxLossHarvesting,
 } from "lib/tax";
 
-const commit = (() => { try { return readFileSync("/app/.git-sha", "utf-8").trim(); } catch { return "unknown"; } })();
+const commit = (() => {
+  try {
+    return readFileSync("/app/.git-sha", "utf-8").trim();
+  } catch {
+    return "unknown";
+  }
+})();
 
 /**
  * Elysia server.
