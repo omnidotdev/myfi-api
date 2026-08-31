@@ -243,6 +243,16 @@ const createJournalEntry = async (
   const { accountingEvent, organizationId, referenceId, amount, memo } =
     normalized;
 
+  // Idempotency key scoped to the accounting event, not just the invoice id.
+  // A single invoice legitimately produces multiple journal entries across its
+  // lifecycle (invoice.sent -> Dr A/R, invoice.paid -> Dr Cash / Cr A/R,
+  // invoice.void -> reversal). Keying on the invoice id alone collapses every
+  // later lifecycle event into the first entry, so A/R is never relieved, cash
+  // is never recognized, and voids never reverse. Including the accounting event
+  // keeps each distinct lifecycle event as its own entry while still deduping a
+  // true replay (same invoice + same event)
+  const sourceReferenceId = `${referenceId}:${accountingEvent}`;
+
   // Look up book by organizationId
   const [book] = await dbPool
     .select()
@@ -256,14 +266,15 @@ const createJournalEntry = async (
     };
   }
 
-  // Duplicate detection: check for existing entry with same source + reference
+  // Duplicate detection: check for existing entry with same source + event-scoped
+  // reference (invoice id + accounting event)
   const [existing] = await dbPool
     .select({ id: journalEntryTable.id })
     .from(journalEntryTable)
     .where(
       and(
         eq(journalEntryTable.source, "mantle_sync"),
-        eq(journalEntryTable.sourceReferenceId, referenceId),
+        eq(journalEntryTable.sourceReferenceId, sourceReferenceId),
       ),
     );
 
@@ -305,7 +316,7 @@ const createJournalEntry = async (
         date: new Date().toISOString(),
         memo: entryMemo,
         source: "mantle_sync",
-        sourceReferenceId: referenceId,
+        sourceReferenceId,
         vendorId: (normalized.metadata?.vendorId as string) ?? null,
         isReviewed: false,
         isReconciled: false,
