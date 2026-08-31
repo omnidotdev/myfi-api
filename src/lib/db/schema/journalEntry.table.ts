@@ -42,7 +42,15 @@ export const journalEntryTable = pgTable(
     index("journal_entry_book_id_idx").on(table.bookId),
     index("journal_entry_date_idx").on(table.date),
     index("journal_entry_source_idx").on(table.source),
-    index("journal_entry_source_ref_idx").on(
+    // Tenant-scoped idempotency key for externally sourced entries (e.g. Mantle
+    // webhooks). Scoping by book prevents a shared legacy sourceReferenceId
+    // (like "1001") from colliding across organizations, and the UNIQUE
+    // constraint makes concurrent inserts race-safe (paired with
+    // onConflictDoNothing) rather than relying on an app-level check-then-insert.
+    // A null sourceReferenceId (manual entries) is exempt: Postgres treats
+    // NULLs as distinct, so unlimited manual entries still coexist
+    uniqueIndex("journal_entry_source_ref_idx").on(
+      table.bookId,
       table.source,
       table.sourceReferenceId,
     ),
