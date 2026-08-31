@@ -36,14 +36,15 @@ const mantleWebhookBody = t.Object({
  * Verify HMAC-SHA256 webhook signature.
  * @param rawBody - Raw request body string.
  * @param signature - Value of the `X-Webhook-Signature` header.
+ * @param secret - Shared webhook signing secret.
  * @returns Whether the signature is valid.
  */
-const verifySignature = (rawBody: string, signature: string): boolean => {
-  if (!MANTLE_WEBHOOK_SECRET) return false;
-
-  const expected = createHmac("sha256", MANTLE_WEBHOOK_SECRET)
-    .update(rawBody)
-    .digest("hex");
+export const verifySignature = (
+  rawBody: string,
+  signature: string,
+  secret: string,
+): boolean => {
+  const expected = createHmac("sha256", secret).update(rawBody).digest("hex");
 
   const sigBuf = Buffer.from(signature, "hex");
   const expectedBuf = Buffer.from(expected, "hex");
@@ -53,25 +54,86 @@ const verifySignature = (rawBody: string, signature: string): boolean => {
   return timingSafeEqual(sigBuf, expectedBuf);
 };
 
+/** Result of an authorization decision for an incoming Mantle webhook. */
+type MantleAuthResult =
+  | { authorized: true }
+  | { authorized: false; status: number; error: string };
+
+/**
+ * Decide whether an incoming Mantle webhook request is authorized.
+ *
+ * Fails closed: local dev is the only bypass. In every other environment the
+ * signing secret MUST be configured; when it is unset the caller cannot be
+ * authenticated, so the request is rejected rather than accepted unverified.
+ * @param isDev - Whether the process is running in local dev mode.
+ * @param secret - Configured webhook signing secret, if any.
+ * @param signature - Value of the `X-Webhook-Signature` header, if present.
+ * @param rawBody - Raw request body string.
+ */
+export const authorizeMantleWebhook = ({
+  isDev,
+  secret,
+  signature,
+  rawBody,
+}: {
+  isDev: boolean;
+  secret: string | undefined;
+  signature: string | null;
+  rawBody: string;
+}): MantleAuthResult => {
+  // Local dev is the only legitimate bypass, gated strictly on a
+  // non-production NODE_ENV
+  if (isDev) return { authorized: true };
+
+  // Fail closed: outside dev the secret MUST be configured. Without it the
+  // caller cannot be authenticated, so reject rather than accept unverified
+  // journal entries. Log the misconfiguration server-side only
+  if (!secret) {
+    console.error("MANTLE_WEBHOOK_SECRET not set, rejecting webhook request");
+
+    return {
+      authorized: false,
+      status: 401,
+      error: "Invalid webhook signature",
+    };
+  }
+
+  if (!signature) {
+    return {
+      authorized: false,
+      status: 401,
+      error: "Missing webhook signature",
+    };
+  }
+
+  if (!verifySignature(rawBody, signature, secret)) {
+    return {
+      authorized: false,
+      status: 401,
+      error: "Invalid webhook signature",
+    };
+  }
+
+  return { authorized: true };
+};
+
 // Vortex webhook endpoint for receiving Mantle events
 const mantleWebhook = new Elysia({ prefix: "/api/webhooks" })
   .onBeforeHandle(async ({ request, set }) => {
-    // Skip verification in dev mode or when secret is not configured
-    if (isDevEnv || !MANTLE_WEBHOOK_SECRET) return;
-
     const signature = request.headers.get("X-Webhook-Signature");
-
-    if (!signature) {
-      set.status = 401;
-      return { error: "Missing webhook signature" };
-    }
-
     // Clone the request to read the raw body without consuming it
     const rawBody = await request.clone().text();
 
-    if (!verifySignature(rawBody, signature)) {
-      set.status = 401;
-      return { error: "Invalid webhook signature" };
+    const result = authorizeMantleWebhook({
+      isDev: isDevEnv,
+      secret: MANTLE_WEBHOOK_SECRET,
+      signature,
+      rawBody,
+    });
+
+    if (!result.authorized) {
+      set.status = result.status;
+      return { error: result.error };
     }
   })
   .post(
