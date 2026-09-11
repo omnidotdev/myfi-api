@@ -5,14 +5,6 @@ import {
   QBO_CLIENT_SECRET,
   QBO_REDIRECT_URI,
 } from "lib/config/env.config";
-import {
-  PAGE_SIZE,
-  exchangeCode,
-  qboGet,
-  queryAccounts,
-  queryJournalEntries,
-  refreshAccessToken,
-} from "./quickbooksClient";
 import { QBO_TOKEN_URL, quickbooksBaseUrl } from "./quickbooksConfig";
 
 import type {
@@ -21,6 +13,20 @@ import type {
   QboJournalEntry,
   QboTokens,
 } from "./quickbooksClient";
+
+// Query param forces a fresh, unmocked module instance, bypassing the
+// mock.module registered for "./quickbooksClient" by backfill.test.ts
+// @ts-expect-error -- query-param import has no type declarations
+const client = await import("./quickbooksClient.ts?real");
+const {
+  PAGE_SIZE,
+  exchangeCode,
+  qboGet,
+  queryAccounts,
+  queryJournalEntries,
+  queryPreferences,
+  refreshAccessToken,
+} = client;
 
 // The client builds Basic auth from whatever env.config resolved. QBO creds are
 // unset in the test environment, so assert against those same resolved values
@@ -402,5 +408,35 @@ describe("queryAccounts", () => {
     const accounts = await queryAccounts(conn, onRefresh);
 
     expect(accounts).toEqual([]);
+  });
+});
+
+describe("queryPreferences", () => {
+  test("runs SELECT * FROM Preferences and returns the first row", async () => {
+    responses = [
+      jsonResponse({
+        QueryResponse: {
+          Preferences: [{ CurrencyPrefs: { MultiCurrencyEnabled: true } }],
+        },
+      }),
+    ];
+    const onRefresh = mock(() => Promise.resolve());
+
+    const preferences = await queryPreferences(conn, onRefresh);
+
+    expect(preferences?.CurrencyPrefs?.MultiCurrencyEnabled).toBe(true);
+    const query = decodeURIComponent(
+      new URL(calls[0]?.url ?? "").searchParams.get("query") ?? "",
+    );
+    expect(query).toContain("SELECT * FROM Preferences");
+  });
+
+  test("returns undefined when there is no Preferences row", async () => {
+    responses = [jsonResponse({ QueryResponse: {} })];
+    const onRefresh = mock(() => Promise.resolve());
+
+    const preferences = await queryPreferences(conn, onRefresh);
+
+    expect(preferences).toBeUndefined();
   });
 });

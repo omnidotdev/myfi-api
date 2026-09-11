@@ -48,7 +48,10 @@ mock.module("lib/db/db", () => ({
   dbPool: { ...mockDbPool, transaction: mockTransaction },
 }));
 
-const { importJournalEntries } = await import("./importJournalEntries");
+// Query param forces a fresh, unmocked module instance, bypassing the
+// mock.module registered for "./importJournalEntries" by backfill.test.ts
+// @ts-expect-error -- query-param import has no type declarations
+const { importJournalEntries } = await import("./importJournalEntries.ts?real");
 
 const DATE = "2026-01-01T00:00:00.000Z";
 

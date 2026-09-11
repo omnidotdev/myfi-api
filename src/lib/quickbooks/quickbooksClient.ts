@@ -35,6 +35,7 @@ export interface QboJournalEntry {
   Id: string;
   TxnDate: string;
   PrivateNote?: string;
+  CurrencyRef?: { value?: string };
   Line: Array<{
     Amount: number;
     DetailType?: string;
@@ -53,6 +54,13 @@ export interface QboAccount {
   AccountType: string;
   AcctNum?: string;
   Classification?: string;
+}
+
+/** Minimal shape of the QBO company Preferences needed by the migration */
+interface QboPreferences {
+  CurrencyPrefs?: {
+    MultiCurrencyEnabled?: boolean;
+  };
 }
 
 interface QboTokenResponse {
@@ -262,3 +270,24 @@ export const queryAccounts = async (
   onRefresh: OnRefresh,
 ): Promise<QboAccount[]> =>
   runQuery<QboAccount>(conn, "SELECT * FROM Account", "Account", onRefresh);
+
+/**
+ * Query the company Preferences.
+ * QBO returns a single Preferences object, so the first row is returned (or
+ * undefined when the collection is absent). Used to detect multi-currency
+ * companies up front, before any journal entry is imported
+ * @param conn - Connection with realmId and current tokens
+ * @param onRefresh - Called with rotated tokens so the caller can persist them
+ */
+export const queryPreferences = async (
+  conn: QboConnection,
+  onRefresh: OnRefresh,
+): Promise<QboPreferences | undefined> => {
+  const rows = await runQuery<QboPreferences>(
+    conn,
+    "SELECT * FROM Preferences",
+    "Preferences",
+    onRefresh,
+  );
+  return rows[0];
+};
