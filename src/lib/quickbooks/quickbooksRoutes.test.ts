@@ -2,6 +2,7 @@ import { afterAll, beforeEach, describe, expect, mock, test } from "bun:test";
 
 import {
   mockDbPool,
+  mockInsertOnConflict,
   mockInsertValues,
   resetDbMock,
   setInsertReturningData,
@@ -27,14 +28,52 @@ mock.module("lib/config/env.config", () => ({
 const QBO_AUTHORIZE_URL = "https://appcenter.intuit.com/connect/oauth2";
 
 // Configured by default; the unconfigured case re-mocks and re-imports a fresh
-// route instance below, since a named import binds its value at module eval
+// route instance below, since a named import binds its value at module eval.
+// Spread the real config so exports the real quickbooksClient still needs
+// (QBO_TOKEN_URL, QBO_REVOKE_URL, quickbooksBaseUrl) stay present when it is
+// re-imported via ?real below, overriding only the two the routes read here
+// @ts-expect-error -- query-param import forces the real module, no types
+const realConfig = await import("./quickbooksConfig.ts?real");
 mock.module("./quickbooksConfig", () => ({
+  ...realConfig,
   QBO_AUTHORIZE_URL,
   isQuickbooksConfigured: true,
 }));
 
 const mockRunBackfill = mock(() => Promise.resolve({ entriesImported: 7 }));
 mock.module("./backfill", () => ({ runBackfill: mockRunBackfill }));
+
+// The account-map view does a live QBO pull. Mock only queryAccounts, spreading
+// the real client so sibling consumers keep every other export. Restored in
+// afterAll below, mirroring reconcile.test.ts, so the stub never leaks
+// @ts-expect-error -- query-param import forces the real module, no types
+const realClient = await import("./quickbooksClient.ts?real");
+let qboAccountsResult: Array<{
+  Id: string;
+  Name: string;
+  AccountType: string;
+  AcctNum?: string;
+}> = [];
+let qboAccountsError: Error | null = null;
+const mockQueryAccounts = mock(() => {
+  if (qboAccountsError) {
+    return Promise.reject(qboAccountsError);
+  }
+  return Promise.resolve(qboAccountsResult);
+});
+mock.module("./quickbooksClient", () => ({
+  ...realClient,
+  queryAccounts: mockQueryAccounts,
+}));
+
+// The account-map view decrypts stored tokens to build the live connection.
+// Deterministic enc()/dec() so a leak assertion can check the plaintext form
+const mockEncryptToken = mock((plaintext: string) => `enc(${plaintext})`);
+const mockDecryptToken = mock((encrypted: string) => `dec(${encrypted})`);
+mock.module("lib/encryption/tokenEncryption", () => ({
+  encryptToken: mockEncryptToken,
+  decryptToken: mockDecryptToken,
+}));
 
 const mockRunReconciliation = mock(() =>
   Promise.resolve({ totalVariance: "0.0000", mismatchCount: 0 }),
@@ -68,6 +107,7 @@ const realReconcile = await import("./reconcile.ts?real");
 afterAll(() => {
   mock.module("./reconcile", () => ({ ...realReconcile }));
   mock.module("./cutover", () => ({ ...realCutover }));
+  mock.module("./quickbooksClient", () => ({ ...realClient }));
 });
 
 const { verifyOauthState } = await import("lib/oauth/state");
@@ -806,5 +846,337 @@ describe("GET /api/quickbooks/reconciliation/:reconciliationId/lines", () => {
 
     const json = await res.json();
     expect(json.error).toBe("bookId is required");
+  });
+});
+
+describe("GET /api/quickbooks/account-map", () => {
+  beforeEach(() => {
+    resetDbMock();
+    mockQueryAccounts.mockClear();
+    qboAccountsResult = [];
+    qboAccountsError = null;
+  });
+
+  test("merges live QBO accounts with the stored map and returns the MyFi candidates", async () => {
+    // Selects run in order: connected account, stored map rows, MyFi accounts
+    setSelectResults([
+      [
+        {
+          id: "conn-1",
+          bookId: "book-1",
+          provider: "quickbooks",
+          accessToken: "enc-access",
+          refreshToken: "enc-refresh",
+          realmId: "realm-1",
+        },
+      ],
+      [{ qboAccountId: "qbo-1", myfiAccountId: "myfi-1" }],
+      [
+        { id: "myfi-1", name: "Cash", code: "1000", type: "asset" },
+        { id: "myfi-2", name: "Sales", code: "4000", type: "revenue" },
+      ],
+    ]);
+    qboAccountsResult = [
+      { Id: "qbo-1", Name: "Checking", AccountType: "Bank" },
+      { Id: "qbo-2", Name: "Sales Income", AccountType: "Income" },
+    ];
+
+    const res = await app.handle(
+      new Request(
+        "http://localhost/api/quickbooks/account-map?bookId=book-1&connectedAccountId=conn-1",
+      ),
+    );
+
+    expect(res.status).toBe(200);
+
+    const json = await res.json();
+    // One entry per QBO account: the mapped one carries its MyFi id, the
+    // unmapped one is null so the UI can offer a resolution
+    expect(json.accounts).toEqual([
+      {
+        qboAccountId: "qbo-1",
+        qboAccountName: "Checking",
+        qboAccountType: "Bank",
+        myfiAccountId: "myfi-1",
+      },
+      {
+        qboAccountId: "qbo-2",
+        qboAccountName: "Sales Income",
+        qboAccountType: "Income",
+        myfiAccountId: null,
+      },
+    ]);
+    // The candidate list for the resolution dropdown
+    expect(json.myfiAccounts).toEqual([
+      { id: "myfi-1", name: "Cash", code: "1000", type: "asset" },
+      { id: "myfi-2", name: "Sales", code: "4000", type: "revenue" },
+    ]);
+    // The live pull runs once against the decrypted connection
+    expect(mockQueryAccounts).toHaveBeenCalledTimes(1);
+  });
+
+  test("rejects a connectedAccountId from a different book with 403 and never pulls QBO", async () => {
+    setSelectResults([
+      [
+        {
+          id: "conn-1",
+          bookId: "other-book",
+          provider: "quickbooks",
+          accessToken: "enc-access",
+          refreshToken: "enc-refresh",
+          realmId: "realm-1",
+        },
+      ],
+    ]);
+
+    const res = await app.handle(
+      new Request(
+        "http://localhost/api/quickbooks/account-map?bookId=book-1&connectedAccountId=conn-1",
+      ),
+    );
+
+    expect(res.status).toBe(403);
+
+    const json = await res.json();
+    expect(json.error).toBe("Forbidden");
+    // No live QBO call for a cross-tenant account
+    expect(mockQueryAccounts).not.toHaveBeenCalled();
+  });
+
+  test("rejects an unknown connectedAccountId with 403", async () => {
+    setSelectResults([[]]);
+
+    const res = await app.handle(
+      new Request(
+        "http://localhost/api/quickbooks/account-map?bookId=book-1&connectedAccountId=missing",
+      ),
+    );
+
+    expect(res.status).toBe(403);
+    expect(mockQueryAccounts).not.toHaveBeenCalled();
+  });
+
+  test("returns 400 when a required query param is missing", async () => {
+    const res = await app.handle(
+      new Request("http://localhost/api/quickbooks/account-map?bookId=book-1"),
+    );
+
+    expect(res.status).toBe(400);
+
+    const json = await res.json();
+    expect(json.error).toBeTruthy();
+    expect(mockQueryAccounts).not.toHaveBeenCalled();
+  });
+
+  test("returns a generic 502 leaking no token or QBO body when the live pull fails", async () => {
+    setSelectResults([
+      [
+        {
+          id: "conn-1",
+          bookId: "book-1",
+          provider: "quickbooks",
+          accessToken: "enc-access",
+          refreshToken: "enc-refresh",
+          realmId: "realm-1",
+        },
+      ],
+    ]);
+    qboAccountsError = new Error(
+      "QBO 401 AQAB-secret-token dec(enc-access) {body}",
+    );
+
+    const res = await app.handle(
+      new Request(
+        "http://localhost/api/quickbooks/account-map?bookId=book-1&connectedAccountId=conn-1",
+      ),
+    );
+
+    expect(res.status).toBe(502);
+
+    const json = await res.json();
+    expect(json.error).toBe("Could not load QuickBooks accounts");
+    // No token, decrypted secret, or QBO body detail leaks in the response
+    const serialized = JSON.stringify(json);
+    expect(serialized).not.toContain("AQAB");
+    expect(serialized).not.toContain("secret");
+    expect(serialized).not.toContain("enc-access");
+    expect(serialized).not.toContain("dec(");
+    expect(serialized).not.toContain("body");
+  });
+});
+
+describe("POST /api/quickbooks/account-map", () => {
+  beforeEach(() => {
+    resetDbMock();
+    mockQueryAccounts.mockClear();
+  });
+
+  test("upserts one mapping and returns it", async () => {
+    // Selects run in order: connected account, chosen MyFi account
+    setSelectResults([
+      [{ id: "conn-1", bookId: "book-1", provider: "quickbooks" }],
+      [{ id: "myfi-1", bookId: "book-1" }],
+    ]);
+    setInsertReturningData([
+      {
+        id: "map-1",
+        bookId: "book-1",
+        qboAccountId: "qbo-1",
+        qboAccountName: "Checking",
+        qboAccountType: "Bank",
+        myfiAccountId: "myfi-1",
+      },
+    ]);
+
+    const res = await app.handle(
+      new Request("http://localhost/api/quickbooks/account-map", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          bookId: "book-1",
+          connectedAccountId: "conn-1",
+          qboAccountId: "qbo-1",
+          qboAccountName: "Checking",
+          qboAccountType: "Bank",
+          myfiAccountId: "myfi-1",
+        }),
+      }),
+    );
+
+    expect(res.status).toBe(200);
+
+    const json = await res.json();
+    expect(json.qboAccountId).toBe("qbo-1");
+    expect(json.myfiAccountId).toBe("myfi-1");
+
+    // The row is written with the mapping and the QBO metadata
+    expect(mockInsertValues).toHaveBeenCalledWith(
+      expect.objectContaining({
+        bookId: "book-1",
+        qboAccountId: "qbo-1",
+        qboAccountName: "Checking",
+        qboAccountType: "Bank",
+        myfiAccountId: "myfi-1",
+      }),
+    );
+    // Idempotent upsert keyed on (bookId, qboAccountId)
+    expect(mockInsertOnConflict).toHaveBeenCalledTimes(1);
+  });
+
+  test("rejects a myfiAccountId that belongs to a different book with 403 and no upsert", async () => {
+    // Connection is owned, but the chosen MyFi account is another book's
+    setSelectResults([
+      [{ id: "conn-1", bookId: "book-1", provider: "quickbooks" }],
+      [{ id: "myfi-9", bookId: "other-book" }],
+    ]);
+
+    const res = await app.handle(
+      new Request("http://localhost/api/quickbooks/account-map", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          bookId: "book-1",
+          connectedAccountId: "conn-1",
+          qboAccountId: "qbo-1",
+          myfiAccountId: "myfi-9",
+        }),
+      }),
+    );
+
+    expect(res.status).toBe(403);
+
+    const json = await res.json();
+    expect(json.error).toBe("Forbidden");
+    // No cross-book linkage is written
+    expect(mockInsertValues).not.toHaveBeenCalled();
+    expect(mockInsertOnConflict).not.toHaveBeenCalled();
+  });
+
+  test("rejects an unknown myfiAccountId with 403", async () => {
+    setSelectResults([
+      [{ id: "conn-1", bookId: "book-1", provider: "quickbooks" }],
+      [],
+    ]);
+
+    const res = await app.handle(
+      new Request("http://localhost/api/quickbooks/account-map", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          bookId: "book-1",
+          connectedAccountId: "conn-1",
+          qboAccountId: "qbo-1",
+          myfiAccountId: "ghost",
+        }),
+      }),
+    );
+
+    expect(res.status).toBe(403);
+    expect(mockInsertValues).not.toHaveBeenCalled();
+  });
+
+  test("rejects a connectedAccountId from a different book with 403 before the MyFi lookup", async () => {
+    setSelectResults([
+      [{ id: "conn-1", bookId: "other-book", provider: "quickbooks" }],
+    ]);
+
+    const res = await app.handle(
+      new Request("http://localhost/api/quickbooks/account-map", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          bookId: "book-1",
+          connectedAccountId: "conn-1",
+          qboAccountId: "qbo-1",
+          myfiAccountId: "myfi-1",
+        }),
+      }),
+    );
+
+    expect(res.status).toBe(403);
+
+    const json = await res.json();
+    expect(json.error).toBe("Forbidden");
+    expect(mockInsertValues).not.toHaveBeenCalled();
+  });
+
+  test("re-maps an existing qboAccountId via onConflictDoUpdate rather than duplicating", async () => {
+    setSelectResults([
+      [{ id: "conn-1", bookId: "book-1", provider: "quickbooks" }],
+      [{ id: "myfi-2", bookId: "book-1" }],
+    ]);
+    setInsertReturningData([
+      {
+        id: "map-1",
+        bookId: "book-1",
+        qboAccountId: "qbo-1",
+        myfiAccountId: "myfi-2",
+      },
+    ]);
+
+    const res = await app.handle(
+      new Request("http://localhost/api/quickbooks/account-map", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          bookId: "book-1",
+          connectedAccountId: "conn-1",
+          qboAccountId: "qbo-1",
+          myfiAccountId: "myfi-2",
+        }),
+      }),
+    );
+
+    expect(res.status).toBe(200);
+
+    const json = await res.json();
+    expect(json.myfiAccountId).toBe("myfi-2");
+
+    // The conflict clause updates the target row's mapping in place
+    expect(mockInsertOnConflict).toHaveBeenCalledTimes(1);
+    const config = mockInsertOnConflict.mock.calls[0]?.[0] as {
+      set?: Record<string, unknown>;
+    };
+    expect(config?.set?.myfiAccountId).toBe("myfi-2");
   });
 });

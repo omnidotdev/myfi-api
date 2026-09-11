@@ -74,9 +74,13 @@ export const setInsertReturningData = (data: unknown[]) => {
   insertReturningData = data;
 };
 // Captures the config passed to .values().onConflictDoUpdate(config), so tests
-// can assert the upsert target and set clause
+// can assert the upsert target and set clause. The result awaits to the queued
+// insertReturningData for callers that terminate at onConflictDoUpdate, and
+// carries .returning() for callers that chain it to read the upserted row back
 export const mockInsertOnConflict = mock((_config?: unknown) =>
-  Promise.resolve(insertReturningData),
+  Object.assign(Promise.resolve(insertReturningData), {
+    returning: mock(() => insertReturningData),
+  }),
 );
 // Default shape of insert().values(): resolves for a bare await, and supports
 // both .returning() and .onConflictDoUpdate() chains

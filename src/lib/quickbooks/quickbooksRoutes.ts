@@ -4,17 +4,23 @@ import { Elysia, t } from "elysia";
 import { QBO_CLIENT_ID, QBO_REDIRECT_URI } from "lib/config/env.config";
 import { dbPool } from "lib/db/db";
 import {
+  accountTable,
   connectedAccountTable,
+  quickbooksAccountMapTable,
   quickbooksCutoverTable,
   quickbooksMigrationTable,
   quickbooksReconciliationLineTable,
   quickbooksReconciliationTable,
 } from "lib/db/schema";
+import { decryptToken, encryptToken } from "lib/encryption/tokenEncryption";
 import { signOauthState } from "lib/oauth/state";
 import { runBackfill } from "./backfill";
 import { CutoverNotReconciledError, runCutover } from "./cutover";
+import { queryAccounts } from "./quickbooksClient";
 import { QBO_AUTHORIZE_URL, isQuickbooksConfigured } from "./quickbooksConfig";
 import { runReconciliation } from "./reconcile";
+
+import type { QboConnection, QboTokens } from "./quickbooksClient";
 
 /** OAuth scope granting read access to a company's accounting data */
 const QBO_ACCOUNTING_SCOPE = "com.intuit.quickbooks.accounting";
@@ -424,6 +430,215 @@ const quickbooksRoutes = new Elysia({ prefix: "/api/quickbooks" })
     {
       params: t.Object({ reconciliationId: t.String() }),
       query: t.Object({ bookId: t.Optional(t.String()) }),
+    },
+  )
+  .get(
+    "/account-map",
+    async ({ query, set }) => {
+      const { bookId, connectedAccountId } = query;
+
+      // Both params are required: bookId authorizes the request (checked by
+      // bookAccessMiddleware) and connectedAccountId names the connection to
+      // pull live. A generic 400 echoes none of the raw input
+      if (!bookId || !connectedAccountId) {
+        set.status = 400;
+        return { error: "bookId and connectedAccountId are required" };
+      }
+
+      // Authorization boundary: bookAccessMiddleware verified the caller may
+      // access bookId, but NOT that this connected account belongs to it.
+      // Without this check a caller could enumerate another tenant's chart of
+      // accounts, so reject a mismatched or non-QBO account with a generic 403
+      // before any live pull happens
+      const [account] = await dbPool
+        .select()
+        .from(connectedAccountTable)
+        .where(eq(connectedAccountTable.id, connectedAccountId));
+
+      if (
+        !account ||
+        account.bookId !== bookId ||
+        account.provider !== "quickbooks"
+      ) {
+        set.status = 403;
+        return { error: "Forbidden" };
+      }
+
+      // The live QBO pull can fail on a token, network, or API error. Isolate it
+      // so any failure returns a generic 502 and logs the error class only,
+      // never a token or the QBO response body
+      let qboAccounts: Awaited<ReturnType<typeof queryAccounts>>;
+      try {
+        if (!account.accessToken || !account.refreshToken || !account.realmId) {
+          throw new Error(
+            "Connected account is missing QuickBooks credentials",
+          );
+        }
+
+        const conn: QboConnection = {
+          realmId: account.realmId,
+          accessToken: decryptToken(account.accessToken),
+          refreshToken: decryptToken(account.refreshToken),
+        };
+
+        // Persist rotated tokens AND update the in-memory connection, mirroring
+        // the backfill pattern, so a mid-pull refresh rotates from the latest
+        // refresh token rather than the original (rotated-away) one
+        const onRefresh = async (tokens: QboTokens): Promise<void> => {
+          conn.accessToken = tokens.accessToken;
+          conn.refreshToken = tokens.refreshToken;
+          await dbPool
+            .update(connectedAccountTable)
+            .set({
+              accessToken: encryptToken(tokens.accessToken),
+              refreshToken: encryptToken(tokens.refreshToken),
+            })
+            .where(eq(connectedAccountTable.id, connectedAccountId));
+        };
+
+        qboAccounts = await queryAccounts(conn, onRefresh);
+      } catch (err) {
+        // Log the error class only server-side (never the message, stack, or
+        // any token) and return a generic failure carrying no internals
+        console.error(
+          `[QuickBooks] account-map load failed (${err instanceof Error ? err.name : "unknown"})`,
+        );
+        set.status = 502;
+        return { error: "Could not load QuickBooks accounts" };
+      }
+
+      // The stored map is the source of truth for which QBO accounts are already
+      // resolved, keyed by qboAccountId so each live account can carry its map
+      const mapRows = await dbPool
+        .select({
+          qboAccountId: quickbooksAccountMapTable.qboAccountId,
+          myfiAccountId: quickbooksAccountMapTable.myfiAccountId,
+        })
+        .from(quickbooksAccountMapTable)
+        .where(eq(quickbooksAccountMapTable.bookId, bookId));
+
+      const mappedByQbo = new Map<string, string>(
+        mapRows.map((row) => [row.qboAccountId, row.myfiAccountId]),
+      );
+
+      // The book's own chart of accounts, the candidate list the UI offers when
+      // resolving an unmapped QBO account
+      const myfiAccounts = await dbPool
+        .select({
+          id: accountTable.id,
+          name: accountTable.name,
+          code: accountTable.code,
+          type: accountTable.type,
+        })
+        .from(accountTable)
+        .where(eq(accountTable.bookId, bookId));
+
+      return {
+        accounts: qboAccounts.map((qbo) => ({
+          qboAccountId: qbo.Id,
+          qboAccountName: qbo.Name,
+          qboAccountType: qbo.AccountType,
+          // A mapped account carries its MyFi id, an unmapped one is null so the
+          // UI can tell them apart and offer a resolution
+          myfiAccountId: mappedByQbo.get(qbo.Id) ?? null,
+        })),
+        myfiAccounts,
+      };
+    },
+    {
+      query: t.Object({
+        bookId: t.Optional(t.String()),
+        connectedAccountId: t.Optional(t.String()),
+      }),
+    },
+  )
+  .post(
+    "/account-map",
+    async ({ body, set }) => {
+      const {
+        bookId,
+        connectedAccountId,
+        qboAccountId,
+        qboAccountName,
+        qboAccountType,
+        myfiAccountId,
+      } = body;
+
+      // First IDOR boundary: bookAccessMiddleware verified the caller may access
+      // bookId, but NOT that this connected account belongs to it. Reject a
+      // mismatched or non-QBO account with a generic 403 before any write
+      const [account] = await dbPool
+        .select({
+          id: connectedAccountTable.id,
+          bookId: connectedAccountTable.bookId,
+          provider: connectedAccountTable.provider,
+        })
+        .from(connectedAccountTable)
+        .where(eq(connectedAccountTable.id, connectedAccountId));
+
+      if (
+        !account ||
+        account.bookId !== bookId ||
+        account.provider !== "quickbooks"
+      ) {
+        set.status = 403;
+        return { error: "Forbidden" };
+      }
+
+      // Second IDOR boundary: the chosen MyFi account must belong to this book.
+      // Without this a caller could link a QBO account to another book's ledger
+      // account, so reject a missing or cross-book target with a generic 403
+      const [myfiAccount] = await dbPool
+        .select({
+          id: accountTable.id,
+          bookId: accountTable.bookId,
+        })
+        .from(accountTable)
+        .where(eq(accountTable.id, myfiAccountId));
+
+      if (!myfiAccount || myfiAccount.bookId !== bookId) {
+        set.status = 403;
+        return { error: "Forbidden" };
+      }
+
+      // Upsert on the (bookId, qboAccountId) unique index so a manual re-map
+      // overwrites the existing row rather than duplicating it. The QBO metadata
+      // is refreshed alongside the mapping so a resolved row carries the account
+      // name and type the UI displays
+      const [row] = await dbPool
+        .insert(quickbooksAccountMapTable)
+        .values({
+          bookId,
+          qboAccountId,
+          qboAccountName: qboAccountName ?? null,
+          qboAccountType: qboAccountType ?? null,
+          myfiAccountId,
+        })
+        .onConflictDoUpdate({
+          target: [
+            quickbooksAccountMapTable.bookId,
+            quickbooksAccountMapTable.qboAccountId,
+          ],
+          set: {
+            myfiAccountId,
+            qboAccountName: qboAccountName ?? null,
+            qboAccountType: qboAccountType ?? null,
+            updatedAt: new Date().toISOString(),
+          },
+        })
+        .returning();
+
+      return row ?? { ok: true, qboAccountId, myfiAccountId };
+    },
+    {
+      body: t.Object({
+        bookId: t.String(),
+        connectedAccountId: t.String(),
+        qboAccountId: t.String(),
+        qboAccountName: t.Optional(t.String()),
+        qboAccountType: t.Optional(t.String()),
+        myfiAccountId: t.String(),
+      }),
     },
   );
 
