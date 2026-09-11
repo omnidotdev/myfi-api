@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, mock, test } from "bun:test";
 
 import {
   mockDbPool,
+  mockInsertOnConflict,
   mockInsertValues,
   resetDbMock,
   setSelectResults,
@@ -81,6 +82,7 @@ describe("POST /api/statement-reconciliations", () => {
     setSelectResults([[]]);
     mockInsertValues.mockReturnValueOnce({
       returning: mock(() => [created]),
+      onConflictDoUpdate: mockInsertOnConflict,
     });
 
     const res = await app.handle(

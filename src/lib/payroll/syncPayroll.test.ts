@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, mock, test } from "bun:test";
 
 import {
   mockDbPool,
+  mockInsertOnConflict,
   mockInsertValues,
   resetDbMock,
   setSelectResults,
@@ -92,6 +93,7 @@ describe("syncPayroll", () => {
     // Make insert().values() return an object with returning()
     mockInsertValues.mockImplementation(() => ({
       returning: mock(() => [{ id: "entry-1" }]),
+      onConflictDoUpdate: mockInsertOnConflict,
     }));
   });
 

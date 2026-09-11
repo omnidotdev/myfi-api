@@ -11,10 +11,10 @@ import {
 
 import {
   mockDbPool,
+  mockInsertOnConflict,
   mockInsertValues,
   mockUpdateWhere,
   resetDbMock,
-  setSelectResults,
 } from "lib/test/mockDb";
 
 mock.module("lib/db/db", () => ({ dbPool: mockDbPool }));
@@ -84,10 +84,7 @@ afterEach(() => {
 });
 
 describe("GET /api/quickbooks/callback", () => {
-  test("exchanges the code, encrypts tokens, inserts a connection, and redirects", async () => {
-    // No existing connection for the book, so the insert path runs
-    setSelectResults([[]]);
-
+  test("exchanges the code, encrypts tokens, upserts a connection, and redirects", async () => {
     const res = await callback({
       code: "auth-code",
       realmId: "realm-1",
@@ -109,10 +106,7 @@ describe("GET /api/quickbooks/callback", () => {
     );
   });
 
-  test("updates the existing connection on reconnect rather than inserting", async () => {
-    // An existing QuickBooks connection for the book triggers the update path
-    setSelectResults([[{ id: "conn-1" }]]);
-
+  test("upserts atomically on reconnect with no separate select or update branch", async () => {
     const res = await callback({
       code: "auth-code",
       realmId: "realm-2",
@@ -120,8 +114,37 @@ describe("GET /api/quickbooks/callback", () => {
     });
 
     expect(res.headers.get("location")).toBe(SUCCESS);
-    expect(mockUpdateWhere).toHaveBeenCalled();
-    expect(mockInsertValues).not.toHaveBeenCalled();
+    // A single atomic upsert, never a select-then-update branch that could race
+    expect(mockDbPool.select).not.toHaveBeenCalled();
+    expect(mockUpdateWhere).not.toHaveBeenCalled();
+    expect(mockInsertValues).toHaveBeenCalledTimes(1);
+    expect(mockInsertOnConflict).toHaveBeenCalledTimes(1);
+  });
+
+  test("upsert conflicts on the book, scoped to the quickbooks partial index, updating tokens", async () => {
+    await callback({
+      code: "auth-code",
+      realmId: "realm-3",
+      state: "book-1",
+    });
+
+    // The conflict target is the book column, narrowed by targetWhere so only
+    // the quickbooks-only partial index is used (Plaid/OFX rows are untouched)
+    const config = mockInsertOnConflict.mock.calls[0]?.[0] as {
+      target: unknown;
+      targetWhere: unknown;
+      set: Record<string, unknown>;
+    };
+    expect(config.target).toBeDefined();
+    expect(config.targetWhere).toBeDefined();
+    expect(config.set).toEqual(
+      expect.objectContaining({
+        realmId: "realm-3",
+        accessToken: "enc(at)",
+        refreshToken: "enc(rt)",
+        status: "active",
+      }),
+    );
   });
 
   test("redirects to a generic error page when QuickBooks is not configured", async () => {
@@ -161,7 +184,6 @@ describe("GET /api/quickbooks/callback", () => {
   });
 
   test("redirects to the error page on failure without leaking the code or tokens", async () => {
-    setSelectResults([[]]);
     exchangeImpl = () =>
       Promise.reject(new Error("intuit rejected secret-token-abc123"));
 

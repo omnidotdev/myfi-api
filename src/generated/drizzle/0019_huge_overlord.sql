@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX "connected_account_book_quickbooks_idx" ON "connected_account" USING btree ("book_id") WHERE "connected_account"."provider" = 'quickbooks';

@@ -18,10 +18,18 @@ export const resetDbMock = () => {
   selectQueue = [];
   insertReturningData = [];
   updateReturningData = [];
+  // Clear calls AND restore the default implementation, so a persistent
+  // mockImplementation set by one test file does not leak into another
   mockInsertValues.mockClear();
+  mockInsertValues.mockImplementation(defaultInsertValuesImpl);
+  mockInsertOnConflict.mockClear();
   mockUpdateWhere.mockClear();
   mockUpdateSet.mockClear();
   mockDeleteWhere.mockClear();
+  mockDbPool.select.mockClear();
+  mockDbPool.insert.mockClear();
+  mockDbPool.update.mockClear();
+  mockDbPool.delete.mockClear();
 };
 
 export const setSelectResults = (results: unknown[][]) => {
@@ -61,9 +69,18 @@ let insertReturningData: unknown[] = [];
 export const setInsertReturningData = (data: unknown[]) => {
   insertReturningData = data;
 };
-export const mockInsertValues = mock(() => ({
+// Captures the config passed to .values().onConflictDoUpdate(config), so tests
+// can assert the upsert target and set clause
+export const mockInsertOnConflict = mock((_config?: unknown) =>
+  Promise.resolve(insertReturningData),
+);
+// Default shape of insert().values(): resolves for a bare await, and supports
+// both .returning() and .onConflictDoUpdate() chains
+const defaultInsertValuesImpl = () => ({
   returning: mock(() => insertReturningData),
-}));
+  onConflictDoUpdate: mockInsertOnConflict,
+});
+export const mockInsertValues = mock(defaultInsertValuesImpl);
 let updateReturningData: unknown[] = [];
 export const setUpdateReturningData = (data: unknown[]) => {
   updateReturningData = data;

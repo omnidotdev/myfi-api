@@ -134,6 +134,13 @@
       "when": 1789153805674,
       "tag": "0018_material_hiroim",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1789157475295,
+      "tag": "0019_huge_overlord",
+      "breakpoints": true
     }
   ]
 }

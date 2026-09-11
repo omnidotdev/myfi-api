@@ -1,4 +1,4 @@
-import { and, eq } from "drizzle-orm";
+import { sql } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 
 import { dbPool } from "lib/db/db";
@@ -48,40 +48,32 @@ export const quickbooksCallbackRoute = new Elysia().get(
       const accessToken = encryptToken(tokens.accessToken);
       const refreshToken = encryptToken(tokens.refreshToken);
 
-      // Idempotent upsert: reuse an existing QuickBooks connection for the book
-      // on reconnect rather than inserting a duplicate row. There is no unique
-      // index on (bookId, provider) to conflict on, so match then update or
-      // insert
-      const [existing] = await dbPool
-        .select({ id: connectedAccountTable.id })
-        .from(connectedAccountTable)
-        .where(
-          and(
-            eq(connectedAccountTable.bookId, bookId),
-            eq(connectedAccountTable.provider, "quickbooks"),
-          ),
-        );
-
-      if (existing) {
-        await dbPool
-          .update(connectedAccountTable)
-          .set({
-            realmId,
-            accessToken,
-            refreshToken,
-            status: "active",
-          })
-          .where(eq(connectedAccountTable.id, existing.id));
-      } else {
-        await dbPool.insert(connectedAccountTable).values({
+      // Atomic upsert against the quickbooks-only partial unique index
+      // (connected_account_book_quickbooks_idx). A single statement closes the
+      // concurrent-connect race: two callbacks for the same book cannot both
+      // insert a QuickBooks row. On reconnect the conflict updates the existing
+      // row in place. Scoped by targetWhere so only the partial index is used,
+      // leaving the many-per-book Plaid and ofx_direct rows untouched
+      await dbPool
+        .insert(connectedAccountTable)
+        .values({
           bookId,
           provider: "quickbooks",
           realmId,
           accessToken,
           refreshToken,
           status: "active",
+        })
+        .onConflictDoUpdate({
+          target: connectedAccountTable.bookId,
+          targetWhere: sql`${connectedAccountTable.provider} = 'quickbooks'`,
+          set: {
+            realmId,
+            accessToken,
+            refreshToken,
+            status: "active",
+          },
         });
-      }
 
       return redirect(SUCCESS_REDIRECT);
     } catch (err) {
