@@ -261,6 +261,87 @@ describe("POST /api/quickbooks/reconcile", () => {
     });
   });
 
+  test("rejects a malformed periodStart with 400 before any work", async () => {
+    // Ownership passes so the date check is what rejects the request
+    setSelectResults([
+      [{ id: "conn-1", bookId: "book-1", provider: "quickbooks" }],
+    ]);
+
+    const res = await app.handle(
+      new Request("http://localhost/api/quickbooks/reconcile", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          bookId: "book-1",
+          connectedAccountId: "conn-1",
+          periodStart: "01/01/2026",
+          periodEnd: "2026-03-31",
+        }),
+      }),
+    );
+
+    expect(res.status).toBe(400);
+
+    const json = await res.json();
+    expect(json.error).toBe("Invalid period");
+    // No run row created and no reconciliation started
+    expect(mockInsertValues).not.toHaveBeenCalled();
+    expect(mockRunReconciliation).not.toHaveBeenCalled();
+  });
+
+  test("rejects a period whose start is after its end with 400", async () => {
+    setSelectResults([
+      [{ id: "conn-1", bookId: "book-1", provider: "quickbooks" }],
+    ]);
+
+    const res = await app.handle(
+      new Request("http://localhost/api/quickbooks/reconcile", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          bookId: "book-1",
+          connectedAccountId: "conn-1",
+          periodStart: "2026-03-31",
+          periodEnd: "2026-01-01",
+        }),
+      }),
+    );
+
+    expect(res.status).toBe(400);
+
+    const json = await res.json();
+    expect(json.error).toBe("Invalid period");
+    expect(mockInsertValues).not.toHaveBeenCalled();
+    expect(mockRunReconciliation).not.toHaveBeenCalled();
+  });
+
+  test("ownership 403 takes precedence over a bad date", async () => {
+    // Cross-book account AND a malformed date: ownership must reject first
+    setSelectResults([
+      [{ id: "conn-1", bookId: "other-book", provider: "quickbooks" }],
+    ]);
+
+    const res = await app.handle(
+      new Request("http://localhost/api/quickbooks/reconcile", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          bookId: "book-1",
+          connectedAccountId: "conn-1",
+          periodStart: "nope",
+          periodEnd: "also-nope",
+        }),
+      }),
+    );
+
+    expect(res.status).toBe(403);
+
+    const json = await res.json();
+    expect(json.error).toBe("Forbidden");
+    expect(mockInsertValues).not.toHaveBeenCalled();
+    expect(mockRunReconciliation).not.toHaveBeenCalled();
+  });
+
   test("rejects a connectedAccountId from a different book with 403", async () => {
     // The account exists but belongs to another book (cross-tenant attempt)
     setSelectResults([

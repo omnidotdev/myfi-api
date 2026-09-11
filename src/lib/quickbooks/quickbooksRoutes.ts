@@ -148,6 +148,19 @@ const quickbooksRoutes = new Elysia({ prefix: "/api/quickbooks" })
         return { error: "Forbidden" };
       }
 
+      // A malformed or inverted period is a client error, so reject it
+      // synchronously with a generic 400 rather than letting the async worker
+      // fail the run downstream. The message echoes none of the raw input
+      const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
+      if (
+        !ISO_DATE.test(periodStart) ||
+        !ISO_DATE.test(periodEnd) ||
+        periodStart > periodEnd
+      ) {
+        set.status = 400;
+        return { error: "Invalid period" };
+      }
+
       const [reconciliation] = await dbPool
         .insert(quickbooksReconciliationTable)
         .values({
