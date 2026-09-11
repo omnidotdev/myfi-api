@@ -11,6 +11,7 @@ import type {
   QboAccount,
   QboConnection,
   QboJournalEntry,
+  QboReportAccountBalance,
   QboTokens,
 } from "./quickbooksClient";
 
@@ -25,6 +26,7 @@ const {
   queryAccounts,
   queryJournalEntries,
   queryPreferences,
+  queryTrialBalanceReport,
   refreshAccessToken,
 } = client;
 
@@ -438,5 +440,165 @@ describe("queryPreferences", () => {
     const preferences = await queryPreferences(conn, onRefresh);
 
     expect(preferences).toBeUndefined();
+  });
+});
+
+describe("queryTrialBalanceReport", () => {
+  // A realistic nested TrialBalance report: an "Assets" section holding two
+  // Data rows (one with an id on ColData[0], one without) plus a section-level
+  // Summary row, then a top-level TOTAL summary row. Only the two Data rows are
+  // real accounts, everything else must be skipped
+  const nestedReport = {
+    Header: { ReportName: "TrialBalance" },
+    Columns: {
+      Column: [{ ColTitle: "" }, { ColTitle: "Debit" }, { ColTitle: "Credit" }],
+    },
+    Rows: {
+      Row: [
+        {
+          Header: { ColData: [{ value: "Assets" }] },
+          Rows: {
+            Row: [
+              {
+                type: "Data",
+                ColData: [
+                  { value: "Checking", id: "101" },
+                  { value: "1,250.75" },
+                  { value: "" },
+                ],
+              },
+              {
+                type: "Data",
+                ColData: [
+                  { value: "Undeposited Funds" },
+                  { value: "" },
+                  { value: "300" },
+                ],
+              },
+            ],
+          },
+          Summary: {
+            ColData: [
+              { value: "Total Assets" },
+              { value: "1250.75" },
+              { value: "300" },
+            ],
+          },
+          type: "Section",
+        },
+        {
+          type: "Section",
+          Summary: {
+            ColData: [
+              { value: "TOTAL" },
+              { value: "1250.75" },
+              { value: "300" },
+            ],
+          },
+        },
+      ],
+    },
+  };
+
+  test("returns only Data rows, skipping section and summary rows, in order", async () => {
+    responses = [jsonResponse(nestedReport)];
+    const onRefresh = mock(() => Promise.resolve());
+
+    const balances: QboReportAccountBalance[] = await queryTrialBalanceReport(
+      conn,
+      { start: "2026-01-01", end: "2026-12-31", onRefresh },
+    );
+
+    expect(balances).toEqual([
+      {
+        qboAccountId: "101",
+        accountName: "Checking",
+        debit: 1250.75,
+        credit: 0,
+      },
+      {
+        qboAccountId: null,
+        accountName: "Undeposited Funds",
+        debit: 0,
+        credit: 300,
+      },
+    ]);
+  });
+
+  test("hits the Reports API path with the date range", async () => {
+    responses = [jsonResponse(nestedReport)];
+    const onRefresh = mock(() => Promise.resolve());
+
+    await queryTrialBalanceReport(conn, {
+      start: "2026-01-01",
+      end: "2026-12-31",
+      onRefresh,
+    });
+
+    const url = new URL(calls[0]?.url ?? "");
+    expect(url.pathname).toBe(`/v3/company/realm-1/reports/TrialBalance`);
+    expect(url.searchParams.get("start_date")).toBe("2026-01-01");
+    expect(url.searchParams.get("end_date")).toBe("2026-12-31");
+  });
+
+  test("rejects a non-ISO start date without issuing a request or echoing it", async () => {
+    const onRefresh = mock(() => Promise.resolve());
+
+    let message = "";
+    try {
+      await queryTrialBalanceReport(conn, {
+        start: "2026-01-01'; DROP",
+        end: "2026-12-31",
+        onRefresh,
+      });
+    } catch (err) {
+      message = (err as Error).message;
+    }
+
+    expect(message.toLowerCase()).toContain("date");
+    expect(message).toContain("start");
+    expect(message).not.toContain("DROP");
+    expect(calls).toHaveLength(0);
+  });
+
+  test("rejects a malformed end date without issuing a request", async () => {
+    const onRefresh = mock(() => Promise.resolve());
+
+    await expect(
+      queryTrialBalanceReport(conn, {
+        start: "2026-01-01",
+        end: "not-a-date",
+        onRefresh,
+      }),
+    ).rejects.toThrow(/date/i);
+    expect(calls).toHaveLength(0);
+  });
+
+  test("returns an empty array when the report has no Rows", async () => {
+    responses = [
+      jsonResponse({ Header: { ReportName: "TrialBalance" }, Columns: {} }),
+    ];
+    const onRefresh = mock(() => Promise.resolve());
+
+    const balances = await queryTrialBalanceReport(conn, {
+      start: "2026-01-01",
+      end: "2026-12-31",
+      onRefresh,
+    });
+
+    expect(balances).toEqual([]);
+  });
+
+  test("returns an empty array when Rows has no Row array", async () => {
+    responses = [jsonResponse({ Rows: {} })];
+    const onRefresh = mock(() => Promise.resolve());
+
+    const balances = await queryTrialBalanceReport(conn, {
+      start: "2026-01-01",
+      end: "2026-12-31",
+      onRefresh,
+    });
+
+    expect(balances).toEqual([]);
   });
 });

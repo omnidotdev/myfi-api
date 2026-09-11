@@ -63,6 +63,32 @@ interface QboPreferences {
   };
 }
 
+/** A single account's balance parsed from a QBO report */
+export type QboReportAccountBalance = {
+  qboAccountId: string | null;
+  accountName: string;
+  debit: number;
+  credit: number;
+};
+
+/** A single cell of a report row */
+interface QboReportColData {
+  value?: string;
+  id?: string;
+}
+
+/** A row in a QBO report, either a Data account row or a nesting Section */
+interface QboReportRow {
+  type?: string;
+  ColData?: QboReportColData[];
+  Rows?: { Row?: QboReportRow[] };
+}
+
+/** Minimal shape of a QBO report response (TrialBalance and friends) */
+interface QboReport {
+  Rows?: { Row?: QboReportRow[] };
+}
+
 interface QboTokenResponse {
   access_token: string;
   refresh_token?: string;
@@ -290,4 +316,74 @@ export const queryPreferences = async (
     onRefresh,
   );
   return rows[0];
+};
+
+/** Coerce a report cell value into a number, treating blanks/junk as 0 */
+const safeNum = (value: string | undefined): number => {
+  if (value === undefined || value === "") {
+    return 0;
+  }
+  const parsed = Number(value.replace(/,/g, ""));
+  return Number.isFinite(parsed) ? parsed : 0;
+};
+
+/**
+ * Walk a report row tree, emitting one balance per Data account row.
+ * Section headers and Summary/TOTAL rows are skipped, and nested Rows.Row are
+ * traversed recursively. This never throws on shape variance
+ */
+const collectReportBalances = (
+  rows: QboReportRow[] | undefined,
+  out: QboReportAccountBalance[],
+): void => {
+  if (!rows) {
+    return;
+  }
+  for (const row of rows) {
+    if (row.type === "Data" && row.ColData) {
+      const cols = row.ColData;
+      out.push({
+        qboAccountId: cols[0]?.id ?? null,
+        accountName: cols[0]?.value ?? "",
+        debit: safeNum(cols[1]?.value),
+        credit: safeNum(cols[2]?.value),
+      });
+    }
+    // A Data row never nests, but a Section (or an untyped wrapper) can, so
+    // always descend into any child rows
+    collectReportBalances(row.Rows?.Row, out);
+  }
+};
+
+/**
+ * Fetch and parse the QBO TrialBalance report for a date range.
+ * Uses the Reports API (not the query endpoint) and flattens the nested report
+ * into one balance per account, skipping section and summary rows
+ * @param conn - Connection with realmId and current tokens
+ * @param opts - Inclusive report date range and the token-refresh callback
+ */
+export const queryTrialBalanceReport = async (
+  conn: QboConnection,
+  opts: { start: string; end: string; onRefresh: OnRefresh },
+): Promise<QboReportAccountBalance[]> => {
+  // Dates are interpolated into the report URL, so reject anything that is not
+  // a plain ISO calendar date before it reaches the query string
+  for (const [field, value] of [
+    ["start", opts.start],
+    ["end", opts.end],
+  ] as const) {
+    if (!ISO_DATE.test(value)) {
+      throw new Error(`Invalid QuickBooks query date for ${field}`);
+    }
+  }
+
+  const report = (await qboGet(
+    conn,
+    `reports/TrialBalance?start_date=${opts.start}&end_date=${opts.end}`,
+    opts.onRefresh,
+  )) as QboReport;
+
+  const balances: QboReportAccountBalance[] = [];
+  collectReportBalances(report.Rows?.Row, balances);
+  return balances;
 };
