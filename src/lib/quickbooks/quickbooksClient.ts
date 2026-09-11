@@ -84,8 +84,15 @@ interface QboReportRow {
   Rows?: { Row?: QboReportRow[] };
 }
 
+/** A column definition in a QBO report header */
+interface QboReportColumn {
+  ColTitle?: string;
+  ColType?: string;
+}
+
 /** Minimal shape of a QBO report response (TrialBalance and friends) */
 interface QboReport {
+  Columns?: { Column?: QboReportColumn[] };
   Rows?: { Row?: QboReportRow[] };
 }
 
@@ -328,12 +335,45 @@ const safeNum = (value: string | undefined): number => {
 };
 
 /**
+ * Resolve the Debit and Credit column indices from the report header.
+ * QBO returns the debit/credit columns by title, and reading them by fixed
+ * position would silently swap the two if Intuit ever reordered or inserted a
+ * column, corrupting every reconciliation variance with no error. So key off
+ * the header and fail loudly when a column cannot be located
+ */
+const resolveBalanceColumnIndices = (
+  columns: QboReportColumn[] | undefined,
+): { debitIdx: number; creditIdx: number } => {
+  let debitIdx = -1;
+  let creditIdx = -1;
+
+  for (let i = 0; i < (columns?.length ?? 0); i++) {
+    const title = columns?.[i]?.ColTitle?.trim().toLowerCase();
+    if (title === "debit") {
+      debitIdx = i;
+    } else if (title === "credit") {
+      creditIdx = i;
+    }
+  }
+
+  if (debitIdx === -1 || creditIdx === -1) {
+    throw new Error(
+      "QuickBooks trial balance report is missing Debit/Credit columns",
+    );
+  }
+
+  return { debitIdx, creditIdx };
+};
+
+/**
  * Walk a report row tree, emitting one balance per Data account row.
  * Section headers and Summary/TOTAL rows are skipped, and nested Rows.Row are
- * traversed recursively. This never throws on shape variance
+ * traversed recursively. Debit and credit are read from the header-resolved
+ * column indices, not fixed positions. This never throws on shape variance
  */
 const collectReportBalances = (
   rows: QboReportRow[] | undefined,
+  indices: { debitIdx: number; creditIdx: number },
   out: QboReportAccountBalance[],
 ): void => {
   if (!rows) {
@@ -345,13 +385,13 @@ const collectReportBalances = (
       out.push({
         qboAccountId: cols[0]?.id ?? null,
         accountName: cols[0]?.value ?? "",
-        debit: safeNum(cols[1]?.value),
-        credit: safeNum(cols[2]?.value),
+        debit: safeNum(cols[indices.debitIdx]?.value),
+        credit: safeNum(cols[indices.creditIdx]?.value),
       });
     }
     // A Data row never nests, but a Section (or an untyped wrapper) can, so
     // always descend into any child rows
-    collectReportBalances(row.Rows?.Row, out);
+    collectReportBalances(row.Rows?.Row, indices, out);
   }
 };
 
@@ -383,7 +423,16 @@ export const queryTrialBalanceReport = async (
     opts.onRefresh,
   )) as QboReport;
 
+  const rows = report.Rows?.Row;
+  if (!rows || rows.length === 0) {
+    return [];
+  }
+
+  // Resolve the Debit/Credit indices from the header before walking, so a
+  // reordered or inserted column can never silently swap the two
+  const indices = resolveBalanceColumnIndices(report.Columns?.Column);
+
   const balances: QboReportAccountBalance[] = [];
-  collectReportBalances(report.Rows?.Row, balances);
+  collectReportBalances(rows, indices, balances);
   return balances;
 };

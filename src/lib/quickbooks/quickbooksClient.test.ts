@@ -525,6 +525,87 @@ describe("queryTrialBalanceReport", () => {
     ]);
   });
 
+  test("reads debit/credit by column header, not position, when columns are swapped", async () => {
+    // Columns ordered [Account, Credit, Debit] instead of the usual
+    // [Account, Debit, Credit], with the ColData cells following that same
+    // order. A position-based parser would swap debit and credit, so keying off
+    // the header must still land each amount in the correct field
+    const swappedReport = {
+      Header: { ReportName: "TrialBalance" },
+      Columns: {
+        Column: [
+          { ColTitle: "", ColType: "Account" },
+          { ColTitle: "Credit", ColType: "Money" },
+          { ColTitle: "Debit", ColType: "Money" },
+        ],
+      },
+      Rows: {
+        Row: [
+          {
+            type: "Data",
+            ColData: [
+              { value: "Checking", id: "101" },
+              { value: "" },
+              { value: "1,250.75" },
+            ],
+          },
+          {
+            type: "Data",
+            ColData: [
+              { value: "Sales", id: "202" },
+              { value: "500" },
+              { value: "" },
+            ],
+          },
+        ],
+      },
+    };
+    responses = [jsonResponse(swappedReport)];
+    const onRefresh = mock(() => Promise.resolve());
+
+    const balances: QboReportAccountBalance[] = await queryTrialBalanceReport(
+      conn,
+      { start: "2026-01-01", end: "2026-12-31", onRefresh },
+    );
+
+    expect(balances).toEqual([
+      {
+        qboAccountId: "101",
+        accountName: "Checking",
+        debit: 1250.75,
+        credit: 0,
+      },
+      { qboAccountId: "202", accountName: "Sales", debit: 0, credit: 500 },
+    ]);
+  });
+
+  test("throws when the report is missing a Debit or Credit column", async () => {
+    const missingDebit = {
+      Header: { ReportName: "TrialBalance" },
+      Columns: {
+        Column: [{ ColTitle: "", ColType: "Account" }, { ColTitle: "Credit" }],
+      },
+      Rows: {
+        Row: [
+          {
+            type: "Data",
+            ColData: [{ value: "Checking", id: "101" }, { value: "300" }],
+          },
+        ],
+      },
+    };
+    responses = [jsonResponse(missingDebit)];
+    const onRefresh = mock(() => Promise.resolve());
+
+    await expect(
+      queryTrialBalanceReport(conn, {
+        start: "2026-01-01",
+        end: "2026-12-31",
+        onRefresh,
+      }),
+    ).rejects.toThrow(/debit\/credit columns/i);
+  });
+
   test("hits the Reports API path with the date range", async () => {
     responses = [jsonResponse(nestedReport)];
     const onRefresh = mock(() => Promise.resolve());
