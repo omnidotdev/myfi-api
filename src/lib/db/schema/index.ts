@@ -17,6 +17,7 @@ export * from "./mileageLog.table";
 export * from "./netWorthSnapshot.table";
 export * from "./payrollConnection.table";
 export * from "./quickbooksAccountMap.table";
+export * from "./quickbooksCutover.table";
 export * from "./quickbooksMigration.table";
 export * from "./quickbooksReconciliation.table";
 export * from "./quickbooksReconciliationLine.table";
