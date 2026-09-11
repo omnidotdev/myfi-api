@@ -10,9 +10,18 @@ import {
 
 mock.module("lib/db/db", () => ({ dbPool: mockDbPool }));
 
+// A valid 32-byte (64 hex char) key so signOauthState can derive its HMAC key.
+// Spread the real module so unrelated named exports stay present: mock.module is
+// global across files, and dropping them would break other modules that
+// statically import those names
+const TEST_KEY = "a".repeat(64);
+const realEnv = await import("lib/config/env.config");
+
 mock.module("lib/config/env.config", () => ({
+  ...realEnv,
   QBO_CLIENT_ID: "test-client-id",
   QBO_REDIRECT_URI: "https://app.myfi.test/api/quickbooks/callback",
+  TOKEN_ENCRYPTION_KEY: TEST_KEY,
 }));
 
 const QBO_AUTHORIZE_URL = "https://appcenter.intuit.com/connect/oauth2";
@@ -61,6 +70,8 @@ afterAll(() => {
   mock.module("./cutover", () => ({ ...realCutover }));
 });
 
+const { verifyOauthState } = await import("lib/oauth/state");
+
 const { default: quickbooksRoutes } = await import("./quickbooksRoutes");
 
 const app = quickbooksRoutes;
@@ -71,7 +82,7 @@ describe("POST /api/quickbooks/connect", () => {
     mockRunBackfill.mockClear();
   });
 
-  test("builds an Intuit authorize URL carrying bookId, scope, and redirect_uri", async () => {
+  test("builds an Intuit authorize URL carrying a signed state, scope, and redirect_uri", async () => {
     const res = await app.handle(
       new Request("http://localhost/api/quickbooks/connect", {
         method: "POST",
@@ -83,7 +94,6 @@ describe("POST /api/quickbooks/connect", () => {
     expect(res.status).toBe(200);
 
     const json = await res.json();
-    expect(json.authUrl).toContain("state=book-1");
     expect(json.authUrl).toContain("scope=com.intuit.quickbooks.accounting");
 
     const parsed = new URL(json.authUrl);
@@ -92,10 +102,16 @@ describe("POST /api/quickbooks/connect", () => {
     );
     expect(parsed.searchParams.get("client_id")).toBe("test-client-id");
     expect(parsed.searchParams.get("response_type")).toBe("code");
-    expect(parsed.searchParams.get("state")).toBe("book-1");
     expect(parsed.searchParams.get("redirect_uri")).toBe(
       "https://app.myfi.test/api/quickbooks/callback",
     );
+
+    // The state is NOT the raw bookId; it is an HMAC-signed token that only the
+    // server can mint, and it verifies back to the bookId
+    const state = parsed.searchParams.get("state");
+    expect(state).not.toBe("book-1");
+    expect(state).toBeTruthy();
+    expect(verifyOauthState(state as string)).toEqual({ bookId: "book-1" });
   });
 
   test("returns a generic 500 when QuickBooks is not configured", async () => {

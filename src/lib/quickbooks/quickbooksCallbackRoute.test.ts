@@ -19,6 +19,17 @@ import {
 
 mock.module("lib/db/db", () => ({ dbPool: mockDbPool }));
 
+// env.config destructures process.env at import time and TOKEN_ENCRYPTION_KEY is
+// unset in the test env, so the OAuth-state helper would have no signing key.
+// Spread the real module (keeping unrelated exports intact) and supply a valid
+// 32-byte (64 hex char) key so signOauthState / verifyOauthState work
+const TEST_KEY = "a".repeat(64);
+const realEnv = await import("lib/config/env.config");
+mock.module("lib/config/env.config", () => ({
+  ...realEnv,
+  TOKEN_ENCRYPTION_KEY: TEST_KEY,
+}));
+
 const mockEncryptToken = mock((plaintext: string) => `enc(${plaintext})`);
 const mockDecryptToken = mock((encrypted: string) => `dec(${encrypted})`);
 mock.module("lib/encryption/tokenEncryption", () => ({
@@ -54,12 +65,17 @@ afterAll(() => {
   mock.module("./quickbooksConfig", () => ({ ...realConfig }));
 });
 
+const { signOauthState } = await import("lib/oauth/state");
+
 const { quickbooksCallbackRoute } = await import("./quickbooksCallbackRoute");
 
 const app = quickbooksCallbackRoute;
 
 const SUCCESS = "/settings/connections";
 const ERROR = "/settings/connections?error=quickbooks";
+
+// A valid signed state for book-1, as the connect route would mint
+const VALID_STATE = signOauthState("book-1");
 
 const callback = (params: Record<string, string>) => {
   const qs = new URLSearchParams(params).toString();
@@ -88,7 +104,7 @@ describe("GET /api/quickbooks/callback", () => {
     const res = await callback({
       code: "auth-code",
       realmId: "realm-1",
-      state: "book-1",
+      state: VALID_STATE,
     });
 
     expect(res.headers.get("location")).toBe(SUCCESS);
@@ -110,7 +126,7 @@ describe("GET /api/quickbooks/callback", () => {
     const res = await callback({
       code: "auth-code",
       realmId: "realm-2",
-      state: "book-1",
+      state: VALID_STATE,
     });
 
     expect(res.headers.get("location")).toBe(SUCCESS);
@@ -125,7 +141,7 @@ describe("GET /api/quickbooks/callback", () => {
     await callback({
       code: "auth-code",
       realmId: "realm-3",
-      state: "book-1",
+      state: VALID_STATE,
     });
 
     // The conflict target is the book column, narrowed by targetWhere so only
@@ -183,6 +199,45 @@ describe("GET /api/quickbooks/callback", () => {
     expect(mockExchangeCode).not.toHaveBeenCalled();
   });
 
+  test("rejects a forged (raw bookId) state without exchanging or writing", async () => {
+    // An attacker points the callback at a victim's raw bookId plus their own
+    // OAuth code. The unsigned state fails verification, so the code is never
+    // exchanged and no connection is written for the victim's book
+    const res = await callback({
+      code: "attacker-code",
+      realmId: "attacker-realm",
+      state: "victim-book",
+    });
+
+    expect(res.headers.get("location")).toBe(ERROR);
+    expect(mockExchangeCode).not.toHaveBeenCalled();
+    expect(mockInsertValues).not.toHaveBeenCalled();
+  });
+
+  test("rejects a tampered signed state without exchanging or writing", async () => {
+    // Flip a bit in the first signature byte so the decoded bytes are
+    // guaranteed to differ from the real signature. Flipping the last base64url
+    // char is NOT reliable: the final char carries only 4 significant bits, so
+    // some flips decode to the SAME 32 bytes and would still verify
+    const [payload, sigPart] = VALID_STATE.split(".");
+    const realSig = Buffer.from(sigPart, "base64url");
+    const tamperedSig = Buffer.from(realSig);
+    tamperedSig[0] ^= 0xff;
+    // Guard: the tamper actually changed the signature bytes
+    expect(tamperedSig.equals(realSig)).toBe(false);
+    const tampered = `${payload}.${tamperedSig.toString("base64url")}`;
+
+    const res = await callback({
+      code: "attacker-code",
+      realmId: "attacker-realm",
+      state: tampered,
+    });
+
+    expect(res.headers.get("location")).toBe(ERROR);
+    expect(mockExchangeCode).not.toHaveBeenCalled();
+    expect(mockInsertValues).not.toHaveBeenCalled();
+  });
+
   test("redirects to the error page on failure without leaking the code or tokens", async () => {
     exchangeImpl = () =>
       Promise.reject(new Error("intuit rejected secret-token-abc123"));
@@ -190,7 +245,7 @@ describe("GET /api/quickbooks/callback", () => {
     const res = await callback({
       code: "auth-code-xyz",
       realmId: "realm-1",
-      state: "book-1",
+      state: VALID_STATE,
     });
 
     const location = res.headers.get("location");

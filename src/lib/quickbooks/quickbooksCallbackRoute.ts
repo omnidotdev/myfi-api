@@ -4,6 +4,7 @@ import { Elysia, t } from "elysia";
 import { dbPool } from "lib/db/db";
 import { connectedAccountTable } from "lib/db/schema";
 import { encryptToken } from "lib/encryption/tokenEncryption";
+import { verifyOauthState } from "lib/oauth/state";
 import { exchangeCode } from "./quickbooksClient";
 import { isQuickbooksConfigured } from "./quickbooksConfig";
 
@@ -34,11 +35,22 @@ export const quickbooksCallbackRoute = new Elysia().get(
       return redirect(ERROR_REDIRECT);
     }
 
-    const { code, realmId, state: bookId, error } = query;
+    const { code, realmId, state, error } = query;
 
     // The user denied consent at Intuit (error param), or a required param is
     // missing, so there is nothing to exchange
     if (error || !code || !realmId) {
+      return redirect(ERROR_REDIRECT);
+    }
+
+    // The state must be a valid HMAC-signed token this server minted at connect
+    // time. A forged callback carrying a raw or tampered state is rejected here
+    // before any token exchange, so it cannot link a company to another book.
+    // Every verification failure maps to the same generic error page
+    let bookId: string;
+    try {
+      ({ bookId } = verifyOauthState(state));
+    } catch {
       return redirect(ERROR_REDIRECT);
     }
 

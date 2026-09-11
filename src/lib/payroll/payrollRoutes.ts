@@ -17,6 +17,7 @@ import {
   reconciliationQueueTable,
 } from "lib/db/schema";
 import { encryptToken } from "lib/encryption/tokenEncryption";
+import { signOauthState, verifyOauthState } from "lib/oauth/state";
 import syncPayroll from "./syncPayroll";
 
 /**
@@ -25,9 +26,9 @@ import syncPayroll from "./syncPayroll";
 export const payrollCallbackRoute = new Elysia().get(
   "/api/payroll/callback",
   async ({ query, set, redirect }) => {
-    const { code, state: bookId } = query;
+    const { code, state } = query;
 
-    if (!code || !bookId) {
+    if (!code || !state) {
       set.status = 400;
       return { error: "Missing code or state parameter" };
     }
@@ -35,6 +36,17 @@ export const payrollCallbackRoute = new Elysia().get(
     if (!GUSTO_CLIENT_ID || !GUSTO_CLIENT_SECRET || !GUSTO_REDIRECT_URI) {
       set.status = 500;
       return { error: "Gusto OAuth not configured" };
+    }
+
+    // The state must be a valid HMAC-signed token this server minted at connect
+    // time. A forged callback carrying a raw or tampered state is rejected here
+    // before any token exchange or insert, so it cannot link a Gusto company to
+    // another book. Every verification failure maps to the generic error page
+    let bookId: string;
+    try {
+      ({ bookId } = verifyOauthState(state));
+    } catch {
+      return redirect("/settings/connections?error=payroll");
     }
 
     // Exchange code for tokens
@@ -106,7 +118,12 @@ const payrollRoutes = new Elysia({ prefix: "/api/payroll" })
         return { error: "Gusto OAuth not configured" };
       }
 
-      const authUrl = `https://api.gusto.com/oauth/authorize?client_id=${GUSTO_CLIENT_ID}&redirect_uri=${encodeURIComponent(GUSTO_REDIRECT_URI)}&response_type=code&state=${bookId}`;
+      // Carry the bookId in an HMAC-signed state (not the raw id) so the
+      // callback can trust it: only the server can mint a state for a given
+      // book, so a forged callback cannot link a company to a victim's book
+      const state = signOauthState(bookId);
+
+      const authUrl = `https://api.gusto.com/oauth/authorize?client_id=${GUSTO_CLIENT_ID}&redirect_uri=${encodeURIComponent(GUSTO_REDIRECT_URI)}&response_type=code&state=${encodeURIComponent(state)}`;
 
       return { authUrl };
     },

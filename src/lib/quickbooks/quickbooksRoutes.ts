@@ -8,6 +8,7 @@ import {
   quickbooksMigrationTable,
   quickbooksReconciliationTable,
 } from "lib/db/schema";
+import { signOauthState } from "lib/oauth/state";
 import { runBackfill } from "./backfill";
 import { CutoverNotReconciledError, runCutover } from "./cutover";
 import { QBO_AUTHORIZE_URL, isQuickbooksConfigured } from "./quickbooksConfig";
@@ -34,14 +35,16 @@ const quickbooksRoutes = new Elysia({ prefix: "/api/quickbooks" })
 
       const { bookId } = body;
 
-      // URLSearchParams percent-encodes the redirect_uri for us; the bookId is
-      // carried through as state so the callback can resolve the book
+      // URLSearchParams percent-encodes the redirect_uri for us. The bookId is
+      // carried in an HMAC-signed state (not the raw id) so the callback can
+      // trust it: only the server can mint a state for a given book, so a forged
+      // callback cannot link an attacker's company to a victim's book
       const params = new URLSearchParams({
         client_id: QBO_CLIENT_ID ?? "",
         response_type: "code",
         scope: QBO_ACCOUNTING_SCOPE,
         redirect_uri: QBO_REDIRECT_URI ?? "",
-        state: bookId,
+        state: signOauthState(bookId),
       });
 
       const authUrl = `${QBO_AUTHORIZE_URL}?${params.toString()}`;
