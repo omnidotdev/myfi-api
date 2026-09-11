@@ -127,6 +127,13 @@
       "when": 1789146991731,
       "tag": "0017_legal_black_crow",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1789153805674,
+      "tag": "0018_material_hiroim",
+      "breakpoints": true
     }
   ]
 }

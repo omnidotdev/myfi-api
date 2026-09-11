@@ -177,6 +177,91 @@ const spec_tagGroup = {
   executor: executor
 };
 const tagGroupCodec = recordCodec(spec_tagGroup);
+const quickbooksCutoverIdentifier = sql.identifier("public", "quickbooks_cutover");
+const spec_quickbooksCutover = {
+  name: "quickbooksCutover",
+  identifier: quickbooksCutoverIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    connected_account_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    reconciliation_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    cutover_at: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "970469",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "quickbooks_cutover"
+    }
+  },
+  executor: executor
+};
+const quickbooksCutoverCodec = recordCodec(spec_quickbooksCutover);
 const __drizzleMigrationsIdentifier = sql.identifier("public", "__drizzle_migrations");
 const spec___drizzleMigrations = {
   name: "__drizzleMigrations",
@@ -4079,6 +4164,29 @@ const tag_group_resourceOptionsConfig = {
   },
   uniques: tag_groupUniques
 };
+const quickbooks_cutoverUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const quickbooks_cutover_resourceOptionsConfig = {
+  executor: executor,
+  name: "quickbooks_cutover",
+  identifier: "main.public.quickbooks_cutover",
+  from: quickbooksCutoverIdentifier,
+  codec: quickbooksCutoverCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "quickbooks_cutover"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: quickbooks_cutoverUniques
+};
 const __drizzle_migrationsUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -4762,6 +4870,7 @@ const registryConfig = {
     tagGroup: tagGroupCodec,
     text: TYPES.text,
     timestamptz: TYPES.timestamptz,
+    quickbooksCutover: quickbooksCutoverCodec,
     "__drizzleMigrations": __drizzleMigrationsCodec,
     int4: TYPES.int,
     int8: TYPES.bigint,
@@ -4812,6 +4921,7 @@ const registryConfig = {
     __proto__: null,
     journal_line_tag: journal_line_tag_resourceOptionsConfig,
     tag_group: tag_group_resourceOptionsConfig,
+    quickbooks_cutover: quickbooks_cutover_resourceOptionsConfig,
     "__drizzle_migrations": {
       executor: executor,
       name: "__drizzle_migrations",
@@ -5305,6 +5415,13 @@ const registryConfig = {
         localAttributes: ["id"],
         remoteAttributes: ["book_id"],
         isReferencee: true
+      },
+      quickbooksCutoversByTheirBookId: {
+        localCodec: bookCodec,
+        remoteResourceOptions: quickbooks_cutover_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["book_id"],
+        isReferencee: true
       }
     },
     bookAccess: {
@@ -5395,6 +5512,17 @@ const registryConfig = {
       quickbooksReconciliationsByTheirConnectedAccountId: {
         localCodec: connectedAccountCodec,
         remoteResourceOptions: quickbooks_reconciliation_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["connected_account_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
+      },
+      quickbooksCutoversByTheirConnectedAccountId: {
+        localCodec: connectedAccountCodec,
+        remoteResourceOptions: quickbooks_cutover_resourceOptionsConfig,
         localAttributes: ["id"],
         remoteAttributes: ["connected_account_id"],
         isReferencee: true,
@@ -5620,6 +5748,30 @@ const registryConfig = {
         isUnique: true
       }
     },
+    quickbooksCutover: {
+      __proto__: null,
+      bookByMyBookId: {
+        localCodec: quickbooksCutoverCodec,
+        remoteResourceOptions: book_resourceOptionsConfig,
+        localAttributes: ["book_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      connectedAccountByMyConnectedAccountId: {
+        localCodec: quickbooksCutoverCodec,
+        remoteResourceOptions: connected_account_resourceOptionsConfig,
+        localAttributes: ["connected_account_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      quickbooksReconciliationByMyReconciliationId: {
+        localCodec: quickbooksCutoverCodec,
+        remoteResourceOptions: quickbooks_reconciliation_resourceOptionsConfig,
+        localAttributes: ["reconciliation_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      }
+    },
     quickbooksMigration: {
       __proto__: null,
       bookByMyBookId: {
@@ -5659,6 +5811,17 @@ const registryConfig = {
         localAttributes: ["id"],
         remoteAttributes: ["reconciliation_id"],
         isReferencee: true
+      },
+      quickbooksCutoversByTheirReconciliationId: {
+        localCodec: quickbooksReconciliationCodec,
+        remoteResourceOptions: quickbooks_cutover_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["reconciliation_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
       }
     },
     quickbooksReconciliationLine: {
@@ -5879,6 +6042,7 @@ const registryConfig = {
 const registry = makeRegistry(registryConfig);
 const resource_journal_line_tagPgResource = registry.pgResources["journal_line_tag"];
 const resource_tag_groupPgResource = registry.pgResources["tag_group"];
+const resource_quickbooks_cutoverPgResource = registry.pgResources["quickbooks_cutover"];
 const resource___drizzle_migrationsPgResource = registry.pgResources["__drizzle_migrations"];
 const resource_account_mappingPgResource = registry.pgResources["account_mapping"];
 const resource_book_accessPgResource = registry.pgResources["book_access"];
@@ -5974,6 +6138,17 @@ const nodeIdHandler_TagGroup = makeTableNodeIdHandler({
 const nodeFetcher_TagGroup = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_TagGroup));
   return nodeIdHandler_TagGroup.get(nodeIdHandler_TagGroup.getSpec($decoded));
+};
+const nodeIdHandler_QuickbooksCutover = makeTableNodeIdHandler({
+  typeName: "QuickbooksCutover",
+  identifier: "QuickbooksCutover",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_quickbooks_cutoverPgResource,
+  pk: quickbooks_cutoverUniques[0].attributes
+});
+const nodeFetcher_QuickbooksCutover = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_QuickbooksCutover));
+  return nodeIdHandler_QuickbooksCutover.get(nodeIdHandler_QuickbooksCutover.getSpec($decoded));
 };
 const nodeIdHandler__DrizzleMigration = makeTableNodeIdHandler({
   typeName: "_DrizzleMigration",
@@ -6359,6 +6534,7 @@ const nodeIdHandlerByTypeName = {
   Query: nodeIdHandler_Query,
   JournalLineTag: nodeIdHandler_JournalLineTag,
   TagGroup: nodeIdHandler_TagGroup,
+  QuickbooksCutover: nodeIdHandler_QuickbooksCutover,
   _DrizzleMigration: nodeIdHandler__DrizzleMigration,
   AccountMapping: nodeIdHandler_AccountMapping,
   BookAccess: nodeIdHandler_BookAccess,
@@ -6845,6 +7021,12 @@ const QuickbooksMigration_errorMessagePlan = $record => {
 const QuickbooksMigration_connectedAccountPlan = $record => resource_connected_accountPgResource.get({
   id: $record.get("connected_account_id")
 });
+const QuickbooksReconciliationLine_reconciliationIdPlan = $record => {
+  return $record.get("reconciliation_id");
+};
+const QuickbooksReconciliationLine_reconciliationPlan = $record => resource_quickbooks_reconciliationPgResource.get({
+  id: $record.get("reconciliation_id")
+});
 function applyInputToInsert(_, $object) {
   return $object;
 }
@@ -6858,6 +7040,10 @@ function applyInputToUpdateOrDelete(_, $object) {
 const specFromArgs_TagGroup = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_TagGroup, $nodeId);
+};
+const specFromArgs_QuickbooksCutover = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_QuickbooksCutover, $nodeId);
 };
 const specFromArgs__DrizzleMigration = args => {
   const $nodeId = args.getRaw(["input", "id"]);
@@ -7032,6 +7218,16 @@ function TagGroupInput_nameApply(obj, val, info) {
 function TagGroupInput_createdAtApply(obj, val, info) {
   obj.set("created_at", bakedInputRuntime(info.schema, info.field.type, val));
 }
+const CreateQuickbooksCutoverPayload_quickbooksCutoverEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_quickbooks_cutoverPgResource, quickbooks_cutoverUniques[0].attributes, $mutation, fieldArgs);
+function QuickbooksCutoverInput_connectedAccountIdApply(obj, val, info) {
+  obj.set("connected_account_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function QuickbooksCutoverInput_reconciliationIdApply(obj, val, info) {
+  obj.set("reconciliation_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function QuickbooksCutoverInput_cutoverAtApply(obj, val, info) {
+  obj.set("cutover_at", bakedInputRuntime(info.schema, info.field.type, val));
+}
 const CreateDrizzleMigrationPayload__drizzleMigrationEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource___drizzle_migrationsPgResource, __drizzle_migrationsUniques[0].attributes, $mutation, fieldArgs);
 function _DrizzleMigrationInput_hashApply(obj, val, info) {
   obj.set("hash", bakedInputRuntime(info.schema, info.field.type, val));
@@ -7174,9 +7370,6 @@ function AccountingPeriodInput_blockersApply(obj, val, info) {
   obj.set("blockers", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateQuickbooksMigrationPayload_quickbooksMigrationEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_quickbooks_migrationPgResource, quickbooks_migrationUniques[0].attributes, $mutation, fieldArgs);
-function QuickbooksMigrationInput_connectedAccountIdApply(obj, val, info) {
-  obj.set("connected_account_id", bakedInputRuntime(info.schema, info.field.type, val));
-}
 function QuickbooksMigrationInput_periodStartApply(obj, val, info) {
   obj.set("period_start", bakedInputRuntime(info.schema, info.field.type, val));
 }
@@ -7190,9 +7383,6 @@ function QuickbooksMigrationInput_errorMessageApply(obj, val, info) {
   obj.set("error_message", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateQuickbooksReconciliationLinePayload_quickbooksReconciliationLineEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_quickbooks_reconciliation_linePgResource, quickbooks_reconciliation_lineUniques[0].attributes, $mutation, fieldArgs);
-function QuickbooksReconciliationLineInput_reconciliationIdApply(obj, val, info) {
-  obj.set("reconciliation_id", bakedInputRuntime(info.schema, info.field.type, val));
-}
 function QuickbooksReconciliationLineInput_accountNameApply(obj, val, info) {
   obj.set("account_name", bakedInputRuntime(info.schema, info.field.type, val));
 }
@@ -7522,6 +7712,9 @@ type Query implements Node {
   """Get a single \`TagGroup\`."""
   tagGroup(rowId: UUID!): TagGroup
 
+  """Get a single \`QuickbooksCutover\`."""
+  quickbooksCutover(rowId: UUID!): QuickbooksCutover
+
   """Get a single \`_DrizzleMigration\`."""
   _drizzleMigration(rowId: Int!): _DrizzleMigration
 
@@ -7625,6 +7818,14 @@ type Query implements Node {
     """The globally unique \`ID\` to be used in selecting a single \`TagGroup\`."""
     id: ID!
   ): TagGroup
+
+  """Reads a single \`QuickbooksCutover\` using its globally unique \`ID\`."""
+  quickbooksCutoverById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`QuickbooksCutover\`.
+    """
+    id: ID!
+  ): QuickbooksCutover
 
   """Reads a single \`_DrizzleMigration\` using its globally unique \`ID\`."""
   _drizzleMigrationById(
@@ -7925,6 +8126,40 @@ type Query implements Node {
     """The method to use when ordering \`TagGroup\`."""
     orderBy: [TagGroupOrderBy!] = [PRIMARY_KEY_ASC]
   ): TagGroupConnection
+
+  """Reads and enables pagination through a set of \`QuickbooksCutover\`."""
+  quickbooksCutovers(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: QuickbooksCutoverCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: QuickbooksCutoverFilter
+
+    """The method to use when ordering \`QuickbooksCutover\`."""
+    orderBy: [QuickbooksCutoverOrderBy!] = [PRIMARY_KEY_ASC]
+  ): QuickbooksCutoverConnection
 
   """Reads and enables pagination through a set of \`_DrizzleMigration\`."""
   _drizzleMigrations(
@@ -10119,6 +10354,40 @@ type Book implements Node {
     """The method to use when ordering \`QuickbooksReconciliationLine\`."""
     orderBy: [QuickbooksReconciliationLineOrderBy!] = [PRIMARY_KEY_ASC]
   ): QuickbooksReconciliationLineConnection!
+
+  """Reads and enables pagination through a set of \`QuickbooksCutover\`."""
+  quickbooksCutovers(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: QuickbooksCutoverCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: QuickbooksCutoverFilter
+
+    """The method to use when ordering \`QuickbooksCutover\`."""
+    orderBy: [QuickbooksCutoverOrderBy!] = [PRIMARY_KEY_ASC]
+  ): QuickbooksCutoverConnection!
 }
 
 enum BookType {
@@ -10558,6 +10827,12 @@ input BookFilter {
 
   """Some related \`quickbooksReconciliationLines\` exist."""
   quickbooksReconciliationLinesExist: Boolean
+
+  """Filter by the object’s \`quickbooksCutovers\` relation."""
+  quickbooksCutovers: BookToManyQuickbooksCutoverFilter
+
+  """Some related \`quickbooksCutovers\` exist."""
+  quickbooksCutoversExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [BookFilter!]
@@ -12408,6 +12683,55 @@ input BookToManyQuickbooksReconciliationLineFilter {
   No related \`QuickbooksReconciliationLine\` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
   none: QuickbooksReconciliationLineFilter
+}
+
+"""
+A filter to be used against many \`QuickbooksCutover\` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyQuickbooksCutoverFilter {
+  """
+  Every related \`QuickbooksCutover\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: QuickbooksCutoverFilter
+
+  """
+  Some related \`QuickbooksCutover\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: QuickbooksCutoverFilter
+
+  """
+  No related \`QuickbooksCutover\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: QuickbooksCutoverFilter
+}
+
+"""
+A filter to be used against \`QuickbooksCutover\` object types. All fields are combined with a logical ‘and.’
+"""
+input QuickbooksCutoverFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`bookId\` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s \`book\` relation."""
+  book: BookFilter
+
+  """Filter by the object’s \`connectedAccount\` relation."""
+  connectedAccount: ConnectedAccountFilter
+
+  """Filter by the object’s \`reconciliation\` relation."""
+  reconciliation: QuickbooksReconciliationFilter
+
+  """Checks for all expressions in this list."""
+  and: [QuickbooksCutoverFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [QuickbooksCutoverFilter!]
+
+  """Negates the expression."""
+  not: QuickbooksCutoverFilter
 }
 
 """
@@ -14833,6 +15157,83 @@ enum QuickbooksReconciliationOrderBy {
   BOOK_ID_DESC
 }
 
+"""A connection to a list of \`QuickbooksCutover\` values."""
+type QuickbooksCutoverConnection {
+  """A list of \`QuickbooksCutover\` objects."""
+  nodes: [QuickbooksCutover]!
+
+  """
+  A list of edges which contains the \`QuickbooksCutover\` and cursor to aid in pagination.
+  """
+  edges: [QuickbooksCutoverEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* \`QuickbooksCutover\` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+type QuickbooksCutover implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  connectedAccountId: UUID!
+  reconciliationId: UUID!
+  cutoverAt: Datetime!
+  createdAt: Datetime
+
+  """Reads a single \`Book\` that is related to this \`QuickbooksCutover\`."""
+  book: Book
+
+  """
+  Reads a single \`ConnectedAccount\` that is related to this \`QuickbooksCutover\`.
+  """
+  connectedAccount: ConnectedAccount
+
+  """
+  Reads a single \`QuickbooksReconciliation\` that is related to this \`QuickbooksCutover\`.
+  """
+  reconciliation: QuickbooksReconciliation
+}
+
+"""A \`QuickbooksCutover\` edge in the connection."""
+type QuickbooksCutoverEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`QuickbooksCutover\` at the end of the edge."""
+  node: QuickbooksCutover
+}
+
+"""
+A condition to be used against \`QuickbooksCutover\` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input QuickbooksCutoverCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`bookId\` field."""
+  bookId: UUID
+}
+
+"""Methods to use when ordering \`QuickbooksCutover\`."""
+enum QuickbooksCutoverOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+}
+
 type _DrizzleMigration implements Node {
   """
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
@@ -15061,6 +15462,14 @@ type Mutation {
     """
     input: CreateTagGroupInput!
   ): CreateTagGroupPayload
+
+  """Creates a single \`QuickbooksCutover\`."""
+  createQuickbooksCutover(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateQuickbooksCutoverInput!
+  ): CreateQuickbooksCutoverPayload
 
   """Creates a single \`_DrizzleMigration\`."""
   createDrizzleMigration(
@@ -15335,6 +15744,24 @@ type Mutation {
     """
     input: UpdateTagGroupInput!
   ): UpdateTagGroupPayload
+
+  """
+  Updates a single \`QuickbooksCutover\` using its globally unique id and a patch.
+  """
+  updateQuickbooksCutoverById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateQuickbooksCutoverByIdInput!
+  ): UpdateQuickbooksCutoverPayload
+
+  """Updates a single \`QuickbooksCutover\` using a unique key and a patch."""
+  updateQuickbooksCutover(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateQuickbooksCutoverInput!
+  ): UpdateQuickbooksCutoverPayload
 
   """
   Updates a single \`_DrizzleMigration\` using its globally unique id and a patch.
@@ -15903,6 +16330,22 @@ type Mutation {
     """
     input: DeleteTagGroupInput!
   ): DeleteTagGroupPayload
+
+  """Deletes a single \`QuickbooksCutover\` using its globally unique id."""
+  deleteQuickbooksCutoverById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteQuickbooksCutoverByIdInput!
+  ): DeleteQuickbooksCutoverPayload
+
+  """Deletes a single \`QuickbooksCutover\` using a unique key."""
+  deleteQuickbooksCutover(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteQuickbooksCutoverInput!
+  ): DeleteQuickbooksCutoverPayload
 
   """Deletes a single \`_DrizzleMigration\` using its globally unique id."""
   deleteDrizzleMigrationById(
@@ -16473,6 +16916,51 @@ input TagGroupInput {
   rowId: UUID
   bookId: UUID!
   name: String!
+  createdAt: Datetime
+}
+
+"""The output of our create \`QuickbooksCutover\` mutation."""
+type CreateQuickbooksCutoverPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`QuickbooksCutover\` that was created by this mutation."""
+  quickbooksCutover: QuickbooksCutover
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`QuickbooksCutover\`. May be used by Relay 1."""
+  quickbooksCutoverEdge(
+    """The method to use when ordering \`QuickbooksCutover\`."""
+    orderBy: [QuickbooksCutoverOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): QuickbooksCutoverEdge
+}
+
+"""All input for the create \`QuickbooksCutover\` mutation."""
+input CreateQuickbooksCutoverInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`QuickbooksCutover\` to be created by this mutation."""
+  quickbooksCutover: QuickbooksCutoverInput!
+}
+
+"""An input for mutations affecting \`QuickbooksCutover\`"""
+input QuickbooksCutoverInput {
+  rowId: UUID
+  bookId: UUID!
+  connectedAccountId: UUID!
+  reconciliationId: UUID!
+  cutoverAt: Datetime
   createdAt: Datetime
 }
 
@@ -18074,6 +18562,75 @@ input UpdateTagGroupInput {
   An object where the defined keys will be set on the \`TagGroup\` being updated.
   """
   patch: TagGroupPatch!
+}
+
+"""The output of our update \`QuickbooksCutover\` mutation."""
+type UpdateQuickbooksCutoverPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`QuickbooksCutover\` that was updated by this mutation."""
+  quickbooksCutover: QuickbooksCutover
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`QuickbooksCutover\`. May be used by Relay 1."""
+  quickbooksCutoverEdge(
+    """The method to use when ordering \`QuickbooksCutover\`."""
+    orderBy: [QuickbooksCutoverOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): QuickbooksCutoverEdge
+}
+
+"""All input for the \`updateQuickbooksCutoverById\` mutation."""
+input UpdateQuickbooksCutoverByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`QuickbooksCutover\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`QuickbooksCutover\` being updated.
+  """
+  patch: QuickbooksCutoverPatch!
+}
+
+"""
+Represents an update to a \`QuickbooksCutover\`. Fields that are set will be updated.
+"""
+input QuickbooksCutoverPatch {
+  rowId: UUID
+  bookId: UUID
+  connectedAccountId: UUID
+  reconciliationId: UUID
+  cutoverAt: Datetime
+  createdAt: Datetime
+}
+
+"""All input for the \`updateQuickbooksCutover\` mutation."""
+input UpdateQuickbooksCutoverInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`QuickbooksCutover\` being updated.
+  """
+  patch: QuickbooksCutoverPatch!
 }
 
 """The output of our update \`_DrizzleMigration\` mutation."""
@@ -20355,6 +20912,54 @@ input DeleteTagGroupInput {
   rowId: UUID!
 }
 
+"""The output of our delete \`QuickbooksCutover\` mutation."""
+type DeleteQuickbooksCutoverPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`QuickbooksCutover\` that was deleted by this mutation."""
+  quickbooksCutover: QuickbooksCutover
+  deletedQuickbooksCutoverId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`QuickbooksCutover\`. May be used by Relay 1."""
+  quickbooksCutoverEdge(
+    """The method to use when ordering \`QuickbooksCutover\`."""
+    orderBy: [QuickbooksCutoverOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): QuickbooksCutoverEdge
+}
+
+"""All input for the \`deleteQuickbooksCutoverById\` mutation."""
+input DeleteQuickbooksCutoverByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`QuickbooksCutover\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteQuickbooksCutover\` mutation."""
+input DeleteQuickbooksCutoverInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete \`_DrizzleMigration\` mutation."""
 type DeleteDrizzleMigrationPayload {
   """
@@ -22332,6 +22937,32 @@ export const objects = {
           orderBy: applyOrderByArgToConnection
         }
       },
+      quickbooksCutover(_$root, {
+        $rowId
+      }) {
+        return resource_quickbooks_cutoverPgResource.get({
+          id: $rowId
+        });
+      },
+      quickbooksCutoverById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_QuickbooksCutover($nodeId);
+      },
+      quickbooksCutovers: {
+        plan() {
+          return connection(resource_quickbooks_cutoverPgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineTagsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       quickbooksMigration(_$root, {
         $rowId
       }) {
@@ -22880,6 +23511,18 @@ export const objects = {
       createQuickbooksAccountMap: {
         plan(_, args) {
           const $insert = pgInsertSingle(resource_quickbooks_account_mapPgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
+      createQuickbooksCutover: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_quickbooks_cutoverPgResource);
           args.apply($insert);
           return object({
             result: $insert
@@ -23544,6 +24187,32 @@ export const objects = {
       deleteQuickbooksAccountMapById: {
         plan(_$root, args) {
           const $delete = pgDeleteSingle(resource_quickbooks_account_mapPgResource, specFromArgs_QuickbooksAccountMap(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteQuickbooksCutover: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_quickbooks_cutoverPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteQuickbooksCutoverById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_quickbooks_cutoverPgResource, specFromArgs_QuickbooksCutover(args));
           args.apply($delete);
           return object({
             result: $delete
@@ -24385,6 +25054,32 @@ export const objects = {
           input: applyInputToUpdateOrDelete
         }
       },
+      updateQuickbooksCutover: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_quickbooks_cutoverPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateQuickbooksCutoverById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_quickbooks_cutoverPgResource, specFromArgs_QuickbooksCutover(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
       updateQuickbooksMigration: {
         plan(_$root, args) {
           const $update = pgUpdateSingle(resource_quickbooks_migrationPgResource, {
@@ -25164,6 +25859,24 @@ export const objects = {
           orderBy: applyOrderByArgToConnection
         }
       },
+      quickbooksCutovers: {
+        plan($record) {
+          const $records = resource_quickbooks_cutoverPgResource.find({
+            book_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineTagsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       quickbooksMigrations: {
         plan($record) {
           const $records = resource_quickbooks_migrationPgResource.find({
@@ -25707,6 +26420,15 @@ export const objects = {
       quickbooksAccountMapEdge: CreateQuickbooksAccountMapPayload_quickbooksAccountMapEdgePlan
     }
   },
+  CreateQuickbooksCutoverPayload: {
+    assertStep: assertStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan,
+      quickbooksCutover: planCreatePayloadResult,
+      quickbooksCutoverEdge: CreateQuickbooksCutoverPayload_quickbooksCutoverEdgePlan
+    }
+  },
   CreateQuickbooksMigrationPayload: {
     assertStep: assertStep,
     plans: {
@@ -26188,6 +26910,20 @@ export const objects = {
       query: queryPlan,
       quickbooksAccountMap: planCreatePayloadResult,
       quickbooksAccountMapEdge: CreateQuickbooksAccountMapPayload_quickbooksAccountMapEdgePlan
+    }
+  },
+  DeleteQuickbooksCutoverPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedQuickbooksCutoverId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_QuickbooksCutover.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      query: queryPlan,
+      quickbooksCutover: planCreatePayloadResult,
+      quickbooksCutoverEdge: CreateQuickbooksCutoverPayload_quickbooksCutoverEdgePlan
     }
   },
   DeleteQuickbooksMigrationPayload: {
@@ -26733,6 +27469,37 @@ export const objects = {
       totalCount: totalCountConnectionPlan
     }
   },
+  QuickbooksCutover: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      book: Account_bookPlan,
+      bookId: Account_bookIdPlan,
+      connectedAccount: QuickbooksMigration_connectedAccountPlan,
+      connectedAccountId: QuickbooksMigration_connectedAccountIdPlan,
+      createdAt: Account_createdAtPlan,
+      cutoverAt($record) {
+        return $record.get("cutover_at");
+      },
+      id($parent) {
+        const specifier = nodeIdHandler_QuickbooksCutover.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_QuickbooksCutover.codec.name].encode);
+      },
+      reconciliation: QuickbooksReconciliationLine_reconciliationPlan,
+      reconciliationId: QuickbooksReconciliationLine_reconciliationIdPlan,
+      rowId: JournalLineTag_rowIdPlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of quickbooks_cutoverUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_quickbooks_cutoverPgResource.get(spec);
+    }
+  },
+  QuickbooksCutoverConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
   QuickbooksMigration: {
     assertStep: assertPgClassSingleStep,
     plans: {
@@ -26842,14 +27609,8 @@ export const objects = {
       qboBalance($record) {
         return $record.get("qbo_balance");
       },
-      reconciliation($record) {
-        return resource_quickbooks_reconciliationPgResource.get({
-          id: $record.get("reconciliation_id")
-        });
-      },
-      reconciliationId($record) {
-        return $record.get("reconciliation_id");
-      },
+      reconciliation: QuickbooksReconciliationLine_reconciliationPlan,
+      reconciliationId: QuickbooksReconciliationLine_reconciliationIdPlan,
       rowId: JournalLineTag_rowIdPlan
     },
     planType($specifier) {
@@ -27338,6 +28099,15 @@ export const objects = {
       query: queryPlan,
       quickbooksAccountMap: planCreatePayloadResult,
       quickbooksAccountMapEdge: CreateQuickbooksAccountMapPayload_quickbooksAccountMapEdgePlan
+    }
+  },
+  UpdateQuickbooksCutoverPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan,
+      quickbooksCutover: planCreatePayloadResult,
+      quickbooksCutoverEdge: CreateQuickbooksCutoverPayload_quickbooksCutoverEdgePlan
     }
   },
   UpdateQuickbooksMigrationPayload: {
@@ -28319,6 +29089,30 @@ export const inputObjects = {
           $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
         });
       },
+      quickbooksCutovers($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: quickbooksCutoverIdentifier,
+          alias: resource_quickbooks_cutoverPgResource.name,
+          localAttributes: registryConfig.pgRelations.book.quickbooksCutoversByTheirBookId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.book.quickbooksCutoversByTheirBookId.remoteAttributes
+        };
+        return $rel;
+      },
+      quickbooksCutoversExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: quickbooksCutoverIdentifier,
+          alias: resource_quickbooks_cutoverPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.book.quickbooksCutoversByTheirBookId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.book.quickbooksCutoversByTheirBookId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
       quickbooksMigrations($where, value) {
         assertAllowed(value, "object");
         const $rel = $where.andPlan();
@@ -28706,6 +29500,13 @@ export const inputObjects = {
     }
   },
   BookToManyQuickbooksAccountMapFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
+  BookToManyQuickbooksCutoverFilter: {
     plans: {
       every: AccountToManyAccountFilter_everyApply,
       none: AccountToManyAccountFilter_noneApply,
@@ -29131,6 +29932,12 @@ export const inputObjects = {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
       quickbooksAccountMap: applyCreateFields
+    }
+  },
+  CreateQuickbooksCutoverInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      quickbooksCutover: applyCreateFields
     }
   },
   CreateQuickbooksMigrationInput: {
@@ -29567,6 +30374,16 @@ export const inputObjects = {
     }
   },
   DeleteQuickbooksAccountMapInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteQuickbooksCutoverByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteQuickbooksCutoverInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate
     }
@@ -30322,6 +31139,56 @@ export const inputObjects = {
       updatedAt: AccountMappingInput_updatedAtApply
     }
   },
+  QuickbooksCutoverCondition: {
+    plans: {
+      bookId: AccountCondition_bookIdApply,
+      rowId: AccountCondition_rowIdApply
+    }
+  },
+  QuickbooksCutoverFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      book($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_bookPgResource, bookIdentifier, registryConfig.pgRelations.quickbooksCutover.bookByMyBookId.localAttributes, registryConfig.pgRelations.quickbooksCutover.bookByMyBookId.remoteAttributes, $where, value);
+      },
+      bookId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("bookId", "book_id", spec_quickbooksCutover.attributes.book_id, queryBuilder, value);
+      },
+      connectedAccount($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_connected_accountPgResource, connectedAccountIdentifier, registryConfig.pgRelations.quickbooksCutover.connectedAccountByMyConnectedAccountId.localAttributes, registryConfig.pgRelations.quickbooksCutover.connectedAccountByMyConnectedAccountId.remoteAttributes, $where, value);
+      },
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      reconciliation($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_quickbooks_reconciliationPgResource, quickbooksReconciliationIdentifier, registryConfig.pgRelations.quickbooksCutover.quickbooksReconciliationByMyReconciliationId.localAttributes, registryConfig.pgRelations.quickbooksCutover.quickbooksReconciliationByMyReconciliationId.remoteAttributes, $where, value);
+      },
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_quickbooksCutover.attributes.id, queryBuilder, value);
+      }
+    }
+  },
+  QuickbooksCutoverInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      bookId: TagGroupInput_bookIdApply,
+      connectedAccountId: QuickbooksCutoverInput_connectedAccountIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      cutoverAt: QuickbooksCutoverInput_cutoverAtApply,
+      reconciliationId: QuickbooksCutoverInput_reconciliationIdApply,
+      rowId: JournalLineTagInput_rowIdApply
+    }
+  },
+  QuickbooksCutoverPatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      bookId: TagGroupInput_bookIdApply,
+      connectedAccountId: QuickbooksCutoverInput_connectedAccountIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      cutoverAt: QuickbooksCutoverInput_cutoverAtApply,
+      reconciliationId: QuickbooksCutoverInput_reconciliationIdApply,
+      rowId: JournalLineTagInput_rowIdApply
+    }
+  },
   QuickbooksMigrationCondition: {
     plans: {
       bookId: AccountCondition_bookIdApply,
@@ -30351,7 +31218,7 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       bookId: TagGroupInput_bookIdApply,
-      connectedAccountId: QuickbooksMigrationInput_connectedAccountIdApply,
+      connectedAccountId: QuickbooksCutoverInput_connectedAccountIdApply,
       createdAt: TagGroupInput_createdAtApply,
       entriesImported: QuickbooksMigrationInput_entriesImportedApply,
       errorMessage: QuickbooksMigrationInput_errorMessageApply,
@@ -30366,7 +31233,7 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       bookId: TagGroupInput_bookIdApply,
-      connectedAccountId: QuickbooksMigrationInput_connectedAccountIdApply,
+      connectedAccountId: QuickbooksCutoverInput_connectedAccountIdApply,
       createdAt: TagGroupInput_createdAtApply,
       entriesImported: QuickbooksMigrationInput_entriesImportedApply,
       errorMessage: QuickbooksMigrationInput_errorMessageApply,
@@ -30430,7 +31297,7 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       bookId: TagGroupInput_bookIdApply,
-      connectedAccountId: QuickbooksMigrationInput_connectedAccountIdApply,
+      connectedAccountId: QuickbooksCutoverInput_connectedAccountIdApply,
       createdAt: TagGroupInput_createdAtApply,
       errorMessage: QuickbooksMigrationInput_errorMessageApply,
       mismatchCount: QuickbooksReconciliationInput_mismatchCountApply,
@@ -30489,7 +31356,7 @@ export const inputObjects = {
       myfiBalance: QuickbooksReconciliationLineInput_myfiBalanceApply,
       qboAccountId: QuickbooksAccountMapInput_qboAccountIdApply,
       qboBalance: QuickbooksReconciliationLineInput_qboBalanceApply,
-      reconciliationId: QuickbooksReconciliationLineInput_reconciliationIdApply,
+      reconciliationId: QuickbooksCutoverInput_reconciliationIdApply,
       rowId: JournalLineTagInput_rowIdApply,
       variance: QuickbooksReconciliationLineInput_varianceApply
     }
@@ -30504,7 +31371,7 @@ export const inputObjects = {
       myfiBalance: QuickbooksReconciliationLineInput_myfiBalanceApply,
       qboAccountId: QuickbooksAccountMapInput_qboAccountIdApply,
       qboBalance: QuickbooksReconciliationLineInput_qboBalanceApply,
-      reconciliationId: QuickbooksReconciliationLineInput_reconciliationIdApply,
+      reconciliationId: QuickbooksCutoverInput_reconciliationIdApply,
       rowId: JournalLineTagInput_rowIdApply,
       variance: QuickbooksReconciliationLineInput_varianceApply
     }
@@ -30513,7 +31380,7 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       bookId: TagGroupInput_bookIdApply,
-      connectedAccountId: QuickbooksMigrationInput_connectedAccountIdApply,
+      connectedAccountId: QuickbooksCutoverInput_connectedAccountIdApply,
       createdAt: TagGroupInput_createdAtApply,
       errorMessage: QuickbooksMigrationInput_errorMessageApply,
       mismatchCount: QuickbooksReconciliationInput_mismatchCountApply,
@@ -31328,6 +32195,18 @@ export const inputObjects = {
     }
   },
   UpdateQuickbooksAccountMapInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateQuickbooksCutoverByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateQuickbooksCutoverInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
       patch: applyCreateFields
@@ -32422,6 +33301,32 @@ export const enums = {
           attribute: "qbo_account_id",
           direction: "DESC"
         });
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply
+    }
+  },
+  QuickbooksCutoverOrderBy: {
+    values: {
+      BOOK_ID_ASC: AccountOrderBy_BOOK_ID_ASCApply,
+      BOOK_ID_DESC: AccountOrderBy_BOOK_ID_DESCApply,
+      PRIMARY_KEY_ASC(queryBuilder) {
+        quickbooks_cutoverUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        quickbooks_cutoverUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
       },
       ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
       ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply

@@ -12,6 +12,10 @@ export const QBO_AUTHORIZE_URL = "https://appcenter.intuit.com/connect/oauth2";
 export const QBO_TOKEN_URL =
   "https://oauth.platform.intuit.com/oauth2/v1/tokens/bearer";
 
+/** Intuit OAuth 2.0 token-revoke endpoint */
+export const QBO_REVOKE_URL =
+  "https://developer.api.intuit.com/v2/oauth2/tokens/revoke";
+
 interface QuickbooksEnv {
   clientId?: string;
   clientSecret?: string;

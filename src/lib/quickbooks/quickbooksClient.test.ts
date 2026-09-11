@@ -5,7 +5,11 @@ import {
   QBO_CLIENT_SECRET,
   QBO_REDIRECT_URI,
 } from "lib/config/env.config";
-import { QBO_TOKEN_URL, quickbooksBaseUrl } from "./quickbooksConfig";
+import {
+  QBO_REVOKE_URL,
+  QBO_TOKEN_URL,
+  quickbooksBaseUrl,
+} from "./quickbooksConfig";
 
 import type {
   QboAccount,
@@ -28,6 +32,7 @@ const {
   queryPreferences,
   queryTrialBalanceReport,
   refreshAccessToken,
+  revokeToken,
 } = client;
 
 // The client builds Basic auth from whatever env.config resolved. QBO creds are
@@ -173,6 +178,44 @@ describe("refreshAccessToken", () => {
     const result = await refreshAccessToken("refresh-1");
 
     expect(result).toEqual({ accessToken: "acc-2", refreshToken: "refresh-1" });
+  });
+});
+
+describe("revokeToken", () => {
+  test("POSTs the refresh token to the revoke endpoint with Basic auth and a JSON body", async () => {
+    responses = [jsonResponse({}, 200)];
+
+    await revokeToken("refresh-to-revoke");
+
+    const [call] = calls;
+    expect(call.url).toBe(QBO_REVOKE_URL);
+    expect(call.init.method).toBe("POST");
+
+    const headers = new Headers(call.init.headers);
+    expect(decodeBasic(headers.get("Authorization") ?? "")).toBe(expectedBasic);
+    expect(headers.get("Content-Type")).toBe("application/json");
+    expect(headers.get("Accept")).toBe("application/json");
+
+    expect(JSON.parse(String(call.init.body))).toEqual({
+      token: "refresh-to-revoke",
+    });
+  });
+
+  test("throws on a non-ok response without leaking the token or the response body", async () => {
+    responses = [
+      jsonResponse({ error: "invalid_token", secret: "leak-me" }, 400),
+    ];
+
+    let message = "";
+    try {
+      await revokeToken("refresh-to-revoke");
+    } catch (err) {
+      message = (err as Error).message;
+    }
+
+    expect(message).toContain("400");
+    expect(message).not.toContain("refresh-to-revoke");
+    expect(message).not.toContain("leak-me");
   });
 });
 
