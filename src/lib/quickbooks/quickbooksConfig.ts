@@ -36,10 +36,11 @@ export const resolveQuickbooksConfig = ({
   env,
 }: QuickbooksEnv): QuickbooksConfig => ({
   isConfigured: Boolean(clientId && clientSecret && redirectUri),
+  // Fail safe toward sandbox for financial data: only an explicit "production" hits the live API
   baseUrl:
-    env === "sandbox"
-      ? "https://sandbox-quickbooks.api.intuit.com"
-      : "https://quickbooks.api.intuit.com",
+    env === "production"
+      ? "https://quickbooks.api.intuit.com"
+      : "https://sandbox-quickbooks.api.intuit.com",
 });
 
 const config = resolveQuickbooksConfig({

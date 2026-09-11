@@ -40,10 +40,19 @@ describe("resolveQuickbooksConfig", () => {
     expect(config.baseUrl).toBe("https://sandbox-quickbooks.api.intuit.com");
   });
 
-  test("baseUrl resolves to production host when env is not sandbox", () => {
+  test("baseUrl resolves to production host only when env is production", () => {
     const config = resolveQuickbooksConfig({ env: "production" });
 
     expect(config.baseUrl).toBe("https://quickbooks.api.intuit.com");
+  });
+
+  test("baseUrl fails safe to sandbox for unset, empty, or unknown env", () => {
+    // Anything other than an explicit "production" must degrade toward sandbox
+    for (const env of [undefined, "", "prod", "PRODUCTION", "staging"]) {
+      const config = resolveQuickbooksConfig({ env });
+
+      expect(config.baseUrl).toBe("https://sandbox-quickbooks.api.intuit.com");
+    }
   });
 });
 
