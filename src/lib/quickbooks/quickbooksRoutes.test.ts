@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, mock, test } from "bun:test";
+import { afterAll, beforeEach, describe, expect, mock, test } from "bun:test";
 
 import {
   mockDbPool,
@@ -26,6 +26,24 @@ mock.module("./quickbooksConfig", () => ({
 
 const mockRunBackfill = mock(() => Promise.resolve({ entriesImported: 7 }));
 mock.module("./backfill", () => ({ runBackfill: mockRunBackfill }));
+
+const mockRunReconciliation = mock(() =>
+  Promise.resolve({ totalVariance: "0.0000", mismatchCount: 0 }),
+);
+mock.module("./reconcile", () => ({
+  runReconciliation: mockRunReconciliation,
+}));
+
+// mock.module is global across every test file in one process, and this file
+// sorts before reconcile.test.ts, so leaving the stub registered would clobber
+// that file's real subject. Import the real module via a query param (which
+// bypasses the mock registry) and restore it once this file's tests finish,
+// mirroring the same afterAll restore reconcile.test.ts does for its stubs
+// @ts-expect-error -- query-param import forces the real module, no types
+const realReconcile = await import("./reconcile.ts?real");
+afterAll(() => {
+  mock.module("./reconcile", () => ({ ...realReconcile }));
+});
 
 const { default: quickbooksRoutes } = await import("./quickbooksRoutes");
 
@@ -187,5 +205,108 @@ describe("POST /api/quickbooks/backfill", () => {
 
     expect(res.status).toBe(403);
     expect(mockRunBackfill).not.toHaveBeenCalled();
+  });
+});
+
+describe("POST /api/quickbooks/reconcile", () => {
+  beforeEach(() => {
+    resetDbMock();
+    mockRunReconciliation.mockClear();
+  });
+
+  test("creates a pending reconciliation row and starts the run, returning 202", async () => {
+    // Ownership check: the connected account belongs to the requested book
+    setSelectResults([
+      [{ id: "conn-1", bookId: "book-1", provider: "quickbooks" }],
+    ]);
+    setInsertReturningData([{ id: "recon-1" }]);
+
+    const res = await app.handle(
+      new Request("http://localhost/api/quickbooks/reconcile", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          bookId: "book-1",
+          connectedAccountId: "conn-1",
+          periodStart: "2026-01-01",
+          periodEnd: "2026-03-31",
+        }),
+      }),
+    );
+
+    // Accepted for async processing; no aggregates since the run is detached
+    expect(res.status).toBe(202);
+
+    const json = await res.json();
+    expect(json.reconciliationId).toBeTruthy();
+    expect(json.totalVariance).toBeUndefined();
+    expect(json.mismatchCount).toBeUndefined();
+
+    // A pending reconciliation row is created with the requested period
+    expect(mockInsertValues).toHaveBeenCalledWith(
+      expect.objectContaining({
+        bookId: "book-1",
+        connectedAccountId: "conn-1",
+        status: "pending",
+        periodStart: "2026-01-01",
+        periodEnd: "2026-03-31",
+      }),
+    );
+
+    // The reconciliation is invoked (fire-and-forget) with the new run id
+    expect(mockRunReconciliation).toHaveBeenCalledWith({
+      reconciliationId: json.reconciliationId,
+      bookId: "book-1",
+      connectedAccountId: "conn-1",
+    });
+  });
+
+  test("rejects a connectedAccountId from a different book with 403", async () => {
+    // The account exists but belongs to another book (cross-tenant attempt)
+    setSelectResults([
+      [{ id: "conn-1", bookId: "other-book", provider: "quickbooks" }],
+    ]);
+
+    const res = await app.handle(
+      new Request("http://localhost/api/quickbooks/reconcile", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          bookId: "book-1",
+          connectedAccountId: "conn-1",
+          periodStart: "2026-01-01",
+          periodEnd: "2026-03-31",
+        }),
+      }),
+    );
+
+    expect(res.status).toBe(403);
+
+    const json = await res.json();
+    expect(json.error).toBe("Forbidden");
+    // No reconciliation row created and no run started
+    expect(mockInsertValues).not.toHaveBeenCalled();
+    expect(mockRunReconciliation).not.toHaveBeenCalled();
+  });
+
+  test("rejects an unknown connectedAccountId with 403", async () => {
+    setSelectResults([[]]);
+
+    const res = await app.handle(
+      new Request("http://localhost/api/quickbooks/reconcile", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          bookId: "book-1",
+          connectedAccountId: "missing",
+          periodStart: "2026-01-01",
+          periodEnd: "2026-03-31",
+        }),
+      }),
+    );
+
+    expect(res.status).toBe(403);
+    expect(mockInsertValues).not.toHaveBeenCalled();
+    expect(mockRunReconciliation).not.toHaveBeenCalled();
   });
 });
