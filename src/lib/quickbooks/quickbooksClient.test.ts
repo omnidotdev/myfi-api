@@ -109,6 +109,35 @@ describe("exchangeCode", () => {
     expect(message).toContain("400");
     expect(message).not.toContain("leak-me");
   });
+
+  test("throws when the exchange response is missing a token, never echoing it", async () => {
+    // An initial auth-code exchange must yield both tokens
+    responses = [jsonResponse({ access_token: "acc-only" })];
+
+    let message = "";
+    try {
+      await exchangeCode("auth-code-123", "realm-xyz");
+    } catch (err) {
+      message = (err as Error).message;
+    }
+
+    expect(message.length).toBeGreaterThan(0);
+    expect(message).not.toContain("acc-only");
+  });
+
+  test("throws when the exchange response omits the access token", async () => {
+    responses = [jsonResponse({ refresh_token: "ref-only" })];
+
+    let message = "";
+    try {
+      await exchangeCode("auth-code-123", "realm-xyz");
+    } catch (err) {
+      message = (err as Error).message;
+    }
+
+    expect(message.length).toBeGreaterThan(0);
+    expect(message).not.toContain("ref-only");
+  });
 });
 
 describe("refreshAccessToken", () => {
@@ -280,6 +309,65 @@ describe("queryJournalEntries", () => {
     });
 
     expect(rows).toEqual([]);
+  });
+
+  test("throws a bounded pagination error instead of looping forever on always-full pages", async () => {
+    const fullPageBody = JSON.stringify({
+      QueryResponse: {
+        JournalEntry: Array.from({ length: PAGE_SIZE }, (_, i) => ({
+          Id: `je-${i}`,
+          TxnDate: "2026-01-01",
+          Line: [],
+        })),
+      },
+    });
+    // Ignore the response queue and always hand back a full page
+    globalThis.fetch = mock(() =>
+      Promise.resolve(new Response(fullPageBody, { status: 200 })),
+    ) as unknown as typeof fetch;
+    const onRefresh = mock(() => Promise.resolve());
+
+    await expect(
+      queryJournalEntries(conn, {
+        start: "2026-01-01",
+        end: "2026-12-31",
+        onRefresh,
+      }),
+    ).rejects.toThrow(/max pagination pages/i);
+  });
+
+  test("rejects a non-ISO date to guard against query injection, without echoing it", async () => {
+    const onRefresh = mock(() => Promise.resolve());
+
+    let message = "";
+    try {
+      await queryJournalEntries(conn, {
+        start: "2026-01-01'; DROP",
+        end: "2026-12-31",
+        onRefresh,
+      });
+    } catch (err) {
+      message = (err as Error).message;
+    }
+
+    expect(message.toLowerCase()).toContain("date");
+    expect(message).toContain("start");
+    expect(message).not.toContain("DROP");
+    // Validation must fail before any request goes out
+    expect(calls).toHaveLength(0);
+  });
+
+  test("rejects a malformed end date", async () => {
+    const onRefresh = mock(() => Promise.resolve());
+
+    await expect(
+      queryJournalEntries(conn, {
+        start: "2026-01-01",
+        end: "not-a-date",
+        onRefresh,
+      }),
+    ).rejects.toThrow(/date/i);
+    expect(calls).toHaveLength(0);
   });
 });
 

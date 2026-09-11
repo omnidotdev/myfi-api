@@ -8,6 +8,12 @@ import { QBO_TOKEN_URL, quickbooksBaseUrl } from "./quickbooksConfig";
 /** Default QBO query page size (STARTPOSITION/MAXRESULTS window) */
 export const PAGE_SIZE = 1000;
 
+/** Hard cap on pagination iterations, a safety net against an unbounded loop */
+const MAX_PAGES = 1000;
+
+/** QBO query dates must be plain ISO calendar dates, guarding against query injection */
+const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
+
 /** A stored QuickBooks connection with its current OAuth tokens */
 export interface QboConnection {
   realmId: string;
@@ -105,9 +111,16 @@ export const exchangeCode = async (
     redirect_uri: QBO_REDIRECT_URI ?? "",
   });
 
+  if (!tokens.access_token || !tokens.refresh_token) {
+    // An initial auth-code exchange always returns both tokens, so a missing one
+    // means the exchange is broken. Storing an empty refresh token would silently
+    // break every future refresh, so fail loudly instead (never echo the body)
+    throw new Error("QuickBooks token exchange returned incomplete tokens");
+  }
+
   return {
     accessToken: tokens.access_token,
-    refreshToken: tokens.refresh_token ?? "",
+    refreshToken: tokens.refresh_token,
     realmId,
   };
 };
@@ -159,6 +172,7 @@ export const qboGet = async (
   let res = await rawGet(conn.realmId, path, conn.accessToken);
 
   if (res.status === 429) {
+    // TODO(phase-2): add bounded backoff and retry on 429
     throw new Error(`QuickBooks rate limit hit: 429 ${path}`);
   }
 
@@ -168,6 +182,7 @@ export const qboGet = async (
     res = await rawGet(conn.realmId, path, tokens.accessToken);
 
     if (res.status === 429) {
+      // TODO(phase-2): add bounded backoff and retry on 429
       throw new Error(`QuickBooks rate limit hit: 429 ${path}`);
     }
   }
@@ -201,27 +216,40 @@ export const queryJournalEntries = async (
   conn: QboConnection,
   opts: { start: string; end: string; onRefresh: OnRefresh },
 ): Promise<QboJournalEntry[]> => {
+  // Dates are interpolated into the QBO query, so reject anything that is not a
+  // plain ISO calendar date before it reaches the query string
+  for (const [field, value] of [
+    ["start", opts.start],
+    ["end", opts.end],
+  ] as const) {
+    if (!ISO_DATE.test(value)) {
+      throw new Error(`Invalid QuickBooks query date for ${field}`);
+    }
+  }
+
   const all: QboJournalEntry[] = [];
   let startPosition = 1;
 
-  while (true) {
+  for (let pageIndex = 0; pageIndex < MAX_PAGES; pageIndex++) {
     const query = `SELECT * FROM JournalEntry WHERE TxnDate >= '${opts.start}' AND TxnDate <= '${opts.end}' STARTPOSITION ${startPosition} MAXRESULTS ${PAGE_SIZE}`;
-    const page = await runQuery<QboJournalEntry>(
+    const rows = await runQuery<QboJournalEntry>(
       conn,
       query,
       "JournalEntry",
       opts.onRefresh,
     );
 
-    all.push(...page);
+    all.push(...rows);
 
-    if (page.length < PAGE_SIZE) {
-      break;
+    if (rows.length < PAGE_SIZE) {
+      return all;
     }
     startPosition += PAGE_SIZE;
   }
 
-  return all;
+  throw new Error(
+    "QuickBooks journal entry query exceeded max pagination pages",
+  );
 };
 
 /**
