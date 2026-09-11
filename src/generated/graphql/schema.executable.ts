@@ -1449,6 +1449,134 @@ const spec_quickbooksMigration = {
   executor: executor
 };
 const quickbooksMigrationCodec = recordCodec(spec_quickbooksMigration);
+const quickbooksReconciliationLineIdentifier = sql.identifier("public", "quickbooks_reconciliation_line");
+const spec_quickbooksReconciliationLine = {
+  name: "quickbooksReconciliationLine",
+  identifier: quickbooksReconciliationLineIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    reconciliation_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    myfi_account_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    qbo_account_id: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    account_name: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    qbo_balance: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    myfi_balance: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    variance: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "970419",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "quickbooks_reconciliation_line"
+    }
+  },
+  executor: executor
+};
+const quickbooksReconciliationLineCodec = recordCodec(spec_quickbooksReconciliationLine);
 const payrollConnectionIdentifier = sql.identifier("public", "payroll_connection");
 const spec_payrollConnection = {
   name: "payrollConnection",
@@ -1698,6 +1826,145 @@ const spec_reconciliationStatement = {
   executor: executor
 };
 const reconciliationStatementCodec = recordCodec(spec_reconciliationStatement);
+const quickbooksReconciliationIdentifier = sql.identifier("public", "quickbooks_reconciliation");
+const spec_quickbooksReconciliation = {
+  name: "quickbooksReconciliation",
+  identifier: quickbooksReconciliationIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    connected_account_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    status: {
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    period_start: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    period_end: {
+      codec: TYPES.timestamptz,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    total_variance: {
+      codec: TYPES.numeric,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    mismatch_count: {
+      codec: TYPES.int,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    error_message: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "970400",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "quickbooks_reconciliation"
+    }
+  },
+  executor: executor
+};
+const quickbooksReconciliationCodec = recordCodec(spec_quickbooksReconciliation);
 const cryptoLotIdentifier = sql.identifier("public", "crypto_lot");
 const spec_cryptoLot = {
   name: "cryptoLot",
@@ -4092,6 +4359,29 @@ const quickbooks_migration_resourceOptionsConfig = {
   },
   uniques: quickbooks_migrationUniques
 };
+const quickbooks_reconciliation_lineUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const quickbooks_reconciliation_line_resourceOptionsConfig = {
+  executor: executor,
+  name: "quickbooks_reconciliation_line",
+  identifier: "main.public.quickbooks_reconciliation_line",
+  from: quickbooksReconciliationLineIdentifier,
+  codec: quickbooksReconciliationLineCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "quickbooks_reconciliation_line"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: quickbooks_reconciliation_lineUniques
+};
 const payroll_connectionUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -4137,6 +4427,29 @@ const reconciliation_statement_resourceOptionsConfig = {
     canDelete: true
   },
   uniques: reconciliation_statementUniques
+};
+const quickbooks_reconciliationUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const quickbooks_reconciliation_resourceOptionsConfig = {
+  executor: executor,
+  name: "quickbooks_reconciliation",
+  identifier: "main.public.quickbooks_reconciliation",
+  from: quickbooksReconciliationIdentifier,
+  codec: quickbooksReconciliationCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "quickbooks_reconciliation"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: quickbooks_reconciliationUniques
 };
 const crypto_lotUniques = [{
   attributes: ["id"],
@@ -4467,8 +4780,10 @@ const registryConfig = {
     netWorthSnapshot: netWorthSnapshotCodec,
     accountingPeriod: accountingPeriodCodec,
     quickbooksMigration: quickbooksMigrationCodec,
+    quickbooksReconciliationLine: quickbooksReconciliationLineCodec,
     payrollConnection: payrollConnectionCodec,
     reconciliationStatement: reconciliationStatementCodec,
+    quickbooksReconciliation: quickbooksReconciliationCodec,
     cryptoLot: cryptoLotCodec,
     mileageLog: mileageLogCodec,
     book: bookCodec,
@@ -4528,8 +4843,10 @@ const registryConfig = {
     net_worth_snapshot: net_worth_snapshot_resourceOptionsConfig,
     accounting_period: accounting_period_resourceOptionsConfig,
     quickbooks_migration: quickbooks_migration_resourceOptionsConfig,
+    quickbooks_reconciliation_line: quickbooks_reconciliation_line_resourceOptionsConfig,
     payroll_connection: payroll_connection_resourceOptionsConfig,
     reconciliation_statement: reconciliation_statement_resourceOptionsConfig,
+    quickbooks_reconciliation: quickbooks_reconciliation_resourceOptionsConfig,
     crypto_lot: crypto_lot_resourceOptionsConfig,
     mileage_log: mileage_log_resourceOptionsConfig,
     book: book_resourceOptionsConfig,
@@ -4754,6 +5071,17 @@ const registryConfig = {
           __proto__: null,
           isIndexed: false
         }
+      },
+      quickbooksReconciliationLinesByTheirMyfiAccountId: {
+        localCodec: accountCodec,
+        remoteResourceOptions: quickbooks_reconciliation_line_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["myfi_account_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
       }
     },
     accountMapping: {
@@ -4963,6 +5291,20 @@ const registryConfig = {
         localAttributes: ["id"],
         remoteAttributes: ["book_id"],
         isReferencee: true
+      },
+      quickbooksReconciliationsByTheirBookId: {
+        localCodec: bookCodec,
+        remoteResourceOptions: quickbooks_reconciliation_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["book_id"],
+        isReferencee: true
+      },
+      quickbooksReconciliationLinesByTheirBookId: {
+        localCodec: bookCodec,
+        remoteResourceOptions: quickbooks_reconciliation_line_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["book_id"],
+        isReferencee: true
       }
     },
     bookAccess: {
@@ -5042,6 +5384,17 @@ const registryConfig = {
       quickbooksMigrationsByTheirConnectedAccountId: {
         localCodec: connectedAccountCodec,
         remoteResourceOptions: quickbooks_migration_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["connected_account_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
+      },
+      quickbooksReconciliationsByTheirConnectedAccountId: {
+        localCodec: connectedAccountCodec,
+        remoteResourceOptions: quickbooks_reconciliation_resourceOptionsConfig,
         localAttributes: ["id"],
         remoteAttributes: ["connected_account_id"],
         isReferencee: true,
@@ -5284,6 +5637,54 @@ const registryConfig = {
         isUnique: true
       }
     },
+    quickbooksReconciliation: {
+      __proto__: null,
+      bookByMyBookId: {
+        localCodec: quickbooksReconciliationCodec,
+        remoteResourceOptions: book_resourceOptionsConfig,
+        localAttributes: ["book_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      connectedAccountByMyConnectedAccountId: {
+        localCodec: quickbooksReconciliationCodec,
+        remoteResourceOptions: connected_account_resourceOptionsConfig,
+        localAttributes: ["connected_account_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      quickbooksReconciliationLinesByTheirReconciliationId: {
+        localCodec: quickbooksReconciliationCodec,
+        remoteResourceOptions: quickbooks_reconciliation_line_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["reconciliation_id"],
+        isReferencee: true
+      }
+    },
+    quickbooksReconciliationLine: {
+      __proto__: null,
+      bookByMyBookId: {
+        localCodec: quickbooksReconciliationLineCodec,
+        remoteResourceOptions: book_resourceOptionsConfig,
+        localAttributes: ["book_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      accountByMyMyfiAccountId: {
+        localCodec: quickbooksReconciliationLineCodec,
+        remoteResourceOptions: account_resourceOptionsConfig,
+        localAttributes: ["myfi_account_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      quickbooksReconciliationByMyReconciliationId: {
+        localCodec: quickbooksReconciliationLineCodec,
+        remoteResourceOptions: quickbooks_reconciliation_resourceOptionsConfig,
+        localAttributes: ["reconciliation_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      }
+    },
     reconciliationQueue: {
       __proto__: null,
       bookByMyBookId: {
@@ -5491,8 +5892,10 @@ const resource_import_profilePgResource = registry.pgResources["import_profile"]
 const resource_net_worth_snapshotPgResource = registry.pgResources["net_worth_snapshot"];
 const resource_accounting_periodPgResource = registry.pgResources["accounting_period"];
 const resource_quickbooks_migrationPgResource = registry.pgResources["quickbooks_migration"];
+const resource_quickbooks_reconciliation_linePgResource = registry.pgResources["quickbooks_reconciliation_line"];
 const resource_payroll_connectionPgResource = registry.pgResources["payroll_connection"];
 const resource_reconciliation_statementPgResource = registry.pgResources["reconciliation_statement"];
+const resource_quickbooks_reconciliationPgResource = registry.pgResources["quickbooks_reconciliation"];
 const resource_crypto_lotPgResource = registry.pgResources["crypto_lot"];
 const resource_mileage_logPgResource = registry.pgResources["mileage_log"];
 const resource_bookPgResource = registry.pgResources["book"];
@@ -5715,6 +6118,17 @@ const nodeFetcher_QuickbooksMigration = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_QuickbooksMigration));
   return nodeIdHandler_QuickbooksMigration.get(nodeIdHandler_QuickbooksMigration.getSpec($decoded));
 };
+const nodeIdHandler_QuickbooksReconciliationLine = makeTableNodeIdHandler({
+  typeName: "QuickbooksReconciliationLine",
+  identifier: "QuickbooksReconciliationLine",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_quickbooks_reconciliation_linePgResource,
+  pk: quickbooks_reconciliation_lineUniques[0].attributes
+});
+const nodeFetcher_QuickbooksReconciliationLine = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_QuickbooksReconciliationLine));
+  return nodeIdHandler_QuickbooksReconciliationLine.get(nodeIdHandler_QuickbooksReconciliationLine.getSpec($decoded));
+};
 const nodeIdHandler_PayrollConnection = makeTableNodeIdHandler({
   typeName: "PayrollConnection",
   identifier: "PayrollConnection",
@@ -5736,6 +6150,17 @@ const nodeIdHandler_ReconciliationStatement = makeTableNodeIdHandler({
 const nodeFetcher_ReconciliationStatement = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_ReconciliationStatement));
   return nodeIdHandler_ReconciliationStatement.get(nodeIdHandler_ReconciliationStatement.getSpec($decoded));
+};
+const nodeIdHandler_QuickbooksReconciliation = makeTableNodeIdHandler({
+  typeName: "QuickbooksReconciliation",
+  identifier: "QuickbooksReconciliation",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_quickbooks_reconciliationPgResource,
+  pk: quickbooks_reconciliationUniques[0].attributes
+});
+const nodeFetcher_QuickbooksReconciliation = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_QuickbooksReconciliation));
+  return nodeIdHandler_QuickbooksReconciliation.get(nodeIdHandler_QuickbooksReconciliation.getSpec($decoded));
 };
 const nodeIdHandler_CryptoLot = makeTableNodeIdHandler({
   typeName: "CryptoLot",
@@ -5947,8 +6372,10 @@ const nodeIdHandlerByTypeName = {
   NetWorthSnapshot: nodeIdHandler_NetWorthSnapshot,
   AccountingPeriod: nodeIdHandler_AccountingPeriod,
   QuickbooksMigration: nodeIdHandler_QuickbooksMigration,
+  QuickbooksReconciliationLine: nodeIdHandler_QuickbooksReconciliationLine,
   PayrollConnection: nodeIdHandler_PayrollConnection,
   ReconciliationStatement: nodeIdHandler_ReconciliationStatement,
+  QuickbooksReconciliation: nodeIdHandler_QuickbooksReconciliation,
   CryptoLot: nodeIdHandler_CryptoLot,
   MileageLog: nodeIdHandler_MileageLog,
   Book: nodeIdHandler_Book,
@@ -6394,6 +6821,30 @@ const AccountingPeriodOrderBy_STATUS_DESCApply = queryBuilder => {
     direction: "DESC"
   });
 };
+const QuickbooksAccountMap_qboAccountIdPlan = $record => {
+  return $record.get("qbo_account_id");
+};
+const QuickbooksAccountMap_myfiAccountIdPlan = $record => {
+  return $record.get("myfi_account_id");
+};
+const QuickbooksAccountMap_myfiAccountPlan = $record => resource_accountPgResource.get({
+  id: $record.get("myfi_account_id")
+});
+const QuickbooksMigration_connectedAccountIdPlan = $record => {
+  return $record.get("connected_account_id");
+};
+const QuickbooksMigration_periodStartPlan = $record => {
+  return $record.get("period_start");
+};
+const QuickbooksMigration_periodEndPlan = $record => {
+  return $record.get("period_end");
+};
+const QuickbooksMigration_errorMessagePlan = $record => {
+  return $record.get("error_message");
+};
+const QuickbooksMigration_connectedAccountPlan = $record => resource_connected_accountPgResource.get({
+  id: $record.get("connected_account_id")
+});
 function applyInputToInsert(_, $object) {
   return $object;
 }
@@ -6460,6 +6911,10 @@ const specFromArgs_QuickbooksMigration = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_QuickbooksMigration, $nodeId);
 };
+const specFromArgs_QuickbooksReconciliationLine = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_QuickbooksReconciliationLine, $nodeId);
+};
 const specFromArgs_PayrollConnection = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_PayrollConnection, $nodeId);
@@ -6467,6 +6922,10 @@ const specFromArgs_PayrollConnection = args => {
 const specFromArgs_ReconciliationStatement = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_ReconciliationStatement, $nodeId);
+};
+const specFromArgs_QuickbooksReconciliation = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_QuickbooksReconciliation, $nodeId);
 };
 const specFromArgs_CryptoLot = args => {
   const $nodeId = args.getRaw(["input", "id"]);
@@ -6730,6 +7189,22 @@ function QuickbooksMigrationInput_entriesImportedApply(obj, val, info) {
 function QuickbooksMigrationInput_errorMessageApply(obj, val, info) {
   obj.set("error_message", bakedInputRuntime(info.schema, info.field.type, val));
 }
+const CreateQuickbooksReconciliationLinePayload_quickbooksReconciliationLineEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_quickbooks_reconciliation_linePgResource, quickbooks_reconciliation_lineUniques[0].attributes, $mutation, fieldArgs);
+function QuickbooksReconciliationLineInput_reconciliationIdApply(obj, val, info) {
+  obj.set("reconciliation_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function QuickbooksReconciliationLineInput_accountNameApply(obj, val, info) {
+  obj.set("account_name", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function QuickbooksReconciliationLineInput_qboBalanceApply(obj, val, info) {
+  obj.set("qbo_balance", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function QuickbooksReconciliationLineInput_myfiBalanceApply(obj, val, info) {
+  obj.set("myfi_balance", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function QuickbooksReconciliationLineInput_varianceApply(obj, val, info) {
+  obj.set("variance", bakedInputRuntime(info.schema, info.field.type, val));
+}
 const CreatePayrollConnectionPayload_payrollConnectionEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_payroll_connectionPgResource, payroll_connectionUniques[0].attributes, $mutation, fieldArgs);
 function PayrollConnectionInput_providerApply(obj, val, info) {
   obj.set("provider", bakedInputRuntime(info.schema, info.field.type, val));
@@ -6764,6 +7239,13 @@ function ReconciliationStatementInput_completedAtApply(obj, val, info) {
 }
 function ReconciliationStatementInput_discrepancyApply(obj, val, info) {
   obj.set("discrepancy", bakedInputRuntime(info.schema, info.field.type, val));
+}
+const CreateQuickbooksReconciliationPayload_quickbooksReconciliationEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_quickbooks_reconciliationPgResource, quickbooks_reconciliationUniques[0].attributes, $mutation, fieldArgs);
+function QuickbooksReconciliationInput_totalVarianceApply(obj, val, info) {
+  obj.set("total_variance", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function QuickbooksReconciliationInput_mismatchCountApply(obj, val, info) {
+  obj.set("mismatch_count", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateCryptoLotPayload_cryptoLotEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_crypto_lotPgResource, crypto_lotUniques[0].attributes, $mutation, fieldArgs);
 function CryptoLotInput_cryptoAssetIdApply(obj, val, info) {
@@ -7079,11 +7561,17 @@ type Query implements Node {
   """Get a single \`QuickbooksMigration\`."""
   quickbooksMigration(rowId: UUID!): QuickbooksMigration
 
+  """Get a single \`QuickbooksReconciliationLine\`."""
+  quickbooksReconciliationLine(rowId: UUID!): QuickbooksReconciliationLine
+
   """Get a single \`PayrollConnection\`."""
   payrollConnection(rowId: UUID!): PayrollConnection
 
   """Get a single \`ReconciliationStatement\`."""
   reconciliationStatement(rowId: UUID!): ReconciliationStatement
+
+  """Get a single \`QuickbooksReconciliation\`."""
+  quickbooksReconciliation(rowId: UUID!): QuickbooksReconciliation
 
   """Get a single \`CryptoLot\`."""
   cryptoLot(rowId: UUID!): CryptoLot
@@ -7238,6 +7726,16 @@ type Query implements Node {
     id: ID!
   ): QuickbooksMigration
 
+  """
+  Reads a single \`QuickbooksReconciliationLine\` using its globally unique \`ID\`.
+  """
+  quickbooksReconciliationLineById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`QuickbooksReconciliationLine\`.
+    """
+    id: ID!
+  ): QuickbooksReconciliationLine
+
   """Reads a single \`PayrollConnection\` using its globally unique \`ID\`."""
   payrollConnectionById(
     """
@@ -7255,6 +7753,16 @@ type Query implements Node {
     """
     id: ID!
   ): ReconciliationStatement
+
+  """
+  Reads a single \`QuickbooksReconciliation\` using its globally unique \`ID\`.
+  """
+  quickbooksReconciliationById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`QuickbooksReconciliation\`.
+    """
+    id: ID!
+  ): QuickbooksReconciliation
 
   """Reads a single \`CryptoLot\` using its globally unique \`ID\`."""
   cryptoLotById(
@@ -7860,6 +8368,42 @@ type Query implements Node {
     orderBy: [QuickbooksMigrationOrderBy!] = [PRIMARY_KEY_ASC]
   ): QuickbooksMigrationConnection
 
+  """
+  Reads and enables pagination through a set of \`QuickbooksReconciliationLine\`.
+  """
+  quickbooksReconciliationLines(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: QuickbooksReconciliationLineCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: QuickbooksReconciliationLineFilter
+
+    """The method to use when ordering \`QuickbooksReconciliationLine\`."""
+    orderBy: [QuickbooksReconciliationLineOrderBy!] = [PRIMARY_KEY_ASC]
+  ): QuickbooksReconciliationLineConnection
+
   """Reads and enables pagination through a set of \`PayrollConnection\`."""
   payrollConnections(
     """Only read the first \`n\` values of the set."""
@@ -7929,6 +8473,42 @@ type Query implements Node {
     """The method to use when ordering \`ReconciliationStatement\`."""
     orderBy: [ReconciliationStatementOrderBy!] = [PRIMARY_KEY_ASC]
   ): ReconciliationStatementConnection
+
+  """
+  Reads and enables pagination through a set of \`QuickbooksReconciliation\`.
+  """
+  quickbooksReconciliations(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: QuickbooksReconciliationCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: QuickbooksReconciliationFilter
+
+    """The method to use when ordering \`QuickbooksReconciliation\`."""
+    orderBy: [QuickbooksReconciliationOrderBy!] = [PRIMARY_KEY_ASC]
+  ): QuickbooksReconciliationConnection
 
   """Reads and enables pagination through a set of \`CryptoLot\`."""
   cryptoLots(
@@ -9467,6 +10047,78 @@ type Book implements Node {
     """The method to use when ordering \`QuickbooksMigration\`."""
     orderBy: [QuickbooksMigrationOrderBy!] = [PRIMARY_KEY_ASC]
   ): QuickbooksMigrationConnection!
+
+  """
+  Reads and enables pagination through a set of \`QuickbooksReconciliation\`.
+  """
+  quickbooksReconciliations(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: QuickbooksReconciliationCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: QuickbooksReconciliationFilter
+
+    """The method to use when ordering \`QuickbooksReconciliation\`."""
+    orderBy: [QuickbooksReconciliationOrderBy!] = [PRIMARY_KEY_ASC]
+  ): QuickbooksReconciliationConnection!
+
+  """
+  Reads and enables pagination through a set of \`QuickbooksReconciliationLine\`.
+  """
+  quickbooksReconciliationLines(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: QuickbooksReconciliationLineCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: QuickbooksReconciliationLineFilter
+
+    """The method to use when ordering \`QuickbooksReconciliationLine\`."""
+    orderBy: [QuickbooksReconciliationLineOrderBy!] = [PRIMARY_KEY_ASC]
+  ): QuickbooksReconciliationLineConnection!
 }
 
 enum BookType {
@@ -9894,6 +10546,18 @@ input BookFilter {
 
   """Some related \`quickbooksMigrations\` exist."""
   quickbooksMigrationsExist: Boolean
+
+  """Filter by the object’s \`quickbooksReconciliations\` relation."""
+  quickbooksReconciliations: BookToManyQuickbooksReconciliationFilter
+
+  """Some related \`quickbooksReconciliations\` exist."""
+  quickbooksReconciliationsExist: Boolean
+
+  """Filter by the object’s \`quickbooksReconciliationLines\` relation."""
+  quickbooksReconciliationLines: BookToManyQuickbooksReconciliationLineFilter
+
+  """Some related \`quickbooksReconciliationLines\` exist."""
+  quickbooksReconciliationLinesExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [BookFilter!]
@@ -11615,6 +12279,135 @@ input QuickbooksMigrationFilter {
 
   """Negates the expression."""
   not: QuickbooksMigrationFilter
+}
+
+"""
+A filter to be used against many \`QuickbooksReconciliation\` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyQuickbooksReconciliationFilter {
+  """
+  Every related \`QuickbooksReconciliation\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: QuickbooksReconciliationFilter
+
+  """
+  Some related \`QuickbooksReconciliation\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: QuickbooksReconciliationFilter
+
+  """
+  No related \`QuickbooksReconciliation\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: QuickbooksReconciliationFilter
+}
+
+"""
+A filter to be used against \`QuickbooksReconciliation\` object types. All fields are combined with a logical ‘and.’
+"""
+input QuickbooksReconciliationFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`bookId\` field."""
+  bookId: UUIDFilter
+
+  """
+  Filter by the object’s \`quickbooksReconciliationLinesByReconciliationId\` relation.
+  """
+  quickbooksReconciliationLinesByReconciliationId: QuickbooksReconciliationToManyQuickbooksReconciliationLineFilter
+
+  """Some related \`quickbooksReconciliationLinesByReconciliationId\` exist."""
+  quickbooksReconciliationLinesByReconciliationIdExist: Boolean
+
+  """Filter by the object’s \`book\` relation."""
+  book: BookFilter
+
+  """Filter by the object’s \`connectedAccount\` relation."""
+  connectedAccount: ConnectedAccountFilter
+
+  """Checks for all expressions in this list."""
+  and: [QuickbooksReconciliationFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [QuickbooksReconciliationFilter!]
+
+  """Negates the expression."""
+  not: QuickbooksReconciliationFilter
+}
+
+"""
+A filter to be used against many \`QuickbooksReconciliationLine\` object types. All fields are combined with a logical ‘and.’
+"""
+input QuickbooksReconciliationToManyQuickbooksReconciliationLineFilter {
+  """
+  Every related \`QuickbooksReconciliationLine\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: QuickbooksReconciliationLineFilter
+
+  """
+  Some related \`QuickbooksReconciliationLine\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: QuickbooksReconciliationLineFilter
+
+  """
+  No related \`QuickbooksReconciliationLine\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: QuickbooksReconciliationLineFilter
+}
+
+"""
+A filter to be used against \`QuickbooksReconciliationLine\` object types. All fields are combined with a logical ‘and.’
+"""
+input QuickbooksReconciliationLineFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`reconciliationId\` field."""
+  reconciliationId: UUIDFilter
+
+  """Filter by the object’s \`bookId\` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s \`book\` relation."""
+  book: BookFilter
+
+  """Filter by the object’s \`myfiAccount\` relation."""
+  myfiAccount: AccountFilter
+
+  """A related \`myfiAccount\` exists."""
+  myfiAccountExists: Boolean
+
+  """Filter by the object’s \`reconciliation\` relation."""
+  reconciliation: QuickbooksReconciliationFilter
+
+  """Checks for all expressions in this list."""
+  and: [QuickbooksReconciliationLineFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [QuickbooksReconciliationLineFilter!]
+
+  """Negates the expression."""
+  not: QuickbooksReconciliationLineFilter
+}
+
+"""
+A filter to be used against many \`QuickbooksReconciliationLine\` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyQuickbooksReconciliationLineFilter {
+  """
+  Every related \`QuickbooksReconciliationLine\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: QuickbooksReconciliationLineFilter
+
+  """
+  Some related \`QuickbooksReconciliationLine\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: QuickbooksReconciliationLineFilter
+
+  """
+  No related \`QuickbooksReconciliationLine\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: QuickbooksReconciliationLineFilter
 }
 
 """
@@ -13837,6 +14630,209 @@ enum QuickbooksMigrationOrderBy {
   BOOK_ID_DESC
 }
 
+"""A connection to a list of \`QuickbooksReconciliation\` values."""
+type QuickbooksReconciliationConnection {
+  """A list of \`QuickbooksReconciliation\` objects."""
+  nodes: [QuickbooksReconciliation]!
+
+  """
+  A list of edges which contains the \`QuickbooksReconciliation\` and cursor to aid in pagination.
+  """
+  edges: [QuickbooksReconciliationEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* \`QuickbooksReconciliation\` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+type QuickbooksReconciliation implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  connectedAccountId: UUID!
+  status: String!
+  periodStart: Datetime!
+  periodEnd: Datetime!
+  totalVariance: BigFloat
+  mismatchCount: Int!
+  errorMessage: String
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """
+  Reads a single \`Book\` that is related to this \`QuickbooksReconciliation\`.
+  """
+  book: Book
+
+  """
+  Reads a single \`ConnectedAccount\` that is related to this \`QuickbooksReconciliation\`.
+  """
+  connectedAccount: ConnectedAccount
+
+  """
+  Reads and enables pagination through a set of \`QuickbooksReconciliationLine\`.
+  """
+  quickbooksReconciliationLinesByReconciliationId(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: QuickbooksReconciliationLineCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: QuickbooksReconciliationLineFilter
+
+    """The method to use when ordering \`QuickbooksReconciliationLine\`."""
+    orderBy: [QuickbooksReconciliationLineOrderBy!] = [PRIMARY_KEY_ASC]
+  ): QuickbooksReconciliationLineConnection!
+}
+
+"""A connection to a list of \`QuickbooksReconciliationLine\` values."""
+type QuickbooksReconciliationLineConnection {
+  """A list of \`QuickbooksReconciliationLine\` objects."""
+  nodes: [QuickbooksReconciliationLine]!
+
+  """
+  A list of edges which contains the \`QuickbooksReconciliationLine\` and cursor to aid in pagination.
+  """
+  edges: [QuickbooksReconciliationLineEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* \`QuickbooksReconciliationLine\` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+type QuickbooksReconciliationLine implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  reconciliationId: UUID!
+  bookId: UUID!
+  myfiAccountId: UUID
+  qboAccountId: String
+  accountName: String!
+  qboBalance: BigFloat!
+  myfiBalance: BigFloat!
+  variance: BigFloat!
+  createdAt: Datetime
+
+  """
+  Reads a single \`Book\` that is related to this \`QuickbooksReconciliationLine\`.
+  """
+  book: Book
+
+  """
+  Reads a single \`Account\` that is related to this \`QuickbooksReconciliationLine\`.
+  """
+  myfiAccount: Account
+
+  """
+  Reads a single \`QuickbooksReconciliation\` that is related to this \`QuickbooksReconciliationLine\`.
+  """
+  reconciliation: QuickbooksReconciliation
+}
+
+"""A \`QuickbooksReconciliationLine\` edge in the connection."""
+type QuickbooksReconciliationLineEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`QuickbooksReconciliationLine\` at the end of the edge."""
+  node: QuickbooksReconciliationLine
+}
+
+"""
+A condition to be used against \`QuickbooksReconciliationLine\` object types. All
+fields are tested for equality and combined with a logical ‘and.’
+"""
+input QuickbooksReconciliationLineCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`reconciliationId\` field."""
+  reconciliationId: UUID
+
+  """Checks for equality with the object’s \`bookId\` field."""
+  bookId: UUID
+}
+
+"""Methods to use when ordering \`QuickbooksReconciliationLine\`."""
+enum QuickbooksReconciliationLineOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  RECONCILIATION_ID_ASC
+  RECONCILIATION_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+}
+
+"""A \`QuickbooksReconciliation\` edge in the connection."""
+type QuickbooksReconciliationEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`QuickbooksReconciliation\` at the end of the edge."""
+  node: QuickbooksReconciliation
+}
+
+"""
+A condition to be used against \`QuickbooksReconciliation\` object types. All
+fields are tested for equality and combined with a logical ‘and.’
+"""
+input QuickbooksReconciliationCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`bookId\` field."""
+  bookId: UUID
+}
+
+"""Methods to use when ordering \`QuickbooksReconciliation\`."""
+enum QuickbooksReconciliationOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+}
+
 type _DrizzleMigration implements Node {
   """
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
@@ -14170,6 +15166,14 @@ type Mutation {
     input: CreateQuickbooksMigrationInput!
   ): CreateQuickbooksMigrationPayload
 
+  """Creates a single \`QuickbooksReconciliationLine\`."""
+  createQuickbooksReconciliationLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateQuickbooksReconciliationLineInput!
+  ): CreateQuickbooksReconciliationLinePayload
+
   """Creates a single \`PayrollConnection\`."""
   createPayrollConnection(
     """
@@ -14185,6 +15189,14 @@ type Mutation {
     """
     input: CreateReconciliationStatementInput!
   ): CreateReconciliationStatementPayload
+
+  """Creates a single \`QuickbooksReconciliation\`."""
+  createQuickbooksReconciliation(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateQuickbooksReconciliationInput!
+  ): CreateQuickbooksReconciliationPayload
 
   """Creates a single \`CryptoLot\`."""
   createCryptoLot(
@@ -14557,6 +15569,26 @@ type Mutation {
   ): UpdateQuickbooksMigrationPayload
 
   """
+  Updates a single \`QuickbooksReconciliationLine\` using its globally unique id and a patch.
+  """
+  updateQuickbooksReconciliationLineById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateQuickbooksReconciliationLineByIdInput!
+  ): UpdateQuickbooksReconciliationLinePayload
+
+  """
+  Updates a single \`QuickbooksReconciliationLine\` using a unique key and a patch.
+  """
+  updateQuickbooksReconciliationLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateQuickbooksReconciliationLineInput!
+  ): UpdateQuickbooksReconciliationLinePayload
+
+  """
   Updates a single \`PayrollConnection\` using its globally unique id and a patch.
   """
   updatePayrollConnectionById(
@@ -14593,6 +15625,26 @@ type Mutation {
     """
     input: UpdateReconciliationStatementInput!
   ): UpdateReconciliationStatementPayload
+
+  """
+  Updates a single \`QuickbooksReconciliation\` using its globally unique id and a patch.
+  """
+  updateQuickbooksReconciliationById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateQuickbooksReconciliationByIdInput!
+  ): UpdateQuickbooksReconciliationPayload
+
+  """
+  Updates a single \`QuickbooksReconciliation\` using a unique key and a patch.
+  """
+  updateQuickbooksReconciliation(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateQuickbooksReconciliationInput!
+  ): UpdateQuickbooksReconciliationPayload
 
   """Updates a single \`CryptoLot\` using its globally unique id and a patch."""
   updateCryptoLotById(
@@ -15060,6 +16112,24 @@ type Mutation {
     input: DeleteQuickbooksMigrationInput!
   ): DeleteQuickbooksMigrationPayload
 
+  """
+  Deletes a single \`QuickbooksReconciliationLine\` using its globally unique id.
+  """
+  deleteQuickbooksReconciliationLineById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteQuickbooksReconciliationLineByIdInput!
+  ): DeleteQuickbooksReconciliationLinePayload
+
+  """Deletes a single \`QuickbooksReconciliationLine\` using a unique key."""
+  deleteQuickbooksReconciliationLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteQuickbooksReconciliationLineInput!
+  ): DeleteQuickbooksReconciliationLinePayload
+
   """Deletes a single \`PayrollConnection\` using its globally unique id."""
   deletePayrollConnectionById(
     """
@@ -15093,6 +16163,24 @@ type Mutation {
     """
     input: DeleteReconciliationStatementInput!
   ): DeleteReconciliationStatementPayload
+
+  """
+  Deletes a single \`QuickbooksReconciliation\` using its globally unique id.
+  """
+  deleteQuickbooksReconciliationById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteQuickbooksReconciliationByIdInput!
+  ): DeleteQuickbooksReconciliationPayload
+
+  """Deletes a single \`QuickbooksReconciliation\` using a unique key."""
+  deleteQuickbooksReconciliation(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteQuickbooksReconciliationInput!
+  ): DeleteQuickbooksReconciliationPayload
 
   """Deletes a single \`CryptoLot\` using its globally unique id."""
   deleteCryptoLotById(
@@ -15991,6 +17079,57 @@ input QuickbooksMigrationInput {
   updatedAt: Datetime
 }
 
+"""The output of our create \`QuickbooksReconciliationLine\` mutation."""
+type CreateQuickbooksReconciliationLinePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`QuickbooksReconciliationLine\` that was created by this mutation."""
+  quickbooksReconciliationLine: QuickbooksReconciliationLine
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """
+  An edge for our \`QuickbooksReconciliationLine\`. May be used by Relay 1.
+  """
+  quickbooksReconciliationLineEdge(
+    """The method to use when ordering \`QuickbooksReconciliationLine\`."""
+    orderBy: [QuickbooksReconciliationLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): QuickbooksReconciliationLineEdge
+}
+
+"""All input for the create \`QuickbooksReconciliationLine\` mutation."""
+input CreateQuickbooksReconciliationLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`QuickbooksReconciliationLine\` to be created by this mutation."""
+  quickbooksReconciliationLine: QuickbooksReconciliationLineInput!
+}
+
+"""An input for mutations affecting \`QuickbooksReconciliationLine\`"""
+input QuickbooksReconciliationLineInput {
+  rowId: UUID
+  reconciliationId: UUID!
+  bookId: UUID!
+  myfiAccountId: UUID
+  qboAccountId: String
+  accountName: String!
+  qboBalance: BigFloat
+  myfiBalance: BigFloat
+  variance: BigFloat
+  createdAt: Datetime
+}
+
 """The output of our create \`PayrollConnection\` mutation."""
 type CreatePayrollConnectionPayload {
   """
@@ -16087,6 +17226,56 @@ input ReconciliationStatementInput {
   completedAt: Datetime
   discrepancy: BigFloat
   createdAt: Datetime
+}
+
+"""The output of our create \`QuickbooksReconciliation\` mutation."""
+type CreateQuickbooksReconciliationPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`QuickbooksReconciliation\` that was created by this mutation."""
+  quickbooksReconciliation: QuickbooksReconciliation
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`QuickbooksReconciliation\`. May be used by Relay 1."""
+  quickbooksReconciliationEdge(
+    """The method to use when ordering \`QuickbooksReconciliation\`."""
+    orderBy: [QuickbooksReconciliationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): QuickbooksReconciliationEdge
+}
+
+"""All input for the create \`QuickbooksReconciliation\` mutation."""
+input CreateQuickbooksReconciliationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`QuickbooksReconciliation\` to be created by this mutation."""
+  quickbooksReconciliation: QuickbooksReconciliationInput!
+}
+
+"""An input for mutations affecting \`QuickbooksReconciliation\`"""
+input QuickbooksReconciliationInput {
+  rowId: UUID
+  bookId: UUID!
+  connectedAccountId: UUID!
+  status: String
+  periodStart: Datetime!
+  periodEnd: Datetime!
+  totalVariance: BigFloat
+  mismatchCount: Int
+  errorMessage: String
+  createdAt: Datetime
+  updatedAt: Datetime
 }
 
 """The output of our create \`CryptoLot\` mutation."""
@@ -17800,6 +18989,81 @@ input UpdateQuickbooksMigrationInput {
   patch: QuickbooksMigrationPatch!
 }
 
+"""The output of our update \`QuickbooksReconciliationLine\` mutation."""
+type UpdateQuickbooksReconciliationLinePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`QuickbooksReconciliationLine\` that was updated by this mutation."""
+  quickbooksReconciliationLine: QuickbooksReconciliationLine
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """
+  An edge for our \`QuickbooksReconciliationLine\`. May be used by Relay 1.
+  """
+  quickbooksReconciliationLineEdge(
+    """The method to use when ordering \`QuickbooksReconciliationLine\`."""
+    orderBy: [QuickbooksReconciliationLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): QuickbooksReconciliationLineEdge
+}
+
+"""All input for the \`updateQuickbooksReconciliationLineById\` mutation."""
+input UpdateQuickbooksReconciliationLineByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`QuickbooksReconciliationLine\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`QuickbooksReconciliationLine\` being updated.
+  """
+  patch: QuickbooksReconciliationLinePatch!
+}
+
+"""
+Represents an update to a \`QuickbooksReconciliationLine\`. Fields that are set will be updated.
+"""
+input QuickbooksReconciliationLinePatch {
+  rowId: UUID
+  reconciliationId: UUID
+  bookId: UUID
+  myfiAccountId: UUID
+  qboAccountId: String
+  accountName: String
+  qboBalance: BigFloat
+  myfiBalance: BigFloat
+  variance: BigFloat
+  createdAt: Datetime
+}
+
+"""All input for the \`updateQuickbooksReconciliationLine\` mutation."""
+input UpdateQuickbooksReconciliationLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`QuickbooksReconciliationLine\` being updated.
+  """
+  patch: QuickbooksReconciliationLinePatch!
+}
+
 """The output of our update \`PayrollConnection\` mutation."""
 type UpdatePayrollConnectionPayload {
   """
@@ -17944,6 +19208,80 @@ input UpdateReconciliationStatementInput {
   An object where the defined keys will be set on the \`ReconciliationStatement\` being updated.
   """
   patch: ReconciliationStatementPatch!
+}
+
+"""The output of our update \`QuickbooksReconciliation\` mutation."""
+type UpdateQuickbooksReconciliationPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`QuickbooksReconciliation\` that was updated by this mutation."""
+  quickbooksReconciliation: QuickbooksReconciliation
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`QuickbooksReconciliation\`. May be used by Relay 1."""
+  quickbooksReconciliationEdge(
+    """The method to use when ordering \`QuickbooksReconciliation\`."""
+    orderBy: [QuickbooksReconciliationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): QuickbooksReconciliationEdge
+}
+
+"""All input for the \`updateQuickbooksReconciliationById\` mutation."""
+input UpdateQuickbooksReconciliationByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`QuickbooksReconciliation\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`QuickbooksReconciliation\` being updated.
+  """
+  patch: QuickbooksReconciliationPatch!
+}
+
+"""
+Represents an update to a \`QuickbooksReconciliation\`. Fields that are set will be updated.
+"""
+input QuickbooksReconciliationPatch {
+  rowId: UUID
+  bookId: UUID
+  connectedAccountId: UUID
+  status: String
+  periodStart: Datetime
+  periodEnd: Datetime
+  totalVariance: BigFloat
+  mismatchCount: Int
+  errorMessage: String
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the \`updateQuickbooksReconciliation\` mutation."""
+input UpdateQuickbooksReconciliationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`QuickbooksReconciliation\` being updated.
+  """
+  patch: QuickbooksReconciliationPatch!
 }
 
 """The output of our update \`CryptoLot\` mutation."""
@@ -19641,6 +20979,56 @@ input DeleteQuickbooksMigrationInput {
   rowId: UUID!
 }
 
+"""The output of our delete \`QuickbooksReconciliationLine\` mutation."""
+type DeleteQuickbooksReconciliationLinePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`QuickbooksReconciliationLine\` that was deleted by this mutation."""
+  quickbooksReconciliationLine: QuickbooksReconciliationLine
+  deletedQuickbooksReconciliationLineId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """
+  An edge for our \`QuickbooksReconciliationLine\`. May be used by Relay 1.
+  """
+  quickbooksReconciliationLineEdge(
+    """The method to use when ordering \`QuickbooksReconciliationLine\`."""
+    orderBy: [QuickbooksReconciliationLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): QuickbooksReconciliationLineEdge
+}
+
+"""All input for the \`deleteQuickbooksReconciliationLineById\` mutation."""
+input DeleteQuickbooksReconciliationLineByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`QuickbooksReconciliationLine\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteQuickbooksReconciliationLine\` mutation."""
+input DeleteQuickbooksReconciliationLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete \`PayrollConnection\` mutation."""
 type DeletePayrollConnectionPayload {
   """
@@ -19729,6 +21117,54 @@ input DeleteReconciliationStatementByIdInput {
 
 """All input for the \`deleteReconciliationStatement\` mutation."""
 input DeleteReconciliationStatementInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`QuickbooksReconciliation\` mutation."""
+type DeleteQuickbooksReconciliationPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`QuickbooksReconciliation\` that was deleted by this mutation."""
+  quickbooksReconciliation: QuickbooksReconciliation
+  deletedQuickbooksReconciliationId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`QuickbooksReconciliation\`. May be used by Relay 1."""
+  quickbooksReconciliationEdge(
+    """The method to use when ordering \`QuickbooksReconciliation\`."""
+    orderBy: [QuickbooksReconciliationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): QuickbooksReconciliationEdge
+}
+
+"""All input for the \`deleteQuickbooksReconciliationById\` mutation."""
+input DeleteQuickbooksReconciliationByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`QuickbooksReconciliation\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteQuickbooksReconciliation\` mutation."""
+input DeleteQuickbooksReconciliationInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -20922,6 +22358,58 @@ export const objects = {
           orderBy: applyOrderByArgToConnection
         }
       },
+      quickbooksReconciliation(_$root, {
+        $rowId
+      }) {
+        return resource_quickbooks_reconciliationPgResource.get({
+          id: $rowId
+        });
+      },
+      quickbooksReconciliationById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_QuickbooksReconciliation($nodeId);
+      },
+      quickbooksReconciliationLine(_$root, {
+        $rowId
+      }) {
+        return resource_quickbooks_reconciliation_linePgResource.get({
+          id: $rowId
+        });
+      },
+      quickbooksReconciliationLineById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_QuickbooksReconciliationLine($nodeId);
+      },
+      quickbooksReconciliationLines: {
+        plan() {
+          return connection(resource_quickbooks_reconciliation_linePgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineTagsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      quickbooksReconciliations: {
+        plan() {
+          return connection(resource_quickbooks_reconciliationPgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineTagsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       reconciliationQueue(_$root, {
         $rowId
       }) {
@@ -21404,6 +22892,30 @@ export const objects = {
       createQuickbooksMigration: {
         plan(_, args) {
           const $insert = pgInsertSingle(resource_quickbooks_migrationPgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
+      createQuickbooksReconciliation: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_quickbooks_reconciliationPgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
+      createQuickbooksReconciliationLine: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_quickbooks_reconciliation_linePgResource);
           args.apply($insert);
           return object({
             result: $insert
@@ -22058,6 +23570,58 @@ export const objects = {
       deleteQuickbooksMigrationById: {
         plan(_$root, args) {
           const $delete = pgDeleteSingle(resource_quickbooks_migrationPgResource, specFromArgs_QuickbooksMigration(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteQuickbooksReconciliation: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_quickbooks_reconciliationPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteQuickbooksReconciliationById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_quickbooks_reconciliationPgResource, specFromArgs_QuickbooksReconciliation(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteQuickbooksReconciliationLine: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_quickbooks_reconciliation_linePgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteQuickbooksReconciliationLineById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_quickbooks_reconciliation_linePgResource, specFromArgs_QuickbooksReconciliationLine(args));
           args.apply($delete);
           return object({
             result: $delete
@@ -22847,6 +24411,58 @@ export const objects = {
           input: applyInputToUpdateOrDelete
         }
       },
+      updateQuickbooksReconciliation: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_quickbooks_reconciliationPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateQuickbooksReconciliationById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_quickbooks_reconciliationPgResource, specFromArgs_QuickbooksReconciliation(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateQuickbooksReconciliationLine: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_quickbooks_reconciliation_linePgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateQuickbooksReconciliationLineById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_quickbooks_reconciliation_linePgResource, specFromArgs_QuickbooksReconciliationLine(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
       updateReconciliationQueue: {
         plan(_$root, args) {
           const $update = pgUpdateSingle(resource_reconciliation_queuePgResource, {
@@ -23566,6 +25182,42 @@ export const objects = {
           orderBy: applyOrderByArgToConnection
         }
       },
+      quickbooksReconciliationLines: {
+        plan($record) {
+          const $records = resource_quickbooks_reconciliation_linePgResource.find({
+            book_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineTagsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      quickbooksReconciliations: {
+        plan($record) {
+          const $records = resource_quickbooks_reconciliationPgResource.find({
+            book_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineTagsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       reconciliationQueues: {
         plan($record) {
           const $records = resource_reconciliation_queuePgResource.find({
@@ -24064,6 +25716,24 @@ export const objects = {
       quickbooksMigrationEdge: CreateQuickbooksMigrationPayload_quickbooksMigrationEdgePlan
     }
   },
+  CreateQuickbooksReconciliationLinePayload: {
+    assertStep: assertStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan,
+      quickbooksReconciliationLine: planCreatePayloadResult,
+      quickbooksReconciliationLineEdge: CreateQuickbooksReconciliationLinePayload_quickbooksReconciliationLineEdgePlan
+    }
+  },
+  CreateQuickbooksReconciliationPayload: {
+    assertStep: assertStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan,
+      quickbooksReconciliation: planCreatePayloadResult,
+      quickbooksReconciliationEdge: CreateQuickbooksReconciliationPayload_quickbooksReconciliationEdgePlan
+    }
+  },
   CreateReconciliationQueuePayload: {
     assertStep: assertStep,
     plans: {
@@ -24532,6 +26202,34 @@ export const objects = {
       query: queryPlan,
       quickbooksMigration: planCreatePayloadResult,
       quickbooksMigrationEdge: CreateQuickbooksMigrationPayload_quickbooksMigrationEdgePlan
+    }
+  },
+  DeleteQuickbooksReconciliationLinePayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedQuickbooksReconciliationLineId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_QuickbooksReconciliationLine.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      query: queryPlan,
+      quickbooksReconciliationLine: planCreatePayloadResult,
+      quickbooksReconciliationLineEdge: CreateQuickbooksReconciliationLinePayload_quickbooksReconciliationLineEdgePlan
+    }
+  },
+  DeleteQuickbooksReconciliationPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedQuickbooksReconciliationId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_QuickbooksReconciliation.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      query: queryPlan,
+      quickbooksReconciliation: planCreatePayloadResult,
+      quickbooksReconciliationEdge: CreateQuickbooksReconciliationPayload_quickbooksReconciliationEdgePlan
     }
   },
   DeleteReconciliationQueuePayload: {
@@ -25011,17 +26709,9 @@ export const objects = {
         const specifier = nodeIdHandler_QuickbooksAccountMap.plan($parent);
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_QuickbooksAccountMap.codec.name].encode);
       },
-      myfiAccount($record) {
-        return resource_accountPgResource.get({
-          id: $record.get("myfi_account_id")
-        });
-      },
-      myfiAccountId($record) {
-        return $record.get("myfi_account_id");
-      },
-      qboAccountId($record) {
-        return $record.get("qbo_account_id");
-      },
+      myfiAccount: QuickbooksAccountMap_myfiAccountPlan,
+      myfiAccountId: QuickbooksAccountMap_myfiAccountIdPlan,
+      qboAccountId: QuickbooksAccountMap_qboAccountIdPlan,
       qboAccountName($record) {
         return $record.get("qbo_account_name");
       },
@@ -25048,31 +26738,19 @@ export const objects = {
     plans: {
       book: Account_bookPlan,
       bookId: Account_bookIdPlan,
-      connectedAccount($record) {
-        return resource_connected_accountPgResource.get({
-          id: $record.get("connected_account_id")
-        });
-      },
-      connectedAccountId($record) {
-        return $record.get("connected_account_id");
-      },
+      connectedAccount: QuickbooksMigration_connectedAccountPlan,
+      connectedAccountId: QuickbooksMigration_connectedAccountIdPlan,
       createdAt: Account_createdAtPlan,
       entriesImported($record) {
         return $record.get("entries_imported");
       },
-      errorMessage($record) {
-        return $record.get("error_message");
-      },
+      errorMessage: QuickbooksMigration_errorMessagePlan,
       id($parent) {
         const specifier = nodeIdHandler_QuickbooksMigration.plan($parent);
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_QuickbooksMigration.codec.name].encode);
       },
-      periodEnd($record) {
-        return $record.get("period_end");
-      },
-      periodStart($record) {
-        return $record.get("period_start");
-      },
+      periodEnd: QuickbooksMigration_periodEndPlan,
+      periodStart: QuickbooksMigration_periodStartPlan,
       rowId: JournalLineTag_rowIdPlan,
       updatedAt: Account_updatedAtPlan
     },
@@ -25083,6 +26761,104 @@ export const objects = {
     }
   },
   QuickbooksMigrationConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
+  QuickbooksReconciliation: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      book: Account_bookPlan,
+      bookId: Account_bookIdPlan,
+      connectedAccount: QuickbooksMigration_connectedAccountPlan,
+      connectedAccountId: QuickbooksMigration_connectedAccountIdPlan,
+      createdAt: Account_createdAtPlan,
+      errorMessage: QuickbooksMigration_errorMessagePlan,
+      id($parent) {
+        const specifier = nodeIdHandler_QuickbooksReconciliation.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_QuickbooksReconciliation.codec.name].encode);
+      },
+      mismatchCount($record) {
+        return $record.get("mismatch_count");
+      },
+      periodEnd: QuickbooksMigration_periodEndPlan,
+      periodStart: QuickbooksMigration_periodStartPlan,
+      quickbooksReconciliationLinesByReconciliationId: {
+        plan($record) {
+          const $records = resource_quickbooks_reconciliation_linePgResource.find({
+            reconciliation_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineTagsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      rowId: JournalLineTag_rowIdPlan,
+      totalVariance($record) {
+        return $record.get("total_variance");
+      },
+      updatedAt: Account_updatedAtPlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of quickbooks_reconciliationUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_quickbooks_reconciliationPgResource.get(spec);
+    }
+  },
+  QuickbooksReconciliationConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
+  QuickbooksReconciliationLine: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      accountName($record) {
+        return $record.get("account_name");
+      },
+      book: Account_bookPlan,
+      bookId: Account_bookIdPlan,
+      createdAt: Account_createdAtPlan,
+      id($parent) {
+        const specifier = nodeIdHandler_QuickbooksReconciliationLine.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_QuickbooksReconciliationLine.codec.name].encode);
+      },
+      myfiAccount: QuickbooksAccountMap_myfiAccountPlan,
+      myfiAccountId: QuickbooksAccountMap_myfiAccountIdPlan,
+      myfiBalance($record) {
+        return $record.get("myfi_balance");
+      },
+      qboAccountId: QuickbooksAccountMap_qboAccountIdPlan,
+      qboBalance($record) {
+        return $record.get("qbo_balance");
+      },
+      reconciliation($record) {
+        return resource_quickbooks_reconciliationPgResource.get({
+          id: $record.get("reconciliation_id")
+        });
+      },
+      reconciliationId($record) {
+        return $record.get("reconciliation_id");
+      },
+      rowId: JournalLineTag_rowIdPlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of quickbooks_reconciliation_lineUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_quickbooks_reconciliation_linePgResource.get(spec);
+    }
+  },
+  QuickbooksReconciliationLineConnection: {
     assertStep: ConnectionStep,
     plans: {
       totalCount: totalCountConnectionPlan
@@ -25571,6 +27347,24 @@ export const objects = {
       query: queryPlan,
       quickbooksMigration: planCreatePayloadResult,
       quickbooksMigrationEdge: CreateQuickbooksMigrationPayload_quickbooksMigrationEdgePlan
+    }
+  },
+  UpdateQuickbooksReconciliationLinePayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan,
+      quickbooksReconciliationLine: planCreatePayloadResult,
+      quickbooksReconciliationLineEdge: CreateQuickbooksReconciliationLinePayload_quickbooksReconciliationLineEdgePlan
+    }
+  },
+  UpdateQuickbooksReconciliationPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan,
+      quickbooksReconciliation: planCreatePayloadResult,
+      quickbooksReconciliationEdge: CreateQuickbooksReconciliationPayload_quickbooksReconciliationEdgePlan
     }
   },
   UpdateReconciliationQueuePayload: {
@@ -26549,6 +28343,54 @@ export const inputObjects = {
           $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
         });
       },
+      quickbooksReconciliationLines($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: quickbooksReconciliationLineIdentifier,
+          alias: resource_quickbooks_reconciliation_linePgResource.name,
+          localAttributes: registryConfig.pgRelations.book.quickbooksReconciliationLinesByTheirBookId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.book.quickbooksReconciliationLinesByTheirBookId.remoteAttributes
+        };
+        return $rel;
+      },
+      quickbooksReconciliationLinesExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: quickbooksReconciliationLineIdentifier,
+          alias: resource_quickbooks_reconciliation_linePgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.book.quickbooksReconciliationLinesByTheirBookId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.book.quickbooksReconciliationLinesByTheirBookId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
+      quickbooksReconciliations($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: quickbooksReconciliationIdentifier,
+          alias: resource_quickbooks_reconciliationPgResource.name,
+          localAttributes: registryConfig.pgRelations.book.quickbooksReconciliationsByTheirBookId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.book.quickbooksReconciliationsByTheirBookId.remoteAttributes
+        };
+        return $rel;
+      },
+      quickbooksReconciliationsExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: quickbooksReconciliationIdentifier,
+          alias: resource_quickbooks_reconciliationPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.book.quickbooksReconciliationsByTheirBookId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.book.quickbooksReconciliationsByTheirBookId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
       reconciliationQueues($where, value) {
         assertAllowed(value, "object");
         const $rel = $where.andPlan();
@@ -26871,6 +28713,20 @@ export const inputObjects = {
     }
   },
   BookToManyQuickbooksMigrationFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
+  BookToManyQuickbooksReconciliationFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
+  BookToManyQuickbooksReconciliationLineFilter: {
     plans: {
       every: AccountToManyAccountFilter_everyApply,
       none: AccountToManyAccountFilter_noneApply,
@@ -27281,6 +29137,18 @@ export const inputObjects = {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
       quickbooksMigration: applyCreateFields
+    }
+  },
+  CreateQuickbooksReconciliationInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      quickbooksReconciliation: applyCreateFields
+    }
+  },
+  CreateQuickbooksReconciliationLineInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      quickbooksReconciliationLine: applyCreateFields
     }
   },
   CreateReconciliationQueueInput: {
@@ -27709,6 +29577,26 @@ export const inputObjects = {
     }
   },
   DeleteQuickbooksMigrationInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteQuickbooksReconciliationByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteQuickbooksReconciliationInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteQuickbooksReconciliationLineByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteQuickbooksReconciliationLineInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate
     }
@@ -28487,6 +30375,161 @@ export const inputObjects = {
       rowId: JournalLineTagInput_rowIdApply,
       status: AccountingPeriodInput_statusApply,
       updatedAt: AccountMappingInput_updatedAtApply
+    }
+  },
+  QuickbooksReconciliationCondition: {
+    plans: {
+      bookId: AccountCondition_bookIdApply,
+      rowId: AccountCondition_rowIdApply
+    }
+  },
+  QuickbooksReconciliationFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      book($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_bookPgResource, bookIdentifier, registryConfig.pgRelations.quickbooksReconciliation.bookByMyBookId.localAttributes, registryConfig.pgRelations.quickbooksReconciliation.bookByMyBookId.remoteAttributes, $where, value);
+      },
+      bookId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("bookId", "book_id", spec_quickbooksReconciliation.attributes.book_id, queryBuilder, value);
+      },
+      connectedAccount($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_connected_accountPgResource, connectedAccountIdentifier, registryConfig.pgRelations.quickbooksReconciliation.connectedAccountByMyConnectedAccountId.localAttributes, registryConfig.pgRelations.quickbooksReconciliation.connectedAccountByMyConnectedAccountId.remoteAttributes, $where, value);
+      },
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      quickbooksReconciliationLinesByReconciliationId($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: quickbooksReconciliationLineIdentifier,
+          alias: resource_quickbooks_reconciliation_linePgResource.name,
+          localAttributes: registryConfig.pgRelations.quickbooksReconciliation.quickbooksReconciliationLinesByTheirReconciliationId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.quickbooksReconciliation.quickbooksReconciliationLinesByTheirReconciliationId.remoteAttributes
+        };
+        return $rel;
+      },
+      quickbooksReconciliationLinesByReconciliationIdExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: quickbooksReconciliationLineIdentifier,
+          alias: resource_quickbooks_reconciliation_linePgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.quickbooksReconciliation.quickbooksReconciliationLinesByTheirReconciliationId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.quickbooksReconciliation.quickbooksReconciliationLinesByTheirReconciliationId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_quickbooksReconciliation.attributes.id, queryBuilder, value);
+      }
+    }
+  },
+  QuickbooksReconciliationInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      bookId: TagGroupInput_bookIdApply,
+      connectedAccountId: QuickbooksMigrationInput_connectedAccountIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      errorMessage: QuickbooksMigrationInput_errorMessageApply,
+      mismatchCount: QuickbooksReconciliationInput_mismatchCountApply,
+      periodEnd: QuickbooksMigrationInput_periodEndApply,
+      periodStart: QuickbooksMigrationInput_periodStartApply,
+      rowId: JournalLineTagInput_rowIdApply,
+      status: AccountingPeriodInput_statusApply,
+      totalVariance: QuickbooksReconciliationInput_totalVarianceApply,
+      updatedAt: AccountMappingInput_updatedAtApply
+    }
+  },
+  QuickbooksReconciliationLineCondition: {
+    plans: {
+      bookId: AccountCondition_bookIdApply,
+      reconciliationId($condition, val) {
+        return applyAttributeCondition("reconciliation_id", TYPES.uuid, $condition, val);
+      },
+      rowId: AccountCondition_rowIdApply
+    }
+  },
+  QuickbooksReconciliationLineFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      book($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_bookPgResource, bookIdentifier, registryConfig.pgRelations.quickbooksReconciliationLine.bookByMyBookId.localAttributes, registryConfig.pgRelations.quickbooksReconciliationLine.bookByMyBookId.remoteAttributes, $where, value);
+      },
+      bookId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("bookId", "book_id", spec_quickbooksReconciliationLine.attributes.book_id, queryBuilder, value);
+      },
+      myfiAccount($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_accountPgResource, accountIdentifier, registryConfig.pgRelations.quickbooksReconciliationLine.accountByMyMyfiAccountId.localAttributes, registryConfig.pgRelations.quickbooksReconciliationLine.accountByMyMyfiAccountId.remoteAttributes, $where, value);
+      },
+      myfiAccountExists($where, value) {
+        return pgConnectionFilterApplyForwardRelationExists(resource_accountPgResource, accountIdentifier, registryConfig.pgRelations.quickbooksReconciliationLine.accountByMyMyfiAccountId.localAttributes, registryConfig.pgRelations.quickbooksReconciliationLine.accountByMyMyfiAccountId.remoteAttributes, $where, value);
+      },
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      reconciliation($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_quickbooks_reconciliationPgResource, quickbooksReconciliationIdentifier, registryConfig.pgRelations.quickbooksReconciliationLine.quickbooksReconciliationByMyReconciliationId.localAttributes, registryConfig.pgRelations.quickbooksReconciliationLine.quickbooksReconciliationByMyReconciliationId.remoteAttributes, $where, value);
+      },
+      reconciliationId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("reconciliationId", "reconciliation_id", spec_quickbooksReconciliationLine.attributes.reconciliation_id, queryBuilder, value);
+      },
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_quickbooksReconciliationLine.attributes.id, queryBuilder, value);
+      }
+    }
+  },
+  QuickbooksReconciliationLineInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      accountName: QuickbooksReconciliationLineInput_accountNameApply,
+      bookId: TagGroupInput_bookIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      myfiAccountId: QuickbooksAccountMapInput_myfiAccountIdApply,
+      myfiBalance: QuickbooksReconciliationLineInput_myfiBalanceApply,
+      qboAccountId: QuickbooksAccountMapInput_qboAccountIdApply,
+      qboBalance: QuickbooksReconciliationLineInput_qboBalanceApply,
+      reconciliationId: QuickbooksReconciliationLineInput_reconciliationIdApply,
+      rowId: JournalLineTagInput_rowIdApply,
+      variance: QuickbooksReconciliationLineInput_varianceApply
+    }
+  },
+  QuickbooksReconciliationLinePatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      accountName: QuickbooksReconciliationLineInput_accountNameApply,
+      bookId: TagGroupInput_bookIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      myfiAccountId: QuickbooksAccountMapInput_myfiAccountIdApply,
+      myfiBalance: QuickbooksReconciliationLineInput_myfiBalanceApply,
+      qboAccountId: QuickbooksAccountMapInput_qboAccountIdApply,
+      qboBalance: QuickbooksReconciliationLineInput_qboBalanceApply,
+      reconciliationId: QuickbooksReconciliationLineInput_reconciliationIdApply,
+      rowId: JournalLineTagInput_rowIdApply,
+      variance: QuickbooksReconciliationLineInput_varianceApply
+    }
+  },
+  QuickbooksReconciliationPatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      bookId: TagGroupInput_bookIdApply,
+      connectedAccountId: QuickbooksMigrationInput_connectedAccountIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      errorMessage: QuickbooksMigrationInput_errorMessageApply,
+      mismatchCount: QuickbooksReconciliationInput_mismatchCountApply,
+      periodEnd: QuickbooksMigrationInput_periodEndApply,
+      periodStart: QuickbooksMigrationInput_periodStartApply,
+      rowId: JournalLineTagInput_rowIdApply,
+      status: AccountingPeriodInput_statusApply,
+      totalVariance: QuickbooksReconciliationInput_totalVarianceApply,
+      updatedAt: AccountMappingInput_updatedAtApply
+    }
+  },
+  QuickbooksReconciliationToManyQuickbooksReconciliationLineFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
     }
   },
   ReconciliationQueueCondition: {
@@ -29297,6 +31340,30 @@ export const inputObjects = {
     }
   },
   UpdateQuickbooksMigrationInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateQuickbooksReconciliationByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateQuickbooksReconciliationInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateQuickbooksReconciliationLineByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateQuickbooksReconciliationLineInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
       patch: applyCreateFields
@@ -30375,6 +32442,70 @@ export const enums = {
       },
       PRIMARY_KEY_DESC(queryBuilder) {
         quickbooks_migrationUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply
+    }
+  },
+  QuickbooksReconciliationLineOrderBy: {
+    values: {
+      BOOK_ID_ASC: AccountOrderBy_BOOK_ID_ASCApply,
+      BOOK_ID_DESC: AccountOrderBy_BOOK_ID_DESCApply,
+      PRIMARY_KEY_ASC(queryBuilder) {
+        quickbooks_reconciliation_lineUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        quickbooks_reconciliation_lineUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      RECONCILIATION_ID_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "reconciliation_id",
+          direction: "ASC"
+        });
+      },
+      RECONCILIATION_ID_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "reconciliation_id",
+          direction: "DESC"
+        });
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply
+    }
+  },
+  QuickbooksReconciliationOrderBy: {
+    values: {
+      BOOK_ID_ASC: AccountOrderBy_BOOK_ID_ASCApply,
+      BOOK_ID_DESC: AccountOrderBy_BOOK_ID_DESCApply,
+      PRIMARY_KEY_ASC(queryBuilder) {
+        quickbooks_reconciliationUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        quickbooks_reconciliationUniques[0].attributes.forEach(attributeName => {
           queryBuilder.orderBy({
             attribute: attributeName,
             direction: "DESC"
