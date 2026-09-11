@@ -27,6 +27,10 @@ export const journalEntryTable = pgTable(
       withTimezone: true,
     }).notNull(),
     memo: text(),
+    // Origin of the entry. Known values: "manual" (default), "plaid_import",
+    // "csv_import", "ofx_import", "payroll_import", "payroll_sync",
+    // "mantle_sync", "quickbooks_import". Paired with sourceReferenceId for the
+    // tenant-scoped idempotency key below
     source: text().notNull().default("manual"),
     sourceReferenceId: text("source_reference_id"),
     isReviewed: boolean("is_reviewed").notNull().default(false),
