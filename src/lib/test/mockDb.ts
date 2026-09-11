@@ -43,23 +43,27 @@ const getNextResult = (): unknown[] => {
   return data;
 };
 
+// A terminal result: an array carrying the mutually chainable Drizzle methods
+// that can follow one another (e.g. orderBy().limit()), each resolving to the
+// same queued data so the terminal call in any order returns it
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const buildTerminal = (data: unknown[]): any =>
+  Object.assign([...data], {
+    orderBy: mock(() => buildTerminal(data)),
+    groupBy: mock(() => buildTerminal(data)),
+    limit: mock(() => buildTerminal(data)),
+  });
+
 // Build a result array that also has chainable Drizzle methods
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const buildResult = (data: unknown[]): any => {
   const arr = [...data];
 
   return Object.assign(arr, {
-    where: mock(() => {
-      const result = [...data];
-      return Object.assign(result, {
-        orderBy: mock(() => [...data]),
-        groupBy: mock(() => [...data]),
-        limit: mock(() => [...data]),
-      });
-    }),
-    orderBy: mock(() => [...data]),
-    groupBy: mock(() => [...data]),
-    limit: mock(() => [...data]),
+    where: mock(() => buildTerminal(data)),
+    orderBy: mock(() => buildTerminal(data)),
+    groupBy: mock(() => buildTerminal(data)),
+    limit: mock(() => buildTerminal(data)),
     innerJoin: mock(() => buildResult(data)),
     leftJoin: mock(() => buildResult(data)),
   });

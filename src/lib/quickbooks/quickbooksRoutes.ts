@@ -1,11 +1,13 @@
-import { eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 
 import { QBO_CLIENT_ID, QBO_REDIRECT_URI } from "lib/config/env.config";
 import { dbPool } from "lib/db/db";
 import {
   connectedAccountTable,
+  quickbooksCutoverTable,
   quickbooksMigrationTable,
+  quickbooksReconciliationLineTable,
   quickbooksReconciliationTable,
 } from "lib/db/schema";
 import { signOauthState } from "lib/oauth/state";
@@ -268,6 +270,160 @@ const quickbooksRoutes = new Elysia({ prefix: "/api/quickbooks" })
         connectedAccountId: t.String(),
         reconciliationId: t.String(),
       }),
+    },
+  )
+  .get(
+    "/status",
+    async ({ query, set }) => {
+      const { bookId } = query;
+
+      if (!bookId) {
+        set.status = 400;
+        return { error: "bookId is required" };
+      }
+
+      // Every select below is scoped by bookId, so the state returned belongs
+      // only to the requested book. An absent row is a valid state (a book that
+      // never connected QuickBooks), returned as null rather than an error
+      const [connection] = await dbPool
+        .select({
+          id: connectedAccountTable.id,
+          realmId: connectedAccountTable.realmId,
+          status: connectedAccountTable.status,
+        })
+        .from(connectedAccountTable)
+        .where(
+          and(
+            eq(connectedAccountTable.bookId, bookId),
+            eq(connectedAccountTable.provider, "quickbooks"),
+          ),
+        )
+        .limit(1);
+
+      const [latestMigration] = await dbPool
+        .select({
+          id: quickbooksMigrationTable.id,
+          status: quickbooksMigrationTable.status,
+          periodStart: quickbooksMigrationTable.periodStart,
+          periodEnd: quickbooksMigrationTable.periodEnd,
+          entriesImported: quickbooksMigrationTable.entriesImported,
+          errorMessage: quickbooksMigrationTable.errorMessage,
+          createdAt: quickbooksMigrationTable.createdAt,
+        })
+        .from(quickbooksMigrationTable)
+        .where(eq(quickbooksMigrationTable.bookId, bookId))
+        .orderBy(desc(quickbooksMigrationTable.createdAt))
+        .limit(1);
+
+      const [latestReconciliation] = await dbPool
+        .select({
+          id: quickbooksReconciliationTable.id,
+          status: quickbooksReconciliationTable.status,
+          periodStart: quickbooksReconciliationTable.periodStart,
+          periodEnd: quickbooksReconciliationTable.periodEnd,
+          totalVariance: quickbooksReconciliationTable.totalVariance,
+          mismatchCount: quickbooksReconciliationTable.mismatchCount,
+          errorMessage: quickbooksReconciliationTable.errorMessage,
+          createdAt: quickbooksReconciliationTable.createdAt,
+        })
+        .from(quickbooksReconciliationTable)
+        .where(eq(quickbooksReconciliationTable.bookId, bookId))
+        .orderBy(desc(quickbooksReconciliationTable.createdAt))
+        .limit(1);
+
+      const [cutover] = await dbPool
+        .select({
+          id: quickbooksCutoverTable.id,
+          cutoverAt: quickbooksCutoverTable.cutoverAt,
+          reconciliationId: quickbooksCutoverTable.reconciliationId,
+        })
+        .from(quickbooksCutoverTable)
+        .where(eq(quickbooksCutoverTable.bookId, bookId))
+        .limit(1);
+
+      return {
+        connection: connection ?? null,
+        latestMigration: latestMigration ?? null,
+        latestReconciliation: latestReconciliation ?? null,
+        cutover: cutover ?? null,
+      };
+    },
+    {
+      query: t.Object({ bookId: t.Optional(t.String()) }),
+    },
+  )
+  .get(
+    "/reconciliation/:reconciliationId/lines",
+    async ({ params, query, set }) => {
+      const { bookId } = query;
+
+      if (!bookId) {
+        set.status = 400;
+        return { error: "bookId is required" };
+      }
+
+      const { reconciliationId } = params;
+
+      // IDOR boundary: bookAccessMiddleware verified the caller may access
+      // bookId, but NOT that this reconciliation belongs to it. Load the run and
+      // reject with a generic 404 when it is missing OR owned by another book,
+      // so the response never reveals whether a run exists for a different book
+      const [reconciliation] = await dbPool
+        .select({
+          id: quickbooksReconciliationTable.id,
+          bookId: quickbooksReconciliationTable.bookId,
+          status: quickbooksReconciliationTable.status,
+          totalVariance: quickbooksReconciliationTable.totalVariance,
+          mismatchCount: quickbooksReconciliationTable.mismatchCount,
+          periodStart: quickbooksReconciliationTable.periodStart,
+          periodEnd: quickbooksReconciliationTable.periodEnd,
+        })
+        .from(quickbooksReconciliationTable)
+        .where(eq(quickbooksReconciliationTable.id, reconciliationId))
+        .limit(1);
+
+      if (!reconciliation || reconciliation.bookId !== bookId) {
+        set.status = 404;
+        return { error: "Not found" };
+      }
+
+      const lines = await dbPool
+        .select({
+          id: quickbooksReconciliationLineTable.id,
+          accountName: quickbooksReconciliationLineTable.accountName,
+          qboAccountId: quickbooksReconciliationLineTable.qboAccountId,
+          myfiAccountId: quickbooksReconciliationLineTable.myfiAccountId,
+          qboBalance: quickbooksReconciliationLineTable.qboBalance,
+          myfiBalance: quickbooksReconciliationLineTable.myfiBalance,
+          variance: quickbooksReconciliationLineTable.variance,
+        })
+        .from(quickbooksReconciliationLineTable)
+        .where(
+          and(
+            eq(
+              quickbooksReconciliationLineTable.reconciliationId,
+              reconciliationId,
+            ),
+            eq(quickbooksReconciliationLineTable.bookId, bookId),
+          ),
+        )
+        .orderBy(quickbooksReconciliationLineTable.accountName);
+
+      return {
+        reconciliation: {
+          id: reconciliation.id,
+          status: reconciliation.status,
+          totalVariance: reconciliation.totalVariance,
+          mismatchCount: reconciliation.mismatchCount,
+          periodStart: reconciliation.periodStart,
+          periodEnd: reconciliation.periodEnd,
+        },
+        lines,
+      };
+    },
+    {
+      params: t.Object({ reconciliationId: t.String() }),
+      query: t.Object({ bookId: t.Optional(t.String()) }),
     },
   );
 

@@ -572,3 +572,239 @@ describe("POST /api/quickbooks/cutover", () => {
     expect(mockRunCutover).not.toHaveBeenCalled();
   });
 });
+
+describe("GET /api/quickbooks/status", () => {
+  beforeEach(() => {
+    resetDbMock();
+  });
+
+  test("returns all four states populated for a fully migrated book", async () => {
+    // The four scoped selects run in order: connection, migration,
+    // reconciliation, cutover
+    setSelectResults([
+      [{ id: "conn-1", realmId: "realm-9", status: "active" }],
+      [
+        {
+          id: "mig-1",
+          status: "complete",
+          periodStart: "2026-01-01",
+          periodEnd: "2026-03-31",
+          entriesImported: 42,
+          errorMessage: null,
+          createdAt: "2026-01-02T00:00:00.000Z",
+        },
+      ],
+      [
+        {
+          id: "recon-1",
+          status: "clean",
+          periodStart: "2026-01-01",
+          periodEnd: "2026-03-31",
+          totalVariance: "0.0000",
+          mismatchCount: 0,
+          errorMessage: null,
+          createdAt: "2026-01-03T00:00:00.000Z",
+        },
+      ],
+      [
+        {
+          id: "cut-1",
+          cutoverAt: "2026-01-04T00:00:00.000Z",
+          reconciliationId: "recon-1",
+        },
+      ],
+    ]);
+
+    const res = await app.handle(
+      new Request("http://localhost/api/quickbooks/status?bookId=book-1"),
+    );
+
+    expect(res.status).toBe(200);
+
+    const json = await res.json();
+    expect(json.connection).toEqual({
+      id: "conn-1",
+      realmId: "realm-9",
+      status: "active",
+    });
+    expect(json.latestMigration).toEqual({
+      id: "mig-1",
+      status: "complete",
+      periodStart: "2026-01-01",
+      periodEnd: "2026-03-31",
+      entriesImported: 42,
+      errorMessage: null,
+      createdAt: "2026-01-02T00:00:00.000Z",
+    });
+    expect(json.latestReconciliation).toEqual({
+      id: "recon-1",
+      status: "clean",
+      periodStart: "2026-01-01",
+      periodEnd: "2026-03-31",
+      totalVariance: "0.0000",
+      mismatchCount: 0,
+      errorMessage: null,
+      createdAt: "2026-01-03T00:00:00.000Z",
+    });
+    expect(json.cutover).toEqual({
+      id: "cut-1",
+      cutoverAt: "2026-01-04T00:00:00.000Z",
+      reconciliationId: "recon-1",
+    });
+  });
+
+  test("returns all null for a book that never connected QuickBooks", async () => {
+    // Every scoped select comes back empty, which is a valid state, not an error
+    setSelectResults([[], [], [], []]);
+
+    const res = await app.handle(
+      new Request("http://localhost/api/quickbooks/status?bookId=book-1"),
+    );
+
+    expect(res.status).toBe(200);
+
+    const json = await res.json();
+    expect(json).toEqual({
+      connection: null,
+      latestMigration: null,
+      latestReconciliation: null,
+      cutover: null,
+    });
+  });
+
+  test("returns 400 when bookId is missing", async () => {
+    const res = await app.handle(
+      new Request("http://localhost/api/quickbooks/status"),
+    );
+
+    expect(res.status).toBe(400);
+
+    const json = await res.json();
+    expect(json.error).toBe("bookId is required");
+  });
+});
+
+describe("GET /api/quickbooks/reconciliation/:reconciliationId/lines", () => {
+  beforeEach(() => {
+    resetDbMock();
+  });
+
+  test("returns the summary and lines for a reconciliation owned by the book", async () => {
+    // First select loads the reconciliation, second loads its lines
+    setSelectResults([
+      [
+        {
+          id: "recon-1",
+          bookId: "book-1",
+          status: "mismatch",
+          totalVariance: "12.5000",
+          mismatchCount: 1,
+          periodStart: "2026-01-01",
+          periodEnd: "2026-03-31",
+        },
+      ],
+      [
+        {
+          id: "line-1",
+          accountName: "Checking",
+          qboAccountId: "qbo-1",
+          myfiAccountId: "acct-1",
+          qboBalance: "100.0000",
+          myfiBalance: "112.5000",
+          variance: "12.5000",
+        },
+      ],
+    ]);
+
+    const res = await app.handle(
+      new Request(
+        "http://localhost/api/quickbooks/reconciliation/recon-1/lines?bookId=book-1",
+      ),
+    );
+
+    expect(res.status).toBe(200);
+
+    const json = await res.json();
+    expect(json.reconciliation).toEqual({
+      id: "recon-1",
+      status: "mismatch",
+      totalVariance: "12.5000",
+      mismatchCount: 1,
+      periodStart: "2026-01-01",
+      periodEnd: "2026-03-31",
+    });
+    expect(json.lines).toEqual([
+      {
+        id: "line-1",
+        accountName: "Checking",
+        qboAccountId: "qbo-1",
+        myfiAccountId: "acct-1",
+        qboBalance: "100.0000",
+        myfiBalance: "112.5000",
+        variance: "12.5000",
+      },
+    ]);
+  });
+
+  test("returns 404 for a reconciliation belonging to a different book, leaking no lines", async () => {
+    // The reconciliation exists but is owned by another book (IDOR attempt).
+    // Only the reconciliation lookup should run; lines must never be queried
+    setSelectResults([
+      [
+        {
+          id: "recon-1",
+          bookId: "other-book",
+          status: "clean",
+          totalVariance: "0.0000",
+          mismatchCount: 0,
+          periodStart: "2026-01-01",
+          periodEnd: "2026-03-31",
+        },
+      ],
+    ]);
+
+    const res = await app.handle(
+      new Request(
+        "http://localhost/api/quickbooks/reconciliation/recon-1/lines?bookId=book-1",
+      ),
+    );
+
+    expect(res.status).toBe(404);
+
+    const json = await res.json();
+    expect(json.error).toBe("Not found");
+    expect(json.lines).toBeUndefined();
+    expect(json.reconciliation).toBeUndefined();
+    // The response leaks neither the owning book nor any line data
+    const serialized = JSON.stringify(json);
+    expect(serialized).not.toContain("other-book");
+  });
+
+  test("returns 404 for an unknown reconciliation id", async () => {
+    setSelectResults([[]]);
+
+    const res = await app.handle(
+      new Request(
+        "http://localhost/api/quickbooks/reconciliation/missing/lines?bookId=book-1",
+      ),
+    );
+
+    expect(res.status).toBe(404);
+
+    const json = await res.json();
+    expect(json.error).toBe("Not found");
+  });
+
+  test("returns 400 when bookId is missing", async () => {
+    const res = await app.handle(
+      new Request(
+        "http://localhost/api/quickbooks/reconciliation/recon-1/lines",
+      ),
+    );
+
+    expect(res.status).toBe(400);
+
+    const json = await res.json();
+    expect(json.error).toBe("bookId is required");
+  });
+});
