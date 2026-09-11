@@ -24,7 +24,7 @@ import syncPayroll from "./syncPayroll";
  */
 export const payrollCallbackRoute = new Elysia().get(
   "/api/payroll/callback",
-  async ({ query, set }) => {
+  async ({ query, set, redirect }) => {
     const { code, state: bookId } = query;
 
     if (!code || !bookId) {
@@ -82,7 +82,7 @@ export const payrollCallbackRoute = new Elysia().get(
       status: "active",
     });
 
-    set.redirect = "/settings/connections";
+    return redirect("/settings/connections");
   },
   {
     query: t.Object({
