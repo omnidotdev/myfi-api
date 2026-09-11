@@ -8,6 +8,7 @@ import {
 } from "lib/db/schema";
 import { decryptToken, encryptToken } from "lib/encryption/tokenEncryption";
 import { importJournalEntries } from "./importJournalEntries";
+import { syncAccountMap } from "./mapAccounts";
 import { queryJournalEntries, queryPreferences } from "./quickbooksClient";
 
 import type { QboEntryInput, QboLine } from "./importJournalEntries";
@@ -23,6 +24,9 @@ import type {
  * floor is truncated rather than pulled from the company's actual open date
  */
 const FLOOR_DATE = "2015-01-01";
+
+/** Cap on unmatched account names listed in the needs-mapping summary */
+const MAX_LISTED_UNMATCHED = 20;
 
 /**
  * Normalize a stored timestamp (or plain date) to a YYYY-MM-DD UTC calendar
@@ -124,6 +128,13 @@ export const runBackfill = async (opts: {
       throw new Error("Connected account is missing QuickBooks credentials");
     }
 
+    // Defense-in-depth against a cross-tenant import: the connected account
+    // must belong to the book being backfilled. The route enforces this too,
+    // but runBackfill must be safe regardless of how it is called
+    if (account.bookId !== bookId) {
+      throw new Error("Connected account does not belong to this book");
+    }
+
     const conn: QboConnection = {
       realmId: account.realmId,
       accessToken: decryptToken(account.accessToken),
@@ -167,6 +178,37 @@ export const runBackfill = async (opts: {
       throw new Error(
         "Multi-currency QuickBooks companies are not yet supported",
       );
+    }
+
+    // Refresh the QBO->MyFi account map before importing, so entries resolve
+    // against the current chart of accounts. Conservative auto-matching leaves
+    // ambiguous accounts unmapped for a human to resolve (see mapAccounts)
+    const { unmatched } = await syncAccountMap({ bookId, conn, onRefresh });
+
+    // Phase 1 has no mapping-resolution UI, so any unmatched account is a hard
+    // precondition: an entry referencing an unmapped account would abort the
+    // whole import opaquely. Stop here with an actionable status listing the
+    // unmatched QBO account names (the owner's own data, not secrets) so a
+    // human can resolve them before retrying
+    if (unmatched.length > 0) {
+      const names = unmatched.map((account) => account.Name);
+      const shown = names.slice(0, MAX_LISTED_UNMATCHED);
+      const remainder = names.length - shown.length;
+      const summary =
+        remainder > 0
+          ? `${shown.join(", ")} and ${remainder} more`
+          : shown.join(", ");
+
+      await dbPool
+        .update(quickbooksMigrationTable)
+        .set({
+          status: "needs_mapping",
+          errorMessage: `Unmapped QuickBooks accounts need manual mapping before import: ${summary}`,
+          updatedAt: new Date().toISOString(),
+        })
+        .where(eq(quickbooksMigrationTable.id, migrationId));
+
+      return { entriesImported: 0 };
     }
 
     const mapRows = await dbPool

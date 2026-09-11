@@ -5,10 +5,7 @@ import { accountTable, quickbooksAccountMapTable } from "lib/db/schema";
 import { queryAccounts } from "./quickbooksClient";
 
 import type { InferInsertModel } from "drizzle-orm";
-import type { QboAccount, QboTokens } from "./quickbooksClient";
-
-/** A stored QuickBooks connection with its current OAuth tokens */
-type QboConn = { realmId: string; accessToken: string; refreshToken: string };
+import type { QboAccount, QboConnection, QboTokens } from "./quickbooksClient";
 
 /**
  * Outcome of a sync, partitioning every QBO account into exactly one bucket so
@@ -88,7 +85,7 @@ const findMatch = (
  */
 const syncAccountMap = async (opts: {
   bookId: string;
-  conn: QboConn;
+  conn: QboConnection;
   onRefresh: (t: QboTokens) => Promise<void>;
 }): Promise<SyncAccountMapResult> => {
   const { bookId, conn, onRefresh } = opts;

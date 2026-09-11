@@ -1,9 +1,13 @@
-import { beforeEach, describe, expect, mock, test } from "bun:test";
+import { afterAll, beforeEach, describe, expect, mock, test } from "bun:test";
 
 import { connectedAccountTable, quickbooksMigrationTable } from "lib/db/schema";
 import { mockDbPool, resetDbMock, setSelectResults } from "lib/test/mockDb";
 
-import type { QboJournalEntry, QboTokens } from "./quickbooksClient";
+import type {
+  QboAccount,
+  QboJournalEntry,
+  QboTokens,
+} from "./quickbooksClient";
 
 // Real sibling modules, imported via query param so they are never subject to
 // the mock.module registrations below. Spreading them into each mock keeps the
@@ -103,6 +107,31 @@ mock.module("./importJournalEntries", () => ({
   importJournalEntries: mockImport,
 }));
 
+// Backfill syncs the QBO->MyFi account map at its start; stub it so the test
+// exercises the import flow without hitting the real chart-of-accounts sync
+const mockSyncAccountMap = mock(
+  (_opts: {
+    bookId: string;
+    conn: { accessToken: string; refreshToken: string; realmId: string };
+    onRefresh: (t: QboTokens) => Promise<void>;
+  }): Promise<{
+    mapped: number;
+    alreadyMapped: number;
+    unmatched: QboAccount[];
+  }> => Promise.resolve({ mapped: 0, alreadyMapped: 0, unmatched: [] }),
+);
+mock.module("./mapAccounts", () => ({
+  syncAccountMap: mockSyncAccountMap,
+}));
+// The genuine module, so the mock can be undone after this file's tests. bun
+// runs test files in one process and mock.module is global, so leaving the
+// stub in place would leak into mapAccounts.test.ts, which tests the real thing
+// @ts-expect-error -- query-param import has no type declarations
+const realMapAccounts = await import("./mapAccounts.ts?real");
+afterAll(() => {
+  mock.module("./mapAccounts", () => ({ ...realMapAccounts }));
+});
+
 const { runBackfill } = await import("./backfill");
 
 const ACCOUNT = {
@@ -144,6 +173,7 @@ beforeEach(() => {
   mockQueryJournalEntries.mockClear();
   mockQueryPreferences.mockClear();
   mockEncryptToken.mockClear();
+  mockSyncAccountMap.mockClear();
 });
 
 const entry = (
@@ -204,6 +234,94 @@ describe("runBackfill", () => {
     const last = migUps[migUps.length - 1];
     expect(last?.values.status).toBe("complete");
     expect(last?.values.entriesImported).toBe(4);
+  });
+
+  test("syncs the QBO account map before importing, using the live connection", async () => {
+    setupSelects({
+      id: "mig-1",
+      periodStart: "2026-01-01",
+      periodEnd: "2026-01-31",
+    });
+    jeQueue = [[entry("je-1")]];
+
+    await runBackfill({
+      migrationId: "mig-1",
+      bookId: "book-1",
+      connectedAccountId: "conn-1",
+    });
+
+    expect(mockSyncAccountMap).toHaveBeenCalledTimes(1);
+    const arg = mockSyncAccountMap.mock.calls[0]?.[0];
+    expect(arg?.bookId).toBe("book-1");
+    expect(arg?.conn.accessToken).toBe("dec(enc-access)");
+    expect(typeof arg?.onRefresh).toBe("function");
+  });
+
+  test("stops with needs_mapping when accounts are unmatched, importing nothing", async () => {
+    setupSelects({
+      id: "mig-1",
+      periodStart: "2026-01-01",
+      periodEnd: "2026-01-31",
+    });
+    jeQueue = [[entry("je-1")]];
+    mockSyncAccountMap.mockResolvedValueOnce({
+      mapped: 1,
+      alreadyMapped: 0,
+      unmatched: [
+        { Id: "qbo-9", Name: "Marketing Expense", AccountType: "Expense" },
+        { Id: "qbo-10", Name: "Owner Draw", AccountType: "Equity" },
+      ],
+    });
+
+    const result = await runBackfill({
+      migrationId: "mig-1",
+      bookId: "book-1",
+      connectedAccountId: "conn-1",
+    });
+
+    // No import loop runs, so nothing is imported and no window is queried
+    expect(result.entriesImported).toBe(0);
+    expect(mockImport).not.toHaveBeenCalled();
+    expect(queryCalls).toHaveLength(0);
+
+    const migUps = migrationUpdates();
+    const last = migUps[migUps.length - 1];
+    expect(last?.values.status).toBe("needs_mapping");
+    // The summary lists the owner's own account names (not secrets)
+    const message = String(last?.values.errorMessage);
+    expect(message).toContain("Marketing Expense");
+    expect(message).toContain("Owner Draw");
+  });
+
+  test("truncates the needs_mapping summary to the first 20 names with a remainder count", async () => {
+    setupSelects({
+      id: "mig-1",
+      periodStart: "2026-01-01",
+      periodEnd: "2026-01-31",
+    });
+    const unmatched = Array.from({ length: 23 }, (_, i) => ({
+      Id: `qbo-${i}`,
+      Name: `Account ${i}`,
+      AccountType: "Expense",
+    }));
+    mockSyncAccountMap.mockResolvedValueOnce({
+      mapped: 0,
+      alreadyMapped: 0,
+      unmatched,
+    });
+
+    await runBackfill({
+      migrationId: "mig-1",
+      bookId: "book-1",
+      connectedAccountId: "conn-1",
+    });
+
+    const migUps = migrationUpdates();
+    const message = String(migUps[migUps.length - 1]?.values.errorMessage);
+    expect(message).toContain("Account 0");
+    expect(message).toContain("Account 19");
+    expect(message).not.toContain("Account 20");
+    expect(message).toContain("and 3 more");
   });
 
   test("date-chunks a two-month range into two windows with correct bounds", async () => {
@@ -510,6 +628,29 @@ describe("runBackfill", () => {
     const migUps = migrationUpdates();
     expect(migUps[migUps.length - 1]?.values.status).toBe("failed");
     expect(mockImport).not.toHaveBeenCalled();
+  });
+
+  test("throws when the connected account belongs to a different book", async () => {
+    // Defense-in-depth against a cross-tenant import: the account is valid but
+    // its bookId does not match the book being backfilled
+    setSelectResults([
+      [{ ...ACCOUNT, bookId: "other-book" }],
+      [{ id: "mig-1" }],
+      [],
+    ]);
+
+    await expect(
+      runBackfill({
+        migrationId: "mig-1",
+        bookId: "book-1",
+        connectedAccountId: "conn-1",
+      }),
+    ).rejects.toThrow(/does not belong to this book/i);
+
+    const migUps = migrationUpdates();
+    expect(migUps[migUps.length - 1]?.values.status).toBe("failed");
+    expect(mockImport).not.toHaveBeenCalled();
+    expect(mockSyncAccountMap).not.toHaveBeenCalled();
   });
 
   test("throws when the migration row is not found", async () => {
