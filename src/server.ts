@@ -1,4 +1,5 @@
 import { readFileSync } from "node:fs";
+
 import { cors } from "@elysiajs/cors";
 import { yoga } from "@elysiajs/graphql-yoga";
 import { useParserCache } from "@envelop/parser-cache";
@@ -38,6 +39,8 @@ import ofxRoutes from "lib/ofx/ofxRoutes";
 import { payrollCallbackRoute, payrollRoutes } from "lib/payroll";
 import plaidRoutes from "lib/plaid/plaidRoutes";
 import startScheduledSync from "lib/plaid/scheduledSync";
+import { quickbooksCallbackRoute } from "lib/quickbooks/quickbooksCallbackRoute";
+import quickbooksRoutes from "lib/quickbooks/quickbooksRoutes";
 import {
   exportReport,
   generateAgingReport,
@@ -80,7 +83,13 @@ import {
   generateTaxLossHarvesting,
 } from "lib/tax";
 
-const commit = (() => { try { return readFileSync("/app/.git-sha", "utf-8").trim(); } catch { return "unknown"; } })();
+const commit = (() => {
+  try {
+    return readFileSync("/app/.git-sha", "utf-8").trim();
+  } catch {
+    return "unknown";
+  }
+})();
 
 /**
  * Elysia server.
@@ -125,6 +134,7 @@ const app = new Elysia()
   // Public (no auth)
   .use(mantleWebhook)
   .use(payrollCallbackRoute)
+  .use(quickbooksCallbackRoute)
   // GraphQL (has its own @envelop/generic-auth plugin)
   .use(
     yoga({
@@ -147,6 +157,7 @@ const app = new Elysia()
   .use(bookAccessMiddleware)
   // Protected routes
   .use(plaidRoutes)
+  .use(quickbooksRoutes)
   .use(cryptoRoutes)
   .use(lotRoutes)
   .use(bookRoutes)

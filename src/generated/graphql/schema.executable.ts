@@ -322,6 +322,99 @@ const spec_accountMapping = {
   executor: executor
 };
 const accountMappingCodec = recordCodec(spec_accountMapping);
+const bookAccessIdentifier = sql.identifier("public", "book_access");
+const spec_bookAccess = {
+  name: "bookAccess",
+  identifier: bookAccessIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    user_id: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    role: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    invited_by: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    invited_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "970212",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "book_access"
+    }
+  },
+  executor: executor
+};
+const bookAccessCodec = recordCodec(spec_bookAccess);
 const taxJurisdictionIdentifier = sql.identifier("public", "tax_jurisdiction");
 const spec_taxJurisdiction = {
   name: "taxJurisdiction",
@@ -416,90 +509,6 @@ const spec_taxJurisdiction = {
   executor: executor
 };
 const taxJurisdictionCodec = recordCodec(spec_taxJurisdiction);
-const journalLineIdentifier = sql.identifier("public", "journal_line");
-const spec_journalLine = {
-  name: "journalLine",
-  identifier: journalLineIdentifier,
-  attributes: {
-    __proto__: null,
-    id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    journal_entry_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    account_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    debit: {
-      codec: TYPES.numeric,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    credit: {
-      codec: TYPES.numeric,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    memo: {
-      codec: TYPES.text,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    }
-  },
-  extensions: {
-    oid: "470172",
-    isTableLike: true,
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "journal_line"
-    }
-  },
-  executor: executor
-};
-const journalLineCodec = recordCodec(spec_journalLine);
 const tagIdentifier = sql.identifier("public", "tag");
 const spec_tag = {
   name: "tag",
@@ -584,6 +593,307 @@ const spec_tag = {
   executor: executor
 };
 const tagCodec = recordCodec(spec_tag);
+const quickbooksAccountMapIdentifier = sql.identifier("public", "quickbooks_account_map");
+const spec_quickbooksAccountMap = {
+  name: "quickbooksAccountMap",
+  identifier: quickbooksAccountMapIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    qbo_account_id: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    qbo_account_name: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    qbo_account_type: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    myfi_account_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "970345",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "quickbooks_account_map"
+    }
+  },
+  executor: executor
+};
+const quickbooksAccountMapCodec = recordCodec(spec_quickbooksAccountMap);
+const vehicleIdentifier = sql.identifier("public", "vehicle");
+const spec_vehicle = {
+  name: "vehicle",
+  identifier: vehicleIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    name: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    year: {
+      codec: TYPES.int,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    make: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    model: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    date_in_service: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "970290",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "vehicle"
+    }
+  },
+  executor: executor
+};
+const vehicleCodec = recordCodec(spec_vehicle);
+const journalLineIdentifier = sql.identifier("public", "journal_line");
+const spec_journalLine = {
+  name: "journalLine",
+  identifier: journalLineIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    journal_entry_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    account_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    debit: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    credit: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    memo: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    cleared: {
+      codec: TYPES.boolean,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "470172",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "journal_line"
+    }
+  },
+  executor: executor
+};
+const journalLineCodec = recordCodec(spec_journalLine);
 const savingsGoalIdentifier = sql.identifier("public", "savings_goal");
 const spec_savingsGoal = {
   name: "savingsGoal",
@@ -689,6 +999,103 @@ const spec_savingsGoal = {
   executor: executor
 };
 const savingsGoalCodec = recordCodec(spec_savingsGoal);
+const importProfileIdentifier = sql.identifier("public", "import_profile");
+const spec_importProfile = {
+  name: "importProfile",
+  identifier: importProfileIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    name: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    column_map: {
+      codec: TYPES.jsonb,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    header_rows: {
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "970323",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "import_profile"
+    }
+  },
+  executor: executor
+};
+const importProfileCodec = recordCodec(spec_importProfile);
 const netWorthSnapshotIdentifier = sql.identifier("public", "net_worth_snapshot");
 const spec_netWorthSnapshot = {
   name: "netWorthSnapshot",
@@ -793,6 +1200,255 @@ const spec_netWorthSnapshot = {
   executor: executor
 };
 const netWorthSnapshotCodec = recordCodec(spec_netWorthSnapshot);
+const accountingPeriodIdentifier = sql.identifier("public", "accounting_period");
+const spec_accountingPeriod = {
+  name: "accountingPeriod",
+  identifier: accountingPeriodIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    year: {
+      codec: TYPES.int,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    month: {
+      codec: TYPES.int,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    status: {
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    closed_at: {
+      codec: TYPES.timestamptz,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    closed_by: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    reopened_at: {
+      codec: TYPES.timestamptz,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    blockers: {
+      codec: TYPES.jsonb,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "639585",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "accounting_period"
+    }
+  },
+  executor: executor
+};
+const accountingPeriodCodec = recordCodec(spec_accountingPeriod);
+const quickbooksMigrationIdentifier = sql.identifier("public", "quickbooks_migration");
+const spec_quickbooksMigration = {
+  name: "quickbooksMigration",
+  identifier: quickbooksMigrationIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    connected_account_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    status: {
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    period_start: {
+      codec: TYPES.timestamptz,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    period_end: {
+      codec: TYPES.timestamptz,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    entries_imported: {
+      codec: TYPES.int,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    error_message: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "970359",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "quickbooks_migration"
+    }
+  },
+  executor: executor
+};
+const quickbooksMigrationCodec = recordCodec(spec_quickbooksMigration);
 const payrollConnectionIdentifier = sql.identifier("public", "payroll_connection");
 const spec_payrollConnection = {
   name: "payrollConnection",
@@ -916,10 +1572,10 @@ const spec_payrollConnection = {
   executor: executor
 };
 const payrollConnectionCodec = recordCodec(spec_payrollConnection);
-const accountingPeriodIdentifier = sql.identifier("public", "accounting_period");
-const spec_accountingPeriod = {
-  name: "accountingPeriod",
-  identifier: accountingPeriodIdentifier,
+const reconciliationStatementIdentifier = sql.identifier("public", "reconciliation_statement");
+const spec_reconciliationStatement = {
+  name: "reconciliationStatement",
+  identifier: reconciliationStatementIdentifier,
   attributes: {
     __proto__: null,
     id: {
@@ -943,8 +1599,8 @@ const spec_accountingPeriod = {
         canUpdate: true
       }
     },
-    year: {
-      codec: TYPES.int,
+    account_id: {
+      codec: TYPES.uuid,
       notNull: true,
       extensions: {
         __proto__: null,
@@ -953,14 +1609,37 @@ const spec_accountingPeriod = {
         canUpdate: true
       }
     },
-    month: {
-      codec: TYPES.int,
+    statement_date: {
+      codec: TYPES.text,
       notNull: true,
       extensions: {
         __proto__: null,
         canSelect: true,
         canInsert: true,
-        canUpdate: true
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    statement_balance: {
+      codec: TYPES.numeric,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    beginning_balance: {
+      codec: TYPES.numeric,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
       }
     },
     status: {
@@ -971,10 +1650,11 @@ const spec_accountingPeriod = {
         __proto__: null,
         canSelect: true,
         canInsert: true,
-        canUpdate: true
+        canUpdate: true,
+        isIndexed: false
       }
     },
-    closed_at: {
+    completed_at: {
       codec: TYPES.timestamptz,
       extensions: {
         __proto__: null,
@@ -984,28 +1664,8 @@ const spec_accountingPeriod = {
         isIndexed: false
       }
     },
-    closed_by: {
-      codec: TYPES.text,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    reopened_at: {
-      codec: TYPES.timestamptz,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    blockers: {
-      codec: TYPES.jsonb,
+    discrepancy: {
+      codec: TYPES.numeric,
       extensions: {
         __proto__: null,
         canSelect: true,
@@ -1027,17 +1687,17 @@ const spec_accountingPeriod = {
     }
   },
   extensions: {
-    oid: "639585",
+    oid: "970241",
     isTableLike: true,
     pg: {
       serviceName: "main",
       schemaName: "public",
-      name: "accounting_period"
+      name: "reconciliation_statement"
     }
   },
   executor: executor
 };
-const accountingPeriodCodec = recordCodec(spec_accountingPeriod);
+const reconciliationStatementCodec = recordCodec(spec_reconciliationStatement);
 const cryptoLotIdentifier = sql.identifier("public", "crypto_lot");
 const spec_cryptoLot = {
   name: "cryptoLot",
@@ -1163,6 +1823,161 @@ const spec_cryptoLot = {
   executor: executor
 };
 const cryptoLotCodec = recordCodec(spec_cryptoLot);
+const mileageLogIdentifier = sql.identifier("public", "mileage_log");
+const spec_mileageLog = {
+  name: "mileageLog",
+  identifier: mileageLogIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    vehicle_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    date: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    description: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    origin: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    destination: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    odometer_start: {
+      codec: TYPES.numeric,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    odometer_end: {
+      codec: TYPES.numeric,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    distance: {
+      codec: TYPES.numeric,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    is_round_trip: {
+      codec: TYPES.boolean,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "970273",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "mileage_log"
+    }
+  },
+  executor: executor
+};
+const mileageLogCodec = recordCodec(spec_mileageLog);
 const bookIdentifier = sql.identifier("public", "book");
 const bookTypeCodec = enumCodec({
   name: "bookType",
@@ -2760,6 +3575,7 @@ const spec_account = {
   executor: executor
 };
 const accountCodec = recordCodec(spec_account);
+const connectedAccountIdentifier = sql.identifier("public", "connected_account");
 const connectedAccountProviderCodec = enumCodec({
   name: "connectedAccountProvider",
   identifier: sql.identifier("public", "connected_account_provider"),
@@ -2788,7 +3604,6 @@ const connectedAccountStatusCodec = enumCodec({
     }
   }
 });
-const connectedAccountIdentifier = sql.identifier("public", "connected_account");
 const spec_connectedAccount = {
   name: "connectedAccount",
   identifier: connectedAccountIdentifier,
@@ -2917,6 +3732,26 @@ const spec_connectedAccount = {
         canUpdate: true,
         isIndexed: false
       }
+    },
+    refresh_token: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    realm_id: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
     }
   },
   extensions: {
@@ -3004,6 +3839,29 @@ const account_mapping_resourceOptionsConfig = {
   },
   uniques: account_mappingUniques
 };
+const book_accessUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const book_access_resourceOptionsConfig = {
+  executor: executor,
+  name: "book_access",
+  identifier: "main.public.book_access",
+  from: bookAccessIdentifier,
+  codec: bookAccessCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "book_access"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: book_accessUniques
+};
 const tax_jurisdictionUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -3026,29 +3884,6 @@ const tax_jurisdiction_resourceOptionsConfig = {
     canDelete: true
   },
   uniques: tax_jurisdictionUniques
-};
-const journal_lineUniques = [{
-  attributes: ["id"],
-  isPrimary: true
-}];
-const journal_line_resourceOptionsConfig = {
-  executor: executor,
-  name: "journal_line",
-  identifier: "main.public.journal_line",
-  from: journalLineIdentifier,
-  codec: journalLineCodec,
-  extensions: {
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "journal_line"
-    },
-    canSelect: true,
-    canInsert: true,
-    canUpdate: true,
-    canDelete: true
-  },
-  uniques: journal_lineUniques
 };
 const tagUniques = [{
   attributes: ["id"],
@@ -3073,6 +3908,75 @@ const tag_resourceOptionsConfig = {
   },
   uniques: tagUniques
 };
+const quickbooks_account_mapUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const quickbooks_account_map_resourceOptionsConfig = {
+  executor: executor,
+  name: "quickbooks_account_map",
+  identifier: "main.public.quickbooks_account_map",
+  from: quickbooksAccountMapIdentifier,
+  codec: quickbooksAccountMapCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "quickbooks_account_map"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: quickbooks_account_mapUniques
+};
+const vehicleUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const vehicle_resourceOptionsConfig = {
+  executor: executor,
+  name: "vehicle",
+  identifier: "main.public.vehicle",
+  from: vehicleIdentifier,
+  codec: vehicleCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "vehicle"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: vehicleUniques
+};
+const journal_lineUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const journal_line_resourceOptionsConfig = {
+  executor: executor,
+  name: "journal_line",
+  identifier: "main.public.journal_line",
+  from: journalLineIdentifier,
+  codec: journalLineCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "journal_line"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: journal_lineUniques
+};
 const savings_goalUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -3095,6 +3999,29 @@ const savings_goal_resourceOptionsConfig = {
     canDelete: true
   },
   uniques: savings_goalUniques
+};
+const import_profileUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const import_profile_resourceOptionsConfig = {
+  executor: executor,
+  name: "import_profile",
+  identifier: "main.public.import_profile",
+  from: importProfileIdentifier,
+  codec: importProfileCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "import_profile"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: import_profileUniques
 };
 const net_worth_snapshotUniques = [{
   attributes: ["id"],
@@ -3119,29 +4046,6 @@ const net_worth_snapshot_resourceOptionsConfig = {
   },
   uniques: net_worth_snapshotUniques
 };
-const payroll_connectionUniques = [{
-  attributes: ["id"],
-  isPrimary: true
-}];
-const payroll_connection_resourceOptionsConfig = {
-  executor: executor,
-  name: "payroll_connection",
-  identifier: "main.public.payroll_connection",
-  from: payrollConnectionIdentifier,
-  codec: payrollConnectionCodec,
-  extensions: {
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "payroll_connection"
-    },
-    canSelect: true,
-    canInsert: true,
-    canUpdate: true,
-    canDelete: true
-  },
-  uniques: payroll_connectionUniques
-};
 const accounting_periodUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -3165,6 +4069,75 @@ const accounting_period_resourceOptionsConfig = {
   },
   uniques: accounting_periodUniques
 };
+const quickbooks_migrationUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const quickbooks_migration_resourceOptionsConfig = {
+  executor: executor,
+  name: "quickbooks_migration",
+  identifier: "main.public.quickbooks_migration",
+  from: quickbooksMigrationIdentifier,
+  codec: quickbooksMigrationCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "quickbooks_migration"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: quickbooks_migrationUniques
+};
+const payroll_connectionUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const payroll_connection_resourceOptionsConfig = {
+  executor: executor,
+  name: "payroll_connection",
+  identifier: "main.public.payroll_connection",
+  from: payrollConnectionIdentifier,
+  codec: payrollConnectionCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "payroll_connection"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: payroll_connectionUniques
+};
+const reconciliation_statementUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const reconciliation_statement_resourceOptionsConfig = {
+  executor: executor,
+  name: "reconciliation_statement",
+  identifier: "main.public.reconciliation_statement",
+  from: reconciliationStatementIdentifier,
+  codec: reconciliationStatementCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "reconciliation_statement"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: reconciliation_statementUniques
+};
 const crypto_lotUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -3187,6 +4160,29 @@ const crypto_lot_resourceOptionsConfig = {
     canDelete: true
   },
   uniques: crypto_lotUniques
+};
+const mileage_logUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const mileage_log_resourceOptionsConfig = {
+  executor: executor,
+  name: "mileage_log",
+  identifier: "main.public.mileage_log",
+  from: mileageLogIdentifier,
+  codec: mileageLogCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "mileage_log"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: mileage_logUniques
 };
 const bookUniques = [{
   attributes: ["id"],
@@ -3457,17 +4453,24 @@ const registryConfig = {
     int4: TYPES.int,
     int8: TYPES.bigint,
     accountMapping: accountMappingCodec,
+    bookAccess: bookAccessCodec,
     taxJurisdiction: taxJurisdictionCodec,
-    journalLine: journalLineCodec,
-    numeric: TYPES.numeric,
     tag: tagCodec,
     bool: TYPES.boolean,
+    quickbooksAccountMap: quickbooksAccountMapCodec,
+    vehicle: vehicleCodec,
+    journalLine: journalLineCodec,
+    numeric: TYPES.numeric,
     savingsGoal: savingsGoalCodec,
-    netWorthSnapshot: netWorthSnapshotCodec,
-    payrollConnection: payrollConnectionCodec,
-    accountingPeriod: accountingPeriodCodec,
+    importProfile: importProfileCodec,
     jsonb: TYPES.jsonb,
+    netWorthSnapshot: netWorthSnapshotCodec,
+    accountingPeriod: accountingPeriodCodec,
+    quickbooksMigration: quickbooksMigrationCodec,
+    payrollConnection: payrollConnectionCodec,
+    reconciliationStatement: reconciliationStatementCodec,
     cryptoLot: cryptoLotCodec,
+    mileageLog: mileageLogCodec,
     book: bookCodec,
     bookType: bookTypeCodec,
     budget: budgetCodec,
@@ -3486,9 +4489,9 @@ const registryConfig = {
     account: accountCodec,
     accountType: accountTypeCodec,
     accountSubType: accountSubTypeCodec,
+    connectedAccount: connectedAccountCodec,
     connectedAccountProvider: connectedAccountProviderCodec,
-    connectedAccountStatus: connectedAccountStatusCodec,
-    connectedAccount: connectedAccountCodec
+    connectedAccountStatus: connectedAccountStatusCodec
   },
   pgResources: {
     __proto__: null,
@@ -3514,14 +4517,21 @@ const registryConfig = {
       uniques: __drizzle_migrationsUniques
     },
     account_mapping: account_mapping_resourceOptionsConfig,
+    book_access: book_access_resourceOptionsConfig,
     tax_jurisdiction: tax_jurisdiction_resourceOptionsConfig,
-    journal_line: journal_line_resourceOptionsConfig,
     tag: tag_resourceOptionsConfig,
+    quickbooks_account_map: quickbooks_account_map_resourceOptionsConfig,
+    vehicle: vehicle_resourceOptionsConfig,
+    journal_line: journal_line_resourceOptionsConfig,
     savings_goal: savings_goal_resourceOptionsConfig,
+    import_profile: import_profile_resourceOptionsConfig,
     net_worth_snapshot: net_worth_snapshot_resourceOptionsConfig,
-    payroll_connection: payroll_connection_resourceOptionsConfig,
     accounting_period: accounting_period_resourceOptionsConfig,
+    quickbooks_migration: quickbooks_migration_resourceOptionsConfig,
+    payroll_connection: payroll_connection_resourceOptionsConfig,
+    reconciliation_statement: reconciliation_statement_resourceOptionsConfig,
     crypto_lot: crypto_lot_resourceOptionsConfig,
+    mileage_log: mileage_log_resourceOptionsConfig,
     book: book_resourceOptionsConfig,
     budget: budget_resourceOptionsConfig,
     vendor: vendor_resourceOptionsConfig,
@@ -3726,6 +4736,24 @@ const registryConfig = {
           __proto__: null,
           isIndexed: false
         }
+      },
+      reconciliationStatementsByTheirAccountId: {
+        localCodec: accountCodec,
+        remoteResourceOptions: reconciliation_statement_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["account_id"],
+        isReferencee: true
+      },
+      quickbooksAccountMapsByTheirMyfiAccountId: {
+        localCodec: accountCodec,
+        remoteResourceOptions: quickbooks_account_map_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["myfi_account_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
       }
     },
     accountMapping: {
@@ -3882,6 +4910,69 @@ const registryConfig = {
         localAttributes: ["id"],
         remoteAttributes: ["book_id"],
         isReferencee: true
+      },
+      bookAccessesByTheirBookId: {
+        localCodec: bookCodec,
+        remoteResourceOptions: book_access_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["book_id"],
+        isReferencee: true
+      },
+      reconciliationStatementsByTheirBookId: {
+        localCodec: bookCodec,
+        remoteResourceOptions: reconciliation_statement_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["book_id"],
+        isReferencee: true
+      },
+      mileageLogsByTheirBookId: {
+        localCodec: bookCodec,
+        remoteResourceOptions: mileage_log_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["book_id"],
+        isReferencee: true
+      },
+      vehiclesByTheirBookId: {
+        localCodec: bookCodec,
+        remoteResourceOptions: vehicle_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["book_id"],
+        isReferencee: true
+      },
+      importProfilesByTheirBookId: {
+        localCodec: bookCodec,
+        remoteResourceOptions: import_profile_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["book_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
+      },
+      quickbooksAccountMapsByTheirBookId: {
+        localCodec: bookCodec,
+        remoteResourceOptions: quickbooks_account_map_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["book_id"],
+        isReferencee: true
+      },
+      quickbooksMigrationsByTheirBookId: {
+        localCodec: bookCodec,
+        remoteResourceOptions: quickbooks_migration_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["book_id"],
+        isReferencee: true
+      }
+    },
+    bookAccess: {
+      __proto__: null,
+      bookByMyBookId: {
+        localCodec: bookAccessCodec,
+        remoteResourceOptions: book_resourceOptionsConfig,
+        localAttributes: ["book_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
       }
     },
     budget: {
@@ -3947,6 +5038,17 @@ const registryConfig = {
         localAttributes: ["book_id"],
         remoteAttributes: ["id"],
         isUnique: true
+      },
+      quickbooksMigrationsByTheirConnectedAccountId: {
+        localCodec: connectedAccountCodec,
+        remoteResourceOptions: quickbooks_migration_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["connected_account_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
       }
     },
     cryptoAsset: {
@@ -4010,6 +5112,16 @@ const registryConfig = {
         localCodec: fixedAssetCodec,
         remoteResourceOptions: account_resourceOptionsConfig,
         localAttributes: ["depreciation_expense_account_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      }
+    },
+    importProfile: {
+      __proto__: null,
+      bookByMyBookId: {
+        localCodec: importProfileCodec,
+        remoteResourceOptions: book_resourceOptionsConfig,
+        localAttributes: ["book_id"],
         remoteAttributes: ["id"],
         isUnique: true
       }
@@ -4101,6 +5213,23 @@ const registryConfig = {
         isUnique: true
       }
     },
+    mileageLog: {
+      __proto__: null,
+      bookByMyBookId: {
+        localCodec: mileageLogCodec,
+        remoteResourceOptions: book_resourceOptionsConfig,
+        localAttributes: ["book_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      vehicleByMyVehicleId: {
+        localCodec: mileageLogCodec,
+        remoteResourceOptions: vehicle_resourceOptionsConfig,
+        localAttributes: ["vehicle_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      }
+    },
     netWorthSnapshot: {
       __proto__: null,
       bookByMyBookId: {
@@ -4117,6 +5246,40 @@ const registryConfig = {
         localCodec: payrollConnectionCodec,
         remoteResourceOptions: book_resourceOptionsConfig,
         localAttributes: ["book_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      }
+    },
+    quickbooksAccountMap: {
+      __proto__: null,
+      bookByMyBookId: {
+        localCodec: quickbooksAccountMapCodec,
+        remoteResourceOptions: book_resourceOptionsConfig,
+        localAttributes: ["book_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      accountByMyMyfiAccountId: {
+        localCodec: quickbooksAccountMapCodec,
+        remoteResourceOptions: account_resourceOptionsConfig,
+        localAttributes: ["myfi_account_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      }
+    },
+    quickbooksMigration: {
+      __proto__: null,
+      bookByMyBookId: {
+        localCodec: quickbooksMigrationCodec,
+        remoteResourceOptions: book_resourceOptionsConfig,
+        localAttributes: ["book_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      connectedAccountByMyConnectedAccountId: {
+        localCodec: quickbooksMigrationCodec,
+        remoteResourceOptions: connected_account_resourceOptionsConfig,
+        localAttributes: ["connected_account_id"],
         remoteAttributes: ["id"],
         isUnique: true
       }
@@ -4148,6 +5311,23 @@ const registryConfig = {
         localCodec: reconciliationQueueCodec,
         remoteResourceOptions: account_resourceOptionsConfig,
         localAttributes: ["suggested_debit_account_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      }
+    },
+    reconciliationStatement: {
+      __proto__: null,
+      accountByMyAccountId: {
+        localCodec: reconciliationStatementCodec,
+        remoteResourceOptions: account_resourceOptionsConfig,
+        localAttributes: ["account_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      bookByMyBookId: {
+        localCodec: reconciliationStatementCodec,
+        remoteResourceOptions: book_resourceOptionsConfig,
+        localAttributes: ["book_id"],
         remoteAttributes: ["id"],
         isUnique: true
       }
@@ -4255,6 +5435,23 @@ const registryConfig = {
         isUnique: true
       }
     },
+    vehicle: {
+      __proto__: null,
+      bookByMyBookId: {
+        localCodec: vehicleCodec,
+        remoteResourceOptions: book_resourceOptionsConfig,
+        localAttributes: ["book_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      mileageLogsByTheirVehicleId: {
+        localCodec: vehicleCodec,
+        remoteResourceOptions: mileage_log_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["vehicle_id"],
+        isReferencee: true
+      }
+    },
     vendor: {
       __proto__: null,
       bookByMyBookId: {
@@ -4283,14 +5480,21 @@ const resource_journal_line_tagPgResource = registry.pgResources["journal_line_t
 const resource_tag_groupPgResource = registry.pgResources["tag_group"];
 const resource___drizzle_migrationsPgResource = registry.pgResources["__drizzle_migrations"];
 const resource_account_mappingPgResource = registry.pgResources["account_mapping"];
+const resource_book_accessPgResource = registry.pgResources["book_access"];
 const resource_tax_jurisdictionPgResource = registry.pgResources["tax_jurisdiction"];
-const resource_journal_linePgResource = registry.pgResources["journal_line"];
 const resource_tagPgResource = registry.pgResources["tag"];
+const resource_quickbooks_account_mapPgResource = registry.pgResources["quickbooks_account_map"];
+const resource_vehiclePgResource = registry.pgResources["vehicle"];
+const resource_journal_linePgResource = registry.pgResources["journal_line"];
 const resource_savings_goalPgResource = registry.pgResources["savings_goal"];
+const resource_import_profilePgResource = registry.pgResources["import_profile"];
 const resource_net_worth_snapshotPgResource = registry.pgResources["net_worth_snapshot"];
-const resource_payroll_connectionPgResource = registry.pgResources["payroll_connection"];
 const resource_accounting_periodPgResource = registry.pgResources["accounting_period"];
+const resource_quickbooks_migrationPgResource = registry.pgResources["quickbooks_migration"];
+const resource_payroll_connectionPgResource = registry.pgResources["payroll_connection"];
+const resource_reconciliation_statementPgResource = registry.pgResources["reconciliation_statement"];
 const resource_crypto_lotPgResource = registry.pgResources["crypto_lot"];
+const resource_mileage_logPgResource = registry.pgResources["mileage_log"];
 const resource_bookPgResource = registry.pgResources["book"];
 const resource_budgetPgResource = registry.pgResources["budget"];
 const resource_vendorPgResource = registry.pgResources["vendor"];
@@ -4390,6 +5594,17 @@ const nodeFetcher_AccountMapping = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_AccountMapping));
   return nodeIdHandler_AccountMapping.get(nodeIdHandler_AccountMapping.getSpec($decoded));
 };
+const nodeIdHandler_BookAccess = makeTableNodeIdHandler({
+  typeName: "BookAccess",
+  identifier: "BookAccess",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_book_accessPgResource,
+  pk: book_accessUniques[0].attributes
+});
+const nodeFetcher_BookAccess = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_BookAccess));
+  return nodeIdHandler_BookAccess.get(nodeIdHandler_BookAccess.getSpec($decoded));
+};
 const nodeIdHandler_TaxJurisdiction = makeTableNodeIdHandler({
   typeName: "TaxJurisdiction",
   identifier: "TaxJurisdiction",
@@ -4400,17 +5615,6 @@ const nodeIdHandler_TaxJurisdiction = makeTableNodeIdHandler({
 const nodeFetcher_TaxJurisdiction = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_TaxJurisdiction));
   return nodeIdHandler_TaxJurisdiction.get(nodeIdHandler_TaxJurisdiction.getSpec($decoded));
-};
-const nodeIdHandler_JournalLine = makeTableNodeIdHandler({
-  typeName: "JournalLine",
-  identifier: "JournalLine",
-  nodeIdCodec: base64JSONNodeIdCodec,
-  resource: resource_journal_linePgResource,
-  pk: journal_lineUniques[0].attributes
-});
-const nodeFetcher_JournalLine = $nodeId => {
-  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_JournalLine));
-  return nodeIdHandler_JournalLine.get(nodeIdHandler_JournalLine.getSpec($decoded));
 };
 const nodeIdHandler_Tag = makeTableNodeIdHandler({
   typeName: "Tag",
@@ -4423,6 +5627,39 @@ const nodeFetcher_Tag = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Tag));
   return nodeIdHandler_Tag.get(nodeIdHandler_Tag.getSpec($decoded));
 };
+const nodeIdHandler_QuickbooksAccountMap = makeTableNodeIdHandler({
+  typeName: "QuickbooksAccountMap",
+  identifier: "QuickbooksAccountMap",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_quickbooks_account_mapPgResource,
+  pk: quickbooks_account_mapUniques[0].attributes
+});
+const nodeFetcher_QuickbooksAccountMap = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_QuickbooksAccountMap));
+  return nodeIdHandler_QuickbooksAccountMap.get(nodeIdHandler_QuickbooksAccountMap.getSpec($decoded));
+};
+const nodeIdHandler_Vehicle = makeTableNodeIdHandler({
+  typeName: "Vehicle",
+  identifier: "Vehicle",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_vehiclePgResource,
+  pk: vehicleUniques[0].attributes
+});
+const nodeFetcher_Vehicle = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Vehicle));
+  return nodeIdHandler_Vehicle.get(nodeIdHandler_Vehicle.getSpec($decoded));
+};
+const nodeIdHandler_JournalLine = makeTableNodeIdHandler({
+  typeName: "JournalLine",
+  identifier: "JournalLine",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_journal_linePgResource,
+  pk: journal_lineUniques[0].attributes
+});
+const nodeFetcher_JournalLine = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_JournalLine));
+  return nodeIdHandler_JournalLine.get(nodeIdHandler_JournalLine.getSpec($decoded));
+};
 const nodeIdHandler_SavingsGoal = makeTableNodeIdHandler({
   typeName: "SavingsGoal",
   identifier: "SavingsGoal",
@@ -4433,6 +5670,17 @@ const nodeIdHandler_SavingsGoal = makeTableNodeIdHandler({
 const nodeFetcher_SavingsGoal = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_SavingsGoal));
   return nodeIdHandler_SavingsGoal.get(nodeIdHandler_SavingsGoal.getSpec($decoded));
+};
+const nodeIdHandler_ImportProfile = makeTableNodeIdHandler({
+  typeName: "ImportProfile",
+  identifier: "ImportProfile",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_import_profilePgResource,
+  pk: import_profileUniques[0].attributes
+});
+const nodeFetcher_ImportProfile = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_ImportProfile));
+  return nodeIdHandler_ImportProfile.get(nodeIdHandler_ImportProfile.getSpec($decoded));
 };
 const nodeIdHandler_NetWorthSnapshot = makeTableNodeIdHandler({
   typeName: "NetWorthSnapshot",
@@ -4445,17 +5693,6 @@ const nodeFetcher_NetWorthSnapshot = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_NetWorthSnapshot));
   return nodeIdHandler_NetWorthSnapshot.get(nodeIdHandler_NetWorthSnapshot.getSpec($decoded));
 };
-const nodeIdHandler_PayrollConnection = makeTableNodeIdHandler({
-  typeName: "PayrollConnection",
-  identifier: "PayrollConnection",
-  nodeIdCodec: base64JSONNodeIdCodec,
-  resource: resource_payroll_connectionPgResource,
-  pk: payroll_connectionUniques[0].attributes
-});
-const nodeFetcher_PayrollConnection = $nodeId => {
-  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_PayrollConnection));
-  return nodeIdHandler_PayrollConnection.get(nodeIdHandler_PayrollConnection.getSpec($decoded));
-};
 const nodeIdHandler_AccountingPeriod = makeTableNodeIdHandler({
   typeName: "AccountingPeriod",
   identifier: "AccountingPeriod",
@@ -4467,6 +5704,39 @@ const nodeFetcher_AccountingPeriod = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_AccountingPeriod));
   return nodeIdHandler_AccountingPeriod.get(nodeIdHandler_AccountingPeriod.getSpec($decoded));
 };
+const nodeIdHandler_QuickbooksMigration = makeTableNodeIdHandler({
+  typeName: "QuickbooksMigration",
+  identifier: "QuickbooksMigration",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_quickbooks_migrationPgResource,
+  pk: quickbooks_migrationUniques[0].attributes
+});
+const nodeFetcher_QuickbooksMigration = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_QuickbooksMigration));
+  return nodeIdHandler_QuickbooksMigration.get(nodeIdHandler_QuickbooksMigration.getSpec($decoded));
+};
+const nodeIdHandler_PayrollConnection = makeTableNodeIdHandler({
+  typeName: "PayrollConnection",
+  identifier: "PayrollConnection",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_payroll_connectionPgResource,
+  pk: payroll_connectionUniques[0].attributes
+});
+const nodeFetcher_PayrollConnection = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_PayrollConnection));
+  return nodeIdHandler_PayrollConnection.get(nodeIdHandler_PayrollConnection.getSpec($decoded));
+};
+const nodeIdHandler_ReconciliationStatement = makeTableNodeIdHandler({
+  typeName: "ReconciliationStatement",
+  identifier: "ReconciliationStatement",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_reconciliation_statementPgResource,
+  pk: reconciliation_statementUniques[0].attributes
+});
+const nodeFetcher_ReconciliationStatement = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_ReconciliationStatement));
+  return nodeIdHandler_ReconciliationStatement.get(nodeIdHandler_ReconciliationStatement.getSpec($decoded));
+};
 const nodeIdHandler_CryptoLot = makeTableNodeIdHandler({
   typeName: "CryptoLot",
   identifier: "CryptoLot",
@@ -4477,6 +5747,17 @@ const nodeIdHandler_CryptoLot = makeTableNodeIdHandler({
 const nodeFetcher_CryptoLot = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_CryptoLot));
   return nodeIdHandler_CryptoLot.get(nodeIdHandler_CryptoLot.getSpec($decoded));
+};
+const nodeIdHandler_MileageLog = makeTableNodeIdHandler({
+  typeName: "MileageLog",
+  identifier: "MileageLog",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_mileage_logPgResource,
+  pk: mileage_logUniques[0].attributes
+});
+const nodeFetcher_MileageLog = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_MileageLog));
+  return nodeIdHandler_MileageLog.get(nodeIdHandler_MileageLog.getSpec($decoded));
 };
 const nodeIdHandler_Book = makeTableNodeIdHandler({
   typeName: "Book",
@@ -4655,14 +5936,21 @@ const nodeIdHandlerByTypeName = {
   TagGroup: nodeIdHandler_TagGroup,
   _DrizzleMigration: nodeIdHandler__DrizzleMigration,
   AccountMapping: nodeIdHandler_AccountMapping,
+  BookAccess: nodeIdHandler_BookAccess,
   TaxJurisdiction: nodeIdHandler_TaxJurisdiction,
-  JournalLine: nodeIdHandler_JournalLine,
   Tag: nodeIdHandler_Tag,
+  QuickbooksAccountMap: nodeIdHandler_QuickbooksAccountMap,
+  Vehicle: nodeIdHandler_Vehicle,
+  JournalLine: nodeIdHandler_JournalLine,
   SavingsGoal: nodeIdHandler_SavingsGoal,
+  ImportProfile: nodeIdHandler_ImportProfile,
   NetWorthSnapshot: nodeIdHandler_NetWorthSnapshot,
-  PayrollConnection: nodeIdHandler_PayrollConnection,
   AccountingPeriod: nodeIdHandler_AccountingPeriod,
+  QuickbooksMigration: nodeIdHandler_QuickbooksMigration,
+  PayrollConnection: nodeIdHandler_PayrollConnection,
+  ReconciliationStatement: nodeIdHandler_ReconciliationStatement,
   CryptoLot: nodeIdHandler_CryptoLot,
+  MileageLog: nodeIdHandler_MileageLog,
   Book: nodeIdHandler_Book,
   Budget: nodeIdHandler_Budget,
   Vendor: nodeIdHandler_Vendor,
@@ -5073,6 +6361,9 @@ const ConnectedAccount_lastSyncedAtPlan = $record => {
 const ConnectedAccount_syncCursorPlan = $record => {
   return $record.get("sync_cursor");
 };
+const ConnectedAccount_refreshTokenPlan = $record => {
+  return $record.get("refresh_token");
+};
 const CryptoLot_disposedAtPlan = $record => {
   return $record.get("disposed_at");
 };
@@ -5125,37 +6416,65 @@ const specFromArgs_AccountMapping = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_AccountMapping, $nodeId);
 };
+const specFromArgs_BookAccess = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_BookAccess, $nodeId);
+};
 const specFromArgs_TaxJurisdiction = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_TaxJurisdiction, $nodeId);
-};
-const specFromArgs_JournalLine = args => {
-  const $nodeId = args.getRaw(["input", "id"]);
-  return specFromNodeId(nodeIdHandler_JournalLine, $nodeId);
 };
 const specFromArgs_Tag = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Tag, $nodeId);
 };
+const specFromArgs_QuickbooksAccountMap = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_QuickbooksAccountMap, $nodeId);
+};
+const specFromArgs_Vehicle = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_Vehicle, $nodeId);
+};
+const specFromArgs_JournalLine = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_JournalLine, $nodeId);
+};
 const specFromArgs_SavingsGoal = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_SavingsGoal, $nodeId);
+};
+const specFromArgs_ImportProfile = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_ImportProfile, $nodeId);
 };
 const specFromArgs_NetWorthSnapshot = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_NetWorthSnapshot, $nodeId);
 };
-const specFromArgs_PayrollConnection = args => {
-  const $nodeId = args.getRaw(["input", "id"]);
-  return specFromNodeId(nodeIdHandler_PayrollConnection, $nodeId);
-};
 const specFromArgs_AccountingPeriod = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_AccountingPeriod, $nodeId);
 };
+const specFromArgs_QuickbooksMigration = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_QuickbooksMigration, $nodeId);
+};
+const specFromArgs_PayrollConnection = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_PayrollConnection, $nodeId);
+};
+const specFromArgs_ReconciliationStatement = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_ReconciliationStatement, $nodeId);
+};
 const specFromArgs_CryptoLot = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_CryptoLot, $nodeId);
+};
+const specFromArgs_MileageLog = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_MileageLog, $nodeId);
 };
 const specFromArgs_Book = args => {
   const $nodeId = args.getRaw(["input", "id"]);
@@ -5271,6 +6590,19 @@ function AccountMappingInput_creditAccountIdApply(obj, val, info) {
 function AccountMappingInput_updatedAtApply(obj, val, info) {
   obj.set("updated_at", bakedInputRuntime(info.schema, info.field.type, val));
 }
+const CreateBookAccessPayload_bookAccessEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_book_accessPgResource, book_accessUniques[0].attributes, $mutation, fieldArgs);
+function BookAccessInput_userIdApply(obj, val, info) {
+  obj.set("user_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function BookAccessInput_roleApply(obj, val, info) {
+  obj.set("role", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function BookAccessInput_invitedByApply(obj, val, info) {
+  obj.set("invited_by", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function BookAccessInput_invitedAtApply(obj, val, info) {
+  obj.set("invited_at", bakedInputRuntime(info.schema, info.field.type, val));
+}
 const CreateTaxJurisdictionPayload_taxJurisdictionEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_tax_jurisdictionPgResource, tax_jurisdictionUniques[0].attributes, $mutation, fieldArgs);
 function TaxJurisdictionInput_codeApply(obj, val, info) {
   obj.set("code", bakedInputRuntime(info.schema, info.field.type, val));
@@ -5280,6 +6612,39 @@ function TaxJurisdictionInput_filingFrequencyApply(obj, val, info) {
 }
 function TaxJurisdictionInput_taxPayableAccountIdApply(obj, val, info) {
   obj.set("tax_payable_account_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+const CreateTagPayload_tagEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_tagPgResource, tagUniques[0].attributes, $mutation, fieldArgs);
+function TagInput_tagGroupIdApply(obj, val, info) {
+  obj.set("tag_group_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function TagInput_isActiveApply(obj, val, info) {
+  obj.set("is_active", bakedInputRuntime(info.schema, info.field.type, val));
+}
+const CreateQuickbooksAccountMapPayload_quickbooksAccountMapEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_quickbooks_account_mapPgResource, quickbooks_account_mapUniques[0].attributes, $mutation, fieldArgs);
+function QuickbooksAccountMapInput_qboAccountIdApply(obj, val, info) {
+  obj.set("qbo_account_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function QuickbooksAccountMapInput_qboAccountNameApply(obj, val, info) {
+  obj.set("qbo_account_name", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function QuickbooksAccountMapInput_qboAccountTypeApply(obj, val, info) {
+  obj.set("qbo_account_type", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function QuickbooksAccountMapInput_myfiAccountIdApply(obj, val, info) {
+  obj.set("myfi_account_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+const CreateVehiclePayload_vehicleEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_vehiclePgResource, vehicleUniques[0].attributes, $mutation, fieldArgs);
+function VehicleInput_yearApply(obj, val, info) {
+  obj.set("year", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function VehicleInput_makeApply(obj, val, info) {
+  obj.set("make", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function VehicleInput_modelApply(obj, val, info) {
+  obj.set("model", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function VehicleInput_dateInServiceApply(obj, val, info) {
+  obj.set("date_in_service", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateJournalLinePayload_journalLineEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_journal_linePgResource, journal_lineUniques[0].attributes, $mutation, fieldArgs);
 function JournalLineInput_journalEntryIdApply(obj, val, info) {
@@ -5297,12 +6662,8 @@ function JournalLineInput_creditApply(obj, val, info) {
 function JournalLineInput_memoApply(obj, val, info) {
   obj.set("memo", bakedInputRuntime(info.schema, info.field.type, val));
 }
-const CreateTagPayload_tagEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_tagPgResource, tagUniques[0].attributes, $mutation, fieldArgs);
-function TagInput_tagGroupIdApply(obj, val, info) {
-  obj.set("tag_group_id", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function TagInput_isActiveApply(obj, val, info) {
-  obj.set("is_active", bakedInputRuntime(info.schema, info.field.type, val));
+function JournalLineInput_clearedApply(obj, val, info) {
+  obj.set("cleared", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateSavingsGoalPayload_savingsGoalEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_savings_goalPgResource, savings_goalUniques[0].attributes, $mutation, fieldArgs);
 function SavingsGoalInput_targetAmountApply(obj, val, info) {
@@ -5310,6 +6671,13 @@ function SavingsGoalInput_targetAmountApply(obj, val, info) {
 }
 function SavingsGoalInput_targetDateApply(obj, val, info) {
   obj.set("target_date", bakedInputRuntime(info.schema, info.field.type, val));
+}
+const CreateImportProfilePayload_importProfileEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_import_profilePgResource, import_profileUniques[0].attributes, $mutation, fieldArgs);
+function ImportProfileInput_columnMapApply(obj, val, info) {
+  obj.set("column_map", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function ImportProfileInput_headerRowsApply(obj, val, info) {
+  obj.set("header_rows", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateNetWorthSnapshotPayload_netWorthSnapshotEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_net_worth_snapshotPgResource, net_worth_snapshotUniques[0].attributes, $mutation, fieldArgs);
 function NetWorthSnapshotInput_dateApply(obj, val, info) {
@@ -5326,6 +6694,41 @@ function NetWorthSnapshotInput_netWorthApply(obj, val, info) {
 }
 function NetWorthSnapshotInput_breakdownApply(obj, val, info) {
   obj.set("breakdown", bakedInputRuntime(info.schema, info.field.type, val));
+}
+const CreateAccountingPeriodPayload_accountingPeriodEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_accounting_periodPgResource, accounting_periodUniques[0].attributes, $mutation, fieldArgs);
+function AccountingPeriodInput_monthApply(obj, val, info) {
+  obj.set("month", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function AccountingPeriodInput_statusApply(obj, val, info) {
+  obj.set("status", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function AccountingPeriodInput_closedAtApply(obj, val, info) {
+  obj.set("closed_at", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function AccountingPeriodInput_closedByApply(obj, val, info) {
+  obj.set("closed_by", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function AccountingPeriodInput_reopenedAtApply(obj, val, info) {
+  obj.set("reopened_at", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function AccountingPeriodInput_blockersApply(obj, val, info) {
+  obj.set("blockers", bakedInputRuntime(info.schema, info.field.type, val));
+}
+const CreateQuickbooksMigrationPayload_quickbooksMigrationEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_quickbooks_migrationPgResource, quickbooks_migrationUniques[0].attributes, $mutation, fieldArgs);
+function QuickbooksMigrationInput_connectedAccountIdApply(obj, val, info) {
+  obj.set("connected_account_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function QuickbooksMigrationInput_periodStartApply(obj, val, info) {
+  obj.set("period_start", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function QuickbooksMigrationInput_periodEndApply(obj, val, info) {
+  obj.set("period_end", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function QuickbooksMigrationInput_entriesImportedApply(obj, val, info) {
+  obj.set("entries_imported", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function QuickbooksMigrationInput_errorMessageApply(obj, val, info) {
+  obj.set("error_message", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreatePayrollConnectionPayload_payrollConnectionEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_payroll_connectionPgResource, payroll_connectionUniques[0].attributes, $mutation, fieldArgs);
 function PayrollConnectionInput_providerApply(obj, val, info) {
@@ -5346,27 +6749,21 @@ function PayrollConnectionInput_lastSyncedAtApply(obj, val, info) {
 function PayrollConnectionInput_syncCursorApply(obj, val, info) {
   obj.set("sync_cursor", bakedInputRuntime(info.schema, info.field.type, val));
 }
-function PayrollConnectionInput_statusApply(obj, val, info) {
-  obj.set("status", bakedInputRuntime(info.schema, info.field.type, val));
+const CreateReconciliationStatementPayload_reconciliationStatementEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_reconciliation_statementPgResource, reconciliation_statementUniques[0].attributes, $mutation, fieldArgs);
+function ReconciliationStatementInput_statementDateApply(obj, val, info) {
+  obj.set("statement_date", bakedInputRuntime(info.schema, info.field.type, val));
 }
-const CreateAccountingPeriodPayload_accountingPeriodEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_accounting_periodPgResource, accounting_periodUniques[0].attributes, $mutation, fieldArgs);
-function AccountingPeriodInput_yearApply(obj, val, info) {
-  obj.set("year", bakedInputRuntime(info.schema, info.field.type, val));
+function ReconciliationStatementInput_statementBalanceApply(obj, val, info) {
+  obj.set("statement_balance", bakedInputRuntime(info.schema, info.field.type, val));
 }
-function AccountingPeriodInput_monthApply(obj, val, info) {
-  obj.set("month", bakedInputRuntime(info.schema, info.field.type, val));
+function ReconciliationStatementInput_beginningBalanceApply(obj, val, info) {
+  obj.set("beginning_balance", bakedInputRuntime(info.schema, info.field.type, val));
 }
-function AccountingPeriodInput_closedAtApply(obj, val, info) {
-  obj.set("closed_at", bakedInputRuntime(info.schema, info.field.type, val));
+function ReconciliationStatementInput_completedAtApply(obj, val, info) {
+  obj.set("completed_at", bakedInputRuntime(info.schema, info.field.type, val));
 }
-function AccountingPeriodInput_closedByApply(obj, val, info) {
-  obj.set("closed_by", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function AccountingPeriodInput_reopenedAtApply(obj, val, info) {
-  obj.set("reopened_at", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function AccountingPeriodInput_blockersApply(obj, val, info) {
-  obj.set("blockers", bakedInputRuntime(info.schema, info.field.type, val));
+function ReconciliationStatementInput_discrepancyApply(obj, val, info) {
+  obj.set("discrepancy", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateCryptoLotPayload_cryptoLotEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_crypto_lotPgResource, crypto_lotUniques[0].attributes, $mutation, fieldArgs);
 function CryptoLotInput_cryptoAssetIdApply(obj, val, info) {
@@ -5389,6 +6786,31 @@ function CryptoLotInput_disposedAtApply(obj, val, info) {
 }
 function CryptoLotInput_proceedsPerUnitApply(obj, val, info) {
   obj.set("proceeds_per_unit", bakedInputRuntime(info.schema, info.field.type, val));
+}
+const CreateMileageLogPayload_mileageLogEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_mileage_logPgResource, mileage_logUniques[0].attributes, $mutation, fieldArgs);
+function MileageLogInput_vehicleIdApply(obj, val, info) {
+  obj.set("vehicle_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function MileageLogInput_descriptionApply(obj, val, info) {
+  obj.set("description", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function MileageLogInput_originApply(obj, val, info) {
+  obj.set("origin", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function MileageLogInput_destinationApply(obj, val, info) {
+  obj.set("destination", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function MileageLogInput_odometerStartApply(obj, val, info) {
+  obj.set("odometer_start", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function MileageLogInput_odometerEndApply(obj, val, info) {
+  obj.set("odometer_end", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function MileageLogInput_distanceApply(obj, val, info) {
+  obj.set("distance", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function MileageLogInput_isRoundTripApply(obj, val, info) {
+  obj.set("is_round_trip", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateBookPayload_bookEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_bookPgResource, bookUniques[0].attributes, $mutation, fieldArgs);
 function BookInput_organizationIdApply(obj, val, info) {
@@ -5505,9 +6927,6 @@ function CategorizationRuleInput_lastHitAtApply(obj, val, info) {
   obj.set("last_hit_at", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateFixedAssetPayload_fixedAssetEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_fixed_assetPgResource, fixed_assetUniques[0].attributes, $mutation, fieldArgs);
-function FixedAssetInput_descriptionApply(obj, val, info) {
-  obj.set("description", bakedInputRuntime(info.schema, info.field.type, val));
-}
 function FixedAssetInput_assetAccountIdApply(obj, val, info) {
   obj.set("asset_account_id", bakedInputRuntime(info.schema, info.field.type, val));
 }
@@ -5593,6 +7012,9 @@ function ConnectedAccountInput_institutionNameApply(obj, val, info) {
 function ConnectedAccountInput_maskApply(obj, val, info) {
   obj.set("mask", bakedInputRuntime(info.schema, info.field.type, val));
 }
+function ConnectedAccountInput_realmIdApply(obj, val, info) {
+  obj.set("realm_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
 export const typeDefs = /* GraphQL */`"""The root query type which gives access points into the data universe."""
 type Query implements Node {
   """
@@ -5624,29 +7046,50 @@ type Query implements Node {
   """Get a single \`AccountMapping\`."""
   accountMapping(rowId: UUID!): AccountMapping
 
+  """Get a single \`BookAccess\`."""
+  bookAccess(rowId: UUID!): BookAccess
+
   """Get a single \`TaxJurisdiction\`."""
   taxJurisdiction(rowId: UUID!): TaxJurisdiction
-
-  """Get a single \`JournalLine\`."""
-  journalLine(rowId: UUID!): JournalLine
 
   """Get a single \`Tag\`."""
   tag(rowId: UUID!): Tag
 
+  """Get a single \`QuickbooksAccountMap\`."""
+  quickbooksAccountMap(rowId: UUID!): QuickbooksAccountMap
+
+  """Get a single \`Vehicle\`."""
+  vehicle(rowId: UUID!): Vehicle
+
+  """Get a single \`JournalLine\`."""
+  journalLine(rowId: UUID!): JournalLine
+
   """Get a single \`SavingsGoal\`."""
   savingsGoal(rowId: UUID!): SavingsGoal
+
+  """Get a single \`ImportProfile\`."""
+  importProfile(rowId: UUID!): ImportProfile
 
   """Get a single \`NetWorthSnapshot\`."""
   netWorthSnapshot(rowId: UUID!): NetWorthSnapshot
 
-  """Get a single \`PayrollConnection\`."""
-  payrollConnection(rowId: UUID!): PayrollConnection
-
   """Get a single \`AccountingPeriod\`."""
   accountingPeriod(rowId: UUID!): AccountingPeriod
 
+  """Get a single \`QuickbooksMigration\`."""
+  quickbooksMigration(rowId: UUID!): QuickbooksMigration
+
+  """Get a single \`PayrollConnection\`."""
+  payrollConnection(rowId: UUID!): PayrollConnection
+
+  """Get a single \`ReconciliationStatement\`."""
+  reconciliationStatement(rowId: UUID!): ReconciliationStatement
+
   """Get a single \`CryptoLot\`."""
   cryptoLot(rowId: UUID!): CryptoLot
+
+  """Get a single \`MileageLog\`."""
+  mileageLog(rowId: UUID!): MileageLog
 
   """Get a single \`Book\`."""
   book(rowId: UUID!): Book
@@ -5711,6 +7154,14 @@ type Query implements Node {
     id: ID!
   ): AccountMapping
 
+  """Reads a single \`BookAccess\` using its globally unique \`ID\`."""
+  bookAccessById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`BookAccess\`.
+    """
+    id: ID!
+  ): BookAccess
+
   """Reads a single \`TaxJurisdiction\` using its globally unique \`ID\`."""
   taxJurisdictionById(
     """
@@ -5718,6 +7169,26 @@ type Query implements Node {
     """
     id: ID!
   ): TaxJurisdiction
+
+  """Reads a single \`Tag\` using its globally unique \`ID\`."""
+  tagById(
+    """The globally unique \`ID\` to be used in selecting a single \`Tag\`."""
+    id: ID!
+  ): Tag
+
+  """Reads a single \`QuickbooksAccountMap\` using its globally unique \`ID\`."""
+  quickbooksAccountMapById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`QuickbooksAccountMap\`.
+    """
+    id: ID!
+  ): QuickbooksAccountMap
+
+  """Reads a single \`Vehicle\` using its globally unique \`ID\`."""
+  vehicleById(
+    """The globally unique \`ID\` to be used in selecting a single \`Vehicle\`."""
+    id: ID!
+  ): Vehicle
 
   """Reads a single \`JournalLine\` using its globally unique \`ID\`."""
   journalLineById(
@@ -5727,12 +7198,6 @@ type Query implements Node {
     id: ID!
   ): JournalLine
 
-  """Reads a single \`Tag\` using its globally unique \`ID\`."""
-  tagById(
-    """The globally unique \`ID\` to be used in selecting a single \`Tag\`."""
-    id: ID!
-  ): Tag
-
   """Reads a single \`SavingsGoal\` using its globally unique \`ID\`."""
   savingsGoalById(
     """
@@ -5740,6 +7205,14 @@ type Query implements Node {
     """
     id: ID!
   ): SavingsGoal
+
+  """Reads a single \`ImportProfile\` using its globally unique \`ID\`."""
+  importProfileById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`ImportProfile\`.
+    """
+    id: ID!
+  ): ImportProfile
 
   """Reads a single \`NetWorthSnapshot\` using its globally unique \`ID\`."""
   netWorthSnapshotById(
@@ -5749,14 +7222,6 @@ type Query implements Node {
     id: ID!
   ): NetWorthSnapshot
 
-  """Reads a single \`PayrollConnection\` using its globally unique \`ID\`."""
-  payrollConnectionById(
-    """
-    The globally unique \`ID\` to be used in selecting a single \`PayrollConnection\`.
-    """
-    id: ID!
-  ): PayrollConnection
-
   """Reads a single \`AccountingPeriod\` using its globally unique \`ID\`."""
   accountingPeriodById(
     """
@@ -5765,11 +7230,45 @@ type Query implements Node {
     id: ID!
   ): AccountingPeriod
 
+  """Reads a single \`QuickbooksMigration\` using its globally unique \`ID\`."""
+  quickbooksMigrationById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`QuickbooksMigration\`.
+    """
+    id: ID!
+  ): QuickbooksMigration
+
+  """Reads a single \`PayrollConnection\` using its globally unique \`ID\`."""
+  payrollConnectionById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`PayrollConnection\`.
+    """
+    id: ID!
+  ): PayrollConnection
+
+  """
+  Reads a single \`ReconciliationStatement\` using its globally unique \`ID\`.
+  """
+  reconciliationStatementById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`ReconciliationStatement\`.
+    """
+    id: ID!
+  ): ReconciliationStatement
+
   """Reads a single \`CryptoLot\` using its globally unique \`ID\`."""
   cryptoLotById(
     """The globally unique \`ID\` to be used in selecting a single \`CryptoLot\`."""
     id: ID!
   ): CryptoLot
+
+  """Reads a single \`MileageLog\` using its globally unique \`ID\`."""
+  mileageLogById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`MileageLog\`.
+    """
+    id: ID!
+  ): MileageLog
 
   """Reads a single \`Book\` using its globally unique \`ID\`."""
   bookById(
@@ -5987,6 +7486,40 @@ type Query implements Node {
     orderBy: [AccountMappingOrderBy!] = [PRIMARY_KEY_ASC]
   ): AccountMappingConnection
 
+  """Reads and enables pagination through a set of \`BookAccess\`."""
+  bookAccesses(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: BookAccessCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: BookAccessFilter
+
+    """The method to use when ordering \`BookAccess\`."""
+    orderBy: [BookAccessOrderBy!] = [PRIMARY_KEY_ASC]
+  ): BookAccessConnection
+
   """Reads and enables pagination through a set of \`TaxJurisdiction\`."""
   taxJurisdictions(
     """Only read the first \`n\` values of the set."""
@@ -6020,40 +7553,6 @@ type Query implements Node {
     """The method to use when ordering \`TaxJurisdiction\`."""
     orderBy: [TaxJurisdictionOrderBy!] = [PRIMARY_KEY_ASC]
   ): TaxJurisdictionConnection
-
-  """Reads and enables pagination through a set of \`JournalLine\`."""
-  journalLines(
-    """Only read the first \`n\` values of the set."""
-    first: Int
-
-    """Only read the last \`n\` values of the set."""
-    last: Int
-
-    """
-    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
-    based pagination. May not be used with \`last\`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: JournalLineCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: JournalLineFilter
-
-    """The method to use when ordering \`JournalLine\`."""
-    orderBy: [JournalLineOrderBy!] = [PRIMARY_KEY_ASC]
-  ): JournalLineConnection
 
   """Reads and enables pagination through a set of \`Tag\`."""
   tags(
@@ -6089,6 +7588,108 @@ type Query implements Node {
     orderBy: [TagOrderBy!] = [PRIMARY_KEY_ASC]
   ): TagConnection
 
+  """Reads and enables pagination through a set of \`QuickbooksAccountMap\`."""
+  quickbooksAccountMaps(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: QuickbooksAccountMapCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: QuickbooksAccountMapFilter
+
+    """The method to use when ordering \`QuickbooksAccountMap\`."""
+    orderBy: [QuickbooksAccountMapOrderBy!] = [PRIMARY_KEY_ASC]
+  ): QuickbooksAccountMapConnection
+
+  """Reads and enables pagination through a set of \`Vehicle\`."""
+  vehicles(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: VehicleCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: VehicleFilter
+
+    """The method to use when ordering \`Vehicle\`."""
+    orderBy: [VehicleOrderBy!] = [PRIMARY_KEY_ASC]
+  ): VehicleConnection
+
+  """Reads and enables pagination through a set of \`JournalLine\`."""
+  journalLines(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: JournalLineCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: JournalLineFilter
+
+    """The method to use when ordering \`JournalLine\`."""
+    orderBy: [JournalLineOrderBy!] = [PRIMARY_KEY_ASC]
+  ): JournalLineConnection
+
   """Reads and enables pagination through a set of \`SavingsGoal\`."""
   savingsGoals(
     """Only read the first \`n\` values of the set."""
@@ -6122,6 +7723,40 @@ type Query implements Node {
     """The method to use when ordering \`SavingsGoal\`."""
     orderBy: [SavingsGoalOrderBy!] = [PRIMARY_KEY_ASC]
   ): SavingsGoalConnection
+
+  """Reads and enables pagination through a set of \`ImportProfile\`."""
+  importProfiles(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ImportProfileCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ImportProfileFilter
+
+    """The method to use when ordering \`ImportProfile\`."""
+    orderBy: [ImportProfileOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ImportProfileConnection
 
   """Reads and enables pagination through a set of \`NetWorthSnapshot\`."""
   netWorthSnapshots(
@@ -6157,40 +7792,6 @@ type Query implements Node {
     orderBy: [NetWorthSnapshotOrderBy!] = [PRIMARY_KEY_ASC]
   ): NetWorthSnapshotConnection
 
-  """Reads and enables pagination through a set of \`PayrollConnection\`."""
-  payrollConnections(
-    """Only read the first \`n\` values of the set."""
-    first: Int
-
-    """Only read the last \`n\` values of the set."""
-    last: Int
-
-    """
-    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
-    based pagination. May not be used with \`last\`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: PayrollConnectionCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: PayrollConnectionFilter
-
-    """The method to use when ordering \`PayrollConnection\`."""
-    orderBy: [PayrollConnectionOrderBy!] = [PRIMARY_KEY_ASC]
-  ): PayrollConnectionConnection
-
   """Reads and enables pagination through a set of \`AccountingPeriod\`."""
   accountingPeriods(
     """Only read the first \`n\` values of the set."""
@@ -6225,6 +7826,110 @@ type Query implements Node {
     orderBy: [AccountingPeriodOrderBy!] = [PRIMARY_KEY_ASC]
   ): AccountingPeriodConnection
 
+  """Reads and enables pagination through a set of \`QuickbooksMigration\`."""
+  quickbooksMigrations(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: QuickbooksMigrationCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: QuickbooksMigrationFilter
+
+    """The method to use when ordering \`QuickbooksMigration\`."""
+    orderBy: [QuickbooksMigrationOrderBy!] = [PRIMARY_KEY_ASC]
+  ): QuickbooksMigrationConnection
+
+  """Reads and enables pagination through a set of \`PayrollConnection\`."""
+  payrollConnections(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PayrollConnectionCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: PayrollConnectionFilter
+
+    """The method to use when ordering \`PayrollConnection\`."""
+    orderBy: [PayrollConnectionOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PayrollConnectionConnection
+
+  """
+  Reads and enables pagination through a set of \`ReconciliationStatement\`.
+  """
+  reconciliationStatements(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ReconciliationStatementCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ReconciliationStatementFilter
+
+    """The method to use when ordering \`ReconciliationStatement\`."""
+    orderBy: [ReconciliationStatementOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ReconciliationStatementConnection
+
   """Reads and enables pagination through a set of \`CryptoLot\`."""
   cryptoLots(
     """Only read the first \`n\` values of the set."""
@@ -6258,6 +7963,40 @@ type Query implements Node {
     """The method to use when ordering \`CryptoLot\`."""
     orderBy: [CryptoLotOrderBy!] = [PRIMARY_KEY_ASC]
   ): CryptoLotConnection
+
+  """Reads and enables pagination through a set of \`MileageLog\`."""
+  mileageLogs(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: MileageLogCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: MileageLogFilter
+
+    """The method to use when ordering \`MileageLog\`."""
+    orderBy: [MileageLogOrderBy!] = [PRIMARY_KEY_ASC]
+  ): MileageLogConnection
 
   """Reads and enables pagination through a set of \`Book\`."""
   books(
@@ -6674,6 +8413,7 @@ type JournalLine implements Node {
   debit: BigFloat!
   credit: BigFloat!
   memo: String
+  cleared: Boolean!
 
   """Reads a single \`Account\` that is related to this \`JournalLine\`."""
   account: Account
@@ -6845,6 +8585,42 @@ type Account implements Node {
     """The method to use when ordering \`JournalLine\`."""
     orderBy: [JournalLineOrderBy!] = [PRIMARY_KEY_ASC]
   ): JournalLineConnection!
+
+  """
+  Reads and enables pagination through a set of \`ReconciliationStatement\`.
+  """
+  reconciliationStatements(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ReconciliationStatementCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ReconciliationStatementFilter
+
+    """The method to use when ordering \`ReconciliationStatement\`."""
+    orderBy: [ReconciliationStatementOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ReconciliationStatementConnection!
 }
 
 enum AccountType {
@@ -7485,6 +9261,212 @@ type Book implements Node {
     """The method to use when ordering \`PayrollConnection\`."""
     orderBy: [PayrollConnectionOrderBy!] = [PRIMARY_KEY_ASC]
   ): PayrollConnectionConnection!
+
+  """Reads and enables pagination through a set of \`BookAccess\`."""
+  bookAccesses(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: BookAccessCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: BookAccessFilter
+
+    """The method to use when ordering \`BookAccess\`."""
+    orderBy: [BookAccessOrderBy!] = [PRIMARY_KEY_ASC]
+  ): BookAccessConnection!
+
+  """
+  Reads and enables pagination through a set of \`ReconciliationStatement\`.
+  """
+  reconciliationStatements(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ReconciliationStatementCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ReconciliationStatementFilter
+
+    """The method to use when ordering \`ReconciliationStatement\`."""
+    orderBy: [ReconciliationStatementOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ReconciliationStatementConnection!
+
+  """Reads and enables pagination through a set of \`MileageLog\`."""
+  mileageLogs(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: MileageLogCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: MileageLogFilter
+
+    """The method to use when ordering \`MileageLog\`."""
+    orderBy: [MileageLogOrderBy!] = [PRIMARY_KEY_ASC]
+  ): MileageLogConnection!
+
+  """Reads and enables pagination through a set of \`Vehicle\`."""
+  vehicles(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: VehicleCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: VehicleFilter
+
+    """The method to use when ordering \`Vehicle\`."""
+    orderBy: [VehicleOrderBy!] = [PRIMARY_KEY_ASC]
+  ): VehicleConnection!
+
+  """Reads and enables pagination through a set of \`QuickbooksAccountMap\`."""
+  quickbooksAccountMaps(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: QuickbooksAccountMapCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: QuickbooksAccountMapFilter
+
+    """The method to use when ordering \`QuickbooksAccountMap\`."""
+    orderBy: [QuickbooksAccountMapOrderBy!] = [PRIMARY_KEY_ASC]
+  ): QuickbooksAccountMapConnection!
+
+  """Reads and enables pagination through a set of \`QuickbooksMigration\`."""
+  quickbooksMigrations(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: QuickbooksMigrationCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: QuickbooksMigrationFilter
+
+    """The method to use when ordering \`QuickbooksMigration\`."""
+    orderBy: [QuickbooksMigrationOrderBy!] = [PRIMARY_KEY_ASC]
+  ): QuickbooksMigrationConnection!
 }
 
 enum BookType {
@@ -7586,6 +9568,12 @@ input AccountFilter {
 
   """Some related \`journalLines\` exist."""
   journalLinesExist: Boolean
+
+  """Filter by the object’s \`reconciliationStatements\` relation."""
+  reconciliationStatements: AccountToManyReconciliationStatementFilter
+
+  """Some related \`reconciliationStatements\` exist."""
+  reconciliationStatementsExist: Boolean
 
   """Filter by the object’s \`book\` relation."""
   book: BookFilter
@@ -7870,6 +9858,42 @@ input BookFilter {
 
   """Some related \`payrollConnections\` exist."""
   payrollConnectionsExist: Boolean
+
+  """Filter by the object’s \`bookAccesses\` relation."""
+  bookAccesses: BookToManyBookAccessFilter
+
+  """Some related \`bookAccesses\` exist."""
+  bookAccessesExist: Boolean
+
+  """Filter by the object’s \`reconciliationStatements\` relation."""
+  reconciliationStatements: BookToManyReconciliationStatementFilter
+
+  """Some related \`reconciliationStatements\` exist."""
+  reconciliationStatementsExist: Boolean
+
+  """Filter by the object’s \`mileageLogs\` relation."""
+  mileageLogs: BookToManyMileageLogFilter
+
+  """Some related \`mileageLogs\` exist."""
+  mileageLogsExist: Boolean
+
+  """Filter by the object’s \`vehicles\` relation."""
+  vehicles: BookToManyVehicleFilter
+
+  """Some related \`vehicles\` exist."""
+  vehiclesExist: Boolean
+
+  """Filter by the object’s \`quickbooksAccountMaps\` relation."""
+  quickbooksAccountMaps: BookToManyQuickbooksAccountMapFilter
+
+  """Some related \`quickbooksAccountMaps\` exist."""
+  quickbooksAccountMapsExist: Boolean
+
+  """Filter by the object’s \`quickbooksMigrations\` relation."""
+  quickbooksMigrations: BookToManyQuickbooksMigrationFilter
+
+  """Some related \`quickbooksMigrations\` exist."""
+  quickbooksMigrationsExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [BookFilter!]
@@ -9283,6 +11307,317 @@ input PayrollConnectionFilter {
 }
 
 """
+A filter to be used against many \`BookAccess\` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyBookAccessFilter {
+  """
+  Every related \`BookAccess\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: BookAccessFilter
+
+  """
+  Some related \`BookAccess\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: BookAccessFilter
+
+  """
+  No related \`BookAccess\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: BookAccessFilter
+}
+
+"""
+A filter to be used against \`BookAccess\` object types. All fields are combined with a logical ‘and.’
+"""
+input BookAccessFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`bookId\` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s \`userId\` field."""
+  userId: StringFilter
+
+  """Filter by the object’s \`book\` relation."""
+  book: BookFilter
+
+  """Checks for all expressions in this list."""
+  and: [BookAccessFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [BookAccessFilter!]
+
+  """Negates the expression."""
+  not: BookAccessFilter
+}
+
+"""
+A filter to be used against many \`ReconciliationStatement\` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyReconciliationStatementFilter {
+  """
+  Every related \`ReconciliationStatement\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: ReconciliationStatementFilter
+
+  """
+  Some related \`ReconciliationStatement\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: ReconciliationStatementFilter
+
+  """
+  No related \`ReconciliationStatement\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: ReconciliationStatementFilter
+}
+
+"""
+A filter to be used against \`ReconciliationStatement\` object types. All fields are combined with a logical ‘and.’
+"""
+input ReconciliationStatementFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`bookId\` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s \`accountId\` field."""
+  accountId: UUIDFilter
+
+  """Filter by the object’s \`account\` relation."""
+  account: AccountFilter
+
+  """Filter by the object’s \`book\` relation."""
+  book: BookFilter
+
+  """Checks for all expressions in this list."""
+  and: [ReconciliationStatementFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [ReconciliationStatementFilter!]
+
+  """Negates the expression."""
+  not: ReconciliationStatementFilter
+}
+
+"""
+A filter to be used against many \`MileageLog\` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyMileageLogFilter {
+  """
+  Every related \`MileageLog\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: MileageLogFilter
+
+  """
+  Some related \`MileageLog\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: MileageLogFilter
+
+  """
+  No related \`MileageLog\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: MileageLogFilter
+}
+
+"""
+A filter to be used against \`MileageLog\` object types. All fields are combined with a logical ‘and.’
+"""
+input MileageLogFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`bookId\` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s \`vehicleId\` field."""
+  vehicleId: UUIDFilter
+
+  """Filter by the object’s \`date\` field."""
+  date: StringFilter
+
+  """Filter by the object’s \`book\` relation."""
+  book: BookFilter
+
+  """Filter by the object’s \`vehicle\` relation."""
+  vehicle: VehicleFilter
+
+  """Checks for all expressions in this list."""
+  and: [MileageLogFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [MileageLogFilter!]
+
+  """Negates the expression."""
+  not: MileageLogFilter
+}
+
+"""
+A filter to be used against \`Vehicle\` object types. All fields are combined with a logical ‘and.’
+"""
+input VehicleFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`bookId\` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s \`mileageLogs\` relation."""
+  mileageLogs: VehicleToManyMileageLogFilter
+
+  """Some related \`mileageLogs\` exist."""
+  mileageLogsExist: Boolean
+
+  """Filter by the object’s \`book\` relation."""
+  book: BookFilter
+
+  """Checks for all expressions in this list."""
+  and: [VehicleFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [VehicleFilter!]
+
+  """Negates the expression."""
+  not: VehicleFilter
+}
+
+"""
+A filter to be used against many \`MileageLog\` object types. All fields are combined with a logical ‘and.’
+"""
+input VehicleToManyMileageLogFilter {
+  """
+  Every related \`MileageLog\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: MileageLogFilter
+
+  """
+  Some related \`MileageLog\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: MileageLogFilter
+
+  """
+  No related \`MileageLog\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: MileageLogFilter
+}
+
+"""
+A filter to be used against many \`Vehicle\` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyVehicleFilter {
+  """
+  Every related \`Vehicle\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: VehicleFilter
+
+  """
+  Some related \`Vehicle\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: VehicleFilter
+
+  """
+  No related \`Vehicle\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: VehicleFilter
+}
+
+"""
+A filter to be used against many \`QuickbooksAccountMap\` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyQuickbooksAccountMapFilter {
+  """
+  Every related \`QuickbooksAccountMap\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: QuickbooksAccountMapFilter
+
+  """
+  Some related \`QuickbooksAccountMap\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: QuickbooksAccountMapFilter
+
+  """
+  No related \`QuickbooksAccountMap\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: QuickbooksAccountMapFilter
+}
+
+"""
+A filter to be used against \`QuickbooksAccountMap\` object types. All fields are combined with a logical ‘and.’
+"""
+input QuickbooksAccountMapFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`bookId\` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s \`qboAccountId\` field."""
+  qboAccountId: StringFilter
+
+  """Filter by the object’s \`book\` relation."""
+  book: BookFilter
+
+  """Filter by the object’s \`myfiAccount\` relation."""
+  myfiAccount: AccountFilter
+
+  """Checks for all expressions in this list."""
+  and: [QuickbooksAccountMapFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [QuickbooksAccountMapFilter!]
+
+  """Negates the expression."""
+  not: QuickbooksAccountMapFilter
+}
+
+"""
+A filter to be used against many \`QuickbooksMigration\` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyQuickbooksMigrationFilter {
+  """
+  Every related \`QuickbooksMigration\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: QuickbooksMigrationFilter
+
+  """
+  Some related \`QuickbooksMigration\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: QuickbooksMigrationFilter
+
+  """
+  No related \`QuickbooksMigration\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: QuickbooksMigrationFilter
+}
+
+"""
+A filter to be used against \`QuickbooksMigration\` object types. All fields are combined with a logical ‘and.’
+"""
+input QuickbooksMigrationFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`bookId\` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s \`book\` relation."""
+  book: BookFilter
+
+  """Filter by the object’s \`connectedAccount\` relation."""
+  connectedAccount: ConnectedAccountFilter
+
+  """Checks for all expressions in this list."""
+  and: [QuickbooksMigrationFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [QuickbooksMigrationFilter!]
+
+  """Negates the expression."""
+  not: QuickbooksMigrationFilter
+}
+
+"""
 A filter to be used against many \`JournalLine\` object types. All fields are combined with a logical ‘and.’
 """
 input AccountToManyJournalLineFilter {
@@ -9300,6 +11635,26 @@ input AccountToManyJournalLineFilter {
   No related \`JournalLine\` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
   none: JournalLineFilter
+}
+
+"""
+A filter to be used against many \`ReconciliationStatement\` object types. All fields are combined with a logical ‘and.’
+"""
+input AccountToManyReconciliationStatementFilter {
+  """
+  Every related \`ReconciliationStatement\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: ReconciliationStatementFilter
+
+  """
+  Some related \`ReconciliationStatement\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: ReconciliationStatementFilter
+
+  """
+  No related \`ReconciliationStatement\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: ReconciliationStatementFilter
 }
 
 """Methods to use when ordering \`Account\`."""
@@ -9508,6 +11863,8 @@ type ConnectedAccount implements Node {
   lastSyncedAt: Datetime
   createdAt: Datetime
   syncCursor: String
+  refreshToken: String
+  realmId: String
 
   """Reads a single \`Account\` that is related to this \`ConnectedAccount\`."""
   account: Account
@@ -10986,6 +13343,500 @@ enum PayrollConnectionOrderBy {
   STATUS_DESC
 }
 
+"""A connection to a list of \`BookAccess\` values."""
+type BookAccessConnection {
+  """A list of \`BookAccess\` objects."""
+  nodes: [BookAccess]!
+
+  """
+  A list of edges which contains the \`BookAccess\` and cursor to aid in pagination.
+  """
+  edges: [BookAccessEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* \`BookAccess\` you could get from the connection."""
+  totalCount: Int!
+}
+
+type BookAccess implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  userId: String!
+  role: String!
+  invitedBy: String
+  invitedAt: Datetime
+  createdAt: Datetime
+
+  """Reads a single \`Book\` that is related to this \`BookAccess\`."""
+  book: Book
+}
+
+"""A \`BookAccess\` edge in the connection."""
+type BookAccessEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`BookAccess\` at the end of the edge."""
+  node: BookAccess
+}
+
+"""
+A condition to be used against \`BookAccess\` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input BookAccessCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`bookId\` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s \`userId\` field."""
+  userId: String
+}
+
+"""Methods to use when ordering \`BookAccess\`."""
+enum BookAccessOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+  USER_ID_ASC
+  USER_ID_DESC
+}
+
+"""A connection to a list of \`ReconciliationStatement\` values."""
+type ReconciliationStatementConnection {
+  """A list of \`ReconciliationStatement\` objects."""
+  nodes: [ReconciliationStatement]!
+
+  """
+  A list of edges which contains the \`ReconciliationStatement\` and cursor to aid in pagination.
+  """
+  edges: [ReconciliationStatementEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* \`ReconciliationStatement\` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+type ReconciliationStatement implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  accountId: UUID!
+  statementDate: String!
+  statementBalance: BigFloat!
+  beginningBalance: BigFloat!
+  status: String!
+  completedAt: Datetime
+  discrepancy: BigFloat
+  createdAt: Datetime
+
+  """
+  Reads a single \`Account\` that is related to this \`ReconciliationStatement\`.
+  """
+  account: Account
+
+  """
+  Reads a single \`Book\` that is related to this \`ReconciliationStatement\`.
+  """
+  book: Book
+}
+
+"""A \`ReconciliationStatement\` edge in the connection."""
+type ReconciliationStatementEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`ReconciliationStatement\` at the end of the edge."""
+  node: ReconciliationStatement
+}
+
+"""
+A condition to be used against \`ReconciliationStatement\` object types. All
+fields are tested for equality and combined with a logical ‘and.’
+"""
+input ReconciliationStatementCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`bookId\` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s \`accountId\` field."""
+  accountId: UUID
+}
+
+"""Methods to use when ordering \`ReconciliationStatement\`."""
+enum ReconciliationStatementOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+  ACCOUNT_ID_ASC
+  ACCOUNT_ID_DESC
+}
+
+"""A connection to a list of \`MileageLog\` values."""
+type MileageLogConnection {
+  """A list of \`MileageLog\` objects."""
+  nodes: [MileageLog]!
+
+  """
+  A list of edges which contains the \`MileageLog\` and cursor to aid in pagination.
+  """
+  edges: [MileageLogEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* \`MileageLog\` you could get from the connection."""
+  totalCount: Int!
+}
+
+type MileageLog implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  vehicleId: UUID!
+  date: String!
+  description: String
+  origin: String
+  destination: String
+  odometerStart: BigFloat
+  odometerEnd: BigFloat
+  distance: BigFloat!
+  isRoundTrip: Boolean!
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """Reads a single \`Book\` that is related to this \`MileageLog\`."""
+  book: Book
+
+  """Reads a single \`Vehicle\` that is related to this \`MileageLog\`."""
+  vehicle: Vehicle
+}
+
+type Vehicle implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  name: String!
+  year: Int
+  make: String
+  model: String
+  dateInService: String
+  createdAt: Datetime
+
+  """Reads a single \`Book\` that is related to this \`Vehicle\`."""
+  book: Book
+
+  """Reads and enables pagination through a set of \`MileageLog\`."""
+  mileageLogs(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: MileageLogCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: MileageLogFilter
+
+    """The method to use when ordering \`MileageLog\`."""
+    orderBy: [MileageLogOrderBy!] = [PRIMARY_KEY_ASC]
+  ): MileageLogConnection!
+}
+
+"""
+A condition to be used against \`MileageLog\` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input MileageLogCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`bookId\` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s \`vehicleId\` field."""
+  vehicleId: UUID
+
+  """Checks for equality with the object’s \`date\` field."""
+  date: String
+}
+
+"""Methods to use when ordering \`MileageLog\`."""
+enum MileageLogOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+  VEHICLE_ID_ASC
+  VEHICLE_ID_DESC
+  DATE_ASC
+  DATE_DESC
+}
+
+"""A \`MileageLog\` edge in the connection."""
+type MileageLogEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`MileageLog\` at the end of the edge."""
+  node: MileageLog
+}
+
+"""A connection to a list of \`Vehicle\` values."""
+type VehicleConnection {
+  """A list of \`Vehicle\` objects."""
+  nodes: [Vehicle]!
+
+  """
+  A list of edges which contains the \`Vehicle\` and cursor to aid in pagination.
+  """
+  edges: [VehicleEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* \`Vehicle\` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A \`Vehicle\` edge in the connection."""
+type VehicleEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`Vehicle\` at the end of the edge."""
+  node: Vehicle
+}
+
+"""
+A condition to be used against \`Vehicle\` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input VehicleCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`bookId\` field."""
+  bookId: UUID
+}
+
+"""Methods to use when ordering \`Vehicle\`."""
+enum VehicleOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+}
+
+"""A connection to a list of \`QuickbooksAccountMap\` values."""
+type QuickbooksAccountMapConnection {
+  """A list of \`QuickbooksAccountMap\` objects."""
+  nodes: [QuickbooksAccountMap]!
+
+  """
+  A list of edges which contains the \`QuickbooksAccountMap\` and cursor to aid in pagination.
+  """
+  edges: [QuickbooksAccountMapEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* \`QuickbooksAccountMap\` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+type QuickbooksAccountMap implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  qboAccountId: String!
+  qboAccountName: String
+  qboAccountType: String
+  myfiAccountId: UUID!
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """Reads a single \`Book\` that is related to this \`QuickbooksAccountMap\`."""
+  book: Book
+
+  """
+  Reads a single \`Account\` that is related to this \`QuickbooksAccountMap\`.
+  """
+  myfiAccount: Account
+}
+
+"""A \`QuickbooksAccountMap\` edge in the connection."""
+type QuickbooksAccountMapEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`QuickbooksAccountMap\` at the end of the edge."""
+  node: QuickbooksAccountMap
+}
+
+"""
+A condition to be used against \`QuickbooksAccountMap\` object types. All fields
+are tested for equality and combined with a logical ‘and.’
+"""
+input QuickbooksAccountMapCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`bookId\` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s \`qboAccountId\` field."""
+  qboAccountId: String
+}
+
+"""Methods to use when ordering \`QuickbooksAccountMap\`."""
+enum QuickbooksAccountMapOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+  QBO_ACCOUNT_ID_ASC
+  QBO_ACCOUNT_ID_DESC
+}
+
+"""A connection to a list of \`QuickbooksMigration\` values."""
+type QuickbooksMigrationConnection {
+  """A list of \`QuickbooksMigration\` objects."""
+  nodes: [QuickbooksMigration]!
+
+  """
+  A list of edges which contains the \`QuickbooksMigration\` and cursor to aid in pagination.
+  """
+  edges: [QuickbooksMigrationEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* \`QuickbooksMigration\` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+type QuickbooksMigration implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  connectedAccountId: UUID!
+  status: String!
+  periodStart: Datetime
+  periodEnd: Datetime
+  entriesImported: Int!
+  errorMessage: String
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """Reads a single \`Book\` that is related to this \`QuickbooksMigration\`."""
+  book: Book
+
+  """
+  Reads a single \`ConnectedAccount\` that is related to this \`QuickbooksMigration\`.
+  """
+  connectedAccount: ConnectedAccount
+}
+
+"""A \`QuickbooksMigration\` edge in the connection."""
+type QuickbooksMigrationEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`QuickbooksMigration\` at the end of the edge."""
+  node: QuickbooksMigration
+}
+
+"""
+A condition to be used against \`QuickbooksMigration\` object types. All fields
+are tested for equality and combined with a logical ‘and.’
+"""
+input QuickbooksMigrationCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`bookId\` field."""
+  bookId: UUID
+}
+
+"""Methods to use when ordering \`QuickbooksMigration\`."""
+enum QuickbooksMigrationOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+}
+
 type _DrizzleMigration implements Node {
   """
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
@@ -11002,6 +13853,23 @@ max value for a JavaScript number. Therefore all big integers will be output as
 strings and not numbers.
 """
 scalar BigInt
+
+type ImportProfile implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  name: String!
+  columnMap: JSON!
+  headerRows: String!
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """Reads a single \`Book\` that is related to this \`ImportProfile\`."""
+  book: Book
+}
 
 """A connection to a list of \`_DrizzleMigration\` values."""
 type _DrizzleMigrationConnection {
@@ -11059,6 +13927,70 @@ input _DrizzleMigrationFilter {
 
 """Methods to use when ordering \`_DrizzleMigration\`."""
 enum _DrizzleMigrationOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+}
+
+"""A connection to a list of \`ImportProfile\` values."""
+type ImportProfileConnection {
+  """A list of \`ImportProfile\` objects."""
+  nodes: [ImportProfile]!
+
+  """
+  A list of edges which contains the \`ImportProfile\` and cursor to aid in pagination.
+  """
+  edges: [ImportProfileEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* \`ImportProfile\` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A \`ImportProfile\` edge in the connection."""
+type ImportProfileEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`ImportProfile\` at the end of the edge."""
+  node: ImportProfile
+}
+
+"""
+A condition to be used against \`ImportProfile\` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input ImportProfileCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+}
+
+"""
+A filter to be used against \`ImportProfile\` object types. All fields are combined with a logical ‘and.’
+"""
+input ImportProfileFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`book\` relation."""
+  book: BookFilter
+
+  """Checks for all expressions in this list."""
+  and: [ImportProfileFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [ImportProfileFilter!]
+
+  """Negates the expression."""
+  not: ImportProfileFilter
+}
+
+"""Methods to use when ordering \`ImportProfile\`."""
+enum ImportProfileOrderBy {
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
@@ -11150,6 +14082,14 @@ type Mutation {
     input: CreateAccountMappingInput!
   ): CreateAccountMappingPayload
 
+  """Creates a single \`BookAccess\`."""
+  createBookAccess(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateBookAccessInput!
+  ): CreateBookAccessPayload
+
   """Creates a single \`TaxJurisdiction\`."""
   createTaxJurisdiction(
     """
@@ -11157,14 +14097,6 @@ type Mutation {
     """
     input: CreateTaxJurisdictionInput!
   ): CreateTaxJurisdictionPayload
-
-  """Creates a single \`JournalLine\`."""
-  createJournalLine(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateJournalLineInput!
-  ): CreateJournalLinePayload
 
   """Creates a single \`Tag\`."""
   createTag(
@@ -11174,6 +14106,30 @@ type Mutation {
     input: CreateTagInput!
   ): CreateTagPayload
 
+  """Creates a single \`QuickbooksAccountMap\`."""
+  createQuickbooksAccountMap(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateQuickbooksAccountMapInput!
+  ): CreateQuickbooksAccountMapPayload
+
+  """Creates a single \`Vehicle\`."""
+  createVehicle(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateVehicleInput!
+  ): CreateVehiclePayload
+
+  """Creates a single \`JournalLine\`."""
+  createJournalLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateJournalLineInput!
+  ): CreateJournalLinePayload
+
   """Creates a single \`SavingsGoal\`."""
   createSavingsGoal(
     """
@@ -11181,6 +14137,14 @@ type Mutation {
     """
     input: CreateSavingsGoalInput!
   ): CreateSavingsGoalPayload
+
+  """Creates a single \`ImportProfile\`."""
+  createImportProfile(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateImportProfileInput!
+  ): CreateImportProfilePayload
 
   """Creates a single \`NetWorthSnapshot\`."""
   createNetWorthSnapshot(
@@ -11190,14 +14154,6 @@ type Mutation {
     input: CreateNetWorthSnapshotInput!
   ): CreateNetWorthSnapshotPayload
 
-  """Creates a single \`PayrollConnection\`."""
-  createPayrollConnection(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreatePayrollConnectionInput!
-  ): CreatePayrollConnectionPayload
-
   """Creates a single \`AccountingPeriod\`."""
   createAccountingPeriod(
     """
@@ -11206,6 +14162,30 @@ type Mutation {
     input: CreateAccountingPeriodInput!
   ): CreateAccountingPeriodPayload
 
+  """Creates a single \`QuickbooksMigration\`."""
+  createQuickbooksMigration(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateQuickbooksMigrationInput!
+  ): CreateQuickbooksMigrationPayload
+
+  """Creates a single \`PayrollConnection\`."""
+  createPayrollConnection(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreatePayrollConnectionInput!
+  ): CreatePayrollConnectionPayload
+
+  """Creates a single \`ReconciliationStatement\`."""
+  createReconciliationStatement(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateReconciliationStatementInput!
+  ): CreateReconciliationStatementPayload
+
   """Creates a single \`CryptoLot\`."""
   createCryptoLot(
     """
@@ -11213,6 +14193,14 @@ type Mutation {
     """
     input: CreateCryptoLotInput!
   ): CreateCryptoLotPayload
+
+  """Creates a single \`MileageLog\`."""
+  createMileageLog(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateMileageLogInput!
+  ): CreateMileageLogPayload
 
   """Creates a single \`Book\`."""
   createBook(
@@ -11373,6 +14361,24 @@ type Mutation {
   ): UpdateAccountMappingPayload
 
   """
+  Updates a single \`BookAccess\` using its globally unique id and a patch.
+  """
+  updateBookAccessById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateBookAccessByIdInput!
+  ): UpdateBookAccessPayload
+
+  """Updates a single \`BookAccess\` using a unique key and a patch."""
+  updateBookAccess(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateBookAccessInput!
+  ): UpdateBookAccessPayload
+
+  """
   Updates a single \`TaxJurisdiction\` using its globally unique id and a patch.
   """
   updateTaxJurisdictionById(
@@ -11389,6 +14395,58 @@ type Mutation {
     """
     input: UpdateTaxJurisdictionInput!
   ): UpdateTaxJurisdictionPayload
+
+  """Updates a single \`Tag\` using its globally unique id and a patch."""
+  updateTagById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateTagByIdInput!
+  ): UpdateTagPayload
+
+  """Updates a single \`Tag\` using a unique key and a patch."""
+  updateTag(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateTagInput!
+  ): UpdateTagPayload
+
+  """
+  Updates a single \`QuickbooksAccountMap\` using its globally unique id and a patch.
+  """
+  updateQuickbooksAccountMapById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateQuickbooksAccountMapByIdInput!
+  ): UpdateQuickbooksAccountMapPayload
+
+  """
+  Updates a single \`QuickbooksAccountMap\` using a unique key and a patch.
+  """
+  updateQuickbooksAccountMap(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateQuickbooksAccountMapInput!
+  ): UpdateQuickbooksAccountMapPayload
+
+  """Updates a single \`Vehicle\` using its globally unique id and a patch."""
+  updateVehicleById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateVehicleByIdInput!
+  ): UpdateVehiclePayload
+
+  """Updates a single \`Vehicle\` using a unique key and a patch."""
+  updateVehicle(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateVehicleInput!
+  ): UpdateVehiclePayload
 
   """
   Updates a single \`JournalLine\` using its globally unique id and a patch.
@@ -11407,22 +14465,6 @@ type Mutation {
     """
     input: UpdateJournalLineInput!
   ): UpdateJournalLinePayload
-
-  """Updates a single \`Tag\` using its globally unique id and a patch."""
-  updateTagById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateTagByIdInput!
-  ): UpdateTagPayload
-
-  """Updates a single \`Tag\` using a unique key and a patch."""
-  updateTag(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateTagInput!
-  ): UpdateTagPayload
 
   """
   Updates a single \`SavingsGoal\` using its globally unique id and a patch.
@@ -11443,6 +14485,24 @@ type Mutation {
   ): UpdateSavingsGoalPayload
 
   """
+  Updates a single \`ImportProfile\` using its globally unique id and a patch.
+  """
+  updateImportProfileById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateImportProfileByIdInput!
+  ): UpdateImportProfilePayload
+
+  """Updates a single \`ImportProfile\` using a unique key and a patch."""
+  updateImportProfile(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateImportProfileInput!
+  ): UpdateImportProfilePayload
+
+  """
   Updates a single \`NetWorthSnapshot\` using its globally unique id and a patch.
   """
   updateNetWorthSnapshotById(
@@ -11459,6 +14519,42 @@ type Mutation {
     """
     input: UpdateNetWorthSnapshotInput!
   ): UpdateNetWorthSnapshotPayload
+
+  """
+  Updates a single \`AccountingPeriod\` using its globally unique id and a patch.
+  """
+  updateAccountingPeriodById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateAccountingPeriodByIdInput!
+  ): UpdateAccountingPeriodPayload
+
+  """Updates a single \`AccountingPeriod\` using a unique key and a patch."""
+  updateAccountingPeriod(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateAccountingPeriodInput!
+  ): UpdateAccountingPeriodPayload
+
+  """
+  Updates a single \`QuickbooksMigration\` using its globally unique id and a patch.
+  """
+  updateQuickbooksMigrationById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateQuickbooksMigrationByIdInput!
+  ): UpdateQuickbooksMigrationPayload
+
+  """Updates a single \`QuickbooksMigration\` using a unique key and a patch."""
+  updateQuickbooksMigration(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateQuickbooksMigrationInput!
+  ): UpdateQuickbooksMigrationPayload
 
   """
   Updates a single \`PayrollConnection\` using its globally unique id and a patch.
@@ -11479,22 +14575,24 @@ type Mutation {
   ): UpdatePayrollConnectionPayload
 
   """
-  Updates a single \`AccountingPeriod\` using its globally unique id and a patch.
+  Updates a single \`ReconciliationStatement\` using its globally unique id and a patch.
   """
-  updateAccountingPeriodById(
+  updateReconciliationStatementById(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: UpdateAccountingPeriodByIdInput!
-  ): UpdateAccountingPeriodPayload
+    input: UpdateReconciliationStatementByIdInput!
+  ): UpdateReconciliationStatementPayload
 
-  """Updates a single \`AccountingPeriod\` using a unique key and a patch."""
-  updateAccountingPeriod(
+  """
+  Updates a single \`ReconciliationStatement\` using a unique key and a patch.
+  """
+  updateReconciliationStatement(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: UpdateAccountingPeriodInput!
-  ): UpdateAccountingPeriodPayload
+    input: UpdateReconciliationStatementInput!
+  ): UpdateReconciliationStatementPayload
 
   """Updates a single \`CryptoLot\` using its globally unique id and a patch."""
   updateCryptoLotById(
@@ -11511,6 +14609,24 @@ type Mutation {
     """
     input: UpdateCryptoLotInput!
   ): UpdateCryptoLotPayload
+
+  """
+  Updates a single \`MileageLog\` using its globally unique id and a patch.
+  """
+  updateMileageLogById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateMileageLogByIdInput!
+  ): UpdateMileageLogPayload
+
+  """Updates a single \`MileageLog\` using a unique key and a patch."""
+  updateMileageLog(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateMileageLogInput!
+  ): UpdateMileageLogPayload
 
   """Updates a single \`Book\` using its globally unique id and a patch."""
   updateBookById(
@@ -11768,6 +14884,22 @@ type Mutation {
     input: DeleteAccountMappingInput!
   ): DeleteAccountMappingPayload
 
+  """Deletes a single \`BookAccess\` using its globally unique id."""
+  deleteBookAccessById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteBookAccessByIdInput!
+  ): DeleteBookAccessPayload
+
+  """Deletes a single \`BookAccess\` using a unique key."""
+  deleteBookAccess(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteBookAccessInput!
+  ): DeleteBookAccessPayload
+
   """Deletes a single \`TaxJurisdiction\` using its globally unique id."""
   deleteTaxJurisdictionById(
     """
@@ -11783,22 +14915,6 @@ type Mutation {
     """
     input: DeleteTaxJurisdictionInput!
   ): DeleteTaxJurisdictionPayload
-
-  """Deletes a single \`JournalLine\` using its globally unique id."""
-  deleteJournalLineById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteJournalLineByIdInput!
-  ): DeleteJournalLinePayload
-
-  """Deletes a single \`JournalLine\` using a unique key."""
-  deleteJournalLine(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteJournalLineInput!
-  ): DeleteJournalLinePayload
 
   """Deletes a single \`Tag\` using its globally unique id."""
   deleteTagById(
@@ -11816,6 +14932,54 @@ type Mutation {
     input: DeleteTagInput!
   ): DeleteTagPayload
 
+  """Deletes a single \`QuickbooksAccountMap\` using its globally unique id."""
+  deleteQuickbooksAccountMapById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteQuickbooksAccountMapByIdInput!
+  ): DeleteQuickbooksAccountMapPayload
+
+  """Deletes a single \`QuickbooksAccountMap\` using a unique key."""
+  deleteQuickbooksAccountMap(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteQuickbooksAccountMapInput!
+  ): DeleteQuickbooksAccountMapPayload
+
+  """Deletes a single \`Vehicle\` using its globally unique id."""
+  deleteVehicleById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteVehicleByIdInput!
+  ): DeleteVehiclePayload
+
+  """Deletes a single \`Vehicle\` using a unique key."""
+  deleteVehicle(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteVehicleInput!
+  ): DeleteVehiclePayload
+
+  """Deletes a single \`JournalLine\` using its globally unique id."""
+  deleteJournalLineById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteJournalLineByIdInput!
+  ): DeleteJournalLinePayload
+
+  """Deletes a single \`JournalLine\` using a unique key."""
+  deleteJournalLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteJournalLineInput!
+  ): DeleteJournalLinePayload
+
   """Deletes a single \`SavingsGoal\` using its globally unique id."""
   deleteSavingsGoalById(
     """
@@ -11831,6 +14995,22 @@ type Mutation {
     """
     input: DeleteSavingsGoalInput!
   ): DeleteSavingsGoalPayload
+
+  """Deletes a single \`ImportProfile\` using its globally unique id."""
+  deleteImportProfileById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteImportProfileByIdInput!
+  ): DeleteImportProfilePayload
+
+  """Deletes a single \`ImportProfile\` using a unique key."""
+  deleteImportProfile(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteImportProfileInput!
+  ): DeleteImportProfilePayload
 
   """Deletes a single \`NetWorthSnapshot\` using its globally unique id."""
   deleteNetWorthSnapshotById(
@@ -11848,22 +15028,6 @@ type Mutation {
     input: DeleteNetWorthSnapshotInput!
   ): DeleteNetWorthSnapshotPayload
 
-  """Deletes a single \`PayrollConnection\` using its globally unique id."""
-  deletePayrollConnectionById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeletePayrollConnectionByIdInput!
-  ): DeletePayrollConnectionPayload
-
-  """Deletes a single \`PayrollConnection\` using a unique key."""
-  deletePayrollConnection(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeletePayrollConnectionInput!
-  ): DeletePayrollConnectionPayload
-
   """Deletes a single \`AccountingPeriod\` using its globally unique id."""
   deleteAccountingPeriodById(
     """
@@ -11880,6 +15044,56 @@ type Mutation {
     input: DeleteAccountingPeriodInput!
   ): DeleteAccountingPeriodPayload
 
+  """Deletes a single \`QuickbooksMigration\` using its globally unique id."""
+  deleteQuickbooksMigrationById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteQuickbooksMigrationByIdInput!
+  ): DeleteQuickbooksMigrationPayload
+
+  """Deletes a single \`QuickbooksMigration\` using a unique key."""
+  deleteQuickbooksMigration(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteQuickbooksMigrationInput!
+  ): DeleteQuickbooksMigrationPayload
+
+  """Deletes a single \`PayrollConnection\` using its globally unique id."""
+  deletePayrollConnectionById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeletePayrollConnectionByIdInput!
+  ): DeletePayrollConnectionPayload
+
+  """Deletes a single \`PayrollConnection\` using a unique key."""
+  deletePayrollConnection(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeletePayrollConnectionInput!
+  ): DeletePayrollConnectionPayload
+
+  """
+  Deletes a single \`ReconciliationStatement\` using its globally unique id.
+  """
+  deleteReconciliationStatementById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteReconciliationStatementByIdInput!
+  ): DeleteReconciliationStatementPayload
+
+  """Deletes a single \`ReconciliationStatement\` using a unique key."""
+  deleteReconciliationStatement(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteReconciliationStatementInput!
+  ): DeleteReconciliationStatementPayload
+
   """Deletes a single \`CryptoLot\` using its globally unique id."""
   deleteCryptoLotById(
     """
@@ -11895,6 +15109,22 @@ type Mutation {
     """
     input: DeleteCryptoLotInput!
   ): DeleteCryptoLotPayload
+
+  """Deletes a single \`MileageLog\` using its globally unique id."""
+  deleteMileageLogById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteMileageLogByIdInput!
+  ): DeleteMileageLogPayload
+
+  """Deletes a single \`MileageLog\` using a unique key."""
+  deleteMileageLog(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteMileageLogInput!
+  ): DeleteMileageLogPayload
 
   """Deletes a single \`Book\` using its globally unique id."""
   deleteBookById(
@@ -12246,6 +15476,52 @@ input AccountMappingInput {
   updatedAt: Datetime
 }
 
+"""The output of our create \`BookAccess\` mutation."""
+type CreateBookAccessPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`BookAccess\` that was created by this mutation."""
+  bookAccess: BookAccess
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`BookAccess\`. May be used by Relay 1."""
+  bookAccessEdge(
+    """The method to use when ordering \`BookAccess\`."""
+    orderBy: [BookAccessOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BookAccessEdge
+}
+
+"""All input for the create \`BookAccess\` mutation."""
+input CreateBookAccessInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`BookAccess\` to be created by this mutation."""
+  bookAccess: BookAccessInput!
+}
+
+"""An input for mutations affecting \`BookAccess\`"""
+input BookAccessInput {
+  rowId: UUID
+  bookId: UUID!
+  userId: String!
+  role: String!
+  invitedBy: String
+  invitedAt: Datetime
+  createdAt: Datetime
+}
+
 """The output of our create \`TaxJurisdiction\` mutation."""
 type CreateTaxJurisdictionPayload {
   """
@@ -12292,51 +15568,6 @@ input TaxJurisdictionInput {
   createdAt: Datetime
 }
 
-"""The output of our create \`JournalLine\` mutation."""
-type CreateJournalLinePayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`JournalLine\` that was created by this mutation."""
-  journalLine: JournalLine
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`JournalLine\`. May be used by Relay 1."""
-  journalLineEdge(
-    """The method to use when ordering \`JournalLine\`."""
-    orderBy: [JournalLineOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): JournalLineEdge
-}
-
-"""All input for the create \`JournalLine\` mutation."""
-input CreateJournalLineInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The \`JournalLine\` to be created by this mutation."""
-  journalLine: JournalLineInput!
-}
-
-"""An input for mutations affecting \`JournalLine\`"""
-input JournalLineInput {
-  rowId: UUID
-  journalEntryId: UUID!
-  accountId: UUID!
-  debit: BigFloat
-  credit: BigFloat
-  memo: String
-}
-
 """The output of our create \`Tag\` mutation."""
 type CreateTagPayload {
   """
@@ -12380,6 +15611,146 @@ input TagInput {
   code: String
   isActive: Boolean
   createdAt: Datetime
+}
+
+"""The output of our create \`QuickbooksAccountMap\` mutation."""
+type CreateQuickbooksAccountMapPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`QuickbooksAccountMap\` that was created by this mutation."""
+  quickbooksAccountMap: QuickbooksAccountMap
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`QuickbooksAccountMap\`. May be used by Relay 1."""
+  quickbooksAccountMapEdge(
+    """The method to use when ordering \`QuickbooksAccountMap\`."""
+    orderBy: [QuickbooksAccountMapOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): QuickbooksAccountMapEdge
+}
+
+"""All input for the create \`QuickbooksAccountMap\` mutation."""
+input CreateQuickbooksAccountMapInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`QuickbooksAccountMap\` to be created by this mutation."""
+  quickbooksAccountMap: QuickbooksAccountMapInput!
+}
+
+"""An input for mutations affecting \`QuickbooksAccountMap\`"""
+input QuickbooksAccountMapInput {
+  rowId: UUID
+  bookId: UUID!
+  qboAccountId: String!
+  qboAccountName: String
+  qboAccountType: String
+  myfiAccountId: UUID!
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""The output of our create \`Vehicle\` mutation."""
+type CreateVehiclePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Vehicle\` that was created by this mutation."""
+  vehicle: Vehicle
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Vehicle\`. May be used by Relay 1."""
+  vehicleEdge(
+    """The method to use when ordering \`Vehicle\`."""
+    orderBy: [VehicleOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): VehicleEdge
+}
+
+"""All input for the create \`Vehicle\` mutation."""
+input CreateVehicleInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`Vehicle\` to be created by this mutation."""
+  vehicle: VehicleInput!
+}
+
+"""An input for mutations affecting \`Vehicle\`"""
+input VehicleInput {
+  rowId: UUID
+  bookId: UUID!
+  name: String!
+  year: Int
+  make: String
+  model: String
+  dateInService: String
+  createdAt: Datetime
+}
+
+"""The output of our create \`JournalLine\` mutation."""
+type CreateJournalLinePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`JournalLine\` that was created by this mutation."""
+  journalLine: JournalLine
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`JournalLine\`. May be used by Relay 1."""
+  journalLineEdge(
+    """The method to use when ordering \`JournalLine\`."""
+    orderBy: [JournalLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): JournalLineEdge
+}
+
+"""All input for the create \`JournalLine\` mutation."""
+input CreateJournalLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`JournalLine\` to be created by this mutation."""
+  journalLine: JournalLineInput!
+}
+
+"""An input for mutations affecting \`JournalLine\`"""
+input JournalLineInput {
+  rowId: UUID
+  journalEntryId: UUID!
+  accountId: UUID!
+  debit: BigFloat
+  credit: BigFloat
+  memo: String
+  cleared: Boolean
 }
 
 """The output of our create \`SavingsGoal\` mutation."""
@@ -12429,6 +15800,52 @@ input SavingsGoalInput {
   updatedAt: Datetime
 }
 
+"""The output of our create \`ImportProfile\` mutation."""
+type CreateImportProfilePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`ImportProfile\` that was created by this mutation."""
+  importProfile: ImportProfile
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`ImportProfile\`. May be used by Relay 1."""
+  importProfileEdge(
+    """The method to use when ordering \`ImportProfile\`."""
+    orderBy: [ImportProfileOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ImportProfileEdge
+}
+
+"""All input for the create \`ImportProfile\` mutation."""
+input CreateImportProfileInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`ImportProfile\` to be created by this mutation."""
+  importProfile: ImportProfileInput!
+}
+
+"""An input for mutations affecting \`ImportProfile\`"""
+input ImportProfileInput {
+  rowId: UUID
+  bookId: UUID!
+  name: String!
+  columnMap: JSON!
+  headerRows: String
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
 """The output of our create \`NetWorthSnapshot\` mutation."""
 type CreateNetWorthSnapshotPayload {
   """
@@ -12473,55 +15890,6 @@ input NetWorthSnapshotInput {
   totalLiabilities: BigFloat!
   netWorth: BigFloat!
   breakdown: String
-  createdAt: Datetime
-}
-
-"""The output of our create \`PayrollConnection\` mutation."""
-type CreatePayrollConnectionPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`PayrollConnection\` that was created by this mutation."""
-  payrollConnection: PayrollConnection
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`PayrollConnection\`. May be used by Relay 1."""
-  payrollConnectionEdge(
-    """The method to use when ordering \`PayrollConnection\`."""
-    orderBy: [PayrollConnectionOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): PayrollConnectionEdge
-}
-
-"""All input for the create \`PayrollConnection\` mutation."""
-input CreatePayrollConnectionInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The \`PayrollConnection\` to be created by this mutation."""
-  payrollConnection: PayrollConnectionInput!
-}
-
-"""An input for mutations affecting \`PayrollConnection\`"""
-input PayrollConnectionInput {
-  rowId: UUID
-  bookId: UUID!
-  provider: String!
-  accessToken: String
-  refreshToken: String
-  companyId: String
-  lastSyncedAt: Datetime
-  syncCursor: String
-  status: String
   createdAt: Datetime
 }
 
@@ -12574,6 +15942,153 @@ input AccountingPeriodInput {
   createdAt: Datetime
 }
 
+"""The output of our create \`QuickbooksMigration\` mutation."""
+type CreateQuickbooksMigrationPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`QuickbooksMigration\` that was created by this mutation."""
+  quickbooksMigration: QuickbooksMigration
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`QuickbooksMigration\`. May be used by Relay 1."""
+  quickbooksMigrationEdge(
+    """The method to use when ordering \`QuickbooksMigration\`."""
+    orderBy: [QuickbooksMigrationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): QuickbooksMigrationEdge
+}
+
+"""All input for the create \`QuickbooksMigration\` mutation."""
+input CreateQuickbooksMigrationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`QuickbooksMigration\` to be created by this mutation."""
+  quickbooksMigration: QuickbooksMigrationInput!
+}
+
+"""An input for mutations affecting \`QuickbooksMigration\`"""
+input QuickbooksMigrationInput {
+  rowId: UUID
+  bookId: UUID!
+  connectedAccountId: UUID!
+  status: String
+  periodStart: Datetime
+  periodEnd: Datetime
+  entriesImported: Int
+  errorMessage: String
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""The output of our create \`PayrollConnection\` mutation."""
+type CreatePayrollConnectionPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`PayrollConnection\` that was created by this mutation."""
+  payrollConnection: PayrollConnection
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`PayrollConnection\`. May be used by Relay 1."""
+  payrollConnectionEdge(
+    """The method to use when ordering \`PayrollConnection\`."""
+    orderBy: [PayrollConnectionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): PayrollConnectionEdge
+}
+
+"""All input for the create \`PayrollConnection\` mutation."""
+input CreatePayrollConnectionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`PayrollConnection\` to be created by this mutation."""
+  payrollConnection: PayrollConnectionInput!
+}
+
+"""An input for mutations affecting \`PayrollConnection\`"""
+input PayrollConnectionInput {
+  rowId: UUID
+  bookId: UUID!
+  provider: String!
+  accessToken: String
+  refreshToken: String
+  companyId: String
+  lastSyncedAt: Datetime
+  syncCursor: String
+  status: String
+  createdAt: Datetime
+}
+
+"""The output of our create \`ReconciliationStatement\` mutation."""
+type CreateReconciliationStatementPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`ReconciliationStatement\` that was created by this mutation."""
+  reconciliationStatement: ReconciliationStatement
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`ReconciliationStatement\`. May be used by Relay 1."""
+  reconciliationStatementEdge(
+    """The method to use when ordering \`ReconciliationStatement\`."""
+    orderBy: [ReconciliationStatementOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ReconciliationStatementEdge
+}
+
+"""All input for the create \`ReconciliationStatement\` mutation."""
+input CreateReconciliationStatementInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`ReconciliationStatement\` to be created by this mutation."""
+  reconciliationStatement: ReconciliationStatementInput!
+}
+
+"""An input for mutations affecting \`ReconciliationStatement\`"""
+input ReconciliationStatementInput {
+  rowId: UUID
+  bookId: UUID!
+  accountId: UUID!
+  statementDate: String!
+  statementBalance: BigFloat!
+  beginningBalance: BigFloat!
+  status: String
+  completedAt: Datetime
+  discrepancy: BigFloat
+  createdAt: Datetime
+}
+
 """The output of our create \`CryptoLot\` mutation."""
 type CreateCryptoLotPayload {
   """
@@ -12621,6 +16136,58 @@ input CryptoLotInput {
   proceedsPerUnit: BigFloat
   journalEntryId: UUID
   createdAt: Datetime
+}
+
+"""The output of our create \`MileageLog\` mutation."""
+type CreateMileageLogPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`MileageLog\` that was created by this mutation."""
+  mileageLog: MileageLog
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`MileageLog\`. May be used by Relay 1."""
+  mileageLogEdge(
+    """The method to use when ordering \`MileageLog\`."""
+    orderBy: [MileageLogOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): MileageLogEdge
+}
+
+"""All input for the create \`MileageLog\` mutation."""
+input CreateMileageLogInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`MileageLog\` to be created by this mutation."""
+  mileageLog: MileageLogInput!
+}
+
+"""An input for mutations affecting \`MileageLog\`"""
+input MileageLogInput {
+  rowId: UUID
+  bookId: UUID!
+  vehicleId: UUID!
+  date: String!
+  description: String
+  origin: String
+  destination: String
+  odometerStart: BigFloat
+  odometerEnd: BigFloat
+  distance: BigFloat!
+  isRoundTrip: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
 }
 
 """The output of our create \`Book\` mutation."""
@@ -13183,6 +16750,8 @@ input ConnectedAccountInput {
   lastSyncedAt: Datetime
   createdAt: Datetime
   syncCursor: String
+  refreshToken: String
+  realmId: String
 }
 
 """The output of our update \`JournalLineTag\` mutation."""
@@ -13454,6 +17023,76 @@ input UpdateAccountMappingInput {
   patch: AccountMappingPatch!
 }
 
+"""The output of our update \`BookAccess\` mutation."""
+type UpdateBookAccessPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`BookAccess\` that was updated by this mutation."""
+  bookAccess: BookAccess
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`BookAccess\`. May be used by Relay 1."""
+  bookAccessEdge(
+    """The method to use when ordering \`BookAccess\`."""
+    orderBy: [BookAccessOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BookAccessEdge
+}
+
+"""All input for the \`updateBookAccessById\` mutation."""
+input UpdateBookAccessByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`BookAccess\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`BookAccess\` being updated.
+  """
+  patch: BookAccessPatch!
+}
+
+"""
+Represents an update to a \`BookAccess\`. Fields that are set will be updated.
+"""
+input BookAccessPatch {
+  rowId: UUID
+  bookId: UUID
+  userId: String
+  role: String
+  invitedBy: String
+  invitedAt: Datetime
+  createdAt: Datetime
+}
+
+"""All input for the \`updateBookAccess\` mutation."""
+input UpdateBookAccessInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`BookAccess\` being updated.
+  """
+  patch: BookAccessPatch!
+}
+
 """The output of our update \`TaxJurisdiction\` mutation."""
 type UpdateTaxJurisdictionPayload {
   """
@@ -13524,75 +17163,6 @@ input UpdateTaxJurisdictionInput {
   patch: TaxJurisdictionPatch!
 }
 
-"""The output of our update \`JournalLine\` mutation."""
-type UpdateJournalLinePayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`JournalLine\` that was updated by this mutation."""
-  journalLine: JournalLine
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`JournalLine\`. May be used by Relay 1."""
-  journalLineEdge(
-    """The method to use when ordering \`JournalLine\`."""
-    orderBy: [JournalLineOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): JournalLineEdge
-}
-
-"""All input for the \`updateJournalLineById\` mutation."""
-input UpdateJournalLineByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`JournalLine\` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the \`JournalLine\` being updated.
-  """
-  patch: JournalLinePatch!
-}
-
-"""
-Represents an update to a \`JournalLine\`. Fields that are set will be updated.
-"""
-input JournalLinePatch {
-  rowId: UUID
-  journalEntryId: UUID
-  accountId: UUID
-  debit: BigFloat
-  credit: BigFloat
-  memo: String
-}
-
-"""All input for the \`updateJournalLine\` mutation."""
-input UpdateJournalLineInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the \`JournalLine\` being updated.
-  """
-  patch: JournalLinePatch!
-}
-
 """The output of our update \`Tag\` mutation."""
 type UpdateTagPayload {
   """
@@ -13658,6 +17228,218 @@ input UpdateTagInput {
   An object where the defined keys will be set on the \`Tag\` being updated.
   """
   patch: TagPatch!
+}
+
+"""The output of our update \`QuickbooksAccountMap\` mutation."""
+type UpdateQuickbooksAccountMapPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`QuickbooksAccountMap\` that was updated by this mutation."""
+  quickbooksAccountMap: QuickbooksAccountMap
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`QuickbooksAccountMap\`. May be used by Relay 1."""
+  quickbooksAccountMapEdge(
+    """The method to use when ordering \`QuickbooksAccountMap\`."""
+    orderBy: [QuickbooksAccountMapOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): QuickbooksAccountMapEdge
+}
+
+"""All input for the \`updateQuickbooksAccountMapById\` mutation."""
+input UpdateQuickbooksAccountMapByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`QuickbooksAccountMap\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`QuickbooksAccountMap\` being updated.
+  """
+  patch: QuickbooksAccountMapPatch!
+}
+
+"""
+Represents an update to a \`QuickbooksAccountMap\`. Fields that are set will be updated.
+"""
+input QuickbooksAccountMapPatch {
+  rowId: UUID
+  bookId: UUID
+  qboAccountId: String
+  qboAccountName: String
+  qboAccountType: String
+  myfiAccountId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the \`updateQuickbooksAccountMap\` mutation."""
+input UpdateQuickbooksAccountMapInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`QuickbooksAccountMap\` being updated.
+  """
+  patch: QuickbooksAccountMapPatch!
+}
+
+"""The output of our update \`Vehicle\` mutation."""
+type UpdateVehiclePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Vehicle\` that was updated by this mutation."""
+  vehicle: Vehicle
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Vehicle\`. May be used by Relay 1."""
+  vehicleEdge(
+    """The method to use when ordering \`Vehicle\`."""
+    orderBy: [VehicleOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): VehicleEdge
+}
+
+"""All input for the \`updateVehicleById\` mutation."""
+input UpdateVehicleByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`Vehicle\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`Vehicle\` being updated.
+  """
+  patch: VehiclePatch!
+}
+
+"""
+Represents an update to a \`Vehicle\`. Fields that are set will be updated.
+"""
+input VehiclePatch {
+  rowId: UUID
+  bookId: UUID
+  name: String
+  year: Int
+  make: String
+  model: String
+  dateInService: String
+  createdAt: Datetime
+}
+
+"""All input for the \`updateVehicle\` mutation."""
+input UpdateVehicleInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`Vehicle\` being updated.
+  """
+  patch: VehiclePatch!
+}
+
+"""The output of our update \`JournalLine\` mutation."""
+type UpdateJournalLinePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`JournalLine\` that was updated by this mutation."""
+  journalLine: JournalLine
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`JournalLine\`. May be used by Relay 1."""
+  journalLineEdge(
+    """The method to use when ordering \`JournalLine\`."""
+    orderBy: [JournalLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): JournalLineEdge
+}
+
+"""All input for the \`updateJournalLineById\` mutation."""
+input UpdateJournalLineByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`JournalLine\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`JournalLine\` being updated.
+  """
+  patch: JournalLinePatch!
+}
+
+"""
+Represents an update to a \`JournalLine\`. Fields that are set will be updated.
+"""
+input JournalLinePatch {
+  rowId: UUID
+  journalEntryId: UUID
+  accountId: UUID
+  debit: BigFloat
+  credit: BigFloat
+  memo: String
+  cleared: Boolean
+}
+
+"""All input for the \`updateJournalLine\` mutation."""
+input UpdateJournalLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`JournalLine\` being updated.
+  """
+  patch: JournalLinePatch!
 }
 
 """The output of our update \`SavingsGoal\` mutation."""
@@ -13731,6 +17513,76 @@ input UpdateSavingsGoalInput {
   patch: SavingsGoalPatch!
 }
 
+"""The output of our update \`ImportProfile\` mutation."""
+type UpdateImportProfilePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`ImportProfile\` that was updated by this mutation."""
+  importProfile: ImportProfile
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`ImportProfile\`. May be used by Relay 1."""
+  importProfileEdge(
+    """The method to use when ordering \`ImportProfile\`."""
+    orderBy: [ImportProfileOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ImportProfileEdge
+}
+
+"""All input for the \`updateImportProfileById\` mutation."""
+input UpdateImportProfileByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`ImportProfile\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`ImportProfile\` being updated.
+  """
+  patch: ImportProfilePatch!
+}
+
+"""
+Represents an update to a \`ImportProfile\`. Fields that are set will be updated.
+"""
+input ImportProfilePatch {
+  rowId: UUID
+  bookId: UUID
+  name: String
+  columnMap: JSON
+  headerRows: String
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the \`updateImportProfile\` mutation."""
+input UpdateImportProfileInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`ImportProfile\` being updated.
+  """
+  patch: ImportProfilePatch!
+}
+
 """The output of our update \`NetWorthSnapshot\` mutation."""
 type UpdateNetWorthSnapshotPayload {
   """
@@ -13800,79 +17652,6 @@ input UpdateNetWorthSnapshotInput {
   An object where the defined keys will be set on the \`NetWorthSnapshot\` being updated.
   """
   patch: NetWorthSnapshotPatch!
-}
-
-"""The output of our update \`PayrollConnection\` mutation."""
-type UpdatePayrollConnectionPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`PayrollConnection\` that was updated by this mutation."""
-  payrollConnection: PayrollConnection
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`PayrollConnection\`. May be used by Relay 1."""
-  payrollConnectionEdge(
-    """The method to use when ordering \`PayrollConnection\`."""
-    orderBy: [PayrollConnectionOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): PayrollConnectionEdge
-}
-
-"""All input for the \`updatePayrollConnectionById\` mutation."""
-input UpdatePayrollConnectionByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`PayrollConnection\` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the \`PayrollConnection\` being updated.
-  """
-  patch: PayrollConnectionPatch!
-}
-
-"""
-Represents an update to a \`PayrollConnection\`. Fields that are set will be updated.
-"""
-input PayrollConnectionPatch {
-  rowId: UUID
-  bookId: UUID
-  provider: String
-  accessToken: String
-  refreshToken: String
-  companyId: String
-  lastSyncedAt: Datetime
-  syncCursor: String
-  status: String
-  createdAt: Datetime
-}
-
-"""All input for the \`updatePayrollConnection\` mutation."""
-input UpdatePayrollConnectionInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the \`PayrollConnection\` being updated.
-  """
-  patch: PayrollConnectionPatch!
 }
 
 """The output of our update \`AccountingPeriod\` mutation."""
@@ -13948,6 +17727,225 @@ input UpdateAccountingPeriodInput {
   patch: AccountingPeriodPatch!
 }
 
+"""The output of our update \`QuickbooksMigration\` mutation."""
+type UpdateQuickbooksMigrationPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`QuickbooksMigration\` that was updated by this mutation."""
+  quickbooksMigration: QuickbooksMigration
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`QuickbooksMigration\`. May be used by Relay 1."""
+  quickbooksMigrationEdge(
+    """The method to use when ordering \`QuickbooksMigration\`."""
+    orderBy: [QuickbooksMigrationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): QuickbooksMigrationEdge
+}
+
+"""All input for the \`updateQuickbooksMigrationById\` mutation."""
+input UpdateQuickbooksMigrationByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`QuickbooksMigration\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`QuickbooksMigration\` being updated.
+  """
+  patch: QuickbooksMigrationPatch!
+}
+
+"""
+Represents an update to a \`QuickbooksMigration\`. Fields that are set will be updated.
+"""
+input QuickbooksMigrationPatch {
+  rowId: UUID
+  bookId: UUID
+  connectedAccountId: UUID
+  status: String
+  periodStart: Datetime
+  periodEnd: Datetime
+  entriesImported: Int
+  errorMessage: String
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the \`updateQuickbooksMigration\` mutation."""
+input UpdateQuickbooksMigrationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`QuickbooksMigration\` being updated.
+  """
+  patch: QuickbooksMigrationPatch!
+}
+
+"""The output of our update \`PayrollConnection\` mutation."""
+type UpdatePayrollConnectionPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`PayrollConnection\` that was updated by this mutation."""
+  payrollConnection: PayrollConnection
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`PayrollConnection\`. May be used by Relay 1."""
+  payrollConnectionEdge(
+    """The method to use when ordering \`PayrollConnection\`."""
+    orderBy: [PayrollConnectionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): PayrollConnectionEdge
+}
+
+"""All input for the \`updatePayrollConnectionById\` mutation."""
+input UpdatePayrollConnectionByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`PayrollConnection\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`PayrollConnection\` being updated.
+  """
+  patch: PayrollConnectionPatch!
+}
+
+"""
+Represents an update to a \`PayrollConnection\`. Fields that are set will be updated.
+"""
+input PayrollConnectionPatch {
+  rowId: UUID
+  bookId: UUID
+  provider: String
+  accessToken: String
+  refreshToken: String
+  companyId: String
+  lastSyncedAt: Datetime
+  syncCursor: String
+  status: String
+  createdAt: Datetime
+}
+
+"""All input for the \`updatePayrollConnection\` mutation."""
+input UpdatePayrollConnectionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`PayrollConnection\` being updated.
+  """
+  patch: PayrollConnectionPatch!
+}
+
+"""The output of our update \`ReconciliationStatement\` mutation."""
+type UpdateReconciliationStatementPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`ReconciliationStatement\` that was updated by this mutation."""
+  reconciliationStatement: ReconciliationStatement
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`ReconciliationStatement\`. May be used by Relay 1."""
+  reconciliationStatementEdge(
+    """The method to use when ordering \`ReconciliationStatement\`."""
+    orderBy: [ReconciliationStatementOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ReconciliationStatementEdge
+}
+
+"""All input for the \`updateReconciliationStatementById\` mutation."""
+input UpdateReconciliationStatementByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`ReconciliationStatement\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`ReconciliationStatement\` being updated.
+  """
+  patch: ReconciliationStatementPatch!
+}
+
+"""
+Represents an update to a \`ReconciliationStatement\`. Fields that are set will be updated.
+"""
+input ReconciliationStatementPatch {
+  rowId: UUID
+  bookId: UUID
+  accountId: UUID
+  statementDate: String
+  statementBalance: BigFloat
+  beginningBalance: BigFloat
+  status: String
+  completedAt: Datetime
+  discrepancy: BigFloat
+  createdAt: Datetime
+}
+
+"""All input for the \`updateReconciliationStatement\` mutation."""
+input UpdateReconciliationStatementInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`ReconciliationStatement\` being updated.
+  """
+  patch: ReconciliationStatementPatch!
+}
+
 """The output of our update \`CryptoLot\` mutation."""
 type UpdateCryptoLotPayload {
   """
@@ -14019,6 +18017,82 @@ input UpdateCryptoLotInput {
   An object where the defined keys will be set on the \`CryptoLot\` being updated.
   """
   patch: CryptoLotPatch!
+}
+
+"""The output of our update \`MileageLog\` mutation."""
+type UpdateMileageLogPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`MileageLog\` that was updated by this mutation."""
+  mileageLog: MileageLog
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`MileageLog\`. May be used by Relay 1."""
+  mileageLogEdge(
+    """The method to use when ordering \`MileageLog\`."""
+    orderBy: [MileageLogOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): MileageLogEdge
+}
+
+"""All input for the \`updateMileageLogById\` mutation."""
+input UpdateMileageLogByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`MileageLog\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`MileageLog\` being updated.
+  """
+  patch: MileageLogPatch!
+}
+
+"""
+Represents an update to a \`MileageLog\`. Fields that are set will be updated.
+"""
+input MileageLogPatch {
+  rowId: UUID
+  bookId: UUID
+  vehicleId: UUID
+  date: String
+  description: String
+  origin: String
+  destination: String
+  odometerStart: BigFloat
+  odometerEnd: BigFloat
+  distance: BigFloat
+  isRoundTrip: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the \`updateMileageLog\` mutation."""
+input UpdateMileageLogInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`MileageLog\` being updated.
+  """
+  patch: MileageLogPatch!
 }
 
 """The output of our update \`Book\` mutation."""
@@ -14828,6 +18902,8 @@ input ConnectedAccountPatch {
   lastSyncedAt: Datetime
   createdAt: Datetime
   syncCursor: String
+  refreshToken: String
+  realmId: String
 }
 
 """All input for the \`updateConnectedAccount\` mutation."""
@@ -15037,6 +19113,54 @@ input DeleteAccountMappingInput {
   rowId: UUID!
 }
 
+"""The output of our delete \`BookAccess\` mutation."""
+type DeleteBookAccessPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`BookAccess\` that was deleted by this mutation."""
+  bookAccess: BookAccess
+  deletedBookAccessId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`BookAccess\`. May be used by Relay 1."""
+  bookAccessEdge(
+    """The method to use when ordering \`BookAccess\`."""
+    orderBy: [BookAccessOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BookAccessEdge
+}
+
+"""All input for the \`deleteBookAccessById\` mutation."""
+input DeleteBookAccessByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`BookAccess\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteBookAccess\` mutation."""
+input DeleteBookAccessInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete \`TaxJurisdiction\` mutation."""
 type DeleteTaxJurisdictionPayload {
   """
@@ -15077,54 +19201,6 @@ input DeleteTaxJurisdictionByIdInput {
 
 """All input for the \`deleteTaxJurisdiction\` mutation."""
 input DeleteTaxJurisdictionInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
-"""The output of our delete \`JournalLine\` mutation."""
-type DeleteJournalLinePayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`JournalLine\` that was deleted by this mutation."""
-  journalLine: JournalLine
-  deletedJournalLineId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`JournalLine\`. May be used by Relay 1."""
-  journalLineEdge(
-    """The method to use when ordering \`JournalLine\`."""
-    orderBy: [JournalLineOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): JournalLineEdge
-}
-
-"""All input for the \`deleteJournalLineById\` mutation."""
-input DeleteJournalLineByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`JournalLine\` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the \`deleteJournalLine\` mutation."""
-input DeleteJournalLineInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -15181,6 +19257,150 @@ input DeleteTagInput {
   rowId: UUID!
 }
 
+"""The output of our delete \`QuickbooksAccountMap\` mutation."""
+type DeleteQuickbooksAccountMapPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`QuickbooksAccountMap\` that was deleted by this mutation."""
+  quickbooksAccountMap: QuickbooksAccountMap
+  deletedQuickbooksAccountMapId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`QuickbooksAccountMap\`. May be used by Relay 1."""
+  quickbooksAccountMapEdge(
+    """The method to use when ordering \`QuickbooksAccountMap\`."""
+    orderBy: [QuickbooksAccountMapOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): QuickbooksAccountMapEdge
+}
+
+"""All input for the \`deleteQuickbooksAccountMapById\` mutation."""
+input DeleteQuickbooksAccountMapByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`QuickbooksAccountMap\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteQuickbooksAccountMap\` mutation."""
+input DeleteQuickbooksAccountMapInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`Vehicle\` mutation."""
+type DeleteVehiclePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Vehicle\` that was deleted by this mutation."""
+  vehicle: Vehicle
+  deletedVehicleId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Vehicle\`. May be used by Relay 1."""
+  vehicleEdge(
+    """The method to use when ordering \`Vehicle\`."""
+    orderBy: [VehicleOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): VehicleEdge
+}
+
+"""All input for the \`deleteVehicleById\` mutation."""
+input DeleteVehicleByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`Vehicle\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteVehicle\` mutation."""
+input DeleteVehicleInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`JournalLine\` mutation."""
+type DeleteJournalLinePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`JournalLine\` that was deleted by this mutation."""
+  journalLine: JournalLine
+  deletedJournalLineId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`JournalLine\`. May be used by Relay 1."""
+  journalLineEdge(
+    """The method to use when ordering \`JournalLine\`."""
+    orderBy: [JournalLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): JournalLineEdge
+}
+
+"""All input for the \`deleteJournalLineById\` mutation."""
+input DeleteJournalLineByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`JournalLine\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteJournalLine\` mutation."""
+input DeleteJournalLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete \`SavingsGoal\` mutation."""
 type DeleteSavingsGoalPayload {
   """
@@ -15221,6 +19441,54 @@ input DeleteSavingsGoalByIdInput {
 
 """All input for the \`deleteSavingsGoal\` mutation."""
 input DeleteSavingsGoalInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`ImportProfile\` mutation."""
+type DeleteImportProfilePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`ImportProfile\` that was deleted by this mutation."""
+  importProfile: ImportProfile
+  deletedImportProfileId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`ImportProfile\`. May be used by Relay 1."""
+  importProfileEdge(
+    """The method to use when ordering \`ImportProfile\`."""
+    orderBy: [ImportProfileOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ImportProfileEdge
+}
+
+"""All input for the \`deleteImportProfileById\` mutation."""
+input DeleteImportProfileByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`ImportProfile\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteImportProfile\` mutation."""
+input DeleteImportProfileInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -15277,54 +19545,6 @@ input DeleteNetWorthSnapshotInput {
   rowId: UUID!
 }
 
-"""The output of our delete \`PayrollConnection\` mutation."""
-type DeletePayrollConnectionPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`PayrollConnection\` that was deleted by this mutation."""
-  payrollConnection: PayrollConnection
-  deletedPayrollConnectionId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`PayrollConnection\`. May be used by Relay 1."""
-  payrollConnectionEdge(
-    """The method to use when ordering \`PayrollConnection\`."""
-    orderBy: [PayrollConnectionOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): PayrollConnectionEdge
-}
-
-"""All input for the \`deletePayrollConnectionById\` mutation."""
-input DeletePayrollConnectionByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`PayrollConnection\` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the \`deletePayrollConnection\` mutation."""
-input DeletePayrollConnectionInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete \`AccountingPeriod\` mutation."""
 type DeleteAccountingPeriodPayload {
   """
@@ -15373,6 +19593,150 @@ input DeleteAccountingPeriodInput {
   rowId: UUID!
 }
 
+"""The output of our delete \`QuickbooksMigration\` mutation."""
+type DeleteQuickbooksMigrationPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`QuickbooksMigration\` that was deleted by this mutation."""
+  quickbooksMigration: QuickbooksMigration
+  deletedQuickbooksMigrationId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`QuickbooksMigration\`. May be used by Relay 1."""
+  quickbooksMigrationEdge(
+    """The method to use when ordering \`QuickbooksMigration\`."""
+    orderBy: [QuickbooksMigrationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): QuickbooksMigrationEdge
+}
+
+"""All input for the \`deleteQuickbooksMigrationById\` mutation."""
+input DeleteQuickbooksMigrationByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`QuickbooksMigration\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteQuickbooksMigration\` mutation."""
+input DeleteQuickbooksMigrationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`PayrollConnection\` mutation."""
+type DeletePayrollConnectionPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`PayrollConnection\` that was deleted by this mutation."""
+  payrollConnection: PayrollConnection
+  deletedPayrollConnectionId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`PayrollConnection\`. May be used by Relay 1."""
+  payrollConnectionEdge(
+    """The method to use when ordering \`PayrollConnection\`."""
+    orderBy: [PayrollConnectionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): PayrollConnectionEdge
+}
+
+"""All input for the \`deletePayrollConnectionById\` mutation."""
+input DeletePayrollConnectionByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`PayrollConnection\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deletePayrollConnection\` mutation."""
+input DeletePayrollConnectionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`ReconciliationStatement\` mutation."""
+type DeleteReconciliationStatementPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`ReconciliationStatement\` that was deleted by this mutation."""
+  reconciliationStatement: ReconciliationStatement
+  deletedReconciliationStatementId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`ReconciliationStatement\`. May be used by Relay 1."""
+  reconciliationStatementEdge(
+    """The method to use when ordering \`ReconciliationStatement\`."""
+    orderBy: [ReconciliationStatementOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ReconciliationStatementEdge
+}
+
+"""All input for the \`deleteReconciliationStatementById\` mutation."""
+input DeleteReconciliationStatementByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`ReconciliationStatement\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteReconciliationStatement\` mutation."""
+input DeleteReconciliationStatementInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete \`CryptoLot\` mutation."""
 type DeleteCryptoLotPayload {
   """
@@ -15413,6 +19777,54 @@ input DeleteCryptoLotByIdInput {
 
 """All input for the \`deleteCryptoLot\` mutation."""
 input DeleteCryptoLotInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`MileageLog\` mutation."""
+type DeleteMileageLogPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`MileageLog\` that was deleted by this mutation."""
+  mileageLog: MileageLog
+  deletedMileageLogId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`MileageLog\`. May be used by Relay 1."""
+  mileageLogEdge(
+    """The method to use when ordering \`MileageLog\`."""
+    orderBy: [MileageLogOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): MileageLogEdge
+}
+
+"""All input for the \`deleteMileageLogById\` mutation."""
+input DeleteMileageLogByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`MileageLog\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteMileageLog\` mutation."""
+input DeleteMileageLogInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -16065,6 +20477,32 @@ export const objects = {
           id: $rowId
         });
       },
+      bookAccess(_$root, {
+        $rowId
+      }) {
+        return resource_book_accessPgResource.get({
+          id: $rowId
+        });
+      },
+      bookAccessById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_BookAccess($nodeId);
+      },
+      bookAccesses: {
+        plan() {
+          return connection(resource_book_accessPgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineTagsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       bookById(_$parent, args) {
         const $nodeId = args.getRaw("id");
         return nodeFetcher_Book($nodeId);
@@ -16244,6 +20682,32 @@ export const objects = {
         const specifier = nodeIdHandler_Query.plan($parent);
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_Query.codec.name].encode);
       },
+      importProfile(_$root, {
+        $rowId
+      }) {
+        return resource_import_profilePgResource.get({
+          id: $rowId
+        });
+      },
+      importProfileById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_ImportProfile($nodeId);
+      },
+      importProfiles: {
+        plan() {
+          return connection(resource_import_profilePgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineTagsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       journalEntries: {
         plan() {
           return connection(resource_journal_entryPgResource.find());
@@ -16322,6 +20786,32 @@ export const objects = {
           orderBy: applyOrderByArgToConnection
         }
       },
+      mileageLog(_$root, {
+        $rowId
+      }) {
+        return resource_mileage_logPgResource.get({
+          id: $rowId
+        });
+      },
+      mileageLogById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_MileageLog($nodeId);
+      },
+      mileageLogs: {
+        plan() {
+          return connection(resource_mileage_logPgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineTagsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       netWorthSnapshot(_$root, {
         $rowId
       }) {
@@ -16380,6 +20870,58 @@ export const objects = {
       query() {
         return rootValue();
       },
+      quickbooksAccountMap(_$root, {
+        $rowId
+      }) {
+        return resource_quickbooks_account_mapPgResource.get({
+          id: $rowId
+        });
+      },
+      quickbooksAccountMapById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_QuickbooksAccountMap($nodeId);
+      },
+      quickbooksAccountMaps: {
+        plan() {
+          return connection(resource_quickbooks_account_mapPgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineTagsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      quickbooksMigration(_$root, {
+        $rowId
+      }) {
+        return resource_quickbooks_migrationPgResource.get({
+          id: $rowId
+        });
+      },
+      quickbooksMigrationById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_QuickbooksMigration($nodeId);
+      },
+      quickbooksMigrations: {
+        plan() {
+          return connection(resource_quickbooks_migrationPgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineTagsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       reconciliationQueue(_$root, {
         $rowId
       }) {
@@ -16394,6 +20936,32 @@ export const objects = {
       reconciliationQueues: {
         plan() {
           return connection(resource_reconciliation_queuePgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineTagsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      reconciliationStatement(_$root, {
+        $rowId
+      }) {
+        return resource_reconciliation_statementPgResource.get({
+          id: $rowId
+        });
+      },
+      reconciliationStatementById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_ReconciliationStatement($nodeId);
+      },
+      reconciliationStatements: {
+        plan() {
+          return connection(resource_reconciliation_statementPgResource.find());
         },
         args: {
           first: applyFirstArg,
@@ -16536,6 +21104,32 @@ export const objects = {
           orderBy: applyOrderByArgToConnection
         }
       },
+      vehicle(_$root, {
+        $rowId
+      }) {
+        return resource_vehiclePgResource.get({
+          id: $rowId
+        });
+      },
+      vehicleById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_Vehicle($nodeId);
+      },
+      vehicles: {
+        plan() {
+          return connection(resource_vehiclePgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineTagsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       vendor(_$root, {
         $rowId
       }) {
@@ -16606,6 +21200,18 @@ export const objects = {
       createBook: {
         plan(_, args) {
           const $insert = pgInsertSingle(resource_bookPgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
+      createBookAccess: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_book_accessPgResource);
           args.apply($insert);
           return object({
             result: $insert
@@ -16699,6 +21305,18 @@ export const objects = {
           input: applyInputToInsert
         }
       },
+      createImportProfile: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_import_profilePgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
       createJournalEntry: {
         plan(_, args) {
           const $insert = pgInsertSingle(resource_journal_entryPgResource);
@@ -16735,6 +21353,18 @@ export const objects = {
           input: applyInputToInsert
         }
       },
+      createMileageLog: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_mileage_logPgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
       createNetWorthSnapshot: {
         plan(_, args) {
           const $insert = pgInsertSingle(resource_net_worth_snapshotPgResource);
@@ -16759,9 +21389,45 @@ export const objects = {
           input: applyInputToInsert
         }
       },
+      createQuickbooksAccountMap: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_quickbooks_account_mapPgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
+      createQuickbooksMigration: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_quickbooks_migrationPgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
       createReconciliationQueue: {
         plan(_, args) {
           const $insert = pgInsertSingle(resource_reconciliation_queuePgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
+      createReconciliationStatement: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_reconciliation_statementPgResource);
           args.apply($insert);
           return object({
             result: $insert
@@ -16822,6 +21488,18 @@ export const objects = {
       createTaxJurisdiction: {
         plan(_, args) {
           const $insert = pgInsertSingle(resource_tax_jurisdictionPgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
+      createVehicle: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_vehiclePgResource);
           args.apply($insert);
           return object({
             result: $insert
@@ -16926,6 +21604,32 @@ export const objects = {
           const $delete = pgDeleteSingle(resource_bookPgResource, {
             id: args.getRaw(['input', "rowId"])
           });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteBookAccess: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_book_accessPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteBookAccessById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_book_accessPgResource, specFromArgs_BookAccess(args));
           args.apply($delete);
           return object({
             result: $delete
@@ -17129,6 +21833,32 @@ export const objects = {
           input: applyInputToUpdateOrDelete
         }
       },
+      deleteImportProfile: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_import_profilePgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteImportProfileById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_import_profilePgResource, specFromArgs_ImportProfile(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
       deleteJournalEntry: {
         plan(_$root, args) {
           const $delete = pgDeleteSingle(resource_journal_entryPgResource, {
@@ -17207,6 +21937,32 @@ export const objects = {
           input: applyInputToUpdateOrDelete
         }
       },
+      deleteMileageLog: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_mileage_logPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteMileageLogById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_mileage_logPgResource, specFromArgs_MileageLog(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
       deleteNetWorthSnapshot: {
         plan(_$root, args) {
           const $delete = pgDeleteSingle(resource_net_worth_snapshotPgResource, {
@@ -17259,6 +22015,58 @@ export const objects = {
           input: applyInputToUpdateOrDelete
         }
       },
+      deleteQuickbooksAccountMap: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_quickbooks_account_mapPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteQuickbooksAccountMapById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_quickbooks_account_mapPgResource, specFromArgs_QuickbooksAccountMap(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteQuickbooksMigration: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_quickbooks_migrationPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteQuickbooksMigrationById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_quickbooks_migrationPgResource, specFromArgs_QuickbooksMigration(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
       deleteReconciliationQueue: {
         plan(_$root, args) {
           const $delete = pgDeleteSingle(resource_reconciliation_queuePgResource, {
@@ -17276,6 +22084,32 @@ export const objects = {
       deleteReconciliationQueueById: {
         plan(_$root, args) {
           const $delete = pgDeleteSingle(resource_reconciliation_queuePgResource, specFromArgs_ReconciliationQueue(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteReconciliationStatement: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_reconciliation_statementPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteReconciliationStatementById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_reconciliation_statementPgResource, specFromArgs_ReconciliationStatement(args));
           args.apply($delete);
           return object({
             result: $delete
@@ -17415,6 +22249,32 @@ export const objects = {
           input: applyInputToUpdateOrDelete
         }
       },
+      deleteVehicle: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_vehiclePgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteVehicleById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_vehiclePgResource, specFromArgs_Vehicle(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
       deleteVendor: {
         plan(_$root, args) {
           const $delete = pgDeleteSingle(resource_vendorPgResource, {
@@ -17524,6 +22384,32 @@ export const objects = {
           const $update = pgUpdateSingle(resource_bookPgResource, {
             id: args.getRaw(['input', "rowId"])
           });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateBookAccess: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_book_accessPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateBookAccessById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_book_accessPgResource, specFromArgs_BookAccess(args));
           args.apply($update);
           return object({
             result: $update
@@ -17727,6 +22613,32 @@ export const objects = {
           input: applyInputToUpdateOrDelete
         }
       },
+      updateImportProfile: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_import_profilePgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateImportProfileById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_import_profilePgResource, specFromArgs_ImportProfile(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
       updateJournalEntry: {
         plan(_$root, args) {
           const $update = pgUpdateSingle(resource_journal_entryPgResource, {
@@ -17805,6 +22717,32 @@ export const objects = {
           input: applyInputToUpdateOrDelete
         }
       },
+      updateMileageLog: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_mileage_logPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateMileageLogById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_mileage_logPgResource, specFromArgs_MileageLog(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
       updateNetWorthSnapshot: {
         plan(_$root, args) {
           const $update = pgUpdateSingle(resource_net_worth_snapshotPgResource, {
@@ -17857,6 +22795,58 @@ export const objects = {
           input: applyInputToUpdateOrDelete
         }
       },
+      updateQuickbooksAccountMap: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_quickbooks_account_mapPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateQuickbooksAccountMapById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_quickbooks_account_mapPgResource, specFromArgs_QuickbooksAccountMap(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateQuickbooksMigration: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_quickbooks_migrationPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateQuickbooksMigrationById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_quickbooks_migrationPgResource, specFromArgs_QuickbooksMigration(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
       updateReconciliationQueue: {
         plan(_$root, args) {
           const $update = pgUpdateSingle(resource_reconciliation_queuePgResource, {
@@ -17874,6 +22864,32 @@ export const objects = {
       updateReconciliationQueueById: {
         plan(_$root, args) {
           const $update = pgUpdateSingle(resource_reconciliation_queuePgResource, specFromArgs_ReconciliationQueue(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateReconciliationStatement: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_reconciliation_statementPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateReconciliationStatementById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_reconciliation_statementPgResource, specFromArgs_ReconciliationStatement(args));
           args.apply($update);
           return object({
             result: $update
@@ -18013,6 +23029,32 @@ export const objects = {
           input: applyInputToUpdateOrDelete
         }
       },
+      updateVehicle: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_vehiclePgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateVehicleById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_vehiclePgResource, specFromArgs_Vehicle(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
       updateVendor: {
         plan(_$root, args) {
           const $update = pgUpdateSingle(resource_vendorPgResource, {
@@ -18138,6 +23180,24 @@ export const objects = {
       },
       parentId($record) {
         return $record.get("parent_id");
+      },
+      reconciliationStatements: {
+        plan($record) {
+          const $records = resource_reconciliation_statementPgResource.find({
+            account_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineTagsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
       },
       rowId: JournalLineTag_rowIdPlan,
       subType($record) {
@@ -18279,6 +23339,24 @@ export const objects = {
           orderBy: applyOrderByArgToConnection
         }
       },
+      bookAccesses: {
+        plan($record) {
+          const $records = resource_book_accessPgResource.find({
+            book_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineTagsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       budgets: {
         plan($record) {
           const $records = resource_budgetPgResource.find({
@@ -18395,6 +23473,24 @@ export const objects = {
           orderBy: applyOrderByArgToConnection
         }
       },
+      mileageLogs: {
+        plan($record) {
+          const $records = resource_mileage_logPgResource.find({
+            book_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineTagsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       netWorthSnapshots: {
         plan($record) {
           const $records = resource_net_worth_snapshotPgResource.find({
@@ -18434,9 +23530,63 @@ export const objects = {
           orderBy: applyOrderByArgToConnection
         }
       },
+      quickbooksAccountMaps: {
+        plan($record) {
+          const $records = resource_quickbooks_account_mapPgResource.find({
+            book_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineTagsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      quickbooksMigrations: {
+        plan($record) {
+          const $records = resource_quickbooks_migrationPgResource.find({
+            book_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineTagsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       reconciliationQueues: {
         plan($record) {
           const $records = resource_reconciliation_queuePgResource.find({
+            book_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineTagsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      reconciliationStatements: {
+        plan($record) {
+          const $records = resource_reconciliation_statementPgResource.find({
             book_id: $record.get("id")
           });
           return connection($records);
@@ -18526,6 +23676,24 @@ export const objects = {
         }
       },
       updatedAt: Account_updatedAtPlan,
+      vehicles: {
+        plan($record) {
+          const $records = resource_vehiclePgResource.find({
+            book_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineTagsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       vendors: {
         plan($record) {
           const $records = resource_vendorPgResource.find({
@@ -18549,6 +23717,39 @@ export const objects = {
       const spec = Object.create(null);
       for (const pkCol of bookUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
       return resource_bookPgResource.get(spec);
+    }
+  },
+  BookAccess: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      book: Account_bookPlan,
+      bookId: Account_bookIdPlan,
+      createdAt: Account_createdAtPlan,
+      id($parent) {
+        const specifier = nodeIdHandler_BookAccess.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_BookAccess.codec.name].encode);
+      },
+      invitedAt($record) {
+        return $record.get("invited_at");
+      },
+      invitedBy($record) {
+        return $record.get("invited_by");
+      },
+      rowId: JournalLineTag_rowIdPlan,
+      userId($record) {
+        return $record.get("user_id");
+      }
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of book_accessUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_book_accessPgResource.get(spec);
+    }
+  },
+  BookAccessConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
     }
   },
   BookConnection: {
@@ -18655,6 +23856,10 @@ export const objects = {
       providerAccountId($record) {
         return $record.get("provider_account_id");
       },
+      realmId($record) {
+        return $record.get("realm_id");
+      },
+      refreshToken: ConnectedAccount_refreshTokenPlan,
       rowId: JournalLineTag_rowIdPlan,
       syncCursor: ConnectedAccount_syncCursorPlan
     },
@@ -18693,6 +23898,15 @@ export const objects = {
     plans: {
       account: planCreatePayloadResult,
       accountEdge: CreateAccountPayload_accountEdgePlan,
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan
+    }
+  },
+  CreateBookAccessPayload: {
+    assertStep: assertStep,
+    plans: {
+      bookAccess: planCreatePayloadResult,
+      bookAccessEdge: CreateBookAccessPayload_bookAccessEdgePlan,
       clientMutationId: getClientMutationIdForCreatePlan,
       query: queryPlan
     }
@@ -18769,6 +23983,15 @@ export const objects = {
       query: queryPlan
     }
   },
+  CreateImportProfilePayload: {
+    assertStep: assertStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      importProfile: planCreatePayloadResult,
+      importProfileEdge: CreateImportProfilePayload_importProfileEdgePlan,
+      query: queryPlan
+    }
+  },
   CreateJournalEntryPayload: {
     assertStep: assertStep,
     plans: {
@@ -18796,6 +24019,15 @@ export const objects = {
       query: queryPlan
     }
   },
+  CreateMileageLogPayload: {
+    assertStep: assertStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      mileageLog: planCreatePayloadResult,
+      mileageLogEdge: CreateMileageLogPayload_mileageLogEdgePlan,
+      query: queryPlan
+    }
+  },
   CreateNetWorthSnapshotPayload: {
     assertStep: assertStep,
     plans: {
@@ -18814,6 +24046,24 @@ export const objects = {
       query: queryPlan
     }
   },
+  CreateQuickbooksAccountMapPayload: {
+    assertStep: assertStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan,
+      quickbooksAccountMap: planCreatePayloadResult,
+      quickbooksAccountMapEdge: CreateQuickbooksAccountMapPayload_quickbooksAccountMapEdgePlan
+    }
+  },
+  CreateQuickbooksMigrationPayload: {
+    assertStep: assertStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan,
+      quickbooksMigration: planCreatePayloadResult,
+      quickbooksMigrationEdge: CreateQuickbooksMigrationPayload_quickbooksMigrationEdgePlan
+    }
+  },
   CreateReconciliationQueuePayload: {
     assertStep: assertStep,
     plans: {
@@ -18821,6 +24071,15 @@ export const objects = {
       query: queryPlan,
       reconciliationQueue: planCreatePayloadResult,
       reconciliationQueueEdge: CreateReconciliationQueuePayload_reconciliationQueueEdgePlan
+    }
+  },
+  CreateReconciliationStatementPayload: {
+    assertStep: assertStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan,
+      reconciliationStatement: planCreatePayloadResult,
+      reconciliationStatementEdge: CreateReconciliationStatementPayload_reconciliationStatementEdgePlan
     }
   },
   CreateRecurringTransactionPayload: {
@@ -18866,6 +24125,15 @@ export const objects = {
       query: queryPlan,
       taxJurisdiction: planCreatePayloadResult,
       taxJurisdictionEdge: CreateTaxJurisdictionPayload_taxJurisdictionEdgePlan
+    }
+  },
+  CreateVehiclePayload: {
+    assertStep: assertStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan,
+      vehicle: planCreatePayloadResult,
+      vehicleEdge: CreateVehiclePayload_vehicleEdgePlan
     }
   },
   CreateVendorPayload: {
@@ -19014,6 +24282,20 @@ export const objects = {
       query: queryPlan
     }
   },
+  DeleteBookAccessPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      bookAccess: planCreatePayloadResult,
+      bookAccessEdge: CreateBookAccessPayload_bookAccessEdgePlan,
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedBookAccessId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_BookAccess.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      query: queryPlan
+    }
+  },
   DeleteBookPayload: {
     assertStep: ObjectStep,
     plans: {
@@ -19126,6 +24408,20 @@ export const objects = {
       query: queryPlan
     }
   },
+  DeleteImportProfilePayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedImportProfileId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_ImportProfile.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      importProfile: planCreatePayloadResult,
+      importProfileEdge: CreateImportProfilePayload_importProfileEdgePlan,
+      query: queryPlan
+    }
+  },
   DeleteJournalEntryPayload: {
     assertStep: ObjectStep,
     plans: {
@@ -19168,6 +24464,20 @@ export const objects = {
       query: queryPlan
     }
   },
+  DeleteMileageLogPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedMileageLogId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_MileageLog.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      mileageLog: planCreatePayloadResult,
+      mileageLogEdge: CreateMileageLogPayload_mileageLogEdgePlan,
+      query: queryPlan
+    }
+  },
   DeleteNetWorthSnapshotPayload: {
     assertStep: ObjectStep,
     plans: {
@@ -19196,6 +24506,34 @@ export const objects = {
       query: queryPlan
     }
   },
+  DeleteQuickbooksAccountMapPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedQuickbooksAccountMapId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_QuickbooksAccountMap.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      query: queryPlan,
+      quickbooksAccountMap: planCreatePayloadResult,
+      quickbooksAccountMapEdge: CreateQuickbooksAccountMapPayload_quickbooksAccountMapEdgePlan
+    }
+  },
+  DeleteQuickbooksMigrationPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedQuickbooksMigrationId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_QuickbooksMigration.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      query: queryPlan,
+      quickbooksMigration: planCreatePayloadResult,
+      quickbooksMigrationEdge: CreateQuickbooksMigrationPayload_quickbooksMigrationEdgePlan
+    }
+  },
   DeleteReconciliationQueuePayload: {
     assertStep: ObjectStep,
     plans: {
@@ -19208,6 +24546,20 @@ export const objects = {
       query: queryPlan,
       reconciliationQueue: planCreatePayloadResult,
       reconciliationQueueEdge: CreateReconciliationQueuePayload_reconciliationQueueEdgePlan
+    }
+  },
+  DeleteReconciliationStatementPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedReconciliationStatementId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_ReconciliationStatement.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      query: queryPlan,
+      reconciliationStatement: planCreatePayloadResult,
+      reconciliationStatementEdge: CreateReconciliationStatementPayload_reconciliationStatementEdgePlan
     }
   },
   DeleteRecurringTransactionPayload: {
@@ -19278,6 +24630,20 @@ export const objects = {
       query: queryPlan,
       taxJurisdiction: planCreatePayloadResult,
       taxJurisdictionEdge: CreateTaxJurisdictionPayload_taxJurisdictionEdgePlan
+    }
+  },
+  DeleteVehiclePayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedVehicleId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_Vehicle.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      query: queryPlan,
+      vehicle: planCreatePayloadResult,
+      vehicleEdge: CreateVehiclePayload_vehicleEdgePlan
     }
   },
   DeleteVendorPayload: {
@@ -19359,6 +24725,37 @@ export const objects = {
     }
   },
   FixedAssetConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
+  ImportProfile: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      book: Account_bookPlan,
+      bookId: Account_bookIdPlan,
+      columnMap($record) {
+        return $record.get("column_map");
+      },
+      createdAt: Account_createdAtPlan,
+      headerRows($record) {
+        return $record.get("header_rows");
+      },
+      id($parent) {
+        const specifier = nodeIdHandler_ImportProfile.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_ImportProfile.codec.name].encode);
+      },
+      rowId: JournalLineTag_rowIdPlan,
+      updatedAt: Account_updatedAtPlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of import_profileUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_import_profilePgResource.get(spec);
+    }
+  },
+  ImportProfileConnection: {
     assertStep: ConnectionStep,
     plans: {
       totalCount: totalCountConnectionPlan
@@ -19498,6 +24895,48 @@ export const objects = {
       totalCount: totalCountConnectionPlan
     }
   },
+  MileageLog: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      book: Account_bookPlan,
+      bookId: Account_bookIdPlan,
+      createdAt: Account_createdAtPlan,
+      id($parent) {
+        const specifier = nodeIdHandler_MileageLog.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_MileageLog.codec.name].encode);
+      },
+      isRoundTrip($record) {
+        return $record.get("is_round_trip");
+      },
+      odometerEnd($record) {
+        return $record.get("odometer_end");
+      },
+      odometerStart($record) {
+        return $record.get("odometer_start");
+      },
+      rowId: JournalLineTag_rowIdPlan,
+      updatedAt: Account_updatedAtPlan,
+      vehicle($record) {
+        return resource_vehiclePgResource.get({
+          id: $record.get("vehicle_id")
+        });
+      },
+      vehicleId($record) {
+        return $record.get("vehicle_id");
+      }
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of mileage_logUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_mileage_logPgResource.get(spec);
+    }
+  },
+  MileageLogConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
   NetWorthSnapshot: {
     assertStep: assertPgClassSingleStep,
     plans: {
@@ -19546,9 +24985,7 @@ export const objects = {
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_PayrollConnection.codec.name].encode);
       },
       lastSyncedAt: ConnectedAccount_lastSyncedAtPlan,
-      refreshToken($record) {
-        return $record.get("refresh_token");
-      },
+      refreshToken: ConnectedAccount_refreshTokenPlan,
       rowId: JournalLineTag_rowIdPlan,
       syncCursor: ConnectedAccount_syncCursorPlan
     },
@@ -19559,6 +24996,93 @@ export const objects = {
     }
   },
   PayrollConnectionConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
+  QuickbooksAccountMap: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      book: Account_bookPlan,
+      bookId: Account_bookIdPlan,
+      createdAt: Account_createdAtPlan,
+      id($parent) {
+        const specifier = nodeIdHandler_QuickbooksAccountMap.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_QuickbooksAccountMap.codec.name].encode);
+      },
+      myfiAccount($record) {
+        return resource_accountPgResource.get({
+          id: $record.get("myfi_account_id")
+        });
+      },
+      myfiAccountId($record) {
+        return $record.get("myfi_account_id");
+      },
+      qboAccountId($record) {
+        return $record.get("qbo_account_id");
+      },
+      qboAccountName($record) {
+        return $record.get("qbo_account_name");
+      },
+      qboAccountType($record) {
+        return $record.get("qbo_account_type");
+      },
+      rowId: JournalLineTag_rowIdPlan,
+      updatedAt: Account_updatedAtPlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of quickbooks_account_mapUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_quickbooks_account_mapPgResource.get(spec);
+    }
+  },
+  QuickbooksAccountMapConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
+  QuickbooksMigration: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      book: Account_bookPlan,
+      bookId: Account_bookIdPlan,
+      connectedAccount($record) {
+        return resource_connected_accountPgResource.get({
+          id: $record.get("connected_account_id")
+        });
+      },
+      connectedAccountId($record) {
+        return $record.get("connected_account_id");
+      },
+      createdAt: Account_createdAtPlan,
+      entriesImported($record) {
+        return $record.get("entries_imported");
+      },
+      errorMessage($record) {
+        return $record.get("error_message");
+      },
+      id($parent) {
+        const specifier = nodeIdHandler_QuickbooksMigration.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_QuickbooksMigration.codec.name].encode);
+      },
+      periodEnd($record) {
+        return $record.get("period_end");
+      },
+      periodStart($record) {
+        return $record.get("period_start");
+      },
+      rowId: JournalLineTag_rowIdPlan,
+      updatedAt: Account_updatedAtPlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of quickbooks_migrationUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_quickbooks_migrationPgResource.get(spec);
+    }
+  },
+  QuickbooksMigrationConnection: {
     assertStep: ConnectionStep,
     plans: {
       totalCount: totalCountConnectionPlan
@@ -19616,6 +25140,44 @@ export const objects = {
     }
   },
   ReconciliationQueueConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
+  ReconciliationStatement: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      account: JournalLine_accountPlan,
+      accountId: JournalLine_accountIdPlan,
+      beginningBalance($record) {
+        return $record.get("beginning_balance");
+      },
+      book: Account_bookPlan,
+      bookId: Account_bookIdPlan,
+      completedAt($record) {
+        return $record.get("completed_at");
+      },
+      createdAt: Account_createdAtPlan,
+      id($parent) {
+        const specifier = nodeIdHandler_ReconciliationStatement.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_ReconciliationStatement.codec.name].encode);
+      },
+      rowId: JournalLineTag_rowIdPlan,
+      statementBalance($record) {
+        return $record.get("statement_balance");
+      },
+      statementDate($record) {
+        return $record.get("statement_date");
+      }
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of reconciliation_statementUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_reconciliation_statementPgResource.get(spec);
+    }
+  },
+  ReconciliationStatementConnection: {
     assertStep: ConnectionStep,
     plans: {
       totalCount: totalCountConnectionPlan
@@ -19849,6 +25411,15 @@ export const objects = {
       query: queryPlan
     }
   },
+  UpdateBookAccessPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      bookAccess: planCreatePayloadResult,
+      bookAccessEdge: CreateBookAccessPayload_bookAccessEdgePlan,
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan
+    }
+  },
   UpdateBookPayload: {
     assertStep: ObjectStep,
     plans: {
@@ -19921,6 +25492,15 @@ export const objects = {
       query: queryPlan
     }
   },
+  UpdateImportProfilePayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      importProfile: planCreatePayloadResult,
+      importProfileEdge: CreateImportProfilePayload_importProfileEdgePlan,
+      query: queryPlan
+    }
+  },
   UpdateJournalEntryPayload: {
     assertStep: ObjectStep,
     plans: {
@@ -19948,6 +25528,15 @@ export const objects = {
       query: queryPlan
     }
   },
+  UpdateMileageLogPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      mileageLog: planCreatePayloadResult,
+      mileageLogEdge: CreateMileageLogPayload_mileageLogEdgePlan,
+      query: queryPlan
+    }
+  },
   UpdateNetWorthSnapshotPayload: {
     assertStep: ObjectStep,
     plans: {
@@ -19966,6 +25555,24 @@ export const objects = {
       query: queryPlan
     }
   },
+  UpdateQuickbooksAccountMapPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan,
+      quickbooksAccountMap: planCreatePayloadResult,
+      quickbooksAccountMapEdge: CreateQuickbooksAccountMapPayload_quickbooksAccountMapEdgePlan
+    }
+  },
+  UpdateQuickbooksMigrationPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan,
+      quickbooksMigration: planCreatePayloadResult,
+      quickbooksMigrationEdge: CreateQuickbooksMigrationPayload_quickbooksMigrationEdgePlan
+    }
+  },
   UpdateReconciliationQueuePayload: {
     assertStep: ObjectStep,
     plans: {
@@ -19973,6 +25580,15 @@ export const objects = {
       query: queryPlan,
       reconciliationQueue: planCreatePayloadResult,
       reconciliationQueueEdge: CreateReconciliationQueuePayload_reconciliationQueueEdgePlan
+    }
+  },
+  UpdateReconciliationStatementPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan,
+      reconciliationStatement: planCreatePayloadResult,
+      reconciliationStatementEdge: CreateReconciliationStatementPayload_reconciliationStatementEdgePlan
     }
   },
   UpdateRecurringTransactionPayload: {
@@ -20020,6 +25636,15 @@ export const objects = {
       taxJurisdictionEdge: CreateTaxJurisdictionPayload_taxJurisdictionEdgePlan
     }
   },
+  UpdateVehiclePayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan,
+      vehicle: planCreatePayloadResult,
+      vehicleEdge: CreateVehiclePayload_vehicleEdgePlan
+    }
+  },
   UpdateVendorPayload: {
     assertStep: ObjectStep,
     plans: {
@@ -20027,6 +25652,51 @@ export const objects = {
       query: queryPlan,
       vendor: planCreatePayloadResult,
       vendorEdge: CreateVendorPayload_vendorEdgePlan
+    }
+  },
+  Vehicle: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      book: Account_bookPlan,
+      bookId: Account_bookIdPlan,
+      createdAt: Account_createdAtPlan,
+      dateInService($record) {
+        return $record.get("date_in_service");
+      },
+      id($parent) {
+        const specifier = nodeIdHandler_Vehicle.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_Vehicle.codec.name].encode);
+      },
+      mileageLogs: {
+        plan($record) {
+          const $records = resource_mileage_logPgResource.find({
+            vehicle_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineTagsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      rowId: JournalLineTag_rowIdPlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of vehicleUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_vehiclePgResource.get(spec);
+    }
+  },
+  VehicleConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
     }
   },
   Vendor: {
@@ -20218,6 +25888,30 @@ export const inputObjects = {
       parentId(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("parentId", "parent_id", spec_account.attributes.parent_id, queryBuilder, value);
       },
+      reconciliationStatements($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: reconciliationStatementIdentifier,
+          alias: resource_reconciliation_statementPgResource.name,
+          localAttributes: registryConfig.pgRelations.account.reconciliationStatementsByTheirAccountId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.account.reconciliationStatementsByTheirAccountId.remoteAttributes
+        };
+        return $rel;
+      },
+      reconciliationStatementsExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: reconciliationStatementIdentifier,
+          alias: resource_reconciliation_statementPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.account.reconciliationStatementsByTheirAccountId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.account.reconciliationStatementsByTheirAccountId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
       rowId(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("rowId", "id", spec_account.attributes.id, queryBuilder, value);
       },
@@ -20275,8 +25969,8 @@ export const inputObjects = {
       month: AccountingPeriodInput_monthApply,
       reopenedAt: AccountingPeriodInput_reopenedAtApply,
       rowId: JournalLineTagInput_rowIdApply,
-      status: PayrollConnectionInput_statusApply,
-      year: AccountingPeriodInput_yearApply
+      status: AccountingPeriodInput_statusApply,
+      year: VehicleInput_yearApply
     }
   },
   AccountingPeriodPatch: {
@@ -20290,8 +25984,8 @@ export const inputObjects = {
       month: AccountingPeriodInput_monthApply,
       reopenedAt: AccountingPeriodInput_reopenedAtApply,
       rowId: JournalLineTagInput_rowIdApply,
-      status: PayrollConnectionInput_statusApply,
-      year: AccountingPeriodInput_yearApply
+      status: AccountingPeriodInput_statusApply,
+      year: VehicleInput_yearApply
     }
   },
   AccountInput: {
@@ -20405,6 +26099,13 @@ export const inputObjects = {
       some: AccountToManyAccountFilter_someApply
     }
   },
+  AccountToManyReconciliationStatementFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
   AccountTypeFilter: {
     plans: {
       distinctFrom: pgAggregatesApply_distinctFrom,
@@ -20418,6 +26119,58 @@ export const inputObjects = {
       notDistinctFrom: pgAggregatesApply_notDistinctFrom,
       notEqualTo: pgAggregatesApply_notEqualTo,
       notIn: pgAggregatesApply_notIn
+    }
+  },
+  BookAccessCondition: {
+    plans: {
+      bookId: AccountCondition_bookIdApply,
+      rowId: AccountCondition_rowIdApply,
+      userId($condition, val) {
+        return applyAttributeCondition("user_id", TYPES.text, $condition, val);
+      }
+    }
+  },
+  BookAccessFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      book($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_bookPgResource, bookIdentifier, registryConfig.pgRelations.bookAccess.bookByMyBookId.localAttributes, registryConfig.pgRelations.bookAccess.bookByMyBookId.remoteAttributes, $where, value);
+      },
+      bookId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("bookId", "book_id", spec_bookAccess.attributes.book_id, queryBuilder, value);
+      },
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_bookAccess.attributes.id, queryBuilder, value);
+      },
+      userId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("userId", "user_id", spec_bookAccess.attributes.user_id, queryBuilder, value);
+      }
+    }
+  },
+  BookAccessInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      bookId: TagGroupInput_bookIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      invitedAt: BookAccessInput_invitedAtApply,
+      invitedBy: BookAccessInput_invitedByApply,
+      role: BookAccessInput_roleApply,
+      rowId: JournalLineTagInput_rowIdApply,
+      userId: BookAccessInput_userIdApply
+    }
+  },
+  BookAccessPatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      bookId: TagGroupInput_bookIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      invitedAt: BookAccessInput_invitedAtApply,
+      invitedBy: BookAccessInput_invitedByApply,
+      role: BookAccessInput_roleApply,
+      rowId: JournalLineTagInput_rowIdApply,
+      userId: BookAccessInput_userIdApply
     }
   },
   BookCondition: {
@@ -20503,6 +26256,30 @@ export const inputObjects = {
         });
       },
       and: AccountFilter_andApply,
+      bookAccesses($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: bookAccessIdentifier,
+          alias: resource_book_accessPgResource.name,
+          localAttributes: registryConfig.pgRelations.book.bookAccessesByTheirBookId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.book.bookAccessesByTheirBookId.remoteAttributes
+        };
+        return $rel;
+      },
+      bookAccessesExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: bookAccessIdentifier,
+          alias: resource_book_accessPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.book.bookAccessesByTheirBookId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.book.bookAccessesByTheirBookId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
       budgets($where, value) {
         assertAllowed(value, "object");
         const $rel = $where.andPlan();
@@ -20647,6 +26424,30 @@ export const inputObjects = {
           $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
         });
       },
+      mileageLogs($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: mileageLogIdentifier,
+          alias: resource_mileage_logPgResource.name,
+          localAttributes: registryConfig.pgRelations.book.mileageLogsByTheirBookId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.book.mileageLogsByTheirBookId.remoteAttributes
+        };
+        return $rel;
+      },
+      mileageLogsExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: mileageLogIdentifier,
+          alias: resource_mileage_logPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.book.mileageLogsByTheirBookId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.book.mileageLogsByTheirBookId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
       netWorthSnapshots($where, value) {
         assertAllowed(value, "object");
         const $rel = $where.andPlan();
@@ -20700,6 +26501,54 @@ export const inputObjects = {
           $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
         });
       },
+      quickbooksAccountMaps($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: quickbooksAccountMapIdentifier,
+          alias: resource_quickbooks_account_mapPgResource.name,
+          localAttributes: registryConfig.pgRelations.book.quickbooksAccountMapsByTheirBookId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.book.quickbooksAccountMapsByTheirBookId.remoteAttributes
+        };
+        return $rel;
+      },
+      quickbooksAccountMapsExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: quickbooksAccountMapIdentifier,
+          alias: resource_quickbooks_account_mapPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.book.quickbooksAccountMapsByTheirBookId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.book.quickbooksAccountMapsByTheirBookId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
+      quickbooksMigrations($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: quickbooksMigrationIdentifier,
+          alias: resource_quickbooks_migrationPgResource.name,
+          localAttributes: registryConfig.pgRelations.book.quickbooksMigrationsByTheirBookId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.book.quickbooksMigrationsByTheirBookId.remoteAttributes
+        };
+        return $rel;
+      },
+      quickbooksMigrationsExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: quickbooksMigrationIdentifier,
+          alias: resource_quickbooks_migrationPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.book.quickbooksMigrationsByTheirBookId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.book.quickbooksMigrationsByTheirBookId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
       reconciliationQueues($where, value) {
         assertAllowed(value, "object");
         const $rel = $where.andPlan();
@@ -20721,6 +26570,30 @@ export const inputObjects = {
         });
         registryConfig.pgRelations.book.reconciliationQueuesByTheirBookId.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = registryConfig.pgRelations.book.reconciliationQueuesByTheirBookId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
+      reconciliationStatements($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: reconciliationStatementIdentifier,
+          alias: resource_reconciliation_statementPgResource.name,
+          localAttributes: registryConfig.pgRelations.book.reconciliationStatementsByTheirBookId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.book.reconciliationStatementsByTheirBookId.remoteAttributes
+        };
+        return $rel;
+      },
+      reconciliationStatementsExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: reconciliationStatementIdentifier,
+          alias: resource_reconciliation_statementPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.book.reconciliationStatementsByTheirBookId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.book.reconciliationStatementsByTheirBookId.remoteAttributes[i];
           $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
         });
       },
@@ -20823,6 +26696,30 @@ export const inputObjects = {
           $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
         });
       },
+      vehicles($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: vehicleIdentifier,
+          alias: resource_vehiclePgResource.name,
+          localAttributes: registryConfig.pgRelations.book.vehiclesByTheirBookId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.book.vehiclesByTheirBookId.remoteAttributes
+        };
+        return $rel;
+      },
+      vehiclesExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: vehicleIdentifier,
+          alias: resource_vehiclePgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.book.vehiclesByTheirBookId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.book.vehiclesByTheirBookId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
       vendors($where, value) {
         assertAllowed(value, "object");
         const $rel = $where.andPlan();
@@ -20896,6 +26793,13 @@ export const inputObjects = {
       some: AccountToManyAccountFilter_someApply
     }
   },
+  BookToManyBookAccessFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
   BookToManyBudgetFilter: {
     plans: {
       every: AccountToManyAccountFilter_everyApply,
@@ -20938,6 +26842,13 @@ export const inputObjects = {
       some: AccountToManyAccountFilter_someApply
     }
   },
+  BookToManyMileageLogFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
   BookToManyNetWorthSnapshotFilter: {
     plans: {
       every: AccountToManyAccountFilter_everyApply,
@@ -20952,7 +26863,28 @@ export const inputObjects = {
       some: AccountToManyAccountFilter_someApply
     }
   },
+  BookToManyQuickbooksAccountMapFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
+  BookToManyQuickbooksMigrationFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
   BookToManyReconciliationQueueFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
+  BookToManyReconciliationStatementFilter: {
     plans: {
       every: AccountToManyAccountFilter_everyApply,
       none: AccountToManyAccountFilter_noneApply,
@@ -20981,6 +26913,13 @@ export const inputObjects = {
     }
   },
   BookToManyTaxJurisdictionFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
+  BookToManyVehicleFilter: {
     plans: {
       every: AccountToManyAccountFilter_everyApply,
       none: AccountToManyAccountFilter_noneApply,
@@ -21177,8 +27116,10 @@ export const inputObjects = {
       mask: ConnectedAccountInput_maskApply,
       provider: PayrollConnectionInput_providerApply,
       providerAccountId: ConnectedAccountInput_providerAccountIdApply,
+      realmId: ConnectedAccountInput_realmIdApply,
+      refreshToken: PayrollConnectionInput_refreshTokenApply,
       rowId: JournalLineTagInput_rowIdApply,
-      status: PayrollConnectionInput_statusApply,
+      status: AccountingPeriodInput_statusApply,
       syncCursor: PayrollConnectionInput_syncCursorApply
     }
   },
@@ -21194,8 +27135,10 @@ export const inputObjects = {
       mask: ConnectedAccountInput_maskApply,
       provider: PayrollConnectionInput_providerApply,
       providerAccountId: ConnectedAccountInput_providerAccountIdApply,
+      realmId: ConnectedAccountInput_realmIdApply,
+      refreshToken: PayrollConnectionInput_refreshTokenApply,
       rowId: JournalLineTagInput_rowIdApply,
-      status: PayrollConnectionInput_statusApply,
+      status: AccountingPeriodInput_statusApply,
       syncCursor: PayrollConnectionInput_syncCursorApply
     }
   },
@@ -21229,6 +27172,12 @@ export const inputObjects = {
   CreateAccountMappingInput: {
     plans: {
       accountMapping: applyCreateFields,
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  CreateBookAccessInput: {
+    plans: {
+      bookAccess: applyCreateFields,
       clientMutationId: applyClientMutationIdForCreate
     }
   },
@@ -21280,6 +27229,12 @@ export const inputObjects = {
       fixedAsset: applyCreateFields
     }
   },
+  CreateImportProfileInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      importProfile: applyCreateFields
+    }
+  },
   CreateJournalEntryInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
@@ -21298,6 +27253,12 @@ export const inputObjects = {
       journalLineTag: applyCreateFields
     }
   },
+  CreateMileageLogInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      mileageLog: applyCreateFields
+    }
+  },
   CreateNetWorthSnapshotInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
@@ -21310,10 +27271,28 @@ export const inputObjects = {
       payrollConnection: applyCreateFields
     }
   },
+  CreateQuickbooksAccountMapInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      quickbooksAccountMap: applyCreateFields
+    }
+  },
+  CreateQuickbooksMigrationInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      quickbooksMigration: applyCreateFields
+    }
+  },
   CreateReconciliationQueueInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
       reconciliationQueue: applyCreateFields
+    }
+  },
+  CreateReconciliationStatementInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      reconciliationStatement: applyCreateFields
     }
   },
   CreateRecurringTransactionInput: {
@@ -21344,6 +27323,12 @@ export const inputObjects = {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
       taxJurisdiction: applyCreateFields
+    }
+  },
+  CreateVehicleInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      vehicle: applyCreateFields
     }
   },
   CreateVendorInput: {
@@ -21548,6 +27533,16 @@ export const inputObjects = {
       clientMutationId: applyClientMutationIdForCreate
     }
   },
+  DeleteBookAccessByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteBookAccessInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
   DeleteBookByIdInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate
@@ -21628,6 +27623,16 @@ export const inputObjects = {
       clientMutationId: applyClientMutationIdForCreate
     }
   },
+  DeleteImportProfileByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteImportProfileInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
   DeleteJournalEntryByIdInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate
@@ -21658,6 +27663,16 @@ export const inputObjects = {
       clientMutationId: applyClientMutationIdForCreate
     }
   },
+  DeleteMileageLogByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteMileageLogInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
   DeleteNetWorthSnapshotByIdInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate
@@ -21678,12 +27693,42 @@ export const inputObjects = {
       clientMutationId: applyClientMutationIdForCreate
     }
   },
+  DeleteQuickbooksAccountMapByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteQuickbooksAccountMapInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteQuickbooksMigrationByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteQuickbooksMigrationInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
   DeleteReconciliationQueueByIdInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate
     }
   },
   DeleteReconciliationQueueInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteReconciliationStatementByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteReconciliationStatementInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate
     }
@@ -21734,6 +27779,16 @@ export const inputObjects = {
     }
   },
   DeleteTaxJurisdictionInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteVehicleByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteVehicleInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate
     }
@@ -21796,7 +27851,7 @@ export const inputObjects = {
       createdAt: TagGroupInput_createdAtApply,
       depreciationExpenseAccountId: FixedAssetInput_depreciationExpenseAccountIdApply,
       depreciationMethod: FixedAssetInput_depreciationMethodApply,
-      description: FixedAssetInput_descriptionApply,
+      description: MileageLogInput_descriptionApply,
       disposalProceeds: FixedAssetInput_disposalProceedsApply,
       disposedAt: CryptoLotInput_disposedAtApply,
       macrsClass: FixedAssetInput_macrsClassApply,
@@ -21817,7 +27872,7 @@ export const inputObjects = {
       createdAt: TagGroupInput_createdAtApply,
       depreciationExpenseAccountId: FixedAssetInput_depreciationExpenseAccountIdApply,
       depreciationMethod: FixedAssetInput_depreciationMethodApply,
-      description: FixedAssetInput_descriptionApply,
+      description: MileageLogInput_descriptionApply,
       disposalProceeds: FixedAssetInput_disposalProceedsApply,
       disposedAt: CryptoLotInput_disposedAtApply,
       macrsClass: FixedAssetInput_macrsClassApply,
@@ -21825,6 +27880,48 @@ export const inputObjects = {
       rowId: JournalLineTagInput_rowIdApply,
       salvageValue: FixedAssetInput_salvageValueApply,
       usefulLifeMonths: FixedAssetInput_usefulLifeMonthsApply
+    }
+  },
+  ImportProfileCondition: {
+    plans: {
+      rowId: AccountCondition_rowIdApply
+    }
+  },
+  ImportProfileFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      book($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_bookPgResource, bookIdentifier, registryConfig.pgRelations.importProfile.bookByMyBookId.localAttributes, registryConfig.pgRelations.importProfile.bookByMyBookId.remoteAttributes, $where, value);
+      },
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_importProfile.attributes.id, queryBuilder, value);
+      }
+    }
+  },
+  ImportProfileInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      bookId: TagGroupInput_bookIdApply,
+      columnMap: ImportProfileInput_columnMapApply,
+      createdAt: TagGroupInput_createdAtApply,
+      headerRows: ImportProfileInput_headerRowsApply,
+      name: TagGroupInput_nameApply,
+      rowId: JournalLineTagInput_rowIdApply,
+      updatedAt: AccountMappingInput_updatedAtApply
+    }
+  },
+  ImportProfilePatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      bookId: TagGroupInput_bookIdApply,
+      columnMap: ImportProfileInput_columnMapApply,
+      createdAt: TagGroupInput_createdAtApply,
+      headerRows: ImportProfileInput_headerRowsApply,
+      name: TagGroupInput_nameApply,
+      rowId: JournalLineTagInput_rowIdApply,
+      updatedAt: AccountMappingInput_updatedAtApply
     }
   },
   IntFilter: {
@@ -22023,6 +28120,7 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       accountId: JournalLineInput_accountIdApply,
+      cleared: JournalLineInput_clearedApply,
       credit: JournalLineInput_creditApply,
       debit: JournalLineInput_debitApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
@@ -22034,6 +28132,7 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       accountId: JournalLineInput_accountIdApply,
+      cleared: JournalLineInput_clearedApply,
       credit: JournalLineInput_creditApply,
       debit: JournalLineInput_debitApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
@@ -22095,6 +28194,79 @@ export const inputObjects = {
       every: AccountToManyAccountFilter_everyApply,
       none: AccountToManyAccountFilter_noneApply,
       some: AccountToManyAccountFilter_someApply
+    }
+  },
+  MileageLogCondition: {
+    plans: {
+      bookId: AccountCondition_bookIdApply,
+      date($condition, val) {
+        return applyAttributeCondition("date", TYPES.text, $condition, val);
+      },
+      rowId: AccountCondition_rowIdApply,
+      vehicleId($condition, val) {
+        return applyAttributeCondition("vehicle_id", TYPES.uuid, $condition, val);
+      }
+    }
+  },
+  MileageLogFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      book($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_bookPgResource, bookIdentifier, registryConfig.pgRelations.mileageLog.bookByMyBookId.localAttributes, registryConfig.pgRelations.mileageLog.bookByMyBookId.remoteAttributes, $where, value);
+      },
+      bookId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("bookId", "book_id", spec_mileageLog.attributes.book_id, queryBuilder, value);
+      },
+      date(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("date", "date", spec_mileageLog.attributes.date, queryBuilder, value);
+      },
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_mileageLog.attributes.id, queryBuilder, value);
+      },
+      vehicle($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_vehiclePgResource, vehicleIdentifier, registryConfig.pgRelations.mileageLog.vehicleByMyVehicleId.localAttributes, registryConfig.pgRelations.mileageLog.vehicleByMyVehicleId.remoteAttributes, $where, value);
+      },
+      vehicleId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("vehicleId", "vehicle_id", spec_mileageLog.attributes.vehicle_id, queryBuilder, value);
+      }
+    }
+  },
+  MileageLogInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      bookId: TagGroupInput_bookIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      date: NetWorthSnapshotInput_dateApply,
+      description: MileageLogInput_descriptionApply,
+      destination: MileageLogInput_destinationApply,
+      distance: MileageLogInput_distanceApply,
+      isRoundTrip: MileageLogInput_isRoundTripApply,
+      odometerEnd: MileageLogInput_odometerEndApply,
+      odometerStart: MileageLogInput_odometerStartApply,
+      origin: MileageLogInput_originApply,
+      rowId: JournalLineTagInput_rowIdApply,
+      updatedAt: AccountMappingInput_updatedAtApply,
+      vehicleId: MileageLogInput_vehicleIdApply
+    }
+  },
+  MileageLogPatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      bookId: TagGroupInput_bookIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      date: NetWorthSnapshotInput_dateApply,
+      description: MileageLogInput_descriptionApply,
+      destination: MileageLogInput_destinationApply,
+      distance: MileageLogInput_distanceApply,
+      isRoundTrip: MileageLogInput_isRoundTripApply,
+      odometerEnd: MileageLogInput_odometerEndApply,
+      odometerStart: MileageLogInput_odometerStartApply,
+      origin: MileageLogInput_originApply,
+      rowId: JournalLineTagInput_rowIdApply,
+      updatedAt: AccountMappingInput_updatedAtApply,
+      vehicleId: MileageLogInput_vehicleIdApply
     }
   },
   NetWorthSnapshotCondition: {
@@ -22186,7 +28358,7 @@ export const inputObjects = {
       provider: PayrollConnectionInput_providerApply,
       refreshToken: PayrollConnectionInput_refreshTokenApply,
       rowId: JournalLineTagInput_rowIdApply,
-      status: PayrollConnectionInput_statusApply,
+      status: AccountingPeriodInput_statusApply,
       syncCursor: PayrollConnectionInput_syncCursorApply
     }
   },
@@ -22201,8 +28373,120 @@ export const inputObjects = {
       provider: PayrollConnectionInput_providerApply,
       refreshToken: PayrollConnectionInput_refreshTokenApply,
       rowId: JournalLineTagInput_rowIdApply,
-      status: PayrollConnectionInput_statusApply,
+      status: AccountingPeriodInput_statusApply,
       syncCursor: PayrollConnectionInput_syncCursorApply
+    }
+  },
+  QuickbooksAccountMapCondition: {
+    plans: {
+      bookId: AccountCondition_bookIdApply,
+      qboAccountId($condition, val) {
+        return applyAttributeCondition("qbo_account_id", TYPES.text, $condition, val);
+      },
+      rowId: AccountCondition_rowIdApply
+    }
+  },
+  QuickbooksAccountMapFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      book($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_bookPgResource, bookIdentifier, registryConfig.pgRelations.quickbooksAccountMap.bookByMyBookId.localAttributes, registryConfig.pgRelations.quickbooksAccountMap.bookByMyBookId.remoteAttributes, $where, value);
+      },
+      bookId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("bookId", "book_id", spec_quickbooksAccountMap.attributes.book_id, queryBuilder, value);
+      },
+      myfiAccount($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_accountPgResource, accountIdentifier, registryConfig.pgRelations.quickbooksAccountMap.accountByMyMyfiAccountId.localAttributes, registryConfig.pgRelations.quickbooksAccountMap.accountByMyMyfiAccountId.remoteAttributes, $where, value);
+      },
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      qboAccountId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("qboAccountId", "qbo_account_id", spec_quickbooksAccountMap.attributes.qbo_account_id, queryBuilder, value);
+      },
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_quickbooksAccountMap.attributes.id, queryBuilder, value);
+      }
+    }
+  },
+  QuickbooksAccountMapInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      bookId: TagGroupInput_bookIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      myfiAccountId: QuickbooksAccountMapInput_myfiAccountIdApply,
+      qboAccountId: QuickbooksAccountMapInput_qboAccountIdApply,
+      qboAccountName: QuickbooksAccountMapInput_qboAccountNameApply,
+      qboAccountType: QuickbooksAccountMapInput_qboAccountTypeApply,
+      rowId: JournalLineTagInput_rowIdApply,
+      updatedAt: AccountMappingInput_updatedAtApply
+    }
+  },
+  QuickbooksAccountMapPatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      bookId: TagGroupInput_bookIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      myfiAccountId: QuickbooksAccountMapInput_myfiAccountIdApply,
+      qboAccountId: QuickbooksAccountMapInput_qboAccountIdApply,
+      qboAccountName: QuickbooksAccountMapInput_qboAccountNameApply,
+      qboAccountType: QuickbooksAccountMapInput_qboAccountTypeApply,
+      rowId: JournalLineTagInput_rowIdApply,
+      updatedAt: AccountMappingInput_updatedAtApply
+    }
+  },
+  QuickbooksMigrationCondition: {
+    plans: {
+      bookId: AccountCondition_bookIdApply,
+      rowId: AccountCondition_rowIdApply
+    }
+  },
+  QuickbooksMigrationFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      book($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_bookPgResource, bookIdentifier, registryConfig.pgRelations.quickbooksMigration.bookByMyBookId.localAttributes, registryConfig.pgRelations.quickbooksMigration.bookByMyBookId.remoteAttributes, $where, value);
+      },
+      bookId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("bookId", "book_id", spec_quickbooksMigration.attributes.book_id, queryBuilder, value);
+      },
+      connectedAccount($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_connected_accountPgResource, connectedAccountIdentifier, registryConfig.pgRelations.quickbooksMigration.connectedAccountByMyConnectedAccountId.localAttributes, registryConfig.pgRelations.quickbooksMigration.connectedAccountByMyConnectedAccountId.remoteAttributes, $where, value);
+      },
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_quickbooksMigration.attributes.id, queryBuilder, value);
+      }
+    }
+  },
+  QuickbooksMigrationInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      bookId: TagGroupInput_bookIdApply,
+      connectedAccountId: QuickbooksMigrationInput_connectedAccountIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      entriesImported: QuickbooksMigrationInput_entriesImportedApply,
+      errorMessage: QuickbooksMigrationInput_errorMessageApply,
+      periodEnd: QuickbooksMigrationInput_periodEndApply,
+      periodStart: QuickbooksMigrationInput_periodStartApply,
+      rowId: JournalLineTagInput_rowIdApply,
+      status: AccountingPeriodInput_statusApply,
+      updatedAt: AccountMappingInput_updatedAtApply
+    }
+  },
+  QuickbooksMigrationPatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      bookId: TagGroupInput_bookIdApply,
+      connectedAccountId: QuickbooksMigrationInput_connectedAccountIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      entriesImported: QuickbooksMigrationInput_entriesImportedApply,
+      errorMessage: QuickbooksMigrationInput_errorMessageApply,
+      periodEnd: QuickbooksMigrationInput_periodEndApply,
+      periodStart: QuickbooksMigrationInput_periodStartApply,
+      rowId: JournalLineTagInput_rowIdApply,
+      status: AccountingPeriodInput_statusApply,
+      updatedAt: AccountMappingInput_updatedAtApply
     }
   },
   ReconciliationQueueCondition: {
@@ -22262,7 +28546,7 @@ export const inputObjects = {
       reviewedAt: ReconciliationQueueInput_reviewedAtApply,
       reviewedBy: ReconciliationQueueInput_reviewedByApply,
       rowId: JournalLineTagInput_rowIdApply,
-      status: PayrollConnectionInput_statusApply,
+      status: AccountingPeriodInput_statusApply,
       suggestedCreditAccountId: ReconciliationQueueInput_suggestedCreditAccountIdApply,
       suggestedDebitAccountId: ReconciliationQueueInput_suggestedDebitAccountIdApply
     }
@@ -22281,9 +28565,68 @@ export const inputObjects = {
       reviewedAt: ReconciliationQueueInput_reviewedAtApply,
       reviewedBy: ReconciliationQueueInput_reviewedByApply,
       rowId: JournalLineTagInput_rowIdApply,
-      status: PayrollConnectionInput_statusApply,
+      status: AccountingPeriodInput_statusApply,
       suggestedCreditAccountId: ReconciliationQueueInput_suggestedCreditAccountIdApply,
       suggestedDebitAccountId: ReconciliationQueueInput_suggestedDebitAccountIdApply
+    }
+  },
+  ReconciliationStatementCondition: {
+    plans: {
+      accountId: BudgetCondition_accountIdApply,
+      bookId: AccountCondition_bookIdApply,
+      rowId: AccountCondition_rowIdApply
+    }
+  },
+  ReconciliationStatementFilter: {
+    plans: {
+      account($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_accountPgResource, accountIdentifier, registryConfig.pgRelations.reconciliationStatement.accountByMyAccountId.localAttributes, registryConfig.pgRelations.reconciliationStatement.accountByMyAccountId.remoteAttributes, $where, value);
+      },
+      accountId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("accountId", "account_id", spec_reconciliationStatement.attributes.account_id, queryBuilder, value);
+      },
+      and: AccountFilter_andApply,
+      book($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_bookPgResource, bookIdentifier, registryConfig.pgRelations.reconciliationStatement.bookByMyBookId.localAttributes, registryConfig.pgRelations.reconciliationStatement.bookByMyBookId.remoteAttributes, $where, value);
+      },
+      bookId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("bookId", "book_id", spec_reconciliationStatement.attributes.book_id, queryBuilder, value);
+      },
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_reconciliationStatement.attributes.id, queryBuilder, value);
+      }
+    }
+  },
+  ReconciliationStatementInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      accountId: JournalLineInput_accountIdApply,
+      beginningBalance: ReconciliationStatementInput_beginningBalanceApply,
+      bookId: TagGroupInput_bookIdApply,
+      completedAt: ReconciliationStatementInput_completedAtApply,
+      createdAt: TagGroupInput_createdAtApply,
+      discrepancy: ReconciliationStatementInput_discrepancyApply,
+      rowId: JournalLineTagInput_rowIdApply,
+      statementBalance: ReconciliationStatementInput_statementBalanceApply,
+      statementDate: ReconciliationStatementInput_statementDateApply,
+      status: AccountingPeriodInput_statusApply
+    }
+  },
+  ReconciliationStatementPatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      accountId: JournalLineInput_accountIdApply,
+      beginningBalance: ReconciliationStatementInput_beginningBalanceApply,
+      bookId: TagGroupInput_bookIdApply,
+      completedAt: ReconciliationStatementInput_completedAtApply,
+      createdAt: TagGroupInput_createdAtApply,
+      discrepancy: ReconciliationStatementInput_discrepancyApply,
+      rowId: JournalLineTagInput_rowIdApply,
+      statementBalance: ReconciliationStatementInput_statementBalanceApply,
+      statementDate: ReconciliationStatementInput_statementDateApply,
+      status: AccountingPeriodInput_statusApply
     }
   },
   ReconciliationStatusFilter: {
@@ -22743,6 +29086,18 @@ export const inputObjects = {
       patch: applyCreateFields
     }
   },
+  UpdateBookAccessByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateBookAccessInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
   UpdateBookByIdInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
@@ -22839,6 +29194,18 @@ export const inputObjects = {
       patch: applyCreateFields
     }
   },
+  UpdateImportProfileByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateImportProfileInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
   UpdateJournalEntryByIdInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
@@ -22875,6 +29242,18 @@ export const inputObjects = {
       patch: applyCreateFields
     }
   },
+  UpdateMileageLogByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateMileageLogInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
   UpdateNetWorthSnapshotByIdInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
@@ -22899,6 +29278,30 @@ export const inputObjects = {
       patch: applyCreateFields
     }
   },
+  UpdateQuickbooksAccountMapByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateQuickbooksAccountMapInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateQuickbooksMigrationByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateQuickbooksMigrationInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
   UpdateReconciliationQueueByIdInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
@@ -22906,6 +29309,18 @@ export const inputObjects = {
     }
   },
   UpdateReconciliationQueueInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateReconciliationStatementByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateReconciliationStatementInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
       patch: applyCreateFields
@@ -22971,6 +29386,18 @@ export const inputObjects = {
       patch: applyCreateFields
     }
   },
+  UpdateVehicleByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateVehicleInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
   UpdateVendorByIdInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
@@ -22996,6 +29423,85 @@ export const inputObjects = {
       notDistinctFrom: pgAggregatesApply_notDistinctFrom,
       notEqualTo: pgAggregatesApply_notEqualTo,
       notIn: pgAggregatesApply_notIn
+    }
+  },
+  VehicleCondition: {
+    plans: {
+      bookId: AccountCondition_bookIdApply,
+      rowId: AccountCondition_rowIdApply
+    }
+  },
+  VehicleFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      book($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_bookPgResource, bookIdentifier, registryConfig.pgRelations.vehicle.bookByMyBookId.localAttributes, registryConfig.pgRelations.vehicle.bookByMyBookId.remoteAttributes, $where, value);
+      },
+      bookId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("bookId", "book_id", spec_vehicle.attributes.book_id, queryBuilder, value);
+      },
+      mileageLogs($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: mileageLogIdentifier,
+          alias: resource_mileage_logPgResource.name,
+          localAttributes: registryConfig.pgRelations.vehicle.mileageLogsByTheirVehicleId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.vehicle.mileageLogsByTheirVehicleId.remoteAttributes
+        };
+        return $rel;
+      },
+      mileageLogsExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: mileageLogIdentifier,
+          alias: resource_mileage_logPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.vehicle.mileageLogsByTheirVehicleId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.vehicle.mileageLogsByTheirVehicleId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_vehicle.attributes.id, queryBuilder, value);
+      }
+    }
+  },
+  VehicleInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      bookId: TagGroupInput_bookIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      dateInService: VehicleInput_dateInServiceApply,
+      make: VehicleInput_makeApply,
+      model: VehicleInput_modelApply,
+      name: TagGroupInput_nameApply,
+      rowId: JournalLineTagInput_rowIdApply,
+      year: VehicleInput_yearApply
+    }
+  },
+  VehiclePatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      bookId: TagGroupInput_bookIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      dateInService: VehicleInput_dateInServiceApply,
+      make: VehicleInput_makeApply,
+      model: VehicleInput_modelApply,
+      name: TagGroupInput_nameApply,
+      rowId: JournalLineTagInput_rowIdApply,
+      year: VehicleInput_yearApply
+    }
+  },
+  VehicleToManyMileageLogFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
     }
   },
   VendorCondition: {
@@ -23292,6 +29798,44 @@ export const enums = {
       ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply
     }
   },
+  BookAccessOrderBy: {
+    values: {
+      BOOK_ID_ASC: AccountOrderBy_BOOK_ID_ASCApply,
+      BOOK_ID_DESC: AccountOrderBy_BOOK_ID_DESCApply,
+      PRIMARY_KEY_ASC(queryBuilder) {
+        book_accessUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        book_accessUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply,
+      USER_ID_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "user_id",
+          direction: "ASC"
+        });
+      },
+      USER_ID_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "user_id",
+          direction: "DESC"
+        });
+      }
+    }
+  },
   BookOrderBy: {
     values: {
       ORGANIZATION_ID_ASC(queryBuilder) {
@@ -23532,6 +30076,30 @@ export const enums = {
       ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply
     }
   },
+  ImportProfileOrderBy: {
+    values: {
+      PRIMARY_KEY_ASC(queryBuilder) {
+        import_profileUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        import_profileUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply
+    }
+  },
   JournalEntryOrderBy: {
     values: {
       BOOK_ID_ASC: AccountOrderBy_BOOK_ID_ASCApply,
@@ -23658,6 +30226,46 @@ export const enums = {
       }
     }
   },
+  MileageLogOrderBy: {
+    values: {
+      BOOK_ID_ASC: AccountOrderBy_BOOK_ID_ASCApply,
+      BOOK_ID_DESC: AccountOrderBy_BOOK_ID_DESCApply,
+      DATE_ASC: JournalEntryOrderBy_DATE_ASCApply,
+      DATE_DESC: JournalEntryOrderBy_DATE_DESCApply,
+      PRIMARY_KEY_ASC(queryBuilder) {
+        mileage_logUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        mileage_logUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply,
+      VEHICLE_ID_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "vehicle_id",
+          direction: "ASC"
+        });
+      },
+      VEHICLE_ID_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "vehicle_id",
+          direction: "DESC"
+        });
+      }
+    }
+  },
   NetWorthSnapshotOrderBy: {
     values: {
       BOOK_ID_ASC: AccountOrderBy_BOOK_ID_ASCApply,
@@ -23714,6 +30322,70 @@ export const enums = {
       STATUS_DESC: AccountingPeriodOrderBy_STATUS_DESCApply
     }
   },
+  QuickbooksAccountMapOrderBy: {
+    values: {
+      BOOK_ID_ASC: AccountOrderBy_BOOK_ID_ASCApply,
+      BOOK_ID_DESC: AccountOrderBy_BOOK_ID_DESCApply,
+      PRIMARY_KEY_ASC(queryBuilder) {
+        quickbooks_account_mapUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        quickbooks_account_mapUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      QBO_ACCOUNT_ID_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "qbo_account_id",
+          direction: "ASC"
+        });
+      },
+      QBO_ACCOUNT_ID_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "qbo_account_id",
+          direction: "DESC"
+        });
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply
+    }
+  },
+  QuickbooksMigrationOrderBy: {
+    values: {
+      BOOK_ID_ASC: AccountOrderBy_BOOK_ID_ASCApply,
+      BOOK_ID_DESC: AccountOrderBy_BOOK_ID_DESCApply,
+      PRIMARY_KEY_ASC(queryBuilder) {
+        quickbooks_migrationUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        quickbooks_migrationUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply
+    }
+  },
   ReconciliationQueueOrderBy: {
     values: {
       BOOK_ID_ASC: AccountOrderBy_BOOK_ID_ASCApply,
@@ -23729,6 +30401,34 @@ export const enums = {
       },
       PRIMARY_KEY_DESC(queryBuilder) {
         reconciliation_queueUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply
+    }
+  },
+  ReconciliationStatementOrderBy: {
+    values: {
+      ACCOUNT_ID_ASC: BudgetOrderBy_ACCOUNT_ID_ASCApply,
+      ACCOUNT_ID_DESC: BudgetOrderBy_ACCOUNT_ID_DESCApply,
+      BOOK_ID_ASC: AccountOrderBy_BOOK_ID_ASCApply,
+      BOOK_ID_DESC: AccountOrderBy_BOOK_ID_DESCApply,
+      PRIMARY_KEY_ASC(queryBuilder) {
+        reconciliation_statementUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        reconciliation_statementUniques[0].attributes.forEach(attributeName => {
           queryBuilder.orderBy({
             attribute: attributeName,
             direction: "DESC"
@@ -23869,6 +30569,32 @@ export const enums = {
       },
       PRIMARY_KEY_DESC(queryBuilder) {
         tax_jurisdictionUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply
+    }
+  },
+  VehicleOrderBy: {
+    values: {
+      BOOK_ID_ASC: AccountOrderBy_BOOK_ID_ASCApply,
+      BOOK_ID_DESC: AccountOrderBy_BOOK_ID_DESCApply,
+      PRIMARY_KEY_ASC(queryBuilder) {
+        vehicleUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        vehicleUniques[0].attributes.forEach(attributeName => {
           queryBuilder.orderBy({
             attribute: attributeName,
             direction: "DESC"
