@@ -1,0 +1,47 @@
+import {
+  index,
+  integer,
+  numeric,
+  pgTable,
+  text,
+  timestamp,
+  uniqueIndex,
+  uuid,
+} from "drizzle-orm/pg-core";
+
+import { generateDefaultDate, generateDefaultId } from "lib/db/util";
+import { bookTable } from "./book.table";
+import { connectedAccountTable } from "./connectedAccount.table";
+
+export const quickbooksReconciliationTable = pgTable(
+  "quickbooks_reconciliation",
+  {
+    id: generateDefaultId(),
+    bookId: uuid("book_id")
+      .notNull()
+      .references(() => bookTable.id, { onDelete: "cascade" }),
+    connectedAccountId: uuid("connected_account_id")
+      .notNull()
+      .references(() => connectedAccountTable.id, { onDelete: "cascade" }),
+    status: text().notNull().default("pending"),
+    periodStart: timestamp("period_start", {
+      precision: 6,
+      mode: "string",
+      withTimezone: true,
+    }).notNull(),
+    periodEnd: timestamp("period_end", {
+      precision: 6,
+      mode: "string",
+      withTimezone: true,
+    }).notNull(),
+    totalVariance: numeric("total_variance", { precision: 19, scale: 4 }),
+    mismatchCount: integer("mismatch_count").notNull().default(0),
+    errorMessage: text("error_message"),
+    createdAt: generateDefaultDate(),
+    updatedAt: generateDefaultDate(),
+  },
+  (table) => [
+    uniqueIndex().on(table.id),
+    index("quickbooks_reconciliation_book_id_idx").on(table.bookId),
+  ],
+);

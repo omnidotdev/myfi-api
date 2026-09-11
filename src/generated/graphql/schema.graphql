@@ -62,11 +62,17 @@ type Query implements Node {
   """Get a single `QuickbooksMigration`."""
   quickbooksMigration(rowId: UUID!): QuickbooksMigration
 
+  """Get a single `QuickbooksReconciliationLine`."""
+  quickbooksReconciliationLine(rowId: UUID!): QuickbooksReconciliationLine
+
   """Get a single `PayrollConnection`."""
   payrollConnection(rowId: UUID!): PayrollConnection
 
   """Get a single `ReconciliationStatement`."""
   reconciliationStatement(rowId: UUID!): ReconciliationStatement
+
+  """Get a single `QuickbooksReconciliation`."""
+  quickbooksReconciliation(rowId: UUID!): QuickbooksReconciliation
 
   """Get a single `CryptoLot`."""
   cryptoLot(rowId: UUID!): CryptoLot
@@ -221,6 +227,16 @@ type Query implements Node {
     id: ID!
   ): QuickbooksMigration
 
+  """
+  Reads a single `QuickbooksReconciliationLine` using its globally unique `ID`.
+  """
+  quickbooksReconciliationLineById(
+    """
+    The globally unique `ID` to be used in selecting a single `QuickbooksReconciliationLine`.
+    """
+    id: ID!
+  ): QuickbooksReconciliationLine
+
   """Reads a single `PayrollConnection` using its globally unique `ID`."""
   payrollConnectionById(
     """
@@ -238,6 +254,16 @@ type Query implements Node {
     """
     id: ID!
   ): ReconciliationStatement
+
+  """
+  Reads a single `QuickbooksReconciliation` using its globally unique `ID`.
+  """
+  quickbooksReconciliationById(
+    """
+    The globally unique `ID` to be used in selecting a single `QuickbooksReconciliation`.
+    """
+    id: ID!
+  ): QuickbooksReconciliation
 
   """Reads a single `CryptoLot` using its globally unique `ID`."""
   cryptoLotById(
@@ -843,6 +869,42 @@ type Query implements Node {
     orderBy: [QuickbooksMigrationOrderBy!] = [PRIMARY_KEY_ASC]
   ): QuickbooksMigrationConnection
 
+  """
+  Reads and enables pagination through a set of `QuickbooksReconciliationLine`.
+  """
+  quickbooksReconciliationLines(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: QuickbooksReconciliationLineCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: QuickbooksReconciliationLineFilter
+
+    """The method to use when ordering `QuickbooksReconciliationLine`."""
+    orderBy: [QuickbooksReconciliationLineOrderBy!] = [PRIMARY_KEY_ASC]
+  ): QuickbooksReconciliationLineConnection
+
   """Reads and enables pagination through a set of `PayrollConnection`."""
   payrollConnections(
     """Only read the first `n` values of the set."""
@@ -912,6 +974,42 @@ type Query implements Node {
     """The method to use when ordering `ReconciliationStatement`."""
     orderBy: [ReconciliationStatementOrderBy!] = [PRIMARY_KEY_ASC]
   ): ReconciliationStatementConnection
+
+  """
+  Reads and enables pagination through a set of `QuickbooksReconciliation`.
+  """
+  quickbooksReconciliations(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: QuickbooksReconciliationCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: QuickbooksReconciliationFilter
+
+    """The method to use when ordering `QuickbooksReconciliation`."""
+    orderBy: [QuickbooksReconciliationOrderBy!] = [PRIMARY_KEY_ASC]
+  ): QuickbooksReconciliationConnection
 
   """Reads and enables pagination through a set of `CryptoLot`."""
   cryptoLots(
@@ -2450,6 +2548,78 @@ type Book implements Node {
     """The method to use when ordering `QuickbooksMigration`."""
     orderBy: [QuickbooksMigrationOrderBy!] = [PRIMARY_KEY_ASC]
   ): QuickbooksMigrationConnection!
+
+  """
+  Reads and enables pagination through a set of `QuickbooksReconciliation`.
+  """
+  quickbooksReconciliations(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: QuickbooksReconciliationCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: QuickbooksReconciliationFilter
+
+    """The method to use when ordering `QuickbooksReconciliation`."""
+    orderBy: [QuickbooksReconciliationOrderBy!] = [PRIMARY_KEY_ASC]
+  ): QuickbooksReconciliationConnection!
+
+  """
+  Reads and enables pagination through a set of `QuickbooksReconciliationLine`.
+  """
+  quickbooksReconciliationLines(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: QuickbooksReconciliationLineCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: QuickbooksReconciliationLineFilter
+
+    """The method to use when ordering `QuickbooksReconciliationLine`."""
+    orderBy: [QuickbooksReconciliationLineOrderBy!] = [PRIMARY_KEY_ASC]
+  ): QuickbooksReconciliationLineConnection!
 }
 
 enum BookType {
@@ -2877,6 +3047,18 @@ input BookFilter {
 
   """Some related `quickbooksMigrations` exist."""
   quickbooksMigrationsExist: Boolean
+
+  """Filter by the object’s `quickbooksReconciliations` relation."""
+  quickbooksReconciliations: BookToManyQuickbooksReconciliationFilter
+
+  """Some related `quickbooksReconciliations` exist."""
+  quickbooksReconciliationsExist: Boolean
+
+  """Filter by the object’s `quickbooksReconciliationLines` relation."""
+  quickbooksReconciliationLines: BookToManyQuickbooksReconciliationLineFilter
+
+  """Some related `quickbooksReconciliationLines` exist."""
+  quickbooksReconciliationLinesExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [BookFilter!]
@@ -4598,6 +4780,135 @@ input QuickbooksMigrationFilter {
 
   """Negates the expression."""
   not: QuickbooksMigrationFilter
+}
+
+"""
+A filter to be used against many `QuickbooksReconciliation` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyQuickbooksReconciliationFilter {
+  """
+  Every related `QuickbooksReconciliation` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: QuickbooksReconciliationFilter
+
+  """
+  Some related `QuickbooksReconciliation` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: QuickbooksReconciliationFilter
+
+  """
+  No related `QuickbooksReconciliation` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: QuickbooksReconciliationFilter
+}
+
+"""
+A filter to be used against `QuickbooksReconciliation` object types. All fields are combined with a logical ‘and.’
+"""
+input QuickbooksReconciliationFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `bookId` field."""
+  bookId: UUIDFilter
+
+  """
+  Filter by the object’s `quickbooksReconciliationLinesByReconciliationId` relation.
+  """
+  quickbooksReconciliationLinesByReconciliationId: QuickbooksReconciliationToManyQuickbooksReconciliationLineFilter
+
+  """Some related `quickbooksReconciliationLinesByReconciliationId` exist."""
+  quickbooksReconciliationLinesByReconciliationIdExist: Boolean
+
+  """Filter by the object’s `book` relation."""
+  book: BookFilter
+
+  """Filter by the object’s `connectedAccount` relation."""
+  connectedAccount: ConnectedAccountFilter
+
+  """Checks for all expressions in this list."""
+  and: [QuickbooksReconciliationFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [QuickbooksReconciliationFilter!]
+
+  """Negates the expression."""
+  not: QuickbooksReconciliationFilter
+}
+
+"""
+A filter to be used against many `QuickbooksReconciliationLine` object types. All fields are combined with a logical ‘and.’
+"""
+input QuickbooksReconciliationToManyQuickbooksReconciliationLineFilter {
+  """
+  Every related `QuickbooksReconciliationLine` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: QuickbooksReconciliationLineFilter
+
+  """
+  Some related `QuickbooksReconciliationLine` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: QuickbooksReconciliationLineFilter
+
+  """
+  No related `QuickbooksReconciliationLine` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: QuickbooksReconciliationLineFilter
+}
+
+"""
+A filter to be used against `QuickbooksReconciliationLine` object types. All fields are combined with a logical ‘and.’
+"""
+input QuickbooksReconciliationLineFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `reconciliationId` field."""
+  reconciliationId: UUIDFilter
+
+  """Filter by the object’s `bookId` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s `book` relation."""
+  book: BookFilter
+
+  """Filter by the object’s `myfiAccount` relation."""
+  myfiAccount: AccountFilter
+
+  """A related `myfiAccount` exists."""
+  myfiAccountExists: Boolean
+
+  """Filter by the object’s `reconciliation` relation."""
+  reconciliation: QuickbooksReconciliationFilter
+
+  """Checks for all expressions in this list."""
+  and: [QuickbooksReconciliationLineFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [QuickbooksReconciliationLineFilter!]
+
+  """Negates the expression."""
+  not: QuickbooksReconciliationLineFilter
+}
+
+"""
+A filter to be used against many `QuickbooksReconciliationLine` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyQuickbooksReconciliationLineFilter {
+  """
+  Every related `QuickbooksReconciliationLine` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: QuickbooksReconciliationLineFilter
+
+  """
+  Some related `QuickbooksReconciliationLine` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: QuickbooksReconciliationLineFilter
+
+  """
+  No related `QuickbooksReconciliationLine` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: QuickbooksReconciliationLineFilter
 }
 
 """
@@ -6820,6 +7131,209 @@ enum QuickbooksMigrationOrderBy {
   BOOK_ID_DESC
 }
 
+"""A connection to a list of `QuickbooksReconciliation` values."""
+type QuickbooksReconciliationConnection {
+  """A list of `QuickbooksReconciliation` objects."""
+  nodes: [QuickbooksReconciliation]!
+
+  """
+  A list of edges which contains the `QuickbooksReconciliation` and cursor to aid in pagination.
+  """
+  edges: [QuickbooksReconciliationEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `QuickbooksReconciliation` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+type QuickbooksReconciliation implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  connectedAccountId: UUID!
+  status: String!
+  periodStart: Datetime!
+  periodEnd: Datetime!
+  totalVariance: BigFloat
+  mismatchCount: Int!
+  errorMessage: String
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """
+  Reads a single `Book` that is related to this `QuickbooksReconciliation`.
+  """
+  book: Book
+
+  """
+  Reads a single `ConnectedAccount` that is related to this `QuickbooksReconciliation`.
+  """
+  connectedAccount: ConnectedAccount
+
+  """
+  Reads and enables pagination through a set of `QuickbooksReconciliationLine`.
+  """
+  quickbooksReconciliationLinesByReconciliationId(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: QuickbooksReconciliationLineCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: QuickbooksReconciliationLineFilter
+
+    """The method to use when ordering `QuickbooksReconciliationLine`."""
+    orderBy: [QuickbooksReconciliationLineOrderBy!] = [PRIMARY_KEY_ASC]
+  ): QuickbooksReconciliationLineConnection!
+}
+
+"""A connection to a list of `QuickbooksReconciliationLine` values."""
+type QuickbooksReconciliationLineConnection {
+  """A list of `QuickbooksReconciliationLine` objects."""
+  nodes: [QuickbooksReconciliationLine]!
+
+  """
+  A list of edges which contains the `QuickbooksReconciliationLine` and cursor to aid in pagination.
+  """
+  edges: [QuickbooksReconciliationLineEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `QuickbooksReconciliationLine` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+type QuickbooksReconciliationLine implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  reconciliationId: UUID!
+  bookId: UUID!
+  myfiAccountId: UUID
+  qboAccountId: String
+  accountName: String!
+  qboBalance: BigFloat!
+  myfiBalance: BigFloat!
+  variance: BigFloat!
+  createdAt: Datetime
+
+  """
+  Reads a single `Book` that is related to this `QuickbooksReconciliationLine`.
+  """
+  book: Book
+
+  """
+  Reads a single `Account` that is related to this `QuickbooksReconciliationLine`.
+  """
+  myfiAccount: Account
+
+  """
+  Reads a single `QuickbooksReconciliation` that is related to this `QuickbooksReconciliationLine`.
+  """
+  reconciliation: QuickbooksReconciliation
+}
+
+"""A `QuickbooksReconciliationLine` edge in the connection."""
+type QuickbooksReconciliationLineEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `QuickbooksReconciliationLine` at the end of the edge."""
+  node: QuickbooksReconciliationLine
+}
+
+"""
+A condition to be used against `QuickbooksReconciliationLine` object types. All
+fields are tested for equality and combined with a logical ‘and.’
+"""
+input QuickbooksReconciliationLineCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `reconciliationId` field."""
+  reconciliationId: UUID
+
+  """Checks for equality with the object’s `bookId` field."""
+  bookId: UUID
+}
+
+"""Methods to use when ordering `QuickbooksReconciliationLine`."""
+enum QuickbooksReconciliationLineOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  RECONCILIATION_ID_ASC
+  RECONCILIATION_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+}
+
+"""A `QuickbooksReconciliation` edge in the connection."""
+type QuickbooksReconciliationEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `QuickbooksReconciliation` at the end of the edge."""
+  node: QuickbooksReconciliation
+}
+
+"""
+A condition to be used against `QuickbooksReconciliation` object types. All
+fields are tested for equality and combined with a logical ‘and.’
+"""
+input QuickbooksReconciliationCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `bookId` field."""
+  bookId: UUID
+}
+
+"""Methods to use when ordering `QuickbooksReconciliation`."""
+enum QuickbooksReconciliationOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+}
+
 type _DrizzleMigration implements Node {
   """
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
@@ -7153,6 +7667,14 @@ type Mutation {
     input: CreateQuickbooksMigrationInput!
   ): CreateQuickbooksMigrationPayload
 
+  """Creates a single `QuickbooksReconciliationLine`."""
+  createQuickbooksReconciliationLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateQuickbooksReconciliationLineInput!
+  ): CreateQuickbooksReconciliationLinePayload
+
   """Creates a single `PayrollConnection`."""
   createPayrollConnection(
     """
@@ -7168,6 +7690,14 @@ type Mutation {
     """
     input: CreateReconciliationStatementInput!
   ): CreateReconciliationStatementPayload
+
+  """Creates a single `QuickbooksReconciliation`."""
+  createQuickbooksReconciliation(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateQuickbooksReconciliationInput!
+  ): CreateQuickbooksReconciliationPayload
 
   """Creates a single `CryptoLot`."""
   createCryptoLot(
@@ -7540,6 +8070,26 @@ type Mutation {
   ): UpdateQuickbooksMigrationPayload
 
   """
+  Updates a single `QuickbooksReconciliationLine` using its globally unique id and a patch.
+  """
+  updateQuickbooksReconciliationLineById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateQuickbooksReconciliationLineByIdInput!
+  ): UpdateQuickbooksReconciliationLinePayload
+
+  """
+  Updates a single `QuickbooksReconciliationLine` using a unique key and a patch.
+  """
+  updateQuickbooksReconciliationLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateQuickbooksReconciliationLineInput!
+  ): UpdateQuickbooksReconciliationLinePayload
+
+  """
   Updates a single `PayrollConnection` using its globally unique id and a patch.
   """
   updatePayrollConnectionById(
@@ -7576,6 +8126,26 @@ type Mutation {
     """
     input: UpdateReconciliationStatementInput!
   ): UpdateReconciliationStatementPayload
+
+  """
+  Updates a single `QuickbooksReconciliation` using its globally unique id and a patch.
+  """
+  updateQuickbooksReconciliationById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateQuickbooksReconciliationByIdInput!
+  ): UpdateQuickbooksReconciliationPayload
+
+  """
+  Updates a single `QuickbooksReconciliation` using a unique key and a patch.
+  """
+  updateQuickbooksReconciliation(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateQuickbooksReconciliationInput!
+  ): UpdateQuickbooksReconciliationPayload
 
   """Updates a single `CryptoLot` using its globally unique id and a patch."""
   updateCryptoLotById(
@@ -8043,6 +8613,24 @@ type Mutation {
     input: DeleteQuickbooksMigrationInput!
   ): DeleteQuickbooksMigrationPayload
 
+  """
+  Deletes a single `QuickbooksReconciliationLine` using its globally unique id.
+  """
+  deleteQuickbooksReconciliationLineById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteQuickbooksReconciliationLineByIdInput!
+  ): DeleteQuickbooksReconciliationLinePayload
+
+  """Deletes a single `QuickbooksReconciliationLine` using a unique key."""
+  deleteQuickbooksReconciliationLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteQuickbooksReconciliationLineInput!
+  ): DeleteQuickbooksReconciliationLinePayload
+
   """Deletes a single `PayrollConnection` using its globally unique id."""
   deletePayrollConnectionById(
     """
@@ -8076,6 +8664,24 @@ type Mutation {
     """
     input: DeleteReconciliationStatementInput!
   ): DeleteReconciliationStatementPayload
+
+  """
+  Deletes a single `QuickbooksReconciliation` using its globally unique id.
+  """
+  deleteQuickbooksReconciliationById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteQuickbooksReconciliationByIdInput!
+  ): DeleteQuickbooksReconciliationPayload
+
+  """Deletes a single `QuickbooksReconciliation` using a unique key."""
+  deleteQuickbooksReconciliation(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteQuickbooksReconciliationInput!
+  ): DeleteQuickbooksReconciliationPayload
 
   """Deletes a single `CryptoLot` using its globally unique id."""
   deleteCryptoLotById(
@@ -8974,6 +9580,57 @@ input QuickbooksMigrationInput {
   updatedAt: Datetime
 }
 
+"""The output of our create `QuickbooksReconciliationLine` mutation."""
+type CreateQuickbooksReconciliationLinePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `QuickbooksReconciliationLine` that was created by this mutation."""
+  quickbooksReconciliationLine: QuickbooksReconciliationLine
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """
+  An edge for our `QuickbooksReconciliationLine`. May be used by Relay 1.
+  """
+  quickbooksReconciliationLineEdge(
+    """The method to use when ordering `QuickbooksReconciliationLine`."""
+    orderBy: [QuickbooksReconciliationLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): QuickbooksReconciliationLineEdge
+}
+
+"""All input for the create `QuickbooksReconciliationLine` mutation."""
+input CreateQuickbooksReconciliationLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `QuickbooksReconciliationLine` to be created by this mutation."""
+  quickbooksReconciliationLine: QuickbooksReconciliationLineInput!
+}
+
+"""An input for mutations affecting `QuickbooksReconciliationLine`"""
+input QuickbooksReconciliationLineInput {
+  rowId: UUID
+  reconciliationId: UUID!
+  bookId: UUID!
+  myfiAccountId: UUID
+  qboAccountId: String
+  accountName: String!
+  qboBalance: BigFloat
+  myfiBalance: BigFloat
+  variance: BigFloat
+  createdAt: Datetime
+}
+
 """The output of our create `PayrollConnection` mutation."""
 type CreatePayrollConnectionPayload {
   """
@@ -9070,6 +9727,56 @@ input ReconciliationStatementInput {
   completedAt: Datetime
   discrepancy: BigFloat
   createdAt: Datetime
+}
+
+"""The output of our create `QuickbooksReconciliation` mutation."""
+type CreateQuickbooksReconciliationPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `QuickbooksReconciliation` that was created by this mutation."""
+  quickbooksReconciliation: QuickbooksReconciliation
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `QuickbooksReconciliation`. May be used by Relay 1."""
+  quickbooksReconciliationEdge(
+    """The method to use when ordering `QuickbooksReconciliation`."""
+    orderBy: [QuickbooksReconciliationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): QuickbooksReconciliationEdge
+}
+
+"""All input for the create `QuickbooksReconciliation` mutation."""
+input CreateQuickbooksReconciliationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `QuickbooksReconciliation` to be created by this mutation."""
+  quickbooksReconciliation: QuickbooksReconciliationInput!
+}
+
+"""An input for mutations affecting `QuickbooksReconciliation`"""
+input QuickbooksReconciliationInput {
+  rowId: UUID
+  bookId: UUID!
+  connectedAccountId: UUID!
+  status: String
+  periodStart: Datetime!
+  periodEnd: Datetime!
+  totalVariance: BigFloat
+  mismatchCount: Int
+  errorMessage: String
+  createdAt: Datetime
+  updatedAt: Datetime
 }
 
 """The output of our create `CryptoLot` mutation."""
@@ -10783,6 +11490,81 @@ input UpdateQuickbooksMigrationInput {
   patch: QuickbooksMigrationPatch!
 }
 
+"""The output of our update `QuickbooksReconciliationLine` mutation."""
+type UpdateQuickbooksReconciliationLinePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `QuickbooksReconciliationLine` that was updated by this mutation."""
+  quickbooksReconciliationLine: QuickbooksReconciliationLine
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """
+  An edge for our `QuickbooksReconciliationLine`. May be used by Relay 1.
+  """
+  quickbooksReconciliationLineEdge(
+    """The method to use when ordering `QuickbooksReconciliationLine`."""
+    orderBy: [QuickbooksReconciliationLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): QuickbooksReconciliationLineEdge
+}
+
+"""All input for the `updateQuickbooksReconciliationLineById` mutation."""
+input UpdateQuickbooksReconciliationLineByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `QuickbooksReconciliationLine` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `QuickbooksReconciliationLine` being updated.
+  """
+  patch: QuickbooksReconciliationLinePatch!
+}
+
+"""
+Represents an update to a `QuickbooksReconciliationLine`. Fields that are set will be updated.
+"""
+input QuickbooksReconciliationLinePatch {
+  rowId: UUID
+  reconciliationId: UUID
+  bookId: UUID
+  myfiAccountId: UUID
+  qboAccountId: String
+  accountName: String
+  qboBalance: BigFloat
+  myfiBalance: BigFloat
+  variance: BigFloat
+  createdAt: Datetime
+}
+
+"""All input for the `updateQuickbooksReconciliationLine` mutation."""
+input UpdateQuickbooksReconciliationLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `QuickbooksReconciliationLine` being updated.
+  """
+  patch: QuickbooksReconciliationLinePatch!
+}
+
 """The output of our update `PayrollConnection` mutation."""
 type UpdatePayrollConnectionPayload {
   """
@@ -10927,6 +11709,80 @@ input UpdateReconciliationStatementInput {
   An object where the defined keys will be set on the `ReconciliationStatement` being updated.
   """
   patch: ReconciliationStatementPatch!
+}
+
+"""The output of our update `QuickbooksReconciliation` mutation."""
+type UpdateQuickbooksReconciliationPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `QuickbooksReconciliation` that was updated by this mutation."""
+  quickbooksReconciliation: QuickbooksReconciliation
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `QuickbooksReconciliation`. May be used by Relay 1."""
+  quickbooksReconciliationEdge(
+    """The method to use when ordering `QuickbooksReconciliation`."""
+    orderBy: [QuickbooksReconciliationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): QuickbooksReconciliationEdge
+}
+
+"""All input for the `updateQuickbooksReconciliationById` mutation."""
+input UpdateQuickbooksReconciliationByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `QuickbooksReconciliation` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `QuickbooksReconciliation` being updated.
+  """
+  patch: QuickbooksReconciliationPatch!
+}
+
+"""
+Represents an update to a `QuickbooksReconciliation`. Fields that are set will be updated.
+"""
+input QuickbooksReconciliationPatch {
+  rowId: UUID
+  bookId: UUID
+  connectedAccountId: UUID
+  status: String
+  periodStart: Datetime
+  periodEnd: Datetime
+  totalVariance: BigFloat
+  mismatchCount: Int
+  errorMessage: String
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the `updateQuickbooksReconciliation` mutation."""
+input UpdateQuickbooksReconciliationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `QuickbooksReconciliation` being updated.
+  """
+  patch: QuickbooksReconciliationPatch!
 }
 
 """The output of our update `CryptoLot` mutation."""
@@ -12624,6 +13480,56 @@ input DeleteQuickbooksMigrationInput {
   rowId: UUID!
 }
 
+"""The output of our delete `QuickbooksReconciliationLine` mutation."""
+type DeleteQuickbooksReconciliationLinePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `QuickbooksReconciliationLine` that was deleted by this mutation."""
+  quickbooksReconciliationLine: QuickbooksReconciliationLine
+  deletedQuickbooksReconciliationLineId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """
+  An edge for our `QuickbooksReconciliationLine`. May be used by Relay 1.
+  """
+  quickbooksReconciliationLineEdge(
+    """The method to use when ordering `QuickbooksReconciliationLine`."""
+    orderBy: [QuickbooksReconciliationLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): QuickbooksReconciliationLineEdge
+}
+
+"""All input for the `deleteQuickbooksReconciliationLineById` mutation."""
+input DeleteQuickbooksReconciliationLineByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `QuickbooksReconciliationLine` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteQuickbooksReconciliationLine` mutation."""
+input DeleteQuickbooksReconciliationLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete `PayrollConnection` mutation."""
 type DeletePayrollConnectionPayload {
   """
@@ -12712,6 +13618,54 @@ input DeleteReconciliationStatementByIdInput {
 
 """All input for the `deleteReconciliationStatement` mutation."""
 input DeleteReconciliationStatementInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `QuickbooksReconciliation` mutation."""
+type DeleteQuickbooksReconciliationPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `QuickbooksReconciliation` that was deleted by this mutation."""
+  quickbooksReconciliation: QuickbooksReconciliation
+  deletedQuickbooksReconciliationId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `QuickbooksReconciliation`. May be used by Relay 1."""
+  quickbooksReconciliationEdge(
+    """The method to use when ordering `QuickbooksReconciliation`."""
+    orderBy: [QuickbooksReconciliationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): QuickbooksReconciliationEdge
+}
+
+"""All input for the `deleteQuickbooksReconciliationById` mutation."""
+input DeleteQuickbooksReconciliationByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `QuickbooksReconciliation` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteQuickbooksReconciliation` mutation."""
+input DeleteQuickbooksReconciliationInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.

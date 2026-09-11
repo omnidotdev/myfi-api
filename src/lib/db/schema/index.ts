@@ -18,6 +18,8 @@ export * from "./netWorthSnapshot.table";
 export * from "./payrollConnection.table";
 export * from "./quickbooksAccountMap.table";
 export * from "./quickbooksMigration.table";
+export * from "./quickbooksReconciliation.table";
+export * from "./quickbooksReconciliationLine.table";
 export * from "./reconciliationQueue.table";
 export * from "./reconciliationStatement.table";
 export * from "./recurringTransaction.table";
