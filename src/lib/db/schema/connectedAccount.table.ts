@@ -33,6 +33,8 @@ export const connectedAccountTable = pgTable(
       withTimezone: true,
     }),
     syncCursor: text("sync_cursor"),
+    refreshToken: text("refresh_token"),
+    realmId: text("realm_id"),
     createdAt: generateDefaultDate(),
   },
   (table) => [

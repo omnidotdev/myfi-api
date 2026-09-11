@@ -16,6 +16,8 @@ export * from "./journalLineTag.table";
 export * from "./mileageLog.table";
 export * from "./netWorthSnapshot.table";
 export * from "./payrollConnection.table";
+export * from "./quickbooksAccountMap.table";
+export * from "./quickbooksMigration.table";
 export * from "./reconciliationQueue.table";
 export * from "./reconciliationStatement.table";
 export * from "./recurringTransaction.table";
