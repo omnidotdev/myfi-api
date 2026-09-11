@@ -1,8 +1,9 @@
-import { eq } from "drizzle-orm";
+import { and, eq, gt } from "drizzle-orm";
 
 import { dbPool } from "lib/db/db";
 import {
   connectedAccountTable,
+  journalEntryTable,
   quickbooksCutoverTable,
   quickbooksReconciliationTable,
 } from "lib/db/schema";
@@ -76,6 +77,36 @@ export const runCutover = async (opts: {
   // completed with zero mismatches. Nothing is written when the gate fails
   if (recon.status !== "complete" || Number(recon.mismatchCount) !== 0) {
     throw new CutoverNotReconciledError("Book has not reconciled cleanly");
+  }
+
+  // Freshness guard: a clean tie-out only authorizes a cutover while the MyFi
+  // ledger is unchanged since it was verified. A book can drift after
+  // reconciling (a later QBO backfill, a manual journal entry, a Plaid import),
+  // and the stale reconciliationId would otherwise still pass the gate above.
+  // recon.updatedAt is the completion timestamp (reconcile sets status running
+  // then complete, touching updatedAt), so any journal entry created after it
+  // means the book no longer ties out. Bounded existence check: select a single
+  // id, never the whole ledger. Nothing is written when this gate fails.
+  // A complete run always carries a completion timestamp (updatedAt defaults to
+  // now and reconcile updates it), so a missing one is a corrupt state we
+  // cannot prove freshness against: fail closed rather than authorize a cutover
+  if (!recon.updatedAt) {
+    throw new CutoverNotReconciledError("Book changed since reconciliation");
+  }
+
+  const [changedEntry] = await dbPool
+    .select({ id: journalEntryTable.id })
+    .from(journalEntryTable)
+    .where(
+      and(
+        eq(journalEntryTable.bookId, bookId),
+        gt(journalEntryTable.createdAt, recon.updatedAt),
+      ),
+    )
+    .limit(1);
+
+  if (changedEntry) {
+    throw new CutoverNotReconciledError("Book changed since reconciliation");
   }
 
   // Insert the cutover row and disconnect the connection atomically. The unique

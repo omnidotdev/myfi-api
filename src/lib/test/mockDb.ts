@@ -46,10 +46,12 @@ const buildResult = (data: unknown[]): any => {
       return Object.assign(result, {
         orderBy: mock(() => [...data]),
         groupBy: mock(() => [...data]),
+        limit: mock(() => [...data]),
       });
     }),
     orderBy: mock(() => [...data]),
     groupBy: mock(() => [...data]),
+    limit: mock(() => [...data]),
     innerJoin: mock(() => buildResult(data)),
     leftJoin: mock(() => buildResult(data)),
   });

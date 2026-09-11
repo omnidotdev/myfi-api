@@ -105,12 +105,16 @@ const RECON = {
   connectedAccountId: "conn-1",
   status: "complete",
   mismatchCount: 0,
+  updatedAt: "2026-09-01T00:00:00.000Z",
 };
 
 const setup = (
   overrides: {
     account?: Record<string, unknown> | null;
     recon?: Record<string, unknown> | null;
+    // Rows the freshness query returns: a non-empty array means a journal
+    // entry was created after the reconciliation completed (the book drifted)
+    postReconEntries?: unknown[];
   } = {},
 ) => {
   const account =
@@ -119,7 +123,14 @@ const setup = (
       : { ...ACCOUNT, ...overrides.account };
   const recon =
     overrides.recon === null ? undefined : { ...RECON, ...overrides.recon };
-  setSelectResults([account ? [account] : [], recon ? [recon] : []]);
+  // The freshness query is the third select in runCutover (account, recon,
+  // then post-recon journal entries); queue an empty result by default so an
+  // unchanged book proceeds
+  setSelectResults([
+    account ? [account] : [],
+    recon ? [recon] : [],
+    overrides.postReconEntries ?? [],
+  ]);
 };
 
 const run = () =>
@@ -194,6 +205,22 @@ describe("runCutover", () => {
     setup({ recon: { mismatchCount: 3 } });
 
     await expect(run()).rejects.toBeInstanceOf(CutoverNotReconciledError);
+
+    expect(cutoverInserts()).toHaveLength(0);
+    expect(connectedDisconnects()).toHaveLength(0);
+    expect(mockTransaction).not.toHaveBeenCalled();
+    expect(mockRevokeToken).not.toHaveBeenCalled();
+  });
+
+  test("freshness fail: book changed since recon throws and writes nothing", async () => {
+    // Tie-out gate passes (complete, zero mismatches), but a journal entry was
+    // created after the reconciliation completed, so the book has drifted and
+    // the stale tie-out must not authorize a cutover
+    setup({ postReconEntries: [{ id: "je-post-recon" }] });
+
+    const error = await run().catch((caught: unknown) => caught);
+    expect(error).toBeInstanceOf(CutoverNotReconciledError);
+    expect((error as Error).message).toBe("Book changed since reconciliation");
 
     expect(cutoverInserts()).toHaveLength(0);
     expect(connectedDisconnects()).toHaveLength(0);
