@@ -166,9 +166,16 @@ describe("runCutover", () => {
 
     const disconnects = connectedDisconnects();
     expect(disconnects).toHaveLength(1);
-    expect(disconnects[0]?.values.status).toBe("disconnected");
+    // The disconnect also clears the stored credentials, so a later revoke
+    // failure can never leave MyFi holding a live QBO credential
+    expect(disconnects[0]?.values).toMatchObject({
+      status: "disconnected",
+      accessToken: null,
+      refreshToken: null,
+    });
 
-    // Revoke is called with the decrypted refresh token
+    // Revoke is still called with the in-memory decrypted refresh token
+    // captured before the columns were nulled
     expect(revokeCalls).toEqual(["dec(enc-refresh)"]);
   });
 
@@ -264,6 +271,18 @@ describe("runCutover", () => {
     });
     // The insert was attempted, but the connection is not disconnected again
     expect(cutoverInserts()).toHaveLength(1);
+    expect(connectedDisconnects()).toHaveLength(0);
+    expect(mockRevokeToken).not.toHaveBeenCalled();
+  });
+
+  test("conflict with no existing row throws instead of returning a blank id", async () => {
+    setup();
+    // A conflict (no returning row) but the follow-up select finds nothing: an
+    // impossible state that must fail loudly rather than return ""
+    cutoverInsertReturning = [];
+    existingCutoverRows = [];
+
+    await expect(run()).rejects.toThrow(/no existing row/i);
     expect(connectedDisconnects()).toHaveLength(0);
     expect(mockRevokeToken).not.toHaveBeenCalled();
   });

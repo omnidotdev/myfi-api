@@ -96,12 +96,23 @@ export const runCutover = async (opts: {
         .from(quickbooksCutoverTable)
         .where(eq(quickbooksCutoverTable.bookId, bookId));
 
-      return { cutoverId: existing?.id ?? "", alreadyCutOver: true };
+      // A conflict means a cutover row exists, so a missing one here is an
+      // impossible state. Fail loudly rather than returning a blank id
+      if (!existing) {
+        throw new Error("Cutover conflict but no existing row found");
+      }
+
+      return { cutoverId: existing.id, alreadyCutOver: true };
     }
 
+    // Clear the stored credentials alongside the disconnect, so if the
+    // post-commit revoke later fails MyFi never retains a live QBO credential
+    // for an account it now treats as disconnected. The revoke below reads the
+    // in-memory refresh token captured before this update, not the DB row, so
+    // nulling the columns here does not break it
     await tx
       .update(connectedAccountTable)
-      .set({ status: "disconnected" })
+      .set({ status: "disconnected", accessToken: null, refreshToken: null })
       .where(eq(connectedAccountTable.id, connectedAccountId));
 
     return { cutoverId: inserted.id, alreadyCutOver: false };
