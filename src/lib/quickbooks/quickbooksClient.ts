@@ -3,7 +3,11 @@ import {
   QBO_CLIENT_SECRET,
   QBO_REDIRECT_URI,
 } from "lib/config/env.config";
-import { QBO_TOKEN_URL, quickbooksBaseUrl } from "./quickbooksConfig";
+import {
+  QBO_REVOKE_URL,
+  QBO_TOKEN_URL,
+  quickbooksBaseUrl,
+} from "./quickbooksConfig";
 
 /** Default QBO query page size (STARTPOSITION/MAXRESULTS window) */
 export const PAGE_SIZE = 1000;
@@ -184,6 +188,29 @@ export const refreshAccessToken = async (
     accessToken: tokens.access_token,
     refreshToken: tokens.refresh_token ?? refreshToken,
   };
+};
+
+/**
+ * Best-effort revoke of a refresh token at Intuit.
+ * Resolves on success, throws only on a non-ok response. The error carries the
+ * status only, never the token or the response body
+ * @param refreshToken - Refresh token to revoke
+ */
+export const revokeToken = async (refreshToken: string): Promise<void> => {
+  const res = await fetch(QBO_REVOKE_URL, {
+    method: "POST",
+    headers: {
+      Authorization: basicAuthHeader(),
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({ token: refreshToken }),
+  });
+
+  if (!res.ok) {
+    // Surface status only, never the token or response body
+    throw new Error(`QuickBooks token revoke failed: ${res.status}`);
+  }
 };
 
 /** Perform a single authed GET against the company API */
