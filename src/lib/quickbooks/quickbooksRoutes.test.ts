@@ -34,6 +34,21 @@ mock.module("./reconcile", () => ({
   runReconciliation: mockRunReconciliation,
 }));
 
+// The real cutover module is imported via a query param (bypassing the mock
+// registry) so the genuine CutoverNotReconciledError class identity is
+// preserved: the route's instanceof check must recognize errors this test
+// throws. Only runCutover is stubbed
+// @ts-expect-error -- query-param import forces the real module, no types
+const realCutover = await import("./cutover.ts?real");
+const { CutoverNotReconciledError } = realCutover;
+const mockRunCutover = mock(() =>
+  Promise.resolve({ cutoverId: "c1", alreadyCutOver: false }),
+);
+mock.module("./cutover", () => ({
+  ...realCutover,
+  runCutover: mockRunCutover,
+}));
+
 // mock.module is global across every test file in one process, and this file
 // sorts before reconcile.test.ts, so leaving the stub registered would clobber
 // that file's real subject. Import the real module via a query param (which
@@ -43,6 +58,7 @@ mock.module("./reconcile", () => ({
 const realReconcile = await import("./reconcile.ts?real");
 afterAll(() => {
   mock.module("./reconcile", () => ({ ...realReconcile }));
+  mock.module("./cutover", () => ({ ...realCutover }));
 });
 
 const { default: quickbooksRoutes } = await import("./quickbooksRoutes");
@@ -389,5 +405,154 @@ describe("POST /api/quickbooks/reconcile", () => {
     expect(res.status).toBe(403);
     expect(mockInsertValues).not.toHaveBeenCalled();
     expect(mockRunReconciliation).not.toHaveBeenCalled();
+  });
+});
+
+describe("POST /api/quickbooks/cutover", () => {
+  beforeEach(() => {
+    resetDbMock();
+    mockRunCutover.mockClear();
+    mockRunCutover.mockResolvedValue({
+      cutoverId: "c1",
+      alreadyCutOver: false,
+    });
+  });
+
+  test("cuts a reconciled book over, returning 200 with the cutover id", async () => {
+    // Ownership check: the connected account belongs to the requested book
+    setSelectResults([
+      [{ id: "conn-1", bookId: "book-1", provider: "quickbooks" }],
+    ]);
+    mockRunCutover.mockResolvedValue({
+      cutoverId: "c1",
+      alreadyCutOver: false,
+    });
+
+    const res = await app.handle(
+      new Request("http://localhost/api/quickbooks/cutover", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          bookId: "book-1",
+          connectedAccountId: "conn-1",
+          reconciliationId: "recon-1",
+        }),
+      }),
+    );
+
+    expect(res.status).toBe(200);
+
+    const json = await res.json();
+    expect(json).toEqual({ cutoverId: "c1", alreadyCutOver: false });
+
+    // The cutover runs synchronously with the book, connection, and run ids
+    expect(mockRunCutover).toHaveBeenCalledWith({
+      bookId: "book-1",
+      connectedAccountId: "conn-1",
+      reconciliationId: "recon-1",
+    });
+  });
+
+  test("returns 409 when the book has not reconciled cleanly", async () => {
+    setSelectResults([
+      [{ id: "conn-1", bookId: "book-1", provider: "quickbooks" }],
+    ]);
+    mockRunCutover.mockRejectedValue(
+      new CutoverNotReconciledError("Book has not reconciled cleanly"),
+    );
+
+    const res = await app.handle(
+      new Request("http://localhost/api/quickbooks/cutover", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          bookId: "book-1",
+          connectedAccountId: "conn-1",
+          reconciliationId: "recon-1",
+        }),
+      }),
+    );
+
+    expect(res.status).toBe(409);
+
+    const json = await res.json();
+    expect(json.error).toBe("Book has not reconciled cleanly");
+  });
+
+  test("returns a generic 500 on an unexpected failure, leaking no internals", async () => {
+    setSelectResults([
+      [{ id: "conn-1", bookId: "book-1", provider: "quickbooks" }],
+    ]);
+    mockRunCutover.mockRejectedValue(
+      new Error("db exploded AQAB-secret dec(enc-refresh)"),
+    );
+
+    const res = await app.handle(
+      new Request("http://localhost/api/quickbooks/cutover", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          bookId: "book-1",
+          connectedAccountId: "conn-1",
+          reconciliationId: "recon-1",
+        }),
+      }),
+    );
+
+    expect(res.status).toBe(500);
+
+    const json = await res.json();
+    expect(json.error).toBe("Cutover failed");
+    // No internal message, token, or stack detail leaks in the response
+    const serialized = JSON.stringify(json);
+    expect(serialized).not.toContain("db exploded");
+    expect(serialized).not.toContain("AQAB");
+    expect(serialized).not.toContain("enc-refresh");
+    expect(serialized).not.toContain("dec(");
+  });
+
+  test("rejects a connectedAccountId from a different book with 403", async () => {
+    // The account exists but belongs to another book (cross-tenant attempt)
+    setSelectResults([
+      [{ id: "conn-1", bookId: "other-book", provider: "quickbooks" }],
+    ]);
+
+    const res = await app.handle(
+      new Request("http://localhost/api/quickbooks/cutover", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          bookId: "book-1",
+          connectedAccountId: "conn-1",
+          reconciliationId: "recon-1",
+        }),
+      }),
+    );
+
+    expect(res.status).toBe(403);
+
+    const json = await res.json();
+    expect(json.error).toBe("Forbidden");
+    // The cutover is never attempted for a mismatched account
+    expect(mockRunCutover).not.toHaveBeenCalled();
+  });
+
+  test("rejects an unknown connectedAccountId with 403", async () => {
+    setSelectResults([[]]);
+
+    const res = await app.handle(
+      new Request("http://localhost/api/quickbooks/cutover", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          bookId: "book-1",
+          connectedAccountId: "missing",
+          reconciliationId: "recon-1",
+        }),
+      }),
+    );
+
+    expect(res.status).toBe(403);
+    expect(mockRunCutover).not.toHaveBeenCalled();
   });
 });

@@ -9,6 +9,7 @@ import {
   quickbooksReconciliationTable,
 } from "lib/db/schema";
 import { runBackfill } from "./backfill";
+import { CutoverNotReconciledError, runCutover } from "./cutover";
 import { QBO_AUTHORIZE_URL, isQuickbooksConfigured } from "./quickbooksConfig";
 import { runReconciliation } from "./reconcile";
 
@@ -199,6 +200,70 @@ const quickbooksRoutes = new Elysia({ prefix: "/api/quickbooks" })
         connectedAccountId: t.String(),
         periodStart: t.String(),
         periodEnd: t.String(),
+      }),
+    },
+  )
+  .post(
+    "/cutover",
+    async ({ body, set }) => {
+      const { bookId, connectedAccountId, reconciliationId } = body;
+
+      // Authorization boundary: bookAccessMiddleware verified the caller may
+      // access bookId, but NOT that this connected account belongs to it.
+      // Without this check a caller could cut over another tenant's book, so
+      // reject a mismatched or non-QBO account with a generic 403 before any
+      // work happens
+      const [account] = await dbPool
+        .select({
+          id: connectedAccountTable.id,
+          bookId: connectedAccountTable.bookId,
+          provider: connectedAccountTable.provider,
+        })
+        .from(connectedAccountTable)
+        .where(eq(connectedAccountTable.id, connectedAccountId));
+
+      if (
+        !account ||
+        account.bookId !== bookId ||
+        account.provider !== "quickbooks"
+      ) {
+        set.status = 403;
+        return { error: "Forbidden" };
+      }
+
+      // Cutover is fast (a couple writes plus one best-effort revoke), so run it
+      // synchronously rather than fire-and-forget. It is gated on a clean
+      // tie-out: a book that has not reconciled cleanly is a distinct, blocked
+      // state (409), separate from an unexpected failure (500)
+      try {
+        const { cutoverId, alreadyCutOver } = await runCutover({
+          bookId,
+          connectedAccountId,
+          reconciliationId,
+        });
+
+        set.status = 200;
+        return { cutoverId, alreadyCutOver };
+      } catch (err) {
+        if (err instanceof CutoverNotReconciledError) {
+          set.status = 409;
+          return { error: "Book has not reconciled cleanly" };
+        }
+
+        // Log the error class only server-side (never the message, stack, or
+        // any token) and return a generic failure carrying no internals
+        console.error(
+          `[QuickBooks] cutover failed (${err instanceof Error ? err.name : "unknown"})`,
+        );
+        set.status = 500;
+        return { error: "Cutover failed" };
+      }
+    },
+    {
+      body: t.Object({
+        bookId: t.String(),
+        connectedAccountId: t.String(),
+        reconciliationId: t.String(),
       }),
     },
   );
