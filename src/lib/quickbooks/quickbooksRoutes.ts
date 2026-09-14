@@ -503,10 +503,12 @@ const quickbooksRoutes = new Elysia({ prefix: "/api/quickbooks" })
 
         qboAccounts = await queryAccounts(conn, onRefresh);
       } catch (err) {
-        // Log the error class only server-side (never the message, stack, or
-        // any token) and return a generic failure carrying no internals
+        // Log our own controlled error message (e.g. "QuickBooks API error: 401
+        // query?query=...") which carries the HTTP status and path but never a
+        // token or the QBO response body, and return a generic failure to the
+        // client carrying no internals
         console.error(
-          `[QuickBooks] account-map load failed (${err instanceof Error ? err.name : "unknown"})`,
+          `[QuickBooks] account-map load failed: ${err instanceof Error ? err.message : "unknown"}`,
         );
         set.status = 502;
         return { error: "Could not load QuickBooks accounts" };
