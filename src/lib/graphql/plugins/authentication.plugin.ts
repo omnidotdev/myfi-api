@@ -1,7 +1,6 @@
 import { useGenericAuth } from "@envelop/generic-auth";
-import { createRemoteJWKSet, jwtVerify } from "jose";
 
-import { AUTH_JWKS_URL } from "lib/config/env.config";
+import { extractBearerToken, resolveUserFromToken } from "lib/auth";
 
 import type { ResolveUserFn } from "@envelop/generic-auth";
 import type { GraphQLContext } from "lib/graphql/createGraphqlContext";
@@ -15,32 +14,20 @@ export interface Observer {
   name?: string;
 }
 
-const jwks = AUTH_JWKS_URL ? createRemoteJWKSet(new URL(AUTH_JWKS_URL)) : null;
-
 /**
- * Validate user session via JWKS token verification.
+ * Validate the request's access token via the IDP (userinfo for Gatekeeper's
+ * opaque tokens, JWKS for JWT-format tokens). Shares the exact resolution the
+ * REST middlewares use, so GraphQL and REST authenticate identically.
  * @see https://the-guild.dev/graphql/envelop/plugins/use-generic-auth#getting-started
  */
 const resolveUser: ResolveUserFn<Observer, GraphQLContext> = async (ctx) => {
-  const accessToken = ctx.request.headers
-    .get("authorization")
-    ?.split("Bearer ")[1];
+  const accessToken = extractBearerToken(
+    ctx.request.headers.get("authorization"),
+  );
 
-  if (!accessToken || !jwks) {
-    return null;
-  }
+  if (!accessToken) return null;
 
-  try {
-    const { payload } = await jwtVerify(accessToken, jwks);
-
-    return {
-      id: payload.sub as string,
-      email: payload.email as string | undefined,
-      name: payload.name as string | undefined,
-    };
-  } catch {
-    return null;
-  }
+  return resolveUserFromToken(accessToken);
 };
 
 /**
