@@ -12,6 +12,7 @@ import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 import { bookTable } from "./book.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
+import type { AnyPgColumn } from "drizzle-orm/pg-core";
 
 export const accountTypeEnum = pgEnum("account_type", [
   "asset",
@@ -58,7 +59,7 @@ export const accountTable = pgTable(
     bookId: uuid("book_id")
       .notNull()
       .references(() => bookTable.id, { onDelete: "cascade" }),
-    parentId: uuid("parent_id").references((): any => accountTable.id, {
+    parentId: uuid("parent_id").references((): AnyPgColumn => accountTable.id, {
       onDelete: "set null",
     }),
     name: text().notNull(),

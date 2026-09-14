@@ -3,3 +3,6 @@ build/
 .cache/
 *.log
 .env.local
+
+# Claude Code local settings
+.claude/

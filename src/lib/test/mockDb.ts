@@ -43,20 +43,30 @@ const getNextResult = (): unknown[] => {
   return data;
 };
 
+// A queued result array that also carries the chainable Drizzle query methods.
+// Methods are optional because terminal and non-terminal results expose
+// different subsets; each resolves to the same queued data
+type ChainableMock = unknown[] & {
+  where?: () => ChainableMock;
+  orderBy?: () => ChainableMock;
+  groupBy?: () => ChainableMock;
+  limit?: () => ChainableMock;
+  innerJoin?: () => ChainableMock;
+  leftJoin?: () => ChainableMock;
+};
+
 // A terminal result: an array carrying the mutually chainable Drizzle methods
 // that can follow one another (e.g. orderBy().limit()), each resolving to the
 // same queued data so the terminal call in any order returns it
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const buildTerminal = (data: unknown[]): any =>
+const buildTerminal = (data: unknown[]): ChainableMock =>
   Object.assign([...data], {
     orderBy: mock(() => buildTerminal(data)),
     groupBy: mock(() => buildTerminal(data)),
     limit: mock(() => buildTerminal(data)),
-  });
+  }) as ChainableMock;
 
 // Build a result array that also has chainable Drizzle methods
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const buildResult = (data: unknown[]): any => {
+const buildResult = (data: unknown[]): ChainableMock => {
   const arr = [...data];
 
   return Object.assign(arr, {
@@ -66,7 +76,7 @@ const buildResult = (data: unknown[]): any => {
     limit: mock(() => buildTerminal(data)),
     innerJoin: mock(() => buildResult(data)),
     leftJoin: mock(() => buildResult(data)),
-  });
+  }) as ChainableMock;
 };
 
 let insertReturningData: unknown[] = [];
