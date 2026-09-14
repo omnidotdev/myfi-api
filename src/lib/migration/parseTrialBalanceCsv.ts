@@ -56,7 +56,11 @@ const parseTrialBalanceCsv = (content: string): ParsedTrialBalance => {
   // unquoted (split across cells)
   let asOf: string | undefined;
   for (const row of rows) {
-    const match = row.join(", ").match(/as of\s+(.+)/i);
+    // Drop empty trailing cells so a "...,," row does not append ", ," to the date
+    const match = row
+      .filter(Boolean)
+      .join(", ")
+      .match(/as of\s+(.+)/i);
     if (match?.[1]) {
       asOf = match[1].trim();
       break;
@@ -107,10 +111,14 @@ const parseTrialBalanceCsv = (content: string): ParsedTrialBalance => {
     // carry a balance
     if (debit === 0 && credit === 0) continue;
 
-    // Split a leading account number ("1000 Checking") from the name
-    let name = rawName;
+    // QuickBooks sub-accounts are "Parent:Child" (e.g. "6000 Payroll &
+    // Related:6010 Salary & Wages"); the leaf carries the balance, so key off it
+    const leaf = rawName.split(":").pop()?.trim() ?? rawName;
+
+    // Split a leading account number ("1010 Checking") from the leaf name
+    let name = leaf;
     let accountNum: string | undefined;
-    const numMatch = rawName.match(/^(\d[\d.-]*)\s+(.+)$/);
+    const numMatch = leaf.match(/^(\d[\d.-]*)\s+(.+)$/);
     if (numMatch?.[1] && numMatch[2]) {
       accountNum = numMatch[1];
       name = numMatch[2].trim();

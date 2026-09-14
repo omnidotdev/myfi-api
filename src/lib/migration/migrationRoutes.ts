@@ -1,5 +1,9 @@
 import { Elysia, t } from "elysia";
 
+import {
+  createAccountsForUnmatched,
+  inferAccountType,
+} from "./createMigrationAccounts";
 import { importOpeningBalances } from "./importOpeningBalances";
 import { parseTrialBalanceCsv } from "./parseTrialBalanceCsv";
 import { resolveTrialBalanceAccounts } from "./resolveTrialBalanceAccounts";
@@ -62,7 +66,16 @@ const migrationRoutes = new Elysia({ prefix: "/api/migration" })
           debit: m.debit,
           credit: m.credit,
         })),
-        unmatched,
+        // Accounts with no confident match are created on import (mirroring the
+        // QuickBooks chart); surface them with their inferred type so the user
+        // can review before committing
+        toCreate: unmatched.map((a) => ({
+          name: a.name,
+          accountNum: a.accountNum,
+          debit: a.debit,
+          credit: a.credit,
+          type: inferAccountType(a.accountNum, a.name, a.debit, a.credit),
+        })),
       };
     },
     {
@@ -116,7 +129,9 @@ const migrationRoutes = new Elysia({ prefix: "/api/migration" })
       }
 
       const lines: OpeningBalanceLine[] = [...mapped];
-      const stillUnmatched: typeof unmatched = [];
+      // Accounts auto-match could not place are created to mirror the QuickBooks
+      // chart, UNLESS the user explicitly mapped one onto an existing account
+      const toCreate: typeof unmatched = [];
       for (const account of unmatched) {
         const accountId = manual[account.name];
         if (accountId) {
@@ -127,16 +142,14 @@ const migrationRoutes = new Elysia({ prefix: "/api/migration" })
             name: account.name,
           });
         } else {
-          stillUnmatched.push(account);
+          toCreate.push(account);
         }
       }
 
-      if (stillUnmatched.length > 0) {
-        set.status = 400;
-        return {
-          error: "Some accounts are not mapped to a MyFi account",
-          unmatched: stillUnmatched,
-        };
+      if (toCreate.length > 0) {
+        lines.push(
+          ...(await createAccountsForUnmatched({ bookId, accounts: toCreate })),
+        );
       }
 
       try {
@@ -145,7 +158,12 @@ const migrationRoutes = new Elysia({ prefix: "/api/migration" })
           asOf: `${asOf}T00:00:00.000Z`,
           lines,
         });
-        return { imported: result.lineCount, replaced: result.replaced, asOf };
+        return {
+          imported: result.lineCount,
+          created: toCreate.length,
+          replaced: result.replaced,
+          asOf,
+        };
       } catch (err) {
         // e.g. the trial balance does not balance
         set.status = 400;

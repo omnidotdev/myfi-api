@@ -1,6 +1,11 @@
 import { beforeEach, describe, expect, mock, test } from "bun:test";
 
-import { mockDbPool, resetDbMock, setSelectResults } from "lib/test/mockDb";
+import {
+  mockDbPool,
+  resetDbMock,
+  setInsertReturningData,
+  setSelectResults,
+} from "lib/test/mockDb";
 
 // Capture writes made inside the import transaction
 const insertedLines: Array<Record<string, unknown>> = [];
@@ -77,7 +82,23 @@ describe("POST /api/migration/opening-balances/preview", () => {
     expect(body.asOf).toBe("August 31, 2026");
     expect(body.balances).toBe(true);
     expect(body.matched).toHaveLength(3);
-    expect(body.unmatched).toHaveLength(0);
+    expect(body.toCreate).toHaveLength(0);
+  });
+
+  test("flags accounts that will be created, with an inferred type", async () => {
+    // Chart missing Accounts Payable -> it will be created on import
+    setSelectResults([[CHART[0], CHART[2]]]);
+
+    const res = await upload("/api/migration/opening-balances/preview", {
+      bookId: "book-1",
+    });
+    const body = await res.json();
+
+    expect(body.toCreate).toHaveLength(1);
+    expect(body.toCreate[0]).toMatchObject({
+      name: "Accounts Payable",
+      type: "liability",
+    });
   });
 });
 
@@ -112,9 +133,10 @@ describe("POST /api/migration/opening-balances", () => {
     expect(mockTransaction).not.toHaveBeenCalled();
   });
 
-  test("400s with the unmatched accounts when some do not map", async () => {
-    // Chart missing Accounts Payable -> it cannot auto-match
+  test("creates missing accounts, then imports", async () => {
+    // Chart missing Accounts Payable -> it is created (mirroring QuickBooks)
     setSelectResults([[CHART[0], CHART[2]]]);
+    setInsertReturningData([{ id: "acct-ap-new" }]);
 
     const res = await upload("/api/migration/opening-balances", {
       bookId: "book-1",
@@ -122,11 +144,8 @@ describe("POST /api/migration/opening-balances", () => {
     });
     const body = await res.json();
 
-    expect(res.status).toBe(400);
-    expect(body.unmatched.map((a: { name: string }) => a.name)).toEqual([
-      "Accounts Payable",
-    ]);
-    expect(mockTransaction).not.toHaveBeenCalled();
+    expect(res.status).toBe(200);
+    expect(body).toMatchObject({ imported: 3, created: 1 });
   });
 
   test("resolves an unmatched account via a manual mapping", async () => {
