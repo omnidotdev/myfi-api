@@ -28,6 +28,9 @@ const realEnv = await import("lib/config/env.config");
 mock.module("lib/config/env.config", () => ({
   ...realEnv,
   TOKEN_ENCRYPTION_KEY: TEST_KEY,
+  // The callback builds an absolute redirect to the app origin (first CORS
+  // origin); pin it so the expected URLs below are deterministic
+  CORS_ALLOWED_ORIGINS: "https://app.example",
 }));
 
 const mockEncryptToken = mock((plaintext: string) => `enc(${plaintext})`);
@@ -71,11 +74,17 @@ const { quickbooksCallbackRoute } = await import("./quickbooksCallbackRoute");
 
 const app = quickbooksCallbackRoute;
 
-const SUCCESS = "/settings/connections";
-const ERROR = "/settings/connections?error=quickbooks";
+const APP = "https://app.example";
+// The workspace-scoped page the connect flow returns the user to
+const RETURN = "/@acme/~/settings/quickbooks";
+const SUCCESS = `${APP}${RETURN}`;
+// Failure lands back on the same page (state carried the return path)
+const ERROR_RETURN = `${APP}${RETURN}?error=quickbooks`;
+// Failure with no usable state falls back to the app root
+const ERROR_FALLBACK = `${APP}/?error=quickbooks`;
 
-// A valid signed state for book-1, as the connect route would mint
-const VALID_STATE = signOauthState("book-1");
+// A valid signed state for book-1 carrying a return path, as connect would mint
+const VALID_STATE = signOauthState("book-1", { returnPath: RETURN });
 
 const callback = (params: Record<string, string>) => {
   const qs = new URLSearchParams(params).toString();
@@ -177,7 +186,7 @@ describe("GET /api/quickbooks/callback", () => {
       ),
     );
 
-    expect(res.headers.get("location")).toBe(ERROR);
+    expect(res.headers.get("location")).toBe(ERROR_FALLBACK);
     // Nothing is exchanged when the integration is disabled
     expect(mockExchangeCode).not.toHaveBeenCalled();
 
@@ -185,17 +194,19 @@ describe("GET /api/quickbooks/callback", () => {
     mock.module("./quickbooksConfig", () => ({ isQuickbooksConfigured: true }));
   });
 
-  test("redirects to the error page when the user denies consent at Intuit", async () => {
-    const res = await callback({ state: "book-1", error: "access_denied" });
+  test("redirects to the return page when the user denies consent at Intuit", async () => {
+    // A real consent denial carries the signed state we sent, so the user is
+    // returned to the page they started from with a generic error param
+    const res = await callback({ state: VALID_STATE, error: "access_denied" });
 
-    expect(res.headers.get("location")).toBe(ERROR);
+    expect(res.headers.get("location")).toBe(ERROR_RETURN);
     expect(mockExchangeCode).not.toHaveBeenCalled();
   });
 
-  test("redirects to the error page when the code is missing", async () => {
-    const res = await callback({ state: "book-1", realmId: "realm-1" });
+  test("redirects to the return page when the code is missing", async () => {
+    const res = await callback({ state: VALID_STATE, realmId: "realm-1" });
 
-    expect(res.headers.get("location")).toBe(ERROR);
+    expect(res.headers.get("location")).toBe(ERROR_RETURN);
     expect(mockExchangeCode).not.toHaveBeenCalled();
   });
 
@@ -209,7 +220,7 @@ describe("GET /api/quickbooks/callback", () => {
       state: "victim-book",
     });
 
-    expect(res.headers.get("location")).toBe(ERROR);
+    expect(res.headers.get("location")).toBe(ERROR_FALLBACK);
     expect(mockExchangeCode).not.toHaveBeenCalled();
     expect(mockInsertValues).not.toHaveBeenCalled();
   });
@@ -233,7 +244,7 @@ describe("GET /api/quickbooks/callback", () => {
       state: tampered,
     });
 
-    expect(res.headers.get("location")).toBe(ERROR);
+    expect(res.headers.get("location")).toBe(ERROR_FALLBACK);
     expect(mockExchangeCode).not.toHaveBeenCalled();
     expect(mockInsertValues).not.toHaveBeenCalled();
   });
@@ -249,7 +260,7 @@ describe("GET /api/quickbooks/callback", () => {
     });
 
     const location = res.headers.get("location");
-    expect(location).toBe(ERROR);
+    expect(location).toBe(ERROR_RETURN);
     // The redirect URL never carries the OAuth code or any secret
     expect(location).not.toContain("auth-code-xyz");
     expect(location).not.toContain("secret-token");

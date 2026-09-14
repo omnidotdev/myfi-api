@@ -17,8 +17,19 @@ import {
   reconciliationQueueTable,
 } from "lib/db/schema";
 import { encryptToken } from "lib/encryption/tokenEncryption";
+import { buildOauthRedirect } from "lib/oauth/redirect";
 import { signOauthState, verifyOauthState } from "lib/oauth/state";
 import syncPayroll from "./syncPayroll";
+
+/** Error param appended to the landing URL on a failed connection (no secrets) */
+const ERROR_PARAM = "payroll";
+
+/**
+ * Where the browser lands when the signed state carries no return path. The app
+ * resolves "/" to the user's workspace home; the connect flow normally supplies
+ * the exact page
+ */
+const FALLBACK_PATH = "/";
 
 /**
  * OAuth callback route (public, registered before auth middleware).
@@ -43,10 +54,13 @@ export const payrollCallbackRoute = new Elysia().get(
     // before any token exchange or insert, so it cannot link a Gusto company to
     // another book. Every verification failure maps to the generic error page
     let bookId: string;
+    let returnPath: string | undefined;
     try {
-      ({ bookId } = verifyOauthState(state));
+      ({ bookId, returnPath } = verifyOauthState(state));
     } catch {
-      return redirect("/settings/connections?error=payroll");
+      return redirect(
+        buildOauthRedirect(undefined, FALLBACK_PATH, ERROR_PARAM),
+      );
     }
 
     // Exchange code for tokens
@@ -94,7 +108,7 @@ export const payrollCallbackRoute = new Elysia().get(
       status: "active",
     });
 
-    return redirect("/settings/connections");
+    return redirect(buildOauthRedirect(returnPath, FALLBACK_PATH));
   },
   {
     query: t.Object({
@@ -111,7 +125,7 @@ const payrollRoutes = new Elysia({ prefix: "/api/payroll" })
   .post(
     "/connect",
     async ({ body, set }) => {
-      const { bookId } = body;
+      const { bookId, returnPath } = body;
 
       if (!GUSTO_CLIENT_ID || !GUSTO_REDIRECT_URI) {
         set.status = 500;
@@ -120,15 +134,20 @@ const payrollRoutes = new Elysia({ prefix: "/api/payroll" })
 
       // Carry the bookId in an HMAC-signed state (not the raw id) so the
       // callback can trust it: only the server can mint a state for a given
-      // book, so a forged callback cannot link a company to a victim's book
-      const state = signOauthState(bookId);
+      // book, so a forged callback cannot link a company to a victim's book.
+      // The return path (the workspace-scoped page the user started from) rides
+      // in the same signed state so the callback can send them back to it
+      const state = signOauthState(bookId, { returnPath });
 
       const authUrl = `https://api.gusto.com/oauth/authorize?client_id=${GUSTO_CLIENT_ID}&redirect_uri=${encodeURIComponent(GUSTO_REDIRECT_URI)}&response_type=code&state=${encodeURIComponent(state)}`;
 
       return { authUrl };
     },
     {
-      body: t.Object({ bookId: t.String() }),
+      body: t.Object({
+        bookId: t.String(),
+        returnPath: t.Optional(t.String()),
+      }),
     },
   )
   .get(

@@ -17,7 +17,37 @@ const { signOauthState, verifyOauthState } = await import("./state");
 describe("signOauthState / verifyOauthState", () => {
   test("round-trips: a signed state verifies back to the bookId", () => {
     const state = signOauthState("book-1");
-    expect(verifyOauthState(state)).toEqual({ bookId: "book-1" });
+    expect(verifyOauthState(state)).toEqual({
+      bookId: "book-1",
+      returnPath: undefined,
+    });
+  });
+
+  test("round-trips a safe return path", () => {
+    const state = signOauthState("book-1", {
+      returnPath: "/@acme/~/settings/quickbooks",
+    });
+    expect(verifyOauthState(state)).toEqual({
+      bookId: "book-1",
+      returnPath: "/@acme/~/settings/quickbooks",
+    });
+  });
+
+  test("drops an unsafe return path (open-redirect guard)", () => {
+    for (const bad of [
+      "//evil.example/phish",
+      "https://evil.example",
+      "http://evil.example",
+      "/\\evil.example",
+      "/path\twith-control",
+      "no-leading-slash",
+    ]) {
+      const state = signOauthState("book-1", { returnPath: bad });
+      expect(verifyOauthState(state)).toEqual({
+        bookId: "book-1",
+        returnPath: undefined,
+      });
+    }
   });
 
   test("the signed state is not the raw bookId", () => {
@@ -56,7 +86,7 @@ describe("signOauthState / verifyOauthState", () => {
 
   test("an expired state fails to verify", () => {
     // A negative TTL puts the expiry in the past, so verification rejects it
-    const expired = signOauthState("book-1", -1000);
+    const expired = signOauthState("book-1", { ttlMs: -1000 });
     expect(() => verifyOauthState(expired)).toThrow();
   });
 
@@ -72,7 +102,7 @@ describe("signOauthState / verifyOauthState", () => {
     for (const bad of [
       "no-dot-here",
       "!!!.@@@",
-      `${signOauthState("b", -1)}`,
+      `${signOauthState("b", { ttlMs: -1 })}`,
     ]) {
       try {
         verifyOauthState(bad);

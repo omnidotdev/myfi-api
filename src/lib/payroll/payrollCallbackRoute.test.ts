@@ -23,6 +23,9 @@ mock.module("lib/config/env.config", () => ({
   GUSTO_CLIENT_SECRET: "client-secret",
   GUSTO_REDIRECT_URI: "https://app.example/api/payroll/callback",
   TOKEN_ENCRYPTION_KEY: TEST_KEY,
+  // The callback builds an absolute redirect to the app origin (first CORS
+  // origin); pin it so the expected URLs below are deterministic
+  CORS_ALLOWED_ORIGINS: "https://app.example",
 }));
 
 const { signOauthState } = await import("lib/oauth/state");
@@ -31,11 +34,15 @@ const { payrollCallbackRoute } = await import("./payrollRoutes");
 
 const app = payrollCallbackRoute;
 
-const SUCCESS = "/settings/connections";
-const ERROR = "/settings/connections?error=payroll";
+const APP = "https://app.example";
+// The workspace-scoped page the connect flow returns the user to
+const RETURN = "/@acme/~/settings/connections";
+const SUCCESS = `${APP}${RETURN}`;
+// Failure with no usable state falls back to the app root
+const ERROR = `${APP}/?error=payroll`;
 
-// A valid signed state for book-1, as the connect route would mint
-const VALID_STATE = signOauthState("book-1");
+// A valid signed state for book-1 carrying a return path, as connect would mint
+const VALID_STATE = signOauthState("book-1", { returnPath: RETURN });
 
 const callback = (params: Record<string, string>) => {
   const qs = new URLSearchParams(params).toString();

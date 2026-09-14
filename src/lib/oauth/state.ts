@@ -19,6 +19,28 @@ type StatePayload = {
   bookId: string;
   nonce: string;
   exp: number;
+  /** Same-origin app path to land on after the OAuth round-trip, if provided */
+  returnPath?: string;
+};
+
+/**
+ * A return path is safe only if it is a same-origin absolute path: it must start
+ * with a single "/", never "//" (protocol-relative) or a backslash (which some
+ * browsers normalize to a slash), and carry no control characters or spaces that
+ * could smuggle a second URL. This is the guard against an open redirect through
+ * the OAuth round-trip; an unsafe value is dropped so the callback falls back to
+ * a safe default rather than honoring attacker-controlled navigation
+ */
+const isSafeReturnPath = (path: string): boolean => {
+  if (path.length === 0 || path.length > 512) return false;
+  if (!path.startsWith("/") || path.startsWith("//")) return false;
+  if (path.includes("\\")) return false;
+
+  for (let i = 0; i < path.length; i++) {
+    if (path.charCodeAt(i) <= 0x20) return false;
+  }
+
+  return true;
 };
 
 /**
@@ -52,17 +74,24 @@ const sign = (encodedPayload: string) =>
  * forged callback carrying a victim's raw bookId would be trusted.
  *
  * @param bookId - Book the OAuth flow targets.
- * @param ttlMs - Validity window in milliseconds (mainly for tests).
+ * @param opts - Optional `returnPath` (same-origin app path to land on after the
+ *   round-trip; unsafe values are dropped) and `ttlMs` validity window (mainly
+ *   for tests).
  * @returns `base64url(payload).base64url(signature)`.
  */
 const signOauthState = (
   bookId: string,
-  ttlMs: number = STATE_TTL_MS,
+  opts: { returnPath?: string; ttlMs?: number } = {},
 ): string => {
+  const { returnPath, ttlMs = STATE_TTL_MS } = opts;
+
   const payload: StatePayload = {
     bookId,
     nonce: randomBytes(16).toString("hex"),
     exp: Date.now() + ttlMs,
+    // Only bind a return path that is a safe same-origin path; anything else is
+    // silently omitted so the callback uses its default
+    ...(returnPath && isSafeReturnPath(returnPath) ? { returnPath } : {}),
   };
 
   const encodedPayload = Buffer.from(JSON.stringify(payload), "utf8").toString(
@@ -80,9 +109,11 @@ const signOauthState = (
  * single generic outcome.
  *
  * @param state - The signed state string from the OAuth callback.
- * @returns The bookId the state was signed for.
+ * @returns The bookId the state was signed for, and its safe returnPath if any.
  */
-const verifyOauthState = (state: string): { bookId: string } => {
+const verifyOauthState = (
+  state: string,
+): { bookId: string; returnPath?: string } => {
   const parts = state.split(".");
 
   if (parts.length !== 2 || !parts[0] || !parts[1]) {
@@ -120,7 +151,16 @@ const verifyOauthState = (state: string): { bookId: string } => {
     throw new Error("Expired OAuth state");
   }
 
-  return { bookId: payload.bookId };
+  // Re-validate the return path on the way out (defense in depth): a state
+  // signed by an older/looser version, or any value that is not a safe
+  // same-origin path, is dropped rather than trusted
+  const returnPath =
+    typeof payload.returnPath === "string" &&
+    isSafeReturnPath(payload.returnPath)
+      ? payload.returnPath
+      : undefined;
+
+  return { bookId: payload.bookId, returnPath };
 };
 
 export { signOauthState, verifyOauthState };

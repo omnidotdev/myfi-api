@@ -41,18 +41,20 @@ const quickbooksRoutes = new Elysia({ prefix: "/api/quickbooks" })
         return { error: "QuickBooks not configured" };
       }
 
-      const { bookId } = body;
+      const { bookId, returnPath } = body;
 
       // URLSearchParams percent-encodes the redirect_uri for us. The bookId is
       // carried in an HMAC-signed state (not the raw id) so the callback can
       // trust it: only the server can mint a state for a given book, so a forged
-      // callback cannot link an attacker's company to a victim's book
+      // callback cannot link an attacker's company to a victim's book. The
+      // return path (the workspace-scoped page the user started from) rides in
+      // the same signed state so the callback can send them back to it
       const params = new URLSearchParams({
         client_id: QBO_CLIENT_ID ?? "",
         response_type: "code",
         scope: QBO_ACCOUNTING_SCOPE,
         redirect_uri: QBO_REDIRECT_URI ?? "",
-        state: signOauthState(bookId),
+        state: signOauthState(bookId, { returnPath }),
       });
 
       const authUrl = `${QBO_AUTHORIZE_URL}?${params.toString()}`;
@@ -60,7 +62,10 @@ const quickbooksRoutes = new Elysia({ prefix: "/api/quickbooks" })
       return { authUrl };
     },
     {
-      body: t.Object({ bookId: t.String() }),
+      body: t.Object({
+        bookId: t.String(),
+        returnPath: t.Optional(t.String()),
+      }),
     },
   )
   .post(
