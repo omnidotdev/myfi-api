@@ -31,6 +31,7 @@ import profileRoutes from "lib/import/profileRoutes";
 import { mantleWebhook } from "lib/mantle";
 import authMiddleware from "lib/middleware/auth.middleware";
 import bookAccessMiddleware from "lib/middleware/bookAccess.middleware";
+import migrationRoutes from "lib/migration/migrationRoutes";
 import {
   computeNetWorth,
   saveNetWorthSnapshot,
@@ -175,6 +176,7 @@ const app = new Elysia()
   .use(dashboardRoutes)
   .use(fixedAssetRoutes)
   .use(importRoutes)
+  .use(migrationRoutes)
   .use(profileRoutes)
   .use(ofxRoutes)
   .use(periodRoutes)
