@@ -1,4 +1,3 @@
-import { sql } from "drizzle-orm";
 import {
   index,
   pgTable,
@@ -34,20 +33,12 @@ export const connectedAccountTable = pgTable(
       withTimezone: true,
     }),
     syncCursor: text("sync_cursor"),
-    refreshToken: text("refresh_token"),
-    realmId: text("realm_id"),
     createdAt: generateDefaultDate(),
   },
   (table) => [
     uniqueIndex().on(table.id),
     index("connected_account_book_id_idx").on(table.bookId),
     index("connected_account_provider_idx").on(table.provider),
-    // At most one QuickBooks connection per book. Partial so Plaid and
-    // ofx_direct rows, which are legitimately many per book, are unaffected.
-    // Backs the atomic upsert in the QuickBooks OAuth callback
-    uniqueIndex("connected_account_book_quickbooks_idx")
-      .on(table.bookId)
-      .where(sql`${table.provider} = 'quickbooks'`),
   ],
 );
 

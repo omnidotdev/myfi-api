@@ -23,9 +23,6 @@ type Query implements Node {
   """Get a single `TagGroup`."""
   tagGroup(rowId: UUID!): TagGroup
 
-  """Get a single `QuickbooksCutover`."""
-  quickbooksCutover(rowId: UUID!): QuickbooksCutover
-
   """Get a single `_DrizzleMigration`."""
   _drizzleMigration(rowId: Int!): _DrizzleMigration
 
@@ -41,9 +38,6 @@ type Query implements Node {
   """Get a single `Tag`."""
   tag(rowId: UUID!): Tag
 
-  """Get a single `QuickbooksAccountMap`."""
-  quickbooksAccountMap(rowId: UUID!): QuickbooksAccountMap
-
   """Get a single `Vehicle`."""
   vehicle(rowId: UUID!): Vehicle
 
@@ -56,17 +50,14 @@ type Query implements Node {
   """Get a single `ImportProfile`."""
   importProfile(rowId: UUID!): ImportProfile
 
+  """Get a single `Book`."""
+  book(rowId: UUID!): Book
+
   """Get a single `NetWorthSnapshot`."""
   netWorthSnapshot(rowId: UUID!): NetWorthSnapshot
 
   """Get a single `AccountingPeriod`."""
   accountingPeriod(rowId: UUID!): AccountingPeriod
-
-  """Get a single `QuickbooksMigration`."""
-  quickbooksMigration(rowId: UUID!): QuickbooksMigration
-
-  """Get a single `QuickbooksReconciliationLine`."""
-  quickbooksReconciliationLine(rowId: UUID!): QuickbooksReconciliationLine
 
   """Get a single `PayrollConnection`."""
   payrollConnection(rowId: UUID!): PayrollConnection
@@ -74,29 +65,29 @@ type Query implements Node {
   """Get a single `ReconciliationStatement`."""
   reconciliationStatement(rowId: UUID!): ReconciliationStatement
 
-  """Get a single `QuickbooksReconciliation`."""
-  quickbooksReconciliation(rowId: UUID!): QuickbooksReconciliation
-
   """Get a single `CryptoLot`."""
   cryptoLot(rowId: UUID!): CryptoLot
+
+  """Get a single `ConnectedAccount`."""
+  connectedAccount(rowId: UUID!): ConnectedAccount
+
+  """Get a single `JournalEntry`."""
+  journalEntry(rowId: UUID!): JournalEntry
 
   """Get a single `MileageLog`."""
   mileageLog(rowId: UUID!): MileageLog
 
-  """Get a single `Book`."""
-  book(rowId: UUID!): Book
-
   """Get a single `Budget`."""
   budget(rowId: UUID!): Budget
+
+  """Get a single `ReconciliationQueue`."""
+  reconciliationQueue(rowId: UUID!): ReconciliationQueue
 
   """Get a single `Vendor`."""
   vendor(rowId: UUID!): Vendor
 
   """Get a single `CryptoAsset`."""
   cryptoAsset(rowId: UUID!): CryptoAsset
-
-  """Get a single `JournalEntry`."""
-  journalEntry(rowId: UUID!): JournalEntry
 
   """Get a single `CategorizationRule`."""
   categorizationRule(rowId: UUID!): CategorizationRule
@@ -107,14 +98,8 @@ type Query implements Node {
   """Get a single `RecurringTransaction`."""
   recurringTransaction(rowId: UUID!): RecurringTransaction
 
-  """Get a single `ReconciliationQueue`."""
-  reconciliationQueue(rowId: UUID!): ReconciliationQueue
-
   """Get a single `Account`."""
   account(rowId: UUID!): Account
-
-  """Get a single `ConnectedAccount`."""
-  connectedAccount(rowId: UUID!): ConnectedAccount
 
   """Reads a single `JournalLineTag` using its globally unique `ID`."""
   journalLineTagById(
@@ -129,14 +114,6 @@ type Query implements Node {
     """The globally unique `ID` to be used in selecting a single `TagGroup`."""
     id: ID!
   ): TagGroup
-
-  """Reads a single `QuickbooksCutover` using its globally unique `ID`."""
-  quickbooksCutoverById(
-    """
-    The globally unique `ID` to be used in selecting a single `QuickbooksCutover`.
-    """
-    id: ID!
-  ): QuickbooksCutover
 
   """Reads a single `_DrizzleMigration` using its globally unique `ID`."""
   _drizzleMigrationById(
@@ -176,14 +153,6 @@ type Query implements Node {
     id: ID!
   ): Tag
 
-  """Reads a single `QuickbooksAccountMap` using its globally unique `ID`."""
-  quickbooksAccountMapById(
-    """
-    The globally unique `ID` to be used in selecting a single `QuickbooksAccountMap`.
-    """
-    id: ID!
-  ): QuickbooksAccountMap
-
   """Reads a single `Vehicle` using its globally unique `ID`."""
   vehicleById(
     """The globally unique `ID` to be used in selecting a single `Vehicle`."""
@@ -214,6 +183,12 @@ type Query implements Node {
     id: ID!
   ): ImportProfile
 
+  """Reads a single `Book` using its globally unique `ID`."""
+  bookById(
+    """The globally unique `ID` to be used in selecting a single `Book`."""
+    id: ID!
+  ): Book
+
   """Reads a single `NetWorthSnapshot` using its globally unique `ID`."""
   netWorthSnapshotById(
     """
@@ -229,24 +204,6 @@ type Query implements Node {
     """
     id: ID!
   ): AccountingPeriod
-
-  """Reads a single `QuickbooksMigration` using its globally unique `ID`."""
-  quickbooksMigrationById(
-    """
-    The globally unique `ID` to be used in selecting a single `QuickbooksMigration`.
-    """
-    id: ID!
-  ): QuickbooksMigration
-
-  """
-  Reads a single `QuickbooksReconciliationLine` using its globally unique `ID`.
-  """
-  quickbooksReconciliationLineById(
-    """
-    The globally unique `ID` to be used in selecting a single `QuickbooksReconciliationLine`.
-    """
-    id: ID!
-  ): QuickbooksReconciliationLine
 
   """Reads a single `PayrollConnection` using its globally unique `ID`."""
   payrollConnectionById(
@@ -266,21 +223,27 @@ type Query implements Node {
     id: ID!
   ): ReconciliationStatement
 
-  """
-  Reads a single `QuickbooksReconciliation` using its globally unique `ID`.
-  """
-  quickbooksReconciliationById(
-    """
-    The globally unique `ID` to be used in selecting a single `QuickbooksReconciliation`.
-    """
-    id: ID!
-  ): QuickbooksReconciliation
-
   """Reads a single `CryptoLot` using its globally unique `ID`."""
   cryptoLotById(
     """The globally unique `ID` to be used in selecting a single `CryptoLot`."""
     id: ID!
   ): CryptoLot
+
+  """Reads a single `ConnectedAccount` using its globally unique `ID`."""
+  connectedAccountById(
+    """
+    The globally unique `ID` to be used in selecting a single `ConnectedAccount`.
+    """
+    id: ID!
+  ): ConnectedAccount
+
+  """Reads a single `JournalEntry` using its globally unique `ID`."""
+  journalEntryById(
+    """
+    The globally unique `ID` to be used in selecting a single `JournalEntry`.
+    """
+    id: ID!
+  ): JournalEntry
 
   """Reads a single `MileageLog` using its globally unique `ID`."""
   mileageLogById(
@@ -290,17 +253,19 @@ type Query implements Node {
     id: ID!
   ): MileageLog
 
-  """Reads a single `Book` using its globally unique `ID`."""
-  bookById(
-    """The globally unique `ID` to be used in selecting a single `Book`."""
-    id: ID!
-  ): Book
-
   """Reads a single `Budget` using its globally unique `ID`."""
   budgetById(
     """The globally unique `ID` to be used in selecting a single `Budget`."""
     id: ID!
   ): Budget
+
+  """Reads a single `ReconciliationQueue` using its globally unique `ID`."""
+  reconciliationQueueById(
+    """
+    The globally unique `ID` to be used in selecting a single `ReconciliationQueue`.
+    """
+    id: ID!
+  ): ReconciliationQueue
 
   """Reads a single `Vendor` using its globally unique `ID`."""
   vendorById(
@@ -315,14 +280,6 @@ type Query implements Node {
     """
     id: ID!
   ): CryptoAsset
-
-  """Reads a single `JournalEntry` using its globally unique `ID`."""
-  journalEntryById(
-    """
-    The globally unique `ID` to be used in selecting a single `JournalEntry`.
-    """
-    id: ID!
-  ): JournalEntry
 
   """Reads a single `CategorizationRule` using its globally unique `ID`."""
   categorizationRuleById(
@@ -348,27 +305,11 @@ type Query implements Node {
     id: ID!
   ): RecurringTransaction
 
-  """Reads a single `ReconciliationQueue` using its globally unique `ID`."""
-  reconciliationQueueById(
-    """
-    The globally unique `ID` to be used in selecting a single `ReconciliationQueue`.
-    """
-    id: ID!
-  ): ReconciliationQueue
-
   """Reads a single `Account` using its globally unique `ID`."""
   accountById(
     """The globally unique `ID` to be used in selecting a single `Account`."""
     id: ID!
   ): Account
-
-  """Reads a single `ConnectedAccount` using its globally unique `ID`."""
-  connectedAccountById(
-    """
-    The globally unique `ID` to be used in selecting a single `ConnectedAccount`.
-    """
-    id: ID!
-  ): ConnectedAccount
 
   """Reads and enables pagination through a set of `JournalLineTag`."""
   journalLineTags(
@@ -437,40 +378,6 @@ type Query implements Node {
     """The method to use when ordering `TagGroup`."""
     orderBy: [TagGroupOrderBy!] = [PRIMARY_KEY_ASC]
   ): TagGroupConnection
-
-  """Reads and enables pagination through a set of `QuickbooksCutover`."""
-  quickbooksCutovers(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: QuickbooksCutoverCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: QuickbooksCutoverFilter
-
-    """The method to use when ordering `QuickbooksCutover`."""
-    orderBy: [QuickbooksCutoverOrderBy!] = [PRIMARY_KEY_ASC]
-  ): QuickbooksCutoverConnection
 
   """Reads and enables pagination through a set of `_DrizzleMigration`."""
   _drizzleMigrations(
@@ -642,40 +549,6 @@ type Query implements Node {
     orderBy: [TagOrderBy!] = [PRIMARY_KEY_ASC]
   ): TagConnection
 
-  """Reads and enables pagination through a set of `QuickbooksAccountMap`."""
-  quickbooksAccountMaps(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: QuickbooksAccountMapCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: QuickbooksAccountMapFilter
-
-    """The method to use when ordering `QuickbooksAccountMap`."""
-    orderBy: [QuickbooksAccountMapOrderBy!] = [PRIMARY_KEY_ASC]
-  ): QuickbooksAccountMapConnection
-
   """Reads and enables pagination through a set of `Vehicle`."""
   vehicles(
     """Only read the first `n` values of the set."""
@@ -812,6 +685,40 @@ type Query implements Node {
     orderBy: [ImportProfileOrderBy!] = [PRIMARY_KEY_ASC]
   ): ImportProfileConnection
 
+  """Reads and enables pagination through a set of `Book`."""
+  books(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: BookCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: BookFilter
+
+    """The method to use when ordering `Book`."""
+    orderBy: [BookOrderBy!] = [PRIMARY_KEY_ASC]
+  ): BookConnection
+
   """Reads and enables pagination through a set of `NetWorthSnapshot`."""
   netWorthSnapshots(
     """Only read the first `n` values of the set."""
@@ -879,76 +786,6 @@ type Query implements Node {
     """The method to use when ordering `AccountingPeriod`."""
     orderBy: [AccountingPeriodOrderBy!] = [PRIMARY_KEY_ASC]
   ): AccountingPeriodConnection
-
-  """Reads and enables pagination through a set of `QuickbooksMigration`."""
-  quickbooksMigrations(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: QuickbooksMigrationCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: QuickbooksMigrationFilter
-
-    """The method to use when ordering `QuickbooksMigration`."""
-    orderBy: [QuickbooksMigrationOrderBy!] = [PRIMARY_KEY_ASC]
-  ): QuickbooksMigrationConnection
-
-  """
-  Reads and enables pagination through a set of `QuickbooksReconciliationLine`.
-  """
-  quickbooksReconciliationLines(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: QuickbooksReconciliationLineCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: QuickbooksReconciliationLineFilter
-
-    """The method to use when ordering `QuickbooksReconciliationLine`."""
-    orderBy: [QuickbooksReconciliationLineOrderBy!] = [PRIMARY_KEY_ASC]
-  ): QuickbooksReconciliationLineConnection
 
   """Reads and enables pagination through a set of `PayrollConnection`."""
   payrollConnections(
@@ -1020,42 +857,6 @@ type Query implements Node {
     orderBy: [ReconciliationStatementOrderBy!] = [PRIMARY_KEY_ASC]
   ): ReconciliationStatementConnection
 
-  """
-  Reads and enables pagination through a set of `QuickbooksReconciliation`.
-  """
-  quickbooksReconciliations(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: QuickbooksReconciliationCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: QuickbooksReconciliationFilter
-
-    """The method to use when ordering `QuickbooksReconciliation`."""
-    orderBy: [QuickbooksReconciliationOrderBy!] = [PRIMARY_KEY_ASC]
-  ): QuickbooksReconciliationConnection
-
   """Reads and enables pagination through a set of `CryptoLot`."""
   cryptoLots(
     """Only read the first `n` values of the set."""
@@ -1089,6 +890,74 @@ type Query implements Node {
     """The method to use when ordering `CryptoLot`."""
     orderBy: [CryptoLotOrderBy!] = [PRIMARY_KEY_ASC]
   ): CryptoLotConnection
+
+  """Reads and enables pagination through a set of `ConnectedAccount`."""
+  connectedAccounts(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ConnectedAccountCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ConnectedAccountFilter
+
+    """The method to use when ordering `ConnectedAccount`."""
+    orderBy: [ConnectedAccountOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ConnectedAccountConnection
+
+  """Reads and enables pagination through a set of `JournalEntry`."""
+  journalEntries(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: JournalEntryCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: JournalEntryFilter
+
+    """The method to use when ordering `JournalEntry`."""
+    orderBy: [JournalEntryOrderBy!] = [PRIMARY_KEY_ASC]
+  ): JournalEntryConnection
 
   """Reads and enables pagination through a set of `MileageLog`."""
   mileageLogs(
@@ -1124,40 +993,6 @@ type Query implements Node {
     orderBy: [MileageLogOrderBy!] = [PRIMARY_KEY_ASC]
   ): MileageLogConnection
 
-  """Reads and enables pagination through a set of `Book`."""
-  books(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: BookCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: BookFilter
-
-    """The method to use when ordering `Book`."""
-    orderBy: [BookOrderBy!] = [PRIMARY_KEY_ASC]
-  ): BookConnection
-
   """Reads and enables pagination through a set of `Budget`."""
   budgets(
     """Only read the first `n` values of the set."""
@@ -1191,6 +1026,40 @@ type Query implements Node {
     """The method to use when ordering `Budget`."""
     orderBy: [BudgetOrderBy!] = [PRIMARY_KEY_ASC]
   ): BudgetConnection
+
+  """Reads and enables pagination through a set of `ReconciliationQueue`."""
+  reconciliationQueues(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ReconciliationQueueCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ReconciliationQueueFilter
+
+    """The method to use when ordering `ReconciliationQueue`."""
+    orderBy: [ReconciliationQueueOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ReconciliationQueueConnection
 
   """Reads and enables pagination through a set of `Vendor`."""
   vendors(
@@ -1259,40 +1128,6 @@ type Query implements Node {
     """The method to use when ordering `CryptoAsset`."""
     orderBy: [CryptoAssetOrderBy!] = [PRIMARY_KEY_ASC]
   ): CryptoAssetConnection
-
-  """Reads and enables pagination through a set of `JournalEntry`."""
-  journalEntries(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: JournalEntryCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: JournalEntryFilter
-
-    """The method to use when ordering `JournalEntry`."""
-    orderBy: [JournalEntryOrderBy!] = [PRIMARY_KEY_ASC]
-  ): JournalEntryConnection
 
   """Reads and enables pagination through a set of `CategorizationRule`."""
   categorizationRules(
@@ -1396,40 +1231,6 @@ type Query implements Node {
     orderBy: [RecurringTransactionOrderBy!] = [PRIMARY_KEY_ASC]
   ): RecurringTransactionConnection
 
-  """Reads and enables pagination through a set of `ReconciliationQueue`."""
-  reconciliationQueues(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: ReconciliationQueueCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: ReconciliationQueueFilter
-
-    """The method to use when ordering `ReconciliationQueue`."""
-    orderBy: [ReconciliationQueueOrderBy!] = [PRIMARY_KEY_ASC]
-  ): ReconciliationQueueConnection
-
   """Reads and enables pagination through a set of `Account`."""
   accounts(
     """Only read the first `n` values of the set."""
@@ -1463,40 +1264,6 @@ type Query implements Node {
     """The method to use when ordering `Account`."""
     orderBy: [AccountOrderBy!] = [PRIMARY_KEY_ASC]
   ): AccountConnection
-
-  """Reads and enables pagination through a set of `ConnectedAccount`."""
-  connectedAccounts(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: ConnectedAccountCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: ConnectedAccountFilter
-
-    """The method to use when ordering `ConnectedAccount`."""
-    orderBy: [ConnectedAccountOrderBy!] = [PRIMARY_KEY_ASC]
-  ): ConnectedAccountConnection
 }
 
 """An object with a globally unique `ID`."""
@@ -1804,7 +1571,7 @@ type Book implements Node {
   rowId: UUID!
   organizationId: String!
   name: String!
-  type: BookType!
+  type: String!
   currency: String!
   fiscalYearStartMonth: Int!
   createdAt: Datetime
@@ -2525,185 +2292,6 @@ type Book implements Node {
     """The method to use when ordering `Vehicle`."""
     orderBy: [VehicleOrderBy!] = [PRIMARY_KEY_ASC]
   ): VehicleConnection!
-
-  """Reads and enables pagination through a set of `QuickbooksAccountMap`."""
-  quickbooksAccountMaps(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: QuickbooksAccountMapCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: QuickbooksAccountMapFilter
-
-    """The method to use when ordering `QuickbooksAccountMap`."""
-    orderBy: [QuickbooksAccountMapOrderBy!] = [PRIMARY_KEY_ASC]
-  ): QuickbooksAccountMapConnection!
-
-  """Reads and enables pagination through a set of `QuickbooksMigration`."""
-  quickbooksMigrations(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: QuickbooksMigrationCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: QuickbooksMigrationFilter
-
-    """The method to use when ordering `QuickbooksMigration`."""
-    orderBy: [QuickbooksMigrationOrderBy!] = [PRIMARY_KEY_ASC]
-  ): QuickbooksMigrationConnection!
-
-  """
-  Reads and enables pagination through a set of `QuickbooksReconciliation`.
-  """
-  quickbooksReconciliations(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: QuickbooksReconciliationCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: QuickbooksReconciliationFilter
-
-    """The method to use when ordering `QuickbooksReconciliation`."""
-    orderBy: [QuickbooksReconciliationOrderBy!] = [PRIMARY_KEY_ASC]
-  ): QuickbooksReconciliationConnection!
-
-  """
-  Reads and enables pagination through a set of `QuickbooksReconciliationLine`.
-  """
-  quickbooksReconciliationLines(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: QuickbooksReconciliationLineCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: QuickbooksReconciliationLineFilter
-
-    """The method to use when ordering `QuickbooksReconciliationLine`."""
-    orderBy: [QuickbooksReconciliationLineOrderBy!] = [PRIMARY_KEY_ASC]
-  ): QuickbooksReconciliationLineConnection!
-
-  """Reads and enables pagination through a set of `QuickbooksCutover`."""
-  quickbooksCutovers(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: QuickbooksCutoverCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: QuickbooksCutoverFilter
-
-    """The method to use when ordering `QuickbooksCutover`."""
-    orderBy: [QuickbooksCutoverOrderBy!] = [PRIMARY_KEY_ASC]
-  ): QuickbooksCutoverConnection!
-}
-
-enum BookType {
-  business
-  personal
 }
 
 """A connection to a list of `Account` values."""
@@ -3115,36 +2703,6 @@ input BookFilter {
   """Some related `vehicles` exist."""
   vehiclesExist: Boolean
 
-  """Filter by the object’s `quickbooksAccountMaps` relation."""
-  quickbooksAccountMaps: BookToManyQuickbooksAccountMapFilter
-
-  """Some related `quickbooksAccountMaps` exist."""
-  quickbooksAccountMapsExist: Boolean
-
-  """Filter by the object’s `quickbooksMigrations` relation."""
-  quickbooksMigrations: BookToManyQuickbooksMigrationFilter
-
-  """Some related `quickbooksMigrations` exist."""
-  quickbooksMigrationsExist: Boolean
-
-  """Filter by the object’s `quickbooksReconciliations` relation."""
-  quickbooksReconciliations: BookToManyQuickbooksReconciliationFilter
-
-  """Some related `quickbooksReconciliations` exist."""
-  quickbooksReconciliationsExist: Boolean
-
-  """Filter by the object’s `quickbooksReconciliationLines` relation."""
-  quickbooksReconciliationLines: BookToManyQuickbooksReconciliationLineFilter
-
-  """Some related `quickbooksReconciliationLines` exist."""
-  quickbooksReconciliationLinesExist: Boolean
-
-  """Filter by the object’s `quickbooksCutovers` relation."""
-  quickbooksCutovers: BookToManyQuickbooksCutoverFilter
-
-  """Some related `quickbooksCutovers` exist."""
-  quickbooksCutoversExist: Boolean
-
   """Checks for all expressions in this list."""
   and: [BookFilter!]
 
@@ -3410,7 +2968,7 @@ input ConnectedAccountFilter {
   bookId: UUIDFilter
 
   """Filter by the object’s `provider` field."""
-  provider: ConnectedAccountProviderFilter
+  provider: StringFilter
 
   """Filter by the object’s `account` relation."""
   account: AccountFilter
@@ -3429,56 +2987,6 @@ input ConnectedAccountFilter {
 
   """Negates the expression."""
   not: ConnectedAccountFilter
-}
-
-"""
-A filter to be used against ConnectedAccountProvider fields. All fields are combined with a logical ‘and.’
-"""
-input ConnectedAccountProviderFilter {
-  """
-  Is null (if `true` is specified) or is not null (if `false` is specified).
-  """
-  isNull: Boolean
-
-  """Equal to the specified value."""
-  equalTo: ConnectedAccountProvider
-
-  """Not equal to the specified value."""
-  notEqualTo: ConnectedAccountProvider
-
-  """
-  Not equal to the specified value, treating null like an ordinary value.
-  """
-  distinctFrom: ConnectedAccountProvider
-
-  """Equal to the specified value, treating null like an ordinary value."""
-  notDistinctFrom: ConnectedAccountProvider
-
-  """Included in the specified list."""
-  in: [ConnectedAccountProvider!]
-
-  """Not included in the specified list."""
-  notIn: [ConnectedAccountProvider!]
-
-  """Less than the specified value."""
-  lessThan: ConnectedAccountProvider
-
-  """Less than or equal to the specified value."""
-  lessThanOrEqualTo: ConnectedAccountProvider
-
-  """Greater than the specified value."""
-  greaterThan: ConnectedAccountProvider
-
-  """Greater than or equal to the specified value."""
-  greaterThanOrEqualTo: ConnectedAccountProvider
-}
-
-enum ConnectedAccountProvider {
-  plaid
-  mx
-  wallet_connect
-  exchange_api
-  manual
 }
 
 """
@@ -3596,7 +3104,7 @@ input JournalEntryFilter {
   date: DatetimeFilter
 
   """Filter by the object’s `source` field."""
-  source: JournalEntrySourceFilter
+  source: StringFilter
 
   """Filter by the object’s `sourceReferenceId` field."""
   sourceReferenceId: StringFilter
@@ -3666,56 +3174,6 @@ input DatetimeFilter {
 
   """Greater than or equal to the specified value."""
   greaterThanOrEqualTo: Datetime
-}
-
-"""
-A filter to be used against JournalEntrySource fields. All fields are combined with a logical ‘and.’
-"""
-input JournalEntrySourceFilter {
-  """
-  Is null (if `true` is specified) or is not null (if `false` is specified).
-  """
-  isNull: Boolean
-
-  """Equal to the specified value."""
-  equalTo: JournalEntrySource
-
-  """Not equal to the specified value."""
-  notEqualTo: JournalEntrySource
-
-  """
-  Not equal to the specified value, treating null like an ordinary value.
-  """
-  distinctFrom: JournalEntrySource
-
-  """Equal to the specified value, treating null like an ordinary value."""
-  notDistinctFrom: JournalEntrySource
-
-  """Included in the specified list."""
-  in: [JournalEntrySource!]
-
-  """Not included in the specified list."""
-  notIn: [JournalEntrySource!]
-
-  """Less than the specified value."""
-  lessThan: JournalEntrySource
-
-  """Less than or equal to the specified value."""
-  lessThanOrEqualTo: JournalEntrySource
-
-  """Greater than the specified value."""
-  greaterThan: JournalEntrySource
-
-  """Greater than or equal to the specified value."""
-  greaterThanOrEqualTo: JournalEntrySource
-}
-
-enum JournalEntrySource {
-  manual
-  mantle_sync
-  plaid_import
-  crypto_sync
-  recurring
 }
 
 """
@@ -4040,7 +3498,7 @@ input ReconciliationQueueFilter {
   bookId: UUIDFilter
 
   """Filter by the object’s `status` field."""
-  status: ReconciliationStatusFilter
+  status: StringFilter
 
   """Filter by the object’s `book` relation."""
   book: BookFilter
@@ -4068,55 +3526,6 @@ input ReconciliationQueueFilter {
 
   """Negates the expression."""
   not: ReconciliationQueueFilter
-}
-
-"""
-A filter to be used against ReconciliationStatus fields. All fields are combined with a logical ‘and.’
-"""
-input ReconciliationStatusFilter {
-  """
-  Is null (if `true` is specified) or is not null (if `false` is specified).
-  """
-  isNull: Boolean
-
-  """Equal to the specified value."""
-  equalTo: ReconciliationStatus
-
-  """Not equal to the specified value."""
-  notEqualTo: ReconciliationStatus
-
-  """
-  Not equal to the specified value, treating null like an ordinary value.
-  """
-  distinctFrom: ReconciliationStatus
-
-  """Equal to the specified value, treating null like an ordinary value."""
-  notDistinctFrom: ReconciliationStatus
-
-  """Included in the specified list."""
-  in: [ReconciliationStatus!]
-
-  """Not included in the specified list."""
-  notIn: [ReconciliationStatus!]
-
-  """Less than the specified value."""
-  lessThan: ReconciliationStatus
-
-  """Less than or equal to the specified value."""
-  lessThanOrEqualTo: ReconciliationStatus
-
-  """Greater than the specified value."""
-  greaterThan: ReconciliationStatus
-
-  """Greater than or equal to the specified value."""
-  greaterThanOrEqualTo: ReconciliationStatus
-}
-
-enum ReconciliationStatus {
-  pending_review
-  approved
-  adjusted
-  rejected
 }
 
 """
@@ -4773,279 +4182,6 @@ input BookToManyVehicleFilter {
 }
 
 """
-A filter to be used against many `QuickbooksAccountMap` object types. All fields are combined with a logical ‘and.’
-"""
-input BookToManyQuickbooksAccountMapFilter {
-  """
-  Every related `QuickbooksAccountMap` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  every: QuickbooksAccountMapFilter
-
-  """
-  Some related `QuickbooksAccountMap` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  some: QuickbooksAccountMapFilter
-
-  """
-  No related `QuickbooksAccountMap` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  none: QuickbooksAccountMapFilter
-}
-
-"""
-A filter to be used against `QuickbooksAccountMap` object types. All fields are combined with a logical ‘and.’
-"""
-input QuickbooksAccountMapFilter {
-  """Filter by the object’s `rowId` field."""
-  rowId: UUIDFilter
-
-  """Filter by the object’s `bookId` field."""
-  bookId: UUIDFilter
-
-  """Filter by the object’s `qboAccountId` field."""
-  qboAccountId: StringFilter
-
-  """Filter by the object’s `book` relation."""
-  book: BookFilter
-
-  """Filter by the object’s `myfiAccount` relation."""
-  myfiAccount: AccountFilter
-
-  """Checks for all expressions in this list."""
-  and: [QuickbooksAccountMapFilter!]
-
-  """Checks for any expressions in this list."""
-  or: [QuickbooksAccountMapFilter!]
-
-  """Negates the expression."""
-  not: QuickbooksAccountMapFilter
-}
-
-"""
-A filter to be used against many `QuickbooksMigration` object types. All fields are combined with a logical ‘and.’
-"""
-input BookToManyQuickbooksMigrationFilter {
-  """
-  Every related `QuickbooksMigration` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  every: QuickbooksMigrationFilter
-
-  """
-  Some related `QuickbooksMigration` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  some: QuickbooksMigrationFilter
-
-  """
-  No related `QuickbooksMigration` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  none: QuickbooksMigrationFilter
-}
-
-"""
-A filter to be used against `QuickbooksMigration` object types. All fields are combined with a logical ‘and.’
-"""
-input QuickbooksMigrationFilter {
-  """Filter by the object’s `rowId` field."""
-  rowId: UUIDFilter
-
-  """Filter by the object’s `bookId` field."""
-  bookId: UUIDFilter
-
-  """Filter by the object’s `book` relation."""
-  book: BookFilter
-
-  """Filter by the object’s `connectedAccount` relation."""
-  connectedAccount: ConnectedAccountFilter
-
-  """Checks for all expressions in this list."""
-  and: [QuickbooksMigrationFilter!]
-
-  """Checks for any expressions in this list."""
-  or: [QuickbooksMigrationFilter!]
-
-  """Negates the expression."""
-  not: QuickbooksMigrationFilter
-}
-
-"""
-A filter to be used against many `QuickbooksReconciliation` object types. All fields are combined with a logical ‘and.’
-"""
-input BookToManyQuickbooksReconciliationFilter {
-  """
-  Every related `QuickbooksReconciliation` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  every: QuickbooksReconciliationFilter
-
-  """
-  Some related `QuickbooksReconciliation` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  some: QuickbooksReconciliationFilter
-
-  """
-  No related `QuickbooksReconciliation` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  none: QuickbooksReconciliationFilter
-}
-
-"""
-A filter to be used against `QuickbooksReconciliation` object types. All fields are combined with a logical ‘and.’
-"""
-input QuickbooksReconciliationFilter {
-  """Filter by the object’s `rowId` field."""
-  rowId: UUIDFilter
-
-  """Filter by the object’s `bookId` field."""
-  bookId: UUIDFilter
-
-  """
-  Filter by the object’s `quickbooksReconciliationLinesByReconciliationId` relation.
-  """
-  quickbooksReconciliationLinesByReconciliationId: QuickbooksReconciliationToManyQuickbooksReconciliationLineFilter
-
-  """Some related `quickbooksReconciliationLinesByReconciliationId` exist."""
-  quickbooksReconciliationLinesByReconciliationIdExist: Boolean
-
-  """Filter by the object’s `book` relation."""
-  book: BookFilter
-
-  """Filter by the object’s `connectedAccount` relation."""
-  connectedAccount: ConnectedAccountFilter
-
-  """Checks for all expressions in this list."""
-  and: [QuickbooksReconciliationFilter!]
-
-  """Checks for any expressions in this list."""
-  or: [QuickbooksReconciliationFilter!]
-
-  """Negates the expression."""
-  not: QuickbooksReconciliationFilter
-}
-
-"""
-A filter to be used against many `QuickbooksReconciliationLine` object types. All fields are combined with a logical ‘and.’
-"""
-input QuickbooksReconciliationToManyQuickbooksReconciliationLineFilter {
-  """
-  Every related `QuickbooksReconciliationLine` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  every: QuickbooksReconciliationLineFilter
-
-  """
-  Some related `QuickbooksReconciliationLine` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  some: QuickbooksReconciliationLineFilter
-
-  """
-  No related `QuickbooksReconciliationLine` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  none: QuickbooksReconciliationLineFilter
-}
-
-"""
-A filter to be used against `QuickbooksReconciliationLine` object types. All fields are combined with a logical ‘and.’
-"""
-input QuickbooksReconciliationLineFilter {
-  """Filter by the object’s `rowId` field."""
-  rowId: UUIDFilter
-
-  """Filter by the object’s `reconciliationId` field."""
-  reconciliationId: UUIDFilter
-
-  """Filter by the object’s `bookId` field."""
-  bookId: UUIDFilter
-
-  """Filter by the object’s `book` relation."""
-  book: BookFilter
-
-  """Filter by the object’s `myfiAccount` relation."""
-  myfiAccount: AccountFilter
-
-  """A related `myfiAccount` exists."""
-  myfiAccountExists: Boolean
-
-  """Filter by the object’s `reconciliation` relation."""
-  reconciliation: QuickbooksReconciliationFilter
-
-  """Checks for all expressions in this list."""
-  and: [QuickbooksReconciliationLineFilter!]
-
-  """Checks for any expressions in this list."""
-  or: [QuickbooksReconciliationLineFilter!]
-
-  """Negates the expression."""
-  not: QuickbooksReconciliationLineFilter
-}
-
-"""
-A filter to be used against many `QuickbooksReconciliationLine` object types. All fields are combined with a logical ‘and.’
-"""
-input BookToManyQuickbooksReconciliationLineFilter {
-  """
-  Every related `QuickbooksReconciliationLine` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  every: QuickbooksReconciliationLineFilter
-
-  """
-  Some related `QuickbooksReconciliationLine` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  some: QuickbooksReconciliationLineFilter
-
-  """
-  No related `QuickbooksReconciliationLine` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  none: QuickbooksReconciliationLineFilter
-}
-
-"""
-A filter to be used against many `QuickbooksCutover` object types. All fields are combined with a logical ‘and.’
-"""
-input BookToManyQuickbooksCutoverFilter {
-  """
-  Every related `QuickbooksCutover` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  every: QuickbooksCutoverFilter
-
-  """
-  Some related `QuickbooksCutover` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  some: QuickbooksCutoverFilter
-
-  """
-  No related `QuickbooksCutover` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  none: QuickbooksCutoverFilter
-}
-
-"""
-A filter to be used against `QuickbooksCutover` object types. All fields are combined with a logical ‘and.’
-"""
-input QuickbooksCutoverFilter {
-  """Filter by the object’s `rowId` field."""
-  rowId: UUIDFilter
-
-  """Filter by the object’s `bookId` field."""
-  bookId: UUIDFilter
-
-  """Filter by the object’s `book` relation."""
-  book: BookFilter
-
-  """Filter by the object’s `connectedAccount` relation."""
-  connectedAccount: ConnectedAccountFilter
-
-  """Filter by the object’s `reconciliation` relation."""
-  reconciliation: QuickbooksReconciliationFilter
-
-  """Checks for all expressions in this list."""
-  and: [QuickbooksCutoverFilter!]
-
-  """Checks for any expressions in this list."""
-  or: [QuickbooksCutoverFilter!]
-
-  """Negates the expression."""
-  not: QuickbooksCutoverFilter
-}
-
-"""
 A filter to be used against many `JournalLine` object types. All fields are combined with a logical ‘and.’
 """
 input AccountToManyJournalLineFilter {
@@ -5281,30 +4417,22 @@ type ConnectedAccount implements Node {
   id: ID!
   rowId: UUID!
   bookId: UUID!
-  provider: ConnectedAccountProvider!
+  provider: String!
   providerAccountId: String
   accountId: UUID
   institutionName: String
   mask: String
-  status: ConnectedAccountStatus!
+  status: String!
   accessToken: String
   lastSyncedAt: Datetime
   createdAt: Datetime
   syncCursor: String
-  refreshToken: String
-  realmId: String
 
   """Reads a single `Account` that is related to this `ConnectedAccount`."""
   account: Account
 
   """Reads a single `Book` that is related to this `ConnectedAccount`."""
   book: Book
-}
-
-enum ConnectedAccountStatus {
-  active
-  disconnected
-  error
 }
 
 """A `ConnectedAccount` edge in the connection."""
@@ -5328,7 +4456,7 @@ input ConnectedAccountCondition {
   bookId: UUID
 
   """Checks for equality with the object’s `provider` field."""
-  provider: ConnectedAccountProvider
+  provider: String
 }
 
 """Methods to use when ordering `ConnectedAccount`."""
@@ -5340,6 +4468,8 @@ enum ConnectedAccountOrderBy {
   ROW_ID_DESC
   BOOK_ID_ASC
   BOOK_ID_DESC
+  PROVIDER_ASC
+  PROVIDER_DESC
 }
 
 """A connection to a list of `CryptoAsset` values."""
@@ -5470,7 +4600,7 @@ type JournalEntry implements Node {
   bookId: UUID!
   date: Datetime!
   memo: String
-  source: JournalEntrySource!
+  source: String!
   sourceReferenceId: String
   isReviewed: Boolean!
   isReconciled: Boolean!
@@ -5707,7 +4837,7 @@ input JournalEntryCondition {
   date: Datetime
 
   """Checks for equality with the object’s `source` field."""
-  source: JournalEntrySource
+  source: String
 
   """Checks for equality with the object’s `sourceReferenceId` field."""
   sourceReferenceId: String
@@ -5724,6 +4854,8 @@ enum JournalEntryOrderBy {
   BOOK_ID_DESC
   DATE_ASC
   DATE_DESC
+  SOURCE_ASC
+  SOURCE_DESC
   SOURCE_REFERENCE_ID_ASC
   SOURCE_REFERENCE_ID_DESC
 }
@@ -5829,7 +4961,7 @@ type ReconciliationQueue implements Node {
   rowId: UUID!
   bookId: UUID!
   journalEntryId: UUID!
-  status: ReconciliationStatus!
+  status: String!
   reviewedAt: Datetime
   reviewedBy: String
   createdAt: Datetime
@@ -5881,7 +5013,7 @@ input ReconciliationQueueCondition {
   bookId: UUID
 
   """Checks for equality with the object’s `status` field."""
-  status: ReconciliationStatus
+  status: String
 }
 
 """Methods to use when ordering `ReconciliationQueue`."""
@@ -5893,6 +5025,8 @@ enum ReconciliationQueueOrderBy {
   ROW_ID_DESC
   BOOK_ID_ASC
   BOOK_ID_DESC
+  STATUS_ASC
+  STATUS_DESC
 }
 
 """A connection to a list of `RecurringTransaction` values."""
@@ -7110,441 +6244,6 @@ enum VehicleOrderBy {
   BOOK_ID_DESC
 }
 
-"""A connection to a list of `QuickbooksAccountMap` values."""
-type QuickbooksAccountMapConnection {
-  """A list of `QuickbooksAccountMap` objects."""
-  nodes: [QuickbooksAccountMap]!
-
-  """
-  A list of edges which contains the `QuickbooksAccountMap` and cursor to aid in pagination.
-  """
-  edges: [QuickbooksAccountMapEdge]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """
-  The count of *all* `QuickbooksAccountMap` you could get from the connection.
-  """
-  totalCount: Int!
-}
-
-type QuickbooksAccountMap implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  id: ID!
-  rowId: UUID!
-  bookId: UUID!
-  qboAccountId: String!
-  qboAccountName: String
-  qboAccountType: String
-  myfiAccountId: UUID!
-  createdAt: Datetime
-  updatedAt: Datetime
-
-  """Reads a single `Book` that is related to this `QuickbooksAccountMap`."""
-  book: Book
-
-  """
-  Reads a single `Account` that is related to this `QuickbooksAccountMap`.
-  """
-  myfiAccount: Account
-}
-
-"""A `QuickbooksAccountMap` edge in the connection."""
-type QuickbooksAccountMapEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `QuickbooksAccountMap` at the end of the edge."""
-  node: QuickbooksAccountMap
-}
-
-"""
-A condition to be used against `QuickbooksAccountMap` object types. All fields
-are tested for equality and combined with a logical ‘and.’
-"""
-input QuickbooksAccountMapCondition {
-  """Checks for equality with the object’s `rowId` field."""
-  rowId: UUID
-
-  """Checks for equality with the object’s `bookId` field."""
-  bookId: UUID
-
-  """Checks for equality with the object’s `qboAccountId` field."""
-  qboAccountId: String
-}
-
-"""Methods to use when ordering `QuickbooksAccountMap`."""
-enum QuickbooksAccountMapOrderBy {
-  NATURAL
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-  ROW_ID_ASC
-  ROW_ID_DESC
-  BOOK_ID_ASC
-  BOOK_ID_DESC
-  QBO_ACCOUNT_ID_ASC
-  QBO_ACCOUNT_ID_DESC
-}
-
-"""A connection to a list of `QuickbooksMigration` values."""
-type QuickbooksMigrationConnection {
-  """A list of `QuickbooksMigration` objects."""
-  nodes: [QuickbooksMigration]!
-
-  """
-  A list of edges which contains the `QuickbooksMigration` and cursor to aid in pagination.
-  """
-  edges: [QuickbooksMigrationEdge]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """
-  The count of *all* `QuickbooksMigration` you could get from the connection.
-  """
-  totalCount: Int!
-}
-
-type QuickbooksMigration implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  id: ID!
-  rowId: UUID!
-  bookId: UUID!
-  connectedAccountId: UUID!
-  status: String!
-  periodStart: Datetime
-  periodEnd: Datetime
-  entriesImported: Int!
-  errorMessage: String
-  createdAt: Datetime
-  updatedAt: Datetime
-
-  """Reads a single `Book` that is related to this `QuickbooksMigration`."""
-  book: Book
-
-  """
-  Reads a single `ConnectedAccount` that is related to this `QuickbooksMigration`.
-  """
-  connectedAccount: ConnectedAccount
-}
-
-"""A `QuickbooksMigration` edge in the connection."""
-type QuickbooksMigrationEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `QuickbooksMigration` at the end of the edge."""
-  node: QuickbooksMigration
-}
-
-"""
-A condition to be used against `QuickbooksMigration` object types. All fields
-are tested for equality and combined with a logical ‘and.’
-"""
-input QuickbooksMigrationCondition {
-  """Checks for equality with the object’s `rowId` field."""
-  rowId: UUID
-
-  """Checks for equality with the object’s `bookId` field."""
-  bookId: UUID
-}
-
-"""Methods to use when ordering `QuickbooksMigration`."""
-enum QuickbooksMigrationOrderBy {
-  NATURAL
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-  ROW_ID_ASC
-  ROW_ID_DESC
-  BOOK_ID_ASC
-  BOOK_ID_DESC
-}
-
-"""A connection to a list of `QuickbooksReconciliation` values."""
-type QuickbooksReconciliationConnection {
-  """A list of `QuickbooksReconciliation` objects."""
-  nodes: [QuickbooksReconciliation]!
-
-  """
-  A list of edges which contains the `QuickbooksReconciliation` and cursor to aid in pagination.
-  """
-  edges: [QuickbooksReconciliationEdge]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """
-  The count of *all* `QuickbooksReconciliation` you could get from the connection.
-  """
-  totalCount: Int!
-}
-
-type QuickbooksReconciliation implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  id: ID!
-  rowId: UUID!
-  bookId: UUID!
-  connectedAccountId: UUID!
-  status: String!
-  periodStart: Datetime!
-  periodEnd: Datetime!
-  totalVariance: BigFloat
-  mismatchCount: Int!
-  errorMessage: String
-  createdAt: Datetime
-  updatedAt: Datetime
-
-  """
-  Reads a single `Book` that is related to this `QuickbooksReconciliation`.
-  """
-  book: Book
-
-  """
-  Reads a single `ConnectedAccount` that is related to this `QuickbooksReconciliation`.
-  """
-  connectedAccount: ConnectedAccount
-
-  """
-  Reads and enables pagination through a set of `QuickbooksReconciliationLine`.
-  """
-  quickbooksReconciliationLinesByReconciliationId(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: QuickbooksReconciliationLineCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: QuickbooksReconciliationLineFilter
-
-    """The method to use when ordering `QuickbooksReconciliationLine`."""
-    orderBy: [QuickbooksReconciliationLineOrderBy!] = [PRIMARY_KEY_ASC]
-  ): QuickbooksReconciliationLineConnection!
-}
-
-"""A connection to a list of `QuickbooksReconciliationLine` values."""
-type QuickbooksReconciliationLineConnection {
-  """A list of `QuickbooksReconciliationLine` objects."""
-  nodes: [QuickbooksReconciliationLine]!
-
-  """
-  A list of edges which contains the `QuickbooksReconciliationLine` and cursor to aid in pagination.
-  """
-  edges: [QuickbooksReconciliationLineEdge]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """
-  The count of *all* `QuickbooksReconciliationLine` you could get from the connection.
-  """
-  totalCount: Int!
-}
-
-type QuickbooksReconciliationLine implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  id: ID!
-  rowId: UUID!
-  reconciliationId: UUID!
-  bookId: UUID!
-  myfiAccountId: UUID
-  qboAccountId: String
-  accountName: String!
-  qboBalance: BigFloat!
-  myfiBalance: BigFloat!
-  variance: BigFloat!
-  createdAt: Datetime
-
-  """
-  Reads a single `Book` that is related to this `QuickbooksReconciliationLine`.
-  """
-  book: Book
-
-  """
-  Reads a single `Account` that is related to this `QuickbooksReconciliationLine`.
-  """
-  myfiAccount: Account
-
-  """
-  Reads a single `QuickbooksReconciliation` that is related to this `QuickbooksReconciliationLine`.
-  """
-  reconciliation: QuickbooksReconciliation
-}
-
-"""A `QuickbooksReconciliationLine` edge in the connection."""
-type QuickbooksReconciliationLineEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `QuickbooksReconciliationLine` at the end of the edge."""
-  node: QuickbooksReconciliationLine
-}
-
-"""
-A condition to be used against `QuickbooksReconciliationLine` object types. All
-fields are tested for equality and combined with a logical ‘and.’
-"""
-input QuickbooksReconciliationLineCondition {
-  """Checks for equality with the object’s `rowId` field."""
-  rowId: UUID
-
-  """Checks for equality with the object’s `reconciliationId` field."""
-  reconciliationId: UUID
-
-  """Checks for equality with the object’s `bookId` field."""
-  bookId: UUID
-}
-
-"""Methods to use when ordering `QuickbooksReconciliationLine`."""
-enum QuickbooksReconciliationLineOrderBy {
-  NATURAL
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-  ROW_ID_ASC
-  ROW_ID_DESC
-  RECONCILIATION_ID_ASC
-  RECONCILIATION_ID_DESC
-  BOOK_ID_ASC
-  BOOK_ID_DESC
-}
-
-"""A `QuickbooksReconciliation` edge in the connection."""
-type QuickbooksReconciliationEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `QuickbooksReconciliation` at the end of the edge."""
-  node: QuickbooksReconciliation
-}
-
-"""
-A condition to be used against `QuickbooksReconciliation` object types. All
-fields are tested for equality and combined with a logical ‘and.’
-"""
-input QuickbooksReconciliationCondition {
-  """Checks for equality with the object’s `rowId` field."""
-  rowId: UUID
-
-  """Checks for equality with the object’s `bookId` field."""
-  bookId: UUID
-}
-
-"""Methods to use when ordering `QuickbooksReconciliation`."""
-enum QuickbooksReconciliationOrderBy {
-  NATURAL
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-  ROW_ID_ASC
-  ROW_ID_DESC
-  BOOK_ID_ASC
-  BOOK_ID_DESC
-}
-
-"""A connection to a list of `QuickbooksCutover` values."""
-type QuickbooksCutoverConnection {
-  """A list of `QuickbooksCutover` objects."""
-  nodes: [QuickbooksCutover]!
-
-  """
-  A list of edges which contains the `QuickbooksCutover` and cursor to aid in pagination.
-  """
-  edges: [QuickbooksCutoverEdge]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """
-  The count of *all* `QuickbooksCutover` you could get from the connection.
-  """
-  totalCount: Int!
-}
-
-type QuickbooksCutover implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  id: ID!
-  rowId: UUID!
-  bookId: UUID!
-  connectedAccountId: UUID!
-  reconciliationId: UUID!
-  cutoverAt: Datetime!
-  createdAt: Datetime
-
-  """Reads a single `Book` that is related to this `QuickbooksCutover`."""
-  book: Book
-
-  """
-  Reads a single `ConnectedAccount` that is related to this `QuickbooksCutover`.
-  """
-  connectedAccount: ConnectedAccount
-
-  """
-  Reads a single `QuickbooksReconciliation` that is related to this `QuickbooksCutover`.
-  """
-  reconciliation: QuickbooksReconciliation
-}
-
-"""A `QuickbooksCutover` edge in the connection."""
-type QuickbooksCutoverEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `QuickbooksCutover` at the end of the edge."""
-  node: QuickbooksCutover
-}
-
-"""
-A condition to be used against `QuickbooksCutover` object types. All fields are
-tested for equality and combined with a logical ‘and.’
-"""
-input QuickbooksCutoverCondition {
-  """Checks for equality with the object’s `rowId` field."""
-  rowId: UUID
-
-  """Checks for equality with the object’s `bookId` field."""
-  bookId: UUID
-}
-
-"""Methods to use when ordering `QuickbooksCutover`."""
-enum QuickbooksCutoverOrderBy {
-  NATURAL
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-  ROW_ID_ASC
-  ROW_ID_DESC
-  BOOK_ID_ASC
-  BOOK_ID_DESC
-}
-
 type _DrizzleMigration implements Node {
   """
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
@@ -7774,14 +6473,6 @@ type Mutation {
     input: CreateTagGroupInput!
   ): CreateTagGroupPayload
 
-  """Creates a single `QuickbooksCutover`."""
-  createQuickbooksCutover(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateQuickbooksCutoverInput!
-  ): CreateQuickbooksCutoverPayload
-
   """Creates a single `_DrizzleMigration`."""
   createDrizzleMigration(
     """
@@ -7822,14 +6513,6 @@ type Mutation {
     input: CreateTagInput!
   ): CreateTagPayload
 
-  """Creates a single `QuickbooksAccountMap`."""
-  createQuickbooksAccountMap(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateQuickbooksAccountMapInput!
-  ): CreateQuickbooksAccountMapPayload
-
   """Creates a single `Vehicle`."""
   createVehicle(
     """
@@ -7862,6 +6545,14 @@ type Mutation {
     input: CreateImportProfileInput!
   ): CreateImportProfilePayload
 
+  """Creates a single `Book`."""
+  createBook(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateBookInput!
+  ): CreateBookPayload
+
   """Creates a single `NetWorthSnapshot`."""
   createNetWorthSnapshot(
     """
@@ -7877,22 +6568,6 @@ type Mutation {
     """
     input: CreateAccountingPeriodInput!
   ): CreateAccountingPeriodPayload
-
-  """Creates a single `QuickbooksMigration`."""
-  createQuickbooksMigration(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateQuickbooksMigrationInput!
-  ): CreateQuickbooksMigrationPayload
-
-  """Creates a single `QuickbooksReconciliationLine`."""
-  createQuickbooksReconciliationLine(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateQuickbooksReconciliationLineInput!
-  ): CreateQuickbooksReconciliationLinePayload
 
   """Creates a single `PayrollConnection`."""
   createPayrollConnection(
@@ -7910,14 +6585,6 @@ type Mutation {
     input: CreateReconciliationStatementInput!
   ): CreateReconciliationStatementPayload
 
-  """Creates a single `QuickbooksReconciliation`."""
-  createQuickbooksReconciliation(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateQuickbooksReconciliationInput!
-  ): CreateQuickbooksReconciliationPayload
-
   """Creates a single `CryptoLot`."""
   createCryptoLot(
     """
@@ -7925,6 +6592,22 @@ type Mutation {
     """
     input: CreateCryptoLotInput!
   ): CreateCryptoLotPayload
+
+  """Creates a single `ConnectedAccount`."""
+  createConnectedAccount(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateConnectedAccountInput!
+  ): CreateConnectedAccountPayload
+
+  """Creates a single `JournalEntry`."""
+  createJournalEntry(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateJournalEntryInput!
+  ): CreateJournalEntryPayload
 
   """Creates a single `MileageLog`."""
   createMileageLog(
@@ -7934,14 +6617,6 @@ type Mutation {
     input: CreateMileageLogInput!
   ): CreateMileageLogPayload
 
-  """Creates a single `Book`."""
-  createBook(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateBookInput!
-  ): CreateBookPayload
-
   """Creates a single `Budget`."""
   createBudget(
     """
@@ -7949,6 +6624,14 @@ type Mutation {
     """
     input: CreateBudgetInput!
   ): CreateBudgetPayload
+
+  """Creates a single `ReconciliationQueue`."""
+  createReconciliationQueue(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateReconciliationQueueInput!
+  ): CreateReconciliationQueuePayload
 
   """Creates a single `Vendor`."""
   createVendor(
@@ -7965,14 +6648,6 @@ type Mutation {
     """
     input: CreateCryptoAssetInput!
   ): CreateCryptoAssetPayload
-
-  """Creates a single `JournalEntry`."""
-  createJournalEntry(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateJournalEntryInput!
-  ): CreateJournalEntryPayload
 
   """Creates a single `CategorizationRule`."""
   createCategorizationRule(
@@ -7998,14 +6673,6 @@ type Mutation {
     input: CreateRecurringTransactionInput!
   ): CreateRecurringTransactionPayload
 
-  """Creates a single `ReconciliationQueue`."""
-  createReconciliationQueue(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateReconciliationQueueInput!
-  ): CreateReconciliationQueuePayload
-
   """Creates a single `Account`."""
   createAccount(
     """
@@ -8013,14 +6680,6 @@ type Mutation {
     """
     input: CreateAccountInput!
   ): CreateAccountPayload
-
-  """Creates a single `ConnectedAccount`."""
-  createConnectedAccount(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateConnectedAccountInput!
-  ): CreateConnectedAccountPayload
 
   """
   Updates a single `JournalLineTag` using its globally unique id and a patch.
@@ -8055,24 +6714,6 @@ type Mutation {
     """
     input: UpdateTagGroupInput!
   ): UpdateTagGroupPayload
-
-  """
-  Updates a single `QuickbooksCutover` using its globally unique id and a patch.
-  """
-  updateQuickbooksCutoverById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateQuickbooksCutoverByIdInput!
-  ): UpdateQuickbooksCutoverPayload
-
-  """Updates a single `QuickbooksCutover` using a unique key and a patch."""
-  updateQuickbooksCutover(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateQuickbooksCutoverInput!
-  ): UpdateQuickbooksCutoverPayload
 
   """
   Updates a single `_DrizzleMigration` using its globally unique id and a patch.
@@ -8162,26 +6803,6 @@ type Mutation {
     input: UpdateTagInput!
   ): UpdateTagPayload
 
-  """
-  Updates a single `QuickbooksAccountMap` using its globally unique id and a patch.
-  """
-  updateQuickbooksAccountMapById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateQuickbooksAccountMapByIdInput!
-  ): UpdateQuickbooksAccountMapPayload
-
-  """
-  Updates a single `QuickbooksAccountMap` using a unique key and a patch.
-  """
-  updateQuickbooksAccountMap(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateQuickbooksAccountMapInput!
-  ): UpdateQuickbooksAccountMapPayload
-
   """Updates a single `Vehicle` using its globally unique id and a patch."""
   updateVehicleById(
     """
@@ -8252,6 +6873,22 @@ type Mutation {
     input: UpdateImportProfileInput!
   ): UpdateImportProfilePayload
 
+  """Updates a single `Book` using its globally unique id and a patch."""
+  updateBookById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateBookByIdInput!
+  ): UpdateBookPayload
+
+  """Updates a single `Book` using a unique key and a patch."""
+  updateBook(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateBookInput!
+  ): UpdateBookPayload
+
   """
   Updates a single `NetWorthSnapshot` using its globally unique id and a patch.
   """
@@ -8287,44 +6924,6 @@ type Mutation {
     """
     input: UpdateAccountingPeriodInput!
   ): UpdateAccountingPeriodPayload
-
-  """
-  Updates a single `QuickbooksMigration` using its globally unique id and a patch.
-  """
-  updateQuickbooksMigrationById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateQuickbooksMigrationByIdInput!
-  ): UpdateQuickbooksMigrationPayload
-
-  """Updates a single `QuickbooksMigration` using a unique key and a patch."""
-  updateQuickbooksMigration(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateQuickbooksMigrationInput!
-  ): UpdateQuickbooksMigrationPayload
-
-  """
-  Updates a single `QuickbooksReconciliationLine` using its globally unique id and a patch.
-  """
-  updateQuickbooksReconciliationLineById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateQuickbooksReconciliationLineByIdInput!
-  ): UpdateQuickbooksReconciliationLinePayload
-
-  """
-  Updates a single `QuickbooksReconciliationLine` using a unique key and a patch.
-  """
-  updateQuickbooksReconciliationLine(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateQuickbooksReconciliationLineInput!
-  ): UpdateQuickbooksReconciliationLinePayload
 
   """
   Updates a single `PayrollConnection` using its globally unique id and a patch.
@@ -8364,26 +6963,6 @@ type Mutation {
     input: UpdateReconciliationStatementInput!
   ): UpdateReconciliationStatementPayload
 
-  """
-  Updates a single `QuickbooksReconciliation` using its globally unique id and a patch.
-  """
-  updateQuickbooksReconciliationById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateQuickbooksReconciliationByIdInput!
-  ): UpdateQuickbooksReconciliationPayload
-
-  """
-  Updates a single `QuickbooksReconciliation` using a unique key and a patch.
-  """
-  updateQuickbooksReconciliation(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateQuickbooksReconciliationInput!
-  ): UpdateQuickbooksReconciliationPayload
-
   """Updates a single `CryptoLot` using its globally unique id and a patch."""
   updateCryptoLotById(
     """
@@ -8399,6 +6978,42 @@ type Mutation {
     """
     input: UpdateCryptoLotInput!
   ): UpdateCryptoLotPayload
+
+  """
+  Updates a single `ConnectedAccount` using its globally unique id and a patch.
+  """
+  updateConnectedAccountById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateConnectedAccountByIdInput!
+  ): UpdateConnectedAccountPayload
+
+  """Updates a single `ConnectedAccount` using a unique key and a patch."""
+  updateConnectedAccount(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateConnectedAccountInput!
+  ): UpdateConnectedAccountPayload
+
+  """
+  Updates a single `JournalEntry` using its globally unique id and a patch.
+  """
+  updateJournalEntryById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateJournalEntryByIdInput!
+  ): UpdateJournalEntryPayload
+
+  """Updates a single `JournalEntry` using a unique key and a patch."""
+  updateJournalEntry(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateJournalEntryInput!
+  ): UpdateJournalEntryPayload
 
   """
   Updates a single `MileageLog` using its globally unique id and a patch.
@@ -8418,22 +7033,6 @@ type Mutation {
     input: UpdateMileageLogInput!
   ): UpdateMileageLogPayload
 
-  """Updates a single `Book` using its globally unique id and a patch."""
-  updateBookById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateBookByIdInput!
-  ): UpdateBookPayload
-
-  """Updates a single `Book` using a unique key and a patch."""
-  updateBook(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateBookInput!
-  ): UpdateBookPayload
-
   """Updates a single `Budget` using its globally unique id and a patch."""
   updateBudgetById(
     """
@@ -8449,6 +7048,24 @@ type Mutation {
     """
     input: UpdateBudgetInput!
   ): UpdateBudgetPayload
+
+  """
+  Updates a single `ReconciliationQueue` using its globally unique id and a patch.
+  """
+  updateReconciliationQueueById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateReconciliationQueueByIdInput!
+  ): UpdateReconciliationQueuePayload
+
+  """Updates a single `ReconciliationQueue` using a unique key and a patch."""
+  updateReconciliationQueue(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateReconciliationQueueInput!
+  ): UpdateReconciliationQueuePayload
 
   """Updates a single `Vendor` using its globally unique id and a patch."""
   updateVendorById(
@@ -8483,24 +7100,6 @@ type Mutation {
     """
     input: UpdateCryptoAssetInput!
   ): UpdateCryptoAssetPayload
-
-  """
-  Updates a single `JournalEntry` using its globally unique id and a patch.
-  """
-  updateJournalEntryById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateJournalEntryByIdInput!
-  ): UpdateJournalEntryPayload
-
-  """Updates a single `JournalEntry` using a unique key and a patch."""
-  updateJournalEntry(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateJournalEntryInput!
-  ): UpdateJournalEntryPayload
 
   """
   Updates a single `CategorizationRule` using its globally unique id and a patch.
@@ -8558,24 +7157,6 @@ type Mutation {
     input: UpdateRecurringTransactionInput!
   ): UpdateRecurringTransactionPayload
 
-  """
-  Updates a single `ReconciliationQueue` using its globally unique id and a patch.
-  """
-  updateReconciliationQueueById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateReconciliationQueueByIdInput!
-  ): UpdateReconciliationQueuePayload
-
-  """Updates a single `ReconciliationQueue` using a unique key and a patch."""
-  updateReconciliationQueue(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateReconciliationQueueInput!
-  ): UpdateReconciliationQueuePayload
-
   """Updates a single `Account` using its globally unique id and a patch."""
   updateAccountById(
     """
@@ -8591,24 +7172,6 @@ type Mutation {
     """
     input: UpdateAccountInput!
   ): UpdateAccountPayload
-
-  """
-  Updates a single `ConnectedAccount` using its globally unique id and a patch.
-  """
-  updateConnectedAccountById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateConnectedAccountByIdInput!
-  ): UpdateConnectedAccountPayload
-
-  """Updates a single `ConnectedAccount` using a unique key and a patch."""
-  updateConnectedAccount(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateConnectedAccountInput!
-  ): UpdateConnectedAccountPayload
 
   """Deletes a single `JournalLineTag` using its globally unique id."""
   deleteJournalLineTagById(
@@ -8641,22 +7204,6 @@ type Mutation {
     """
     input: DeleteTagGroupInput!
   ): DeleteTagGroupPayload
-
-  """Deletes a single `QuickbooksCutover` using its globally unique id."""
-  deleteQuickbooksCutoverById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteQuickbooksCutoverByIdInput!
-  ): DeleteQuickbooksCutoverPayload
-
-  """Deletes a single `QuickbooksCutover` using a unique key."""
-  deleteQuickbooksCutover(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteQuickbooksCutoverInput!
-  ): DeleteQuickbooksCutoverPayload
 
   """Deletes a single `_DrizzleMigration` using its globally unique id."""
   deleteDrizzleMigrationById(
@@ -8738,22 +7285,6 @@ type Mutation {
     input: DeleteTagInput!
   ): DeleteTagPayload
 
-  """Deletes a single `QuickbooksAccountMap` using its globally unique id."""
-  deleteQuickbooksAccountMapById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteQuickbooksAccountMapByIdInput!
-  ): DeleteQuickbooksAccountMapPayload
-
-  """Deletes a single `QuickbooksAccountMap` using a unique key."""
-  deleteQuickbooksAccountMap(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteQuickbooksAccountMapInput!
-  ): DeleteQuickbooksAccountMapPayload
-
   """Deletes a single `Vehicle` using its globally unique id."""
   deleteVehicleById(
     """
@@ -8818,6 +7349,22 @@ type Mutation {
     input: DeleteImportProfileInput!
   ): DeleteImportProfilePayload
 
+  """Deletes a single `Book` using its globally unique id."""
+  deleteBookById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteBookByIdInput!
+  ): DeleteBookPayload
+
+  """Deletes a single `Book` using a unique key."""
+  deleteBook(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteBookInput!
+  ): DeleteBookPayload
+
   """Deletes a single `NetWorthSnapshot` using its globally unique id."""
   deleteNetWorthSnapshotById(
     """
@@ -8849,40 +7396,6 @@ type Mutation {
     """
     input: DeleteAccountingPeriodInput!
   ): DeleteAccountingPeriodPayload
-
-  """Deletes a single `QuickbooksMigration` using its globally unique id."""
-  deleteQuickbooksMigrationById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteQuickbooksMigrationByIdInput!
-  ): DeleteQuickbooksMigrationPayload
-
-  """Deletes a single `QuickbooksMigration` using a unique key."""
-  deleteQuickbooksMigration(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteQuickbooksMigrationInput!
-  ): DeleteQuickbooksMigrationPayload
-
-  """
-  Deletes a single `QuickbooksReconciliationLine` using its globally unique id.
-  """
-  deleteQuickbooksReconciliationLineById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteQuickbooksReconciliationLineByIdInput!
-  ): DeleteQuickbooksReconciliationLinePayload
-
-  """Deletes a single `QuickbooksReconciliationLine` using a unique key."""
-  deleteQuickbooksReconciliationLine(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteQuickbooksReconciliationLineInput!
-  ): DeleteQuickbooksReconciliationLinePayload
 
   """Deletes a single `PayrollConnection` using its globally unique id."""
   deletePayrollConnectionById(
@@ -8918,24 +7431,6 @@ type Mutation {
     input: DeleteReconciliationStatementInput!
   ): DeleteReconciliationStatementPayload
 
-  """
-  Deletes a single `QuickbooksReconciliation` using its globally unique id.
-  """
-  deleteQuickbooksReconciliationById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteQuickbooksReconciliationByIdInput!
-  ): DeleteQuickbooksReconciliationPayload
-
-  """Deletes a single `QuickbooksReconciliation` using a unique key."""
-  deleteQuickbooksReconciliation(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteQuickbooksReconciliationInput!
-  ): DeleteQuickbooksReconciliationPayload
-
   """Deletes a single `CryptoLot` using its globally unique id."""
   deleteCryptoLotById(
     """
@@ -8951,6 +7446,38 @@ type Mutation {
     """
     input: DeleteCryptoLotInput!
   ): DeleteCryptoLotPayload
+
+  """Deletes a single `ConnectedAccount` using its globally unique id."""
+  deleteConnectedAccountById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteConnectedAccountByIdInput!
+  ): DeleteConnectedAccountPayload
+
+  """Deletes a single `ConnectedAccount` using a unique key."""
+  deleteConnectedAccount(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteConnectedAccountInput!
+  ): DeleteConnectedAccountPayload
+
+  """Deletes a single `JournalEntry` using its globally unique id."""
+  deleteJournalEntryById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteJournalEntryByIdInput!
+  ): DeleteJournalEntryPayload
+
+  """Deletes a single `JournalEntry` using a unique key."""
+  deleteJournalEntry(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteJournalEntryInput!
+  ): DeleteJournalEntryPayload
 
   """Deletes a single `MileageLog` using its globally unique id."""
   deleteMileageLogById(
@@ -8968,22 +7495,6 @@ type Mutation {
     input: DeleteMileageLogInput!
   ): DeleteMileageLogPayload
 
-  """Deletes a single `Book` using its globally unique id."""
-  deleteBookById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteBookByIdInput!
-  ): DeleteBookPayload
-
-  """Deletes a single `Book` using a unique key."""
-  deleteBook(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteBookInput!
-  ): DeleteBookPayload
-
   """Deletes a single `Budget` using its globally unique id."""
   deleteBudgetById(
     """
@@ -8999,6 +7510,22 @@ type Mutation {
     """
     input: DeleteBudgetInput!
   ): DeleteBudgetPayload
+
+  """Deletes a single `ReconciliationQueue` using its globally unique id."""
+  deleteReconciliationQueueById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteReconciliationQueueByIdInput!
+  ): DeleteReconciliationQueuePayload
+
+  """Deletes a single `ReconciliationQueue` using a unique key."""
+  deleteReconciliationQueue(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteReconciliationQueueInput!
+  ): DeleteReconciliationQueuePayload
 
   """Deletes a single `Vendor` using its globally unique id."""
   deleteVendorById(
@@ -9031,22 +7558,6 @@ type Mutation {
     """
     input: DeleteCryptoAssetInput!
   ): DeleteCryptoAssetPayload
-
-  """Deletes a single `JournalEntry` using its globally unique id."""
-  deleteJournalEntryById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteJournalEntryByIdInput!
-  ): DeleteJournalEntryPayload
-
-  """Deletes a single `JournalEntry` using a unique key."""
-  deleteJournalEntry(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteJournalEntryInput!
-  ): DeleteJournalEntryPayload
 
   """Deletes a single `CategorizationRule` using its globally unique id."""
   deleteCategorizationRuleById(
@@ -9096,22 +7607,6 @@ type Mutation {
     input: DeleteRecurringTransactionInput!
   ): DeleteRecurringTransactionPayload
 
-  """Deletes a single `ReconciliationQueue` using its globally unique id."""
-  deleteReconciliationQueueById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteReconciliationQueueByIdInput!
-  ): DeleteReconciliationQueuePayload
-
-  """Deletes a single `ReconciliationQueue` using a unique key."""
-  deleteReconciliationQueue(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteReconciliationQueueInput!
-  ): DeleteReconciliationQueuePayload
-
   """Deletes a single `Account` using its globally unique id."""
   deleteAccountById(
     """
@@ -9127,22 +7622,6 @@ type Mutation {
     """
     input: DeleteAccountInput!
   ): DeleteAccountPayload
-
-  """Deletes a single `ConnectedAccount` using its globally unique id."""
-  deleteConnectedAccountById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteConnectedAccountByIdInput!
-  ): DeleteConnectedAccountPayload
-
-  """Deletes a single `ConnectedAccount` using a unique key."""
-  deleteConnectedAccount(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteConnectedAccountInput!
-  ): DeleteConnectedAccountPayload
 }
 
 """The output of our create `JournalLineTag` mutation."""
@@ -9227,51 +7706,6 @@ input TagGroupInput {
   rowId: UUID
   bookId: UUID!
   name: String!
-  createdAt: Datetime
-}
-
-"""The output of our create `QuickbooksCutover` mutation."""
-type CreateQuickbooksCutoverPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `QuickbooksCutover` that was created by this mutation."""
-  quickbooksCutover: QuickbooksCutover
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `QuickbooksCutover`. May be used by Relay 1."""
-  quickbooksCutoverEdge(
-    """The method to use when ordering `QuickbooksCutover`."""
-    orderBy: [QuickbooksCutoverOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): QuickbooksCutoverEdge
-}
-
-"""All input for the create `QuickbooksCutover` mutation."""
-input CreateQuickbooksCutoverInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `QuickbooksCutover` to be created by this mutation."""
-  quickbooksCutover: QuickbooksCutoverInput!
-}
-
-"""An input for mutations affecting `QuickbooksCutover`"""
-input QuickbooksCutoverInput {
-  rowId: UUID
-  bookId: UUID!
-  connectedAccountId: UUID!
-  reconciliationId: UUID!
-  cutoverAt: Datetime
   createdAt: Datetime
 }
 
@@ -9500,53 +7934,6 @@ input TagInput {
   createdAt: Datetime
 }
 
-"""The output of our create `QuickbooksAccountMap` mutation."""
-type CreateQuickbooksAccountMapPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `QuickbooksAccountMap` that was created by this mutation."""
-  quickbooksAccountMap: QuickbooksAccountMap
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `QuickbooksAccountMap`. May be used by Relay 1."""
-  quickbooksAccountMapEdge(
-    """The method to use when ordering `QuickbooksAccountMap`."""
-    orderBy: [QuickbooksAccountMapOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): QuickbooksAccountMapEdge
-}
-
-"""All input for the create `QuickbooksAccountMap` mutation."""
-input CreateQuickbooksAccountMapInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `QuickbooksAccountMap` to be created by this mutation."""
-  quickbooksAccountMap: QuickbooksAccountMapInput!
-}
-
-"""An input for mutations affecting `QuickbooksAccountMap`"""
-input QuickbooksAccountMapInput {
-  rowId: UUID
-  bookId: UUID!
-  qboAccountId: String!
-  qboAccountName: String
-  qboAccountType: String
-  myfiAccountId: UUID!
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
 """The output of our create `Vehicle` mutation."""
 type CreateVehiclePayload {
   """
@@ -9733,6 +8120,53 @@ input ImportProfileInput {
   updatedAt: Datetime
 }
 
+"""The output of our create `Book` mutation."""
+type CreateBookPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Book` that was created by this mutation."""
+  book: Book
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Book`. May be used by Relay 1."""
+  bookEdge(
+    """The method to use when ordering `Book`."""
+    orderBy: [BookOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BookEdge
+}
+
+"""All input for the create `Book` mutation."""
+input CreateBookInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Book` to be created by this mutation."""
+  book: BookInput!
+}
+
+"""An input for mutations affecting `Book`"""
+input BookInput {
+  rowId: UUID
+  organizationId: String!
+  name: String!
+  type: String!
+  currency: String
+  fiscalYearStartMonth: Int
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
 """The output of our create `NetWorthSnapshot` mutation."""
 type CreateNetWorthSnapshotPayload {
   """
@@ -9826,106 +8260,6 @@ input AccountingPeriodInput {
   closedBy: String
   reopenedAt: Datetime
   blockers: JSON
-  createdAt: Datetime
-}
-
-"""The output of our create `QuickbooksMigration` mutation."""
-type CreateQuickbooksMigrationPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `QuickbooksMigration` that was created by this mutation."""
-  quickbooksMigration: QuickbooksMigration
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `QuickbooksMigration`. May be used by Relay 1."""
-  quickbooksMigrationEdge(
-    """The method to use when ordering `QuickbooksMigration`."""
-    orderBy: [QuickbooksMigrationOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): QuickbooksMigrationEdge
-}
-
-"""All input for the create `QuickbooksMigration` mutation."""
-input CreateQuickbooksMigrationInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `QuickbooksMigration` to be created by this mutation."""
-  quickbooksMigration: QuickbooksMigrationInput!
-}
-
-"""An input for mutations affecting `QuickbooksMigration`"""
-input QuickbooksMigrationInput {
-  rowId: UUID
-  bookId: UUID!
-  connectedAccountId: UUID!
-  status: String
-  periodStart: Datetime
-  periodEnd: Datetime
-  entriesImported: Int
-  errorMessage: String
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
-"""The output of our create `QuickbooksReconciliationLine` mutation."""
-type CreateQuickbooksReconciliationLinePayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `QuickbooksReconciliationLine` that was created by this mutation."""
-  quickbooksReconciliationLine: QuickbooksReconciliationLine
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """
-  An edge for our `QuickbooksReconciliationLine`. May be used by Relay 1.
-  """
-  quickbooksReconciliationLineEdge(
-    """The method to use when ordering `QuickbooksReconciliationLine`."""
-    orderBy: [QuickbooksReconciliationLineOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): QuickbooksReconciliationLineEdge
-}
-
-"""All input for the create `QuickbooksReconciliationLine` mutation."""
-input CreateQuickbooksReconciliationLineInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `QuickbooksReconciliationLine` to be created by this mutation."""
-  quickbooksReconciliationLine: QuickbooksReconciliationLineInput!
-}
-
-"""An input for mutations affecting `QuickbooksReconciliationLine`"""
-input QuickbooksReconciliationLineInput {
-  rowId: UUID
-  reconciliationId: UUID!
-  bookId: UUID!
-  myfiAccountId: UUID
-  qboAccountId: String
-  accountName: String!
-  qboBalance: BigFloat
-  myfiBalance: BigFloat
-  variance: BigFloat
   createdAt: Datetime
 }
 
@@ -10027,56 +8361,6 @@ input ReconciliationStatementInput {
   createdAt: Datetime
 }
 
-"""The output of our create `QuickbooksReconciliation` mutation."""
-type CreateQuickbooksReconciliationPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `QuickbooksReconciliation` that was created by this mutation."""
-  quickbooksReconciliation: QuickbooksReconciliation
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `QuickbooksReconciliation`. May be used by Relay 1."""
-  quickbooksReconciliationEdge(
-    """The method to use when ordering `QuickbooksReconciliation`."""
-    orderBy: [QuickbooksReconciliationOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): QuickbooksReconciliationEdge
-}
-
-"""All input for the create `QuickbooksReconciliation` mutation."""
-input CreateQuickbooksReconciliationInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `QuickbooksReconciliation` to be created by this mutation."""
-  quickbooksReconciliation: QuickbooksReconciliationInput!
-}
-
-"""An input for mutations affecting `QuickbooksReconciliation`"""
-input QuickbooksReconciliationInput {
-  rowId: UUID
-  bookId: UUID!
-  connectedAccountId: UUID!
-  status: String
-  periodStart: Datetime!
-  periodEnd: Datetime!
-  totalVariance: BigFloat
-  mismatchCount: Int
-  errorMessage: String
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
 """The output of our create `CryptoLot` mutation."""
 type CreateCryptoLotPayload {
   """
@@ -10124,6 +8408,107 @@ input CryptoLotInput {
   proceedsPerUnit: BigFloat
   journalEntryId: UUID
   createdAt: Datetime
+}
+
+"""The output of our create `ConnectedAccount` mutation."""
+type CreateConnectedAccountPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ConnectedAccount` that was created by this mutation."""
+  connectedAccount: ConnectedAccount
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ConnectedAccount`. May be used by Relay 1."""
+  connectedAccountEdge(
+    """The method to use when ordering `ConnectedAccount`."""
+    orderBy: [ConnectedAccountOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ConnectedAccountEdge
+}
+
+"""All input for the create `ConnectedAccount` mutation."""
+input CreateConnectedAccountInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `ConnectedAccount` to be created by this mutation."""
+  connectedAccount: ConnectedAccountInput!
+}
+
+"""An input for mutations affecting `ConnectedAccount`"""
+input ConnectedAccountInput {
+  rowId: UUID
+  bookId: UUID!
+  provider: String!
+  providerAccountId: String
+  accountId: UUID
+  institutionName: String
+  mask: String
+  status: String
+  accessToken: String
+  lastSyncedAt: Datetime
+  createdAt: Datetime
+  syncCursor: String
+}
+
+"""The output of our create `JournalEntry` mutation."""
+type CreateJournalEntryPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `JournalEntry` that was created by this mutation."""
+  journalEntry: JournalEntry
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `JournalEntry`. May be used by Relay 1."""
+  journalEntryEdge(
+    """The method to use when ordering `JournalEntry`."""
+    orderBy: [JournalEntryOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): JournalEntryEdge
+}
+
+"""All input for the create `JournalEntry` mutation."""
+input CreateJournalEntryInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `JournalEntry` to be created by this mutation."""
+  journalEntry: JournalEntryInput!
+}
+
+"""An input for mutations affecting `JournalEntry`"""
+input JournalEntryInput {
+  rowId: UUID
+  bookId: UUID!
+  date: Datetime!
+  memo: String
+  source: String
+  sourceReferenceId: String
+  isReviewed: Boolean
+  isReconciled: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
+  vendorId: UUID
 }
 
 """The output of our create `MileageLog` mutation."""
@@ -10178,53 +8563,6 @@ input MileageLogInput {
   updatedAt: Datetime
 }
 
-"""The output of our create `Book` mutation."""
-type CreateBookPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Book` that was created by this mutation."""
-  book: Book
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `Book`. May be used by Relay 1."""
-  bookEdge(
-    """The method to use when ordering `Book`."""
-    orderBy: [BookOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): BookEdge
-}
-
-"""All input for the create `Book` mutation."""
-input CreateBookInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `Book` to be created by this mutation."""
-  book: BookInput!
-}
-
-"""An input for mutations affecting `Book`"""
-input BookInput {
-  rowId: UUID
-  organizationId: String!
-  name: String!
-  type: BookType!
-  currency: String
-  fiscalYearStartMonth: Int
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
 """The output of our create `Budget` mutation."""
 type CreateBudgetPayload {
   """
@@ -10270,6 +8608,59 @@ input BudgetInput {
   rollover: Boolean
   createdAt: Datetime
   updatedAt: Datetime
+}
+
+"""The output of our create `ReconciliationQueue` mutation."""
+type CreateReconciliationQueuePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ReconciliationQueue` that was created by this mutation."""
+  reconciliationQueue: ReconciliationQueue
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ReconciliationQueue`. May be used by Relay 1."""
+  reconciliationQueueEdge(
+    """The method to use when ordering `ReconciliationQueue`."""
+    orderBy: [ReconciliationQueueOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ReconciliationQueueEdge
+}
+
+"""All input for the create `ReconciliationQueue` mutation."""
+input CreateReconciliationQueueInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `ReconciliationQueue` to be created by this mutation."""
+  reconciliationQueue: ReconciliationQueueInput!
+}
+
+"""An input for mutations affecting `ReconciliationQueue`"""
+input ReconciliationQueueInput {
+  rowId: UUID
+  bookId: UUID!
+  journalEntryId: UUID!
+  status: String
+  reviewedAt: Datetime
+  reviewedBy: String
+  createdAt: Datetime
+  categorizationSource: String
+  confidence: BigFloat
+  suggestedDebitAccountId: UUID
+  suggestedCreditAccountId: UUID
+  priority: Int
+  periodYear: Int
+  periodMonth: Int
 }
 
 """The output of our create `Vendor` mutation."""
@@ -10373,56 +8764,6 @@ input CryptoAssetInput {
   lastSyncedAt: Datetime
   createdAt: Datetime
   updatedAt: Datetime
-}
-
-"""The output of our create `JournalEntry` mutation."""
-type CreateJournalEntryPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `JournalEntry` that was created by this mutation."""
-  journalEntry: JournalEntry
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `JournalEntry`. May be used by Relay 1."""
-  journalEntryEdge(
-    """The method to use when ordering `JournalEntry`."""
-    orderBy: [JournalEntryOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): JournalEntryEdge
-}
-
-"""All input for the create `JournalEntry` mutation."""
-input CreateJournalEntryInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `JournalEntry` to be created by this mutation."""
-  journalEntry: JournalEntryInput!
-}
-
-"""An input for mutations affecting `JournalEntry`"""
-input JournalEntryInput {
-  rowId: UUID
-  bookId: UUID!
-  date: Datetime!
-  memo: String
-  source: JournalEntrySource
-  sourceReferenceId: String
-  isReviewed: Boolean
-  isReconciled: Boolean
-  createdAt: Datetime
-  updatedAt: Datetime
-  vendorId: UUID
 }
 
 """The output of our create `CategorizationRule` mutation."""
@@ -10586,59 +8927,6 @@ input RecurringTransactionInput {
   updatedAt: Datetime
 }
 
-"""The output of our create `ReconciliationQueue` mutation."""
-type CreateReconciliationQueuePayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `ReconciliationQueue` that was created by this mutation."""
-  reconciliationQueue: ReconciliationQueue
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `ReconciliationQueue`. May be used by Relay 1."""
-  reconciliationQueueEdge(
-    """The method to use when ordering `ReconciliationQueue`."""
-    orderBy: [ReconciliationQueueOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): ReconciliationQueueEdge
-}
-
-"""All input for the create `ReconciliationQueue` mutation."""
-input CreateReconciliationQueueInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `ReconciliationQueue` to be created by this mutation."""
-  reconciliationQueue: ReconciliationQueueInput!
-}
-
-"""An input for mutations affecting `ReconciliationQueue`"""
-input ReconciliationQueueInput {
-  rowId: UUID
-  bookId: UUID!
-  journalEntryId: UUID!
-  status: ReconciliationStatus
-  reviewedAt: Datetime
-  reviewedBy: String
-  createdAt: Datetime
-  categorizationSource: String
-  confidence: BigFloat
-  suggestedDebitAccountId: UUID
-  suggestedCreditAccountId: UUID
-  priority: Int
-  periodYear: Int
-  periodMonth: Int
-}
-
 """The output of our create `Account` mutation."""
 type CreateAccountPayload {
   """
@@ -10687,59 +8975,6 @@ input AccountInput {
   isActive: Boolean
   createdAt: Datetime
   updatedAt: Datetime
-}
-
-"""The output of our create `ConnectedAccount` mutation."""
-type CreateConnectedAccountPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `ConnectedAccount` that was created by this mutation."""
-  connectedAccount: ConnectedAccount
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `ConnectedAccount`. May be used by Relay 1."""
-  connectedAccountEdge(
-    """The method to use when ordering `ConnectedAccount`."""
-    orderBy: [ConnectedAccountOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): ConnectedAccountEdge
-}
-
-"""All input for the create `ConnectedAccount` mutation."""
-input CreateConnectedAccountInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `ConnectedAccount` to be created by this mutation."""
-  connectedAccount: ConnectedAccountInput!
-}
-
-"""An input for mutations affecting `ConnectedAccount`"""
-input ConnectedAccountInput {
-  rowId: UUID
-  bookId: UUID!
-  provider: ConnectedAccountProvider!
-  providerAccountId: String
-  accountId: UUID
-  institutionName: String
-  mask: String
-  status: ConnectedAccountStatus
-  accessToken: String
-  lastSyncedAt: Datetime
-  createdAt: Datetime
-  syncCursor: String
-  refreshToken: String
-  realmId: String
 }
 
 """The output of our update `JournalLineTag` mutation."""
@@ -10873,75 +9108,6 @@ input UpdateTagGroupInput {
   An object where the defined keys will be set on the `TagGroup` being updated.
   """
   patch: TagGroupPatch!
-}
-
-"""The output of our update `QuickbooksCutover` mutation."""
-type UpdateQuickbooksCutoverPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `QuickbooksCutover` that was updated by this mutation."""
-  quickbooksCutover: QuickbooksCutover
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `QuickbooksCutover`. May be used by Relay 1."""
-  quickbooksCutoverEdge(
-    """The method to use when ordering `QuickbooksCutover`."""
-    orderBy: [QuickbooksCutoverOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): QuickbooksCutoverEdge
-}
-
-"""All input for the `updateQuickbooksCutoverById` mutation."""
-input UpdateQuickbooksCutoverByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `QuickbooksCutover` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the `QuickbooksCutover` being updated.
-  """
-  patch: QuickbooksCutoverPatch!
-}
-
-"""
-Represents an update to a `QuickbooksCutover`. Fields that are set will be updated.
-"""
-input QuickbooksCutoverPatch {
-  rowId: UUID
-  bookId: UUID
-  connectedAccountId: UUID
-  reconciliationId: UUID
-  cutoverAt: Datetime
-  createdAt: Datetime
-}
-
-"""All input for the `updateQuickbooksCutover` mutation."""
-input UpdateQuickbooksCutoverInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the `QuickbooksCutover` being updated.
-  """
-  patch: QuickbooksCutoverPatch!
 }
 
 """The output of our update `_DrizzleMigration` mutation."""
@@ -11287,77 +9453,6 @@ input UpdateTagInput {
   patch: TagPatch!
 }
 
-"""The output of our update `QuickbooksAccountMap` mutation."""
-type UpdateQuickbooksAccountMapPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `QuickbooksAccountMap` that was updated by this mutation."""
-  quickbooksAccountMap: QuickbooksAccountMap
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `QuickbooksAccountMap`. May be used by Relay 1."""
-  quickbooksAccountMapEdge(
-    """The method to use when ordering `QuickbooksAccountMap`."""
-    orderBy: [QuickbooksAccountMapOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): QuickbooksAccountMapEdge
-}
-
-"""All input for the `updateQuickbooksAccountMapById` mutation."""
-input UpdateQuickbooksAccountMapByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `QuickbooksAccountMap` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the `QuickbooksAccountMap` being updated.
-  """
-  patch: QuickbooksAccountMapPatch!
-}
-
-"""
-Represents an update to a `QuickbooksAccountMap`. Fields that are set will be updated.
-"""
-input QuickbooksAccountMapPatch {
-  rowId: UUID
-  bookId: UUID
-  qboAccountId: String
-  qboAccountName: String
-  qboAccountType: String
-  myfiAccountId: UUID
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
-"""All input for the `updateQuickbooksAccountMap` mutation."""
-input UpdateQuickbooksAccountMapInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the `QuickbooksAccountMap` being updated.
-  """
-  patch: QuickbooksAccountMapPatch!
-}
-
 """The output of our update `Vehicle` mutation."""
 type UpdateVehiclePayload {
   """
@@ -11640,6 +9735,75 @@ input UpdateImportProfileInput {
   patch: ImportProfilePatch!
 }
 
+"""The output of our update `Book` mutation."""
+type UpdateBookPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Book` that was updated by this mutation."""
+  book: Book
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Book`. May be used by Relay 1."""
+  bookEdge(
+    """The method to use when ordering `Book`."""
+    orderBy: [BookOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BookEdge
+}
+
+"""All input for the `updateBookById` mutation."""
+input UpdateBookByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Book` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `Book` being updated.
+  """
+  patch: BookPatch!
+}
+
+"""Represents an update to a `Book`. Fields that are set will be updated."""
+input BookPatch {
+  rowId: UUID
+  organizationId: String
+  name: String
+  type: String
+  currency: String
+  fiscalYearStartMonth: Int
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the `updateBook` mutation."""
+input UpdateBookInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `Book` being updated.
+  """
+  patch: BookPatch!
+}
+
 """The output of our update `NetWorthSnapshot` mutation."""
 type UpdateNetWorthSnapshotPayload {
   """
@@ -11782,154 +9946,6 @@ input UpdateAccountingPeriodInput {
   An object where the defined keys will be set on the `AccountingPeriod` being updated.
   """
   patch: AccountingPeriodPatch!
-}
-
-"""The output of our update `QuickbooksMigration` mutation."""
-type UpdateQuickbooksMigrationPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `QuickbooksMigration` that was updated by this mutation."""
-  quickbooksMigration: QuickbooksMigration
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `QuickbooksMigration`. May be used by Relay 1."""
-  quickbooksMigrationEdge(
-    """The method to use when ordering `QuickbooksMigration`."""
-    orderBy: [QuickbooksMigrationOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): QuickbooksMigrationEdge
-}
-
-"""All input for the `updateQuickbooksMigrationById` mutation."""
-input UpdateQuickbooksMigrationByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `QuickbooksMigration` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the `QuickbooksMigration` being updated.
-  """
-  patch: QuickbooksMigrationPatch!
-}
-
-"""
-Represents an update to a `QuickbooksMigration`. Fields that are set will be updated.
-"""
-input QuickbooksMigrationPatch {
-  rowId: UUID
-  bookId: UUID
-  connectedAccountId: UUID
-  status: String
-  periodStart: Datetime
-  periodEnd: Datetime
-  entriesImported: Int
-  errorMessage: String
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
-"""All input for the `updateQuickbooksMigration` mutation."""
-input UpdateQuickbooksMigrationInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the `QuickbooksMigration` being updated.
-  """
-  patch: QuickbooksMigrationPatch!
-}
-
-"""The output of our update `QuickbooksReconciliationLine` mutation."""
-type UpdateQuickbooksReconciliationLinePayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `QuickbooksReconciliationLine` that was updated by this mutation."""
-  quickbooksReconciliationLine: QuickbooksReconciliationLine
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """
-  An edge for our `QuickbooksReconciliationLine`. May be used by Relay 1.
-  """
-  quickbooksReconciliationLineEdge(
-    """The method to use when ordering `QuickbooksReconciliationLine`."""
-    orderBy: [QuickbooksReconciliationLineOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): QuickbooksReconciliationLineEdge
-}
-
-"""All input for the `updateQuickbooksReconciliationLineById` mutation."""
-input UpdateQuickbooksReconciliationLineByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `QuickbooksReconciliationLine` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the `QuickbooksReconciliationLine` being updated.
-  """
-  patch: QuickbooksReconciliationLinePatch!
-}
-
-"""
-Represents an update to a `QuickbooksReconciliationLine`. Fields that are set will be updated.
-"""
-input QuickbooksReconciliationLinePatch {
-  rowId: UUID
-  reconciliationId: UUID
-  bookId: UUID
-  myfiAccountId: UUID
-  qboAccountId: String
-  accountName: String
-  qboBalance: BigFloat
-  myfiBalance: BigFloat
-  variance: BigFloat
-  createdAt: Datetime
-}
-
-"""All input for the `updateQuickbooksReconciliationLine` mutation."""
-input UpdateQuickbooksReconciliationLineInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the `QuickbooksReconciliationLine` being updated.
-  """
-  patch: QuickbooksReconciliationLinePatch!
 }
 
 """The output of our update `PayrollConnection` mutation."""
@@ -12078,80 +10094,6 @@ input UpdateReconciliationStatementInput {
   patch: ReconciliationStatementPatch!
 }
 
-"""The output of our update `QuickbooksReconciliation` mutation."""
-type UpdateQuickbooksReconciliationPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `QuickbooksReconciliation` that was updated by this mutation."""
-  quickbooksReconciliation: QuickbooksReconciliation
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `QuickbooksReconciliation`. May be used by Relay 1."""
-  quickbooksReconciliationEdge(
-    """The method to use when ordering `QuickbooksReconciliation`."""
-    orderBy: [QuickbooksReconciliationOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): QuickbooksReconciliationEdge
-}
-
-"""All input for the `updateQuickbooksReconciliationById` mutation."""
-input UpdateQuickbooksReconciliationByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `QuickbooksReconciliation` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the `QuickbooksReconciliation` being updated.
-  """
-  patch: QuickbooksReconciliationPatch!
-}
-
-"""
-Represents an update to a `QuickbooksReconciliation`. Fields that are set will be updated.
-"""
-input QuickbooksReconciliationPatch {
-  rowId: UUID
-  bookId: UUID
-  connectedAccountId: UUID
-  status: String
-  periodStart: Datetime
-  periodEnd: Datetime
-  totalVariance: BigFloat
-  mismatchCount: Int
-  errorMessage: String
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
-"""All input for the `updateQuickbooksReconciliation` mutation."""
-input UpdateQuickbooksReconciliationInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the `QuickbooksReconciliation` being updated.
-  """
-  patch: QuickbooksReconciliationPatch!
-}
-
 """The output of our update `CryptoLot` mutation."""
 type UpdateCryptoLotPayload {
   """
@@ -12223,6 +10165,155 @@ input UpdateCryptoLotInput {
   An object where the defined keys will be set on the `CryptoLot` being updated.
   """
   patch: CryptoLotPatch!
+}
+
+"""The output of our update `ConnectedAccount` mutation."""
+type UpdateConnectedAccountPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ConnectedAccount` that was updated by this mutation."""
+  connectedAccount: ConnectedAccount
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ConnectedAccount`. May be used by Relay 1."""
+  connectedAccountEdge(
+    """The method to use when ordering `ConnectedAccount`."""
+    orderBy: [ConnectedAccountOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ConnectedAccountEdge
+}
+
+"""All input for the `updateConnectedAccountById` mutation."""
+input UpdateConnectedAccountByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `ConnectedAccount` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `ConnectedAccount` being updated.
+  """
+  patch: ConnectedAccountPatch!
+}
+
+"""
+Represents an update to a `ConnectedAccount`. Fields that are set will be updated.
+"""
+input ConnectedAccountPatch {
+  rowId: UUID
+  bookId: UUID
+  provider: String
+  providerAccountId: String
+  accountId: UUID
+  institutionName: String
+  mask: String
+  status: String
+  accessToken: String
+  lastSyncedAt: Datetime
+  createdAt: Datetime
+  syncCursor: String
+}
+
+"""All input for the `updateConnectedAccount` mutation."""
+input UpdateConnectedAccountInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `ConnectedAccount` being updated.
+  """
+  patch: ConnectedAccountPatch!
+}
+
+"""The output of our update `JournalEntry` mutation."""
+type UpdateJournalEntryPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `JournalEntry` that was updated by this mutation."""
+  journalEntry: JournalEntry
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `JournalEntry`. May be used by Relay 1."""
+  journalEntryEdge(
+    """The method to use when ordering `JournalEntry`."""
+    orderBy: [JournalEntryOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): JournalEntryEdge
+}
+
+"""All input for the `updateJournalEntryById` mutation."""
+input UpdateJournalEntryByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `JournalEntry` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `JournalEntry` being updated.
+  """
+  patch: JournalEntryPatch!
+}
+
+"""
+Represents an update to a `JournalEntry`. Fields that are set will be updated.
+"""
+input JournalEntryPatch {
+  rowId: UUID
+  bookId: UUID
+  date: Datetime
+  memo: String
+  source: String
+  sourceReferenceId: String
+  isReviewed: Boolean
+  isReconciled: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
+  vendorId: UUID
+}
+
+"""All input for the `updateJournalEntry` mutation."""
+input UpdateJournalEntryInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `JournalEntry` being updated.
+  """
+  patch: JournalEntryPatch!
 }
 
 """The output of our update `MileageLog` mutation."""
@@ -12301,75 +10392,6 @@ input UpdateMileageLogInput {
   patch: MileageLogPatch!
 }
 
-"""The output of our update `Book` mutation."""
-type UpdateBookPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Book` that was updated by this mutation."""
-  book: Book
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `Book`. May be used by Relay 1."""
-  bookEdge(
-    """The method to use when ordering `Book`."""
-    orderBy: [BookOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): BookEdge
-}
-
-"""All input for the `updateBookById` mutation."""
-input UpdateBookByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Book` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the `Book` being updated.
-  """
-  patch: BookPatch!
-}
-
-"""Represents an update to a `Book`. Fields that are set will be updated."""
-input BookPatch {
-  rowId: UUID
-  organizationId: String
-  name: String
-  type: BookType
-  currency: String
-  fiscalYearStartMonth: Int
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
-"""All input for the `updateBook` mutation."""
-input UpdateBookInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the `Book` being updated.
-  """
-  patch: BookPatch!
-}
-
 """The output of our update `Budget` mutation."""
 type UpdateBudgetPayload {
   """
@@ -12439,6 +10461,83 @@ input UpdateBudgetInput {
   An object where the defined keys will be set on the `Budget` being updated.
   """
   patch: BudgetPatch!
+}
+
+"""The output of our update `ReconciliationQueue` mutation."""
+type UpdateReconciliationQueuePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ReconciliationQueue` that was updated by this mutation."""
+  reconciliationQueue: ReconciliationQueue
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ReconciliationQueue`. May be used by Relay 1."""
+  reconciliationQueueEdge(
+    """The method to use when ordering `ReconciliationQueue`."""
+    orderBy: [ReconciliationQueueOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ReconciliationQueueEdge
+}
+
+"""All input for the `updateReconciliationQueueById` mutation."""
+input UpdateReconciliationQueueByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `ReconciliationQueue` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `ReconciliationQueue` being updated.
+  """
+  patch: ReconciliationQueuePatch!
+}
+
+"""
+Represents an update to a `ReconciliationQueue`. Fields that are set will be updated.
+"""
+input ReconciliationQueuePatch {
+  rowId: UUID
+  bookId: UUID
+  journalEntryId: UUID
+  status: String
+  reviewedAt: Datetime
+  reviewedBy: String
+  createdAt: Datetime
+  categorizationSource: String
+  confidence: BigFloat
+  suggestedDebitAccountId: UUID
+  suggestedCreditAccountId: UUID
+  priority: Int
+  periodYear: Int
+  periodMonth: Int
+}
+
+"""All input for the `updateReconciliationQueue` mutation."""
+input UpdateReconciliationQueueInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `ReconciliationQueue` being updated.
+  """
+  patch: ReconciliationQueuePatch!
 }
 
 """The output of our update `Vendor` mutation."""
@@ -12590,80 +10689,6 @@ input UpdateCryptoAssetInput {
   An object where the defined keys will be set on the `CryptoAsset` being updated.
   """
   patch: CryptoAssetPatch!
-}
-
-"""The output of our update `JournalEntry` mutation."""
-type UpdateJournalEntryPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `JournalEntry` that was updated by this mutation."""
-  journalEntry: JournalEntry
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `JournalEntry`. May be used by Relay 1."""
-  journalEntryEdge(
-    """The method to use when ordering `JournalEntry`."""
-    orderBy: [JournalEntryOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): JournalEntryEdge
-}
-
-"""All input for the `updateJournalEntryById` mutation."""
-input UpdateJournalEntryByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `JournalEntry` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the `JournalEntry` being updated.
-  """
-  patch: JournalEntryPatch!
-}
-
-"""
-Represents an update to a `JournalEntry`. Fields that are set will be updated.
-"""
-input JournalEntryPatch {
-  rowId: UUID
-  bookId: UUID
-  date: Datetime
-  memo: String
-  source: JournalEntrySource
-  sourceReferenceId: String
-  isReviewed: Boolean
-  isReconciled: Boolean
-  createdAt: Datetime
-  updatedAt: Datetime
-  vendorId: UUID
-}
-
-"""All input for the `updateJournalEntry` mutation."""
-input UpdateJournalEntryInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the `JournalEntry` being updated.
-  """
-  patch: JournalEntryPatch!
 }
 
 """The output of our update `CategorizationRule` mutation."""
@@ -12899,83 +10924,6 @@ input UpdateRecurringTransactionInput {
   patch: RecurringTransactionPatch!
 }
 
-"""The output of our update `ReconciliationQueue` mutation."""
-type UpdateReconciliationQueuePayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `ReconciliationQueue` that was updated by this mutation."""
-  reconciliationQueue: ReconciliationQueue
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `ReconciliationQueue`. May be used by Relay 1."""
-  reconciliationQueueEdge(
-    """The method to use when ordering `ReconciliationQueue`."""
-    orderBy: [ReconciliationQueueOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): ReconciliationQueueEdge
-}
-
-"""All input for the `updateReconciliationQueueById` mutation."""
-input UpdateReconciliationQueueByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `ReconciliationQueue` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the `ReconciliationQueue` being updated.
-  """
-  patch: ReconciliationQueuePatch!
-}
-
-"""
-Represents an update to a `ReconciliationQueue`. Fields that are set will be updated.
-"""
-input ReconciliationQueuePatch {
-  rowId: UUID
-  bookId: UUID
-  journalEntryId: UUID
-  status: ReconciliationStatus
-  reviewedAt: Datetime
-  reviewedBy: String
-  createdAt: Datetime
-  categorizationSource: String
-  confidence: BigFloat
-  suggestedDebitAccountId: UUID
-  suggestedCreditAccountId: UUID
-  priority: Int
-  periodYear: Int
-  periodMonth: Int
-}
-
-"""All input for the `updateReconciliationQueue` mutation."""
-input UpdateReconciliationQueueInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the `ReconciliationQueue` being updated.
-  """
-  patch: ReconciliationQueuePatch!
-}
-
 """The output of our update `Account` mutation."""
 type UpdateAccountPayload {
   """
@@ -13048,83 +10996,6 @@ input UpdateAccountInput {
   An object where the defined keys will be set on the `Account` being updated.
   """
   patch: AccountPatch!
-}
-
-"""The output of our update `ConnectedAccount` mutation."""
-type UpdateConnectedAccountPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `ConnectedAccount` that was updated by this mutation."""
-  connectedAccount: ConnectedAccount
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `ConnectedAccount`. May be used by Relay 1."""
-  connectedAccountEdge(
-    """The method to use when ordering `ConnectedAccount`."""
-    orderBy: [ConnectedAccountOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): ConnectedAccountEdge
-}
-
-"""All input for the `updateConnectedAccountById` mutation."""
-input UpdateConnectedAccountByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `ConnectedAccount` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the `ConnectedAccount` being updated.
-  """
-  patch: ConnectedAccountPatch!
-}
-
-"""
-Represents an update to a `ConnectedAccount`. Fields that are set will be updated.
-"""
-input ConnectedAccountPatch {
-  rowId: UUID
-  bookId: UUID
-  provider: ConnectedAccountProvider
-  providerAccountId: String
-  accountId: UUID
-  institutionName: String
-  mask: String
-  status: ConnectedAccountStatus
-  accessToken: String
-  lastSyncedAt: Datetime
-  createdAt: Datetime
-  syncCursor: String
-  refreshToken: String
-  realmId: String
-}
-
-"""All input for the `updateConnectedAccount` mutation."""
-input UpdateConnectedAccountInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the `ConnectedAccount` being updated.
-  """
-  patch: ConnectedAccountPatch!
 }
 
 """The output of our delete `JournalLineTag` mutation."""
@@ -13215,54 +11086,6 @@ input DeleteTagGroupByIdInput {
 
 """All input for the `deleteTagGroup` mutation."""
 input DeleteTagGroupInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
-"""The output of our delete `QuickbooksCutover` mutation."""
-type DeleteQuickbooksCutoverPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `QuickbooksCutover` that was deleted by this mutation."""
-  quickbooksCutover: QuickbooksCutover
-  deletedQuickbooksCutoverId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `QuickbooksCutover`. May be used by Relay 1."""
-  quickbooksCutoverEdge(
-    """The method to use when ordering `QuickbooksCutover`."""
-    orderBy: [QuickbooksCutoverOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): QuickbooksCutoverEdge
-}
-
-"""All input for the `deleteQuickbooksCutoverById` mutation."""
-input DeleteQuickbooksCutoverByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `QuickbooksCutover` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the `deleteQuickbooksCutover` mutation."""
-input DeleteQuickbooksCutoverInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -13511,54 +11334,6 @@ input DeleteTagInput {
   rowId: UUID!
 }
 
-"""The output of our delete `QuickbooksAccountMap` mutation."""
-type DeleteQuickbooksAccountMapPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `QuickbooksAccountMap` that was deleted by this mutation."""
-  quickbooksAccountMap: QuickbooksAccountMap
-  deletedQuickbooksAccountMapId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `QuickbooksAccountMap`. May be used by Relay 1."""
-  quickbooksAccountMapEdge(
-    """The method to use when ordering `QuickbooksAccountMap`."""
-    orderBy: [QuickbooksAccountMapOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): QuickbooksAccountMapEdge
-}
-
-"""All input for the `deleteQuickbooksAccountMapById` mutation."""
-input DeleteQuickbooksAccountMapByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `QuickbooksAccountMap` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the `deleteQuickbooksAccountMap` mutation."""
-input DeleteQuickbooksAccountMapInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete `Vehicle` mutation."""
 type DeleteVehiclePayload {
   """
@@ -13751,6 +11526,54 @@ input DeleteImportProfileInput {
   rowId: UUID!
 }
 
+"""The output of our delete `Book` mutation."""
+type DeleteBookPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Book` that was deleted by this mutation."""
+  book: Book
+  deletedBookId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Book`. May be used by Relay 1."""
+  bookEdge(
+    """The method to use when ordering `Book`."""
+    orderBy: [BookOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BookEdge
+}
+
+"""All input for the `deleteBookById` mutation."""
+input DeleteBookByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Book` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteBook` mutation."""
+input DeleteBookInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete `NetWorthSnapshot` mutation."""
 type DeleteNetWorthSnapshotPayload {
   """
@@ -13839,104 +11662,6 @@ input DeleteAccountingPeriodByIdInput {
 
 """All input for the `deleteAccountingPeriod` mutation."""
 input DeleteAccountingPeriodInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
-"""The output of our delete `QuickbooksMigration` mutation."""
-type DeleteQuickbooksMigrationPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `QuickbooksMigration` that was deleted by this mutation."""
-  quickbooksMigration: QuickbooksMigration
-  deletedQuickbooksMigrationId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `QuickbooksMigration`. May be used by Relay 1."""
-  quickbooksMigrationEdge(
-    """The method to use when ordering `QuickbooksMigration`."""
-    orderBy: [QuickbooksMigrationOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): QuickbooksMigrationEdge
-}
-
-"""All input for the `deleteQuickbooksMigrationById` mutation."""
-input DeleteQuickbooksMigrationByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `QuickbooksMigration` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the `deleteQuickbooksMigration` mutation."""
-input DeleteQuickbooksMigrationInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
-"""The output of our delete `QuickbooksReconciliationLine` mutation."""
-type DeleteQuickbooksReconciliationLinePayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `QuickbooksReconciliationLine` that was deleted by this mutation."""
-  quickbooksReconciliationLine: QuickbooksReconciliationLine
-  deletedQuickbooksReconciliationLineId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """
-  An edge for our `QuickbooksReconciliationLine`. May be used by Relay 1.
-  """
-  quickbooksReconciliationLineEdge(
-    """The method to use when ordering `QuickbooksReconciliationLine`."""
-    orderBy: [QuickbooksReconciliationLineOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): QuickbooksReconciliationLineEdge
-}
-
-"""All input for the `deleteQuickbooksReconciliationLineById` mutation."""
-input DeleteQuickbooksReconciliationLineByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `QuickbooksReconciliationLine` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the `deleteQuickbooksReconciliationLine` mutation."""
-input DeleteQuickbooksReconciliationLineInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -14041,54 +11766,6 @@ input DeleteReconciliationStatementInput {
   rowId: UUID!
 }
 
-"""The output of our delete `QuickbooksReconciliation` mutation."""
-type DeleteQuickbooksReconciliationPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `QuickbooksReconciliation` that was deleted by this mutation."""
-  quickbooksReconciliation: QuickbooksReconciliation
-  deletedQuickbooksReconciliationId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `QuickbooksReconciliation`. May be used by Relay 1."""
-  quickbooksReconciliationEdge(
-    """The method to use when ordering `QuickbooksReconciliation`."""
-    orderBy: [QuickbooksReconciliationOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): QuickbooksReconciliationEdge
-}
-
-"""All input for the `deleteQuickbooksReconciliationById` mutation."""
-input DeleteQuickbooksReconciliationByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `QuickbooksReconciliation` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the `deleteQuickbooksReconciliation` mutation."""
-input DeleteQuickbooksReconciliationInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete `CryptoLot` mutation."""
 type DeleteCryptoLotPayload {
   """
@@ -14129,6 +11806,102 @@ input DeleteCryptoLotByIdInput {
 
 """All input for the `deleteCryptoLot` mutation."""
 input DeleteCryptoLotInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `ConnectedAccount` mutation."""
+type DeleteConnectedAccountPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ConnectedAccount` that was deleted by this mutation."""
+  connectedAccount: ConnectedAccount
+  deletedConnectedAccountId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ConnectedAccount`. May be used by Relay 1."""
+  connectedAccountEdge(
+    """The method to use when ordering `ConnectedAccount`."""
+    orderBy: [ConnectedAccountOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ConnectedAccountEdge
+}
+
+"""All input for the `deleteConnectedAccountById` mutation."""
+input DeleteConnectedAccountByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `ConnectedAccount` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteConnectedAccount` mutation."""
+input DeleteConnectedAccountInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `JournalEntry` mutation."""
+type DeleteJournalEntryPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `JournalEntry` that was deleted by this mutation."""
+  journalEntry: JournalEntry
+  deletedJournalEntryId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `JournalEntry`. May be used by Relay 1."""
+  journalEntryEdge(
+    """The method to use when ordering `JournalEntry`."""
+    orderBy: [JournalEntryOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): JournalEntryEdge
+}
+
+"""All input for the `deleteJournalEntryById` mutation."""
+input DeleteJournalEntryByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `JournalEntry` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteJournalEntry` mutation."""
+input DeleteJournalEntryInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -14185,54 +11958,6 @@ input DeleteMileageLogInput {
   rowId: UUID!
 }
 
-"""The output of our delete `Book` mutation."""
-type DeleteBookPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Book` that was deleted by this mutation."""
-  book: Book
-  deletedBookId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `Book`. May be used by Relay 1."""
-  bookEdge(
-    """The method to use when ordering `Book`."""
-    orderBy: [BookOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): BookEdge
-}
-
-"""All input for the `deleteBookById` mutation."""
-input DeleteBookByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Book` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the `deleteBook` mutation."""
-input DeleteBookInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete `Budget` mutation."""
 type DeleteBudgetPayload {
   """
@@ -14273,6 +11998,54 @@ input DeleteBudgetByIdInput {
 
 """All input for the `deleteBudget` mutation."""
 input DeleteBudgetInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `ReconciliationQueue` mutation."""
+type DeleteReconciliationQueuePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ReconciliationQueue` that was deleted by this mutation."""
+  reconciliationQueue: ReconciliationQueue
+  deletedReconciliationQueueId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `ReconciliationQueue`. May be used by Relay 1."""
+  reconciliationQueueEdge(
+    """The method to use when ordering `ReconciliationQueue`."""
+    orderBy: [ReconciliationQueueOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ReconciliationQueueEdge
+}
+
+"""All input for the `deleteReconciliationQueueById` mutation."""
+input DeleteReconciliationQueueByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `ReconciliationQueue` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteReconciliationQueue` mutation."""
+input DeleteReconciliationQueueInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -14369,54 +12142,6 @@ input DeleteCryptoAssetByIdInput {
 
 """All input for the `deleteCryptoAsset` mutation."""
 input DeleteCryptoAssetInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
-"""The output of our delete `JournalEntry` mutation."""
-type DeleteJournalEntryPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `JournalEntry` that was deleted by this mutation."""
-  journalEntry: JournalEntry
-  deletedJournalEntryId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `JournalEntry`. May be used by Relay 1."""
-  journalEntryEdge(
-    """The method to use when ordering `JournalEntry`."""
-    orderBy: [JournalEntryOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): JournalEntryEdge
-}
-
-"""All input for the `deleteJournalEntryById` mutation."""
-input DeleteJournalEntryByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `JournalEntry` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the `deleteJournalEntry` mutation."""
-input DeleteJournalEntryInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -14569,54 +12294,6 @@ input DeleteRecurringTransactionInput {
   rowId: UUID!
 }
 
-"""The output of our delete `ReconciliationQueue` mutation."""
-type DeleteReconciliationQueuePayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `ReconciliationQueue` that was deleted by this mutation."""
-  reconciliationQueue: ReconciliationQueue
-  deletedReconciliationQueueId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `ReconciliationQueue`. May be used by Relay 1."""
-  reconciliationQueueEdge(
-    """The method to use when ordering `ReconciliationQueue`."""
-    orderBy: [ReconciliationQueueOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): ReconciliationQueueEdge
-}
-
-"""All input for the `deleteReconciliationQueueById` mutation."""
-input DeleteReconciliationQueueByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `ReconciliationQueue` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the `deleteReconciliationQueue` mutation."""
-input DeleteReconciliationQueueInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete `Account` mutation."""
 type DeleteAccountPayload {
   """
@@ -14657,54 +12334,6 @@ input DeleteAccountByIdInput {
 
 """All input for the `deleteAccount` mutation."""
 input DeleteAccountInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
-"""The output of our delete `ConnectedAccount` mutation."""
-type DeleteConnectedAccountPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `ConnectedAccount` that was deleted by this mutation."""
-  connectedAccount: ConnectedAccount
-  deletedConnectedAccountId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `ConnectedAccount`. May be used by Relay 1."""
-  connectedAccountEdge(
-    """The method to use when ordering `ConnectedAccount`."""
-    orderBy: [ConnectedAccountOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): ConnectedAccountEdge
-}
-
-"""All input for the `deleteConnectedAccountById` mutation."""
-input DeleteConnectedAccountByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `ConnectedAccount` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the `deleteConnectedAccount` mutation."""
-input DeleteConnectedAccountInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.

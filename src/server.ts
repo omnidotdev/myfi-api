@@ -40,8 +40,6 @@ import ofxRoutes from "lib/ofx/ofxRoutes";
 import { payrollCallbackRoute, payrollRoutes } from "lib/payroll";
 import plaidRoutes from "lib/plaid/plaidRoutes";
 import startScheduledSync from "lib/plaid/scheduledSync";
-import { quickbooksCallbackRoute } from "lib/quickbooks/quickbooksCallbackRoute";
-import quickbooksRoutes from "lib/quickbooks/quickbooksRoutes";
 import {
   exportReport,
   generateAgingReport,
@@ -135,7 +133,6 @@ const app = new Elysia()
   // Public (no auth)
   .use(mantleWebhook)
   .use(payrollCallbackRoute)
-  .use(quickbooksCallbackRoute)
   // GraphQL (has its own @envelop/generic-auth plugin)
   .use(
     yoga({
@@ -158,7 +155,6 @@ const app = new Elysia()
   .use(bookAccessMiddleware)
   // Protected routes
   .use(plaidRoutes)
-  .use(quickbooksRoutes)
   .use(cryptoRoutes)
   .use(lotRoutes)
   .use(bookRoutes)
