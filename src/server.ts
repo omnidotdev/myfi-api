@@ -59,6 +59,7 @@ import bookRoutes from "lib/routes/bookRoutes";
 import budgetRoutes from "lib/routes/budgetRoutes";
 import categorizationRuleRoutes from "lib/routes/categorizationRuleRoutes";
 import connectionRoutes from "lib/routes/connectionRoutes";
+import customerRoutes from "lib/routes/customerRoutes";
 import dashboardRoutes from "lib/routes/dashboardRoutes";
 import fixedAssetRoutes from "lib/routes/fixedAssetRoutes";
 import journalRoutes from "lib/routes/journalRoutes";
@@ -181,6 +182,7 @@ const app = new Elysia()
   .use(periodRoutes)
   .use(tagRoutes)
   .use(taxJurisdictionRoutes)
+  .use(customerRoutes)
   .use(vendorRoutes)
   .use(payrollRoutes)
   // Report REST endpoints

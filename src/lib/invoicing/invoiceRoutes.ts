@@ -1,5 +1,9 @@
+import { desc, eq } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 
+import { dbPool } from "lib/db/db";
+import { customerTable, invoiceLineTable, invoiceTable } from "lib/db/schema";
+import { createInvoiceDraft } from "./createInvoiceDraft";
 import { postInvoice } from "./postInvoice";
 import { recordInvoicePayment } from "./recordInvoicePayment";
 import { voidInvoice } from "./voidInvoice";
@@ -9,7 +13,7 @@ const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
 // Business-rule failures safe to surface to the user; anything else is treated
 // as an unexpected error and returned generically (never leak internals)
 const isClientError = (message: string): boolean =>
-  /not found|no lines|Accounts Receivable|balance|positive|posted, unpaid|payments|Deposit account/i.test(
+  /not found|no lines|at least one line|Accounts Receivable|balance|positive|posted, unpaid|payments|Deposit account/i.test(
     message,
   );
 
@@ -21,6 +25,110 @@ const isClientError = (message: string): boolean =>
  * that the invoice belongs to that book (IDOR guard) inside the service
  */
 const invoiceRoutes = new Elysia({ prefix: "/api/invoices" })
+  // List invoices for a book (newest first) with the customer name and balance
+  .get("/", async ({ query, set }) => {
+    const { bookId } = query;
+    if (!bookId) {
+      set.status = 400;
+      return { error: "bookId is required" };
+    }
+
+    const rows = await dbPool
+      .select({
+        id: invoiceTable.id,
+        number: invoiceTable.number,
+        status: invoiceTable.status,
+        issueDate: invoiceTable.issueDate,
+        dueDate: invoiceTable.dueDate,
+        total: invoiceTable.total,
+        amountPaid: invoiceTable.amountPaid,
+        customerId: invoiceTable.customerId,
+        customerName: customerTable.name,
+      })
+      .from(invoiceTable)
+      .innerJoin(customerTable, eq(invoiceTable.customerId, customerTable.id))
+      .where(eq(invoiceTable.bookId, bookId))
+      .orderBy(desc(invoiceTable.issueDate));
+
+    return {
+      invoices: rows.map((r) => ({
+        ...r,
+        balanceDue: (Number(r.total) - Number(r.amountPaid)).toFixed(4),
+      })),
+    };
+  })
+  // Get one invoice with its line items
+  .get(
+    "/:id",
+    async ({ params, query, set }) => {
+      const { bookId } = query;
+      if (!bookId) {
+        set.status = 400;
+        return { error: "bookId is required" };
+      }
+
+      const [invoice] = await dbPool
+        .select()
+        .from(invoiceTable)
+        .where(eq(invoiceTable.id, params.id));
+      // Generic ownership guard (IDOR)
+      if (!invoice || invoice.bookId !== bookId) {
+        set.status = 404;
+        return { error: "Invoice not found" };
+      }
+
+      const lines = await dbPool
+        .select()
+        .from(invoiceLineTable)
+        .where(eq(invoiceLineTable.invoiceId, params.id))
+        .orderBy(invoiceLineTable.sortOrder);
+
+      return { invoice, lines };
+    },
+    {
+      params: t.Object({ id: t.String() }),
+    },
+  )
+  // Create a draft invoice with line items
+  .post(
+    "/",
+    async ({ body, set }) => {
+      try {
+        const result = await createInvoiceDraft(body);
+        set.status = 201;
+        return result;
+      } catch (err) {
+        const message = err instanceof Error ? err.message : "Create failed";
+        if (isClientError(message)) {
+          set.status = 400;
+          return { error: message };
+        }
+        console.error("[invoices] create failed:", err);
+        set.status = 500;
+        return { error: "Could not create the invoice" };
+      }
+    },
+    {
+      body: t.Object({
+        bookId: t.String(),
+        customerId: t.String(),
+        number: t.String(),
+        issueDate: t.String(),
+        dueDate: t.String(),
+        memo: t.Optional(t.String()),
+        terms: t.Optional(t.String()),
+        lines: t.Array(
+          t.Object({
+            description: t.String(),
+            quantity: t.Number(),
+            unitPrice: t.Number(),
+            incomeAccountId: t.String(),
+            taxJurisdictionId: t.Optional(t.String()),
+          }),
+        ),
+      }),
+    },
+  )
   // Post a draft invoice to the ledger
   .post(
     "/:id/post",

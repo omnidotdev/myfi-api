@@ -8,7 +8,7 @@ export const toUnits = (amount: number): number =>
   Math.round(amount * MONEY_SCALE);
 
 /** Convert integer ten-thousandths back to a decimal amount */
-const fromUnits = (units: number): number => units / MONEY_SCALE;
+export const fromUnits = (units: number): number => units / MONEY_SCALE;
 
 /** Extended amount for a line: quantity times unit price, at 4-decimal scale */
 export const computeLineAmount = (
