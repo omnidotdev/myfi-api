@@ -88,6 +88,11 @@ describe("parseTrialBalanceCsv", () => {
     expect(parseTrialBalanceCsv(`﻿${SAMPLE}`).accounts).toHaveLength(7);
   });
 
+  test("parses CRLF line endings identically to LF (real exports use CRLF)", () => {
+    const crlf = SAMPLE.replace(/\n/g, "\r\n");
+    expect(parseTrialBalanceCsv(crlf)).toEqual(parseTrialBalanceCsv(SAMPLE));
+  });
+
   test("throws when Debit/Credit columns are absent (wrong report)", () => {
     expect(() =>
       parseTrialBalanceCsv("Date,Description,Amount\n1,2,3"),
