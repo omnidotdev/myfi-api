@@ -1,4 +1,11 @@
-import { index, pgTable, text, uniqueIndex, uuid } from "drizzle-orm/pg-core";
+import {
+  index,
+  numeric,
+  pgTable,
+  text,
+  uniqueIndex,
+  uuid,
+} from "drizzle-orm/pg-core";
 
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 import { accountTable } from "./account.table";
@@ -15,6 +22,9 @@ export const taxJurisdictionTable = pgTable(
       .references(() => bookTable.id, { onDelete: "cascade" }),
     name: text().notNull(),
     code: text(),
+    // tax rate as a fraction (e.g. 0.0825 for 8.25%), used to auto-compute tax
+    // on invoice lines; null when the jurisdiction has no single flat rate
+    rate: numeric({ precision: 9, scale: 6 }),
     filingFrequency: text("filing_frequency").notNull(),
     taxPayableAccountId: uuid("tax_payable_account_id")
       .notNull()
