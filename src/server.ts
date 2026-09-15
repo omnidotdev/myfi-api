@@ -28,6 +28,7 @@ import createGraphqlContext from "lib/graphql/createGraphqlContext";
 import { armorPlugin, authenticationPlugin } from "lib/graphql/plugins";
 import importRoutes from "lib/import/importRoutes";
 import profileRoutes from "lib/import/profileRoutes";
+import invoiceRoutes from "lib/invoicing/invoiceRoutes";
 import { mantleWebhook } from "lib/mantle";
 import authMiddleware from "lib/middleware/auth.middleware";
 import bookAccessMiddleware from "lib/middleware/bookAccess.middleware";
@@ -43,6 +44,7 @@ import startScheduledSync from "lib/plaid/scheduledSync";
 import {
   exportReport,
   generateAgingReport,
+  generateArAging,
   generateBalanceSheet,
   generateCashFlow,
   generateGeneralLedger,
@@ -172,6 +174,7 @@ const app = new Elysia()
   .use(dashboardRoutes)
   .use(fixedAssetRoutes)
   .use(importRoutes)
+  .use(invoiceRoutes)
   .use(migrationRoutes)
   .use(profileRoutes)
   .use(ofxRoutes)
@@ -319,11 +322,7 @@ const app = new Elysia()
         },
       );
     }
-    return generateAgingReport({
-      bookId,
-      asOfDate,
-      accountSubType: "accounts_receivable",
-    });
+    return generateArAging({ bookId, asOfDate });
   })
   .get("/api/budgets/tracking", async ({ query }) => {
     const { bookId, period } = query;
