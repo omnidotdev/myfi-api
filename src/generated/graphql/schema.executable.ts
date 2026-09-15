@@ -1460,6 +1460,126 @@ const spec_payrollConnection = {
   executor: executor
 };
 const payrollConnectionCodec = recordCodec(spec_payrollConnection);
+const billLineIdentifier = sql.identifier("public", "bill_line");
+const spec_billLine = {
+  name: "billLine",
+  identifier: billLineIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    bill_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    description: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    quantity: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    unit_price: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    amount: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    expense_account_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    tax_jurisdiction_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    sort_order: {
+      codec: TYPES.int,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "17693",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "bill_line"
+    }
+  },
+  executor: executor
+};
+const billLineCodec = recordCodec(spec_billLine);
 const invoiceLineIdentifier = sql.identifier("public", "invoice_line");
 const spec_invoiceLine = {
   name: "invoiceLine",
@@ -1580,6 +1700,130 @@ const spec_invoiceLine = {
   executor: executor
 };
 const invoiceLineCodec = recordCodec(spec_invoiceLine);
+const billPaymentIdentifier = sql.identifier("public", "bill_payment");
+const spec_billPayment = {
+  name: "billPayment",
+  identifier: billPaymentIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    bill_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    date: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    amount: {
+      codec: TYPES.numeric,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    payment_account_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    method: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    reference: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    journal_entry_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "17713",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "bill_payment"
+    }
+  },
+  executor: executor
+};
+const billPaymentCodec = recordCodec(spec_billPayment);
 const invoicePaymentIdentifier = sql.identifier("public", "invoice_payment");
 const spec_invoicePayment = {
   name: "invoicePayment",
@@ -3155,6 +3399,201 @@ const spec_cryptoAsset = {
   executor: executor
 };
 const cryptoAssetCodec = recordCodec(spec_cryptoAsset);
+const billIdentifier = sql.identifier("public", "bill");
+const spec_bill = {
+  name: "bill",
+  identifier: billIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    vendor_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    number: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    status: {
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    bill_date: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    due_date: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    subtotal: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    tax_amount: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    total: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    amount_paid: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    currency: {
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    memo: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    journal_entry_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "17665",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "bill"
+    }
+  },
+  executor: executor
+};
+const billCodec = recordCodec(spec_bill);
 const categorizationRuleIdentifier = sql.identifier("public", "categorization_rule");
 const spec_categorizationRule = {
   name: "categorizationRule",
@@ -4396,6 +4835,29 @@ const payroll_connection_resourceOptionsConfig = {
   },
   uniques: payroll_connectionUniques
 };
+const bill_lineUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const bill_line_resourceOptionsConfig = {
+  executor: executor,
+  name: "bill_line",
+  identifier: "main.public.bill_line",
+  from: billLineIdentifier,
+  codec: billLineCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "bill_line"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: bill_lineUniques
+};
 const invoice_lineUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -4418,6 +4880,29 @@ const invoice_line_resourceOptionsConfig = {
     canDelete: true
   },
   uniques: invoice_lineUniques
+};
+const bill_paymentUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const bill_payment_resourceOptionsConfig = {
+  executor: executor,
+  name: "bill_payment",
+  identifier: "main.public.bill_payment",
+  from: billPaymentIdentifier,
+  codec: billPaymentCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "bill_payment"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: bill_paymentUniques
 };
 const invoice_paymentUniques = [{
   attributes: ["id"],
@@ -4672,6 +5157,29 @@ const crypto_asset_resourceOptionsConfig = {
   },
   uniques: crypto_assetUniques
 };
+const billUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const bill_resourceOptionsConfig = {
+  executor: executor,
+  name: "bill",
+  identifier: "main.public.bill",
+  from: billIdentifier,
+  codec: billCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "bill"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: billUniques
+};
 const categorization_ruleUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -4817,7 +5325,9 @@ const registryConfig = {
     netWorthSnapshot: netWorthSnapshotCodec,
     accountingPeriod: accountingPeriodCodec,
     payrollConnection: payrollConnectionCodec,
+    billLine: billLineCodec,
     invoiceLine: invoiceLineCodec,
+    billPayment: billPaymentCodec,
     invoicePayment: invoicePaymentCodec,
     reconciliationStatement: reconciliationStatementCodec,
     cryptoLot: cryptoLotCodec,
@@ -4831,6 +5341,7 @@ const registryConfig = {
     vendor: vendorCodec,
     cryptoAsset: cryptoAssetCodec,
     costBasisMethod: costBasisMethodCodec,
+    bill: billCodec,
     categorizationRule: categorizationRuleCodec,
     fixedAsset: fixedAssetCodec,
     invoice: invoiceCodec,
@@ -4875,7 +5386,9 @@ const registryConfig = {
     net_worth_snapshot: net_worth_snapshot_resourceOptionsConfig,
     accounting_period: accounting_period_resourceOptionsConfig,
     payroll_connection: payroll_connection_resourceOptionsConfig,
+    bill_line: bill_line_resourceOptionsConfig,
     invoice_line: invoice_line_resourceOptionsConfig,
+    bill_payment: bill_payment_resourceOptionsConfig,
     invoice_payment: invoice_payment_resourceOptionsConfig,
     reconciliation_statement: reconciliation_statement_resourceOptionsConfig,
     crypto_lot: crypto_lot_resourceOptionsConfig,
@@ -4887,6 +5400,7 @@ const registryConfig = {
     customer: customer_resourceOptionsConfig,
     vendor: vendor_resourceOptionsConfig,
     crypto_asset: crypto_asset_resourceOptionsConfig,
+    bill: bill_resourceOptionsConfig,
     categorization_rule: categorization_rule_resourceOptionsConfig,
     fixed_asset: fixed_asset_resourceOptionsConfig,
     invoice: invoice_resourceOptionsConfig,
@@ -5114,6 +5628,28 @@ const registryConfig = {
           __proto__: null,
           isIndexed: false
         }
+      },
+      billLinesByTheirExpenseAccountId: {
+        localCodec: accountCodec,
+        remoteResourceOptions: bill_line_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["expense_account_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
+      },
+      billPaymentsByTheirPaymentAccountId: {
+        localCodec: accountCodec,
+        remoteResourceOptions: bill_payment_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["payment_account_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
       }
     },
     accountMapping: {
@@ -5146,6 +5682,99 @@ const registryConfig = {
         localCodec: accountingPeriodCodec,
         remoteResourceOptions: book_resourceOptionsConfig,
         localAttributes: ["book_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      }
+    },
+    bill: {
+      __proto__: null,
+      bookByMyBookId: {
+        localCodec: billCodec,
+        remoteResourceOptions: book_resourceOptionsConfig,
+        localAttributes: ["book_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      journalEntryByMyJournalEntryId: {
+        localCodec: billCodec,
+        remoteResourceOptions: journal_entry_resourceOptionsConfig,
+        localAttributes: ["journal_entry_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      vendorByMyVendorId: {
+        localCodec: billCodec,
+        remoteResourceOptions: vendor_resourceOptionsConfig,
+        localAttributes: ["vendor_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      billLinesByTheirBillId: {
+        localCodec: billCodec,
+        remoteResourceOptions: bill_line_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["bill_id"],
+        isReferencee: true
+      },
+      billPaymentsByTheirBillId: {
+        localCodec: billCodec,
+        remoteResourceOptions: bill_payment_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["bill_id"],
+        isReferencee: true
+      }
+    },
+    billLine: {
+      __proto__: null,
+      billByMyBillId: {
+        localCodec: billLineCodec,
+        remoteResourceOptions: bill_resourceOptionsConfig,
+        localAttributes: ["bill_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      accountByMyExpenseAccountId: {
+        localCodec: billLineCodec,
+        remoteResourceOptions: account_resourceOptionsConfig,
+        localAttributes: ["expense_account_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      taxJurisdictionByMyTaxJurisdictionId: {
+        localCodec: billLineCodec,
+        remoteResourceOptions: tax_jurisdiction_resourceOptionsConfig,
+        localAttributes: ["tax_jurisdiction_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      }
+    },
+    billPayment: {
+      __proto__: null,
+      billByMyBillId: {
+        localCodec: billPaymentCodec,
+        remoteResourceOptions: bill_resourceOptionsConfig,
+        localAttributes: ["bill_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      bookByMyBookId: {
+        localCodec: billPaymentCodec,
+        remoteResourceOptions: book_resourceOptionsConfig,
+        localAttributes: ["book_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      journalEntryByMyJournalEntryId: {
+        localCodec: billPaymentCodec,
+        remoteResourceOptions: journal_entry_resourceOptionsConfig,
+        localAttributes: ["journal_entry_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      accountByMyPaymentAccountId: {
+        localCodec: billPaymentCodec,
+        remoteResourceOptions: account_resourceOptionsConfig,
+        localAttributes: ["payment_account_id"],
         remoteAttributes: ["id"],
         isUnique: true
       }
@@ -5327,6 +5956,20 @@ const registryConfig = {
       invoicePaymentsByTheirBookId: {
         localCodec: bookCodec,
         remoteResourceOptions: invoice_payment_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["book_id"],
+        isReferencee: true
+      },
+      billsByTheirBookId: {
+        localCodec: bookCodec,
+        remoteResourceOptions: bill_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["book_id"],
+        isReferencee: true
+      },
+      billPaymentsByTheirBookId: {
+        localCodec: bookCodec,
+        remoteResourceOptions: bill_payment_resourceOptionsConfig,
         localAttributes: ["id"],
         remoteAttributes: ["book_id"],
         isReferencee: true
@@ -5658,6 +6301,28 @@ const registryConfig = {
           __proto__: null,
           isIndexed: false
         }
+      },
+      billsByTheirJournalEntryId: {
+        localCodec: journalEntryCodec,
+        remoteResourceOptions: bill_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["journal_entry_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
+      },
+      billPaymentsByTheirJournalEntryId: {
+        localCodec: journalEntryCodec,
+        remoteResourceOptions: bill_payment_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["journal_entry_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
       }
     },
     journalLine: {
@@ -5898,6 +6563,17 @@ const registryConfig = {
           __proto__: null,
           isIndexed: false
         }
+      },
+      billLinesByTheirTaxJurisdictionId: {
+        localCodec: taxJurisdictionCodec,
+        remoteResourceOptions: bill_line_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["tax_jurisdiction_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
       }
     },
     vehicle: {
@@ -5936,6 +6612,13 @@ const registryConfig = {
           __proto__: null,
           isIndexed: false
         }
+      },
+      billsByTheirVendorId: {
+        localCodec: vendorCodec,
+        remoteResourceOptions: bill_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["vendor_id"],
+        isReferencee: true
       }
     }
   }
@@ -5956,7 +6639,9 @@ const resource_bookPgResource = registry.pgResources["book"];
 const resource_net_worth_snapshotPgResource = registry.pgResources["net_worth_snapshot"];
 const resource_accounting_periodPgResource = registry.pgResources["accounting_period"];
 const resource_payroll_connectionPgResource = registry.pgResources["payroll_connection"];
+const resource_bill_linePgResource = registry.pgResources["bill_line"];
 const resource_invoice_linePgResource = registry.pgResources["invoice_line"];
+const resource_bill_paymentPgResource = registry.pgResources["bill_payment"];
 const resource_invoice_paymentPgResource = registry.pgResources["invoice_payment"];
 const resource_reconciliation_statementPgResource = registry.pgResources["reconciliation_statement"];
 const resource_crypto_lotPgResource = registry.pgResources["crypto_lot"];
@@ -5968,6 +6653,7 @@ const resource_reconciliation_queuePgResource = registry.pgResources["reconcilia
 const resource_customerPgResource = registry.pgResources["customer"];
 const resource_vendorPgResource = registry.pgResources["vendor"];
 const resource_crypto_assetPgResource = registry.pgResources["crypto_asset"];
+const resource_billPgResource = registry.pgResources["bill"];
 const resource_categorization_rulePgResource = registry.pgResources["categorization_rule"];
 const resource_fixed_assetPgResource = registry.pgResources["fixed_asset"];
 const resource_invoicePgResource = registry.pgResources["invoice"];
@@ -6182,6 +6868,17 @@ const nodeFetcher_PayrollConnection = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_PayrollConnection));
   return nodeIdHandler_PayrollConnection.get(nodeIdHandler_PayrollConnection.getSpec($decoded));
 };
+const nodeIdHandler_BillLine = makeTableNodeIdHandler({
+  typeName: "BillLine",
+  identifier: "BillLine",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_bill_linePgResource,
+  pk: bill_lineUniques[0].attributes
+});
+const nodeFetcher_BillLine = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_BillLine));
+  return nodeIdHandler_BillLine.get(nodeIdHandler_BillLine.getSpec($decoded));
+};
 const nodeIdHandler_InvoiceLine = makeTableNodeIdHandler({
   typeName: "InvoiceLine",
   identifier: "InvoiceLine",
@@ -6192,6 +6889,17 @@ const nodeIdHandler_InvoiceLine = makeTableNodeIdHandler({
 const nodeFetcher_InvoiceLine = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_InvoiceLine));
   return nodeIdHandler_InvoiceLine.get(nodeIdHandler_InvoiceLine.getSpec($decoded));
+};
+const nodeIdHandler_BillPayment = makeTableNodeIdHandler({
+  typeName: "BillPayment",
+  identifier: "BillPayment",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_bill_paymentPgResource,
+  pk: bill_paymentUniques[0].attributes
+});
+const nodeFetcher_BillPayment = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_BillPayment));
+  return nodeIdHandler_BillPayment.get(nodeIdHandler_BillPayment.getSpec($decoded));
 };
 const nodeIdHandler_InvoicePayment = makeTableNodeIdHandler({
   typeName: "InvoicePayment",
@@ -6313,6 +7021,17 @@ const nodeIdHandler_CryptoAsset = makeTableNodeIdHandler({
 const nodeFetcher_CryptoAsset = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_CryptoAsset));
   return nodeIdHandler_CryptoAsset.get(nodeIdHandler_CryptoAsset.getSpec($decoded));
+};
+const nodeIdHandler_Bill = makeTableNodeIdHandler({
+  typeName: "Bill",
+  identifier: "Bill",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_billPgResource,
+  pk: billUniques[0].attributes
+});
+const nodeFetcher_Bill = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Bill));
+  return nodeIdHandler_Bill.get(nodeIdHandler_Bill.getSpec($decoded));
 };
 const nodeIdHandler_CategorizationRule = makeTableNodeIdHandler({
   typeName: "CategorizationRule",
@@ -6436,7 +7155,9 @@ const nodeIdHandlerByTypeName = {
   NetWorthSnapshot: nodeIdHandler_NetWorthSnapshot,
   AccountingPeriod: nodeIdHandler_AccountingPeriod,
   PayrollConnection: nodeIdHandler_PayrollConnection,
+  BillLine: nodeIdHandler_BillLine,
   InvoiceLine: nodeIdHandler_InvoiceLine,
+  BillPayment: nodeIdHandler_BillPayment,
   InvoicePayment: nodeIdHandler_InvoicePayment,
   ReconciliationStatement: nodeIdHandler_ReconciliationStatement,
   CryptoLot: nodeIdHandler_CryptoLot,
@@ -6448,6 +7169,7 @@ const nodeIdHandlerByTypeName = {
   Customer: nodeIdHandler_Customer,
   Vendor: nodeIdHandler_Vendor,
   CryptoAsset: nodeIdHandler_CryptoAsset,
+  Bill: nodeIdHandler_Bill,
   CategorizationRule: nodeIdHandler_CategorizationRule,
   FixedAsset: nodeIdHandler_FixedAsset,
   Invoice: nodeIdHandler_Invoice,
@@ -6855,8 +7577,80 @@ const ConnectedAccount_syncCursorPlan = $record => {
 const CryptoLot_disposedAtPlan = $record => {
   return $record.get("disposed_at");
 };
+const JournalEntry_vendorIdPlan = $record => {
+  return $record.get("vendor_id");
+};
+const JournalEntry_vendorPlan = $record => resource_vendorPgResource.get({
+  id: $record.get("vendor_id")
+});
 const Vendor_businessNamePlan = $record => {
   return $record.get("business_name");
+};
+const Bill_dueDatePlan = $record => {
+  return $record.get("due_date");
+};
+const Bill_taxAmountPlan = $record => {
+  return $record.get("tax_amount");
+};
+const Bill_amountPaidPlan = $record => {
+  return $record.get("amount_paid");
+};
+const BillLine_billIdPlan = $record => {
+  return $record.get("bill_id");
+};
+const BillLine_unitPricePlan = $record => {
+  return $record.get("unit_price");
+};
+const BillLine_taxJurisdictionIdPlan = $record => {
+  return $record.get("tax_jurisdiction_id");
+};
+const BillLine_sortOrderPlan = $record => {
+  return $record.get("sort_order");
+};
+const BillLine_billPlan = $record => resource_billPgResource.get({
+  id: $record.get("bill_id")
+});
+const BillLine_taxJurisdictionPlan = $record => resource_tax_jurisdictionPgResource.get({
+  id: $record.get("tax_jurisdiction_id")
+});
+const BillLineCondition_billIdApply = ($condition, val) => applyAttributeCondition("bill_id", TYPES.uuid, $condition, val);
+const BillLineOrderBy_BILL_ID_ASCApply = queryBuilder => {
+  queryBuilder.orderBy({
+    attribute: "bill_id",
+    direction: "ASC"
+  });
+};
+const BillLineOrderBy_BILL_ID_DESCApply = queryBuilder => {
+  queryBuilder.orderBy({
+    attribute: "bill_id",
+    direction: "DESC"
+  });
+};
+const BillCondition_numberApply = ($condition, val) => applyAttributeCondition("number", TYPES.text, $condition, val);
+const BillCondition_statusApply = ($condition, val) => applyAttributeCondition("status", TYPES.text, $condition, val);
+const BillOrderBy_NUMBER_ASCApply = queryBuilder => {
+  queryBuilder.orderBy({
+    attribute: "number",
+    direction: "ASC"
+  });
+};
+const BillOrderBy_NUMBER_DESCApply = queryBuilder => {
+  queryBuilder.orderBy({
+    attribute: "number",
+    direction: "DESC"
+  });
+};
+const BillOrderBy_STATUS_ASCApply = queryBuilder => {
+  queryBuilder.orderBy({
+    attribute: "status",
+    direction: "ASC"
+  });
+};
+const BillOrderBy_STATUS_DESCApply = queryBuilder => {
+  queryBuilder.orderBy({
+    attribute: "status",
+    direction: "DESC"
+  });
 };
 const JournalEntryCondition_dateApply = ($condition, val) => applyAttributeCondition("date", TYPES.timestamptz, $condition, val);
 const JournalEntryOrderBy_DATE_ASCApply = queryBuilder => {
@@ -6868,19 +7662,6 @@ const JournalEntryOrderBy_DATE_ASCApply = queryBuilder => {
 const JournalEntryOrderBy_DATE_DESCApply = queryBuilder => {
   queryBuilder.orderBy({
     attribute: "date",
-    direction: "DESC"
-  });
-};
-const ReconciliationQueueCondition_statusApply = ($condition, val) => applyAttributeCondition("status", TYPES.text, $condition, val);
-const ReconciliationQueueOrderBy_STATUS_ASCApply = queryBuilder => {
-  queryBuilder.orderBy({
-    attribute: "status",
-    direction: "ASC"
-  });
-};
-const ReconciliationQueueOrderBy_STATUS_DESCApply = queryBuilder => {
-  queryBuilder.orderBy({
-    attribute: "status",
     direction: "DESC"
   });
 };
@@ -6970,9 +7751,17 @@ const specFromArgs_PayrollConnection = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_PayrollConnection, $nodeId);
 };
+const specFromArgs_BillLine = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_BillLine, $nodeId);
+};
 const specFromArgs_InvoiceLine = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_InvoiceLine, $nodeId);
+};
+const specFromArgs_BillPayment = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_BillPayment, $nodeId);
 };
 const specFromArgs_InvoicePayment = args => {
   const $nodeId = args.getRaw(["input", "id"]);
@@ -7017,6 +7806,10 @@ const specFromArgs_Vendor = args => {
 const specFromArgs_CryptoAsset = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_CryptoAsset, $nodeId);
+};
+const specFromArgs_Bill = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_Bill, $nodeId);
 };
 const specFromArgs_CategorizationRule = args => {
   const $nodeId = args.getRaw(["input", "id"]);
@@ -7254,40 +8047,51 @@ function PayrollConnectionInput_lastSyncedAtApply(obj, val, info) {
 function PayrollConnectionInput_syncCursorApply(obj, val, info) {
   obj.set("sync_cursor", bakedInputRuntime(info.schema, info.field.type, val));
 }
+const CreateBillLinePayload_billLineEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_bill_linePgResource, bill_lineUniques[0].attributes, $mutation, fieldArgs);
+function BillLineInput_billIdApply(obj, val, info) {
+  obj.set("bill_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function BillLineInput_descriptionApply(obj, val, info) {
+  obj.set("description", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function BillLineInput_quantityApply(obj, val, info) {
+  obj.set("quantity", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function BillLineInput_unitPriceApply(obj, val, info) {
+  obj.set("unit_price", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function BillLineInput_amountApply(obj, val, info) {
+  obj.set("amount", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function BillLineInput_expenseAccountIdApply(obj, val, info) {
+  obj.set("expense_account_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function BillLineInput_taxJurisdictionIdApply(obj, val, info) {
+  obj.set("tax_jurisdiction_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function BillLineInput_sortOrderApply(obj, val, info) {
+  obj.set("sort_order", bakedInputRuntime(info.schema, info.field.type, val));
+}
 const CreateInvoiceLinePayload_invoiceLineEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_invoice_linePgResource, invoice_lineUniques[0].attributes, $mutation, fieldArgs);
 function InvoiceLineInput_invoiceIdApply(obj, val, info) {
   obj.set("invoice_id", bakedInputRuntime(info.schema, info.field.type, val));
 }
-function InvoiceLineInput_descriptionApply(obj, val, info) {
-  obj.set("description", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function InvoiceLineInput_quantityApply(obj, val, info) {
-  obj.set("quantity", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function InvoiceLineInput_unitPriceApply(obj, val, info) {
-  obj.set("unit_price", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function InvoiceLineInput_amountApply(obj, val, info) {
-  obj.set("amount", bakedInputRuntime(info.schema, info.field.type, val));
-}
 function InvoiceLineInput_incomeAccountIdApply(obj, val, info) {
   obj.set("income_account_id", bakedInputRuntime(info.schema, info.field.type, val));
 }
-function InvoiceLineInput_taxJurisdictionIdApply(obj, val, info) {
-  obj.set("tax_jurisdiction_id", bakedInputRuntime(info.schema, info.field.type, val));
+const CreateBillPaymentPayload_billPaymentEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_bill_paymentPgResource, bill_paymentUniques[0].attributes, $mutation, fieldArgs);
+function BillPaymentInput_paymentAccountIdApply(obj, val, info) {
+  obj.set("payment_account_id", bakedInputRuntime(info.schema, info.field.type, val));
 }
-function InvoiceLineInput_sortOrderApply(obj, val, info) {
-  obj.set("sort_order", bakedInputRuntime(info.schema, info.field.type, val));
+function BillPaymentInput_methodApply(obj, val, info) {
+  obj.set("method", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function BillPaymentInput_referenceApply(obj, val, info) {
+  obj.set("reference", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateInvoicePaymentPayload_invoicePaymentEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_invoice_paymentPgResource, invoice_paymentUniques[0].attributes, $mutation, fieldArgs);
 function InvoicePaymentInput_depositAccountIdApply(obj, val, info) {
   obj.set("deposit_account_id", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function InvoicePaymentInput_methodApply(obj, val, info) {
-  obj.set("method", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function InvoicePaymentInput_referenceApply(obj, val, info) {
-  obj.set("reference", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateReconciliationStatementPayload_reconciliationStatementEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_reconciliation_statementPgResource, reconciliation_statementUniques[0].attributes, $mutation, fieldArgs);
 function ReconciliationStatementInput_statementDateApply(obj, val, info) {
@@ -7461,6 +8265,28 @@ function CryptoAssetInput_balanceApply(obj, val, info) {
 function CryptoAssetInput_costBasisMethodApply(obj, val, info) {
   obj.set("cost_basis_method", bakedInputRuntime(info.schema, info.field.type, val));
 }
+const CreateBillPayload_billEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_billPgResource, billUniques[0].attributes, $mutation, fieldArgs);
+function BillInput_numberApply(obj, val, info) {
+  obj.set("number", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function BillInput_billDateApply(obj, val, info) {
+  obj.set("bill_date", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function BillInput_dueDateApply(obj, val, info) {
+  obj.set("due_date", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function BillInput_subtotalApply(obj, val, info) {
+  obj.set("subtotal", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function BillInput_taxAmountApply(obj, val, info) {
+  obj.set("tax_amount", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function BillInput_totalApply(obj, val, info) {
+  obj.set("total", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function BillInput_amountPaidApply(obj, val, info) {
+  obj.set("amount_paid", bakedInputRuntime(info.schema, info.field.type, val));
+}
 const CreateCategorizationRulePayload_categorizationRuleEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_categorization_rulePgResource, categorization_ruleUniques[0].attributes, $mutation, fieldArgs);
 function CategorizationRuleInput_matchFieldApply(obj, val, info) {
   obj.set("match_field", bakedInputRuntime(info.schema, info.field.type, val));
@@ -7518,26 +8344,8 @@ const CreateInvoicePayload_invoiceEdgePlan = ($mutation, fieldArgs) => pgMutatio
 function InvoiceInput_customerIdApply(obj, val, info) {
   obj.set("customer_id", bakedInputRuntime(info.schema, info.field.type, val));
 }
-function InvoiceInput_numberApply(obj, val, info) {
-  obj.set("number", bakedInputRuntime(info.schema, info.field.type, val));
-}
 function InvoiceInput_issueDateApply(obj, val, info) {
   obj.set("issue_date", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function InvoiceInput_dueDateApply(obj, val, info) {
-  obj.set("due_date", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function InvoiceInput_subtotalApply(obj, val, info) {
-  obj.set("subtotal", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function InvoiceInput_taxAmountApply(obj, val, info) {
-  obj.set("tax_amount", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function InvoiceInput_totalApply(obj, val, info) {
-  obj.set("total", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function InvoiceInput_amountPaidApply(obj, val, info) {
-  obj.set("amount_paid", bakedInputRuntime(info.schema, info.field.type, val));
 }
 function InvoiceInput_termsApply(obj, val, info) {
   obj.set("terms", bakedInputRuntime(info.schema, info.field.type, val));
@@ -7629,8 +8437,14 @@ type Query implements Node {
   """Get a single \`PayrollConnection\`."""
   payrollConnection(rowId: UUID!): PayrollConnection
 
+  """Get a single \`BillLine\`."""
+  billLine(rowId: UUID!): BillLine
+
   """Get a single \`InvoiceLine\`."""
   invoiceLine(rowId: UUID!): InvoiceLine
+
+  """Get a single \`BillPayment\`."""
+  billPayment(rowId: UUID!): BillPayment
 
   """Get a single \`InvoicePayment\`."""
   invoicePayment(rowId: UUID!): InvoicePayment
@@ -7664,6 +8478,9 @@ type Query implements Node {
 
   """Get a single \`CryptoAsset\`."""
   cryptoAsset(rowId: UUID!): CryptoAsset
+
+  """Get a single \`Bill\`."""
+  bill(rowId: UUID!): Bill
 
   """Get a single \`CategorizationRule\`."""
   categorizationRule(rowId: UUID!): CategorizationRule
@@ -7792,6 +8609,12 @@ type Query implements Node {
     id: ID!
   ): PayrollConnection
 
+  """Reads a single \`BillLine\` using its globally unique \`ID\`."""
+  billLineById(
+    """The globally unique \`ID\` to be used in selecting a single \`BillLine\`."""
+    id: ID!
+  ): BillLine
+
   """Reads a single \`InvoiceLine\` using its globally unique \`ID\`."""
   invoiceLineById(
     """
@@ -7799,6 +8622,14 @@ type Query implements Node {
     """
     id: ID!
   ): InvoiceLine
+
+  """Reads a single \`BillPayment\` using its globally unique \`ID\`."""
+  billPaymentById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`BillPayment\`.
+    """
+    id: ID!
+  ): BillPayment
 
   """Reads a single \`InvoicePayment\` using its globally unique \`ID\`."""
   invoicePaymentById(
@@ -7881,6 +8712,12 @@ type Query implements Node {
     """
     id: ID!
   ): CryptoAsset
+
+  """Reads a single \`Bill\` using its globally unique \`ID\`."""
+  billById(
+    """The globally unique \`ID\` to be used in selecting a single \`Bill\`."""
+    id: ID!
+  ): Bill
 
   """Reads a single \`CategorizationRule\` using its globally unique \`ID\`."""
   categorizationRuleById(
@@ -8428,6 +9265,40 @@ type Query implements Node {
     orderBy: [PayrollConnectionOrderBy!] = [PRIMARY_KEY_ASC]
   ): PayrollConnectionConnection
 
+  """Reads and enables pagination through a set of \`BillLine\`."""
+  billLines(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: BillLineCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: BillLineFilter
+
+    """The method to use when ordering \`BillLine\`."""
+    orderBy: [BillLineOrderBy!] = [PRIMARY_KEY_ASC]
+  ): BillLineConnection
+
   """Reads and enables pagination through a set of \`InvoiceLine\`."""
   invoiceLines(
     """Only read the first \`n\` values of the set."""
@@ -8461,6 +9332,40 @@ type Query implements Node {
     """The method to use when ordering \`InvoiceLine\`."""
     orderBy: [InvoiceLineOrderBy!] = [PRIMARY_KEY_ASC]
   ): InvoiceLineConnection
+
+  """Reads and enables pagination through a set of \`BillPayment\`."""
+  billPayments(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: BillPaymentCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: BillPaymentFilter
+
+    """The method to use when ordering \`BillPayment\`."""
+    orderBy: [BillPaymentOrderBy!] = [PRIMARY_KEY_ASC]
+  ): BillPaymentConnection
 
   """Reads and enables pagination through a set of \`InvoicePayment\`."""
   invoicePayments(
@@ -8837,6 +9742,40 @@ type Query implements Node {
     """The method to use when ordering \`CryptoAsset\`."""
     orderBy: [CryptoAssetOrderBy!] = [PRIMARY_KEY_ASC]
   ): CryptoAssetConnection
+
+  """Reads and enables pagination through a set of \`Bill\`."""
+  bills(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: BillCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: BillFilter
+
+    """The method to use when ordering \`Bill\`."""
+    orderBy: [BillOrderBy!] = [PRIMARY_KEY_ASC]
+  ): BillConnection
 
   """Reads and enables pagination through a set of \`CategorizationRule\`."""
   categorizationRules(
@@ -10137,6 +11076,74 @@ type Book implements Node {
     """The method to use when ordering \`InvoicePayment\`."""
     orderBy: [InvoicePaymentOrderBy!] = [PRIMARY_KEY_ASC]
   ): InvoicePaymentConnection!
+
+  """Reads and enables pagination through a set of \`Bill\`."""
+  bills(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: BillCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: BillFilter
+
+    """The method to use when ordering \`Bill\`."""
+    orderBy: [BillOrderBy!] = [PRIMARY_KEY_ASC]
+  ): BillConnection!
+
+  """Reads and enables pagination through a set of \`BillPayment\`."""
+  billPayments(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: BillPaymentCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: BillPaymentFilter
+
+    """The method to use when ordering \`BillPayment\`."""
+    orderBy: [BillPaymentOrderBy!] = [PRIMARY_KEY_ASC]
+  ): BillPaymentConnection!
 }
 
 """A connection to a list of \`Account\` values."""
@@ -10565,6 +11572,18 @@ input BookFilter {
 
   """Some related \`invoicePayments\` exist."""
   invoicePaymentsExist: Boolean
+
+  """Filter by the object’s \`bills\` relation."""
+  bills: BookToManyBillFilter
+
+  """Some related \`bills\` exist."""
+  billsExist: Boolean
+
+  """Filter by the object’s \`billPayments\` relation."""
+  billPayments: BookToManyBillPaymentFilter
+
+  """Some related \`billPayments\` exist."""
+  billPaymentsExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [BookFilter!]
@@ -11251,6 +12270,12 @@ input VendorFilter {
   """Filter by the object’s \`bookId\` field."""
   bookId: UUIDFilter
 
+  """Filter by the object’s \`bills\` relation."""
+  bills: VendorToManyBillFilter
+
+  """Some related \`bills\` exist."""
+  billsExist: Boolean
+
   """Filter by the object’s \`book\` relation."""
   book: BookFilter
 
@@ -11262,6 +12287,215 @@ input VendorFilter {
 
   """Negates the expression."""
   not: VendorFilter
+}
+
+"""
+A filter to be used against many \`Bill\` object types. All fields are combined with a logical ‘and.’
+"""
+input VendorToManyBillFilter {
+  """
+  Every related \`Bill\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: BillFilter
+
+  """
+  Some related \`Bill\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: BillFilter
+
+  """
+  No related \`Bill\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: BillFilter
+}
+
+"""
+A filter to be used against \`Bill\` object types. All fields are combined with a logical ‘and.’
+"""
+input BillFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`bookId\` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s \`vendorId\` field."""
+  vendorId: UUIDFilter
+
+  """Filter by the object’s \`number\` field."""
+  number: StringFilter
+
+  """Filter by the object’s \`status\` field."""
+  status: StringFilter
+
+  """Filter by the object’s \`billLines\` relation."""
+  billLines: BillToManyBillLineFilter
+
+  """Some related \`billLines\` exist."""
+  billLinesExist: Boolean
+
+  """Filter by the object’s \`billPayments\` relation."""
+  billPayments: BillToManyBillPaymentFilter
+
+  """Some related \`billPayments\` exist."""
+  billPaymentsExist: Boolean
+
+  """Filter by the object’s \`book\` relation."""
+  book: BookFilter
+
+  """Filter by the object’s \`journalEntry\` relation."""
+  journalEntry: JournalEntryFilter
+
+  """A related \`journalEntry\` exists."""
+  journalEntryExists: Boolean
+
+  """Filter by the object’s \`vendor\` relation."""
+  vendor: VendorFilter
+
+  """Checks for all expressions in this list."""
+  and: [BillFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [BillFilter!]
+
+  """Negates the expression."""
+  not: BillFilter
+}
+
+"""
+A filter to be used against many \`BillLine\` object types. All fields are combined with a logical ‘and.’
+"""
+input BillToManyBillLineFilter {
+  """
+  Every related \`BillLine\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: BillLineFilter
+
+  """
+  Some related \`BillLine\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: BillLineFilter
+
+  """
+  No related \`BillLine\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: BillLineFilter
+}
+
+"""
+A filter to be used against \`BillLine\` object types. All fields are combined with a logical ‘and.’
+"""
+input BillLineFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`billId\` field."""
+  billId: UUIDFilter
+
+  """Filter by the object’s \`bill\` relation."""
+  bill: BillFilter
+
+  """Filter by the object’s \`expenseAccount\` relation."""
+  expenseAccount: AccountFilter
+
+  """Filter by the object’s \`taxJurisdiction\` relation."""
+  taxJurisdiction: TaxJurisdictionFilter
+
+  """A related \`taxJurisdiction\` exists."""
+  taxJurisdictionExists: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [BillLineFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [BillLineFilter!]
+
+  """Negates the expression."""
+  not: BillLineFilter
+}
+
+"""
+A filter to be used against \`TaxJurisdiction\` object types. All fields are combined with a logical ‘and.’
+"""
+input TaxJurisdictionFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`bookId\` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s \`book\` relation."""
+  book: BookFilter
+
+  """Filter by the object’s \`taxPayableAccount\` relation."""
+  taxPayableAccount: AccountFilter
+
+  """Checks for all expressions in this list."""
+  and: [TaxJurisdictionFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [TaxJurisdictionFilter!]
+
+  """Negates the expression."""
+  not: TaxJurisdictionFilter
+}
+
+"""
+A filter to be used against many \`BillPayment\` object types. All fields are combined with a logical ‘and.’
+"""
+input BillToManyBillPaymentFilter {
+  """
+  Every related \`BillPayment\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: BillPaymentFilter
+
+  """
+  Some related \`BillPayment\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: BillPaymentFilter
+
+  """
+  No related \`BillPayment\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: BillPaymentFilter
+}
+
+"""
+A filter to be used against \`BillPayment\` object types. All fields are combined with a logical ‘and.’
+"""
+input BillPaymentFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`bookId\` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s \`billId\` field."""
+  billId: UUIDFilter
+
+  """Filter by the object’s \`bill\` relation."""
+  bill: BillFilter
+
+  """Filter by the object’s \`book\` relation."""
+  book: BookFilter
+
+  """Filter by the object’s \`journalEntry\` relation."""
+  journalEntry: JournalEntryFilter
+
+  """A related \`journalEntry\` exists."""
+  journalEntryExists: Boolean
+
+  """Filter by the object’s \`paymentAccount\` relation."""
+  paymentAccount: AccountFilter
+
+  """Checks for all expressions in this list."""
+  and: [BillPaymentFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [BillPaymentFilter!]
+
+  """Negates the expression."""
+  not: BillPaymentFilter
 }
 
 """
@@ -11754,32 +12988,6 @@ input BookToManyTaxJurisdictionFilter {
   No related \`TaxJurisdiction\` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
   none: TaxJurisdictionFilter
-}
-
-"""
-A filter to be used against \`TaxJurisdiction\` object types. All fields are combined with a logical ‘and.’
-"""
-input TaxJurisdictionFilter {
-  """Filter by the object’s \`rowId\` field."""
-  rowId: UUIDFilter
-
-  """Filter by the object’s \`bookId\` field."""
-  bookId: UUIDFilter
-
-  """Filter by the object’s \`book\` relation."""
-  book: BookFilter
-
-  """Filter by the object’s \`taxPayableAccount\` relation."""
-  taxPayableAccount: AccountFilter
-
-  """Checks for all expressions in this list."""
-  and: [TaxJurisdictionFilter!]
-
-  """Checks for any expressions in this list."""
-  or: [TaxJurisdictionFilter!]
-
-  """Negates the expression."""
-  not: TaxJurisdictionFilter
 }
 
 """
@@ -12317,6 +13525,46 @@ input BookToManyInvoicePaymentFilter {
 }
 
 """
+A filter to be used against many \`Bill\` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyBillFilter {
+  """
+  Every related \`Bill\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: BillFilter
+
+  """
+  Some related \`Bill\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: BillFilter
+
+  """
+  No related \`Bill\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: BillFilter
+}
+
+"""
+A filter to be used against many \`BillPayment\` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyBillPaymentFilter {
+  """
+  Every related \`BillPayment\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: BillPaymentFilter
+
+  """
+  Some related \`BillPayment\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: BillPaymentFilter
+
+  """
+  No related \`BillPayment\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: BillPaymentFilter
+}
+
+"""
 A filter to be used against many \`JournalLine\` object types. All fields are combined with a logical ‘and.’
 """
 input AccountToManyJournalLineFilter {
@@ -12806,6 +14054,381 @@ type Vendor implements Node {
 
   """Reads a single \`Book\` that is related to this \`Vendor\`."""
   book: Book
+
+  """Reads and enables pagination through a set of \`Bill\`."""
+  bills(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: BillCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: BillFilter
+
+    """The method to use when ordering \`Bill\`."""
+    orderBy: [BillOrderBy!] = [PRIMARY_KEY_ASC]
+  ): BillConnection!
+}
+
+"""A connection to a list of \`Bill\` values."""
+type BillConnection {
+  """A list of \`Bill\` objects."""
+  nodes: [Bill]!
+
+  """
+  A list of edges which contains the \`Bill\` and cursor to aid in pagination.
+  """
+  edges: [BillEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* \`Bill\` you could get from the connection."""
+  totalCount: Int!
+}
+
+type Bill implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  vendorId: UUID!
+  number: String!
+  status: String!
+  billDate: String!
+  dueDate: String!
+  subtotal: BigFloat!
+  taxAmount: BigFloat!
+  total: BigFloat!
+  amountPaid: BigFloat!
+  currency: String!
+  memo: String
+  journalEntryId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """Reads a single \`Book\` that is related to this \`Bill\`."""
+  book: Book
+
+  """Reads a single \`JournalEntry\` that is related to this \`Bill\`."""
+  journalEntry: JournalEntry
+
+  """Reads a single \`Vendor\` that is related to this \`Bill\`."""
+  vendor: Vendor
+
+  """Reads and enables pagination through a set of \`BillLine\`."""
+  billLines(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: BillLineCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: BillLineFilter
+
+    """The method to use when ordering \`BillLine\`."""
+    orderBy: [BillLineOrderBy!] = [PRIMARY_KEY_ASC]
+  ): BillLineConnection!
+
+  """Reads and enables pagination through a set of \`BillPayment\`."""
+  billPayments(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: BillPaymentCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: BillPaymentFilter
+
+    """The method to use when ordering \`BillPayment\`."""
+    orderBy: [BillPaymentOrderBy!] = [PRIMARY_KEY_ASC]
+  ): BillPaymentConnection!
+}
+
+"""A connection to a list of \`BillLine\` values."""
+type BillLineConnection {
+  """A list of \`BillLine\` objects."""
+  nodes: [BillLine]!
+
+  """
+  A list of edges which contains the \`BillLine\` and cursor to aid in pagination.
+  """
+  edges: [BillLineEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* \`BillLine\` you could get from the connection."""
+  totalCount: Int!
+}
+
+type BillLine implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  billId: UUID!
+  description: String!
+  quantity: BigFloat!
+  unitPrice: BigFloat!
+  amount: BigFloat!
+  expenseAccountId: UUID!
+  taxJurisdictionId: UUID
+  sortOrder: Int!
+
+  """Reads a single \`Bill\` that is related to this \`BillLine\`."""
+  bill: Bill
+
+  """Reads a single \`Account\` that is related to this \`BillLine\`."""
+  expenseAccount: Account
+
+  """Reads a single \`TaxJurisdiction\` that is related to this \`BillLine\`."""
+  taxJurisdiction: TaxJurisdiction
+}
+
+type TaxJurisdiction implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  name: String!
+  code: String
+  filingFrequency: String!
+  taxPayableAccountId: UUID!
+  createdAt: Datetime
+  rate: BigFloat
+
+  """Reads a single \`Book\` that is related to this \`TaxJurisdiction\`."""
+  book: Book
+
+  """Reads a single \`Account\` that is related to this \`TaxJurisdiction\`."""
+  taxPayableAccount: Account
+}
+
+"""A \`BillLine\` edge in the connection."""
+type BillLineEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`BillLine\` at the end of the edge."""
+  node: BillLine
+}
+
+"""
+A condition to be used against \`BillLine\` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input BillLineCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`billId\` field."""
+  billId: UUID
+}
+
+"""Methods to use when ordering \`BillLine\`."""
+enum BillLineOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BILL_ID_ASC
+  BILL_ID_DESC
+}
+
+"""A connection to a list of \`BillPayment\` values."""
+type BillPaymentConnection {
+  """A list of \`BillPayment\` objects."""
+  nodes: [BillPayment]!
+
+  """
+  A list of edges which contains the \`BillPayment\` and cursor to aid in pagination.
+  """
+  edges: [BillPaymentEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* \`BillPayment\` you could get from the connection."""
+  totalCount: Int!
+}
+
+type BillPayment implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  billId: UUID!
+  date: String!
+  amount: BigFloat!
+  paymentAccountId: UUID!
+  method: String
+  reference: String
+  journalEntryId: UUID
+  createdAt: Datetime
+
+  """Reads a single \`Bill\` that is related to this \`BillPayment\`."""
+  bill: Bill
+
+  """Reads a single \`Book\` that is related to this \`BillPayment\`."""
+  book: Book
+
+  """Reads a single \`JournalEntry\` that is related to this \`BillPayment\`."""
+  journalEntry: JournalEntry
+
+  """Reads a single \`Account\` that is related to this \`BillPayment\`."""
+  paymentAccount: Account
+}
+
+"""A \`BillPayment\` edge in the connection."""
+type BillPaymentEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`BillPayment\` at the end of the edge."""
+  node: BillPayment
+}
+
+"""
+A condition to be used against \`BillPayment\` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input BillPaymentCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`bookId\` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s \`billId\` field."""
+  billId: UUID
+}
+
+"""Methods to use when ordering \`BillPayment\`."""
+enum BillPaymentOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+  BILL_ID_ASC
+  BILL_ID_DESC
+}
+
+"""A \`Bill\` edge in the connection."""
+type BillEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`Bill\` at the end of the edge."""
+  node: Bill
+}
+
+"""
+A condition to be used against \`Bill\` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input BillCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`bookId\` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s \`vendorId\` field."""
+  vendorId: UUID
+
+  """Checks for equality with the object’s \`number\` field."""
+  number: String
+
+  """Checks for equality with the object’s \`status\` field."""
+  status: String
+}
+
+"""Methods to use when ordering \`Bill\`."""
+enum BillOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+  VENDOR_ID_ASC
+  VENDOR_ID_DESC
+  NUMBER_ASC
+  NUMBER_DESC
+  STATUS_ASC
+  STATUS_DESC
 }
 
 """A connection to a list of \`JournalLine\` values."""
@@ -13910,27 +15533,6 @@ type TaxJurisdictionConnection {
   The count of *all* \`TaxJurisdiction\` you could get from the connection.
   """
   totalCount: Int!
-}
-
-type TaxJurisdiction implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  id: ID!
-  rowId: UUID!
-  bookId: UUID!
-  name: String!
-  code: String
-  filingFrequency: String!
-  taxPayableAccountId: UUID!
-  createdAt: Datetime
-  rate: BigFloat
-
-  """Reads a single \`Book\` that is related to this \`TaxJurisdiction\`."""
-  book: Book
-
-  """Reads a single \`Account\` that is related to this \`TaxJurisdiction\`."""
-  taxPayableAccount: Account
 }
 
 """A \`TaxJurisdiction\` edge in the connection."""
@@ -15145,6 +16747,14 @@ type Mutation {
     input: CreatePayrollConnectionInput!
   ): CreatePayrollConnectionPayload
 
+  """Creates a single \`BillLine\`."""
+  createBillLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateBillLineInput!
+  ): CreateBillLinePayload
+
   """Creates a single \`InvoiceLine\`."""
   createInvoiceLine(
     """
@@ -15152,6 +16762,14 @@ type Mutation {
     """
     input: CreateInvoiceLineInput!
   ): CreateInvoiceLinePayload
+
+  """Creates a single \`BillPayment\`."""
+  createBillPayment(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateBillPaymentInput!
+  ): CreateBillPaymentPayload
 
   """Creates a single \`InvoicePayment\`."""
   createInvoicePayment(
@@ -15240,6 +16858,14 @@ type Mutation {
     """
     input: CreateCryptoAssetInput!
   ): CreateCryptoAssetPayload
+
+  """Creates a single \`Bill\`."""
+  createBill(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateBillInput!
+  ): CreateBillPayload
 
   """Creates a single \`CategorizationRule\`."""
   createCategorizationRule(
@@ -15543,6 +17169,22 @@ type Mutation {
     input: UpdatePayrollConnectionInput!
   ): UpdatePayrollConnectionPayload
 
+  """Updates a single \`BillLine\` using its globally unique id and a patch."""
+  updateBillLineById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateBillLineByIdInput!
+  ): UpdateBillLinePayload
+
+  """Updates a single \`BillLine\` using a unique key and a patch."""
+  updateBillLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateBillLineInput!
+  ): UpdateBillLinePayload
+
   """
   Updates a single \`InvoiceLine\` using its globally unique id and a patch.
   """
@@ -15560,6 +17202,24 @@ type Mutation {
     """
     input: UpdateInvoiceLineInput!
   ): UpdateInvoiceLinePayload
+
+  """
+  Updates a single \`BillPayment\` using its globally unique id and a patch.
+  """
+  updateBillPaymentById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateBillPaymentByIdInput!
+  ): UpdateBillPaymentPayload
+
+  """Updates a single \`BillPayment\` using a unique key and a patch."""
+  updateBillPayment(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateBillPaymentInput!
+  ): UpdateBillPaymentPayload
 
   """
   Updates a single \`InvoicePayment\` using its globally unique id and a patch.
@@ -15752,6 +17412,22 @@ type Mutation {
     """
     input: UpdateCryptoAssetInput!
   ): UpdateCryptoAssetPayload
+
+  """Updates a single \`Bill\` using its globally unique id and a patch."""
+  updateBillById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateBillByIdInput!
+  ): UpdateBillPayload
+
+  """Updates a single \`Bill\` using a unique key and a patch."""
+  updateBill(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateBillInput!
+  ): UpdateBillPayload
 
   """
   Updates a single \`CategorizationRule\` using its globally unique id and a patch.
@@ -16081,6 +17757,22 @@ type Mutation {
     input: DeletePayrollConnectionInput!
   ): DeletePayrollConnectionPayload
 
+  """Deletes a single \`BillLine\` using its globally unique id."""
+  deleteBillLineById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteBillLineByIdInput!
+  ): DeleteBillLinePayload
+
+  """Deletes a single \`BillLine\` using a unique key."""
+  deleteBillLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteBillLineInput!
+  ): DeleteBillLinePayload
+
   """Deletes a single \`InvoiceLine\` using its globally unique id."""
   deleteInvoiceLineById(
     """
@@ -16096,6 +17788,22 @@ type Mutation {
     """
     input: DeleteInvoiceLineInput!
   ): DeleteInvoiceLinePayload
+
+  """Deletes a single \`BillPayment\` using its globally unique id."""
+  deleteBillPaymentById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteBillPaymentByIdInput!
+  ): DeleteBillPaymentPayload
+
+  """Deletes a single \`BillPayment\` using a unique key."""
+  deleteBillPayment(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteBillPaymentInput!
+  ): DeleteBillPaymentPayload
 
   """Deletes a single \`InvoicePayment\` using its globally unique id."""
   deleteInvoicePaymentById(
@@ -16274,6 +17982,22 @@ type Mutation {
     """
     input: DeleteCryptoAssetInput!
   ): DeleteCryptoAssetPayload
+
+  """Deletes a single \`Bill\` using its globally unique id."""
+  deleteBillById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteBillByIdInput!
+  ): DeleteBillPayload
+
+  """Deletes a single \`Bill\` using a unique key."""
+  deleteBill(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteBillInput!
+  ): DeleteBillPayload
 
   """Deletes a single \`CategorizationRule\` using its globally unique id."""
   deleteCategorizationRuleById(
@@ -17045,6 +18769,54 @@ input PayrollConnectionInput {
   createdAt: Datetime
 }
 
+"""The output of our create \`BillLine\` mutation."""
+type CreateBillLinePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`BillLine\` that was created by this mutation."""
+  billLine: BillLine
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`BillLine\`. May be used by Relay 1."""
+  billLineEdge(
+    """The method to use when ordering \`BillLine\`."""
+    orderBy: [BillLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BillLineEdge
+}
+
+"""All input for the create \`BillLine\` mutation."""
+input CreateBillLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`BillLine\` to be created by this mutation."""
+  billLine: BillLineInput!
+}
+
+"""An input for mutations affecting \`BillLine\`"""
+input BillLineInput {
+  rowId: UUID
+  billId: UUID!
+  description: String!
+  quantity: BigFloat
+  unitPrice: BigFloat
+  amount: BigFloat
+  expenseAccountId: UUID!
+  taxJurisdictionId: UUID
+  sortOrder: Int
+}
+
 """The output of our create \`InvoiceLine\` mutation."""
 type CreateInvoiceLinePayload {
   """
@@ -17091,6 +18863,55 @@ input InvoiceLineInput {
   incomeAccountId: UUID!
   taxJurisdictionId: UUID
   sortOrder: Int
+}
+
+"""The output of our create \`BillPayment\` mutation."""
+type CreateBillPaymentPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`BillPayment\` that was created by this mutation."""
+  billPayment: BillPayment
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`BillPayment\`. May be used by Relay 1."""
+  billPaymentEdge(
+    """The method to use when ordering \`BillPayment\`."""
+    orderBy: [BillPaymentOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BillPaymentEdge
+}
+
+"""All input for the create \`BillPayment\` mutation."""
+input CreateBillPaymentInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`BillPayment\` to be created by this mutation."""
+  billPayment: BillPaymentInput!
+}
+
+"""An input for mutations affecting \`BillPayment\`"""
+input BillPaymentInput {
+  rowId: UUID
+  bookId: UUID!
+  billId: UUID!
+  date: String!
+  amount: BigFloat!
+  paymentAccountId: UUID!
+  method: String
+  reference: String
+  journalEntryId: UUID
+  createdAt: Datetime
 }
 
 """The output of our create \`InvoicePayment\` mutation."""
@@ -17645,6 +19466,61 @@ input CryptoAssetInput {
   balance: BigFloat
   costBasisMethod: CostBasisMethod
   lastSyncedAt: Datetime
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""The output of our create \`Bill\` mutation."""
+type CreateBillPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Bill\` that was created by this mutation."""
+  bill: Bill
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Bill\`. May be used by Relay 1."""
+  billEdge(
+    """The method to use when ordering \`Bill\`."""
+    orderBy: [BillOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BillEdge
+}
+
+"""All input for the create \`Bill\` mutation."""
+input CreateBillInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`Bill\` to be created by this mutation."""
+  bill: BillInput!
+}
+
+"""An input for mutations affecting \`Bill\`"""
+input BillInput {
+  rowId: UUID
+  bookId: UUID!
+  vendorId: UUID!
+  number: String!
+  status: String
+  billDate: String!
+  dueDate: String!
+  subtotal: BigFloat
+  taxAmount: BigFloat
+  total: BigFloat
+  amountPaid: BigFloat
+  currency: String
+  memo: String
+  journalEntryId: UUID
   createdAt: Datetime
   updatedAt: Datetime
 }
@@ -18961,6 +20837,78 @@ input UpdatePayrollConnectionInput {
   patch: PayrollConnectionPatch!
 }
 
+"""The output of our update \`BillLine\` mutation."""
+type UpdateBillLinePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`BillLine\` that was updated by this mutation."""
+  billLine: BillLine
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`BillLine\`. May be used by Relay 1."""
+  billLineEdge(
+    """The method to use when ordering \`BillLine\`."""
+    orderBy: [BillLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BillLineEdge
+}
+
+"""All input for the \`updateBillLineById\` mutation."""
+input UpdateBillLineByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`BillLine\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`BillLine\` being updated.
+  """
+  patch: BillLinePatch!
+}
+
+"""
+Represents an update to a \`BillLine\`. Fields that are set will be updated.
+"""
+input BillLinePatch {
+  rowId: UUID
+  billId: UUID
+  description: String
+  quantity: BigFloat
+  unitPrice: BigFloat
+  amount: BigFloat
+  expenseAccountId: UUID
+  taxJurisdictionId: UUID
+  sortOrder: Int
+}
+
+"""All input for the \`updateBillLine\` mutation."""
+input UpdateBillLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`BillLine\` being updated.
+  """
+  patch: BillLinePatch!
+}
+
 """The output of our update \`InvoiceLine\` mutation."""
 type UpdateInvoiceLinePayload {
   """
@@ -19031,6 +20979,79 @@ input UpdateInvoiceLineInput {
   An object where the defined keys will be set on the \`InvoiceLine\` being updated.
   """
   patch: InvoiceLinePatch!
+}
+
+"""The output of our update \`BillPayment\` mutation."""
+type UpdateBillPaymentPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`BillPayment\` that was updated by this mutation."""
+  billPayment: BillPayment
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`BillPayment\`. May be used by Relay 1."""
+  billPaymentEdge(
+    """The method to use when ordering \`BillPayment\`."""
+    orderBy: [BillPaymentOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BillPaymentEdge
+}
+
+"""All input for the \`updateBillPaymentById\` mutation."""
+input UpdateBillPaymentByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`BillPayment\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`BillPayment\` being updated.
+  """
+  patch: BillPaymentPatch!
+}
+
+"""
+Represents an update to a \`BillPayment\`. Fields that are set will be updated.
+"""
+input BillPaymentPatch {
+  rowId: UUID
+  bookId: UUID
+  billId: UUID
+  date: String
+  amount: BigFloat
+  paymentAccountId: UUID
+  method: String
+  reference: String
+  journalEntryId: UUID
+  createdAt: Datetime
+}
+
+"""All input for the \`updateBillPayment\` mutation."""
+input UpdateBillPaymentInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`BillPayment\` being updated.
+  """
+  patch: BillPaymentPatch!
 }
 
 """The output of our update \`InvoicePayment\` mutation."""
@@ -19851,6 +21872,83 @@ input UpdateCryptoAssetInput {
   An object where the defined keys will be set on the \`CryptoAsset\` being updated.
   """
   patch: CryptoAssetPatch!
+}
+
+"""The output of our update \`Bill\` mutation."""
+type UpdateBillPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Bill\` that was updated by this mutation."""
+  bill: Bill
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Bill\`. May be used by Relay 1."""
+  billEdge(
+    """The method to use when ordering \`Bill\`."""
+    orderBy: [BillOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BillEdge
+}
+
+"""All input for the \`updateBillById\` mutation."""
+input UpdateBillByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`Bill\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`Bill\` being updated.
+  """
+  patch: BillPatch!
+}
+
+"""Represents an update to a \`Bill\`. Fields that are set will be updated."""
+input BillPatch {
+  rowId: UUID
+  bookId: UUID
+  vendorId: UUID
+  number: String
+  status: String
+  billDate: String
+  dueDate: String
+  subtotal: BigFloat
+  taxAmount: BigFloat
+  total: BigFloat
+  amountPaid: BigFloat
+  currency: String
+  memo: String
+  journalEntryId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the \`updateBill\` mutation."""
+input UpdateBillInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`Bill\` being updated.
+  """
+  patch: BillPatch!
 }
 
 """The output of our update \`CategorizationRule\` mutation."""
@@ -20960,6 +23058,54 @@ input DeletePayrollConnectionInput {
   rowId: UUID!
 }
 
+"""The output of our delete \`BillLine\` mutation."""
+type DeleteBillLinePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`BillLine\` that was deleted by this mutation."""
+  billLine: BillLine
+  deletedBillLineId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`BillLine\`. May be used by Relay 1."""
+  billLineEdge(
+    """The method to use when ordering \`BillLine\`."""
+    orderBy: [BillLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BillLineEdge
+}
+
+"""All input for the \`deleteBillLineById\` mutation."""
+input DeleteBillLineByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`BillLine\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteBillLine\` mutation."""
+input DeleteBillLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete \`InvoiceLine\` mutation."""
 type DeleteInvoiceLinePayload {
   """
@@ -21000,6 +23146,54 @@ input DeleteInvoiceLineByIdInput {
 
 """All input for the \`deleteInvoiceLine\` mutation."""
 input DeleteInvoiceLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`BillPayment\` mutation."""
+type DeleteBillPaymentPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`BillPayment\` that was deleted by this mutation."""
+  billPayment: BillPayment
+  deletedBillPaymentId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`BillPayment\`. May be used by Relay 1."""
+  billPaymentEdge(
+    """The method to use when ordering \`BillPayment\`."""
+    orderBy: [BillPaymentOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BillPaymentEdge
+}
+
+"""All input for the \`deleteBillPaymentById\` mutation."""
+input DeleteBillPaymentByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`BillPayment\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteBillPayment\` mutation."""
+input DeleteBillPaymentInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -21536,6 +23730,54 @@ input DeleteCryptoAssetInput {
   rowId: UUID!
 }
 
+"""The output of our delete \`Bill\` mutation."""
+type DeleteBillPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Bill\` that was deleted by this mutation."""
+  bill: Bill
+  deletedBillId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Bill\`. May be used by Relay 1."""
+  billEdge(
+    """The method to use when ordering \`Bill\`."""
+    orderBy: [BillOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BillEdge
+}
+
+"""All input for the \`deleteBillById\` mutation."""
+input DeleteBillByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`Bill\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteBill\` mutation."""
+input DeleteBillInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete \`CategorizationRule\` mutation."""
 type DeleteCategorizationRulePayload {
   """
@@ -21873,6 +24115,84 @@ export const objects = {
       accounts: {
         plan() {
           return connection(resource_accountPgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineTagsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      bill(_$root, {
+        $rowId
+      }) {
+        return resource_billPgResource.get({
+          id: $rowId
+        });
+      },
+      billById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_Bill($nodeId);
+      },
+      billLine(_$root, {
+        $rowId
+      }) {
+        return resource_bill_linePgResource.get({
+          id: $rowId
+        });
+      },
+      billLineById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_BillLine($nodeId);
+      },
+      billLines: {
+        plan() {
+          return connection(resource_bill_linePgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineTagsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      billPayment(_$root, {
+        $rowId
+      }) {
+        return resource_bill_paymentPgResource.get({
+          id: $rowId
+        });
+      },
+      billPaymentById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_BillPayment($nodeId);
+      },
+      billPayments: {
+        plan() {
+          return connection(resource_bill_paymentPgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineTagsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      bills: {
+        plan() {
+          return connection(resource_billPgResource.find());
         },
         args: {
           first: applyFirstArg,
@@ -22664,6 +24984,42 @@ export const objects = {
           input: applyInputToInsert
         }
       },
+      createBill: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_billPgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
+      createBillLine: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_bill_linePgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
+      createBillPayment: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_bill_paymentPgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
       createBook: {
         plan(_, args) {
           const $insert = pgInsertSingle(resource_bookPgResource);
@@ -23081,6 +25437,84 @@ export const objects = {
       deleteAccountMappingById: {
         plan(_$root, args) {
           const $delete = pgDeleteSingle(resource_account_mappingPgResource, specFromArgs_AccountMapping(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteBill: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_billPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteBillById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_billPgResource, specFromArgs_Bill(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteBillLine: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_bill_linePgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteBillLineById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_bill_linePgResource, specFromArgs_BillLine(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteBillPayment: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_bill_paymentPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteBillPaymentById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_bill_paymentPgResource, specFromArgs_BillPayment(args));
           args.apply($delete);
           return object({
             result: $delete
@@ -23913,6 +26347,84 @@ export const objects = {
       updateAccountMappingById: {
         plan(_$root, args) {
           const $update = pgUpdateSingle(resource_account_mappingPgResource, specFromArgs_AccountMapping(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateBill: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_billPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateBillById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_billPgResource, specFromArgs_Bill(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateBillLine: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_bill_linePgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateBillLineById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_bill_linePgResource, specFromArgs_BillLine(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateBillPayment: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_bill_paymentPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateBillPaymentById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_bill_paymentPgResource, specFromArgs_BillPayment(args));
           args.apply($update);
           return object({
             result: $update
@@ -24877,6 +27389,148 @@ export const objects = {
       totalCount: totalCountConnectionPlan
     }
   },
+  Bill: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      amountPaid: Bill_amountPaidPlan,
+      billDate($record) {
+        return $record.get("bill_date");
+      },
+      billLines: {
+        plan($record) {
+          const $records = resource_bill_linePgResource.find({
+            bill_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineTagsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      billPayments: {
+        plan($record) {
+          const $records = resource_bill_paymentPgResource.find({
+            bill_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineTagsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      book: Account_bookPlan,
+      bookId: Account_bookIdPlan,
+      createdAt: Account_createdAtPlan,
+      dueDate: Bill_dueDatePlan,
+      id($parent) {
+        const specifier = nodeIdHandler_Bill.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_Bill.codec.name].encode);
+      },
+      journalEntry: JournalLine_journalEntryPlan,
+      journalEntryId: JournalLine_journalEntryIdPlan,
+      rowId: JournalLineTag_rowIdPlan,
+      taxAmount: Bill_taxAmountPlan,
+      updatedAt: Account_updatedAtPlan,
+      vendor: JournalEntry_vendorPlan,
+      vendorId: JournalEntry_vendorIdPlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of billUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_billPgResource.get(spec);
+    }
+  },
+  BillConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
+  BillLine: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      bill: BillLine_billPlan,
+      billId: BillLine_billIdPlan,
+      expenseAccount($record) {
+        return resource_accountPgResource.get({
+          id: $record.get("expense_account_id")
+        });
+      },
+      expenseAccountId($record) {
+        return $record.get("expense_account_id");
+      },
+      id($parent) {
+        const specifier = nodeIdHandler_BillLine.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_BillLine.codec.name].encode);
+      },
+      rowId: JournalLineTag_rowIdPlan,
+      sortOrder: BillLine_sortOrderPlan,
+      taxJurisdiction: BillLine_taxJurisdictionPlan,
+      taxJurisdictionId: BillLine_taxJurisdictionIdPlan,
+      unitPrice: BillLine_unitPricePlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of bill_lineUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_bill_linePgResource.get(spec);
+    }
+  },
+  BillLineConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
+  BillPayment: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      bill: BillLine_billPlan,
+      billId: BillLine_billIdPlan,
+      book: Account_bookPlan,
+      bookId: Account_bookIdPlan,
+      createdAt: Account_createdAtPlan,
+      id($parent) {
+        const specifier = nodeIdHandler_BillPayment.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_BillPayment.codec.name].encode);
+      },
+      journalEntry: JournalLine_journalEntryPlan,
+      journalEntryId: JournalLine_journalEntryIdPlan,
+      paymentAccount($record) {
+        return resource_accountPgResource.get({
+          id: $record.get("payment_account_id")
+        });
+      },
+      paymentAccountId($record) {
+        return $record.get("payment_account_id");
+      },
+      rowId: JournalLineTag_rowIdPlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of bill_paymentUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_bill_paymentPgResource.get(spec);
+    }
+  },
+  BillPaymentConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
   Book: {
     assertStep: assertPgClassSingleStep,
     plans: {
@@ -24919,6 +27573,42 @@ export const objects = {
       accounts: {
         plan($record) {
           const $records = resource_accountPgResource.find({
+            book_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineTagsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      billPayments: {
+        plan($record) {
+          const $records = resource_bill_paymentPgResource.find({
+            book_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineTagsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      bills: {
+        plan($record) {
+          const $records = resource_billPgResource.find({
             book_id: $record.get("id")
           });
           return connection($records);
@@ -25511,6 +28201,33 @@ export const objects = {
       query: queryPlan
     }
   },
+  CreateBillLinePayload: {
+    assertStep: assertStep,
+    plans: {
+      billLine: planCreatePayloadResult,
+      billLineEdge: CreateBillLinePayload_billLineEdgePlan,
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan
+    }
+  },
+  CreateBillPayload: {
+    assertStep: assertStep,
+    plans: {
+      bill: planCreatePayloadResult,
+      billEdge: CreateBillPayload_billEdgePlan,
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan
+    }
+  },
+  CreateBillPaymentPayload: {
+    assertStep: assertStep,
+    plans: {
+      billPayment: planCreatePayloadResult,
+      billPaymentEdge: CreateBillPaymentPayload_billPaymentEdgePlan,
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan
+    }
+  },
   CreateBookAccessPayload: {
     assertStep: assertStep,
     plans: {
@@ -25949,6 +28666,48 @@ export const objects = {
       deletedAccountId($object) {
         const $record = $object.getStepForKey("result"),
           specifier = nodeIdHandler_Account.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      query: queryPlan
+    }
+  },
+  DeleteBillLinePayload: {
+    assertStep: ObjectStep,
+    plans: {
+      billLine: planCreatePayloadResult,
+      billLineEdge: CreateBillLinePayload_billLineEdgePlan,
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedBillLineId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_BillLine.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      query: queryPlan
+    }
+  },
+  DeleteBillPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      bill: planCreatePayloadResult,
+      billEdge: CreateBillPayload_billEdgePlan,
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedBillId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_Bill.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      query: queryPlan
+    }
+  },
+  DeleteBillPaymentPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      billPayment: planCreatePayloadResult,
+      billPaymentEdge: CreateBillPaymentPayload_billPaymentEdgePlan,
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedBillPaymentId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_BillPayment.plan($record);
         return lambda(specifier, base64JSONNodeIdCodec.encode);
       },
       query: queryPlan
@@ -26464,9 +29223,7 @@ export const objects = {
   Invoice: {
     assertStep: assertPgClassSingleStep,
     plans: {
-      amountPaid($record) {
-        return $record.get("amount_paid");
-      },
+      amountPaid: Bill_amountPaidPlan,
       book: Account_bookPlan,
       bookId: Account_bookIdPlan,
       createdAt: Account_createdAtPlan,
@@ -26478,9 +29235,7 @@ export const objects = {
       customerId($record) {
         return $record.get("customer_id");
       },
-      dueDate($record) {
-        return $record.get("due_date");
-      },
+      dueDate: Bill_dueDatePlan,
       id($parent) {
         const specifier = nodeIdHandler_Invoice.plan($parent);
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_Invoice.codec.name].encode);
@@ -26527,9 +29282,7 @@ export const objects = {
       journalEntry: JournalLine_journalEntryPlan,
       journalEntryId: JournalLine_journalEntryIdPlan,
       rowId: JournalLineTag_rowIdPlan,
-      taxAmount($record) {
-        return $record.get("tax_amount");
-      },
+      taxAmount: Bill_taxAmountPlan,
       updatedAt: Account_updatedAtPlan
     },
     planType($specifier) {
@@ -26562,20 +29315,10 @@ export const objects = {
       invoice: InvoiceLine_invoicePlan,
       invoiceId: InvoiceLine_invoiceIdPlan,
       rowId: JournalLineTag_rowIdPlan,
-      sortOrder($record) {
-        return $record.get("sort_order");
-      },
-      taxJurisdiction($record) {
-        return resource_tax_jurisdictionPgResource.get({
-          id: $record.get("tax_jurisdiction_id")
-        });
-      },
-      taxJurisdictionId($record) {
-        return $record.get("tax_jurisdiction_id");
-      },
-      unitPrice($record) {
-        return $record.get("unit_price");
-      }
+      sortOrder: BillLine_sortOrderPlan,
+      taxJurisdiction: BillLine_taxJurisdictionPlan,
+      taxJurisdictionId: BillLine_taxJurisdictionIdPlan,
+      unitPrice: BillLine_unitPricePlan
     },
     planType($specifier) {
       const spec = Object.create(null);
@@ -26664,14 +29407,8 @@ export const objects = {
         return $record.get("source_reference_id");
       },
       updatedAt: Account_updatedAtPlan,
-      vendor($record) {
-        return resource_vendorPgResource.get({
-          id: $record.get("vendor_id")
-        });
-      },
-      vendorId($record) {
-        return $record.get("vendor_id");
-      }
+      vendor: JournalEntry_vendorPlan,
+      vendorId: JournalEntry_vendorIdPlan
     },
     planType($specifier) {
       const spec = Object.create(null);
@@ -27190,6 +29927,33 @@ export const objects = {
       query: queryPlan
     }
   },
+  UpdateBillLinePayload: {
+    assertStep: ObjectStep,
+    plans: {
+      billLine: planCreatePayloadResult,
+      billLineEdge: CreateBillLinePayload_billLineEdgePlan,
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan
+    }
+  },
+  UpdateBillPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      bill: planCreatePayloadResult,
+      billEdge: CreateBillPayload_billEdgePlan,
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan
+    }
+  },
+  UpdateBillPaymentPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      billPayment: planCreatePayloadResult,
+      billPaymentEdge: CreateBillPaymentPayload_billPaymentEdgePlan,
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan
+    }
+  },
   UpdateBookAccessPayload: {
     assertStep: ObjectStep,
     plans: {
@@ -27499,6 +30263,24 @@ export const objects = {
   Vendor: {
     assertStep: assertPgClassSingleStep,
     plans: {
+      bills: {
+        plan($record) {
+          const $records = resource_billPgResource.find({
+            vendor_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineTagsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       book: Account_bookPlan,
       bookId: Account_bookIdPlan,
       businessName: Vendor_businessNamePlan,
@@ -27722,7 +30504,7 @@ export const inputObjects = {
         return applyAttributeCondition("month", TYPES.int, $condition, val);
       },
       rowId: AccountCondition_rowIdApply,
-      status: ReconciliationQueueCondition_statusApply,
+      status: BillCondition_statusApply,
       year($condition, val) {
         return applyAttributeCondition("year", TYPES.int, $condition, val);
       }
@@ -27916,6 +30698,282 @@ export const inputObjects = {
       notIn: pgAggregatesApply_notIn
     }
   },
+  BillCondition: {
+    plans: {
+      bookId: AccountCondition_bookIdApply,
+      number: BillCondition_numberApply,
+      rowId: AccountCondition_rowIdApply,
+      status: BillCondition_statusApply,
+      vendorId($condition, val) {
+        return applyAttributeCondition("vendor_id", TYPES.uuid, $condition, val);
+      }
+    }
+  },
+  BillFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      billLines($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: billLineIdentifier,
+          alias: resource_bill_linePgResource.name,
+          localAttributes: registryConfig.pgRelations.bill.billLinesByTheirBillId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.bill.billLinesByTheirBillId.remoteAttributes
+        };
+        return $rel;
+      },
+      billLinesExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: billLineIdentifier,
+          alias: resource_bill_linePgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.bill.billLinesByTheirBillId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.bill.billLinesByTheirBillId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
+      billPayments($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: billPaymentIdentifier,
+          alias: resource_bill_paymentPgResource.name,
+          localAttributes: registryConfig.pgRelations.bill.billPaymentsByTheirBillId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.bill.billPaymentsByTheirBillId.remoteAttributes
+        };
+        return $rel;
+      },
+      billPaymentsExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: billPaymentIdentifier,
+          alias: resource_bill_paymentPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.bill.billPaymentsByTheirBillId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.bill.billPaymentsByTheirBillId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
+      book($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_bookPgResource, bookIdentifier, registryConfig.pgRelations.bill.bookByMyBookId.localAttributes, registryConfig.pgRelations.bill.bookByMyBookId.remoteAttributes, $where, value);
+      },
+      bookId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("bookId", "book_id", spec_bill.attributes.book_id, queryBuilder, value);
+      },
+      journalEntry($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_journal_entryPgResource, journalEntryIdentifier, registryConfig.pgRelations.bill.journalEntryByMyJournalEntryId.localAttributes, registryConfig.pgRelations.bill.journalEntryByMyJournalEntryId.remoteAttributes, $where, value);
+      },
+      journalEntryExists($where, value) {
+        return pgConnectionFilterApplyForwardRelationExists(resource_journal_entryPgResource, journalEntryIdentifier, registryConfig.pgRelations.bill.journalEntryByMyJournalEntryId.localAttributes, registryConfig.pgRelations.bill.journalEntryByMyJournalEntryId.remoteAttributes, $where, value);
+      },
+      not: AccountFilter_notApply,
+      number(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("number", "number", spec_bill.attributes.number, queryBuilder, value);
+      },
+      or: AccountFilter_orApply,
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_bill.attributes.id, queryBuilder, value);
+      },
+      status(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("status", "status", spec_bill.attributes.status, queryBuilder, value);
+      },
+      vendor($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_vendorPgResource, vendorIdentifier, registryConfig.pgRelations.bill.vendorByMyVendorId.localAttributes, registryConfig.pgRelations.bill.vendorByMyVendorId.remoteAttributes, $where, value);
+      },
+      vendorId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("vendorId", "vendor_id", spec_bill.attributes.vendor_id, queryBuilder, value);
+      }
+    }
+  },
+  BillInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      amountPaid: BillInput_amountPaidApply,
+      billDate: BillInput_billDateApply,
+      bookId: TagGroupInput_bookIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      currency: BookInput_currencyApply,
+      dueDate: BillInput_dueDateApply,
+      journalEntryId: JournalLineInput_journalEntryIdApply,
+      memo: JournalLineInput_memoApply,
+      number: BillInput_numberApply,
+      rowId: JournalLineTagInput_rowIdApply,
+      status: AccountingPeriodInput_statusApply,
+      subtotal: BillInput_subtotalApply,
+      taxAmount: BillInput_taxAmountApply,
+      total: BillInput_totalApply,
+      updatedAt: AccountMappingInput_updatedAtApply,
+      vendorId: JournalEntryInput_vendorIdApply
+    }
+  },
+  BillLineCondition: {
+    plans: {
+      billId: BillLineCondition_billIdApply,
+      rowId: AccountCondition_rowIdApply
+    }
+  },
+  BillLineFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      bill($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_billPgResource, billIdentifier, registryConfig.pgRelations.billLine.billByMyBillId.localAttributes, registryConfig.pgRelations.billLine.billByMyBillId.remoteAttributes, $where, value);
+      },
+      billId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("billId", "bill_id", spec_billLine.attributes.bill_id, queryBuilder, value);
+      },
+      expenseAccount($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_accountPgResource, accountIdentifier, registryConfig.pgRelations.billLine.accountByMyExpenseAccountId.localAttributes, registryConfig.pgRelations.billLine.accountByMyExpenseAccountId.remoteAttributes, $where, value);
+      },
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_billLine.attributes.id, queryBuilder, value);
+      },
+      taxJurisdiction($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_tax_jurisdictionPgResource, taxJurisdictionIdentifier, registryConfig.pgRelations.billLine.taxJurisdictionByMyTaxJurisdictionId.localAttributes, registryConfig.pgRelations.billLine.taxJurisdictionByMyTaxJurisdictionId.remoteAttributes, $where, value);
+      },
+      taxJurisdictionExists($where, value) {
+        return pgConnectionFilterApplyForwardRelationExists(resource_tax_jurisdictionPgResource, taxJurisdictionIdentifier, registryConfig.pgRelations.billLine.taxJurisdictionByMyTaxJurisdictionId.localAttributes, registryConfig.pgRelations.billLine.taxJurisdictionByMyTaxJurisdictionId.remoteAttributes, $where, value);
+      }
+    }
+  },
+  BillLineInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      amount: BillLineInput_amountApply,
+      billId: BillLineInput_billIdApply,
+      description: BillLineInput_descriptionApply,
+      expenseAccountId: BillLineInput_expenseAccountIdApply,
+      quantity: BillLineInput_quantityApply,
+      rowId: JournalLineTagInput_rowIdApply,
+      sortOrder: BillLineInput_sortOrderApply,
+      taxJurisdictionId: BillLineInput_taxJurisdictionIdApply,
+      unitPrice: BillLineInput_unitPriceApply
+    }
+  },
+  BillLinePatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      amount: BillLineInput_amountApply,
+      billId: BillLineInput_billIdApply,
+      description: BillLineInput_descriptionApply,
+      expenseAccountId: BillLineInput_expenseAccountIdApply,
+      quantity: BillLineInput_quantityApply,
+      rowId: JournalLineTagInput_rowIdApply,
+      sortOrder: BillLineInput_sortOrderApply,
+      taxJurisdictionId: BillLineInput_taxJurisdictionIdApply,
+      unitPrice: BillLineInput_unitPriceApply
+    }
+  },
+  BillPatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      amountPaid: BillInput_amountPaidApply,
+      billDate: BillInput_billDateApply,
+      bookId: TagGroupInput_bookIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      currency: BookInput_currencyApply,
+      dueDate: BillInput_dueDateApply,
+      journalEntryId: JournalLineInput_journalEntryIdApply,
+      memo: JournalLineInput_memoApply,
+      number: BillInput_numberApply,
+      rowId: JournalLineTagInput_rowIdApply,
+      status: AccountingPeriodInput_statusApply,
+      subtotal: BillInput_subtotalApply,
+      taxAmount: BillInput_taxAmountApply,
+      total: BillInput_totalApply,
+      updatedAt: AccountMappingInput_updatedAtApply,
+      vendorId: JournalEntryInput_vendorIdApply
+    }
+  },
+  BillPaymentCondition: {
+    plans: {
+      billId: BillLineCondition_billIdApply,
+      bookId: AccountCondition_bookIdApply,
+      rowId: AccountCondition_rowIdApply
+    }
+  },
+  BillPaymentFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      bill($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_billPgResource, billIdentifier, registryConfig.pgRelations.billPayment.billByMyBillId.localAttributes, registryConfig.pgRelations.billPayment.billByMyBillId.remoteAttributes, $where, value);
+      },
+      billId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("billId", "bill_id", spec_billPayment.attributes.bill_id, queryBuilder, value);
+      },
+      book($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_bookPgResource, bookIdentifier, registryConfig.pgRelations.billPayment.bookByMyBookId.localAttributes, registryConfig.pgRelations.billPayment.bookByMyBookId.remoteAttributes, $where, value);
+      },
+      bookId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("bookId", "book_id", spec_billPayment.attributes.book_id, queryBuilder, value);
+      },
+      journalEntry($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_journal_entryPgResource, journalEntryIdentifier, registryConfig.pgRelations.billPayment.journalEntryByMyJournalEntryId.localAttributes, registryConfig.pgRelations.billPayment.journalEntryByMyJournalEntryId.remoteAttributes, $where, value);
+      },
+      journalEntryExists($where, value) {
+        return pgConnectionFilterApplyForwardRelationExists(resource_journal_entryPgResource, journalEntryIdentifier, registryConfig.pgRelations.billPayment.journalEntryByMyJournalEntryId.localAttributes, registryConfig.pgRelations.billPayment.journalEntryByMyJournalEntryId.remoteAttributes, $where, value);
+      },
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      paymentAccount($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_accountPgResource, accountIdentifier, registryConfig.pgRelations.billPayment.accountByMyPaymentAccountId.localAttributes, registryConfig.pgRelations.billPayment.accountByMyPaymentAccountId.remoteAttributes, $where, value);
+      },
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_billPayment.attributes.id, queryBuilder, value);
+      }
+    }
+  },
+  BillPaymentInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      amount: BillLineInput_amountApply,
+      billId: BillLineInput_billIdApply,
+      bookId: TagGroupInput_bookIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      date: NetWorthSnapshotInput_dateApply,
+      journalEntryId: JournalLineInput_journalEntryIdApply,
+      method: BillPaymentInput_methodApply,
+      paymentAccountId: BillPaymentInput_paymentAccountIdApply,
+      reference: BillPaymentInput_referenceApply,
+      rowId: JournalLineTagInput_rowIdApply
+    }
+  },
+  BillPaymentPatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      amount: BillLineInput_amountApply,
+      billId: BillLineInput_billIdApply,
+      bookId: TagGroupInput_bookIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      date: NetWorthSnapshotInput_dateApply,
+      journalEntryId: JournalLineInput_journalEntryIdApply,
+      method: BillPaymentInput_methodApply,
+      paymentAccountId: BillPaymentInput_paymentAccountIdApply,
+      reference: BillPaymentInput_referenceApply,
+      rowId: JournalLineTagInput_rowIdApply
+    }
+  },
+  BillToManyBillLineFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
+  BillToManyBillPaymentFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
   BookAccessCondition: {
     plans: {
       bookId: AccountCondition_bookIdApply,
@@ -28051,6 +31109,54 @@ export const inputObjects = {
         });
       },
       and: AccountFilter_andApply,
+      billPayments($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: billPaymentIdentifier,
+          alias: resource_bill_paymentPgResource.name,
+          localAttributes: registryConfig.pgRelations.book.billPaymentsByTheirBookId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.book.billPaymentsByTheirBookId.remoteAttributes
+        };
+        return $rel;
+      },
+      billPaymentsExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: billPaymentIdentifier,
+          alias: resource_bill_paymentPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.book.billPaymentsByTheirBookId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.book.billPaymentsByTheirBookId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
+      bills($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: billIdentifier,
+          alias: resource_billPgResource.name,
+          localAttributes: registryConfig.pgRelations.book.billsByTheirBookId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.book.billsByTheirBookId.remoteAttributes
+        };
+        return $rel;
+      },
+      billsExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: billIdentifier,
+          alias: resource_billPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.book.billsByTheirBookId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.book.billsByTheirBookId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
       bookAccesses($where, value) {
         assertAllowed(value, "object");
         const $rel = $where.andPlan();
@@ -28612,6 +31718,20 @@ export const inputObjects = {
       some: AccountToManyAccountFilter_someApply
     }
   },
+  BookToManyBillFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
+  BookToManyBillPaymentFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
   BookToManyBookAccessFilter: {
     plans: {
       every: AccountToManyAccountFilter_everyApply,
@@ -28792,7 +31912,7 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       accountId: JournalLineInput_accountIdApply,
-      amount: InvoiceLineInput_amountApply,
+      amount: BillLineInput_amountApply,
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
       period: BudgetInput_periodApply,
@@ -28805,7 +31925,7 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       accountId: JournalLineInput_accountIdApply,
-      amount: InvoiceLineInput_amountApply,
+      amount: BillLineInput_amountApply,
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
       period: BudgetInput_periodApply,
@@ -28979,6 +32099,24 @@ export const inputObjects = {
   CreateAccountMappingInput: {
     plans: {
       accountMapping: applyCreateFields,
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  CreateBillInput: {
+    plans: {
+      bill: applyCreateFields,
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  CreateBillLineInput: {
+    plans: {
+      billLine: applyCreateFields,
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  CreateBillPaymentInput: {
+    plans: {
+      billPayment: applyCreateFields,
       clientMutationId: applyClientMutationIdForCreate
     }
   },
@@ -29287,7 +32425,7 @@ export const inputObjects = {
       disposedAt: CryptoLotInput_disposedAtApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       proceedsPerUnit: CryptoLotInput_proceedsPerUnitApply,
-      quantity: InvoiceLineInput_quantityApply,
+      quantity: BillLineInput_quantityApply,
       remainingQuantity: CryptoLotInput_remainingQuantityApply,
       rowId: JournalLineTagInput_rowIdApply
     }
@@ -29302,7 +32440,7 @@ export const inputObjects = {
       disposedAt: CryptoLotInput_disposedAtApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       proceedsPerUnit: CryptoLotInput_proceedsPerUnitApply,
-      quantity: InvoiceLineInput_quantityApply,
+      quantity: BillLineInput_quantityApply,
       remainingQuantity: CryptoLotInput_remainingQuantityApply,
       rowId: JournalLineTagInput_rowIdApply
     }
@@ -29439,6 +32577,36 @@ export const inputObjects = {
     }
   },
   DeleteAccountMappingInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteBillByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteBillInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteBillLineByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteBillLineInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteBillPaymentByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteBillPaymentInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate
     }
@@ -29781,7 +32949,7 @@ export const inputObjects = {
       createdAt: TagGroupInput_createdAtApply,
       depreciationExpenseAccountId: FixedAssetInput_depreciationExpenseAccountIdApply,
       depreciationMethod: FixedAssetInput_depreciationMethodApply,
-      description: InvoiceLineInput_descriptionApply,
+      description: BillLineInput_descriptionApply,
       disposalProceeds: FixedAssetInput_disposalProceedsApply,
       disposedAt: CryptoLotInput_disposedAtApply,
       macrsClass: FixedAssetInput_macrsClassApply,
@@ -29802,7 +32970,7 @@ export const inputObjects = {
       createdAt: TagGroupInput_createdAtApply,
       depreciationExpenseAccountId: FixedAssetInput_depreciationExpenseAccountIdApply,
       depreciationMethod: FixedAssetInput_depreciationMethodApply,
-      description: InvoiceLineInput_descriptionApply,
+      description: BillLineInput_descriptionApply,
       disposalProceeds: FixedAssetInput_disposalProceedsApply,
       disposedAt: CryptoLotInput_disposedAtApply,
       macrsClass: FixedAssetInput_macrsClassApply,
@@ -29875,11 +33043,9 @@ export const inputObjects = {
       customerId($condition, val) {
         return applyAttributeCondition("customer_id", TYPES.uuid, $condition, val);
       },
-      number($condition, val) {
-        return applyAttributeCondition("number", TYPES.text, $condition, val);
-      },
+      number: BillCondition_numberApply,
       rowId: AccountCondition_rowIdApply,
-      status: ReconciliationQueueCondition_statusApply
+      status: BillCondition_statusApply
     }
   },
   InvoiceFilter: {
@@ -29967,22 +33133,22 @@ export const inputObjects = {
   InvoiceInput: {
     baked: createObjectAndApplyChildren,
     plans: {
-      amountPaid: InvoiceInput_amountPaidApply,
+      amountPaid: BillInput_amountPaidApply,
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
       currency: BookInput_currencyApply,
       customerId: InvoiceInput_customerIdApply,
-      dueDate: InvoiceInput_dueDateApply,
+      dueDate: BillInput_dueDateApply,
       issueDate: InvoiceInput_issueDateApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       memo: JournalLineInput_memoApply,
-      number: InvoiceInput_numberApply,
+      number: BillInput_numberApply,
       rowId: JournalLineTagInput_rowIdApply,
       status: AccountingPeriodInput_statusApply,
-      subtotal: InvoiceInput_subtotalApply,
-      taxAmount: InvoiceInput_taxAmountApply,
+      subtotal: BillInput_subtotalApply,
+      taxAmount: BillInput_taxAmountApply,
       terms: InvoiceInput_termsApply,
-      total: InvoiceInput_totalApply,
+      total: BillInput_totalApply,
       updatedAt: AccountMappingInput_updatedAtApply
     }
   },
@@ -30020,50 +33186,50 @@ export const inputObjects = {
   InvoiceLineInput: {
     baked: createObjectAndApplyChildren,
     plans: {
-      amount: InvoiceLineInput_amountApply,
-      description: InvoiceLineInput_descriptionApply,
+      amount: BillLineInput_amountApply,
+      description: BillLineInput_descriptionApply,
       incomeAccountId: InvoiceLineInput_incomeAccountIdApply,
       invoiceId: InvoiceLineInput_invoiceIdApply,
-      quantity: InvoiceLineInput_quantityApply,
+      quantity: BillLineInput_quantityApply,
       rowId: JournalLineTagInput_rowIdApply,
-      sortOrder: InvoiceLineInput_sortOrderApply,
-      taxJurisdictionId: InvoiceLineInput_taxJurisdictionIdApply,
-      unitPrice: InvoiceLineInput_unitPriceApply
+      sortOrder: BillLineInput_sortOrderApply,
+      taxJurisdictionId: BillLineInput_taxJurisdictionIdApply,
+      unitPrice: BillLineInput_unitPriceApply
     }
   },
   InvoiceLinePatch: {
     baked: createObjectAndApplyChildren,
     plans: {
-      amount: InvoiceLineInput_amountApply,
-      description: InvoiceLineInput_descriptionApply,
+      amount: BillLineInput_amountApply,
+      description: BillLineInput_descriptionApply,
       incomeAccountId: InvoiceLineInput_incomeAccountIdApply,
       invoiceId: InvoiceLineInput_invoiceIdApply,
-      quantity: InvoiceLineInput_quantityApply,
+      quantity: BillLineInput_quantityApply,
       rowId: JournalLineTagInput_rowIdApply,
-      sortOrder: InvoiceLineInput_sortOrderApply,
-      taxJurisdictionId: InvoiceLineInput_taxJurisdictionIdApply,
-      unitPrice: InvoiceLineInput_unitPriceApply
+      sortOrder: BillLineInput_sortOrderApply,
+      taxJurisdictionId: BillLineInput_taxJurisdictionIdApply,
+      unitPrice: BillLineInput_unitPriceApply
     }
   },
   InvoicePatch: {
     baked: createObjectAndApplyChildren,
     plans: {
-      amountPaid: InvoiceInput_amountPaidApply,
+      amountPaid: BillInput_amountPaidApply,
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
       currency: BookInput_currencyApply,
       customerId: InvoiceInput_customerIdApply,
-      dueDate: InvoiceInput_dueDateApply,
+      dueDate: BillInput_dueDateApply,
       issueDate: InvoiceInput_issueDateApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       memo: JournalLineInput_memoApply,
-      number: InvoiceInput_numberApply,
+      number: BillInput_numberApply,
       rowId: JournalLineTagInput_rowIdApply,
       status: AccountingPeriodInput_statusApply,
-      subtotal: InvoiceInput_subtotalApply,
-      taxAmount: InvoiceInput_taxAmountApply,
+      subtotal: BillInput_subtotalApply,
+      taxAmount: BillInput_taxAmountApply,
       terms: InvoiceInput_termsApply,
-      total: InvoiceInput_totalApply,
+      total: BillInput_totalApply,
       updatedAt: AccountMappingInput_updatedAtApply
     }
   },
@@ -30108,30 +33274,30 @@ export const inputObjects = {
   InvoicePaymentInput: {
     baked: createObjectAndApplyChildren,
     plans: {
-      amount: InvoiceLineInput_amountApply,
+      amount: BillLineInput_amountApply,
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
       date: NetWorthSnapshotInput_dateApply,
       depositAccountId: InvoicePaymentInput_depositAccountIdApply,
       invoiceId: InvoiceLineInput_invoiceIdApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
-      method: InvoicePaymentInput_methodApply,
-      reference: InvoicePaymentInput_referenceApply,
+      method: BillPaymentInput_methodApply,
+      reference: BillPaymentInput_referenceApply,
       rowId: JournalLineTagInput_rowIdApply
     }
   },
   InvoicePaymentPatch: {
     baked: createObjectAndApplyChildren,
     plans: {
-      amount: InvoiceLineInput_amountApply,
+      amount: BillLineInput_amountApply,
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
       date: NetWorthSnapshotInput_dateApply,
       depositAccountId: InvoicePaymentInput_depositAccountIdApply,
       invoiceId: InvoiceLineInput_invoiceIdApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
-      method: InvoicePaymentInput_methodApply,
-      reference: InvoicePaymentInput_referenceApply,
+      method: BillPaymentInput_methodApply,
+      reference: BillPaymentInput_referenceApply,
       rowId: JournalLineTagInput_rowIdApply
     }
   },
@@ -30434,7 +33600,7 @@ export const inputObjects = {
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
       date: NetWorthSnapshotInput_dateApply,
-      description: InvoiceLineInput_descriptionApply,
+      description: BillLineInput_descriptionApply,
       destination: MileageLogInput_destinationApply,
       distance: MileageLogInput_distanceApply,
       isRoundTrip: MileageLogInput_isRoundTripApply,
@@ -30452,7 +33618,7 @@ export const inputObjects = {
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
       date: NetWorthSnapshotInput_dateApply,
-      description: InvoiceLineInput_descriptionApply,
+      description: BillLineInput_descriptionApply,
       destination: MileageLogInput_destinationApply,
       distance: MileageLogInput_distanceApply,
       isRoundTrip: MileageLogInput_isRoundTripApply,
@@ -30520,7 +33686,7 @@ export const inputObjects = {
     plans: {
       bookId: AccountCondition_bookIdApply,
       rowId: AccountCondition_rowIdApply,
-      status: ReconciliationQueueCondition_statusApply
+      status: BillCondition_statusApply
     }
   },
   PayrollConnectionFilter: {
@@ -30576,7 +33742,7 @@ export const inputObjects = {
     plans: {
       bookId: AccountCondition_bookIdApply,
       rowId: AccountCondition_rowIdApply,
-      status: ReconciliationQueueCondition_statusApply
+      status: BillCondition_statusApply
     }
   },
   ReconciliationQueueFilter: {
@@ -30745,7 +33911,7 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       accountId: JournalLineInput_accountIdApply,
-      amount: InvoiceLineInput_amountApply,
+      amount: BillLineInput_amountApply,
       bookId: TagGroupInput_bookIdApply,
       counterAccountId: RecurringTransactionInput_counterAccountIdApply,
       createdAt: TagGroupInput_createdAtApply,
@@ -30762,7 +33928,7 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       accountId: JournalLineInput_accountIdApply,
-      amount: InvoiceLineInput_amountApply,
+      amount: BillLineInput_amountApply,
       bookId: TagGroupInput_bookIdApply,
       counterAccountId: RecurringTransactionInput_counterAccountIdApply,
       createdAt: TagGroupInput_createdAtApply,
@@ -31149,6 +34315,42 @@ export const inputObjects = {
     }
   },
   UpdateAccountMappingInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateBillByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateBillInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateBillLineByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateBillLineInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateBillPaymentByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateBillPaymentInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
       patch: applyCreateFields
@@ -31605,6 +34807,30 @@ export const inputObjects = {
   VendorFilter: {
     plans: {
       and: AccountFilter_andApply,
+      bills($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: billIdentifier,
+          alias: resource_billPgResource.name,
+          localAttributes: registryConfig.pgRelations.vendor.billsByTheirVendorId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.vendor.billsByTheirVendorId.remoteAttributes
+        };
+        return $rel;
+      },
+      billsExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: billIdentifier,
+          alias: resource_billPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.vendor.billsByTheirVendorId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.vendor.billsByTheirVendorId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
       book($where, value) {
         return pgConnectionFilterApplySingleRelation(resource_bookPgResource, bookIdentifier, registryConfig.pgRelations.vendor.bookByMyBookId.localAttributes, registryConfig.pgRelations.vendor.bookByMyBookId.remoteAttributes, $where, value);
       },
@@ -31654,6 +34880,13 @@ export const inputObjects = {
       taxIdType: VendorInput_taxIdTypeApply,
       threshold: VendorInput_thresholdApply,
       zip: CustomerInput_zipApply
+    }
+  },
+  VendorToManyBillFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
     }
   }
 };
@@ -31798,8 +35031,8 @@ export const enums = {
       },
       ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
       ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply,
-      STATUS_ASC: ReconciliationQueueOrderBy_STATUS_ASCApply,
-      STATUS_DESC: ReconciliationQueueOrderBy_STATUS_DESCApply,
+      STATUS_ASC: BillOrderBy_STATUS_ASCApply,
+      STATUS_DESC: BillOrderBy_STATUS_DESCApply,
       YEAR_ASC(queryBuilder) {
         queryBuilder.orderBy({
           attribute: "year",
@@ -31879,6 +35112,102 @@ export const enums = {
       },
       PRIMARY_KEY_DESC(queryBuilder) {
         accountUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply
+    }
+  },
+  BillLineOrderBy: {
+    values: {
+      BILL_ID_ASC: BillLineOrderBy_BILL_ID_ASCApply,
+      BILL_ID_DESC: BillLineOrderBy_BILL_ID_DESCApply,
+      PRIMARY_KEY_ASC(queryBuilder) {
+        bill_lineUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        bill_lineUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply
+    }
+  },
+  BillOrderBy: {
+    values: {
+      BOOK_ID_ASC: AccountOrderBy_BOOK_ID_ASCApply,
+      BOOK_ID_DESC: AccountOrderBy_BOOK_ID_DESCApply,
+      NUMBER_ASC: BillOrderBy_NUMBER_ASCApply,
+      NUMBER_DESC: BillOrderBy_NUMBER_DESCApply,
+      PRIMARY_KEY_ASC(queryBuilder) {
+        billUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        billUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply,
+      STATUS_ASC: BillOrderBy_STATUS_ASCApply,
+      STATUS_DESC: BillOrderBy_STATUS_DESCApply,
+      VENDOR_ID_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "vendor_id",
+          direction: "ASC"
+        });
+      },
+      VENDOR_ID_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "vendor_id",
+          direction: "DESC"
+        });
+      }
+    }
+  },
+  BillPaymentOrderBy: {
+    values: {
+      BILL_ID_ASC: BillLineOrderBy_BILL_ID_ASCApply,
+      BILL_ID_DESC: BillLineOrderBy_BILL_ID_DESCApply,
+      BOOK_ID_ASC: AccountOrderBy_BOOK_ID_ASCApply,
+      BOOK_ID_DESC: AccountOrderBy_BOOK_ID_DESCApply,
+      PRIMARY_KEY_ASC(queryBuilder) {
+        bill_paymentUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        bill_paymentUniques[0].attributes.forEach(attributeName => {
           queryBuilder.orderBy({
             attribute: attributeName,
             direction: "DESC"
@@ -32272,18 +35601,8 @@ export const enums = {
           direction: "DESC"
         });
       },
-      NUMBER_ASC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "number",
-          direction: "ASC"
-        });
-      },
-      NUMBER_DESC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "number",
-          direction: "DESC"
-        });
-      },
+      NUMBER_ASC: BillOrderBy_NUMBER_ASCApply,
+      NUMBER_DESC: BillOrderBy_NUMBER_DESCApply,
       PRIMARY_KEY_ASC(queryBuilder) {
         invoiceUniques[0].attributes.forEach(attributeName => {
           queryBuilder.orderBy({
@@ -32304,8 +35623,8 @@ export const enums = {
       },
       ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
       ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply,
-      STATUS_ASC: ReconciliationQueueOrderBy_STATUS_ASCApply,
-      STATUS_DESC: ReconciliationQueueOrderBy_STATUS_DESCApply
+      STATUS_ASC: BillOrderBy_STATUS_ASCApply,
+      STATUS_DESC: BillOrderBy_STATUS_DESCApply
     }
   },
   InvoicePaymentOrderBy: {
@@ -32566,8 +35885,8 @@ export const enums = {
       },
       ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
       ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply,
-      STATUS_ASC: ReconciliationQueueOrderBy_STATUS_ASCApply,
-      STATUS_DESC: ReconciliationQueueOrderBy_STATUS_DESCApply
+      STATUS_ASC: BillOrderBy_STATUS_ASCApply,
+      STATUS_DESC: BillOrderBy_STATUS_DESCApply
     }
   },
   ReconciliationQueueOrderBy: {
@@ -32594,8 +35913,8 @@ export const enums = {
       },
       ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
       ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply,
-      STATUS_ASC: ReconciliationQueueOrderBy_STATUS_ASCApply,
-      STATUS_DESC: ReconciliationQueueOrderBy_STATUS_DESCApply
+      STATUS_ASC: BillOrderBy_STATUS_ASCApply,
+      STATUS_DESC: BillOrderBy_STATUS_DESCApply
     }
   },
   ReconciliationStatementOrderBy: {

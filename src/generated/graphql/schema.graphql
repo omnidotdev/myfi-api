@@ -62,8 +62,14 @@ type Query implements Node {
   """Get a single `PayrollConnection`."""
   payrollConnection(rowId: UUID!): PayrollConnection
 
+  """Get a single `BillLine`."""
+  billLine(rowId: UUID!): BillLine
+
   """Get a single `InvoiceLine`."""
   invoiceLine(rowId: UUID!): InvoiceLine
+
+  """Get a single `BillPayment`."""
+  billPayment(rowId: UUID!): BillPayment
 
   """Get a single `InvoicePayment`."""
   invoicePayment(rowId: UUID!): InvoicePayment
@@ -97,6 +103,9 @@ type Query implements Node {
 
   """Get a single `CryptoAsset`."""
   cryptoAsset(rowId: UUID!): CryptoAsset
+
+  """Get a single `Bill`."""
+  bill(rowId: UUID!): Bill
 
   """Get a single `CategorizationRule`."""
   categorizationRule(rowId: UUID!): CategorizationRule
@@ -225,6 +234,12 @@ type Query implements Node {
     id: ID!
   ): PayrollConnection
 
+  """Reads a single `BillLine` using its globally unique `ID`."""
+  billLineById(
+    """The globally unique `ID` to be used in selecting a single `BillLine`."""
+    id: ID!
+  ): BillLine
+
   """Reads a single `InvoiceLine` using its globally unique `ID`."""
   invoiceLineById(
     """
@@ -232,6 +247,14 @@ type Query implements Node {
     """
     id: ID!
   ): InvoiceLine
+
+  """Reads a single `BillPayment` using its globally unique `ID`."""
+  billPaymentById(
+    """
+    The globally unique `ID` to be used in selecting a single `BillPayment`.
+    """
+    id: ID!
+  ): BillPayment
 
   """Reads a single `InvoicePayment` using its globally unique `ID`."""
   invoicePaymentById(
@@ -314,6 +337,12 @@ type Query implements Node {
     """
     id: ID!
   ): CryptoAsset
+
+  """Reads a single `Bill` using its globally unique `ID`."""
+  billById(
+    """The globally unique `ID` to be used in selecting a single `Bill`."""
+    id: ID!
+  ): Bill
 
   """Reads a single `CategorizationRule` using its globally unique `ID`."""
   categorizationRuleById(
@@ -861,6 +890,40 @@ type Query implements Node {
     orderBy: [PayrollConnectionOrderBy!] = [PRIMARY_KEY_ASC]
   ): PayrollConnectionConnection
 
+  """Reads and enables pagination through a set of `BillLine`."""
+  billLines(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: BillLineCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: BillLineFilter
+
+    """The method to use when ordering `BillLine`."""
+    orderBy: [BillLineOrderBy!] = [PRIMARY_KEY_ASC]
+  ): BillLineConnection
+
   """Reads and enables pagination through a set of `InvoiceLine`."""
   invoiceLines(
     """Only read the first `n` values of the set."""
@@ -894,6 +957,40 @@ type Query implements Node {
     """The method to use when ordering `InvoiceLine`."""
     orderBy: [InvoiceLineOrderBy!] = [PRIMARY_KEY_ASC]
   ): InvoiceLineConnection
+
+  """Reads and enables pagination through a set of `BillPayment`."""
+  billPayments(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: BillPaymentCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: BillPaymentFilter
+
+    """The method to use when ordering `BillPayment`."""
+    orderBy: [BillPaymentOrderBy!] = [PRIMARY_KEY_ASC]
+  ): BillPaymentConnection
 
   """Reads and enables pagination through a set of `InvoicePayment`."""
   invoicePayments(
@@ -1270,6 +1367,40 @@ type Query implements Node {
     """The method to use when ordering `CryptoAsset`."""
     orderBy: [CryptoAssetOrderBy!] = [PRIMARY_KEY_ASC]
   ): CryptoAssetConnection
+
+  """Reads and enables pagination through a set of `Bill`."""
+  bills(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: BillCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: BillFilter
+
+    """The method to use when ordering `Bill`."""
+    orderBy: [BillOrderBy!] = [PRIMARY_KEY_ASC]
+  ): BillConnection
 
   """Reads and enables pagination through a set of `CategorizationRule`."""
   categorizationRules(
@@ -2570,6 +2701,74 @@ type Book implements Node {
     """The method to use when ordering `InvoicePayment`."""
     orderBy: [InvoicePaymentOrderBy!] = [PRIMARY_KEY_ASC]
   ): InvoicePaymentConnection!
+
+  """Reads and enables pagination through a set of `Bill`."""
+  bills(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: BillCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: BillFilter
+
+    """The method to use when ordering `Bill`."""
+    orderBy: [BillOrderBy!] = [PRIMARY_KEY_ASC]
+  ): BillConnection!
+
+  """Reads and enables pagination through a set of `BillPayment`."""
+  billPayments(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: BillPaymentCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: BillPaymentFilter
+
+    """The method to use when ordering `BillPayment`."""
+    orderBy: [BillPaymentOrderBy!] = [PRIMARY_KEY_ASC]
+  ): BillPaymentConnection!
 }
 
 """A connection to a list of `Account` values."""
@@ -2998,6 +3197,18 @@ input BookFilter {
 
   """Some related `invoicePayments` exist."""
   invoicePaymentsExist: Boolean
+
+  """Filter by the object’s `bills` relation."""
+  bills: BookToManyBillFilter
+
+  """Some related `bills` exist."""
+  billsExist: Boolean
+
+  """Filter by the object’s `billPayments` relation."""
+  billPayments: BookToManyBillPaymentFilter
+
+  """Some related `billPayments` exist."""
+  billPaymentsExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [BookFilter!]
@@ -3684,6 +3895,12 @@ input VendorFilter {
   """Filter by the object’s `bookId` field."""
   bookId: UUIDFilter
 
+  """Filter by the object’s `bills` relation."""
+  bills: VendorToManyBillFilter
+
+  """Some related `bills` exist."""
+  billsExist: Boolean
+
   """Filter by the object’s `book` relation."""
   book: BookFilter
 
@@ -3695,6 +3912,215 @@ input VendorFilter {
 
   """Negates the expression."""
   not: VendorFilter
+}
+
+"""
+A filter to be used against many `Bill` object types. All fields are combined with a logical ‘and.’
+"""
+input VendorToManyBillFilter {
+  """
+  Every related `Bill` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: BillFilter
+
+  """
+  Some related `Bill` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: BillFilter
+
+  """
+  No related `Bill` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: BillFilter
+}
+
+"""
+A filter to be used against `Bill` object types. All fields are combined with a logical ‘and.’
+"""
+input BillFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `bookId` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s `vendorId` field."""
+  vendorId: UUIDFilter
+
+  """Filter by the object’s `number` field."""
+  number: StringFilter
+
+  """Filter by the object’s `status` field."""
+  status: StringFilter
+
+  """Filter by the object’s `billLines` relation."""
+  billLines: BillToManyBillLineFilter
+
+  """Some related `billLines` exist."""
+  billLinesExist: Boolean
+
+  """Filter by the object’s `billPayments` relation."""
+  billPayments: BillToManyBillPaymentFilter
+
+  """Some related `billPayments` exist."""
+  billPaymentsExist: Boolean
+
+  """Filter by the object’s `book` relation."""
+  book: BookFilter
+
+  """Filter by the object’s `journalEntry` relation."""
+  journalEntry: JournalEntryFilter
+
+  """A related `journalEntry` exists."""
+  journalEntryExists: Boolean
+
+  """Filter by the object’s `vendor` relation."""
+  vendor: VendorFilter
+
+  """Checks for all expressions in this list."""
+  and: [BillFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [BillFilter!]
+
+  """Negates the expression."""
+  not: BillFilter
+}
+
+"""
+A filter to be used against many `BillLine` object types. All fields are combined with a logical ‘and.’
+"""
+input BillToManyBillLineFilter {
+  """
+  Every related `BillLine` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: BillLineFilter
+
+  """
+  Some related `BillLine` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: BillLineFilter
+
+  """
+  No related `BillLine` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: BillLineFilter
+}
+
+"""
+A filter to be used against `BillLine` object types. All fields are combined with a logical ‘and.’
+"""
+input BillLineFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `billId` field."""
+  billId: UUIDFilter
+
+  """Filter by the object’s `bill` relation."""
+  bill: BillFilter
+
+  """Filter by the object’s `expenseAccount` relation."""
+  expenseAccount: AccountFilter
+
+  """Filter by the object’s `taxJurisdiction` relation."""
+  taxJurisdiction: TaxJurisdictionFilter
+
+  """A related `taxJurisdiction` exists."""
+  taxJurisdictionExists: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [BillLineFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [BillLineFilter!]
+
+  """Negates the expression."""
+  not: BillLineFilter
+}
+
+"""
+A filter to be used against `TaxJurisdiction` object types. All fields are combined with a logical ‘and.’
+"""
+input TaxJurisdictionFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `bookId` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s `book` relation."""
+  book: BookFilter
+
+  """Filter by the object’s `taxPayableAccount` relation."""
+  taxPayableAccount: AccountFilter
+
+  """Checks for all expressions in this list."""
+  and: [TaxJurisdictionFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [TaxJurisdictionFilter!]
+
+  """Negates the expression."""
+  not: TaxJurisdictionFilter
+}
+
+"""
+A filter to be used against many `BillPayment` object types. All fields are combined with a logical ‘and.’
+"""
+input BillToManyBillPaymentFilter {
+  """
+  Every related `BillPayment` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: BillPaymentFilter
+
+  """
+  Some related `BillPayment` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: BillPaymentFilter
+
+  """
+  No related `BillPayment` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: BillPaymentFilter
+}
+
+"""
+A filter to be used against `BillPayment` object types. All fields are combined with a logical ‘and.’
+"""
+input BillPaymentFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `bookId` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s `billId` field."""
+  billId: UUIDFilter
+
+  """Filter by the object’s `bill` relation."""
+  bill: BillFilter
+
+  """Filter by the object’s `book` relation."""
+  book: BookFilter
+
+  """Filter by the object’s `journalEntry` relation."""
+  journalEntry: JournalEntryFilter
+
+  """A related `journalEntry` exists."""
+  journalEntryExists: Boolean
+
+  """Filter by the object’s `paymentAccount` relation."""
+  paymentAccount: AccountFilter
+
+  """Checks for all expressions in this list."""
+  and: [BillPaymentFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [BillPaymentFilter!]
+
+  """Negates the expression."""
+  not: BillPaymentFilter
 }
 
 """
@@ -4187,32 +4613,6 @@ input BookToManyTaxJurisdictionFilter {
   No related `TaxJurisdiction` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
   none: TaxJurisdictionFilter
-}
-
-"""
-A filter to be used against `TaxJurisdiction` object types. All fields are combined with a logical ‘and.’
-"""
-input TaxJurisdictionFilter {
-  """Filter by the object’s `rowId` field."""
-  rowId: UUIDFilter
-
-  """Filter by the object’s `bookId` field."""
-  bookId: UUIDFilter
-
-  """Filter by the object’s `book` relation."""
-  book: BookFilter
-
-  """Filter by the object’s `taxPayableAccount` relation."""
-  taxPayableAccount: AccountFilter
-
-  """Checks for all expressions in this list."""
-  and: [TaxJurisdictionFilter!]
-
-  """Checks for any expressions in this list."""
-  or: [TaxJurisdictionFilter!]
-
-  """Negates the expression."""
-  not: TaxJurisdictionFilter
 }
 
 """
@@ -4750,6 +5150,46 @@ input BookToManyInvoicePaymentFilter {
 }
 
 """
+A filter to be used against many `Bill` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyBillFilter {
+  """
+  Every related `Bill` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: BillFilter
+
+  """
+  Some related `Bill` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: BillFilter
+
+  """
+  No related `Bill` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: BillFilter
+}
+
+"""
+A filter to be used against many `BillPayment` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyBillPaymentFilter {
+  """
+  Every related `BillPayment` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: BillPaymentFilter
+
+  """
+  Some related `BillPayment` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: BillPaymentFilter
+
+  """
+  No related `BillPayment` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: BillPaymentFilter
+}
+
+"""
 A filter to be used against many `JournalLine` object types. All fields are combined with a logical ‘and.’
 """
 input AccountToManyJournalLineFilter {
@@ -5239,6 +5679,381 @@ type Vendor implements Node {
 
   """Reads a single `Book` that is related to this `Vendor`."""
   book: Book
+
+  """Reads and enables pagination through a set of `Bill`."""
+  bills(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: BillCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: BillFilter
+
+    """The method to use when ordering `Bill`."""
+    orderBy: [BillOrderBy!] = [PRIMARY_KEY_ASC]
+  ): BillConnection!
+}
+
+"""A connection to a list of `Bill` values."""
+type BillConnection {
+  """A list of `Bill` objects."""
+  nodes: [Bill]!
+
+  """
+  A list of edges which contains the `Bill` and cursor to aid in pagination.
+  """
+  edges: [BillEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Bill` you could get from the connection."""
+  totalCount: Int!
+}
+
+type Bill implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  vendorId: UUID!
+  number: String!
+  status: String!
+  billDate: String!
+  dueDate: String!
+  subtotal: BigFloat!
+  taxAmount: BigFloat!
+  total: BigFloat!
+  amountPaid: BigFloat!
+  currency: String!
+  memo: String
+  journalEntryId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """Reads a single `Book` that is related to this `Bill`."""
+  book: Book
+
+  """Reads a single `JournalEntry` that is related to this `Bill`."""
+  journalEntry: JournalEntry
+
+  """Reads a single `Vendor` that is related to this `Bill`."""
+  vendor: Vendor
+
+  """Reads and enables pagination through a set of `BillLine`."""
+  billLines(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: BillLineCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: BillLineFilter
+
+    """The method to use when ordering `BillLine`."""
+    orderBy: [BillLineOrderBy!] = [PRIMARY_KEY_ASC]
+  ): BillLineConnection!
+
+  """Reads and enables pagination through a set of `BillPayment`."""
+  billPayments(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: BillPaymentCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: BillPaymentFilter
+
+    """The method to use when ordering `BillPayment`."""
+    orderBy: [BillPaymentOrderBy!] = [PRIMARY_KEY_ASC]
+  ): BillPaymentConnection!
+}
+
+"""A connection to a list of `BillLine` values."""
+type BillLineConnection {
+  """A list of `BillLine` objects."""
+  nodes: [BillLine]!
+
+  """
+  A list of edges which contains the `BillLine` and cursor to aid in pagination.
+  """
+  edges: [BillLineEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `BillLine` you could get from the connection."""
+  totalCount: Int!
+}
+
+type BillLine implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  billId: UUID!
+  description: String!
+  quantity: BigFloat!
+  unitPrice: BigFloat!
+  amount: BigFloat!
+  expenseAccountId: UUID!
+  taxJurisdictionId: UUID
+  sortOrder: Int!
+
+  """Reads a single `Bill` that is related to this `BillLine`."""
+  bill: Bill
+
+  """Reads a single `Account` that is related to this `BillLine`."""
+  expenseAccount: Account
+
+  """Reads a single `TaxJurisdiction` that is related to this `BillLine`."""
+  taxJurisdiction: TaxJurisdiction
+}
+
+type TaxJurisdiction implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  name: String!
+  code: String
+  filingFrequency: String!
+  taxPayableAccountId: UUID!
+  createdAt: Datetime
+  rate: BigFloat
+
+  """Reads a single `Book` that is related to this `TaxJurisdiction`."""
+  book: Book
+
+  """Reads a single `Account` that is related to this `TaxJurisdiction`."""
+  taxPayableAccount: Account
+}
+
+"""A `BillLine` edge in the connection."""
+type BillLineEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `BillLine` at the end of the edge."""
+  node: BillLine
+}
+
+"""
+A condition to be used against `BillLine` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input BillLineCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `billId` field."""
+  billId: UUID
+}
+
+"""Methods to use when ordering `BillLine`."""
+enum BillLineOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BILL_ID_ASC
+  BILL_ID_DESC
+}
+
+"""A connection to a list of `BillPayment` values."""
+type BillPaymentConnection {
+  """A list of `BillPayment` objects."""
+  nodes: [BillPayment]!
+
+  """
+  A list of edges which contains the `BillPayment` and cursor to aid in pagination.
+  """
+  edges: [BillPaymentEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `BillPayment` you could get from the connection."""
+  totalCount: Int!
+}
+
+type BillPayment implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  billId: UUID!
+  date: String!
+  amount: BigFloat!
+  paymentAccountId: UUID!
+  method: String
+  reference: String
+  journalEntryId: UUID
+  createdAt: Datetime
+
+  """Reads a single `Bill` that is related to this `BillPayment`."""
+  bill: Bill
+
+  """Reads a single `Book` that is related to this `BillPayment`."""
+  book: Book
+
+  """Reads a single `JournalEntry` that is related to this `BillPayment`."""
+  journalEntry: JournalEntry
+
+  """Reads a single `Account` that is related to this `BillPayment`."""
+  paymentAccount: Account
+}
+
+"""A `BillPayment` edge in the connection."""
+type BillPaymentEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `BillPayment` at the end of the edge."""
+  node: BillPayment
+}
+
+"""
+A condition to be used against `BillPayment` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input BillPaymentCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `bookId` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s `billId` field."""
+  billId: UUID
+}
+
+"""Methods to use when ordering `BillPayment`."""
+enum BillPaymentOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+  BILL_ID_ASC
+  BILL_ID_DESC
+}
+
+"""A `Bill` edge in the connection."""
+type BillEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Bill` at the end of the edge."""
+  node: Bill
+}
+
+"""
+A condition to be used against `Bill` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input BillCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `bookId` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s `vendorId` field."""
+  vendorId: UUID
+
+  """Checks for equality with the object’s `number` field."""
+  number: String
+
+  """Checks for equality with the object’s `status` field."""
+  status: String
+}
+
+"""Methods to use when ordering `Bill`."""
+enum BillOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+  VENDOR_ID_ASC
+  VENDOR_ID_DESC
+  NUMBER_ASC
+  NUMBER_DESC
+  STATUS_ASC
+  STATUS_DESC
 }
 
 """A connection to a list of `JournalLine` values."""
@@ -6343,27 +7158,6 @@ type TaxJurisdictionConnection {
   The count of *all* `TaxJurisdiction` you could get from the connection.
   """
   totalCount: Int!
-}
-
-type TaxJurisdiction implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  id: ID!
-  rowId: UUID!
-  bookId: UUID!
-  name: String!
-  code: String
-  filingFrequency: String!
-  taxPayableAccountId: UUID!
-  createdAt: Datetime
-  rate: BigFloat
-
-  """Reads a single `Book` that is related to this `TaxJurisdiction`."""
-  book: Book
-
-  """Reads a single `Account` that is related to this `TaxJurisdiction`."""
-  taxPayableAccount: Account
 }
 
 """A `TaxJurisdiction` edge in the connection."""
@@ -7578,6 +8372,14 @@ type Mutation {
     input: CreatePayrollConnectionInput!
   ): CreatePayrollConnectionPayload
 
+  """Creates a single `BillLine`."""
+  createBillLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateBillLineInput!
+  ): CreateBillLinePayload
+
   """Creates a single `InvoiceLine`."""
   createInvoiceLine(
     """
@@ -7585,6 +8387,14 @@ type Mutation {
     """
     input: CreateInvoiceLineInput!
   ): CreateInvoiceLinePayload
+
+  """Creates a single `BillPayment`."""
+  createBillPayment(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateBillPaymentInput!
+  ): CreateBillPaymentPayload
 
   """Creates a single `InvoicePayment`."""
   createInvoicePayment(
@@ -7673,6 +8483,14 @@ type Mutation {
     """
     input: CreateCryptoAssetInput!
   ): CreateCryptoAssetPayload
+
+  """Creates a single `Bill`."""
+  createBill(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateBillInput!
+  ): CreateBillPayload
 
   """Creates a single `CategorizationRule`."""
   createCategorizationRule(
@@ -7976,6 +8794,22 @@ type Mutation {
     input: UpdatePayrollConnectionInput!
   ): UpdatePayrollConnectionPayload
 
+  """Updates a single `BillLine` using its globally unique id and a patch."""
+  updateBillLineById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateBillLineByIdInput!
+  ): UpdateBillLinePayload
+
+  """Updates a single `BillLine` using a unique key and a patch."""
+  updateBillLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateBillLineInput!
+  ): UpdateBillLinePayload
+
   """
   Updates a single `InvoiceLine` using its globally unique id and a patch.
   """
@@ -7993,6 +8827,24 @@ type Mutation {
     """
     input: UpdateInvoiceLineInput!
   ): UpdateInvoiceLinePayload
+
+  """
+  Updates a single `BillPayment` using its globally unique id and a patch.
+  """
+  updateBillPaymentById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateBillPaymentByIdInput!
+  ): UpdateBillPaymentPayload
+
+  """Updates a single `BillPayment` using a unique key and a patch."""
+  updateBillPayment(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateBillPaymentInput!
+  ): UpdateBillPaymentPayload
 
   """
   Updates a single `InvoicePayment` using its globally unique id and a patch.
@@ -8185,6 +9037,22 @@ type Mutation {
     """
     input: UpdateCryptoAssetInput!
   ): UpdateCryptoAssetPayload
+
+  """Updates a single `Bill` using its globally unique id and a patch."""
+  updateBillById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateBillByIdInput!
+  ): UpdateBillPayload
+
+  """Updates a single `Bill` using a unique key and a patch."""
+  updateBill(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateBillInput!
+  ): UpdateBillPayload
 
   """
   Updates a single `CategorizationRule` using its globally unique id and a patch.
@@ -8514,6 +9382,22 @@ type Mutation {
     input: DeletePayrollConnectionInput!
   ): DeletePayrollConnectionPayload
 
+  """Deletes a single `BillLine` using its globally unique id."""
+  deleteBillLineById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteBillLineByIdInput!
+  ): DeleteBillLinePayload
+
+  """Deletes a single `BillLine` using a unique key."""
+  deleteBillLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteBillLineInput!
+  ): DeleteBillLinePayload
+
   """Deletes a single `InvoiceLine` using its globally unique id."""
   deleteInvoiceLineById(
     """
@@ -8529,6 +9413,22 @@ type Mutation {
     """
     input: DeleteInvoiceLineInput!
   ): DeleteInvoiceLinePayload
+
+  """Deletes a single `BillPayment` using its globally unique id."""
+  deleteBillPaymentById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteBillPaymentByIdInput!
+  ): DeleteBillPaymentPayload
+
+  """Deletes a single `BillPayment` using a unique key."""
+  deleteBillPayment(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteBillPaymentInput!
+  ): DeleteBillPaymentPayload
 
   """Deletes a single `InvoicePayment` using its globally unique id."""
   deleteInvoicePaymentById(
@@ -8707,6 +9607,22 @@ type Mutation {
     """
     input: DeleteCryptoAssetInput!
   ): DeleteCryptoAssetPayload
+
+  """Deletes a single `Bill` using its globally unique id."""
+  deleteBillById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteBillByIdInput!
+  ): DeleteBillPayload
+
+  """Deletes a single `Bill` using a unique key."""
+  deleteBill(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteBillInput!
+  ): DeleteBillPayload
 
   """Deletes a single `CategorizationRule` using its globally unique id."""
   deleteCategorizationRuleById(
@@ -9478,6 +10394,54 @@ input PayrollConnectionInput {
   createdAt: Datetime
 }
 
+"""The output of our create `BillLine` mutation."""
+type CreateBillLinePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `BillLine` that was created by this mutation."""
+  billLine: BillLine
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `BillLine`. May be used by Relay 1."""
+  billLineEdge(
+    """The method to use when ordering `BillLine`."""
+    orderBy: [BillLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BillLineEdge
+}
+
+"""All input for the create `BillLine` mutation."""
+input CreateBillLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `BillLine` to be created by this mutation."""
+  billLine: BillLineInput!
+}
+
+"""An input for mutations affecting `BillLine`"""
+input BillLineInput {
+  rowId: UUID
+  billId: UUID!
+  description: String!
+  quantity: BigFloat
+  unitPrice: BigFloat
+  amount: BigFloat
+  expenseAccountId: UUID!
+  taxJurisdictionId: UUID
+  sortOrder: Int
+}
+
 """The output of our create `InvoiceLine` mutation."""
 type CreateInvoiceLinePayload {
   """
@@ -9524,6 +10488,55 @@ input InvoiceLineInput {
   incomeAccountId: UUID!
   taxJurisdictionId: UUID
   sortOrder: Int
+}
+
+"""The output of our create `BillPayment` mutation."""
+type CreateBillPaymentPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `BillPayment` that was created by this mutation."""
+  billPayment: BillPayment
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `BillPayment`. May be used by Relay 1."""
+  billPaymentEdge(
+    """The method to use when ordering `BillPayment`."""
+    orderBy: [BillPaymentOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BillPaymentEdge
+}
+
+"""All input for the create `BillPayment` mutation."""
+input CreateBillPaymentInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `BillPayment` to be created by this mutation."""
+  billPayment: BillPaymentInput!
+}
+
+"""An input for mutations affecting `BillPayment`"""
+input BillPaymentInput {
+  rowId: UUID
+  bookId: UUID!
+  billId: UUID!
+  date: String!
+  amount: BigFloat!
+  paymentAccountId: UUID!
+  method: String
+  reference: String
+  journalEntryId: UUID
+  createdAt: Datetime
 }
 
 """The output of our create `InvoicePayment` mutation."""
@@ -10078,6 +11091,61 @@ input CryptoAssetInput {
   balance: BigFloat
   costBasisMethod: CostBasisMethod
   lastSyncedAt: Datetime
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""The output of our create `Bill` mutation."""
+type CreateBillPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Bill` that was created by this mutation."""
+  bill: Bill
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Bill`. May be used by Relay 1."""
+  billEdge(
+    """The method to use when ordering `Bill`."""
+    orderBy: [BillOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BillEdge
+}
+
+"""All input for the create `Bill` mutation."""
+input CreateBillInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Bill` to be created by this mutation."""
+  bill: BillInput!
+}
+
+"""An input for mutations affecting `Bill`"""
+input BillInput {
+  rowId: UUID
+  bookId: UUID!
+  vendorId: UUID!
+  number: String!
+  status: String
+  billDate: String!
+  dueDate: String!
+  subtotal: BigFloat
+  taxAmount: BigFloat
+  total: BigFloat
+  amountPaid: BigFloat
+  currency: String
+  memo: String
+  journalEntryId: UUID
   createdAt: Datetime
   updatedAt: Datetime
 }
@@ -11394,6 +12462,78 @@ input UpdatePayrollConnectionInput {
   patch: PayrollConnectionPatch!
 }
 
+"""The output of our update `BillLine` mutation."""
+type UpdateBillLinePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `BillLine` that was updated by this mutation."""
+  billLine: BillLine
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `BillLine`. May be used by Relay 1."""
+  billLineEdge(
+    """The method to use when ordering `BillLine`."""
+    orderBy: [BillLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BillLineEdge
+}
+
+"""All input for the `updateBillLineById` mutation."""
+input UpdateBillLineByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `BillLine` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `BillLine` being updated.
+  """
+  patch: BillLinePatch!
+}
+
+"""
+Represents an update to a `BillLine`. Fields that are set will be updated.
+"""
+input BillLinePatch {
+  rowId: UUID
+  billId: UUID
+  description: String
+  quantity: BigFloat
+  unitPrice: BigFloat
+  amount: BigFloat
+  expenseAccountId: UUID
+  taxJurisdictionId: UUID
+  sortOrder: Int
+}
+
+"""All input for the `updateBillLine` mutation."""
+input UpdateBillLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `BillLine` being updated.
+  """
+  patch: BillLinePatch!
+}
+
 """The output of our update `InvoiceLine` mutation."""
 type UpdateInvoiceLinePayload {
   """
@@ -11464,6 +12604,79 @@ input UpdateInvoiceLineInput {
   An object where the defined keys will be set on the `InvoiceLine` being updated.
   """
   patch: InvoiceLinePatch!
+}
+
+"""The output of our update `BillPayment` mutation."""
+type UpdateBillPaymentPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `BillPayment` that was updated by this mutation."""
+  billPayment: BillPayment
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `BillPayment`. May be used by Relay 1."""
+  billPaymentEdge(
+    """The method to use when ordering `BillPayment`."""
+    orderBy: [BillPaymentOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BillPaymentEdge
+}
+
+"""All input for the `updateBillPaymentById` mutation."""
+input UpdateBillPaymentByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `BillPayment` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `BillPayment` being updated.
+  """
+  patch: BillPaymentPatch!
+}
+
+"""
+Represents an update to a `BillPayment`. Fields that are set will be updated.
+"""
+input BillPaymentPatch {
+  rowId: UUID
+  bookId: UUID
+  billId: UUID
+  date: String
+  amount: BigFloat
+  paymentAccountId: UUID
+  method: String
+  reference: String
+  journalEntryId: UUID
+  createdAt: Datetime
+}
+
+"""All input for the `updateBillPayment` mutation."""
+input UpdateBillPaymentInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `BillPayment` being updated.
+  """
+  patch: BillPaymentPatch!
 }
 
 """The output of our update `InvoicePayment` mutation."""
@@ -12284,6 +13497,83 @@ input UpdateCryptoAssetInput {
   An object where the defined keys will be set on the `CryptoAsset` being updated.
   """
   patch: CryptoAssetPatch!
+}
+
+"""The output of our update `Bill` mutation."""
+type UpdateBillPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Bill` that was updated by this mutation."""
+  bill: Bill
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Bill`. May be used by Relay 1."""
+  billEdge(
+    """The method to use when ordering `Bill`."""
+    orderBy: [BillOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BillEdge
+}
+
+"""All input for the `updateBillById` mutation."""
+input UpdateBillByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Bill` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `Bill` being updated.
+  """
+  patch: BillPatch!
+}
+
+"""Represents an update to a `Bill`. Fields that are set will be updated."""
+input BillPatch {
+  rowId: UUID
+  bookId: UUID
+  vendorId: UUID
+  number: String
+  status: String
+  billDate: String
+  dueDate: String
+  subtotal: BigFloat
+  taxAmount: BigFloat
+  total: BigFloat
+  amountPaid: BigFloat
+  currency: String
+  memo: String
+  journalEntryId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the `updateBill` mutation."""
+input UpdateBillInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `Bill` being updated.
+  """
+  patch: BillPatch!
 }
 
 """The output of our update `CategorizationRule` mutation."""
@@ -13393,6 +14683,54 @@ input DeletePayrollConnectionInput {
   rowId: UUID!
 }
 
+"""The output of our delete `BillLine` mutation."""
+type DeleteBillLinePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `BillLine` that was deleted by this mutation."""
+  billLine: BillLine
+  deletedBillLineId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `BillLine`. May be used by Relay 1."""
+  billLineEdge(
+    """The method to use when ordering `BillLine`."""
+    orderBy: [BillLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BillLineEdge
+}
+
+"""All input for the `deleteBillLineById` mutation."""
+input DeleteBillLineByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `BillLine` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteBillLine` mutation."""
+input DeleteBillLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete `InvoiceLine` mutation."""
 type DeleteInvoiceLinePayload {
   """
@@ -13433,6 +14771,54 @@ input DeleteInvoiceLineByIdInput {
 
 """All input for the `deleteInvoiceLine` mutation."""
 input DeleteInvoiceLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `BillPayment` mutation."""
+type DeleteBillPaymentPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `BillPayment` that was deleted by this mutation."""
+  billPayment: BillPayment
+  deletedBillPaymentId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `BillPayment`. May be used by Relay 1."""
+  billPaymentEdge(
+    """The method to use when ordering `BillPayment`."""
+    orderBy: [BillPaymentOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BillPaymentEdge
+}
+
+"""All input for the `deleteBillPaymentById` mutation."""
+input DeleteBillPaymentByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `BillPayment` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteBillPayment` mutation."""
+input DeleteBillPaymentInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -13961,6 +15347,54 @@ input DeleteCryptoAssetByIdInput {
 
 """All input for the `deleteCryptoAsset` mutation."""
 input DeleteCryptoAssetInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `Bill` mutation."""
+type DeleteBillPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Bill` that was deleted by this mutation."""
+  bill: Bill
+  deletedBillId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Bill`. May be used by Relay 1."""
+  billEdge(
+    """The method to use when ordering `Bill`."""
+    orderBy: [BillOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BillEdge
+}
+
+"""All input for the `deleteBillById` mutation."""
+input DeleteBillByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Bill` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteBill` mutation."""
+input DeleteBillInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
