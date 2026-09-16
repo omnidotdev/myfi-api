@@ -8,10 +8,9 @@ import { dbPool } from "lib/db/db";
 import { attachmentTable, journalEntryTable } from "lib/db/schema";
 import {
   deleteObject,
-  generateDownloadUrl,
-  generateUploadUrl,
-  headObject,
+  getObject,
   isStorageConfigured,
+  putObject,
 } from "lib/storage/s3Client";
 
 const MAX_FILE_SIZE = 25 * 1024 * 1024;
@@ -30,7 +29,9 @@ const sanitizeFilename = (name: string): string => {
   return cleaned || "file";
 };
 
-// Attachment CRUD routes for managing file uploads via presigned URLs
+// Attachments are financial records in a PRIVATE bucket, so every upload and
+// download is proxied through the API (the S3 endpoint is cluster-internal and
+// book access is enforced by the global middleware plus a per-row book check)
 const attachmentRoutes = new Elysia({ prefix: "/api/attachments" })
   .get(
     "/",
@@ -54,21 +55,7 @@ const attachmentRoutes = new Elysia({ prefix: "/api/attachments" })
             : eq(attachmentTable.bookId, bookId),
         );
 
-      const attachments = await Promise.all(
-        rows.map(async (row) => {
-          let downloadUrl: string | null = null;
-          if (row.uploadStatus === "complete" && isStorageConfigured()) {
-            try {
-              downloadUrl = await generateDownloadUrl(row.storageKey);
-            } catch {
-              downloadUrl = null;
-            }
-          }
-          return { ...row, downloadUrl };
-        }),
-      );
-
-      return { attachments };
+      return { attachments: rows };
     },
     {
       query: t.Object({
@@ -77,34 +64,45 @@ const attachmentRoutes = new Elysia({ prefix: "/api/attachments" })
       }),
     },
   )
+  // Upload a file directly through the API (multipart). Validates, stores the
+  // bytes in the private bucket, and records the attachment in one step
   .post(
-    "/presign",
+    "/",
     async ({ body, set }) => {
       if (!isStorageConfigured()) {
         set.status = 503;
         return { error: "Storage not configured" };
       }
 
-      if (!ALLOWED_TYPES.includes(body.contentType)) {
+      const { file, bookId, journalEntryId, createdBy } = body;
+
+      if (!ALLOWED_TYPES.includes(file.type)) {
         set.status = 400;
         return { error: "Content type not allowed" };
       }
 
-      if (body.sizeBytes <= 0 || body.sizeBytes > MAX_FILE_SIZE) {
+      if (file.size <= 0 || file.size > MAX_FILE_SIZE) {
         set.status = 400;
         return { error: "File size must be between 1 byte and 25MB" };
       }
 
-      if (body.journalEntryId) {
+      if (journalEntryId) {
+        const [targetEntry] = await dbPool
+          .select({ bookId: journalEntryTable.bookId })
+          .from(journalEntryTable)
+          .where(eq(journalEntryTable.id, journalEntryId));
+
+        if (!targetEntry || targetEntry.bookId !== bookId) {
+          set.status = 400;
+          return {
+            error: "Cannot link attachment to entry in a different book",
+          };
+        }
+
         const existing = await dbPool
           .select({ id: attachmentTable.id })
           .from(attachmentTable)
-          .where(
-            and(
-              eq(attachmentTable.journalEntryId, body.journalEntryId),
-              eq(attachmentTable.uploadStatus, "complete"),
-            ),
-          );
+          .where(eq(attachmentTable.journalEntryId, journalEntryId));
 
         if (existing.length >= MAX_ATTACHMENTS_PER_ENTRY) {
           set.status = 400;
@@ -114,85 +112,35 @@ const attachmentRoutes = new Elysia({ prefix: "/api/attachments" })
         }
       }
 
-      const safeFilename = sanitizeFilename(body.filename);
-      const storageKey = `${body.bookId}/${randomUUID()}/${safeFilename}`;
+      const safeFilename = sanitizeFilename(file.name);
+      const storageKey = `${bookId}/${randomUUID()}/${safeFilename}`;
+      const bytes = new Uint8Array(await file.arrayBuffer());
+
+      try {
+        await putObject(storageKey, bytes, file.type);
+      } catch (err) {
+        console.error("[attachments] upload failed:", err);
+        set.status = 500;
+        return { error: "Could not store the attachment" };
+      }
 
       const [attachment] = await dbPool
         .insert(attachmentTable)
         .values({
-          bookId: body.bookId,
-          journalEntryId: body.journalEntryId ?? null,
-          filename: body.filename,
-          contentType: body.contentType,
-          sizeBytes: body.sizeBytes,
+          bookId,
+          journalEntryId: journalEntryId ?? null,
+          filename: file.name,
+          contentType: file.type,
+          sizeBytes: bytes.byteLength,
           storageKey,
-          uploadStatus: "pending",
-          createdBy: body.createdBy ?? "unknown",
-        })
-        .returning();
-
-      const uploadUrl = await generateUploadUrl(
-        storageKey,
-        body.contentType,
-        body.sizeBytes,
-      );
-
-      set.status = 201;
-
-      return { attachment, uploadUrl };
-    },
-    {
-      body: t.Object({
-        bookId: t.String(),
-        journalEntryId: t.Optional(t.String()),
-        filename: t.String(),
-        contentType: t.String(),
-        sizeBytes: t.Number(),
-        createdBy: t.Optional(t.String()),
-      }),
-    },
-  )
-  .post(
-    "/:id/confirm",
-    async ({ params, set }) => {
-      const { id } = params;
-
-      const [row] = await dbPool
-        .select()
-        .from(attachmentTable)
-        .where(eq(attachmentTable.id, id));
-
-      if (!row) {
-        set.status = 404;
-        return { error: "Attachment not found" };
-      }
-
-      if (row.uploadStatus === "complete") {
-        return { attachment: row };
-      }
-
-      const head = await headObject(row.storageKey);
-
-      if (!head.exists) {
-        set.status = 400;
-        return { error: "File not found in storage" };
-      }
-
-      const [attachment] = await dbPool
-        .update(attachmentTable)
-        .set({
           uploadStatus: "complete",
-          ...(head.contentLength !== undefined
-            ? { sizeBytes: head.contentLength }
-            : {}),
+          createdBy: createdBy ?? "unknown",
         })
-        .where(eq(attachmentTable.id, id))
         .returning();
 
       emitAudit({
         type: "myfi.attachment.uploaded",
         organizationId: attachment.bookId,
-        actor: { id: attachment.createdBy },
         resource: {
           type: "attachment",
           id: attachment.id,
@@ -206,10 +154,65 @@ const attachmentRoutes = new Elysia({ prefix: "/api/attachments" })
         },
       });
 
+      set.status = 201;
       return { attachment };
     },
     {
+      body: t.Object({
+        file: t.File(),
+        bookId: t.String(),
+        journalEntryId: t.Optional(t.String()),
+        createdBy: t.Optional(t.String()),
+      }),
+    },
+  )
+  // Stream the file back through the API (book access enforced; the file never
+  // leaves via a shareable URL)
+  .get(
+    "/:id/download",
+    async ({ params, query, set }) => {
+      const { bookId } = query;
+      if (!bookId) {
+        set.status = 400;
+        return { error: "bookId is required" };
+      }
+
+      if (!isStorageConfigured()) {
+        set.status = 503;
+        return { error: "Storage not configured" };
+      }
+
+      const [row] = await dbPool
+        .select()
+        .from(attachmentTable)
+        .where(eq(attachmentTable.id, params.id));
+
+      // Ownership guard (IDOR): the attachment must belong to the named book
+      if (!row || row.bookId !== bookId) {
+        set.status = 404;
+        return { error: "Attachment not found" };
+      }
+
+      try {
+        const { body, contentType, contentLength } = await getObject(
+          row.storageKey,
+        );
+        return new Response(body, {
+          headers: {
+            "Content-Type": contentType ?? row.contentType,
+            "Content-Disposition": `inline; filename="${sanitizeFilename(row.filename)}"`,
+            "Content-Length": String(contentLength ?? row.sizeBytes),
+          },
+        });
+      } catch (err) {
+        console.error("[attachments] download failed:", err);
+        set.status = 500;
+        return { error: "Could not retrieve the attachment" };
+      }
+    },
+    {
       params: t.Object({ id: t.String() }),
+      query: t.Object({ bookId: t.String() }),
     },
   )
   .patch(
@@ -244,25 +247,16 @@ const attachmentRoutes = new Elysia({ prefix: "/api/attachments" })
           };
         }
 
-        // Pending attachments do not count toward the cap, they are only
-        // enforced once the upload is confirmed
-        if (current.uploadStatus === "complete") {
-          const existing = await dbPool
-            .select({ id: attachmentTable.id })
-            .from(attachmentTable)
-            .where(
-              and(
-                eq(attachmentTable.journalEntryId, nextJournalEntryId),
-                eq(attachmentTable.uploadStatus, "complete"),
-              ),
-            );
+        const existing = await dbPool
+          .select({ id: attachmentTable.id })
+          .from(attachmentTable)
+          .where(eq(attachmentTable.journalEntryId, nextJournalEntryId));
 
-          if (existing.length >= MAX_ATTACHMENTS_PER_ENTRY) {
-            set.status = 400;
-            return {
-              error: `Maximum ${MAX_ATTACHMENTS_PER_ENTRY} attachments per entry`,
-            };
-          }
+        if (existing.length >= MAX_ATTACHMENTS_PER_ENTRY) {
+          set.status = 400;
+          return {
+            error: `Maximum ${MAX_ATTACHMENTS_PER_ENTRY} attachments per entry`,
+          };
         }
       }
 
@@ -310,7 +304,6 @@ const attachmentRoutes = new Elysia({ prefix: "/api/attachments" })
       emitAudit({
         type: "myfi.attachment.deleted",
         organizationId: attachment.bookId,
-        actor: { id: attachment.createdBy },
         resource: {
           type: "attachment",
           id: attachment.id,

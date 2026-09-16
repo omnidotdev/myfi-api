@@ -1,11 +1,9 @@
 import {
   DeleteObjectCommand,
   GetObjectCommand,
-  HeadObjectCommand,
   PutObjectCommand,
   S3Client,
 } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 const BUCKET = process.env.S3_BUCKET;
 const REGION = process.env.S3_REGION ?? "auto";
@@ -23,6 +21,9 @@ const client =
   BUCKET && ACCESS_KEY_ID && SECRET_ACCESS_KEY
     ? new S3Client({
         region: REGION,
+        // Path-style addressing works against both S3 and S3-compatible
+        // gateways (Garage) without per-bucket DNS
+        forcePathStyle: true,
         ...(ENDPOINT ? { endpoint: ENDPOINT } : {}),
         credentials: {
           accessKeyId: ACCESS_KEY_ID,
@@ -31,46 +32,50 @@ const client =
       })
     : null;
 
-const PRESIGN_EXPIRY = 3600;
-
-export const generateUploadUrl = async (
+/**
+ * Store an object. The bucket is private, so every read and write is proxied
+ * through the API (never a presigned URL): the S3 endpoint is cluster-internal
+ * and these are financial records that must stay behind book-level auth.
+ */
+export const putObject = async (
   key: string,
+  body: Uint8Array,
   contentType: string,
-  maxBytes: number,
-): Promise<string> => {
+): Promise<void> => {
   if (!client || !BUCKET) throw new Error("Storage not configured");
 
-  const command = new PutObjectCommand({
-    Bucket: BUCKET,
-    Key: key,
-    ContentType: contentType,
-    ContentLength: maxBytes,
-  });
-
-  return getSignedUrl(client, command, { expiresIn: PRESIGN_EXPIRY });
+  await client.send(
+    new PutObjectCommand({
+      Bucket: BUCKET,
+      Key: key,
+      Body: body,
+      ContentType: contentType,
+      ContentLength: body.byteLength,
+    }),
+  );
 };
 
-export const generateDownloadUrl = async (key: string): Promise<string> => {
-  if (!client || !BUCKET) throw new Error("Storage not configured");
-
-  const command = new GetObjectCommand({ Bucket: BUCKET, Key: key });
-
-  return getSignedUrl(client, command, { expiresIn: PRESIGN_EXPIRY });
-};
-
-export const headObject = async (
+/** Fetch an object as a web stream for API-proxied download (no full buffering). */
+export const getObject = async (
   key: string,
-): Promise<{ exists: boolean; contentLength?: number }> => {
+): Promise<{
+  body: ReadableStream;
+  contentType?: string;
+  contentLength?: number;
+}> => {
   if (!client || !BUCKET) throw new Error("Storage not configured");
 
-  try {
-    const result = await client.send(
-      new HeadObjectCommand({ Bucket: BUCKET, Key: key }),
-    );
-    return { exists: true, contentLength: result.ContentLength };
-  } catch {
-    return { exists: false };
-  }
+  const result = await client.send(
+    new GetObjectCommand({ Bucket: BUCKET, Key: key }),
+  );
+
+  if (!result.Body) throw new Error("Object has no body");
+
+  return {
+    body: result.Body.transformToWebStream(),
+    contentType: result.ContentType,
+    contentLength: result.ContentLength,
+  };
 };
 
 export const deleteObject = async (key: string): Promise<void> => {
