@@ -1003,114 +1003,6 @@ const spec_importProfile = {
   executor: executor
 };
 const importProfileCodec = recordCodec(spec_importProfile);
-const bookIdentifier = sql.identifier("public", "book");
-const spec_book = {
-  name: "book",
-  identifier: bookIdentifier,
-  attributes: {
-    __proto__: null,
-    id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    organization_id: {
-      codec: TYPES.text,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    name: {
-      codec: TYPES.text,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    type: {
-      codec: TYPES.text,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    currency: {
-      codec: TYPES.text,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    fiscal_year_start_month: {
-      codec: TYPES.int,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    created_at: {
-      codec: TYPES.timestamptz,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    updated_at: {
-      codec: TYPES.timestamptz,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    }
-  },
-  extensions: {
-    oid: "16576",
-    isTableLike: true,
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "book"
-    }
-  },
-  executor: executor
-};
-const bookCodec = recordCodec(spec_book);
 const netWorthSnapshotIdentifier = sql.identifier("public", "net_worth_snapshot");
 const spec_netWorthSnapshot = {
   name: "netWorthSnapshot",
@@ -1463,6 +1355,126 @@ const spec_inventoryTransaction = {
   executor: executor
 };
 const inventoryTransactionCodec = recordCodec(spec_inventoryTransaction);
+const bookIdentifier = sql.identifier("public", "book");
+const spec_book = {
+  name: "book",
+  identifier: bookIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    organization_id: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    name: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    type: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    currency: {
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    fiscal_year_start_month: {
+      codec: TYPES.int,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    invoice_source: {
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "16576",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "book"
+    }
+  },
+  executor: executor
+};
+const bookCodec = recordCodec(spec_book);
 const payrollConnectionIdentifier = sql.identifier("public", "payroll_connection");
 const spec_payrollConnection = {
   name: "payrollConnection",
@@ -5341,29 +5353,6 @@ const import_profile_resourceOptionsConfig = {
   },
   uniques: import_profileUniques
 };
-const bookUniques = [{
-  attributes: ["id"],
-  isPrimary: true
-}];
-const book_resourceOptionsConfig = {
-  executor: executor,
-  name: "book",
-  identifier: "main.public.book",
-  from: bookIdentifier,
-  codec: bookCodec,
-  extensions: {
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "book"
-    },
-    canSelect: true,
-    canInsert: true,
-    canUpdate: true,
-    canDelete: true
-  },
-  uniques: bookUniques
-};
 const net_worth_snapshotUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -5432,6 +5421,29 @@ const inventory_transaction_resourceOptionsConfig = {
     canDelete: true
   },
   uniques: inventory_transactionUniques
+};
+const bookUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const book_resourceOptionsConfig = {
+  executor: executor,
+  name: "book",
+  identifier: "main.public.book",
+  from: bookIdentifier,
+  codec: bookCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "book"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: bookUniques
 };
 const payroll_connectionUniques = [{
   attributes: ["id"],
@@ -6011,10 +6023,10 @@ const registryConfig = {
     savingsGoal: savingsGoalCodec,
     importProfile: importProfileCodec,
     jsonb: TYPES.jsonb,
-    book: bookCodec,
     netWorthSnapshot: netWorthSnapshotCodec,
     accountingPeriod: accountingPeriodCodec,
     inventoryTransaction: inventoryTransactionCodec,
+    book: bookCodec,
     payrollConnection: payrollConnectionCodec,
     billLine: billLineCodec,
     estimateLine: estimateLineCodec,
@@ -6076,10 +6088,10 @@ const registryConfig = {
     journal_line: journal_line_resourceOptionsConfig,
     savings_goal: savings_goal_resourceOptionsConfig,
     import_profile: import_profile_resourceOptionsConfig,
-    book: book_resourceOptionsConfig,
     net_worth_snapshot: net_worth_snapshot_resourceOptionsConfig,
     accounting_period: accounting_period_resourceOptionsConfig,
     inventory_transaction: inventory_transaction_resourceOptionsConfig,
+    book: book_resourceOptionsConfig,
     payroll_connection: payroll_connection_resourceOptionsConfig,
     bill_line: bill_line_resourceOptionsConfig,
     estimate_line: estimate_line_resourceOptionsConfig,
@@ -7573,10 +7585,10 @@ const resource_vehiclePgResource = registry.pgResources["vehicle"];
 const resource_journal_linePgResource = registry.pgResources["journal_line"];
 const resource_savings_goalPgResource = registry.pgResources["savings_goal"];
 const resource_import_profilePgResource = registry.pgResources["import_profile"];
-const resource_bookPgResource = registry.pgResources["book"];
 const resource_net_worth_snapshotPgResource = registry.pgResources["net_worth_snapshot"];
 const resource_accounting_periodPgResource = registry.pgResources["accounting_period"];
 const resource_inventory_transactionPgResource = registry.pgResources["inventory_transaction"];
+const resource_bookPgResource = registry.pgResources["book"];
 const resource_payroll_connectionPgResource = registry.pgResources["payroll_connection"];
 const resource_bill_linePgResource = registry.pgResources["bill_line"];
 const resource_estimate_linePgResource = registry.pgResources["estimate_line"];
@@ -7766,17 +7778,6 @@ const nodeFetcher_ImportProfile = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_ImportProfile));
   return nodeIdHandler_ImportProfile.get(nodeIdHandler_ImportProfile.getSpec($decoded));
 };
-const nodeIdHandler_Book = makeTableNodeIdHandler({
-  typeName: "Book",
-  identifier: "Book",
-  nodeIdCodec: base64JSONNodeIdCodec,
-  resource: resource_bookPgResource,
-  pk: bookUniques[0].attributes
-});
-const nodeFetcher_Book = $nodeId => {
-  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Book));
-  return nodeIdHandler_Book.get(nodeIdHandler_Book.getSpec($decoded));
-};
 const nodeIdHandler_NetWorthSnapshot = makeTableNodeIdHandler({
   typeName: "NetWorthSnapshot",
   identifier: "NetWorthSnapshot",
@@ -7809,6 +7810,17 @@ const nodeIdHandler_InventoryTransaction = makeTableNodeIdHandler({
 const nodeFetcher_InventoryTransaction = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_InventoryTransaction));
   return nodeIdHandler_InventoryTransaction.get(nodeIdHandler_InventoryTransaction.getSpec($decoded));
+};
+const nodeIdHandler_Book = makeTableNodeIdHandler({
+  typeName: "Book",
+  identifier: "Book",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_bookPgResource,
+  pk: bookUniques[0].attributes
+});
+const nodeFetcher_Book = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Book));
+  return nodeIdHandler_Book.get(nodeIdHandler_Book.getSpec($decoded));
 };
 const nodeIdHandler_PayrollConnection = makeTableNodeIdHandler({
   typeName: "PayrollConnection",
@@ -8137,10 +8149,10 @@ const nodeIdHandlerByTypeName = {
   JournalLine: nodeIdHandler_JournalLine,
   SavingsGoal: nodeIdHandler_SavingsGoal,
   ImportProfile: nodeIdHandler_ImportProfile,
-  Book: nodeIdHandler_Book,
   NetWorthSnapshot: nodeIdHandler_NetWorthSnapshot,
   AccountingPeriod: nodeIdHandler_AccountingPeriod,
   InventoryTransaction: nodeIdHandler_InventoryTransaction,
+  Book: nodeIdHandler_Book,
   PayrollConnection: nodeIdHandler_PayrollConnection,
   BillLine: nodeIdHandler_BillLine,
   EstimateLine: nodeIdHandler_EstimateLine,
@@ -8756,10 +8768,6 @@ const specFromArgs_ImportProfile = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_ImportProfile, $nodeId);
 };
-const specFromArgs_Book = args => {
-  const $nodeId = args.getRaw(["input", "id"]);
-  return specFromNodeId(nodeIdHandler_Book, $nodeId);
-};
 const specFromArgs_NetWorthSnapshot = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_NetWorthSnapshot, $nodeId);
@@ -8771,6 +8779,10 @@ const specFromArgs_AccountingPeriod = args => {
 const specFromArgs_InventoryTransaction = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_InventoryTransaction, $nodeId);
+};
+const specFromArgs_Book = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_Book, $nodeId);
 };
 const specFromArgs_PayrollConnection = args => {
   const $nodeId = args.getRaw(["input", "id"]);
@@ -9017,19 +9029,6 @@ function ImportProfileInput_columnMapApply(obj, val, info) {
 function ImportProfileInput_headerRowsApply(obj, val, info) {
   obj.set("header_rows", bakedInputRuntime(info.schema, info.field.type, val));
 }
-const CreateBookPayload_bookEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_bookPgResource, bookUniques[0].attributes, $mutation, fieldArgs);
-function BookInput_organizationIdApply(obj, val, info) {
-  obj.set("organization_id", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function BookInput_typeApply(obj, val, info) {
-  obj.set("type", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function BookInput_currencyApply(obj, val, info) {
-  obj.set("currency", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function BookInput_fiscalYearStartMonthApply(obj, val, info) {
-  obj.set("fiscal_year_start_month", bakedInputRuntime(info.schema, info.field.type, val));
-}
 const CreateNetWorthSnapshotPayload_netWorthSnapshotEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_net_worth_snapshotPgResource, net_worth_snapshotUniques[0].attributes, $mutation, fieldArgs);
 function NetWorthSnapshotInput_dateApply(obj, val, info) {
   obj.set("date", bakedInputRuntime(info.schema, info.field.type, val));
@@ -9069,6 +9068,9 @@ const CreateInventoryTransactionPayload_inventoryTransactionEdgePlan = ($mutatio
 function InventoryTransactionInput_itemIdApply(obj, val, info) {
   obj.set("item_id", bakedInputRuntime(info.schema, info.field.type, val));
 }
+function InventoryTransactionInput_typeApply(obj, val, info) {
+  obj.set("type", bakedInputRuntime(info.schema, info.field.type, val));
+}
 function InventoryTransactionInput_quantityApply(obj, val, info) {
   obj.set("quantity", bakedInputRuntime(info.schema, info.field.type, val));
 }
@@ -9077,6 +9079,19 @@ function InventoryTransactionInput_unitCostApply(obj, val, info) {
 }
 function InventoryTransactionInput_noteApply(obj, val, info) {
   obj.set("note", bakedInputRuntime(info.schema, info.field.type, val));
+}
+const CreateBookPayload_bookEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_bookPgResource, bookUniques[0].attributes, $mutation, fieldArgs);
+function BookInput_organizationIdApply(obj, val, info) {
+  obj.set("organization_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function BookInput_currencyApply(obj, val, info) {
+  obj.set("currency", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function BookInput_fiscalYearStartMonthApply(obj, val, info) {
+  obj.set("fiscal_year_start_month", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function BookInput_invoiceSourceApply(obj, val, info) {
+  obj.set("invoice_source", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreatePayrollConnectionPayload_payrollConnectionEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_payroll_connectionPgResource, payroll_connectionUniques[0].attributes, $mutation, fieldArgs);
 function PayrollConnectionInput_providerApply(obj, val, info) {
@@ -9505,9 +9520,6 @@ type Query implements Node {
   """Get a single \`ImportProfile\`."""
   importProfile(rowId: UUID!): ImportProfile
 
-  """Get a single \`Book\`."""
-  book(rowId: UUID!): Book
-
   """Get a single \`NetWorthSnapshot\`."""
   netWorthSnapshot(rowId: UUID!): NetWorthSnapshot
 
@@ -9516,6 +9528,9 @@ type Query implements Node {
 
   """Get a single \`InventoryTransaction\`."""
   inventoryTransaction(rowId: UUID!): InventoryTransaction
+
+  """Get a single \`Book\`."""
+  book(rowId: UUID!): Book
 
   """Get a single \`PayrollConnection\`."""
   payrollConnection(rowId: UUID!): PayrollConnection
@@ -9671,12 +9686,6 @@ type Query implements Node {
     id: ID!
   ): ImportProfile
 
-  """Reads a single \`Book\` using its globally unique \`ID\`."""
-  bookById(
-    """The globally unique \`ID\` to be used in selecting a single \`Book\`."""
-    id: ID!
-  ): Book
-
   """Reads a single \`NetWorthSnapshot\` using its globally unique \`ID\`."""
   netWorthSnapshotById(
     """
@@ -9700,6 +9709,12 @@ type Query implements Node {
     """
     id: ID!
   ): InventoryTransaction
+
+  """Reads a single \`Book\` using its globally unique \`ID\`."""
+  bookById(
+    """The globally unique \`ID\` to be used in selecting a single \`Book\`."""
+    id: ID!
+  ): Book
 
   """Reads a single \`PayrollConnection\` using its globally unique \`ID\`."""
   payrollConnectionById(
@@ -10251,40 +10266,6 @@ type Query implements Node {
     orderBy: [ImportProfileOrderBy!] = [PRIMARY_KEY_ASC]
   ): ImportProfileConnection
 
-  """Reads and enables pagination through a set of \`Book\`."""
-  books(
-    """Only read the first \`n\` values of the set."""
-    first: Int
-
-    """Only read the last \`n\` values of the set."""
-    last: Int
-
-    """
-    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
-    based pagination. May not be used with \`last\`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: BookCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: BookFilter
-
-    """The method to use when ordering \`Book\`."""
-    orderBy: [BookOrderBy!] = [PRIMARY_KEY_ASC]
-  ): BookConnection
-
   """Reads and enables pagination through a set of \`NetWorthSnapshot\`."""
   netWorthSnapshots(
     """Only read the first \`n\` values of the set."""
@@ -10386,6 +10367,40 @@ type Query implements Node {
     """The method to use when ordering \`InventoryTransaction\`."""
     orderBy: [InventoryTransactionOrderBy!] = [PRIMARY_KEY_ASC]
   ): InventoryTransactionConnection
+
+  """Reads and enables pagination through a set of \`Book\`."""
+  books(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: BookCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: BookFilter
+
+    """The method to use when ordering \`Book\`."""
+    orderBy: [BookOrderBy!] = [PRIMARY_KEY_ASC]
+  ): BookConnection
 
   """Reads and enables pagination through a set of \`PayrollConnection\`."""
   payrollConnections(
@@ -11516,6 +11531,7 @@ type Book implements Node {
   fiscalYearStartMonth: Int!
   createdAt: Datetime
   updatedAt: Datetime
+  invoiceSource: String!
 
   """Reads and enables pagination through a set of \`Account\`."""
   accounts(
@@ -18821,14 +18837,6 @@ type Mutation {
     input: CreateImportProfileInput!
   ): CreateImportProfilePayload
 
-  """Creates a single \`Book\`."""
-  createBook(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateBookInput!
-  ): CreateBookPayload
-
   """Creates a single \`NetWorthSnapshot\`."""
   createNetWorthSnapshot(
     """
@@ -18852,6 +18860,14 @@ type Mutation {
     """
     input: CreateInventoryTransactionInput!
   ): CreateInventoryTransactionPayload
+
+  """Creates a single \`Book\`."""
+  createBook(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateBookInput!
+  ): CreateBookPayload
 
   """Creates a single \`PayrollConnection\`."""
   createPayrollConnection(
@@ -19237,22 +19253,6 @@ type Mutation {
     input: UpdateImportProfileInput!
   ): UpdateImportProfilePayload
 
-  """Updates a single \`Book\` using its globally unique id and a patch."""
-  updateBookById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateBookByIdInput!
-  ): UpdateBookPayload
-
-  """Updates a single \`Book\` using a unique key and a patch."""
-  updateBook(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateBookInput!
-  ): UpdateBookPayload
-
   """
   Updates a single \`NetWorthSnapshot\` using its globally unique id and a patch.
   """
@@ -19308,6 +19308,22 @@ type Mutation {
     """
     input: UpdateInventoryTransactionInput!
   ): UpdateInventoryTransactionPayload
+
+  """Updates a single \`Book\` using its globally unique id and a patch."""
+  updateBookById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateBookByIdInput!
+  ): UpdateBookPayload
+
+  """Updates a single \`Book\` using a unique key and a patch."""
+  updateBook(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateBookInput!
+  ): UpdateBookPayload
 
   """
   Updates a single \`PayrollConnection\` using its globally unique id and a patch.
@@ -19903,22 +19919,6 @@ type Mutation {
     input: DeleteImportProfileInput!
   ): DeleteImportProfilePayload
 
-  """Deletes a single \`Book\` using its globally unique id."""
-  deleteBookById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteBookByIdInput!
-  ): DeleteBookPayload
-
-  """Deletes a single \`Book\` using a unique key."""
-  deleteBook(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteBookInput!
-  ): DeleteBookPayload
-
   """Deletes a single \`NetWorthSnapshot\` using its globally unique id."""
   deleteNetWorthSnapshotById(
     """
@@ -19966,6 +19966,22 @@ type Mutation {
     """
     input: DeleteInventoryTransactionInput!
   ): DeleteInventoryTransactionPayload
+
+  """Deletes a single \`Book\` using its globally unique id."""
+  deleteBookById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteBookByIdInput!
+  ): DeleteBookPayload
+
+  """Deletes a single \`Book\` using a unique key."""
+  deleteBook(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteBookInput!
+  ): DeleteBookPayload
 
   """Deletes a single \`PayrollConnection\` using its globally unique id."""
   deletePayrollConnectionById(
@@ -20851,53 +20867,6 @@ input ImportProfileInput {
   updatedAt: Datetime
 }
 
-"""The output of our create \`Book\` mutation."""
-type CreateBookPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`Book\` that was created by this mutation."""
-  book: Book
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`Book\`. May be used by Relay 1."""
-  bookEdge(
-    """The method to use when ordering \`Book\`."""
-    orderBy: [BookOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): BookEdge
-}
-
-"""All input for the create \`Book\` mutation."""
-input CreateBookInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The \`Book\` to be created by this mutation."""
-  book: BookInput!
-}
-
-"""An input for mutations affecting \`Book\`"""
-input BookInput {
-  rowId: UUID
-  organizationId: String!
-  name: String!
-  type: String!
-  currency: String
-  fiscalYearStartMonth: Int
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
 """The output of our create \`NetWorthSnapshot\` mutation."""
 type CreateNetWorthSnapshotPayload {
   """
@@ -21041,6 +21010,54 @@ input InventoryTransactionInput {
   note: String
   journalEntryId: UUID
   createdAt: Datetime
+}
+
+"""The output of our create \`Book\` mutation."""
+type CreateBookPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Book\` that was created by this mutation."""
+  book: Book
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Book\`. May be used by Relay 1."""
+  bookEdge(
+    """The method to use when ordering \`Book\`."""
+    orderBy: [BookOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BookEdge
+}
+
+"""All input for the create \`Book\` mutation."""
+input CreateBookInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`Book\` to be created by this mutation."""
+  book: BookInput!
+}
+
+"""An input for mutations affecting \`Book\`"""
+input BookInput {
+  rowId: UUID
+  organizationId: String!
+  name: String!
+  type: String!
+  currency: String
+  fiscalYearStartMonth: Int
+  createdAt: Datetime
+  updatedAt: Datetime
+  invoiceSource: String
 }
 
 """The output of our create \`PayrollConnection\` mutation."""
@@ -23029,75 +23046,6 @@ input UpdateImportProfileInput {
   patch: ImportProfilePatch!
 }
 
-"""The output of our update \`Book\` mutation."""
-type UpdateBookPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`Book\` that was updated by this mutation."""
-  book: Book
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`Book\`. May be used by Relay 1."""
-  bookEdge(
-    """The method to use when ordering \`Book\`."""
-    orderBy: [BookOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): BookEdge
-}
-
-"""All input for the \`updateBookById\` mutation."""
-input UpdateBookByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`Book\` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the \`Book\` being updated.
-  """
-  patch: BookPatch!
-}
-
-"""Represents an update to a \`Book\`. Fields that are set will be updated."""
-input BookPatch {
-  rowId: UUID
-  organizationId: String
-  name: String
-  type: String
-  currency: String
-  fiscalYearStartMonth: Int
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
-"""All input for the \`updateBook\` mutation."""
-input UpdateBookInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the \`Book\` being updated.
-  """
-  patch: BookPatch!
-}
-
 """The output of our update \`NetWorthSnapshot\` mutation."""
 type UpdateNetWorthSnapshotPayload {
   """
@@ -23313,6 +23261,76 @@ input UpdateInventoryTransactionInput {
   An object where the defined keys will be set on the \`InventoryTransaction\` being updated.
   """
   patch: InventoryTransactionPatch!
+}
+
+"""The output of our update \`Book\` mutation."""
+type UpdateBookPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Book\` that was updated by this mutation."""
+  book: Book
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Book\`. May be used by Relay 1."""
+  bookEdge(
+    """The method to use when ordering \`Book\`."""
+    orderBy: [BookOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BookEdge
+}
+
+"""All input for the \`updateBookById\` mutation."""
+input UpdateBookByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`Book\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`Book\` being updated.
+  """
+  patch: BookPatch!
+}
+
+"""Represents an update to a \`Book\`. Fields that are set will be updated."""
+input BookPatch {
+  rowId: UUID
+  organizationId: String
+  name: String
+  type: String
+  currency: String
+  fiscalYearStartMonth: Int
+  createdAt: Datetime
+  updatedAt: Datetime
+  invoiceSource: String
+}
+
+"""All input for the \`updateBook\` mutation."""
+input UpdateBookInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`Book\` being updated.
+  """
+  patch: BookPatch!
 }
 
 """The output of our update \`PayrollConnection\` mutation."""
@@ -25644,54 +25662,6 @@ input DeleteImportProfileInput {
   rowId: UUID!
 }
 
-"""The output of our delete \`Book\` mutation."""
-type DeleteBookPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`Book\` that was deleted by this mutation."""
-  book: Book
-  deletedBookId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`Book\`. May be used by Relay 1."""
-  bookEdge(
-    """The method to use when ordering \`Book\`."""
-    orderBy: [BookOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): BookEdge
-}
-
-"""All input for the \`deleteBookById\` mutation."""
-input DeleteBookByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`Book\` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the \`deleteBook\` mutation."""
-input DeleteBookInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete \`NetWorthSnapshot\` mutation."""
 type DeleteNetWorthSnapshotPayload {
   """
@@ -25828,6 +25798,54 @@ input DeleteInventoryTransactionByIdInput {
 
 """All input for the \`deleteInventoryTransaction\` mutation."""
 input DeleteInventoryTransactionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`Book\` mutation."""
+type DeleteBookPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Book\` that was deleted by this mutation."""
+  book: Book
+  deletedBookId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Book\`. May be used by Relay 1."""
+  bookEdge(
+    """The method to use when ordering \`Book\`."""
+    orderBy: [BookOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BookEdge
+}
+
+"""All input for the \`deleteBookById\` mutation."""
+input DeleteBookByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`Book\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteBook\` mutation."""
+input DeleteBookInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -31178,6 +31196,9 @@ export const objects = {
           orderBy: applyOrderByArgToConnection
         }
       },
+      invoiceSource($record) {
+        return $record.get("invoice_source");
+      },
       journalEntries: {
         plan($record) {
           const $records = resource_journal_entryPgResource.find({
@@ -34293,7 +34314,7 @@ export const inputObjects = {
       parentId: AccountInput_parentIdApply,
       rowId: JournalLineTagInput_rowIdApply,
       subType: AccountInput_subTypeApply,
-      type: BookInput_typeApply,
+      type: InventoryTransactionInput_typeApply,
       updatedAt: AccountMappingInput_updatedAtApply
     }
   },
@@ -34367,7 +34388,7 @@ export const inputObjects = {
       parentId: AccountInput_parentIdApply,
       rowId: JournalLineTagInput_rowIdApply,
       subType: AccountInput_subTypeApply,
-      type: BookInput_typeApply,
+      type: InventoryTransactionInput_typeApply,
       updatedAt: AccountMappingInput_updatedAtApply
     }
   },
@@ -35465,10 +35486,11 @@ export const inputObjects = {
       createdAt: TagGroupInput_createdAtApply,
       currency: BookInput_currencyApply,
       fiscalYearStartMonth: BookInput_fiscalYearStartMonthApply,
+      invoiceSource: BookInput_invoiceSourceApply,
       name: TagGroupInput_nameApply,
       organizationId: BookInput_organizationIdApply,
       rowId: JournalLineTagInput_rowIdApply,
-      type: BookInput_typeApply,
+      type: InventoryTransactionInput_typeApply,
       updatedAt: AccountMappingInput_updatedAtApply
     }
   },
@@ -35478,10 +35500,11 @@ export const inputObjects = {
       createdAt: TagGroupInput_createdAtApply,
       currency: BookInput_currencyApply,
       fiscalYearStartMonth: BookInput_fiscalYearStartMonthApply,
+      invoiceSource: BookInput_invoiceSourceApply,
       name: TagGroupInput_nameApply,
       organizationId: BookInput_organizationIdApply,
       rowId: JournalLineTagInput_rowIdApply,
-      type: BookInput_typeApply,
+      type: InventoryTransactionInput_typeApply,
       updatedAt: AccountMappingInput_updatedAtApply
     }
   },
@@ -37262,7 +37285,7 @@ export const inputObjects = {
       note: InventoryTransactionInput_noteApply,
       quantity: InventoryTransactionInput_quantityApply,
       rowId: JournalLineTagInput_rowIdApply,
-      type: BookInput_typeApply,
+      type: InventoryTransactionInput_typeApply,
       unitCost: InventoryTransactionInput_unitCostApply
     }
   },
@@ -37277,7 +37300,7 @@ export const inputObjects = {
       note: InventoryTransactionInput_noteApply,
       quantity: InventoryTransactionInput_quantityApply,
       rowId: JournalLineTagInput_rowIdApply,
-      type: BookInput_typeApply,
+      type: InventoryTransactionInput_typeApply,
       unitCost: InventoryTransactionInput_unitCostApply
     }
   },

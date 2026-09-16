@@ -183,6 +183,13 @@
       "when": 1789530203426,
       "tag": "0025_acoustic_energizer",
       "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1789533485989,
+      "tag": "0026_optimal_zeigeist",
+      "breakpoints": true
     }
   ]
 }

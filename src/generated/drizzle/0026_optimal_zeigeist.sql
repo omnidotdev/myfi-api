@@ -1,0 +1,1 @@
+ALTER TABLE "book" ADD COLUMN "invoice_source" text DEFAULT 'myfi' NOT NULL;

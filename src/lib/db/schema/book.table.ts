@@ -21,6 +21,10 @@ export const bookTable = pgTable(
     fiscalYearStartMonth: integer("fiscal_year_start_month")
       .notNull()
       .default(1),
+    // source of record for invoices/quotes/inventory (app-validated text):
+    // "myfi" (native, standalone) or "mantle" (Mantle owns them; MyFi records
+    // the accounting from Mantle CloudEvents). Guarantees a single SSOT per book
+    invoiceSource: text("invoice_source").notNull().default("myfi"),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },

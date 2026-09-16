@@ -50,9 +50,6 @@ type Query implements Node {
   """Get a single `ImportProfile`."""
   importProfile(rowId: UUID!): ImportProfile
 
-  """Get a single `Book`."""
-  book(rowId: UUID!): Book
-
   """Get a single `NetWorthSnapshot`."""
   netWorthSnapshot(rowId: UUID!): NetWorthSnapshot
 
@@ -61,6 +58,9 @@ type Query implements Node {
 
   """Get a single `InventoryTransaction`."""
   inventoryTransaction(rowId: UUID!): InventoryTransaction
+
+  """Get a single `Book`."""
+  book(rowId: UUID!): Book
 
   """Get a single `PayrollConnection`."""
   payrollConnection(rowId: UUID!): PayrollConnection
@@ -216,12 +216,6 @@ type Query implements Node {
     id: ID!
   ): ImportProfile
 
-  """Reads a single `Book` using its globally unique `ID`."""
-  bookById(
-    """The globally unique `ID` to be used in selecting a single `Book`."""
-    id: ID!
-  ): Book
-
   """Reads a single `NetWorthSnapshot` using its globally unique `ID`."""
   netWorthSnapshotById(
     """
@@ -245,6 +239,12 @@ type Query implements Node {
     """
     id: ID!
   ): InventoryTransaction
+
+  """Reads a single `Book` using its globally unique `ID`."""
+  bookById(
+    """The globally unique `ID` to be used in selecting a single `Book`."""
+    id: ID!
+  ): Book
 
   """Reads a single `PayrollConnection` using its globally unique `ID`."""
   payrollConnectionById(
@@ -796,40 +796,6 @@ type Query implements Node {
     orderBy: [ImportProfileOrderBy!] = [PRIMARY_KEY_ASC]
   ): ImportProfileConnection
 
-  """Reads and enables pagination through a set of `Book`."""
-  books(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: BookCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: BookFilter
-
-    """The method to use when ordering `Book`."""
-    orderBy: [BookOrderBy!] = [PRIMARY_KEY_ASC]
-  ): BookConnection
-
   """Reads and enables pagination through a set of `NetWorthSnapshot`."""
   netWorthSnapshots(
     """Only read the first `n` values of the set."""
@@ -931,6 +897,40 @@ type Query implements Node {
     """The method to use when ordering `InventoryTransaction`."""
     orderBy: [InventoryTransactionOrderBy!] = [PRIMARY_KEY_ASC]
   ): InventoryTransactionConnection
+
+  """Reads and enables pagination through a set of `Book`."""
+  books(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: BookCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: BookFilter
+
+    """The method to use when ordering `Book`."""
+    orderBy: [BookOrderBy!] = [PRIMARY_KEY_ASC]
+  ): BookConnection
 
   """Reads and enables pagination through a set of `PayrollConnection`."""
   payrollConnections(
@@ -2061,6 +2061,7 @@ type Book implements Node {
   fiscalYearStartMonth: Int!
   createdAt: Datetime
   updatedAt: Datetime
+  invoiceSource: String!
 
   """Reads and enables pagination through a set of `Account`."""
   accounts(
@@ -9366,14 +9367,6 @@ type Mutation {
     input: CreateImportProfileInput!
   ): CreateImportProfilePayload
 
-  """Creates a single `Book`."""
-  createBook(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateBookInput!
-  ): CreateBookPayload
-
   """Creates a single `NetWorthSnapshot`."""
   createNetWorthSnapshot(
     """
@@ -9397,6 +9390,14 @@ type Mutation {
     """
     input: CreateInventoryTransactionInput!
   ): CreateInventoryTransactionPayload
+
+  """Creates a single `Book`."""
+  createBook(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateBookInput!
+  ): CreateBookPayload
 
   """Creates a single `PayrollConnection`."""
   createPayrollConnection(
@@ -9782,22 +9783,6 @@ type Mutation {
     input: UpdateImportProfileInput!
   ): UpdateImportProfilePayload
 
-  """Updates a single `Book` using its globally unique id and a patch."""
-  updateBookById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateBookByIdInput!
-  ): UpdateBookPayload
-
-  """Updates a single `Book` using a unique key and a patch."""
-  updateBook(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateBookInput!
-  ): UpdateBookPayload
-
   """
   Updates a single `NetWorthSnapshot` using its globally unique id and a patch.
   """
@@ -9853,6 +9838,22 @@ type Mutation {
     """
     input: UpdateInventoryTransactionInput!
   ): UpdateInventoryTransactionPayload
+
+  """Updates a single `Book` using its globally unique id and a patch."""
+  updateBookById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateBookByIdInput!
+  ): UpdateBookPayload
+
+  """Updates a single `Book` using a unique key and a patch."""
+  updateBook(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateBookInput!
+  ): UpdateBookPayload
 
   """
   Updates a single `PayrollConnection` using its globally unique id and a patch.
@@ -10448,22 +10449,6 @@ type Mutation {
     input: DeleteImportProfileInput!
   ): DeleteImportProfilePayload
 
-  """Deletes a single `Book` using its globally unique id."""
-  deleteBookById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteBookByIdInput!
-  ): DeleteBookPayload
-
-  """Deletes a single `Book` using a unique key."""
-  deleteBook(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteBookInput!
-  ): DeleteBookPayload
-
   """Deletes a single `NetWorthSnapshot` using its globally unique id."""
   deleteNetWorthSnapshotById(
     """
@@ -10511,6 +10496,22 @@ type Mutation {
     """
     input: DeleteInventoryTransactionInput!
   ): DeleteInventoryTransactionPayload
+
+  """Deletes a single `Book` using its globally unique id."""
+  deleteBookById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteBookByIdInput!
+  ): DeleteBookPayload
+
+  """Deletes a single `Book` using a unique key."""
+  deleteBook(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteBookInput!
+  ): DeleteBookPayload
 
   """Deletes a single `PayrollConnection` using its globally unique id."""
   deletePayrollConnectionById(
@@ -11396,53 +11397,6 @@ input ImportProfileInput {
   updatedAt: Datetime
 }
 
-"""The output of our create `Book` mutation."""
-type CreateBookPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Book` that was created by this mutation."""
-  book: Book
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `Book`. May be used by Relay 1."""
-  bookEdge(
-    """The method to use when ordering `Book`."""
-    orderBy: [BookOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): BookEdge
-}
-
-"""All input for the create `Book` mutation."""
-input CreateBookInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `Book` to be created by this mutation."""
-  book: BookInput!
-}
-
-"""An input for mutations affecting `Book`"""
-input BookInput {
-  rowId: UUID
-  organizationId: String!
-  name: String!
-  type: String!
-  currency: String
-  fiscalYearStartMonth: Int
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
 """The output of our create `NetWorthSnapshot` mutation."""
 type CreateNetWorthSnapshotPayload {
   """
@@ -11586,6 +11540,54 @@ input InventoryTransactionInput {
   note: String
   journalEntryId: UUID
   createdAt: Datetime
+}
+
+"""The output of our create `Book` mutation."""
+type CreateBookPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Book` that was created by this mutation."""
+  book: Book
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Book`. May be used by Relay 1."""
+  bookEdge(
+    """The method to use when ordering `Book`."""
+    orderBy: [BookOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BookEdge
+}
+
+"""All input for the create `Book` mutation."""
+input CreateBookInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Book` to be created by this mutation."""
+  book: BookInput!
+}
+
+"""An input for mutations affecting `Book`"""
+input BookInput {
+  rowId: UUID
+  organizationId: String!
+  name: String!
+  type: String!
+  currency: String
+  fiscalYearStartMonth: Int
+  createdAt: Datetime
+  updatedAt: Datetime
+  invoiceSource: String
 }
 
 """The output of our create `PayrollConnection` mutation."""
@@ -13574,75 +13576,6 @@ input UpdateImportProfileInput {
   patch: ImportProfilePatch!
 }
 
-"""The output of our update `Book` mutation."""
-type UpdateBookPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Book` that was updated by this mutation."""
-  book: Book
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `Book`. May be used by Relay 1."""
-  bookEdge(
-    """The method to use when ordering `Book`."""
-    orderBy: [BookOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): BookEdge
-}
-
-"""All input for the `updateBookById` mutation."""
-input UpdateBookByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Book` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the `Book` being updated.
-  """
-  patch: BookPatch!
-}
-
-"""Represents an update to a `Book`. Fields that are set will be updated."""
-input BookPatch {
-  rowId: UUID
-  organizationId: String
-  name: String
-  type: String
-  currency: String
-  fiscalYearStartMonth: Int
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
-"""All input for the `updateBook` mutation."""
-input UpdateBookInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the `Book` being updated.
-  """
-  patch: BookPatch!
-}
-
 """The output of our update `NetWorthSnapshot` mutation."""
 type UpdateNetWorthSnapshotPayload {
   """
@@ -13858,6 +13791,76 @@ input UpdateInventoryTransactionInput {
   An object where the defined keys will be set on the `InventoryTransaction` being updated.
   """
   patch: InventoryTransactionPatch!
+}
+
+"""The output of our update `Book` mutation."""
+type UpdateBookPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Book` that was updated by this mutation."""
+  book: Book
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Book`. May be used by Relay 1."""
+  bookEdge(
+    """The method to use when ordering `Book`."""
+    orderBy: [BookOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BookEdge
+}
+
+"""All input for the `updateBookById` mutation."""
+input UpdateBookByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Book` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `Book` being updated.
+  """
+  patch: BookPatch!
+}
+
+"""Represents an update to a `Book`. Fields that are set will be updated."""
+input BookPatch {
+  rowId: UUID
+  organizationId: String
+  name: String
+  type: String
+  currency: String
+  fiscalYearStartMonth: Int
+  createdAt: Datetime
+  updatedAt: Datetime
+  invoiceSource: String
+}
+
+"""All input for the `updateBook` mutation."""
+input UpdateBookInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `Book` being updated.
+  """
+  patch: BookPatch!
 }
 
 """The output of our update `PayrollConnection` mutation."""
@@ -16189,54 +16192,6 @@ input DeleteImportProfileInput {
   rowId: UUID!
 }
 
-"""The output of our delete `Book` mutation."""
-type DeleteBookPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Book` that was deleted by this mutation."""
-  book: Book
-  deletedBookId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `Book`. May be used by Relay 1."""
-  bookEdge(
-    """The method to use when ordering `Book`."""
-    orderBy: [BookOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): BookEdge
-}
-
-"""All input for the `deleteBookById` mutation."""
-input DeleteBookByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Book` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the `deleteBook` mutation."""
-input DeleteBookInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete `NetWorthSnapshot` mutation."""
 type DeleteNetWorthSnapshotPayload {
   """
@@ -16373,6 +16328,54 @@ input DeleteInventoryTransactionByIdInput {
 
 """All input for the `deleteInventoryTransaction` mutation."""
 input DeleteInventoryTransactionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `Book` mutation."""
+type DeleteBookPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Book` that was deleted by this mutation."""
+  book: Book
+  deletedBookId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Book`. May be used by Relay 1."""
+  bookEdge(
+    """The method to use when ordering `Book`."""
+    orderBy: [BookOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BookEdge
+}
+
+"""All input for the `deleteBookById` mutation."""
+input DeleteBookByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Book` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteBook` mutation."""
+input DeleteBookInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
