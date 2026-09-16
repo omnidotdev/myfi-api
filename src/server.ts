@@ -44,6 +44,8 @@ import ofxRoutes from "lib/ofx/ofxRoutes";
 import { payrollCallbackRoute, payrollRoutes } from "lib/payroll";
 import plaidRoutes from "lib/plaid/plaidRoutes";
 import startScheduledSync from "lib/plaid/scheduledSync";
+import recurringRoutes from "lib/recurring/recurringRoutes";
+import startScheduledRecurring from "lib/recurring/scheduledRecurring";
 import {
   exportReport,
   generateAgingReport,
@@ -185,6 +187,7 @@ const app = new Elysia()
   .use(billRoutes)
   .use(estimateRoutes)
   .use(inventoryRoutes)
+  .use(recurringRoutes)
   .use(migrationRoutes)
   .use(profileRoutes)
   .use(ofxRoutes)
@@ -615,6 +618,7 @@ console.info(
 
 const stopSync = startScheduledSync();
 const stopClose = startScheduledClose();
+const stopRecurring = startScheduledRecurring();
 
 /**
  * Graceful shutdown handler.
@@ -623,6 +627,7 @@ const shutdown = async (signal: string) => {
   console.info(`[Server] Received ${signal}, shutting down gracefully...`);
   stopSync();
   stopClose();
+  stopRecurring();
   app.stop();
   await pgPool.end();
   console.info("[Server] Shutdown complete");
