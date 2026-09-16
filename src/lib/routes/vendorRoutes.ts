@@ -98,7 +98,6 @@ const vendorRoutes = new Elysia({ prefix: "/api/vendors" })
       emitAudit({
         type: "myfi.vendor.created",
         organizationId: body.bookId,
-        actor: { id: "unknown" },
         resource: { type: "vendor", id: vendor.id, name: vendor.name },
         data: { bookId: body.bookId },
       });
@@ -166,7 +165,6 @@ const vendorRoutes = new Elysia({ prefix: "/api/vendors" })
       emitAudit({
         type: "myfi.vendor.updated",
         organizationId: existing.bookId,
-        actor: { id: "unknown" },
         resource: { type: "vendor", id: vendor.id, name: vendor.name },
         data: { bookId: existing.bookId },
       });
@@ -228,7 +226,6 @@ const vendorRoutes = new Elysia({ prefix: "/api/vendors" })
       emitAudit({
         type: "myfi.vendor.deleted",
         organizationId: existing.bookId,
-        actor: { id: "unknown" },
         resource: { type: "vendor", id: existing.id, name: existing.name },
       });
 

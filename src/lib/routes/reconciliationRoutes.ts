@@ -148,7 +148,7 @@ const reconciliationRoutes = new Elysia({ prefix: "/api/reconciliation" })
       emitAudit({
         type: auditType,
         organizationId: existing.bookId,
-        actor: body.reviewedBy ? { id: body.reviewedBy } : { id: "unknown" },
+        actor: body.reviewedBy ? { id: body.reviewedBy } : undefined,
         resource: { type: "reconciliation", id },
         data: {
           journalEntryId: existing.journalEntryId,

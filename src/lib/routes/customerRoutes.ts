@@ -66,7 +66,6 @@ const customerRoutes = new Elysia({ prefix: "/api/customers" })
       emitAudit({
         type: "myfi.customer.created",
         organizationId: body.bookId,
-        actor: { id: "unknown" },
         resource: { type: "customer", id: customer.id, name: customer.name },
         data: { bookId: body.bookId },
       });
@@ -171,7 +170,6 @@ const customerRoutes = new Elysia({ prefix: "/api/customers" })
       emitAudit({
         type: "myfi.customer.deleted",
         organizationId: existing.bookId,
-        actor: { id: "unknown" },
         resource: { type: "customer", id: existing.id, name: existing.name },
       });
 

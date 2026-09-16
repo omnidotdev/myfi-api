@@ -148,7 +148,6 @@ const periodRoutes = new Elysia({ prefix: "/api/periods" })
       emitAudit({
         type: "myfi.period.reopened",
         organizationId: body.bookId,
-        actor: { id: "unknown" },
         resource: { type: "accounting_period", id: period.id },
         data: { year: body.year, month: body.month },
       });

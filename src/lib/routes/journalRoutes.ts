@@ -146,7 +146,6 @@ const journalRoutes = new Elysia({ prefix: "/api/journal-entries" })
       emitAudit({
         type: "myfi.journal_entry.created",
         organizationId: bookId,
-        actor: { id: "unknown" },
         resource: {
           type: "journal_entry",
           id: entry.id,
@@ -261,7 +260,6 @@ const journalRoutes = new Elysia({ prefix: "/api/journal-entries" })
       emitAudit({
         type: "myfi.journal_entry.updated",
         organizationId: existing.bookId,
-        actor: { id: "unknown" },
         resource: {
           type: "journal_entry",
           id,
@@ -359,7 +357,6 @@ const journalRoutes = new Elysia({ prefix: "/api/journal-entries" })
       emitAudit({
         type: "myfi.journal_entry.reversed",
         organizationId: original.bookId,
-        actor: { id: "unknown" },
         resource: { type: "journal_entry", id: entry.id },
         data: { bookId: original.bookId, reversalOf: id, date: reversalDate },
       });
@@ -410,7 +407,6 @@ const journalRoutes = new Elysia({ prefix: "/api/journal-entries" })
         emitAudit({
           type: "myfi.journal_entry.deleted",
           organizationId: full.bookId,
-          actor: { id: "unknown" },
           resource: { type: "journal_entry", id, name: full.memo ?? undefined },
           data: { bookId: full.bookId },
         });

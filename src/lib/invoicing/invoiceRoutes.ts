@@ -152,7 +152,6 @@ const invoiceRoutes = new Elysia({ prefix: "/api/invoices" })
         emitAudit({
           type: "myfi.invoice.posted",
           organizationId: body.bookId,
-          actor: { id: "unknown" },
           resource: { type: "invoice", id: params.id },
           data: { total: result.total },
         });
@@ -194,7 +193,6 @@ const invoiceRoutes = new Elysia({ prefix: "/api/invoices" })
         emitAudit({
           type: "myfi.invoice.payment_recorded",
           organizationId: body.bookId,
-          actor: { id: "unknown" },
           resource: { type: "invoice", id: params.id },
           data: { amount: body.amount, status: result.invoiceStatus },
         });
@@ -231,7 +229,6 @@ const invoiceRoutes = new Elysia({ prefix: "/api/invoices" })
         emitAudit({
           type: "myfi.invoice.voided",
           organizationId: body.bookId,
-          actor: { id: "unknown" },
           resource: { type: "invoice", id: params.id },
         });
         return result;

@@ -50,7 +50,6 @@ const categorizationRuleRoutes = new Elysia({
       emitAudit({
         type: "myfi.rule.created",
         organizationId: body.bookId,
-        actor: { id: "unknown" },
         resource: { type: "categorization_rule", id: rule.id, name: rule.name },
         data: {
           matchField: body.matchField,
@@ -101,7 +100,6 @@ const categorizationRuleRoutes = new Elysia({
       emitAudit({
         type: "myfi.rule.updated",
         organizationId: existing.bookId,
-        actor: { id: "unknown" },
         resource: {
           type: "categorization_rule",
           id: params.id,
@@ -149,7 +147,6 @@ const categorizationRuleRoutes = new Elysia({
       emitAudit({
         type: "myfi.rule.deleted",
         organizationId: existing.bookId,
-        actor: { id: "unknown" },
         resource: {
           type: "categorization_rule",
           id: params.id,

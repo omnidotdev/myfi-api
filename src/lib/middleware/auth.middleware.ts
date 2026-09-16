@@ -1,5 +1,6 @@
 import { Elysia } from "elysia";
 
+import { setAuditActor } from "lib/audit";
 import { extractBearerToken, resolveUserFromToken } from "lib/auth";
 
 import type { Observer } from "lib/auth";
@@ -41,6 +42,10 @@ const authMiddleware = new Elysia({ name: "auth-middleware" })
       if (!user) {
         throw new AuthenticationError("Invalid or expired token");
       }
+
+      // Bind the actor for the rest of this request so audit events attribute
+      // changes to the real user without every handler threading it through
+      setAuditActor({ id: user.id, name: user.name, email: user.email });
 
       return { user };
     },

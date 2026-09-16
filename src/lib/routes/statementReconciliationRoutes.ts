@@ -206,7 +206,6 @@ const statementReconciliationRoutes = new Elysia({
     emitAudit({
       type: "myfi.statement_reconciliation.completed",
       organizationId: existing.bookId,
-      actor: { id: "unknown" },
       resource: {
         type: "statement_reconciliation",
         id,

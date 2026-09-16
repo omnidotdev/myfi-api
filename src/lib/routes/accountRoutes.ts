@@ -55,7 +55,6 @@ const accountRoutes = new Elysia({ prefix: "/api/accounts" })
       emitAudit({
         type: "myfi.account.created",
         organizationId: body.bookId,
-        actor: { id: "unknown" },
         resource: { type: "account", id: account.id, name: account.name },
         data: { bookId: body.bookId, accountType: body.type },
       });
@@ -115,7 +114,6 @@ const accountRoutes = new Elysia({ prefix: "/api/accounts" })
       emitAudit({
         type: "myfi.account.updated",
         organizationId: existing.bookId,
-        actor: { id: "unknown" },
         resource: { type: "account", id: params.id, name: account.name },
       });
 
@@ -175,7 +173,6 @@ const accountRoutes = new Elysia({ prefix: "/api/accounts" })
           ? "myfi.account.deactivated"
           : "myfi.account.updated",
         organizationId: existing.bookId,
-        actor: { id: "unknown" },
         resource: { type: "account", id: params.id, name: existing.name },
       });
 
@@ -209,7 +206,6 @@ const accountRoutes = new Elysia({ prefix: "/api/accounts" })
       emitAudit({
         type: "myfi.account.deleted",
         organizationId: existing.bookId,
-        actor: { id: "unknown" },
         resource: {
           type: "account",
           id: existing.id,

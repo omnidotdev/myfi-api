@@ -113,7 +113,6 @@ const fixedAssetRoutes = new Elysia({ prefix: "/api/fixed-assets" })
       emitAudit({
         type: "myfi.asset.created",
         organizationId: body.bookId,
-        actor: { id: "unknown" },
         resource: { type: "fixed_asset", id: asset.id, name: asset.name },
         data: { bookId: body.bookId },
       });
@@ -174,7 +173,6 @@ const fixedAssetRoutes = new Elysia({ prefix: "/api/fixed-assets" })
       emitAudit({
         type: "myfi.asset.deleted",
         organizationId: asset.bookId,
-        actor: { id: "unknown" },
         resource: { type: "fixed_asset", id: asset.id, name: asset.name },
       });
 
@@ -300,7 +298,6 @@ const fixedAssetRoutes = new Elysia({ prefix: "/api/fixed-assets" })
       emitAudit({
         type: "myfi.asset.disposed",
         organizationId: asset.bookId,
-        actor: { id: "unknown" },
         resource: { type: "fixed_asset", id: asset.id, name: asset.name },
         data: {
           disposedAt: body.disposedAt,

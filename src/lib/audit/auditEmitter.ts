@@ -1,3 +1,4 @@
+import { getAuditActor } from "lib/audit/auditContext";
 import { events } from "lib/providers";
 
 type AuditActor = {
@@ -9,7 +10,12 @@ type AuditActor = {
 type AuditEvent = {
   type: string;
   organizationId: string;
-  actor: AuditActor;
+  /**
+   * The acting user. Optional: when omitted, the request-scoped actor bound by
+   * the auth middleware is used, falling back to the system actor. Prefer
+   * omitting it so the real user is captured automatically
+   */
+  actor?: AuditActor;
   resource: {
     type: string;
     id: string;
@@ -28,15 +34,16 @@ const SYSTEM_ACTOR: AuditActor = {
  * Fire-and-forget: never blocks the caller, logs warning on failure
  */
 const emitAudit = (event: AuditEvent): void => {
+  const actor = event.actor ?? getAuditActor() ?? SYSTEM_ACTOR;
   events
     .emit({
       type: event.type,
       organizationId: event.organizationId,
       subject: event.resource.id,
       data: {
-        actorId: event.actor.id,
-        actorName: event.actor.name,
-        actorEmail: event.actor.email,
+        actorId: actor.id,
+        actorName: actor.name,
+        actorEmail: actor.email,
         resourceType: event.resource.type,
         resourceId: event.resource.id,
         resourceName: event.resource.name,

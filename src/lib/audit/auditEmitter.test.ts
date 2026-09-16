@@ -9,6 +9,7 @@ mock.module("lib/providers", () => ({
 }));
 
 const { emitAudit, SYSTEM_ACTOR } = await import("./auditEmitter");
+const { setAuditActor } = await import("./auditContext");
 
 const baseEvent = {
   type: "myfi.test.created",
@@ -84,6 +85,39 @@ describe("emitAudit", () => {
     );
 
     expect(() => emitAudit(baseEvent)).not.toThrow();
+  });
+});
+
+// These run after the explicit-actor tests above, which never bind a request
+// actor, so the store starts empty here
+describe("emitAudit actor resolution", () => {
+  beforeEach(() => {
+    mockEmit.mockClear();
+  });
+
+  test("falls back to the system actor when none is provided or bound", async () => {
+    emitAudit({ ...baseEvent, actor: undefined });
+    await new Promise((r) => setTimeout(r, 10));
+
+    expect(getEmitData().actorId).toBe("system");
+  });
+
+  test("uses the request-scoped actor when no explicit actor is passed", async () => {
+    setAuditActor({ id: "user-9", name: "Req User", email: "r@x.com" });
+    emitAudit({ ...baseEvent, actor: undefined });
+    await new Promise((r) => setTimeout(r, 10));
+
+    const data = getEmitData();
+    expect(data.actorId).toBe("user-9");
+    expect(data.actorName).toBe("Req User");
+  });
+
+  test("an explicit actor overrides the request-scoped one", async () => {
+    setAuditActor({ id: "user-9" });
+    emitAudit(baseEvent);
+    await new Promise((r) => setTimeout(r, 10));
+
+    expect(getEmitData().actorId).toBe("user-1");
   });
 });
 

@@ -48,7 +48,6 @@ const tagRoutes = new Elysia({ prefix: "/api/tags" })
       emitAudit({
         type: "myfi.tag_group.created",
         organizationId: body.bookId,
-        actor: { id: "unknown" },
         resource: { type: "tag_group", id: group.id, name: group.name },
         data: { bookId: body.bookId },
       });
@@ -81,7 +80,6 @@ const tagRoutes = new Elysia({ prefix: "/api/tags" })
       emitAudit({
         type: "myfi.tag_group.deleted",
         organizationId: existing.bookId,
-        actor: { id: "unknown" },
         resource: {
           type: "tag_group",
           id: existing.id,
@@ -123,7 +121,6 @@ const tagRoutes = new Elysia({ prefix: "/api/tags" })
       emitAudit({
         type: "myfi.tag.created",
         organizationId: group.bookId,
-        actor: { id: "unknown" },
         resource: { type: "tag", id: tag.id, name: tag.name },
         data: { tagGroupId: body.tagGroupId },
       });
@@ -170,7 +167,6 @@ const tagRoutes = new Elysia({ prefix: "/api/tags" })
       emitAudit({
         type: "myfi.tag.updated",
         organizationId: existing.bookId,
-        actor: { id: "unknown" },
         resource: { type: "tag", id: tag.id, name: tag.name },
       });
 
@@ -209,7 +205,6 @@ const tagRoutes = new Elysia({ prefix: "/api/tags" })
       emitAudit({
         type: "myfi.tag.deleted",
         organizationId: existing.bookId,
-        actor: { id: "unknown" },
         resource: {
           type: "tag",
           id: existing.id,

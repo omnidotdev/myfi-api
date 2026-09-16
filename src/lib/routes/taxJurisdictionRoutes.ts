@@ -43,7 +43,6 @@ const taxJurisdictionRoutes = new Elysia({
       emitAudit({
         type: "myfi.tax_jurisdiction.created",
         organizationId: body.bookId,
-        actor: { id: "unknown" },
         resource: {
           type: "tax_jurisdiction",
           id: jurisdiction.id,
@@ -94,7 +93,6 @@ const taxJurisdictionRoutes = new Elysia({
       emitAudit({
         type: "myfi.tax_jurisdiction.updated",
         organizationId: existing.bookId,
-        actor: { id: "unknown" },
         resource: {
           type: "tax_jurisdiction",
           id: jurisdiction.id,
@@ -135,7 +133,6 @@ const taxJurisdictionRoutes = new Elysia({
       emitAudit({
         type: "myfi.tax_jurisdiction.deleted",
         organizationId: existing.bookId,
-        actor: { id: "unknown" },
         resource: {
           type: "tax_jurisdiction",
           id: existing.id,

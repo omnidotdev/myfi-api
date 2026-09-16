@@ -61,7 +61,6 @@ const connectionRoutes = new Elysia({ prefix: "/api/connections" })
       emitAudit({
         type: "myfi.connection.linked",
         organizationId: existing.bookId,
-        actor: { id: "unknown" },
         resource: {
           type: "connected_account",
           id: params.id,
@@ -107,7 +106,6 @@ const connectionRoutes = new Elysia({ prefix: "/api/connections" })
       emitAudit({
         type: "myfi.connection.unlinked",
         organizationId: existing.bookId,
-        actor: { id: "unknown" },
         resource: {
           type: "connected_account",
           id: params.id,

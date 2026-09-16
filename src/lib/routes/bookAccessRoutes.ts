@@ -85,7 +85,6 @@ const bookAccessRoutes = new Elysia({ prefix: "/api/book-access" })
       emitAudit({
         type: "myfi.book_access.updated",
         organizationId: existing.bookId,
-        actor: { id: "unknown" },
         resource: {
           type: "book_access",
           id: record.id,
@@ -132,7 +131,6 @@ const bookAccessRoutes = new Elysia({ prefix: "/api/book-access" })
       emitAudit({
         type: "myfi.book_access.deleted",
         organizationId: existing.bookId,
-        actor: { id: "unknown" },
         resource: {
           type: "book_access",
           id: existing.id,
