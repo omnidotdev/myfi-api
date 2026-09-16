@@ -12,6 +12,7 @@ export {
 export { default as generateGeneralLedger } from "./generalLedger";
 export { default as generatePayrollSummary } from "./payrollSummary";
 export { default as generateProfitAndLoss } from "./profitAndLoss";
+export { generateProjectPnl, generateProjectSummary } from "./projectReport";
 export { default as getSalesByState } from "./salesByState";
 export { default as generateSalesTaxReport } from "./salesTax";
 export { default as generateStatementOfEquity } from "./statementOfEquity";

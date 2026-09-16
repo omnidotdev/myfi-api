@@ -7,6 +7,7 @@ import renderReportHtml from "./htmlRenderer";
 import generatePayrollSummary from "./payrollSummary";
 import renderReportPdf from "./pdfRenderer";
 import generateProfitAndLoss from "./profitAndLoss";
+import { generateProjectPnl } from "./projectReport";
 import getSalesByState from "./salesByState";
 import generateSalesTaxReport from "./salesTax";
 import generateTrialBalance from "./trialBalance";
@@ -28,6 +29,8 @@ type ExportParams = {
   asOfDate?: string;
   year?: string;
   tagIds?: string[];
+  projectId?: string;
+  projectIds?: string[];
   accountId?: string;
   jurisdictionId?: string;
   basis?: "accrual" | "cash";
@@ -86,6 +89,8 @@ const exportReport = async (params: ExportParams): Promise<ExportResult> => {
     asOfDate,
     year,
     tagIds,
+    projectId,
+    projectIds,
     accountId,
     jurisdictionId,
     basis,
@@ -111,6 +116,7 @@ const exportReport = async (params: ExportParams): Promise<ExportResult> => {
         startDate,
         endDate,
         tagIds,
+        projectIds,
         basis,
       });
 
@@ -141,7 +147,12 @@ const exportReport = async (params: ExportParams): Promise<ExportResult> => {
         throw new Error("asOfDate is required for balance-sheet");
       }
 
-      const bs = await generateBalanceSheet({ bookId, asOfDate, tagIds });
+      const bs = await generateBalanceSheet({
+        bookId,
+        asOfDate,
+        tagIds,
+        projectIds,
+      });
 
       title = "Balance Sheet";
       subtitle = `As of ${asOfDate}`;
@@ -176,6 +187,7 @@ const exportReport = async (params: ExportParams): Promise<ExportResult> => {
         startDate,
         endDate,
         tagIds,
+        projectIds,
       });
 
       title = "Trial Balance";
@@ -229,6 +241,7 @@ const exportReport = async (params: ExportParams): Promise<ExportResult> => {
         startDate,
         endDate,
         tagIds,
+        projectIds,
       });
 
       title = "Cash Flow Statement";
@@ -271,6 +284,7 @@ const exportReport = async (params: ExportParams): Promise<ExportResult> => {
         startDate,
         endDate,
         tagIds,
+        projectIds,
       });
 
       title = `General Ledger: ${gl.accountName}`;
@@ -422,6 +436,41 @@ const exportReport = async (params: ExportParams): Promise<ExportResult> => {
         String(sbs.totalTransactions),
         "",
       ];
+      break;
+    }
+
+    case "project-pnl": {
+      if (!projectId) {
+        throw new Error("projectId is required for project-pnl");
+      }
+
+      const ppnl = await generateProjectPnl({
+        projectId,
+        bookId,
+        startDate,
+        endDate,
+      });
+
+      title = `Project P&L: ${ppnl.project.name}`;
+      subtitle =
+        startDate && endDate ? `${startDate} to ${endDate}` : undefined;
+      filenameBase = `project-pnl_${ppnl.project.name.replace(/\s+/g, "-")}`;
+      headers = ["Account", "Type", "Amount"];
+
+      rows = [
+        ...ppnl.revenue.map((r) => {
+          const net =
+            Number.parseFloat(r.totalCredit) - Number.parseFloat(r.totalDebit);
+          return [r.accountName, "Revenue", fmt(net.toString())];
+        }),
+        ...ppnl.expenses.map((e) => {
+          const net =
+            Number.parseFloat(e.totalDebit) - Number.parseFloat(e.totalCredit);
+          return [e.accountName, "Expense", fmt(net.toString())];
+        }),
+      ];
+
+      totals = ["Net Income", "", fmt(ppnl.netIncome.toString())];
       break;
     }
 

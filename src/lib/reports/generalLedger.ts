@@ -4,6 +4,7 @@ import { dbPool } from "lib/db/db";
 import {
   accountTable,
   journalEntryTable,
+  journalLineProjectTable,
   journalLineTable,
   journalLineTagTable,
 } from "lib/db/schema";
@@ -42,6 +43,7 @@ const computeOpeningBalance = async (
   accountType: string,
   beforeDate: string,
   tagIds?: string[],
+  projectIds?: string[],
 ): Promise<number> => {
   let query = dbPool
     .select({
@@ -62,12 +64,22 @@ const computeOpeningBalance = async (
     );
   }
 
+  if (projectIds?.length) {
+    query = query.innerJoin(
+      journalLineProjectTable,
+      eq(journalLineProjectTable.journalLineId, journalLineTable.id),
+    );
+  }
+
   const [result] = await query.where(
     and(
       eq(journalEntryTable.bookId, bookId),
       eq(journalLineTable.accountId, accountId),
       lt(journalEntryTable.date, beforeDate),
       tagIds?.length ? inArray(journalLineTagTable.tagId, tagIds) : undefined,
+      projectIds?.length
+        ? inArray(journalLineProjectTable.projectId, projectIds)
+        : undefined,
     ),
   );
 
@@ -94,8 +106,9 @@ const generateGeneralLedger = async (params: {
   startDate: string;
   endDate: string;
   tagIds?: string[];
+  projectIds?: string[];
 }): Promise<GeneralLedgerReport> => {
-  const { bookId, accountId, startDate, endDate, tagIds } = params;
+  const { bookId, accountId, startDate, endDate, tagIds, projectIds } = params;
 
   // Fetch the account details
   const [account] = await dbPool
@@ -133,6 +146,7 @@ const generateGeneralLedger = async (params: {
     account.type,
     startDate,
     tagIds,
+    projectIds,
   );
 
   // Fetch journal lines within the date range for this account
@@ -159,6 +173,13 @@ const generateGeneralLedger = async (params: {
     );
   }
 
+  if (projectIds?.length) {
+    entriesQuery = entriesQuery.innerJoin(
+      journalLineProjectTable,
+      eq(journalLineProjectTable.journalLineId, journalLineTable.id),
+    );
+  }
+
   const results = await entriesQuery
     .where(
       and(
@@ -166,6 +187,9 @@ const generateGeneralLedger = async (params: {
         eq(journalLineTable.accountId, accountId),
         between(journalEntryTable.date, startDate, endDate),
         tagIds?.length ? inArray(journalLineTagTable.tagId, tagIds) : undefined,
+        projectIds?.length
+          ? inArray(journalLineProjectTable.projectId, projectIds)
+          : undefined,
       ),
     )
     .orderBy(asc(journalEntryTable.date));

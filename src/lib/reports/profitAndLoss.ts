@@ -4,6 +4,7 @@ import { dbPool } from "lib/db/db";
 import {
   accountTable,
   journalEntryTable,
+  journalLineProjectTable,
   journalLineTable,
   journalLineTagTable,
 } from "lib/db/schema";
@@ -83,9 +84,10 @@ const generateProfitAndLoss = async (params: {
   startDate: string;
   endDate: string;
   tagIds?: string[];
+  projectIds?: string[];
   basis?: ReportBasis;
 }): Promise<ProfitAndLossReport> => {
-  const { bookId, startDate, endDate, tagIds } = params;
+  const { bookId, startDate, endDate, tagIds, projectIds } = params;
   const basis: ReportBasis = params.basis === "cash" ? "cash" : "accrual";
   const cash = basis === "cash";
 
@@ -116,6 +118,15 @@ const generateProfitAndLoss = async (params: {
     );
   }
 
+  // Project filtering is likewise accrual-only (cash-basis adjustments are
+  // payment-traced and carry no project assignment)
+  if (!cash && projectIds?.length) {
+    query = query.innerJoin(
+      journalLineProjectTable,
+      eq(journalLineProjectTable.journalLineId, journalLineTable.id),
+    );
+  }
+
   const results = await query
     .where(
       and(
@@ -129,6 +140,9 @@ const generateProfitAndLoss = async (params: {
           : undefined,
         !cash && tagIds?.length
           ? inArray(journalLineTagTable.tagId, tagIds)
+          : undefined,
+        !cash && projectIds?.length
+          ? inArray(journalLineProjectTable.projectId, projectIds)
           : undefined,
       ),
     )
