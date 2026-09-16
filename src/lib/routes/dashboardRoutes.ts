@@ -1,6 +1,7 @@
 import { and, eq, sql } from "drizzle-orm";
 import { Elysia } from "elysia";
 
+import getRunway from "lib/dashboard/runway";
 import { dbPool } from "lib/db/db";
 import {
   accountTable,
@@ -146,6 +147,22 @@ dashboardRoutes.get("/close-status", async ({ query, set }) => {
   }
 
   return { statuses, year, month };
+});
+
+// Cash runway + burn for a single book
+dashboardRoutes.get("/runway", async ({ query, set }) => {
+  const { bookId, months } = query;
+
+  if (!bookId) {
+    set.status = 400;
+    return { error: "bookId is required" };
+  }
+
+  const parsed = months ? Number.parseInt(months, 10) : 6;
+  const windowMonths =
+    Number.isFinite(parsed) && parsed >= 1 && parsed <= 24 ? parsed : 6;
+
+  return getRunway({ bookId, months: windowMonths });
 });
 
 export default dashboardRoutes;
