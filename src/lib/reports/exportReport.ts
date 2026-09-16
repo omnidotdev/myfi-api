@@ -1,3 +1,4 @@
+import { getVendorSpend } from "lib/spending";
 import { generate1099Nec } from "lib/tax";
 import generateBalanceSheet from "./balanceSheet";
 import generateCashFlow from "./cashFlow";
@@ -359,6 +360,32 @@ const exportReport = async (params: ExportParams): Promise<ExportResult> => {
         fmt(pr.totals.taxes),
         fmt(pr.totals.benefits),
         fmt(pr.totals.netPay),
+      ];
+      break;
+    }
+
+    case "vendor-spend": {
+      if (!startDate || !endDate) {
+        throw new Error("startDate and endDate are required for vendor-spend");
+      }
+
+      const vs = await getVendorSpend({ bookId, startDate, endDate });
+
+      title = "Vendor Spend";
+      subtitle = `${startDate} to ${endDate}`;
+      filenameBase = `vendor-spend_${startDate}_${endDate}`;
+      headers = ["Vendor", ...vs.months, "Total"];
+
+      rows = vs.vendors.map((v) => [
+        v.vendorName,
+        ...vs.months.map((m) => fmt(v.monthly[m] ?? "0")),
+        fmt(v.total),
+      ]);
+
+      totals = [
+        "Totals",
+        ...vs.months.map((m) => fmt(vs.monthlyTotals[m] ?? "0")),
+        fmt(vs.grandTotal),
       ];
       break;
     }

@@ -85,6 +85,7 @@ import {
   detectRecurringTransactions,
   getSpendingByCategory,
   getSpendingTrends,
+  getVendorSpend,
 } from "lib/spending";
 import {
   generate1099Nec,
@@ -441,6 +442,18 @@ const app = new Elysia()
       });
     }
     return detectRecurringTransactions({ bookId });
+  })
+  .get("/api/spending/vendors", async ({ query }) => {
+    const { bookId, startDate, endDate } = query;
+    if (!bookId || !startDate || !endDate) {
+      return new Response(
+        JSON.stringify({
+          error: "bookId, startDate, and endDate are required",
+        }),
+        { status: 400, headers: { "Content-Type": "application/json" } },
+      );
+    }
+    return getVendorSpend({ bookId, startDate, endDate });
   })
   // Net worth endpoints
   .get("/api/net-worth", async ({ query }) => {
