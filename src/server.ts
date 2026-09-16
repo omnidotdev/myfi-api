@@ -75,6 +75,7 @@ import bookAccessRoutes from "lib/routes/bookAccessRoutes";
 import bookRoutes from "lib/routes/bookRoutes";
 import budgetRoutes from "lib/routes/budgetRoutes";
 import categorizationRuleRoutes from "lib/routes/categorizationRuleRoutes";
+import closeReviewRoutes from "lib/routes/closeReviewRoutes";
 import connectionRoutes from "lib/routes/connectionRoutes";
 import customerRoutes from "lib/routes/customerRoutes";
 import dashboardRoutes from "lib/routes/dashboardRoutes";
@@ -210,6 +211,7 @@ const app = new Elysia()
   .use(profileRoutes)
   .use(ofxRoutes)
   .use(periodRoutes)
+  .use(closeReviewRoutes)
   .use(projectRoutes)
   .use(tagRoutes)
   .use(taxJurisdictionRoutes)
