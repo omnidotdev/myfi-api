@@ -9,6 +9,7 @@ import {
   journalLineTable,
   reconciliationQueueTable,
 } from "lib/db/schema";
+import { adoptMantleSource } from "lib/mantle/invoiceSource";
 
 import type { InferInsertModel } from "drizzle-orm";
 
@@ -295,6 +296,20 @@ const createJournalEntry = async (
       retryable: true,
       error: `No book found for organization ${organizationId}`,
     };
+  }
+
+  // Auto-adopt Mantle as this book's source of record on the first Mantle event,
+  // so no manual setup is needed. From here MyFi records Mantle's accounting and
+  // its native invoice/quote/inventory creation is disabled for the book
+  const adopted = await adoptMantleSource(book.id);
+  if (adopted) {
+    emitAudit({
+      type: "myfi.book.invoice_source_changed",
+      organizationId,
+      actor: { id: "mantle" },
+      resource: { type: "book", id: book.id, name: book.name },
+      data: { invoiceSource: "mantle", reason: "mantle_event_received" },
+    });
   }
 
   // Duplicate detection: check for an existing entry with the same book +

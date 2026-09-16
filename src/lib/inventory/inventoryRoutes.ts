@@ -3,6 +3,10 @@ import { Elysia, t } from "elysia";
 
 import { dbPool } from "lib/db/db";
 import { inventoryItemTable, inventoryTransactionTable } from "lib/db/schema";
+import {
+  MANTLE_MANAGED_MESSAGE,
+  isMantleManaged,
+} from "lib/mantle/invoiceSource";
 import { receiveStock } from "./receiveStock";
 import { recordInventorySale } from "./recordInventorySale";
 
@@ -59,6 +63,10 @@ const inventoryRoutes = new Elysia({ prefix: "/api/inventory-items" })
   .post(
     "/",
     async ({ body, set }) => {
+      if (await isMantleManaged(body.bookId)) {
+        set.status = 409;
+        return { error: MANTLE_MANAGED_MESSAGE };
+      }
       const [item] = await dbPool
         .insert(inventoryItemTable)
         .values({
@@ -136,6 +144,10 @@ const inventoryRoutes = new Elysia({ prefix: "/api/inventory-items" })
         set.status = 400;
         return { error: "date must be a YYYY-MM-DD date" };
       }
+      if (await isMantleManaged(body.bookId)) {
+        set.status = 409;
+        return { error: MANTLE_MANAGED_MESSAGE };
+      }
       try {
         return await receiveStock({
           itemId: params.id,
@@ -175,6 +187,10 @@ const inventoryRoutes = new Elysia({ prefix: "/api/inventory-items" })
       if (!ISO_DATE.test(body.date)) {
         set.status = 400;
         return { error: "date must be a YYYY-MM-DD date" };
+      }
+      if (await isMantleManaged(body.bookId)) {
+        set.status = 409;
+        return { error: MANTLE_MANAGED_MESSAGE };
       }
       try {
         return await recordInventorySale({

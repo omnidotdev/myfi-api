@@ -1,8 +1,13 @@
 import { desc, eq } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 
+import { emitAudit } from "lib/audit";
 import { dbPool } from "lib/db/db";
 import { customerTable, invoiceLineTable, invoiceTable } from "lib/db/schema";
+import {
+  MANTLE_MANAGED_MESSAGE,
+  isMantleManaged,
+} from "lib/mantle/invoiceSource";
 import { createInvoiceDraft } from "./createInvoiceDraft";
 import { postInvoice } from "./postInvoice";
 import { recordInvoicePayment } from "./recordInvoicePayment";
@@ -93,6 +98,10 @@ const invoiceRoutes = new Elysia({ prefix: "/api/invoices" })
   .post(
     "/",
     async ({ body, set }) => {
+      if (await isMantleManaged(body.bookId)) {
+        set.status = 409;
+        return { error: MANTLE_MANAGED_MESSAGE };
+      }
       try {
         const result = await createInvoiceDraft(body);
         set.status = 201;
@@ -134,8 +143,20 @@ const invoiceRoutes = new Elysia({ prefix: "/api/invoices" })
   .post(
     "/:id/post",
     async ({ params, body, set }) => {
+      if (await isMantleManaged(body.bookId)) {
+        set.status = 409;
+        return { error: MANTLE_MANAGED_MESSAGE };
+      }
       try {
-        return await postInvoice(params.id, body.bookId);
+        const result = await postInvoice(params.id, body.bookId);
+        emitAudit({
+          type: "myfi.invoice.posted",
+          organizationId: body.bookId,
+          actor: { id: "unknown" },
+          resource: { type: "invoice", id: params.id },
+          data: { total: result.total },
+        });
+        return result;
       } catch (err) {
         const message = err instanceof Error ? err.message : "Post failed";
         if (isClientError(message)) {
@@ -161,7 +182,7 @@ const invoiceRoutes = new Elysia({ prefix: "/api/invoices" })
         return { error: "date must be a YYYY-MM-DD date" };
       }
       try {
-        return await recordInvoicePayment({
+        const result = await recordInvoicePayment({
           invoiceId: params.id,
           bookId: body.bookId,
           amount: body.amount,
@@ -170,6 +191,14 @@ const invoiceRoutes = new Elysia({ prefix: "/api/invoices" })
           method: body.method,
           reference: body.reference,
         });
+        emitAudit({
+          type: "myfi.invoice.payment_recorded",
+          organizationId: body.bookId,
+          actor: { id: "unknown" },
+          resource: { type: "invoice", id: params.id },
+          data: { amount: body.amount, status: result.invoiceStatus },
+        });
+        return result;
       } catch (err) {
         const message = err instanceof Error ? err.message : "Payment failed";
         if (isClientError(message)) {
@@ -198,7 +227,14 @@ const invoiceRoutes = new Elysia({ prefix: "/api/invoices" })
     "/:id/void",
     async ({ params, body, set }) => {
       try {
-        return await voidInvoice(params.id, body.bookId);
+        const result = await voidInvoice(params.id, body.bookId);
+        emitAudit({
+          type: "myfi.invoice.voided",
+          organizationId: body.bookId,
+          actor: { id: "unknown" },
+          resource: { type: "invoice", id: params.id },
+        });
+        return result;
       } catch (err) {
         const message = err instanceof Error ? err.message : "Void failed";
         if (isClientError(message)) {

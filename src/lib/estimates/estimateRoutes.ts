@@ -3,6 +3,10 @@ import { Elysia, t } from "elysia";
 
 import { dbPool } from "lib/db/db";
 import { customerTable, estimateLineTable, estimateTable } from "lib/db/schema";
+import {
+  MANTLE_MANAGED_MESSAGE,
+  isMantleManaged,
+} from "lib/mantle/invoiceSource";
 import { convertEstimateToInvoice } from "./convertEstimateToInvoice";
 import { createEstimateDraft } from "./createEstimateDraft";
 import { updateEstimateStatus } from "./updateEstimateStatus";
@@ -79,6 +83,10 @@ const estimateRoutes = new Elysia({ prefix: "/api/estimates" })
   .post(
     "/",
     async ({ body, set }) => {
+      if (await isMantleManaged(body.bookId)) {
+        set.status = 409;
+        return { error: MANTLE_MANAGED_MESSAGE };
+      }
       try {
         const result = await createEstimateDraft(body);
         set.status = 201;
@@ -146,6 +154,10 @@ const estimateRoutes = new Elysia({ prefix: "/api/estimates" })
       if (!ISO_DATE.test(body.issueDate) || !ISO_DATE.test(body.dueDate)) {
         set.status = 400;
         return { error: "issueDate and dueDate must be YYYY-MM-DD dates" };
+      }
+      if (await isMantleManaged(body.bookId)) {
+        set.status = 409;
+        return { error: MANTLE_MANAGED_MESSAGE };
       }
       try {
         return await convertEstimateToInvoice({
