@@ -19,9 +19,12 @@ type BalanceSheetLineItem = {
   balance: string;
 };
 
+type ReportBasis = "accrual" | "cash";
+
 type BalanceSheetReport = {
   bookId: string;
   asOfDate: string;
+  basis: ReportBasis;
   assets: BalanceSheetLineItem[];
   liabilities: BalanceSheetLineItem[];
   equity: BalanceSheetLineItem[];
@@ -42,8 +45,10 @@ const generateBalanceSheet = async (params: {
   asOfDate: string;
   tagIds?: string[];
   projectIds?: string[];
+  basis?: ReportBasis;
 }): Promise<BalanceSheetReport> => {
   const { bookId, asOfDate, tagIds, projectIds } = params;
+  const basis: ReportBasis = params.basis === "cash" ? "cash" : "accrual";
 
   let query = dbPool
     .select({
@@ -105,6 +110,11 @@ const generateBalanceSheet = async (params: {
   let totalAssets = 0;
   let totalLiabilities = 0;
   let totalEquity = 0;
+  // On the cash basis, drop the AR/AP subledger balances (accrual artifacts) and
+  // reclass them into equity so the sheet still balances: E_cash = E - AR + AP
+  const cash = basis === "cash";
+  let arDropped = 0;
+  let apDropped = 0;
 
   for (const row of results) {
     const debit = Number.parseFloat(row.debitTotal);
@@ -117,6 +127,23 @@ const generateBalanceSheet = async (params: {
       balance = debit - credit;
     } else {
       balance = credit - debit;
+    }
+
+    if (
+      cash &&
+      row.accountType === "asset" &&
+      row.subType === "accounts_receivable"
+    ) {
+      arDropped += balance;
+      continue;
+    }
+    if (
+      cash &&
+      row.accountType === "liability" &&
+      row.subType === "accounts_payable"
+    ) {
+      apDropped += balance;
+      continue;
     }
 
     const item: BalanceSheetLineItem = {
@@ -141,6 +168,21 @@ const generateBalanceSheet = async (params: {
     }
   }
 
+  // Reclass the dropped AR/AP into a single cash-basis equity adjustment
+  if (cash && (arDropped !== 0 || apDropped !== 0)) {
+    const adjustment = apDropped - arDropped;
+    equity.push({
+      accountId: "cash-basis-adjustment",
+      accountCode: null,
+      accountName: "Cash Basis Adjustment",
+      accountType: "equity",
+      subType: null,
+      parentId: null,
+      balance: adjustment.toFixed(4),
+    });
+    totalEquity += adjustment;
+  }
+
   // Assets = Liabilities + Equity (within floating point tolerance)
   const isBalanced =
     Math.abs(totalAssets - (totalLiabilities + totalEquity)) < 0.01;
@@ -148,6 +190,7 @@ const generateBalanceSheet = async (params: {
   return {
     bookId,
     asOfDate,
+    basis,
     assets,
     liabilities,
     equity,

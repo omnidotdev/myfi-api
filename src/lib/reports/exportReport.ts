@@ -152,10 +152,11 @@ const exportReport = async (params: ExportParams): Promise<ExportResult> => {
         asOfDate,
         tagIds,
         projectIds,
+        basis,
       });
 
       title = "Balance Sheet";
-      subtitle = `As of ${asOfDate}`;
+      subtitle = `As of ${asOfDate}${basis === "cash" ? " (cash basis)" : ""}`;
       filenameBase = `balance-sheet_${asOfDate}`;
       headers = ["Account", "Type", "Balance"];
 

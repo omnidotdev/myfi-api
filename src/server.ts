@@ -256,7 +256,13 @@ const app = new Elysia()
     const projectIds = query.projectIds
       ? query.projectIds.split(",").filter(Boolean)
       : undefined;
-    return generateBalanceSheet({ bookId, asOfDate, tagIds, projectIds });
+    return generateBalanceSheet({
+      bookId,
+      asOfDate,
+      tagIds,
+      projectIds,
+      basis: query.basis === "cash" ? "cash" : "accrual",
+    });
   })
   .get("/api/reports/comparative-profit-and-loss", async ({ query }) => {
     const { bookId, startDate, endDate, priorStartDate, priorEndDate } = query;

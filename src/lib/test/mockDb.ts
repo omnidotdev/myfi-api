@@ -54,6 +54,7 @@ type ChainableMock = unknown[] & {
   limit?: () => ChainableMock;
   innerJoin?: () => ChainableMock;
   leftJoin?: () => ChainableMock;
+  $dynamic?: () => ChainableMock;
 };
 
 // A terminal result: an array carrying the mutually chainable Drizzle methods
@@ -77,6 +78,8 @@ const buildResult = (data: unknown[]): ChainableMock => {
     limit: mock(() => buildTerminal(data)),
     innerJoin: mock(() => buildResult(data)),
     leftJoin: mock(() => buildResult(data)),
+    // Drizzle's `.$dynamic()` returns the same builder, so mirror the chain
+    $dynamic: mock(() => buildResult(data)),
   }) as ChainableMock;
 };
 
