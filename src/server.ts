@@ -56,6 +56,7 @@ import {
   generatePayrollSummary,
   generateProfitAndLoss,
   generateSalesTaxReport,
+  generateStatementOfEquity,
   generateTrialBalance,
 } from "lib/reports";
 import accountRoutes from "lib/routes/accountRoutes";
@@ -294,6 +295,18 @@ const app = new Elysia()
       ? query.tagIds.split(",").filter(Boolean)
       : undefined;
     return generateCashFlow({ bookId, startDate, endDate, tagIds });
+  })
+  .get("/api/reports/statement-of-equity", async ({ query }) => {
+    const { bookId, startDate, endDate } = query;
+    if (!bookId || !startDate || !endDate) {
+      return new Response(
+        JSON.stringify({
+          error: "bookId, startDate, and endDate are required",
+        }),
+        { status: 400, headers: { "Content-Type": "application/json" } },
+      );
+    }
+    return generateStatementOfEquity({ bookId, startDate, endDate });
   })
   .get("/api/reports/general-ledger", async ({ query }) => {
     const { bookId, accountId, startDate, endDate } = query;
