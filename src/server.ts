@@ -216,7 +216,13 @@ const app = new Elysia()
     const tagIds = query.tagIds
       ? query.tagIds.split(",").filter(Boolean)
       : undefined;
-    return generateProfitAndLoss({ bookId, startDate, endDate, tagIds });
+    return generateProfitAndLoss({
+      bookId,
+      startDate,
+      endDate,
+      tagIds,
+      basis: query.basis === "cash" ? "cash" : "accrual",
+    });
   })
   .get("/api/reports/balance-sheet", async ({ query }) => {
     const { bookId, asOfDate } = query;
@@ -602,6 +608,7 @@ const app = new Elysia()
         tagIds,
         accountId: query.accountId,
         jurisdictionId: query.jurisdictionId,
+        basis: query.basis === "cash" ? "cash" : undefined,
       });
 
       // content is a string (html/csv) or bytes (xlsx/pdf); the cast bridges the

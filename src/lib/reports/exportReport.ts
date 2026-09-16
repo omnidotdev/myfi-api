@@ -30,6 +30,7 @@ type ExportParams = {
   tagIds?: string[];
   accountId?: string;
   jurisdictionId?: string;
+  basis?: "accrual" | "cash";
 };
 
 type ExportResult = {
@@ -87,6 +88,7 @@ const exportReport = async (params: ExportParams): Promise<ExportResult> => {
     tagIds,
     accountId,
     jurisdictionId,
+    basis,
   } = params;
 
   let headers: string[];
@@ -109,10 +111,11 @@ const exportReport = async (params: ExportParams): Promise<ExportResult> => {
         startDate,
         endDate,
         tagIds,
+        basis,
       });
 
       title = "Profit & Loss";
-      subtitle = `${startDate} to ${endDate}`;
+      subtitle = `${startDate} to ${endDate}${basis === "cash" ? " (cash basis)" : ""}`;
       filenameBase = `profit-and-loss_${startDate}_${endDate}`;
       headers = ["Account", "Type", "Amount"];
 
