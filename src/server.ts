@@ -30,6 +30,7 @@ import createGraphqlContext from "lib/graphql/createGraphqlContext";
 import { armorPlugin, authenticationPlugin } from "lib/graphql/plugins";
 import importRoutes from "lib/import/importRoutes";
 import profileRoutes from "lib/import/profileRoutes";
+import inventoryRoutes from "lib/inventory/inventoryRoutes";
 import invoiceRoutes from "lib/invoicing/invoiceRoutes";
 import { mantleWebhook } from "lib/mantle";
 import authMiddleware from "lib/middleware/auth.middleware";
@@ -180,6 +181,7 @@ const app = new Elysia()
   .use(invoiceRoutes)
   .use(billRoutes)
   .use(estimateRoutes)
+  .use(inventoryRoutes)
   .use(migrationRoutes)
   .use(profileRoutes)
   .use(ofxRoutes)
