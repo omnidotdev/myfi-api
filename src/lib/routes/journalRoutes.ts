@@ -180,6 +180,108 @@ const journalRoutes = new Elysia({ prefix: "/api/journal-entries" })
       }),
     },
   )
+  .post(
+    "/batch",
+    async ({ body, set }) => {
+      const { entries } = body;
+
+      if (entries.length > 100) {
+        set.status = 400;
+        return { error: "Maximum 100 entries per batch" };
+      }
+
+      if (entries.length === 0) {
+        set.status = 400;
+        return { error: "At least one entry required" };
+      }
+
+      // Validate all entries before creating any, using the same server-side
+      // invariants as the single-entry create so a batch cannot slip past them
+      for (const entry of entries) {
+        if (await isPeriodLocked(entry.bookId, entry.date)) {
+          set.status = 409;
+          return { error: "Cannot create entry in a closed period" };
+        }
+
+        try {
+          validateJournalLines(entry.lines);
+        } catch (err) {
+          set.status = 400;
+          return {
+            error: err instanceof Error ? err.message : "Invalid journal entry",
+          };
+        }
+      }
+
+      // Create all entries in a single transaction
+      const created = await dbPool.transaction(async (tx) => {
+        const results = [];
+
+        for (const entry of entries) {
+          const [journalEntry] = await tx
+            .insert(journalEntryTable)
+            .values({
+              bookId: entry.bookId,
+              date: entry.date,
+              memo: entry.memo ?? null,
+              source: "manual",
+              isReviewed: true,
+            })
+            .returning();
+
+          const lines = await tx
+            .insert(journalLineTable)
+            .values(
+              entry.lines.map((line) => ({
+                journalEntryId: journalEntry.id,
+                accountId: line.accountId,
+                debit: line.debit ?? "0.0000",
+                credit: line.credit ?? "0.0000",
+                memo: line.memo ?? null,
+              })),
+            )
+            .returning();
+
+          results.push({ ...journalEntry, lines });
+
+          emitAudit({
+            type: "myfi.journal_entry.created",
+            organizationId: entry.bookId,
+            resource: {
+              type: "journal_entry",
+              id: journalEntry.id,
+            },
+            data: { source: "batch", lineCount: lines.length },
+          });
+        }
+
+        return results;
+      });
+
+      set.status = 201;
+      return { entries: created };
+    },
+    {
+      body: t.Object({
+        entries: t.Array(
+          t.Object({
+            bookId: t.String(),
+            date: t.String(),
+            memo: t.Optional(t.String()),
+            vendorId: t.Optional(t.String()),
+            lines: t.Array(
+              t.Object({
+                accountId: t.String(),
+                debit: t.Optional(t.String()),
+                credit: t.Optional(t.String()),
+                memo: t.Optional(t.String()),
+              }),
+            ),
+          }),
+        ),
+      }),
+    },
+  )
   .patch(
     "/:id",
     async ({ params, body, set }) => {

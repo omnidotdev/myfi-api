@@ -5,7 +5,7 @@ import { yoga } from "@elysiajs/graphql-yoga";
 import { useParserCache } from "@envelop/parser-cache";
 import { useValidationCache } from "@envelop/validation-cache";
 import { useDisableIntrospection } from "@graphql-yoga/plugin-disable-introspection";
-import { desc, eq, sql } from "drizzle-orm";
+import { and, desc, eq, sql } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 import { schema } from "generated/graphql/schema.executable";
 import { useGrafast } from "grafast/envelop";
@@ -24,7 +24,11 @@ import {
 } from "lib/config/env.config";
 import { cryptoRoutes, lotRoutes } from "lib/crypto";
 import { dbPool, pgPool } from "lib/db/db";
-import { netWorthSnapshotTable } from "lib/db/schema";
+import {
+  amortizationEntryTable,
+  loanTable,
+  netWorthSnapshotTable,
+} from "lib/db/schema";
 import estimateRoutes from "lib/estimates/estimateRoutes";
 import createGraphqlContext from "lib/graphql/createGraphqlContext";
 import { armorPlugin, authenticationPlugin } from "lib/graphql/plugins";
@@ -58,12 +62,15 @@ import {
   generateGeneralLedger,
   generatePayrollSummary,
   generateProfitAndLoss,
+  generateProjectPnl,
+  generateProjectSummary,
   generateSalesTaxReport,
   generateStatementOfEquity,
   generateTrialBalance,
   getSalesByState,
 } from "lib/reports";
 import accountRoutes from "lib/routes/accountRoutes";
+import attachmentRoutes from "lib/routes/attachmentRoutes";
 import bookAccessRoutes from "lib/routes/bookAccessRoutes";
 import bookRoutes from "lib/routes/bookRoutes";
 import budgetRoutes from "lib/routes/budgetRoutes";
@@ -73,9 +80,11 @@ import customerRoutes from "lib/routes/customerRoutes";
 import dashboardRoutes from "lib/routes/dashboardRoutes";
 import fixedAssetRoutes from "lib/routes/fixedAssetRoutes";
 import journalRoutes from "lib/routes/journalRoutes";
+import loanRoutes, { getCurrentBalance } from "lib/routes/loanRoutes";
 import mappingRoutes from "lib/routes/mappingRoutes";
 import mileageRoutes from "lib/routes/mileageRoutes";
 import periodRoutes from "lib/routes/periodRoutes";
+import projectRoutes from "lib/routes/projectRoutes";
 import reconciliationRoutes from "lib/routes/reconciliationRoutes";
 import savingsRoutes from "lib/routes/savingsRoutes";
 import statementReconciliationRoutes from "lib/routes/statementReconciliationRoutes";
@@ -187,6 +196,8 @@ const app = new Elysia()
   .use(categorizationRuleRoutes)
   .use(dashboardRoutes)
   .use(fixedAssetRoutes)
+  .use(loanRoutes)
+  .use(attachmentRoutes)
   .use(importRoutes)
   .use(invoiceRoutes)
   .use(billRoutes)
@@ -197,6 +208,7 @@ const app = new Elysia()
   .use(profileRoutes)
   .use(ofxRoutes)
   .use(periodRoutes)
+  .use(projectRoutes)
   .use(tagRoutes)
   .use(taxJurisdictionRoutes)
   .use(customerRoutes)
@@ -216,11 +228,15 @@ const app = new Elysia()
     const tagIds = query.tagIds
       ? query.tagIds.split(",").filter(Boolean)
       : undefined;
+    const projectIds = query.projectIds
+      ? query.projectIds.split(",").filter(Boolean)
+      : undefined;
     return generateProfitAndLoss({
       bookId,
       startDate,
       endDate,
       tagIds,
+      projectIds,
       basis: query.basis === "cash" ? "cash" : "accrual",
     });
   })
@@ -235,7 +251,10 @@ const app = new Elysia()
     const tagIds = query.tagIds
       ? query.tagIds.split(",").filter(Boolean)
       : undefined;
-    return generateBalanceSheet({ bookId, asOfDate, tagIds });
+    const projectIds = query.projectIds
+      ? query.projectIds.split(",").filter(Boolean)
+      : undefined;
+    return generateBalanceSheet({ bookId, asOfDate, tagIds, projectIds });
   })
   .get("/api/reports/comparative-profit-and-loss", async ({ query }) => {
     const { bookId, startDate, endDate, priorStartDate, priorEndDate } = query;
@@ -293,7 +312,16 @@ const app = new Elysia()
     const tagIds = query.tagIds
       ? query.tagIds.split(",").filter(Boolean)
       : undefined;
-    return generateTrialBalance({ bookId, startDate, endDate, tagIds });
+    const projectIds = query.projectIds
+      ? query.projectIds.split(",").filter(Boolean)
+      : undefined;
+    return generateTrialBalance({
+      bookId,
+      startDate,
+      endDate,
+      tagIds,
+      projectIds,
+    });
   })
   .get("/api/reports/cash-flow", async ({ query }) => {
     const { bookId, startDate, endDate } = query;
@@ -308,7 +336,10 @@ const app = new Elysia()
     const tagIds = query.tagIds
       ? query.tagIds.split(",").filter(Boolean)
       : undefined;
-    return generateCashFlow({ bookId, startDate, endDate, tagIds });
+    const projectIds = query.projectIds
+      ? query.projectIds.split(",").filter(Boolean)
+      : undefined;
+    return generateCashFlow({ bookId, startDate, endDate, tagIds, projectIds });
   })
   .get("/api/reports/statement-of-equity", async ({ query }) => {
     const { bookId, startDate, endDate } = query;
@@ -335,12 +366,16 @@ const app = new Elysia()
     const tagIds = query.tagIds
       ? query.tagIds.split(",").filter(Boolean)
       : undefined;
+    const projectIds = query.projectIds
+      ? query.projectIds.split(",").filter(Boolean)
+      : undefined;
     return generateGeneralLedger({
       bookId,
       accountId,
       startDate,
       endDate,
       tagIds,
+      projectIds,
     });
   })
   .get("/api/reports/sales-tax", async ({ query }) => {
@@ -389,6 +424,26 @@ const app = new Elysia()
       year: Number.parseInt(year, 10),
     });
   })
+  .get("/api/reports/project-pnl", async ({ query }) => {
+    const { bookId, projectId, startDate, endDate } = query;
+    if (!bookId || !projectId) {
+      return new Response(
+        JSON.stringify({ error: "bookId and projectId are required" }),
+        { status: 400, headers: { "Content-Type": "application/json" } },
+      );
+    }
+    return generateProjectPnl({ bookId, projectId, startDate, endDate });
+  })
+  .get("/api/reports/project-summary", async ({ query }) => {
+    const { bookId } = query;
+    if (!bookId) {
+      return new Response(JSON.stringify({ error: "bookId is required" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+    return generateProjectSummary(bookId);
+  })
   .get("/api/reports/ap-aging", async ({ query }) => {
     const { bookId, asOfDate } = query;
     if (!bookId || !asOfDate) {
@@ -422,6 +477,77 @@ const app = new Elysia()
       );
     }
     return generateArAging({ bookId, asOfDate });
+  })
+  .get("/api/reports/loan-summary", async ({ query }) => {
+    const { bookId } = query;
+    if (!bookId) {
+      return new Response(JSON.stringify({ error: "bookId is required" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    const loans = await dbPool
+      .select()
+      .from(loanTable)
+      .where(eq(loanTable.bookId, bookId));
+
+    const summaries = await Promise.all(
+      loans.map(async (loan) => {
+        const currentBalance = await getCurrentBalance(loan);
+
+        // Total interest paid (from posted entries)
+        const [paidResult] = await dbPool
+          .select({
+            total: sql<string>`coalesce(sum(${amortizationEntryTable.interestAmount}::numeric), 0)`,
+          })
+          .from(amortizationEntryTable)
+          .where(
+            and(
+              eq(amortizationEntryTable.loanId, loan.id),
+              eq(amortizationEntryTable.status, "posted"),
+            ),
+          );
+        const totalInterestPaid = Number(paidResult?.total ?? 0);
+
+        // Total interest remaining (from scheduled entries)
+        const [remainingResult] = await dbPool
+          .select({
+            total: sql<string>`coalesce(sum(${amortizationEntryTable.interestAmount}::numeric), 0)`,
+          })
+          .from(amortizationEntryTable)
+          .where(
+            and(
+              eq(amortizationEntryTable.loanId, loan.id),
+              eq(amortizationEntryTable.status, "scheduled"),
+            ),
+          );
+        const totalInterestRemaining = Number(remainingResult?.total ?? 0);
+
+        // Next payment (first scheduled entry)
+        const [nextPayment] = await dbPool
+          .select()
+          .from(amortizationEntryTable)
+          .where(
+            and(
+              eq(amortizationEntryTable.loanId, loan.id),
+              eq(amortizationEntryTable.status, "scheduled"),
+            ),
+          )
+          .orderBy(amortizationEntryTable.sequenceNumber)
+          .limit(1);
+
+        return {
+          ...loan,
+          currentBalance,
+          totalInterestPaid,
+          totalInterestRemaining,
+          nextPayment: nextPayment ?? null,
+        };
+      }),
+    );
+
+    return { loans: summaries };
   })
   .get("/api/budgets/tracking", async ({ query }) => {
     const { bookId, period } = query;
@@ -596,6 +722,9 @@ const app = new Elysia()
       const tagIds = query.tagIds
         ? query.tagIds.split(",").filter(Boolean)
         : undefined;
+      const projectIds = query.projectIds
+        ? query.projectIds.split(",").filter(Boolean)
+        : undefined;
 
       const result = await exportReport({
         type,
@@ -606,6 +735,8 @@ const app = new Elysia()
         asOfDate: query.asOfDate,
         year: query.year,
         tagIds,
+        projectId: query.projectId,
+        projectIds,
         accountId: query.accountId,
         jurisdictionId: query.jurisdictionId,
         basis: query.basis === "cash" ? "cash" : undefined,
