@@ -1,7 +1,7 @@
 import { and, desc, eq, sql } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 
-import { calculateSchedule, postAmortization } from "lib/amortization";
+import { calculateSchedule } from "lib/amortization/calculateSchedule";
 import { emitAudit } from "lib/audit";
 import { dbPool } from "lib/db/db";
 import {
@@ -469,6 +469,12 @@ const loanRoutes = new Elysia({ prefix: "/api/loans" })
   .post(
     "/run-amortization",
     async ({ body }) => {
+      // Lazy import: postAmortization pulls the audit/CloudEvents chain, and
+      // statically importing it alongside another async-init module here makes
+      // bun's bundler emit an undefined __promiseAll helper (see Dockerfile guard)
+      const { default: postAmortization } = await import(
+        "lib/amortization/postAmortization"
+      );
       const result = await postAmortization(body.bookId, body.year, body.month);
       return { result };
     },
