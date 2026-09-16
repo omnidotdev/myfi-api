@@ -4,11 +4,18 @@ import generateCashFlow from "./cashFlow";
 import generateGeneralLedger from "./generalLedger";
 import renderReportHtml from "./htmlRenderer";
 import generatePayrollSummary from "./payrollSummary";
+import renderReportPdf from "./pdfRenderer";
 import generateProfitAndLoss from "./profitAndLoss";
 import generateSalesTaxReport from "./salesTax";
 import generateTrialBalance from "./trialBalance";
+import renderReportXlsx from "./xlsxRenderer";
 
-type ExportFormat = "html" | "csv";
+export type ExportFormat = "html" | "csv" | "xlsx" | "pdf";
+
+export const EXPORT_FORMATS: ExportFormat[] = ["html", "csv", "xlsx", "pdf"];
+
+const XLSX_CONTENT_TYPE =
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
 type ExportParams = {
   type: string;
@@ -24,7 +31,7 @@ type ExportParams = {
 };
 
 type ExportResult = {
-  content: string;
+  content: string | Uint8Array;
   contentType: string;
   filename: string;
 };
@@ -365,6 +372,34 @@ const exportReport = async (params: ExportParams): Promise<ExportResult> => {
       content: renderReportHtml({ title, subtitle, headers, rows, totals }),
       contentType: "text/html",
       filename: `${filenameBase}.html`,
+    };
+  }
+
+  if (format === "xlsx") {
+    return {
+      content: await renderReportXlsx({
+        title,
+        subtitle,
+        headers,
+        rows,
+        totals,
+      }),
+      contentType: XLSX_CONTENT_TYPE,
+      filename: `${filenameBase}.xlsx`,
+    };
+  }
+
+  if (format === "pdf") {
+    return {
+      content: await renderReportPdf({
+        title,
+        subtitle,
+        headers,
+        rows,
+        totals,
+      }),
+      contentType: "application/pdf",
+      filename: `${filenameBase}.pdf`,
     };
   }
 

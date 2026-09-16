@@ -47,6 +47,7 @@ import startScheduledSync from "lib/plaid/scheduledSync";
 import recurringRoutes from "lib/recurring/recurringRoutes";
 import startScheduledRecurring from "lib/recurring/scheduledRecurring";
 import {
+  EXPORT_FORMATS,
   exportReport,
   generateAgingReport,
   generateArAging,
@@ -92,6 +93,8 @@ import {
   generateScheduleC,
   generateTaxLossHarvesting,
 } from "lib/tax";
+
+import type { ExportFormat } from "lib/reports";
 
 const commit = (() => {
   try {
@@ -530,8 +533,8 @@ const app = new Elysia()
     }
     return generateTaxLossHarvesting({ bookId });
   })
-  // Report export (HTML for print-to-PDF, CSV for download)
-  .get("/api/reports/export", async ({ query, set }) => {
+  // Report export (HTML, CSV, XLSX, PDF)
+  .get("/api/reports/export", async ({ query }) => {
     const { type, format, bookId } = query;
 
     if (!type || !format || !bookId) {
@@ -543,9 +546,9 @@ const app = new Elysia()
       );
     }
 
-    if (format !== "html" && format !== "csv") {
+    if (!EXPORT_FORMATS.includes(format as ExportFormat)) {
       return new Response(
-        JSON.stringify({ error: "format must be html or csv" }),
+        JSON.stringify({ error: "format must be html, csv, xlsx, or pdf" }),
         { status: 400, headers: { "Content-Type": "application/json" } },
       );
     }
@@ -557,7 +560,7 @@ const app = new Elysia()
 
       const result = await exportReport({
         type,
-        format,
+        format: format as ExportFormat,
         bookId,
         startDate: query.startDate,
         endDate: query.endDate,
@@ -568,11 +571,19 @@ const app = new Elysia()
         jurisdictionId: query.jurisdictionId,
       });
 
-      set.headers["Content-Type"] = result.contentType;
-      set.headers["Content-Disposition"] =
-        `attachment; filename="${result.filename}"`;
+      // content is a string (html/csv) or bytes (xlsx/pdf); the cast bridges the
+      // TS lib variance between Uint8Array<ArrayBufferLike> and BlobPart
+      const body = new Blob([result.content as BlobPart], {
+        type: result.contentType,
+      });
 
-      return result.content;
+      return new Response(body, {
+        status: 200,
+        headers: {
+          "Content-Type": result.contentType,
+          "Content-Disposition": `attachment; filename="${result.filename}"`,
+        },
+      });
     } catch (err) {
       const message = err instanceof Error ? err.message : "Export failed";
 

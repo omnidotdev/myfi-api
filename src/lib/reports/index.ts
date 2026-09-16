@@ -4,7 +4,11 @@ export { default as generateBalanceSheet } from "./balanceSheet";
 export { default as generateCashFlow } from "./cashFlow";
 export { default as generateComparativeBalanceSheet } from "./comparativeBalanceSheet";
 export { default as generateComparativeProfitAndLoss } from "./comparativeProfitAndLoss";
-export { default as exportReport } from "./exportReport";
+export {
+  EXPORT_FORMATS,
+  type ExportFormat,
+  default as exportReport,
+} from "./exportReport";
 export { default as generateGeneralLedger } from "./generalLedger";
 export { default as generatePayrollSummary } from "./payrollSummary";
 export { default as generateProfitAndLoss } from "./profitAndLoss";
