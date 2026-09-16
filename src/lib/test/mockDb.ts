@@ -30,6 +30,7 @@ export const resetDbMock = () => {
   mockDbPool.insert.mockClear();
   mockDbPool.update.mockClear();
   mockDbPool.delete.mockClear();
+  mockDbPool.transaction.mockClear();
 };
 
 export const setSelectResults = (results: unknown[][]) => {
@@ -123,4 +124,9 @@ export const mockDbPool = {
   delete: mock(() => ({
     where: mockDeleteWhere,
   })),
+  // Runs the callback with the same mock as the transaction handle, so code that
+  // wraps writes in dbPool.transaction() exercises the queued mock results
+  transaction: mock(
+    async <T>(cb: (tx: unknown) => Promise<T>): Promise<T> => cb(mockDbPool),
+  ),
 };
