@@ -78,6 +78,7 @@ import categorizationRuleRoutes from "lib/routes/categorizationRuleRoutes";
 import connectionRoutes from "lib/routes/connectionRoutes";
 import customerRoutes from "lib/routes/customerRoutes";
 import dashboardRoutes from "lib/routes/dashboardRoutes";
+import documentRoutes from "lib/routes/documentRoutes";
 import fixedAssetRoutes from "lib/routes/fixedAssetRoutes";
 import journalRoutes from "lib/routes/journalRoutes";
 import loanRoutes, { getCurrentBalance } from "lib/routes/loanRoutes";
@@ -198,6 +199,7 @@ const app = new Elysia()
   .use(fixedAssetRoutes)
   .use(loanRoutes)
   .use(attachmentRoutes)
+  .use(documentRoutes)
   .use(importRoutes)
   .use(invoiceRoutes)
   .use(billRoutes)
