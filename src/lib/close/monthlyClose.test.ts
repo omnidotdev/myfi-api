@@ -19,12 +19,16 @@ mock.module("lib/netWorth/netWorthService", () => ({
   saveNetWorthSnapshot: mockSaveSnapshot,
 }));
 
-// Mock postDepreciation
+// Mock postDepreciation. bun's mock.module is global across test files, so keep
+// the module shape complete (calculateMonthlyDepreciation passed through) or a
+// later file importing it, e.g. fixedAssetRoutes, fails to resolve that export
 const mockPostDepreciation = mock(() =>
   Promise.resolve({ postedCount: 0, skippedCount: 0 }),
 );
+const { calculateMonthlyDepreciation } = await import("lib/depreciation");
 mock.module("lib/depreciation", () => ({
   postDepreciation: mockPostDepreciation,
+  calculateMonthlyDepreciation,
 }));
 
 mock.module("lib/db/db", () => ({ dbPool: mockDbPool }));

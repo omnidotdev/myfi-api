@@ -136,6 +136,124 @@ const fixedAssetRoutes = new Elysia({ prefix: "/api/fixed-assets" })
       }),
     },
   )
+  .patch(
+    "/:id",
+    async ({ params, body, set }) => {
+      const { id } = params;
+
+      const [asset] = await dbPool
+        .select()
+        .from(fixedAssetTable)
+        .where(eq(fixedAssetTable.id, id));
+
+      if (!asset || asset.bookId !== body.bookId) {
+        set.status = 404;
+        return { error: "Asset not found" };
+      }
+
+      // Fields that change the depreciation schedule cannot be edited once any
+      // depreciation has been posted or the asset has been disposed, since that
+      // would leave already-posted entries inconsistent with the new basis
+      const scheduleFields = {
+        assetAccountId: body.assetAccountId,
+        depreciationExpenseAccountId: body.depreciationExpenseAccountId,
+        accumulatedDepreciationAccountId: body.accumulatedDepreciationAccountId,
+        acquisitionDate: body.acquisitionDate,
+        acquisitionCost: body.acquisitionCost,
+        salvageValue: body.salvageValue,
+        usefulLifeMonths: body.usefulLifeMonths,
+        depreciationMethod: body.depreciationMethod,
+        macrsClass: body.macrsClass,
+      };
+      const editsSchedule = Object.values(scheduleFields).some(
+        (value) => value !== undefined,
+      );
+
+      if (editsSchedule) {
+        if (asset.disposedAt) {
+          set.status = 409;
+          return { error: "Cannot change a disposed asset" };
+        }
+        const [depEntry] = await dbPool
+          .select({ id: journalEntryTable.id })
+          .from(journalEntryTable)
+          .where(
+            and(
+              eq(journalEntryTable.source, "depreciation"),
+              like(journalEntryTable.sourceReferenceId, `${id}:%`),
+            ),
+          )
+          .limit(1);
+        if (depEntry) {
+          set.status = 409;
+          return {
+            error:
+              "Cannot change the depreciation basis of an asset with posted depreciation",
+          };
+        }
+      }
+
+      const updates: Partial<InferInsertModel<typeof fixedAssetTable>> = {};
+      if (body.name !== undefined) updates.name = body.name;
+      if (body.description !== undefined)
+        updates.description = body.description;
+      if (body.assetAccountId !== undefined)
+        updates.assetAccountId = body.assetAccountId;
+      if (body.depreciationExpenseAccountId !== undefined)
+        updates.depreciationExpenseAccountId =
+          body.depreciationExpenseAccountId;
+      if (body.accumulatedDepreciationAccountId !== undefined)
+        updates.accumulatedDepreciationAccountId =
+          body.accumulatedDepreciationAccountId;
+      if (body.acquisitionDate !== undefined)
+        updates.acquisitionDate = body.acquisitionDate;
+      if (body.acquisitionCost !== undefined)
+        updates.acquisitionCost = body.acquisitionCost;
+      if (body.salvageValue !== undefined)
+        updates.salvageValue = body.salvageValue;
+      if (body.usefulLifeMonths !== undefined)
+        updates.usefulLifeMonths = body.usefulLifeMonths;
+      if (body.depreciationMethod !== undefined)
+        updates.depreciationMethod = body.depreciationMethod;
+      if (body.macrsClass !== undefined) updates.macrsClass = body.macrsClass;
+
+      if (Object.keys(updates).length === 0) {
+        return { asset };
+      }
+
+      const [updated] = await dbPool
+        .update(fixedAssetTable)
+        .set(updates)
+        .where(eq(fixedAssetTable.id, id))
+        .returning();
+
+      emitAudit({
+        type: "myfi.asset.updated",
+        organizationId: asset.bookId,
+        resource: { type: "fixed_asset", id: updated.id, name: updated.name },
+        data: { bookId: asset.bookId },
+      });
+
+      return { asset: updated };
+    },
+    {
+      params: t.Object({ id: t.String() }),
+      body: t.Object({
+        bookId: t.String(),
+        name: t.Optional(t.String()),
+        description: t.Optional(t.Nullable(t.String())),
+        assetAccountId: t.Optional(t.String()),
+        depreciationExpenseAccountId: t.Optional(t.String()),
+        accumulatedDepreciationAccountId: t.Optional(t.String()),
+        acquisitionDate: t.Optional(t.String()),
+        acquisitionCost: t.Optional(t.String()),
+        salvageValue: t.Optional(t.String()),
+        usefulLifeMonths: t.Optional(t.Number()),
+        depreciationMethod: t.Optional(t.String()),
+        macrsClass: t.Optional(t.Nullable(t.String())),
+      }),
+    },
+  )
   .delete(
     "/:id",
     async ({ params, set }) => {
