@@ -9,6 +9,7 @@ import {
   journalEntryTable,
   journalLineTable,
 } from "lib/db/schema";
+import { validateJournalLines } from "lib/journal/validateEntry";
 
 import type { InsertJournalEntry } from "lib/db/schema";
 
@@ -101,6 +102,15 @@ const journalRoutes = new Elysia({ prefix: "/api/journal-entries" })
     async ({ body, set }) => {
       const { bookId, date, memo, source, lines } = body;
 
+      try {
+        validateJournalLines(lines);
+      } catch (err) {
+        set.status = 400;
+        return {
+          error: err instanceof Error ? err.message : "Invalid journal entry",
+        };
+      }
+
       if (await isPeriodLocked(bookId, date)) {
         set.status = 409;
         return { error: "Cannot create entry in a closed period" };
@@ -184,6 +194,17 @@ const journalRoutes = new Elysia({ prefix: "/api/journal-entries" })
       if (!existing) {
         set.status = 404;
         return { error: "Journal entry not found" };
+      }
+
+      if (body.lines) {
+        try {
+          validateJournalLines(body.lines);
+        } catch (err) {
+          set.status = 400;
+          return {
+            error: err instanceof Error ? err.message : "Invalid journal entry",
+          };
+        }
       }
 
       const effectiveDate = body.date ?? existing.date;
@@ -273,6 +294,82 @@ const journalRoutes = new Elysia({ prefix: "/api/journal-entries" })
           ),
         ),
       }),
+    },
+  )
+  // Post a reversing entry: a new entry with each line's debit and credit
+  // swapped, dated today (or a given date). The non-destructive way to correct
+  // a posted entry, which CPAs use instead of editing/deleting history
+  .post(
+    "/:id/reverse",
+    async ({ params, body, set }) => {
+      const { id } = params;
+
+      const [original] = await dbPool
+        .select()
+        .from(journalEntryTable)
+        .where(eq(journalEntryTable.id, id));
+      if (!original) {
+        set.status = 404;
+        return { error: "Journal entry not found" };
+      }
+
+      const reversalDate = body.date ?? new Date().toISOString().slice(0, 10);
+      if (await isPeriodLocked(original.bookId, reversalDate)) {
+        set.status = 409;
+        return { error: "Cannot post a reversal in a closed period" };
+      }
+
+      const originalLines = await dbPool
+        .select()
+        .from(journalLineTable)
+        .where(eq(journalLineTable.journalEntryId, id));
+      if (originalLines.length === 0) {
+        set.status = 400;
+        return { error: "Entry has no lines to reverse" };
+      }
+
+      const entry = await dbPool.transaction(async (tx) => {
+        const [created] = await tx
+          .insert(journalEntryTable)
+          .values({
+            bookId: original.bookId,
+            date: reversalDate,
+            memo: `Reversal of ${original.memo ?? id}`,
+            source: "reversal" as InsertJournalEntry["source"],
+            sourceReferenceId: id,
+          })
+          .returning();
+
+        const lineRows = originalLines.map((line) => ({
+          journalEntryId: created.id,
+          accountId: line.accountId,
+          // swap debit and credit to reverse the original's effect
+          debit: line.credit,
+          credit: line.debit,
+          memo: line.memo,
+        }));
+        const insertedLines = await tx
+          .insert(journalLineTable)
+          .values(lineRows)
+          .returning();
+
+        return { ...created, lines: insertedLines };
+      });
+
+      emitAudit({
+        type: "myfi.journal_entry.reversed",
+        organizationId: original.bookId,
+        actor: { id: "unknown" },
+        resource: { type: "journal_entry", id: entry.id },
+        data: { bookId: original.bookId, reversalOf: id, date: reversalDate },
+      });
+
+      set.status = 201;
+      return { entry };
+    },
+    {
+      params: t.Object({ id: t.String() }),
+      body: t.Object({ date: t.Optional(t.String()) }),
     },
   )
   .delete(
