@@ -169,6 +169,13 @@
       "when": 1789517073547,
       "tag": "0023_mute_doctor_spectrum",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1789517854905,
+      "tag": "0024_nice_supernaut",
+      "breakpoints": true
     }
   ]
 }

@@ -59,6 +59,9 @@ type Query implements Node {
   """Get a single `AccountingPeriod`."""
   accountingPeriod(rowId: UUID!): AccountingPeriod
 
+  """Get a single `InventoryTransaction`."""
+  inventoryTransaction(rowId: UUID!): InventoryTransaction
+
   """Get a single `PayrollConnection`."""
   payrollConnection(rowId: UUID!): PayrollConnection
 
@@ -103,6 +106,9 @@ type Query implements Node {
 
   """Get a single `Customer`."""
   customer(rowId: UUID!): Customer
+
+  """Get a single `InventoryItem`."""
+  inventoryItem(rowId: UUID!): InventoryItem
 
   """Get a single `Vendor`."""
   vendor(rowId: UUID!): Vendor
@@ -232,6 +238,14 @@ type Query implements Node {
     id: ID!
   ): AccountingPeriod
 
+  """Reads a single `InventoryTransaction` using its globally unique `ID`."""
+  inventoryTransactionById(
+    """
+    The globally unique `ID` to be used in selecting a single `InventoryTransaction`.
+    """
+    id: ID!
+  ): InventoryTransaction
+
   """Reads a single `PayrollConnection` using its globally unique `ID`."""
   payrollConnectionById(
     """
@@ -343,6 +357,14 @@ type Query implements Node {
     """The globally unique `ID` to be used in selecting a single `Customer`."""
     id: ID!
   ): Customer
+
+  """Reads a single `InventoryItem` using its globally unique `ID`."""
+  inventoryItemById(
+    """
+    The globally unique `ID` to be used in selecting a single `InventoryItem`.
+    """
+    id: ID!
+  ): InventoryItem
 
   """Reads a single `Vendor` using its globally unique `ID`."""
   vendorById(
@@ -876,6 +898,40 @@ type Query implements Node {
     orderBy: [AccountingPeriodOrderBy!] = [PRIMARY_KEY_ASC]
   ): AccountingPeriodConnection
 
+  """Reads and enables pagination through a set of `InventoryTransaction`."""
+  inventoryTransactions(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: InventoryTransactionCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: InventoryTransactionFilter
+
+    """The method to use when ordering `InventoryTransaction`."""
+    orderBy: [InventoryTransactionOrderBy!] = [PRIMARY_KEY_ASC]
+  ): InventoryTransactionConnection
+
   """Reads and enables pagination through a set of `PayrollConnection`."""
   payrollConnections(
     """Only read the first `n` values of the set."""
@@ -1387,6 +1443,40 @@ type Query implements Node {
     """The method to use when ordering `Customer`."""
     orderBy: [CustomerOrderBy!] = [PRIMARY_KEY_ASC]
   ): CustomerConnection
+
+  """Reads and enables pagination through a set of `InventoryItem`."""
+  inventoryItems(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: InventoryItemCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: InventoryItemFilter
+
+    """The method to use when ordering `InventoryItem`."""
+    orderBy: [InventoryItemOrderBy!] = [PRIMARY_KEY_ASC]
+  ): InventoryItemConnection
 
   """Reads and enables pagination through a set of `Vendor`."""
   vendors(
@@ -2891,6 +2981,74 @@ type Book implements Node {
     """The method to use when ordering `Estimate`."""
     orderBy: [EstimateOrderBy!] = [PRIMARY_KEY_ASC]
   ): EstimateConnection!
+
+  """Reads and enables pagination through a set of `InventoryItem`."""
+  inventoryItems(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: InventoryItemCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: InventoryItemFilter
+
+    """The method to use when ordering `InventoryItem`."""
+    orderBy: [InventoryItemOrderBy!] = [PRIMARY_KEY_ASC]
+  ): InventoryItemConnection!
+
+  """Reads and enables pagination through a set of `InventoryTransaction`."""
+  inventoryTransactions(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: InventoryTransactionCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: InventoryTransactionFilter
+
+    """The method to use when ordering `InventoryTransaction`."""
+    orderBy: [InventoryTransactionOrderBy!] = [PRIMARY_KEY_ASC]
+  ): InventoryTransactionConnection!
 }
 
 """A connection to a list of `Account` values."""
@@ -3337,6 +3495,18 @@ input BookFilter {
 
   """Some related `estimates` exist."""
   estimatesExist: Boolean
+
+  """Filter by the object’s `inventoryItems` relation."""
+  inventoryItems: BookToManyInventoryItemFilter
+
+  """Some related `inventoryItems` exist."""
+  inventoryItemsExist: Boolean
+
+  """Filter by the object’s `inventoryTransactions` relation."""
+  inventoryTransactions: BookToManyInventoryTransactionFilter
+
+  """Some related `inventoryTransactions` exist."""
+  inventoryTransactionsExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [BookFilter!]
@@ -5460,6 +5630,139 @@ input BookToManyEstimateFilter {
   No related `Estimate` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
   none: EstimateFilter
+}
+
+"""
+A filter to be used against many `InventoryItem` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyInventoryItemFilter {
+  """
+  Every related `InventoryItem` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: InventoryItemFilter
+
+  """
+  Some related `InventoryItem` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: InventoryItemFilter
+
+  """
+  No related `InventoryItem` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: InventoryItemFilter
+}
+
+"""
+A filter to be used against `InventoryItem` object types. All fields are combined with a logical ‘and.’
+"""
+input InventoryItemFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `bookId` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s `inventoryTransactionsByItemId` relation."""
+  inventoryTransactionsByItemId: InventoryItemToManyInventoryTransactionFilter
+
+  """Some related `inventoryTransactionsByItemId` exist."""
+  inventoryTransactionsByItemIdExist: Boolean
+
+  """Filter by the object’s `assetAccount` relation."""
+  assetAccount: AccountFilter
+
+  """Filter by the object’s `book` relation."""
+  book: BookFilter
+
+  """Filter by the object’s `cogsAccount` relation."""
+  cogsAccount: AccountFilter
+
+  """Filter by the object’s `incomeAccount` relation."""
+  incomeAccount: AccountFilter
+
+  """Checks for all expressions in this list."""
+  and: [InventoryItemFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [InventoryItemFilter!]
+
+  """Negates the expression."""
+  not: InventoryItemFilter
+}
+
+"""
+A filter to be used against many `InventoryTransaction` object types. All fields are combined with a logical ‘and.’
+"""
+input InventoryItemToManyInventoryTransactionFilter {
+  """
+  Every related `InventoryTransaction` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: InventoryTransactionFilter
+
+  """
+  Some related `InventoryTransaction` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: InventoryTransactionFilter
+
+  """
+  No related `InventoryTransaction` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: InventoryTransactionFilter
+}
+
+"""
+A filter to be used against `InventoryTransaction` object types. All fields are combined with a logical ‘and.’
+"""
+input InventoryTransactionFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `bookId` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s `itemId` field."""
+  itemId: UUIDFilter
+
+  """Filter by the object’s `book` relation."""
+  book: BookFilter
+
+  """Filter by the object’s `item` relation."""
+  item: InventoryItemFilter
+
+  """Filter by the object’s `journalEntry` relation."""
+  journalEntry: JournalEntryFilter
+
+  """A related `journalEntry` exists."""
+  journalEntryExists: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [InventoryTransactionFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [InventoryTransactionFilter!]
+
+  """Negates the expression."""
+  not: InventoryTransactionFilter
+}
+
+"""
+A filter to be used against many `InventoryTransaction` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyInventoryTransactionFilter {
+  """
+  Every related `InventoryTransaction` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: InventoryTransactionFilter
+
+  """
+  Some related `InventoryTransaction` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: InventoryTransactionFilter
+
+  """
+  No related `InventoryTransaction` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: InventoryTransactionFilter
 }
 
 """
@@ -8550,6 +8853,208 @@ enum CustomerOrderBy {
   BOOK_ID_DESC
 }
 
+"""A connection to a list of `InventoryItem` values."""
+type InventoryItemConnection {
+  """A list of `InventoryItem` objects."""
+  nodes: [InventoryItem]!
+
+  """
+  A list of edges which contains the `InventoryItem` and cursor to aid in pagination.
+  """
+  edges: [InventoryItemEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `InventoryItem` you could get from the connection."""
+  totalCount: Int!
+}
+
+type InventoryItem implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  sku: String
+  name: String!
+  description: String
+  salePrice: BigFloat!
+  quantityOnHand: BigFloat!
+  averageCost: BigFloat!
+  assetAccountId: UUID!
+  cogsAccountId: UUID!
+  incomeAccountId: UUID!
+  isActive: Boolean!
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """Reads a single `Account` that is related to this `InventoryItem`."""
+  assetAccount: Account
+
+  """Reads a single `Book` that is related to this `InventoryItem`."""
+  book: Book
+
+  """Reads a single `Account` that is related to this `InventoryItem`."""
+  cogsAccount: Account
+
+  """Reads a single `Account` that is related to this `InventoryItem`."""
+  incomeAccount: Account
+
+  """Reads and enables pagination through a set of `InventoryTransaction`."""
+  inventoryTransactionsByItemId(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: InventoryTransactionCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: InventoryTransactionFilter
+
+    """The method to use when ordering `InventoryTransaction`."""
+    orderBy: [InventoryTransactionOrderBy!] = [PRIMARY_KEY_ASC]
+  ): InventoryTransactionConnection!
+}
+
+"""A connection to a list of `InventoryTransaction` values."""
+type InventoryTransactionConnection {
+  """A list of `InventoryTransaction` objects."""
+  nodes: [InventoryTransaction]!
+
+  """
+  A list of edges which contains the `InventoryTransaction` and cursor to aid in pagination.
+  """
+  edges: [InventoryTransactionEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `InventoryTransaction` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+type InventoryTransaction implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  itemId: UUID!
+  date: String!
+  type: String!
+  quantity: BigFloat!
+  unitCost: BigFloat!
+  note: String
+  journalEntryId: UUID
+  createdAt: Datetime
+
+  """Reads a single `Book` that is related to this `InventoryTransaction`."""
+  book: Book
+
+  """
+  Reads a single `InventoryItem` that is related to this `InventoryTransaction`.
+  """
+  item: InventoryItem
+
+  """
+  Reads a single `JournalEntry` that is related to this `InventoryTransaction`.
+  """
+  journalEntry: JournalEntry
+}
+
+"""A `InventoryTransaction` edge in the connection."""
+type InventoryTransactionEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `InventoryTransaction` at the end of the edge."""
+  node: InventoryTransaction
+}
+
+"""
+A condition to be used against `InventoryTransaction` object types. All fields
+are tested for equality and combined with a logical ‘and.’
+"""
+input InventoryTransactionCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `bookId` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s `itemId` field."""
+  itemId: UUID
+}
+
+"""Methods to use when ordering `InventoryTransaction`."""
+enum InventoryTransactionOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+  ITEM_ID_ASC
+  ITEM_ID_DESC
+}
+
+"""A `InventoryItem` edge in the connection."""
+type InventoryItemEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `InventoryItem` at the end of the edge."""
+  node: InventoryItem
+}
+
+"""
+A condition to be used against `InventoryItem` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input InventoryItemCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `bookId` field."""
+  bookId: UUID
+}
+
+"""Methods to use when ordering `InventoryItem`."""
+enum InventoryItemOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+}
+
 type _DrizzleMigration implements Node {
   """
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
@@ -8875,6 +9380,14 @@ type Mutation {
     input: CreateAccountingPeriodInput!
   ): CreateAccountingPeriodPayload
 
+  """Creates a single `InventoryTransaction`."""
+  createInventoryTransaction(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateInventoryTransactionInput!
+  ): CreateInventoryTransactionPayload
+
   """Creates a single `PayrollConnection`."""
   createPayrollConnection(
     """
@@ -8994,6 +9507,14 @@ type Mutation {
     """
     input: CreateCustomerInput!
   ): CreateCustomerPayload
+
+  """Creates a single `InventoryItem`."""
+  createInventoryItem(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateInventoryItemInput!
+  ): CreateInventoryItemPayload
 
   """Creates a single `Vendor`."""
   createVendor(
@@ -9304,6 +9825,26 @@ type Mutation {
   ): UpdateAccountingPeriodPayload
 
   """
+  Updates a single `InventoryTransaction` using its globally unique id and a patch.
+  """
+  updateInventoryTransactionById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateInventoryTransactionByIdInput!
+  ): UpdateInventoryTransactionPayload
+
+  """
+  Updates a single `InventoryTransaction` using a unique key and a patch.
+  """
+  updateInventoryTransaction(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateInventoryTransactionInput!
+  ): UpdateInventoryTransactionPayload
+
+  """
   Updates a single `PayrollConnection` using its globally unique id and a patch.
   """
   updatePayrollConnectionById(
@@ -9564,6 +10105,24 @@ type Mutation {
     """
     input: UpdateCustomerInput!
   ): UpdateCustomerPayload
+
+  """
+  Updates a single `InventoryItem` using its globally unique id and a patch.
+  """
+  updateInventoryItemById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateInventoryItemByIdInput!
+  ): UpdateInventoryItemPayload
+
+  """Updates a single `InventoryItem` using a unique key and a patch."""
+  updateInventoryItem(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateInventoryItemInput!
+  ): UpdateInventoryItemPayload
 
   """Updates a single `Vendor` using its globally unique id and a patch."""
   updateVendorById(
@@ -9927,6 +10486,22 @@ type Mutation {
     input: DeleteAccountingPeriodInput!
   ): DeleteAccountingPeriodPayload
 
+  """Deletes a single `InventoryTransaction` using its globally unique id."""
+  deleteInventoryTransactionById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteInventoryTransactionByIdInput!
+  ): DeleteInventoryTransactionPayload
+
+  """Deletes a single `InventoryTransaction` using a unique key."""
+  deleteInventoryTransaction(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteInventoryTransactionInput!
+  ): DeleteInventoryTransactionPayload
+
   """Deletes a single `PayrollConnection` using its globally unique id."""
   deletePayrollConnectionById(
     """
@@ -10168,6 +10743,22 @@ type Mutation {
     """
     input: DeleteCustomerInput!
   ): DeleteCustomerPayload
+
+  """Deletes a single `InventoryItem` using its globally unique id."""
+  deleteInventoryItemById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteInventoryItemByIdInput!
+  ): DeleteInventoryItemPayload
+
+  """Deletes a single `InventoryItem` using a unique key."""
+  deleteInventoryItem(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteInventoryItemInput!
+  ): DeleteInventoryItemPayload
 
   """Deletes a single `Vendor` using its globally unique id."""
   deleteVendorById(
@@ -10938,6 +11529,55 @@ input AccountingPeriodInput {
   createdAt: Datetime
 }
 
+"""The output of our create `InventoryTransaction` mutation."""
+type CreateInventoryTransactionPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `InventoryTransaction` that was created by this mutation."""
+  inventoryTransaction: InventoryTransaction
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `InventoryTransaction`. May be used by Relay 1."""
+  inventoryTransactionEdge(
+    """The method to use when ordering `InventoryTransaction`."""
+    orderBy: [InventoryTransactionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): InventoryTransactionEdge
+}
+
+"""All input for the create `InventoryTransaction` mutation."""
+input CreateInventoryTransactionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `InventoryTransaction` to be created by this mutation."""
+  inventoryTransaction: InventoryTransactionInput!
+}
+
+"""An input for mutations affecting `InventoryTransaction`"""
+input InventoryTransactionInput {
+  rowId: UUID
+  bookId: UUID!
+  itemId: UUID!
+  date: String!
+  type: String!
+  quantity: BigFloat!
+  unitCost: BigFloat
+  note: String
+  journalEntryId: UUID
+  createdAt: Datetime
+}
+
 """The output of our create `PayrollConnection` mutation."""
 type CreatePayrollConnectionPayload {
   """
@@ -11681,6 +12321,59 @@ input CustomerInput {
   state: String
   zip: String
   notes: String
+  isActive: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""The output of our create `InventoryItem` mutation."""
+type CreateInventoryItemPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `InventoryItem` that was created by this mutation."""
+  inventoryItem: InventoryItem
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `InventoryItem`. May be used by Relay 1."""
+  inventoryItemEdge(
+    """The method to use when ordering `InventoryItem`."""
+    orderBy: [InventoryItemOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): InventoryItemEdge
+}
+
+"""All input for the create `InventoryItem` mutation."""
+input CreateInventoryItemInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `InventoryItem` to be created by this mutation."""
+  inventoryItem: InventoryItemInput!
+}
+
+"""An input for mutations affecting `InventoryItem`"""
+input InventoryItemInput {
+  rowId: UUID
+  bookId: UUID!
+  sku: String
+  name: String!
+  description: String
+  salePrice: BigFloat
+  quantityOnHand: BigFloat
+  averageCost: BigFloat
+  assetAccountId: UUID!
+  cogsAccountId: UUID!
+  incomeAccountId: UUID!
   isActive: Boolean
   createdAt: Datetime
   updatedAt: Datetime
@@ -13083,6 +13776,79 @@ input UpdateAccountingPeriodInput {
   patch: AccountingPeriodPatch!
 }
 
+"""The output of our update `InventoryTransaction` mutation."""
+type UpdateInventoryTransactionPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `InventoryTransaction` that was updated by this mutation."""
+  inventoryTransaction: InventoryTransaction
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `InventoryTransaction`. May be used by Relay 1."""
+  inventoryTransactionEdge(
+    """The method to use when ordering `InventoryTransaction`."""
+    orderBy: [InventoryTransactionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): InventoryTransactionEdge
+}
+
+"""All input for the `updateInventoryTransactionById` mutation."""
+input UpdateInventoryTransactionByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `InventoryTransaction` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `InventoryTransaction` being updated.
+  """
+  patch: InventoryTransactionPatch!
+}
+
+"""
+Represents an update to a `InventoryTransaction`. Fields that are set will be updated.
+"""
+input InventoryTransactionPatch {
+  rowId: UUID
+  bookId: UUID
+  itemId: UUID
+  date: String
+  type: String
+  quantity: BigFloat
+  unitCost: BigFloat
+  note: String
+  journalEntryId: UUID
+  createdAt: Datetime
+}
+
+"""All input for the `updateInventoryTransaction` mutation."""
+input UpdateInventoryTransactionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `InventoryTransaction` being updated.
+  """
+  patch: InventoryTransactionPatch!
+}
+
 """The output of our update `PayrollConnection` mutation."""
 type UpdatePayrollConnectionPayload {
   """
@@ -14189,6 +14955,83 @@ input UpdateCustomerInput {
   An object where the defined keys will be set on the `Customer` being updated.
   """
   patch: CustomerPatch!
+}
+
+"""The output of our update `InventoryItem` mutation."""
+type UpdateInventoryItemPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `InventoryItem` that was updated by this mutation."""
+  inventoryItem: InventoryItem
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `InventoryItem`. May be used by Relay 1."""
+  inventoryItemEdge(
+    """The method to use when ordering `InventoryItem`."""
+    orderBy: [InventoryItemOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): InventoryItemEdge
+}
+
+"""All input for the `updateInventoryItemById` mutation."""
+input UpdateInventoryItemByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `InventoryItem` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `InventoryItem` being updated.
+  """
+  patch: InventoryItemPatch!
+}
+
+"""
+Represents an update to a `InventoryItem`. Fields that are set will be updated.
+"""
+input InventoryItemPatch {
+  rowId: UUID
+  bookId: UUID
+  sku: String
+  name: String
+  description: String
+  salePrice: BigFloat
+  quantityOnHand: BigFloat
+  averageCost: BigFloat
+  assetAccountId: UUID
+  cogsAccountId: UUID
+  incomeAccountId: UUID
+  isActive: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the `updateInventoryItem` mutation."""
+input UpdateInventoryItemInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `InventoryItem` being updated.
+  """
+  patch: InventoryItemPatch!
 }
 
 """The output of our update `Vendor` mutation."""
@@ -15478,6 +16321,54 @@ input DeleteAccountingPeriodInput {
   rowId: UUID!
 }
 
+"""The output of our delete `InventoryTransaction` mutation."""
+type DeleteInventoryTransactionPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `InventoryTransaction` that was deleted by this mutation."""
+  inventoryTransaction: InventoryTransaction
+  deletedInventoryTransactionId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `InventoryTransaction`. May be used by Relay 1."""
+  inventoryTransactionEdge(
+    """The method to use when ordering `InventoryTransaction`."""
+    orderBy: [InventoryTransactionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): InventoryTransactionEdge
+}
+
+"""All input for the `deleteInventoryTransactionById` mutation."""
+input DeleteInventoryTransactionByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `InventoryTransaction` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteInventoryTransaction` mutation."""
+input DeleteInventoryTransactionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete `PayrollConnection` mutation."""
 type DeletePayrollConnectionPayload {
   """
@@ -16190,6 +17081,54 @@ input DeleteCustomerByIdInput {
 
 """All input for the `deleteCustomer` mutation."""
 input DeleteCustomerInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `InventoryItem` mutation."""
+type DeleteInventoryItemPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `InventoryItem` that was deleted by this mutation."""
+  inventoryItem: InventoryItem
+  deletedInventoryItemId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `InventoryItem`. May be used by Relay 1."""
+  inventoryItemEdge(
+    """The method to use when ordering `InventoryItem`."""
+    orderBy: [InventoryItemOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): InventoryItemEdge
+}
+
+"""All input for the `deleteInventoryItemById` mutation."""
+input DeleteInventoryItemByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `InventoryItem` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteInventoryItem` mutation."""
+input DeleteInventoryItemInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.

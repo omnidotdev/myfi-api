@@ -1337,6 +1337,132 @@ const spec_accountingPeriod = {
   executor: executor
 };
 const accountingPeriodCodec = recordCodec(spec_accountingPeriod);
+const inventoryTransactionIdentifier = sql.identifier("public", "inventory_transaction");
+const spec_inventoryTransaction = {
+  name: "inventoryTransaction",
+  identifier: inventoryTransactionIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    item_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    date: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    type: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    quantity: {
+      codec: TYPES.numeric,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    unit_cost: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    note: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    journal_entry_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "17890",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "inventory_transaction"
+    }
+  },
+  executor: executor
+};
+const inventoryTransactionCodec = recordCodec(spec_inventoryTransaction);
 const payrollConnectionIdentifier = sql.identifier("public", "payroll_connection");
 const spec_payrollConnection = {
   name: "payrollConnection",
@@ -3372,6 +3498,180 @@ const spec_customer = {
   executor: executor
 };
 const customerCodec = recordCodec(spec_customer);
+const inventoryItemIdentifier = sql.identifier("public", "inventory_item");
+const spec_inventoryItem = {
+  name: "inventoryItem",
+  identifier: inventoryItemIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    sku: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    name: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    description: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    sale_price: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    quantity_on_hand: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    average_cost: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    asset_account_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    cogs_account_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    income_account_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    is_active: {
+      codec: TYPES.boolean,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "17866",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "inventory_item"
+    }
+  },
+  executor: executor
+};
+const inventoryItemCodec = recordCodec(spec_inventoryItem);
 const vendorIdentifier = sql.identifier("public", "vendor");
 const spec_vendor = {
   name: "vendor",
@@ -5100,6 +5400,29 @@ const accounting_period_resourceOptionsConfig = {
   },
   uniques: accounting_periodUniques
 };
+const inventory_transactionUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const inventory_transaction_resourceOptionsConfig = {
+  executor: executor,
+  name: "inventory_transaction",
+  identifier: "main.public.inventory_transaction",
+  from: inventoryTransactionIdentifier,
+  codec: inventoryTransactionCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "inventory_transaction"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: inventory_transactionUniques
+};
 const payroll_connectionUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -5445,6 +5768,29 @@ const customer_resourceOptionsConfig = {
   },
   uniques: customerUniques
 };
+const inventory_itemUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const inventory_item_resourceOptionsConfig = {
+  executor: executor,
+  name: "inventory_item",
+  identifier: "main.public.inventory_item",
+  from: inventoryItemIdentifier,
+  codec: inventoryItemCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "inventory_item"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: inventory_itemUniques
+};
 const vendorUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -5658,6 +6004,7 @@ const registryConfig = {
     book: bookCodec,
     netWorthSnapshot: netWorthSnapshotCodec,
     accountingPeriod: accountingPeriodCodec,
+    inventoryTransaction: inventoryTransactionCodec,
     payrollConnection: payrollConnectionCodec,
     billLine: billLineCodec,
     estimateLine: estimateLineCodec,
@@ -5674,6 +6021,7 @@ const registryConfig = {
     estimate: estimateCodec,
     reconciliationQueue: reconciliationQueueCodec,
     customer: customerCodec,
+    inventoryItem: inventoryItemCodec,
     vendor: vendorCodec,
     cryptoAsset: cryptoAssetCodec,
     costBasisMethod: costBasisMethodCodec,
@@ -5721,6 +6069,7 @@ const registryConfig = {
     book: book_resourceOptionsConfig,
     net_worth_snapshot: net_worth_snapshot_resourceOptionsConfig,
     accounting_period: accounting_period_resourceOptionsConfig,
+    inventory_transaction: inventory_transaction_resourceOptionsConfig,
     payroll_connection: payroll_connection_resourceOptionsConfig,
     bill_line: bill_line_resourceOptionsConfig,
     estimate_line: estimate_line_resourceOptionsConfig,
@@ -5736,6 +6085,7 @@ const registryConfig = {
     estimate: estimate_resourceOptionsConfig,
     reconciliation_queue: reconciliation_queue_resourceOptionsConfig,
     customer: customer_resourceOptionsConfig,
+    inventory_item: inventory_item_resourceOptionsConfig,
     vendor: vendor_resourceOptionsConfig,
     crypto_asset: crypto_asset_resourceOptionsConfig,
     bill: bill_resourceOptionsConfig,
@@ -5992,6 +6342,39 @@ const registryConfig = {
       estimateLinesByTheirIncomeAccountId: {
         localCodec: accountCodec,
         remoteResourceOptions: estimate_line_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["income_account_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
+      },
+      inventoryItemsByTheirAssetAccountId: {
+        localCodec: accountCodec,
+        remoteResourceOptions: inventory_item_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["asset_account_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
+      },
+      inventoryItemsByTheirCogsAccountId: {
+        localCodec: accountCodec,
+        remoteResourceOptions: inventory_item_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["cogs_account_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
+      },
+      inventoryItemsByTheirIncomeAccountId: {
+        localCodec: accountCodec,
+        remoteResourceOptions: inventory_item_resourceOptionsConfig,
         localAttributes: ["id"],
         remoteAttributes: ["income_account_id"],
         isReferencee: true,
@@ -6329,6 +6712,20 @@ const registryConfig = {
         localAttributes: ["id"],
         remoteAttributes: ["book_id"],
         isReferencee: true
+      },
+      inventoryItemsByTheirBookId: {
+        localCodec: bookCodec,
+        remoteResourceOptions: inventory_item_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["book_id"],
+        isReferencee: true
+      },
+      inventoryTransactionsByTheirBookId: {
+        localCodec: bookCodec,
+        remoteResourceOptions: inventory_transaction_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["book_id"],
+        isReferencee: true
       }
     },
     bookAccess: {
@@ -6560,6 +6957,68 @@ const registryConfig = {
         isUnique: true
       }
     },
+    inventoryItem: {
+      __proto__: null,
+      accountByMyAssetAccountId: {
+        localCodec: inventoryItemCodec,
+        remoteResourceOptions: account_resourceOptionsConfig,
+        localAttributes: ["asset_account_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      bookByMyBookId: {
+        localCodec: inventoryItemCodec,
+        remoteResourceOptions: book_resourceOptionsConfig,
+        localAttributes: ["book_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      accountByMyCogsAccountId: {
+        localCodec: inventoryItemCodec,
+        remoteResourceOptions: account_resourceOptionsConfig,
+        localAttributes: ["cogs_account_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      accountByMyIncomeAccountId: {
+        localCodec: inventoryItemCodec,
+        remoteResourceOptions: account_resourceOptionsConfig,
+        localAttributes: ["income_account_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      inventoryTransactionsByTheirItemId: {
+        localCodec: inventoryItemCodec,
+        remoteResourceOptions: inventory_transaction_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["item_id"],
+        isReferencee: true
+      }
+    },
+    inventoryTransaction: {
+      __proto__: null,
+      bookByMyBookId: {
+        localCodec: inventoryTransactionCodec,
+        remoteResourceOptions: book_resourceOptionsConfig,
+        localAttributes: ["book_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      inventoryItemByMyItemId: {
+        localCodec: inventoryTransactionCodec,
+        remoteResourceOptions: inventory_item_resourceOptionsConfig,
+        localAttributes: ["item_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      journalEntryByMyJournalEntryId: {
+        localCodec: inventoryTransactionCodec,
+        remoteResourceOptions: journal_entry_resourceOptionsConfig,
+        localAttributes: ["journal_entry_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      }
+    },
     invoice: {
       __proto__: null,
       bookByMyBookId: {
@@ -6745,6 +7204,17 @@ const registryConfig = {
       billPaymentsByTheirJournalEntryId: {
         localCodec: journalEntryCodec,
         remoteResourceOptions: bill_payment_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["journal_entry_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
+      },
+      inventoryTransactionsByTheirJournalEntryId: {
+        localCodec: journalEntryCodec,
+        remoteResourceOptions: inventory_transaction_resourceOptionsConfig,
         localAttributes: ["id"],
         remoteAttributes: ["journal_entry_id"],
         isReferencee: true,
@@ -7078,6 +7548,7 @@ const resource_import_profilePgResource = registry.pgResources["import_profile"]
 const resource_bookPgResource = registry.pgResources["book"];
 const resource_net_worth_snapshotPgResource = registry.pgResources["net_worth_snapshot"];
 const resource_accounting_periodPgResource = registry.pgResources["accounting_period"];
+const resource_inventory_transactionPgResource = registry.pgResources["inventory_transaction"];
 const resource_payroll_connectionPgResource = registry.pgResources["payroll_connection"];
 const resource_bill_linePgResource = registry.pgResources["bill_line"];
 const resource_estimate_linePgResource = registry.pgResources["estimate_line"];
@@ -7093,6 +7564,7 @@ const resource_budgetPgResource = registry.pgResources["budget"];
 const resource_estimatePgResource = registry.pgResources["estimate"];
 const resource_reconciliation_queuePgResource = registry.pgResources["reconciliation_queue"];
 const resource_customerPgResource = registry.pgResources["customer"];
+const resource_inventory_itemPgResource = registry.pgResources["inventory_item"];
 const resource_vendorPgResource = registry.pgResources["vendor"];
 const resource_crypto_assetPgResource = registry.pgResources["crypto_asset"];
 const resource_billPgResource = registry.pgResources["bill"];
@@ -7299,6 +7771,17 @@ const nodeFetcher_AccountingPeriod = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_AccountingPeriod));
   return nodeIdHandler_AccountingPeriod.get(nodeIdHandler_AccountingPeriod.getSpec($decoded));
 };
+const nodeIdHandler_InventoryTransaction = makeTableNodeIdHandler({
+  typeName: "InventoryTransaction",
+  identifier: "InventoryTransaction",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_inventory_transactionPgResource,
+  pk: inventory_transactionUniques[0].attributes
+});
+const nodeFetcher_InventoryTransaction = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_InventoryTransaction));
+  return nodeIdHandler_InventoryTransaction.get(nodeIdHandler_InventoryTransaction.getSpec($decoded));
+};
 const nodeIdHandler_PayrollConnection = makeTableNodeIdHandler({
   typeName: "PayrollConnection",
   identifier: "PayrollConnection",
@@ -7464,6 +7947,17 @@ const nodeFetcher_Customer = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Customer));
   return nodeIdHandler_Customer.get(nodeIdHandler_Customer.getSpec($decoded));
 };
+const nodeIdHandler_InventoryItem = makeTableNodeIdHandler({
+  typeName: "InventoryItem",
+  identifier: "InventoryItem",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_inventory_itemPgResource,
+  pk: inventory_itemUniques[0].attributes
+});
+const nodeFetcher_InventoryItem = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_InventoryItem));
+  return nodeIdHandler_InventoryItem.get(nodeIdHandler_InventoryItem.getSpec($decoded));
+};
 const nodeIdHandler_Vendor = makeTableNodeIdHandler({
   typeName: "Vendor",
   identifier: "Vendor",
@@ -7618,6 +8112,7 @@ const nodeIdHandlerByTypeName = {
   Book: nodeIdHandler_Book,
   NetWorthSnapshot: nodeIdHandler_NetWorthSnapshot,
   AccountingPeriod: nodeIdHandler_AccountingPeriod,
+  InventoryTransaction: nodeIdHandler_InventoryTransaction,
   PayrollConnection: nodeIdHandler_PayrollConnection,
   BillLine: nodeIdHandler_BillLine,
   EstimateLine: nodeIdHandler_EstimateLine,
@@ -7633,6 +8128,7 @@ const nodeIdHandlerByTypeName = {
   Estimate: nodeIdHandler_Estimate,
   ReconciliationQueue: nodeIdHandler_ReconciliationQueue,
   Customer: nodeIdHandler_Customer,
+  InventoryItem: nodeIdHandler_InventoryItem,
   Vendor: nodeIdHandler_Vendor,
   CryptoAsset: nodeIdHandler_CryptoAsset,
   Bill: nodeIdHandler_Bill,
@@ -8132,6 +8628,12 @@ const JournalEntryOrderBy_DATE_DESCApply = queryBuilder => {
   });
 };
 const JSONSerialize = value => value;
+const FixedAsset_assetAccountIdPlan = $record => {
+  return $record.get("asset_account_id");
+};
+const FixedAsset_assetAccountPlan = $record => resource_accountPgResource.get({
+  id: $record.get("asset_account_id")
+});
 const Invoice_customerIdPlan = $record => {
   return $record.get("customer_id");
 };
@@ -8238,6 +8740,10 @@ const specFromArgs_AccountingPeriod = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_AccountingPeriod, $nodeId);
 };
+const specFromArgs_InventoryTransaction = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_InventoryTransaction, $nodeId);
+};
 const specFromArgs_PayrollConnection = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_PayrollConnection, $nodeId);
@@ -8297,6 +8803,10 @@ const specFromArgs_ReconciliationQueue = args => {
 const specFromArgs_Customer = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Customer, $nodeId);
+};
+const specFromArgs_InventoryItem = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_InventoryItem, $nodeId);
 };
 const specFromArgs_Vendor = args => {
   const $nodeId = args.getRaw(["input", "id"]);
@@ -8527,6 +9037,19 @@ function AccountingPeriodInput_reopenedAtApply(obj, val, info) {
 function AccountingPeriodInput_blockersApply(obj, val, info) {
   obj.set("blockers", bakedInputRuntime(info.schema, info.field.type, val));
 }
+const CreateInventoryTransactionPayload_inventoryTransactionEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_inventory_transactionPgResource, inventory_transactionUniques[0].attributes, $mutation, fieldArgs);
+function InventoryTransactionInput_itemIdApply(obj, val, info) {
+  obj.set("item_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function InventoryTransactionInput_quantityApply(obj, val, info) {
+  obj.set("quantity", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function InventoryTransactionInput_unitCostApply(obj, val, info) {
+  obj.set("unit_cost", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function InventoryTransactionInput_noteApply(obj, val, info) {
+  obj.set("note", bakedInputRuntime(info.schema, info.field.type, val));
+}
 const CreatePayrollConnectionPayload_payrollConnectionEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_payroll_connectionPgResource, payroll_connectionUniques[0].attributes, $mutation, fieldArgs);
 function PayrollConnectionInput_providerApply(obj, val, info) {
   obj.set("provider", bakedInputRuntime(info.schema, info.field.type, val));
@@ -8552,9 +9075,6 @@ function BillLineInput_billIdApply(obj, val, info) {
 }
 function BillLineInput_descriptionApply(obj, val, info) {
   obj.set("description", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function BillLineInput_quantityApply(obj, val, info) {
-  obj.set("quantity", bakedInputRuntime(info.schema, info.field.type, val));
 }
 function BillLineInput_unitPriceApply(obj, val, info) {
   obj.set("unit_price", bakedInputRuntime(info.schema, info.field.type, val));
@@ -8764,6 +9284,25 @@ function CustomerInput_zipApply(obj, val, info) {
 function CustomerInput_notesApply(obj, val, info) {
   obj.set("notes", bakedInputRuntime(info.schema, info.field.type, val));
 }
+const CreateInventoryItemPayload_inventoryItemEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_inventory_itemPgResource, inventory_itemUniques[0].attributes, $mutation, fieldArgs);
+function InventoryItemInput_skuApply(obj, val, info) {
+  obj.set("sku", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function InventoryItemInput_salePriceApply(obj, val, info) {
+  obj.set("sale_price", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function InventoryItemInput_quantityOnHandApply(obj, val, info) {
+  obj.set("quantity_on_hand", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function InventoryItemInput_averageCostApply(obj, val, info) {
+  obj.set("average_cost", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function InventoryItemInput_assetAccountIdApply(obj, val, info) {
+  obj.set("asset_account_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function InventoryItemInput_cogsAccountIdApply(obj, val, info) {
+  obj.set("cogs_account_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
 const CreateVendorPayload_vendorEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_vendorPgResource, vendorUniques[0].attributes, $mutation, fieldArgs);
 function VendorInput_taxIdTypeApply(obj, val, info) {
   obj.set("tax_id_type", bakedInputRuntime(info.schema, info.field.type, val));
@@ -8829,9 +9368,6 @@ function CategorizationRuleInput_lastHitAtApply(obj, val, info) {
   obj.set("last_hit_at", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateFixedAssetPayload_fixedAssetEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_fixed_assetPgResource, fixed_assetUniques[0].attributes, $mutation, fieldArgs);
-function FixedAssetInput_assetAccountIdApply(obj, val, info) {
-  obj.set("asset_account_id", bakedInputRuntime(info.schema, info.field.type, val));
-}
 function FixedAssetInput_depreciationExpenseAccountIdApply(obj, val, info) {
   obj.set("depreciation_expense_account_id", bakedInputRuntime(info.schema, info.field.type, val));
 }
@@ -8947,6 +9483,9 @@ type Query implements Node {
   """Get a single \`AccountingPeriod\`."""
   accountingPeriod(rowId: UUID!): AccountingPeriod
 
+  """Get a single \`InventoryTransaction\`."""
+  inventoryTransaction(rowId: UUID!): InventoryTransaction
+
   """Get a single \`PayrollConnection\`."""
   payrollConnection(rowId: UUID!): PayrollConnection
 
@@ -8991,6 +9530,9 @@ type Query implements Node {
 
   """Get a single \`Customer\`."""
   customer(rowId: UUID!): Customer
+
+  """Get a single \`InventoryItem\`."""
+  inventoryItem(rowId: UUID!): InventoryItem
 
   """Get a single \`Vendor\`."""
   vendor(rowId: UUID!): Vendor
@@ -9120,6 +9662,14 @@ type Query implements Node {
     id: ID!
   ): AccountingPeriod
 
+  """Reads a single \`InventoryTransaction\` using its globally unique \`ID\`."""
+  inventoryTransactionById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`InventoryTransaction\`.
+    """
+    id: ID!
+  ): InventoryTransaction
+
   """Reads a single \`PayrollConnection\` using its globally unique \`ID\`."""
   payrollConnectionById(
     """
@@ -9231,6 +9781,14 @@ type Query implements Node {
     """The globally unique \`ID\` to be used in selecting a single \`Customer\`."""
     id: ID!
   ): Customer
+
+  """Reads a single \`InventoryItem\` using its globally unique \`ID\`."""
+  inventoryItemById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`InventoryItem\`.
+    """
+    id: ID!
+  ): InventoryItem
 
   """Reads a single \`Vendor\` using its globally unique \`ID\`."""
   vendorById(
@@ -9764,6 +10322,40 @@ type Query implements Node {
     orderBy: [AccountingPeriodOrderBy!] = [PRIMARY_KEY_ASC]
   ): AccountingPeriodConnection
 
+  """Reads and enables pagination through a set of \`InventoryTransaction\`."""
+  inventoryTransactions(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: InventoryTransactionCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: InventoryTransactionFilter
+
+    """The method to use when ordering \`InventoryTransaction\`."""
+    orderBy: [InventoryTransactionOrderBy!] = [PRIMARY_KEY_ASC]
+  ): InventoryTransactionConnection
+
   """Reads and enables pagination through a set of \`PayrollConnection\`."""
   payrollConnections(
     """Only read the first \`n\` values of the set."""
@@ -10275,6 +10867,40 @@ type Query implements Node {
     """The method to use when ordering \`Customer\`."""
     orderBy: [CustomerOrderBy!] = [PRIMARY_KEY_ASC]
   ): CustomerConnection
+
+  """Reads and enables pagination through a set of \`InventoryItem\`."""
+  inventoryItems(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: InventoryItemCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: InventoryItemFilter
+
+    """The method to use when ordering \`InventoryItem\`."""
+    orderBy: [InventoryItemOrderBy!] = [PRIMARY_KEY_ASC]
+  ): InventoryItemConnection
 
   """Reads and enables pagination through a set of \`Vendor\`."""
   vendors(
@@ -11779,6 +12405,74 @@ type Book implements Node {
     """The method to use when ordering \`Estimate\`."""
     orderBy: [EstimateOrderBy!] = [PRIMARY_KEY_ASC]
   ): EstimateConnection!
+
+  """Reads and enables pagination through a set of \`InventoryItem\`."""
+  inventoryItems(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: InventoryItemCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: InventoryItemFilter
+
+    """The method to use when ordering \`InventoryItem\`."""
+    orderBy: [InventoryItemOrderBy!] = [PRIMARY_KEY_ASC]
+  ): InventoryItemConnection!
+
+  """Reads and enables pagination through a set of \`InventoryTransaction\`."""
+  inventoryTransactions(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: InventoryTransactionCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: InventoryTransactionFilter
+
+    """The method to use when ordering \`InventoryTransaction\`."""
+    orderBy: [InventoryTransactionOrderBy!] = [PRIMARY_KEY_ASC]
+  ): InventoryTransactionConnection!
 }
 
 """A connection to a list of \`Account\` values."""
@@ -12225,6 +12919,18 @@ input BookFilter {
 
   """Some related \`estimates\` exist."""
   estimatesExist: Boolean
+
+  """Filter by the object’s \`inventoryItems\` relation."""
+  inventoryItems: BookToManyInventoryItemFilter
+
+  """Some related \`inventoryItems\` exist."""
+  inventoryItemsExist: Boolean
+
+  """Filter by the object’s \`inventoryTransactions\` relation."""
+  inventoryTransactions: BookToManyInventoryTransactionFilter
+
+  """Some related \`inventoryTransactions\` exist."""
+  inventoryTransactionsExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [BookFilter!]
@@ -14348,6 +15054,139 @@ input BookToManyEstimateFilter {
   No related \`Estimate\` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
   none: EstimateFilter
+}
+
+"""
+A filter to be used against many \`InventoryItem\` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyInventoryItemFilter {
+  """
+  Every related \`InventoryItem\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: InventoryItemFilter
+
+  """
+  Some related \`InventoryItem\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: InventoryItemFilter
+
+  """
+  No related \`InventoryItem\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: InventoryItemFilter
+}
+
+"""
+A filter to be used against \`InventoryItem\` object types. All fields are combined with a logical ‘and.’
+"""
+input InventoryItemFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`bookId\` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s \`inventoryTransactionsByItemId\` relation."""
+  inventoryTransactionsByItemId: InventoryItemToManyInventoryTransactionFilter
+
+  """Some related \`inventoryTransactionsByItemId\` exist."""
+  inventoryTransactionsByItemIdExist: Boolean
+
+  """Filter by the object’s \`assetAccount\` relation."""
+  assetAccount: AccountFilter
+
+  """Filter by the object’s \`book\` relation."""
+  book: BookFilter
+
+  """Filter by the object’s \`cogsAccount\` relation."""
+  cogsAccount: AccountFilter
+
+  """Filter by the object’s \`incomeAccount\` relation."""
+  incomeAccount: AccountFilter
+
+  """Checks for all expressions in this list."""
+  and: [InventoryItemFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [InventoryItemFilter!]
+
+  """Negates the expression."""
+  not: InventoryItemFilter
+}
+
+"""
+A filter to be used against many \`InventoryTransaction\` object types. All fields are combined with a logical ‘and.’
+"""
+input InventoryItemToManyInventoryTransactionFilter {
+  """
+  Every related \`InventoryTransaction\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: InventoryTransactionFilter
+
+  """
+  Some related \`InventoryTransaction\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: InventoryTransactionFilter
+
+  """
+  No related \`InventoryTransaction\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: InventoryTransactionFilter
+}
+
+"""
+A filter to be used against \`InventoryTransaction\` object types. All fields are combined with a logical ‘and.’
+"""
+input InventoryTransactionFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`bookId\` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s \`itemId\` field."""
+  itemId: UUIDFilter
+
+  """Filter by the object’s \`book\` relation."""
+  book: BookFilter
+
+  """Filter by the object’s \`item\` relation."""
+  item: InventoryItemFilter
+
+  """Filter by the object’s \`journalEntry\` relation."""
+  journalEntry: JournalEntryFilter
+
+  """A related \`journalEntry\` exists."""
+  journalEntryExists: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [InventoryTransactionFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [InventoryTransactionFilter!]
+
+  """Negates the expression."""
+  not: InventoryTransactionFilter
+}
+
+"""
+A filter to be used against many \`InventoryTransaction\` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyInventoryTransactionFilter {
+  """
+  Every related \`InventoryTransaction\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: InventoryTransactionFilter
+
+  """
+  Some related \`InventoryTransaction\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: InventoryTransactionFilter
+
+  """
+  No related \`InventoryTransaction\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: InventoryTransactionFilter
 }
 
 """
@@ -17438,6 +18277,208 @@ enum CustomerOrderBy {
   BOOK_ID_DESC
 }
 
+"""A connection to a list of \`InventoryItem\` values."""
+type InventoryItemConnection {
+  """A list of \`InventoryItem\` objects."""
+  nodes: [InventoryItem]!
+
+  """
+  A list of edges which contains the \`InventoryItem\` and cursor to aid in pagination.
+  """
+  edges: [InventoryItemEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* \`InventoryItem\` you could get from the connection."""
+  totalCount: Int!
+}
+
+type InventoryItem implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  sku: String
+  name: String!
+  description: String
+  salePrice: BigFloat!
+  quantityOnHand: BigFloat!
+  averageCost: BigFloat!
+  assetAccountId: UUID!
+  cogsAccountId: UUID!
+  incomeAccountId: UUID!
+  isActive: Boolean!
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """Reads a single \`Account\` that is related to this \`InventoryItem\`."""
+  assetAccount: Account
+
+  """Reads a single \`Book\` that is related to this \`InventoryItem\`."""
+  book: Book
+
+  """Reads a single \`Account\` that is related to this \`InventoryItem\`."""
+  cogsAccount: Account
+
+  """Reads a single \`Account\` that is related to this \`InventoryItem\`."""
+  incomeAccount: Account
+
+  """Reads and enables pagination through a set of \`InventoryTransaction\`."""
+  inventoryTransactionsByItemId(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: InventoryTransactionCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: InventoryTransactionFilter
+
+    """The method to use when ordering \`InventoryTransaction\`."""
+    orderBy: [InventoryTransactionOrderBy!] = [PRIMARY_KEY_ASC]
+  ): InventoryTransactionConnection!
+}
+
+"""A connection to a list of \`InventoryTransaction\` values."""
+type InventoryTransactionConnection {
+  """A list of \`InventoryTransaction\` objects."""
+  nodes: [InventoryTransaction]!
+
+  """
+  A list of edges which contains the \`InventoryTransaction\` and cursor to aid in pagination.
+  """
+  edges: [InventoryTransactionEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* \`InventoryTransaction\` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+type InventoryTransaction implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  itemId: UUID!
+  date: String!
+  type: String!
+  quantity: BigFloat!
+  unitCost: BigFloat!
+  note: String
+  journalEntryId: UUID
+  createdAt: Datetime
+
+  """Reads a single \`Book\` that is related to this \`InventoryTransaction\`."""
+  book: Book
+
+  """
+  Reads a single \`InventoryItem\` that is related to this \`InventoryTransaction\`.
+  """
+  item: InventoryItem
+
+  """
+  Reads a single \`JournalEntry\` that is related to this \`InventoryTransaction\`.
+  """
+  journalEntry: JournalEntry
+}
+
+"""A \`InventoryTransaction\` edge in the connection."""
+type InventoryTransactionEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`InventoryTransaction\` at the end of the edge."""
+  node: InventoryTransaction
+}
+
+"""
+A condition to be used against \`InventoryTransaction\` object types. All fields
+are tested for equality and combined with a logical ‘and.’
+"""
+input InventoryTransactionCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`bookId\` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s \`itemId\` field."""
+  itemId: UUID
+}
+
+"""Methods to use when ordering \`InventoryTransaction\`."""
+enum InventoryTransactionOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+  ITEM_ID_ASC
+  ITEM_ID_DESC
+}
+
+"""A \`InventoryItem\` edge in the connection."""
+type InventoryItemEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`InventoryItem\` at the end of the edge."""
+  node: InventoryItem
+}
+
+"""
+A condition to be used against \`InventoryItem\` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input InventoryItemCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`bookId\` field."""
+  bookId: UUID
+}
+
+"""Methods to use when ordering \`InventoryItem\`."""
+enum InventoryItemOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+}
+
 type _DrizzleMigration implements Node {
   """
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
@@ -17763,6 +18804,14 @@ type Mutation {
     input: CreateAccountingPeriodInput!
   ): CreateAccountingPeriodPayload
 
+  """Creates a single \`InventoryTransaction\`."""
+  createInventoryTransaction(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateInventoryTransactionInput!
+  ): CreateInventoryTransactionPayload
+
   """Creates a single \`PayrollConnection\`."""
   createPayrollConnection(
     """
@@ -17882,6 +18931,14 @@ type Mutation {
     """
     input: CreateCustomerInput!
   ): CreateCustomerPayload
+
+  """Creates a single \`InventoryItem\`."""
+  createInventoryItem(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateInventoryItemInput!
+  ): CreateInventoryItemPayload
 
   """Creates a single \`Vendor\`."""
   createVendor(
@@ -18192,6 +19249,26 @@ type Mutation {
   ): UpdateAccountingPeriodPayload
 
   """
+  Updates a single \`InventoryTransaction\` using its globally unique id and a patch.
+  """
+  updateInventoryTransactionById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateInventoryTransactionByIdInput!
+  ): UpdateInventoryTransactionPayload
+
+  """
+  Updates a single \`InventoryTransaction\` using a unique key and a patch.
+  """
+  updateInventoryTransaction(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateInventoryTransactionInput!
+  ): UpdateInventoryTransactionPayload
+
+  """
   Updates a single \`PayrollConnection\` using its globally unique id and a patch.
   """
   updatePayrollConnectionById(
@@ -18452,6 +19529,24 @@ type Mutation {
     """
     input: UpdateCustomerInput!
   ): UpdateCustomerPayload
+
+  """
+  Updates a single \`InventoryItem\` using its globally unique id and a patch.
+  """
+  updateInventoryItemById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateInventoryItemByIdInput!
+  ): UpdateInventoryItemPayload
+
+  """Updates a single \`InventoryItem\` using a unique key and a patch."""
+  updateInventoryItem(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateInventoryItemInput!
+  ): UpdateInventoryItemPayload
 
   """Updates a single \`Vendor\` using its globally unique id and a patch."""
   updateVendorById(
@@ -18815,6 +19910,22 @@ type Mutation {
     input: DeleteAccountingPeriodInput!
   ): DeleteAccountingPeriodPayload
 
+  """Deletes a single \`InventoryTransaction\` using its globally unique id."""
+  deleteInventoryTransactionById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteInventoryTransactionByIdInput!
+  ): DeleteInventoryTransactionPayload
+
+  """Deletes a single \`InventoryTransaction\` using a unique key."""
+  deleteInventoryTransaction(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteInventoryTransactionInput!
+  ): DeleteInventoryTransactionPayload
+
   """Deletes a single \`PayrollConnection\` using its globally unique id."""
   deletePayrollConnectionById(
     """
@@ -19056,6 +20167,22 @@ type Mutation {
     """
     input: DeleteCustomerInput!
   ): DeleteCustomerPayload
+
+  """Deletes a single \`InventoryItem\` using its globally unique id."""
+  deleteInventoryItemById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteInventoryItemByIdInput!
+  ): DeleteInventoryItemPayload
+
+  """Deletes a single \`InventoryItem\` using a unique key."""
+  deleteInventoryItem(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteInventoryItemInput!
+  ): DeleteInventoryItemPayload
 
   """Deletes a single \`Vendor\` using its globally unique id."""
   deleteVendorById(
@@ -19826,6 +20953,55 @@ input AccountingPeriodInput {
   createdAt: Datetime
 }
 
+"""The output of our create \`InventoryTransaction\` mutation."""
+type CreateInventoryTransactionPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`InventoryTransaction\` that was created by this mutation."""
+  inventoryTransaction: InventoryTransaction
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`InventoryTransaction\`. May be used by Relay 1."""
+  inventoryTransactionEdge(
+    """The method to use when ordering \`InventoryTransaction\`."""
+    orderBy: [InventoryTransactionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): InventoryTransactionEdge
+}
+
+"""All input for the create \`InventoryTransaction\` mutation."""
+input CreateInventoryTransactionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`InventoryTransaction\` to be created by this mutation."""
+  inventoryTransaction: InventoryTransactionInput!
+}
+
+"""An input for mutations affecting \`InventoryTransaction\`"""
+input InventoryTransactionInput {
+  rowId: UUID
+  bookId: UUID!
+  itemId: UUID!
+  date: String!
+  type: String!
+  quantity: BigFloat!
+  unitCost: BigFloat
+  note: String
+  journalEntryId: UUID
+  createdAt: Datetime
+}
+
 """The output of our create \`PayrollConnection\` mutation."""
 type CreatePayrollConnectionPayload {
   """
@@ -20569,6 +21745,59 @@ input CustomerInput {
   state: String
   zip: String
   notes: String
+  isActive: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""The output of our create \`InventoryItem\` mutation."""
+type CreateInventoryItemPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`InventoryItem\` that was created by this mutation."""
+  inventoryItem: InventoryItem
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`InventoryItem\`. May be used by Relay 1."""
+  inventoryItemEdge(
+    """The method to use when ordering \`InventoryItem\`."""
+    orderBy: [InventoryItemOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): InventoryItemEdge
+}
+
+"""All input for the create \`InventoryItem\` mutation."""
+input CreateInventoryItemInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`InventoryItem\` to be created by this mutation."""
+  inventoryItem: InventoryItemInput!
+}
+
+"""An input for mutations affecting \`InventoryItem\`"""
+input InventoryItemInput {
+  rowId: UUID
+  bookId: UUID!
+  sku: String
+  name: String!
+  description: String
+  salePrice: BigFloat
+  quantityOnHand: BigFloat
+  averageCost: BigFloat
+  assetAccountId: UUID!
+  cogsAccountId: UUID!
+  incomeAccountId: UUID!
   isActive: Boolean
   createdAt: Datetime
   updatedAt: Datetime
@@ -21971,6 +23200,79 @@ input UpdateAccountingPeriodInput {
   patch: AccountingPeriodPatch!
 }
 
+"""The output of our update \`InventoryTransaction\` mutation."""
+type UpdateInventoryTransactionPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`InventoryTransaction\` that was updated by this mutation."""
+  inventoryTransaction: InventoryTransaction
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`InventoryTransaction\`. May be used by Relay 1."""
+  inventoryTransactionEdge(
+    """The method to use when ordering \`InventoryTransaction\`."""
+    orderBy: [InventoryTransactionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): InventoryTransactionEdge
+}
+
+"""All input for the \`updateInventoryTransactionById\` mutation."""
+input UpdateInventoryTransactionByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`InventoryTransaction\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`InventoryTransaction\` being updated.
+  """
+  patch: InventoryTransactionPatch!
+}
+
+"""
+Represents an update to a \`InventoryTransaction\`. Fields that are set will be updated.
+"""
+input InventoryTransactionPatch {
+  rowId: UUID
+  bookId: UUID
+  itemId: UUID
+  date: String
+  type: String
+  quantity: BigFloat
+  unitCost: BigFloat
+  note: String
+  journalEntryId: UUID
+  createdAt: Datetime
+}
+
+"""All input for the \`updateInventoryTransaction\` mutation."""
+input UpdateInventoryTransactionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`InventoryTransaction\` being updated.
+  """
+  patch: InventoryTransactionPatch!
+}
+
 """The output of our update \`PayrollConnection\` mutation."""
 type UpdatePayrollConnectionPayload {
   """
@@ -23077,6 +24379,83 @@ input UpdateCustomerInput {
   An object where the defined keys will be set on the \`Customer\` being updated.
   """
   patch: CustomerPatch!
+}
+
+"""The output of our update \`InventoryItem\` mutation."""
+type UpdateInventoryItemPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`InventoryItem\` that was updated by this mutation."""
+  inventoryItem: InventoryItem
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`InventoryItem\`. May be used by Relay 1."""
+  inventoryItemEdge(
+    """The method to use when ordering \`InventoryItem\`."""
+    orderBy: [InventoryItemOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): InventoryItemEdge
+}
+
+"""All input for the \`updateInventoryItemById\` mutation."""
+input UpdateInventoryItemByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`InventoryItem\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`InventoryItem\` being updated.
+  """
+  patch: InventoryItemPatch!
+}
+
+"""
+Represents an update to a \`InventoryItem\`. Fields that are set will be updated.
+"""
+input InventoryItemPatch {
+  rowId: UUID
+  bookId: UUID
+  sku: String
+  name: String
+  description: String
+  salePrice: BigFloat
+  quantityOnHand: BigFloat
+  averageCost: BigFloat
+  assetAccountId: UUID
+  cogsAccountId: UUID
+  incomeAccountId: UUID
+  isActive: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the \`updateInventoryItem\` mutation."""
+input UpdateInventoryItemInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`InventoryItem\` being updated.
+  """
+  patch: InventoryItemPatch!
 }
 
 """The output of our update \`Vendor\` mutation."""
@@ -24366,6 +25745,54 @@ input DeleteAccountingPeriodInput {
   rowId: UUID!
 }
 
+"""The output of our delete \`InventoryTransaction\` mutation."""
+type DeleteInventoryTransactionPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`InventoryTransaction\` that was deleted by this mutation."""
+  inventoryTransaction: InventoryTransaction
+  deletedInventoryTransactionId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`InventoryTransaction\`. May be used by Relay 1."""
+  inventoryTransactionEdge(
+    """The method to use when ordering \`InventoryTransaction\`."""
+    orderBy: [InventoryTransactionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): InventoryTransactionEdge
+}
+
+"""All input for the \`deleteInventoryTransactionById\` mutation."""
+input DeleteInventoryTransactionByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`InventoryTransaction\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteInventoryTransaction\` mutation."""
+input DeleteInventoryTransactionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete \`PayrollConnection\` mutation."""
 type DeletePayrollConnectionPayload {
   """
@@ -25078,6 +26505,54 @@ input DeleteCustomerByIdInput {
 
 """All input for the \`deleteCustomer\` mutation."""
 input DeleteCustomerInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`InventoryItem\` mutation."""
+type DeleteInventoryItemPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`InventoryItem\` that was deleted by this mutation."""
+  inventoryItem: InventoryItem
+  deletedInventoryItemId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`InventoryItem\`. May be used by Relay 1."""
+  inventoryItemEdge(
+    """The method to use when ordering \`InventoryItem\`."""
+    orderBy: [InventoryItemOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): InventoryItemEdge
+}
+
+"""All input for the \`deleteInventoryItemById\` mutation."""
+input DeleteInventoryItemByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`InventoryItem\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteInventoryItem\` mutation."""
+input DeleteInventoryItemInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -25973,6 +27448,58 @@ export const objects = {
           orderBy: applyOrderByArgToConnection
         }
       },
+      inventoryItem(_$root, {
+        $rowId
+      }) {
+        return resource_inventory_itemPgResource.get({
+          id: $rowId
+        });
+      },
+      inventoryItemById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_InventoryItem($nodeId);
+      },
+      inventoryItems: {
+        plan() {
+          return connection(resource_inventory_itemPgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineTagsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      inventoryTransaction(_$root, {
+        $rowId
+      }) {
+        return resource_inventory_transactionPgResource.get({
+          id: $rowId
+        });
+      },
+      inventoryTransactionById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_InventoryTransaction($nodeId);
+      },
+      inventoryTransactions: {
+        plan() {
+          return connection(resource_inventory_transactionPgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineTagsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       invoice(_$root, {
         $rowId
       }) {
@@ -26671,6 +28198,30 @@ export const objects = {
       createImportProfile: {
         plan(_, args) {
           const $insert = pgInsertSingle(resource_import_profilePgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
+      createInventoryItem: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_inventory_itemPgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
+      createInventoryTransaction: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_inventory_transactionPgResource);
           args.apply($insert);
           return object({
             result: $insert
@@ -27381,6 +28932,58 @@ export const objects = {
       deleteImportProfileById: {
         plan(_$root, args) {
           const $delete = pgDeleteSingle(resource_import_profilePgResource, specFromArgs_ImportProfile(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteInventoryItem: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_inventory_itemPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteInventoryItemById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_inventory_itemPgResource, specFromArgs_InventoryItem(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteInventoryTransaction: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_inventory_transactionPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteInventoryTransactionById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_inventory_transactionPgResource, specFromArgs_InventoryTransaction(args));
           args.apply($delete);
           return object({
             result: $delete
@@ -28343,6 +29946,58 @@ export const objects = {
       updateImportProfileById: {
         plan(_$root, args) {
           const $update = pgUpdateSingle(resource_import_profilePgResource, specFromArgs_ImportProfile(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateInventoryItem: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_inventory_itemPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateInventoryItemById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_inventory_itemPgResource, specFromArgs_InventoryItem(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateInventoryTransaction: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_inventory_transactionPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateInventoryTransactionById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_inventory_transactionPgResource, specFromArgs_InventoryTransaction(args));
           args.apply($update);
           return object({
             result: $update
@@ -29408,6 +31063,42 @@ export const objects = {
         const specifier = nodeIdHandler_Book.plan($parent);
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_Book.codec.name].encode);
       },
+      inventoryItems: {
+        plan($record) {
+          const $records = resource_inventory_itemPgResource.find({
+            book_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineTagsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      inventoryTransactions: {
+        plan($record) {
+          const $records = resource_inventory_transactionPgResource.find({
+            book_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineTagsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       invoicePayments: {
         plan($record) {
           const $records = resource_invoice_paymentPgResource.find({
@@ -29992,6 +31683,24 @@ export const objects = {
       clientMutationId: getClientMutationIdForCreatePlan,
       importProfile: planCreatePayloadResult,
       importProfileEdge: CreateImportProfilePayload_importProfileEdgePlan,
+      query: queryPlan
+    }
+  },
+  CreateInventoryItemPayload: {
+    assertStep: assertStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      inventoryItem: planCreatePayloadResult,
+      inventoryItemEdge: CreateInventoryItemPayload_inventoryItemEdgePlan,
+      query: queryPlan
+    }
+  },
+  CreateInventoryTransactionPayload: {
+    assertStep: assertStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      inventoryTransaction: planCreatePayloadResult,
+      inventoryTransactionEdge: CreateInventoryTransactionPayload_inventoryTransactionEdgePlan,
       query: queryPlan
     }
   },
@@ -30581,6 +32290,34 @@ export const objects = {
       query: queryPlan
     }
   },
+  DeleteInventoryItemPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedInventoryItemId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_InventoryItem.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      inventoryItem: planCreatePayloadResult,
+      inventoryItemEdge: CreateInventoryItemPayload_inventoryItemEdgePlan,
+      query: queryPlan
+    }
+  },
+  DeleteInventoryTransactionPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedInventoryTransactionId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_InventoryTransaction.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      inventoryTransaction: planCreatePayloadResult,
+      inventoryTransactionEdge: CreateInventoryTransactionPayload_inventoryTransactionEdgePlan,
+      query: queryPlan
+    }
+  },
   DeleteInvoiceLinePayload: {
     assertStep: ObjectStep,
     plans: {
@@ -30944,14 +32681,8 @@ export const objects = {
       acquisitionDate($record) {
         return $record.get("acquisition_date");
       },
-      assetAccount($record) {
-        return resource_accountPgResource.get({
-          id: $record.get("asset_account_id")
-        });
-      },
-      assetAccountId($record) {
-        return $record.get("asset_account_id");
-      },
+      assetAccount: FixedAsset_assetAccountPlan,
+      assetAccountId: FixedAsset_assetAccountIdPlan,
       book: Account_bookPlan,
       bookId: Account_bookIdPlan,
       createdAt: Account_createdAtPlan,
@@ -31023,6 +32754,108 @@ export const objects = {
     }
   },
   ImportProfileConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
+  InventoryItem: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      assetAccount: FixedAsset_assetAccountPlan,
+      assetAccountId: FixedAsset_assetAccountIdPlan,
+      averageCost($record) {
+        return $record.get("average_cost");
+      },
+      book: Account_bookPlan,
+      bookId: Account_bookIdPlan,
+      cogsAccount($record) {
+        return resource_accountPgResource.get({
+          id: $record.get("cogs_account_id")
+        });
+      },
+      cogsAccountId($record) {
+        return $record.get("cogs_account_id");
+      },
+      createdAt: Account_createdAtPlan,
+      id($parent) {
+        const specifier = nodeIdHandler_InventoryItem.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_InventoryItem.codec.name].encode);
+      },
+      incomeAccount: InvoiceLine_incomeAccountPlan,
+      incomeAccountId: InvoiceLine_incomeAccountIdPlan,
+      inventoryTransactionsByItemId: {
+        plan($record) {
+          const $records = resource_inventory_transactionPgResource.find({
+            item_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineTagsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      isActive: Account_isActivePlan,
+      quantityOnHand($record) {
+        return $record.get("quantity_on_hand");
+      },
+      rowId: JournalLineTag_rowIdPlan,
+      salePrice($record) {
+        return $record.get("sale_price");
+      },
+      updatedAt: Account_updatedAtPlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of inventory_itemUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_inventory_itemPgResource.get(spec);
+    }
+  },
+  InventoryItemConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
+  InventoryTransaction: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      book: Account_bookPlan,
+      bookId: Account_bookIdPlan,
+      createdAt: Account_createdAtPlan,
+      id($parent) {
+        const specifier = nodeIdHandler_InventoryTransaction.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_InventoryTransaction.codec.name].encode);
+      },
+      item($record) {
+        return resource_inventory_itemPgResource.get({
+          id: $record.get("item_id")
+        });
+      },
+      itemId($record) {
+        return $record.get("item_id");
+      },
+      journalEntry: JournalLine_journalEntryPlan,
+      journalEntryId: JournalLine_journalEntryIdPlan,
+      rowId: JournalLineTag_rowIdPlan,
+      unitCost($record) {
+        return $record.get("unit_cost");
+      }
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of inventory_transactionUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_inventory_transactionPgResource.get(spec);
+    }
+  },
+  InventoryTransactionConnection: {
     assertStep: ConnectionStep,
     plans: {
       totalCount: totalCountConnectionPlan
@@ -31867,6 +33700,24 @@ export const objects = {
       query: queryPlan
     }
   },
+  UpdateInventoryItemPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      inventoryItem: planCreatePayloadResult,
+      inventoryItemEdge: CreateInventoryItemPayload_inventoryItemEdgePlan,
+      query: queryPlan
+    }
+  },
+  UpdateInventoryTransactionPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      inventoryTransaction: planCreatePayloadResult,
+      inventoryTransactionEdge: CreateInventoryTransactionPayload_inventoryTransactionEdgePlan,
+      query: queryPlan
+    }
+  },
   UpdateInvoiceLinePayload: {
     assertStep: ObjectStep,
     plans: {
@@ -32664,7 +34515,7 @@ export const inputObjects = {
       billId: BillLineInput_billIdApply,
       description: BillLineInput_descriptionApply,
       expenseAccountId: BillLineInput_expenseAccountIdApply,
-      quantity: BillLineInput_quantityApply,
+      quantity: InventoryTransactionInput_quantityApply,
       rowId: JournalLineTagInput_rowIdApply,
       sortOrder: BillLineInput_sortOrderApply,
       taxJurisdictionId: BillLineInput_taxJurisdictionIdApply,
@@ -32678,7 +34529,7 @@ export const inputObjects = {
       billId: BillLineInput_billIdApply,
       description: BillLineInput_descriptionApply,
       expenseAccountId: BillLineInput_expenseAccountIdApply,
-      quantity: BillLineInput_quantityApply,
+      quantity: InventoryTransactionInput_quantityApply,
       rowId: JournalLineTagInput_rowIdApply,
       sortOrder: BillLineInput_sortOrderApply,
       taxJurisdictionId: BillLineInput_taxJurisdictionIdApply,
@@ -33163,6 +35014,54 @@ export const inputObjects = {
           $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
         });
       },
+      inventoryItems($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: inventoryItemIdentifier,
+          alias: resource_inventory_itemPgResource.name,
+          localAttributes: registryConfig.pgRelations.book.inventoryItemsByTheirBookId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.book.inventoryItemsByTheirBookId.remoteAttributes
+        };
+        return $rel;
+      },
+      inventoryItemsExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: inventoryItemIdentifier,
+          alias: resource_inventory_itemPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.book.inventoryItemsByTheirBookId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.book.inventoryItemsByTheirBookId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
+      inventoryTransactions($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: inventoryTransactionIdentifier,
+          alias: resource_inventory_transactionPgResource.name,
+          localAttributes: registryConfig.pgRelations.book.inventoryTransactionsByTheirBookId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.book.inventoryTransactionsByTheirBookId.remoteAttributes
+        };
+        return $rel;
+      },
+      inventoryTransactionsExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: inventoryTransactionIdentifier,
+          alias: resource_inventory_transactionPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.book.inventoryTransactionsByTheirBookId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.book.inventoryTransactionsByTheirBookId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
       invoicePayments($where, value) {
         assertAllowed(value, "object");
         const $rel = $where.andPlan();
@@ -33626,6 +35525,20 @@ export const inputObjects = {
       some: AccountToManyAccountFilter_someApply
     }
   },
+  BookToManyInventoryItemFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
+  BookToManyInventoryTransactionFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
   BookToManyInvoiceFilter: {
     plans: {
       every: AccountToManyAccountFilter_everyApply,
@@ -34043,6 +35956,18 @@ export const inputObjects = {
       importProfile: applyCreateFields
     }
   },
+  CreateInventoryItemInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      inventoryItem: applyCreateFields
+    }
+  },
+  CreateInventoryTransactionInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      inventoryTransaction: applyCreateFields
+    }
+  },
   CreateInvoiceInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
@@ -34282,7 +36207,7 @@ export const inputObjects = {
       disposedAt: CryptoLotInput_disposedAtApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       proceedsPerUnit: CryptoLotInput_proceedsPerUnitApply,
-      quantity: BillLineInput_quantityApply,
+      quantity: InventoryTransactionInput_quantityApply,
       remainingQuantity: CryptoLotInput_remainingQuantityApply,
       rowId: JournalLineTagInput_rowIdApply
     }
@@ -34297,7 +36222,7 @@ export const inputObjects = {
       disposedAt: CryptoLotInput_disposedAtApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       proceedsPerUnit: CryptoLotInput_proceedsPerUnitApply,
-      quantity: BillLineInput_quantityApply,
+      quantity: InventoryTransactionInput_quantityApply,
       remainingQuantity: CryptoLotInput_remainingQuantityApply,
       rowId: JournalLineTagInput_rowIdApply
     }
@@ -34629,6 +36554,26 @@ export const inputObjects = {
       clientMutationId: applyClientMutationIdForCreate
     }
   },
+  DeleteInventoryItemByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteInventoryItemInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteInventoryTransactionByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteInventoryTransactionInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
   DeleteInvoiceByIdInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate
@@ -34935,7 +36880,7 @@ export const inputObjects = {
       description: BillLineInput_descriptionApply,
       estimateId: EstimateLineInput_estimateIdApply,
       incomeAccountId: EstimateLineInput_incomeAccountIdApply,
-      quantity: BillLineInput_quantityApply,
+      quantity: InventoryTransactionInput_quantityApply,
       rowId: JournalLineTagInput_rowIdApply,
       sortOrder: BillLineInput_sortOrderApply,
       taxJurisdictionId: BillLineInput_taxJurisdictionIdApply,
@@ -34949,7 +36894,7 @@ export const inputObjects = {
       description: BillLineInput_descriptionApply,
       estimateId: EstimateLineInput_estimateIdApply,
       incomeAccountId: EstimateLineInput_incomeAccountIdApply,
-      quantity: BillLineInput_quantityApply,
+      quantity: InventoryTransactionInput_quantityApply,
       rowId: JournalLineTagInput_rowIdApply,
       sortOrder: BillLineInput_sortOrderApply,
       taxJurisdictionId: BillLineInput_taxJurisdictionIdApply,
@@ -35025,7 +36970,7 @@ export const inputObjects = {
       accumulatedDepreciationAccountId: FixedAssetInput_accumulatedDepreciationAccountIdApply,
       acquisitionCost: FixedAssetInput_acquisitionCostApply,
       acquisitionDate: FixedAssetInput_acquisitionDateApply,
-      assetAccountId: FixedAssetInput_assetAccountIdApply,
+      assetAccountId: InventoryItemInput_assetAccountIdApply,
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
       depreciationExpenseAccountId: FixedAssetInput_depreciationExpenseAccountIdApply,
@@ -35046,7 +36991,7 @@ export const inputObjects = {
       accumulatedDepreciationAccountId: FixedAssetInput_accumulatedDepreciationAccountIdApply,
       acquisitionCost: FixedAssetInput_acquisitionCostApply,
       acquisitionDate: FixedAssetInput_acquisitionDateApply,
-      assetAccountId: FixedAssetInput_assetAccountIdApply,
+      assetAccountId: InventoryItemInput_assetAccountIdApply,
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
       depreciationExpenseAccountId: FixedAssetInput_depreciationExpenseAccountIdApply,
@@ -35116,6 +37061,173 @@ export const inputObjects = {
       notDistinctFrom: pgAggregatesApply_notDistinctFrom,
       notEqualTo: pgAggregatesApply_notEqualTo,
       notIn: pgAggregatesApply_notIn
+    }
+  },
+  InventoryItemCondition: {
+    plans: {
+      bookId: AccountCondition_bookIdApply,
+      rowId: AccountCondition_rowIdApply
+    }
+  },
+  InventoryItemFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      assetAccount($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_accountPgResource, accountIdentifier, registryConfig.pgRelations.inventoryItem.accountByMyAssetAccountId.localAttributes, registryConfig.pgRelations.inventoryItem.accountByMyAssetAccountId.remoteAttributes, $where, value);
+      },
+      book($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_bookPgResource, bookIdentifier, registryConfig.pgRelations.inventoryItem.bookByMyBookId.localAttributes, registryConfig.pgRelations.inventoryItem.bookByMyBookId.remoteAttributes, $where, value);
+      },
+      bookId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("bookId", "book_id", spec_inventoryItem.attributes.book_id, queryBuilder, value);
+      },
+      cogsAccount($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_accountPgResource, accountIdentifier, registryConfig.pgRelations.inventoryItem.accountByMyCogsAccountId.localAttributes, registryConfig.pgRelations.inventoryItem.accountByMyCogsAccountId.remoteAttributes, $where, value);
+      },
+      incomeAccount($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_accountPgResource, accountIdentifier, registryConfig.pgRelations.inventoryItem.accountByMyIncomeAccountId.localAttributes, registryConfig.pgRelations.inventoryItem.accountByMyIncomeAccountId.remoteAttributes, $where, value);
+      },
+      inventoryTransactionsByItemId($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: inventoryTransactionIdentifier,
+          alias: resource_inventory_transactionPgResource.name,
+          localAttributes: registryConfig.pgRelations.inventoryItem.inventoryTransactionsByTheirItemId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.inventoryItem.inventoryTransactionsByTheirItemId.remoteAttributes
+        };
+        return $rel;
+      },
+      inventoryTransactionsByItemIdExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: inventoryTransactionIdentifier,
+          alias: resource_inventory_transactionPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.inventoryItem.inventoryTransactionsByTheirItemId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.inventoryItem.inventoryTransactionsByTheirItemId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_inventoryItem.attributes.id, queryBuilder, value);
+      }
+    }
+  },
+  InventoryItemInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      assetAccountId: InventoryItemInput_assetAccountIdApply,
+      averageCost: InventoryItemInput_averageCostApply,
+      bookId: TagGroupInput_bookIdApply,
+      cogsAccountId: InventoryItemInput_cogsAccountIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      description: BillLineInput_descriptionApply,
+      incomeAccountId: EstimateLineInput_incomeAccountIdApply,
+      isActive: TagInput_isActiveApply,
+      name: TagGroupInput_nameApply,
+      quantityOnHand: InventoryItemInput_quantityOnHandApply,
+      rowId: JournalLineTagInput_rowIdApply,
+      salePrice: InventoryItemInput_salePriceApply,
+      sku: InventoryItemInput_skuApply,
+      updatedAt: AccountMappingInput_updatedAtApply
+    }
+  },
+  InventoryItemPatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      assetAccountId: InventoryItemInput_assetAccountIdApply,
+      averageCost: InventoryItemInput_averageCostApply,
+      bookId: TagGroupInput_bookIdApply,
+      cogsAccountId: InventoryItemInput_cogsAccountIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      description: BillLineInput_descriptionApply,
+      incomeAccountId: EstimateLineInput_incomeAccountIdApply,
+      isActive: TagInput_isActiveApply,
+      name: TagGroupInput_nameApply,
+      quantityOnHand: InventoryItemInput_quantityOnHandApply,
+      rowId: JournalLineTagInput_rowIdApply,
+      salePrice: InventoryItemInput_salePriceApply,
+      sku: InventoryItemInput_skuApply,
+      updatedAt: AccountMappingInput_updatedAtApply
+    }
+  },
+  InventoryItemToManyInventoryTransactionFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
+  InventoryTransactionCondition: {
+    plans: {
+      bookId: AccountCondition_bookIdApply,
+      itemId($condition, val) {
+        return applyAttributeCondition("item_id", TYPES.uuid, $condition, val);
+      },
+      rowId: AccountCondition_rowIdApply
+    }
+  },
+  InventoryTransactionFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      book($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_bookPgResource, bookIdentifier, registryConfig.pgRelations.inventoryTransaction.bookByMyBookId.localAttributes, registryConfig.pgRelations.inventoryTransaction.bookByMyBookId.remoteAttributes, $where, value);
+      },
+      bookId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("bookId", "book_id", spec_inventoryTransaction.attributes.book_id, queryBuilder, value);
+      },
+      item($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_inventory_itemPgResource, inventoryItemIdentifier, registryConfig.pgRelations.inventoryTransaction.inventoryItemByMyItemId.localAttributes, registryConfig.pgRelations.inventoryTransaction.inventoryItemByMyItemId.remoteAttributes, $where, value);
+      },
+      itemId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("itemId", "item_id", spec_inventoryTransaction.attributes.item_id, queryBuilder, value);
+      },
+      journalEntry($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_journal_entryPgResource, journalEntryIdentifier, registryConfig.pgRelations.inventoryTransaction.journalEntryByMyJournalEntryId.localAttributes, registryConfig.pgRelations.inventoryTransaction.journalEntryByMyJournalEntryId.remoteAttributes, $where, value);
+      },
+      journalEntryExists($where, value) {
+        return pgConnectionFilterApplyForwardRelationExists(resource_journal_entryPgResource, journalEntryIdentifier, registryConfig.pgRelations.inventoryTransaction.journalEntryByMyJournalEntryId.localAttributes, registryConfig.pgRelations.inventoryTransaction.journalEntryByMyJournalEntryId.remoteAttributes, $where, value);
+      },
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_inventoryTransaction.attributes.id, queryBuilder, value);
+      }
+    }
+  },
+  InventoryTransactionInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      bookId: TagGroupInput_bookIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      date: NetWorthSnapshotInput_dateApply,
+      itemId: InventoryTransactionInput_itemIdApply,
+      journalEntryId: JournalLineInput_journalEntryIdApply,
+      note: InventoryTransactionInput_noteApply,
+      quantity: InventoryTransactionInput_quantityApply,
+      rowId: JournalLineTagInput_rowIdApply,
+      type: BookInput_typeApply,
+      unitCost: InventoryTransactionInput_unitCostApply
+    }
+  },
+  InventoryTransactionPatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      bookId: TagGroupInput_bookIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      date: NetWorthSnapshotInput_dateApply,
+      itemId: InventoryTransactionInput_itemIdApply,
+      journalEntryId: JournalLineInput_journalEntryIdApply,
+      note: InventoryTransactionInput_noteApply,
+      quantity: InventoryTransactionInput_quantityApply,
+      rowId: JournalLineTagInput_rowIdApply,
+      type: BookInput_typeApply,
+      unitCost: InventoryTransactionInput_unitCostApply
     }
   },
   InvoiceCondition: {
@@ -35269,7 +37381,7 @@ export const inputObjects = {
       description: BillLineInput_descriptionApply,
       incomeAccountId: EstimateLineInput_incomeAccountIdApply,
       invoiceId: InvoiceLineInput_invoiceIdApply,
-      quantity: BillLineInput_quantityApply,
+      quantity: InventoryTransactionInput_quantityApply,
       rowId: JournalLineTagInput_rowIdApply,
       sortOrder: BillLineInput_sortOrderApply,
       taxJurisdictionId: BillLineInput_taxJurisdictionIdApply,
@@ -35283,7 +37395,7 @@ export const inputObjects = {
       description: BillLineInput_descriptionApply,
       incomeAccountId: EstimateLineInput_incomeAccountIdApply,
       invoiceId: InvoiceLineInput_invoiceIdApply,
-      quantity: BillLineInput_quantityApply,
+      quantity: InventoryTransactionInput_quantityApply,
       rowId: JournalLineTagInput_rowIdApply,
       sortOrder: BillLineInput_sortOrderApply,
       taxJurisdictionId: BillLineInput_taxJurisdictionIdApply,
@@ -36591,6 +38703,30 @@ export const inputObjects = {
       patch: applyCreateFields
     }
   },
+  UpdateInventoryItemByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateInventoryItemInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateInventoryTransactionByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateInventoryTransactionInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
   UpdateInvoiceByIdInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
@@ -37719,6 +39855,70 @@ export const enums = {
       },
       PRIMARY_KEY_DESC(queryBuilder) {
         import_profileUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply
+    }
+  },
+  InventoryItemOrderBy: {
+    values: {
+      BOOK_ID_ASC: AccountOrderBy_BOOK_ID_ASCApply,
+      BOOK_ID_DESC: AccountOrderBy_BOOK_ID_DESCApply,
+      PRIMARY_KEY_ASC(queryBuilder) {
+        inventory_itemUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        inventory_itemUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply
+    }
+  },
+  InventoryTransactionOrderBy: {
+    values: {
+      BOOK_ID_ASC: AccountOrderBy_BOOK_ID_ASCApply,
+      BOOK_ID_DESC: AccountOrderBy_BOOK_ID_DESCApply,
+      ITEM_ID_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "item_id",
+          direction: "ASC"
+        });
+      },
+      ITEM_ID_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "item_id",
+          direction: "DESC"
+        });
+      },
+      PRIMARY_KEY_ASC(queryBuilder) {
+        inventory_transactionUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        inventory_transactionUniques[0].attributes.forEach(attributeName => {
           queryBuilder.orderBy({
             attribute: attributeName,
             direction: "DESC"

@@ -16,6 +16,8 @@ export * from "./estimate.table";
 export * from "./estimateLine.table";
 export * from "./fixedAsset.table";
 export * from "./importProfile.table";
+export * from "./inventoryItem.table";
+export * from "./inventoryTransaction.table";
 export * from "./invoice.table";
 export * from "./invoiceLine.table";
 export * from "./invoicePayment.table";
