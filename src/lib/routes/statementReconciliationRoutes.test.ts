@@ -110,15 +110,19 @@ describe("POST /:id/complete", () => {
     mockEmitAudit.mockClear();
   });
 
-  test("completes a reconciliation", async () => {
+  test("completes a reconciliation that ties out", async () => {
+    // beginning 4000 + cleared 1000 = 5000 = statement balance -> difference 0
     const existing = makeReconciliation();
     const completed = makeReconciliation({
       status: "completed",
       completedAt: "2026-03-31T00:00:00Z",
-      discrepancy: "0",
+      discrepancy: "0.0000",
     });
 
-    setSelectResults([[existing]]);
+    setSelectResults([
+      [existing], // lookup
+      [{ cleared: true, debit: "1000", credit: "0" }], // cleared lines for tie-out
+    ]);
     setUpdateReturningData([completed]);
 
     const res = await app.handle(
@@ -136,6 +140,24 @@ describe("POST /:id/complete", () => {
         type: "myfi.statement_reconciliation.completed",
       }),
     );
+  });
+
+  test("refuses to complete when it does not balance", async () => {
+    // beginning 4000, no cleared items -> cleared balance 4000 vs statement 5000
+    const existing = makeReconciliation();
+    setSelectResults([[existing], []]);
+
+    const res = await app.handle(
+      new Request(
+        "http://localhost/api/statement-reconciliations/recon-1/complete",
+        { method: "POST" },
+      ),
+    );
+
+    expect(res.status).toBe(409);
+    const json = await res.json();
+    expect(json.error).toMatch(/does not balance/);
+    expect(json.difference).toBe("1000.0000");
   });
 
   test("rejects completing an already completed reconciliation", async () => {

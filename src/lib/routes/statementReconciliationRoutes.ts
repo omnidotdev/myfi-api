@@ -9,6 +9,55 @@ import {
   reconciliationStatementTable,
 } from "lib/db/schema";
 
+import type { SelectReconciliationStatement } from "lib/db/schema";
+
+/**
+ * Fetch the account's journal lines through the statement date and compute the
+ * cleared balance (beginning balance plus cleared debits minus credits) and the
+ * difference from the statement balance. Shared by the detail view and the
+ * complete step so both use the same tie-out math
+ */
+const computeReconciliation = async (
+  reconciliation: SelectReconciliationStatement,
+) => {
+  const lines = await dbPool
+    .select({
+      lineId: journalLineTable.id,
+      journalEntryId: journalLineTable.journalEntryId,
+      debit: journalLineTable.debit,
+      credit: journalLineTable.credit,
+      cleared: journalLineTable.cleared,
+      memo: journalLineTable.memo,
+      entryDate: journalEntryTable.date,
+      entryMemo: journalEntryTable.memo,
+      source: journalEntryTable.source,
+    })
+    .from(journalLineTable)
+    .innerJoin(
+      journalEntryTable,
+      eq(journalLineTable.journalEntryId, journalEntryTable.id),
+    )
+    .where(
+      and(
+        eq(journalLineTable.accountId, reconciliation.accountId),
+        eq(journalEntryTable.bookId, reconciliation.bookId),
+        lte(journalEntryTable.date, reconciliation.statementDate),
+      ),
+    )
+    .orderBy(journalEntryTable.date);
+
+  const beginNum = Number(reconciliation.beginningBalance);
+  let clearedSum = 0;
+  for (const line of lines) {
+    if (line.cleared) {
+      clearedSum += Number(line.debit ?? 0) - Number(line.credit ?? 0);
+    }
+  }
+  const clearedBalance = beginNum + clearedSum;
+  const difference = Number(reconciliation.statementBalance) - clearedBalance;
+  return { lines, clearedBalance, difference };
+};
+
 const statementReconciliationRoutes = new Elysia({
   prefix: "/api/statement-reconciliations",
 })
@@ -93,46 +142,8 @@ const statementReconciliationRoutes = new Elysia({
       return { error: "Reconciliation not found" };
     }
 
-    // Fetch journal lines for this account up to statement date
-    const lines = await dbPool
-      .select({
-        lineId: journalLineTable.id,
-        journalEntryId: journalLineTable.journalEntryId,
-        debit: journalLineTable.debit,
-        credit: journalLineTable.credit,
-        cleared: journalLineTable.cleared,
-        memo: journalLineTable.memo,
-        entryDate: journalEntryTable.date,
-        entryMemo: journalEntryTable.memo,
-        source: journalEntryTable.source,
-      })
-      .from(journalLineTable)
-      .innerJoin(
-        journalEntryTable,
-        eq(journalLineTable.journalEntryId, journalEntryTable.id),
-      )
-      .where(
-        and(
-          eq(journalLineTable.accountId, reconciliation.accountId),
-          eq(journalEntryTable.bookId, reconciliation.bookId),
-          lte(journalEntryTable.date, reconciliation.statementDate),
-        ),
-      )
-      .orderBy(journalEntryTable.date);
-
-    // Calculate cleared balance
-    // For asset accounts: amount = debit - credit
-    const beginNum = Number(reconciliation.beginningBalance);
-    let clearedSum = 0;
-
-    for (const line of lines) {
-      if (line.cleared) {
-        clearedSum += Number(line.debit ?? 0) - Number(line.credit ?? 0);
-      }
-    }
-
-    const clearedBalance = beginNum + clearedSum;
-    const difference = Number(reconciliation.statementBalance) - clearedBalance;
+    const { lines, clearedBalance, difference } =
+      await computeReconciliation(reconciliation);
 
     return {
       reconciliation,
@@ -193,12 +204,24 @@ const statementReconciliationRoutes = new Elysia({
       return { error: "Reconciliation is already completed" };
     }
 
+    // A reconciliation may only be completed when the cleared items tie out to
+    // the statement balance. Never finalize an out-of-balance reconciliation
+    const { difference } = await computeReconciliation(existing);
+    if (Math.abs(difference) >= 0.005) {
+      set.status = 409;
+      return {
+        error:
+          "Reconciliation does not balance; clear or add items until the difference is zero",
+        difference: difference.toFixed(4),
+      };
+    }
+
     const [reconciliation] = await dbPool
       .update(reconciliationStatementTable)
       .set({
         status: "completed",
         completedAt: new Date().toISOString(),
-        discrepancy: "0",
+        discrepancy: "0.0000",
       })
       .where(eq(reconciliationStatementTable.id, id))
       .returning();
