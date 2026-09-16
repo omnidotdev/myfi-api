@@ -10,6 +10,7 @@ import {
 
 import { generateDefaultId } from "lib/db/util";
 import { accountTable } from "./account.table";
+import { inventoryItemTable } from "./inventoryItem.table";
 import { invoiceTable } from "./invoice.table";
 import { taxJurisdictionTable } from "./taxJurisdiction.table";
 
@@ -34,6 +35,11 @@ export const invoiceLineTable = pgTable(
       .references(() => accountTable.id),
     taxJurisdictionId: uuid("tax_jurisdiction_id").references(
       () => taxJurisdictionTable.id,
+    ),
+    // when set, posting the invoice also posts COGS and decrements this item's
+    // stock at its weighted-average cost
+    inventoryItemId: uuid("inventory_item_id").references(
+      () => inventoryItemTable.id,
     ),
     sortOrder: integer("sort_order").notNull().default(0),
   },

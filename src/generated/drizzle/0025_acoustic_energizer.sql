@@ -1,0 +1,2 @@
+ALTER TABLE "invoice_line" ADD COLUMN "inventory_item_id" uuid;--> statement-breakpoint
+ALTER TABLE "invoice_line" ADD CONSTRAINT "invoice_line_inventory_item_id_inventory_item_id_fk" FOREIGN KEY ("inventory_item_id") REFERENCES "public"."inventory_item"("id") ON DELETE no action ON UPDATE no action;

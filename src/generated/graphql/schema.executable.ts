@@ -1826,126 +1826,6 @@ const spec_estimateLine = {
   executor: executor
 };
 const estimateLineCodec = recordCodec(spec_estimateLine);
-const invoiceLineIdentifier = sql.identifier("public", "invoice_line");
-const spec_invoiceLine = {
-  name: "invoiceLine",
-  identifier: invoiceLineIdentifier,
-  attributes: {
-    __proto__: null,
-    id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    invoice_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    description: {
-      codec: TYPES.text,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    quantity: {
-      codec: TYPES.numeric,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    unit_price: {
-      codec: TYPES.numeric,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    amount: {
-      codec: TYPES.numeric,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    income_account_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    tax_jurisdiction_id: {
-      codec: TYPES.uuid,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    sort_order: {
-      codec: TYPES.int,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    }
-  },
-  extensions: {
-    oid: "17563",
-    isTableLike: true,
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "invoice_line"
-    }
-  },
-  executor: executor
-};
-const invoiceLineCodec = recordCodec(spec_invoiceLine);
 const billPaymentIdentifier = sql.identifier("public", "bill_payment");
 const spec_billPayment = {
   name: "billPayment",
@@ -2320,6 +2200,136 @@ const spec_reconciliationStatement = {
   executor: executor
 };
 const reconciliationStatementCodec = recordCodec(spec_reconciliationStatement);
+const invoiceLineIdentifier = sql.identifier("public", "invoice_line");
+const spec_invoiceLine = {
+  name: "invoiceLine",
+  identifier: invoiceLineIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    invoice_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    description: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    quantity: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    unit_price: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    amount: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    income_account_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    tax_jurisdiction_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    sort_order: {
+      codec: TYPES.int,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    inventory_item_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "17563",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "invoice_line"
+    }
+  },
+  executor: executor
+};
+const invoiceLineCodec = recordCodec(spec_invoiceLine);
 const cryptoLotIdentifier = sql.identifier("public", "crypto_lot");
 const spec_cryptoLot = {
   name: "cryptoLot",
@@ -5492,29 +5502,6 @@ const estimate_line_resourceOptionsConfig = {
   },
   uniques: estimate_lineUniques
 };
-const invoice_lineUniques = [{
-  attributes: ["id"],
-  isPrimary: true
-}];
-const invoice_line_resourceOptionsConfig = {
-  executor: executor,
-  name: "invoice_line",
-  identifier: "main.public.invoice_line",
-  from: invoiceLineIdentifier,
-  codec: invoiceLineCodec,
-  extensions: {
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "invoice_line"
-    },
-    canSelect: true,
-    canInsert: true,
-    canUpdate: true,
-    canDelete: true
-  },
-  uniques: invoice_lineUniques
-};
 const bill_paymentUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -5583,6 +5570,29 @@ const reconciliation_statement_resourceOptionsConfig = {
     canDelete: true
   },
   uniques: reconciliation_statementUniques
+};
+const invoice_lineUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const invoice_line_resourceOptionsConfig = {
+  executor: executor,
+  name: "invoice_line",
+  identifier: "main.public.invoice_line",
+  from: invoiceLineIdentifier,
+  codec: invoiceLineCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "invoice_line"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: invoice_lineUniques
 };
 const crypto_lotUniques = [{
   attributes: ["id"],
@@ -6008,10 +6018,10 @@ const registryConfig = {
     payrollConnection: payrollConnectionCodec,
     billLine: billLineCodec,
     estimateLine: estimateLineCodec,
-    invoiceLine: invoiceLineCodec,
     billPayment: billPaymentCodec,
     invoicePayment: invoicePaymentCodec,
     reconciliationStatement: reconciliationStatementCodec,
+    invoiceLine: invoiceLineCodec,
     cryptoLot: cryptoLotCodec,
     connectedAccount: connectedAccountCodec,
     journalEntry: journalEntryCodec,
@@ -6073,10 +6083,10 @@ const registryConfig = {
     payroll_connection: payroll_connection_resourceOptionsConfig,
     bill_line: bill_line_resourceOptionsConfig,
     estimate_line: estimate_line_resourceOptionsConfig,
-    invoice_line: invoice_line_resourceOptionsConfig,
     bill_payment: bill_payment_resourceOptionsConfig,
     invoice_payment: invoice_payment_resourceOptionsConfig,
     reconciliation_statement: reconciliation_statement_resourceOptionsConfig,
+    invoice_line: invoice_line_resourceOptionsConfig,
     crypto_lot: crypto_lot_resourceOptionsConfig,
     connected_account: connected_account_resourceOptionsConfig,
     journal_entry: journal_entry_resourceOptionsConfig,
@@ -6987,6 +6997,17 @@ const registryConfig = {
         remoteAttributes: ["id"],
         isUnique: true
       },
+      invoiceLinesByTheirInventoryItemId: {
+        localCodec: inventoryItemCodec,
+        remoteResourceOptions: invoice_line_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["inventory_item_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
+      },
       inventoryTransactionsByTheirItemId: {
         localCodec: inventoryItemCodec,
         remoteResourceOptions: inventory_transaction_resourceOptionsConfig,
@@ -7074,6 +7095,13 @@ const registryConfig = {
         localCodec: invoiceLineCodec,
         remoteResourceOptions: account_resourceOptionsConfig,
         localAttributes: ["income_account_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      inventoryItemByMyInventoryItemId: {
+        localCodec: invoiceLineCodec,
+        remoteResourceOptions: inventory_item_resourceOptionsConfig,
+        localAttributes: ["inventory_item_id"],
         remoteAttributes: ["id"],
         isUnique: true
       },
@@ -7552,10 +7580,10 @@ const resource_inventory_transactionPgResource = registry.pgResources["inventory
 const resource_payroll_connectionPgResource = registry.pgResources["payroll_connection"];
 const resource_bill_linePgResource = registry.pgResources["bill_line"];
 const resource_estimate_linePgResource = registry.pgResources["estimate_line"];
-const resource_invoice_linePgResource = registry.pgResources["invoice_line"];
 const resource_bill_paymentPgResource = registry.pgResources["bill_payment"];
 const resource_invoice_paymentPgResource = registry.pgResources["invoice_payment"];
 const resource_reconciliation_statementPgResource = registry.pgResources["reconciliation_statement"];
+const resource_invoice_linePgResource = registry.pgResources["invoice_line"];
 const resource_crypto_lotPgResource = registry.pgResources["crypto_lot"];
 const resource_connected_accountPgResource = registry.pgResources["connected_account"];
 const resource_journal_entryPgResource = registry.pgResources["journal_entry"];
@@ -7815,17 +7843,6 @@ const nodeFetcher_EstimateLine = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_EstimateLine));
   return nodeIdHandler_EstimateLine.get(nodeIdHandler_EstimateLine.getSpec($decoded));
 };
-const nodeIdHandler_InvoiceLine = makeTableNodeIdHandler({
-  typeName: "InvoiceLine",
-  identifier: "InvoiceLine",
-  nodeIdCodec: base64JSONNodeIdCodec,
-  resource: resource_invoice_linePgResource,
-  pk: invoice_lineUniques[0].attributes
-});
-const nodeFetcher_InvoiceLine = $nodeId => {
-  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_InvoiceLine));
-  return nodeIdHandler_InvoiceLine.get(nodeIdHandler_InvoiceLine.getSpec($decoded));
-};
 const nodeIdHandler_BillPayment = makeTableNodeIdHandler({
   typeName: "BillPayment",
   identifier: "BillPayment",
@@ -7858,6 +7875,17 @@ const nodeIdHandler_ReconciliationStatement = makeTableNodeIdHandler({
 const nodeFetcher_ReconciliationStatement = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_ReconciliationStatement));
   return nodeIdHandler_ReconciliationStatement.get(nodeIdHandler_ReconciliationStatement.getSpec($decoded));
+};
+const nodeIdHandler_InvoiceLine = makeTableNodeIdHandler({
+  typeName: "InvoiceLine",
+  identifier: "InvoiceLine",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_invoice_linePgResource,
+  pk: invoice_lineUniques[0].attributes
+});
+const nodeFetcher_InvoiceLine = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_InvoiceLine));
+  return nodeIdHandler_InvoiceLine.get(nodeIdHandler_InvoiceLine.getSpec($decoded));
 };
 const nodeIdHandler_CryptoLot = makeTableNodeIdHandler({
   typeName: "CryptoLot",
@@ -8116,10 +8144,10 @@ const nodeIdHandlerByTypeName = {
   PayrollConnection: nodeIdHandler_PayrollConnection,
   BillLine: nodeIdHandler_BillLine,
   EstimateLine: nodeIdHandler_EstimateLine,
-  InvoiceLine: nodeIdHandler_InvoiceLine,
   BillPayment: nodeIdHandler_BillPayment,
   InvoicePayment: nodeIdHandler_InvoicePayment,
   ReconciliationStatement: nodeIdHandler_ReconciliationStatement,
+  InvoiceLine: nodeIdHandler_InvoiceLine,
   CryptoLot: nodeIdHandler_CryptoLot,
   ConnectedAccount: nodeIdHandler_ConnectedAccount,
   JournalEntry: nodeIdHandler_JournalEntry,
@@ -8756,10 +8784,6 @@ const specFromArgs_EstimateLine = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_EstimateLine, $nodeId);
 };
-const specFromArgs_InvoiceLine = args => {
-  const $nodeId = args.getRaw(["input", "id"]);
-  return specFromNodeId(nodeIdHandler_InvoiceLine, $nodeId);
-};
 const specFromArgs_BillPayment = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_BillPayment, $nodeId);
@@ -8771,6 +8795,10 @@ const specFromArgs_InvoicePayment = args => {
 const specFromArgs_ReconciliationStatement = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_ReconciliationStatement, $nodeId);
+};
+const specFromArgs_InvoiceLine = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_InvoiceLine, $nodeId);
 };
 const specFromArgs_CryptoLot = args => {
   const $nodeId = args.getRaw(["input", "id"]);
@@ -9098,10 +9126,6 @@ function EstimateLineInput_estimateIdApply(obj, val, info) {
 function EstimateLineInput_incomeAccountIdApply(obj, val, info) {
   obj.set("income_account_id", bakedInputRuntime(info.schema, info.field.type, val));
 }
-const CreateInvoiceLinePayload_invoiceLineEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_invoice_linePgResource, invoice_lineUniques[0].attributes, $mutation, fieldArgs);
-function InvoiceLineInput_invoiceIdApply(obj, val, info) {
-  obj.set("invoice_id", bakedInputRuntime(info.schema, info.field.type, val));
-}
 const CreateBillPaymentPayload_billPaymentEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_bill_paymentPgResource, bill_paymentUniques[0].attributes, $mutation, fieldArgs);
 function BillPaymentInput_paymentAccountIdApply(obj, val, info) {
   obj.set("payment_account_id", bakedInputRuntime(info.schema, info.field.type, val));
@@ -9113,6 +9137,9 @@ function BillPaymentInput_referenceApply(obj, val, info) {
   obj.set("reference", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateInvoicePaymentPayload_invoicePaymentEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_invoice_paymentPgResource, invoice_paymentUniques[0].attributes, $mutation, fieldArgs);
+function InvoicePaymentInput_invoiceIdApply(obj, val, info) {
+  obj.set("invoice_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
 function InvoicePaymentInput_depositAccountIdApply(obj, val, info) {
   obj.set("deposit_account_id", bakedInputRuntime(info.schema, info.field.type, val));
 }
@@ -9131,6 +9158,10 @@ function ReconciliationStatementInput_completedAtApply(obj, val, info) {
 }
 function ReconciliationStatementInput_discrepancyApply(obj, val, info) {
   obj.set("discrepancy", bakedInputRuntime(info.schema, info.field.type, val));
+}
+const CreateInvoiceLinePayload_invoiceLineEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_invoice_linePgResource, invoice_lineUniques[0].attributes, $mutation, fieldArgs);
+function InvoiceLineInput_inventoryItemIdApply(obj, val, info) {
+  obj.set("inventory_item_id", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateCryptoLotPayload_cryptoLotEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_crypto_lotPgResource, crypto_lotUniques[0].attributes, $mutation, fieldArgs);
 function CryptoLotInput_cryptoAssetIdApply(obj, val, info) {
@@ -9495,9 +9526,6 @@ type Query implements Node {
   """Get a single \`EstimateLine\`."""
   estimateLine(rowId: UUID!): EstimateLine
 
-  """Get a single \`InvoiceLine\`."""
-  invoiceLine(rowId: UUID!): InvoiceLine
-
   """Get a single \`BillPayment\`."""
   billPayment(rowId: UUID!): BillPayment
 
@@ -9506,6 +9534,9 @@ type Query implements Node {
 
   """Get a single \`ReconciliationStatement\`."""
   reconciliationStatement(rowId: UUID!): ReconciliationStatement
+
+  """Get a single \`InvoiceLine\`."""
+  invoiceLine(rowId: UUID!): InvoiceLine
 
   """Get a single \`CryptoLot\`."""
   cryptoLot(rowId: UUID!): CryptoLot
@@ -9692,14 +9723,6 @@ type Query implements Node {
     id: ID!
   ): EstimateLine
 
-  """Reads a single \`InvoiceLine\` using its globally unique \`ID\`."""
-  invoiceLineById(
-    """
-    The globally unique \`ID\` to be used in selecting a single \`InvoiceLine\`.
-    """
-    id: ID!
-  ): InvoiceLine
-
   """Reads a single \`BillPayment\` using its globally unique \`ID\`."""
   billPaymentById(
     """
@@ -9725,6 +9748,14 @@ type Query implements Node {
     """
     id: ID!
   ): ReconciliationStatement
+
+  """Reads a single \`InvoiceLine\` using its globally unique \`ID\`."""
+  invoiceLineById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`InvoiceLine\`.
+    """
+    id: ID!
+  ): InvoiceLine
 
   """Reads a single \`CryptoLot\` using its globally unique \`ID\`."""
   cryptoLotById(
@@ -10458,40 +10489,6 @@ type Query implements Node {
     orderBy: [EstimateLineOrderBy!] = [PRIMARY_KEY_ASC]
   ): EstimateLineConnection
 
-  """Reads and enables pagination through a set of \`InvoiceLine\`."""
-  invoiceLines(
-    """Only read the first \`n\` values of the set."""
-    first: Int
-
-    """Only read the last \`n\` values of the set."""
-    last: Int
-
-    """
-    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
-    based pagination. May not be used with \`last\`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: InvoiceLineCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: InvoiceLineFilter
-
-    """The method to use when ordering \`InvoiceLine\`."""
-    orderBy: [InvoiceLineOrderBy!] = [PRIMARY_KEY_ASC]
-  ): InvoiceLineConnection
-
   """Reads and enables pagination through a set of \`BillPayment\`."""
   billPayments(
     """Only read the first \`n\` values of the set."""
@@ -10595,6 +10592,40 @@ type Query implements Node {
     """The method to use when ordering \`ReconciliationStatement\`."""
     orderBy: [ReconciliationStatementOrderBy!] = [PRIMARY_KEY_ASC]
   ): ReconciliationStatementConnection
+
+  """Reads and enables pagination through a set of \`InvoiceLine\`."""
+  invoiceLines(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: InvoiceLineCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: InvoiceLineFilter
+
+    """The method to use when ordering \`InvoiceLine\`."""
+    orderBy: [InvoiceLineOrderBy!] = [PRIMARY_KEY_ASC]
+  ): InvoiceLineConnection
 
   """Reads and enables pagination through a set of \`CryptoLot\`."""
   cryptoLots(
@@ -14760,6 +14791,12 @@ input InvoiceLineFilter {
   """Filter by the object’s \`incomeAccount\` relation."""
   incomeAccount: AccountFilter
 
+  """Filter by the object’s \`inventoryItem\` relation."""
+  inventoryItem: InventoryItemFilter
+
+  """A related \`inventoryItem\` exists."""
+  inventoryItemExists: Boolean
+
   """Filter by the object’s \`invoice\` relation."""
   invoice: InvoiceFilter
 
@@ -14777,6 +14814,99 @@ input InvoiceLineFilter {
 
   """Negates the expression."""
   not: InvoiceLineFilter
+}
+
+"""
+A filter to be used against \`InventoryItem\` object types. All fields are combined with a logical ‘and.’
+"""
+input InventoryItemFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`bookId\` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s \`inventoryTransactionsByItemId\` relation."""
+  inventoryTransactionsByItemId: InventoryItemToManyInventoryTransactionFilter
+
+  """Some related \`inventoryTransactionsByItemId\` exist."""
+  inventoryTransactionsByItemIdExist: Boolean
+
+  """Filter by the object’s \`assetAccount\` relation."""
+  assetAccount: AccountFilter
+
+  """Filter by the object’s \`book\` relation."""
+  book: BookFilter
+
+  """Filter by the object’s \`cogsAccount\` relation."""
+  cogsAccount: AccountFilter
+
+  """Filter by the object’s \`incomeAccount\` relation."""
+  incomeAccount: AccountFilter
+
+  """Checks for all expressions in this list."""
+  and: [InventoryItemFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [InventoryItemFilter!]
+
+  """Negates the expression."""
+  not: InventoryItemFilter
+}
+
+"""
+A filter to be used against many \`InventoryTransaction\` object types. All fields are combined with a logical ‘and.’
+"""
+input InventoryItemToManyInventoryTransactionFilter {
+  """
+  Every related \`InventoryTransaction\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: InventoryTransactionFilter
+
+  """
+  Some related \`InventoryTransaction\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: InventoryTransactionFilter
+
+  """
+  No related \`InventoryTransaction\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: InventoryTransactionFilter
+}
+
+"""
+A filter to be used against \`InventoryTransaction\` object types. All fields are combined with a logical ‘and.’
+"""
+input InventoryTransactionFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`bookId\` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s \`itemId\` field."""
+  itemId: UUIDFilter
+
+  """Filter by the object’s \`book\` relation."""
+  book: BookFilter
+
+  """Filter by the object’s \`item\` relation."""
+  item: InventoryItemFilter
+
+  """Filter by the object’s \`journalEntry\` relation."""
+  journalEntry: JournalEntryFilter
+
+  """A related \`journalEntry\` exists."""
+  journalEntryExists: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [InventoryTransactionFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [InventoryTransactionFilter!]
+
+  """Negates the expression."""
+  not: InventoryTransactionFilter
 }
 
 """
@@ -15074,99 +15204,6 @@ input BookToManyInventoryItemFilter {
   No related \`InventoryItem\` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
   none: InventoryItemFilter
-}
-
-"""
-A filter to be used against \`InventoryItem\` object types. All fields are combined with a logical ‘and.’
-"""
-input InventoryItemFilter {
-  """Filter by the object’s \`rowId\` field."""
-  rowId: UUIDFilter
-
-  """Filter by the object’s \`bookId\` field."""
-  bookId: UUIDFilter
-
-  """Filter by the object’s \`inventoryTransactionsByItemId\` relation."""
-  inventoryTransactionsByItemId: InventoryItemToManyInventoryTransactionFilter
-
-  """Some related \`inventoryTransactionsByItemId\` exist."""
-  inventoryTransactionsByItemIdExist: Boolean
-
-  """Filter by the object’s \`assetAccount\` relation."""
-  assetAccount: AccountFilter
-
-  """Filter by the object’s \`book\` relation."""
-  book: BookFilter
-
-  """Filter by the object’s \`cogsAccount\` relation."""
-  cogsAccount: AccountFilter
-
-  """Filter by the object’s \`incomeAccount\` relation."""
-  incomeAccount: AccountFilter
-
-  """Checks for all expressions in this list."""
-  and: [InventoryItemFilter!]
-
-  """Checks for any expressions in this list."""
-  or: [InventoryItemFilter!]
-
-  """Negates the expression."""
-  not: InventoryItemFilter
-}
-
-"""
-A filter to be used against many \`InventoryTransaction\` object types. All fields are combined with a logical ‘and.’
-"""
-input InventoryItemToManyInventoryTransactionFilter {
-  """
-  Every related \`InventoryTransaction\` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  every: InventoryTransactionFilter
-
-  """
-  Some related \`InventoryTransaction\` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  some: InventoryTransactionFilter
-
-  """
-  No related \`InventoryTransaction\` matches the filter criteria. All fields are combined with a logical ‘and.’
-  """
-  none: InventoryTransactionFilter
-}
-
-"""
-A filter to be used against \`InventoryTransaction\` object types. All fields are combined with a logical ‘and.’
-"""
-input InventoryTransactionFilter {
-  """Filter by the object’s \`rowId\` field."""
-  rowId: UUIDFilter
-
-  """Filter by the object’s \`bookId\` field."""
-  bookId: UUIDFilter
-
-  """Filter by the object’s \`itemId\` field."""
-  itemId: UUIDFilter
-
-  """Filter by the object’s \`book\` relation."""
-  book: BookFilter
-
-  """Filter by the object’s \`item\` relation."""
-  item: InventoryItemFilter
-
-  """Filter by the object’s \`journalEntry\` relation."""
-  journalEntry: JournalEntryFilter
-
-  """A related \`journalEntry\` exists."""
-  journalEntryExists: Boolean
-
-  """Checks for all expressions in this list."""
-  and: [InventoryTransactionFilter!]
-
-  """Checks for any expressions in this list."""
-  or: [InventoryTransactionFilter!]
-
-  """Negates the expression."""
-  not: InventoryTransactionFilter
 }
 
 """
@@ -17865,9 +17902,13 @@ type InvoiceLine implements Node {
   incomeAccountId: UUID!
   taxJurisdictionId: UUID
   sortOrder: Int!
+  inventoryItemId: UUID
 
   """Reads a single \`Account\` that is related to this \`InvoiceLine\`."""
   incomeAccount: Account
+
+  """Reads a single \`InventoryItem\` that is related to this \`InvoiceLine\`."""
+  inventoryItem: InventoryItem
 
   """Reads a single \`Invoice\` that is related to this \`InvoiceLine\`."""
   invoice: Invoice
@@ -17876,6 +17917,159 @@ type InvoiceLine implements Node {
   Reads a single \`TaxJurisdiction\` that is related to this \`InvoiceLine\`.
   """
   taxJurisdiction: TaxJurisdiction
+}
+
+type InventoryItem implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  sku: String
+  name: String!
+  description: String
+  salePrice: BigFloat!
+  quantityOnHand: BigFloat!
+  averageCost: BigFloat!
+  assetAccountId: UUID!
+  cogsAccountId: UUID!
+  incomeAccountId: UUID!
+  isActive: Boolean!
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """Reads a single \`Account\` that is related to this \`InventoryItem\`."""
+  assetAccount: Account
+
+  """Reads a single \`Book\` that is related to this \`InventoryItem\`."""
+  book: Book
+
+  """Reads a single \`Account\` that is related to this \`InventoryItem\`."""
+  cogsAccount: Account
+
+  """Reads a single \`Account\` that is related to this \`InventoryItem\`."""
+  incomeAccount: Account
+
+  """Reads and enables pagination through a set of \`InventoryTransaction\`."""
+  inventoryTransactionsByItemId(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: InventoryTransactionCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: InventoryTransactionFilter
+
+    """The method to use when ordering \`InventoryTransaction\`."""
+    orderBy: [InventoryTransactionOrderBy!] = [PRIMARY_KEY_ASC]
+  ): InventoryTransactionConnection!
+}
+
+"""A connection to a list of \`InventoryTransaction\` values."""
+type InventoryTransactionConnection {
+  """A list of \`InventoryTransaction\` objects."""
+  nodes: [InventoryTransaction]!
+
+  """
+  A list of edges which contains the \`InventoryTransaction\` and cursor to aid in pagination.
+  """
+  edges: [InventoryTransactionEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* \`InventoryTransaction\` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+type InventoryTransaction implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  itemId: UUID!
+  date: String!
+  type: String!
+  quantity: BigFloat!
+  unitCost: BigFloat!
+  note: String
+  journalEntryId: UUID
+  createdAt: Datetime
+
+  """Reads a single \`Book\` that is related to this \`InventoryTransaction\`."""
+  book: Book
+
+  """
+  Reads a single \`InventoryItem\` that is related to this \`InventoryTransaction\`.
+  """
+  item: InventoryItem
+
+  """
+  Reads a single \`JournalEntry\` that is related to this \`InventoryTransaction\`.
+  """
+  journalEntry: JournalEntry
+}
+
+"""A \`InventoryTransaction\` edge in the connection."""
+type InventoryTransactionEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`InventoryTransaction\` at the end of the edge."""
+  node: InventoryTransaction
+}
+
+"""
+A condition to be used against \`InventoryTransaction\` object types. All fields
+are tested for equality and combined with a logical ‘and.’
+"""
+input InventoryTransactionCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`bookId\` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s \`itemId\` field."""
+  itemId: UUID
+}
+
+"""Methods to use when ordering \`InventoryTransaction\`."""
+enum InventoryTransactionOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+  ITEM_ID_ASC
+  ITEM_ID_DESC
 }
 
 """A \`InvoiceLine\` edge in the connection."""
@@ -18294,159 +18488,6 @@ type InventoryItemConnection {
   totalCount: Int!
 }
 
-type InventoryItem implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  id: ID!
-  rowId: UUID!
-  bookId: UUID!
-  sku: String
-  name: String!
-  description: String
-  salePrice: BigFloat!
-  quantityOnHand: BigFloat!
-  averageCost: BigFloat!
-  assetAccountId: UUID!
-  cogsAccountId: UUID!
-  incomeAccountId: UUID!
-  isActive: Boolean!
-  createdAt: Datetime
-  updatedAt: Datetime
-
-  """Reads a single \`Account\` that is related to this \`InventoryItem\`."""
-  assetAccount: Account
-
-  """Reads a single \`Book\` that is related to this \`InventoryItem\`."""
-  book: Book
-
-  """Reads a single \`Account\` that is related to this \`InventoryItem\`."""
-  cogsAccount: Account
-
-  """Reads a single \`Account\` that is related to this \`InventoryItem\`."""
-  incomeAccount: Account
-
-  """Reads and enables pagination through a set of \`InventoryTransaction\`."""
-  inventoryTransactionsByItemId(
-    """Only read the first \`n\` values of the set."""
-    first: Int
-
-    """Only read the last \`n\` values of the set."""
-    last: Int
-
-    """
-    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
-    based pagination. May not be used with \`last\`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: InventoryTransactionCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: InventoryTransactionFilter
-
-    """The method to use when ordering \`InventoryTransaction\`."""
-    orderBy: [InventoryTransactionOrderBy!] = [PRIMARY_KEY_ASC]
-  ): InventoryTransactionConnection!
-}
-
-"""A connection to a list of \`InventoryTransaction\` values."""
-type InventoryTransactionConnection {
-  """A list of \`InventoryTransaction\` objects."""
-  nodes: [InventoryTransaction]!
-
-  """
-  A list of edges which contains the \`InventoryTransaction\` and cursor to aid in pagination.
-  """
-  edges: [InventoryTransactionEdge]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """
-  The count of *all* \`InventoryTransaction\` you could get from the connection.
-  """
-  totalCount: Int!
-}
-
-type InventoryTransaction implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  id: ID!
-  rowId: UUID!
-  bookId: UUID!
-  itemId: UUID!
-  date: String!
-  type: String!
-  quantity: BigFloat!
-  unitCost: BigFloat!
-  note: String
-  journalEntryId: UUID
-  createdAt: Datetime
-
-  """Reads a single \`Book\` that is related to this \`InventoryTransaction\`."""
-  book: Book
-
-  """
-  Reads a single \`InventoryItem\` that is related to this \`InventoryTransaction\`.
-  """
-  item: InventoryItem
-
-  """
-  Reads a single \`JournalEntry\` that is related to this \`InventoryTransaction\`.
-  """
-  journalEntry: JournalEntry
-}
-
-"""A \`InventoryTransaction\` edge in the connection."""
-type InventoryTransactionEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The \`InventoryTransaction\` at the end of the edge."""
-  node: InventoryTransaction
-}
-
-"""
-A condition to be used against \`InventoryTransaction\` object types. All fields
-are tested for equality and combined with a logical ‘and.’
-"""
-input InventoryTransactionCondition {
-  """Checks for equality with the object’s \`rowId\` field."""
-  rowId: UUID
-
-  """Checks for equality with the object’s \`bookId\` field."""
-  bookId: UUID
-
-  """Checks for equality with the object’s \`itemId\` field."""
-  itemId: UUID
-}
-
-"""Methods to use when ordering \`InventoryTransaction\`."""
-enum InventoryTransactionOrderBy {
-  NATURAL
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-  ROW_ID_ASC
-  ROW_ID_DESC
-  BOOK_ID_ASC
-  BOOK_ID_DESC
-  ITEM_ID_ASC
-  ITEM_ID_DESC
-}
-
 """A \`InventoryItem\` edge in the connection."""
 type InventoryItemEdge {
   """A cursor for use in pagination."""
@@ -18836,14 +18877,6 @@ type Mutation {
     input: CreateEstimateLineInput!
   ): CreateEstimateLinePayload
 
-  """Creates a single \`InvoiceLine\`."""
-  createInvoiceLine(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateInvoiceLineInput!
-  ): CreateInvoiceLinePayload
-
   """Creates a single \`BillPayment\`."""
   createBillPayment(
     """
@@ -18867,6 +18900,14 @@ type Mutation {
     """
     input: CreateReconciliationStatementInput!
   ): CreateReconciliationStatementPayload
+
+  """Creates a single \`InvoiceLine\`."""
+  createInvoiceLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateInvoiceLineInput!
+  ): CreateInvoiceLinePayload
 
   """Creates a single \`CryptoLot\`."""
   createCryptoLot(
@@ -19321,24 +19362,6 @@ type Mutation {
   ): UpdateEstimateLinePayload
 
   """
-  Updates a single \`InvoiceLine\` using its globally unique id and a patch.
-  """
-  updateInvoiceLineById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateInvoiceLineByIdInput!
-  ): UpdateInvoiceLinePayload
-
-  """Updates a single \`InvoiceLine\` using a unique key and a patch."""
-  updateInvoiceLine(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateInvoiceLineInput!
-  ): UpdateInvoiceLinePayload
-
-  """
   Updates a single \`BillPayment\` using its globally unique id and a patch.
   """
   updateBillPaymentById(
@@ -19393,6 +19416,24 @@ type Mutation {
     """
     input: UpdateReconciliationStatementInput!
   ): UpdateReconciliationStatementPayload
+
+  """
+  Updates a single \`InvoiceLine\` using its globally unique id and a patch.
+  """
+  updateInvoiceLineById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateInvoiceLineByIdInput!
+  ): UpdateInvoiceLinePayload
+
+  """Updates a single \`InvoiceLine\` using a unique key and a patch."""
+  updateInvoiceLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateInvoiceLineInput!
+  ): UpdateInvoiceLinePayload
 
   """Updates a single \`CryptoLot\` using its globally unique id and a patch."""
   updateCryptoLotById(
@@ -19974,22 +20015,6 @@ type Mutation {
     input: DeleteEstimateLineInput!
   ): DeleteEstimateLinePayload
 
-  """Deletes a single \`InvoiceLine\` using its globally unique id."""
-  deleteInvoiceLineById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteInvoiceLineByIdInput!
-  ): DeleteInvoiceLinePayload
-
-  """Deletes a single \`InvoiceLine\` using a unique key."""
-  deleteInvoiceLine(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteInvoiceLineInput!
-  ): DeleteInvoiceLinePayload
-
   """Deletes a single \`BillPayment\` using its globally unique id."""
   deleteBillPaymentById(
     """
@@ -20039,6 +20064,22 @@ type Mutation {
     """
     input: DeleteReconciliationStatementInput!
   ): DeleteReconciliationStatementPayload
+
+  """Deletes a single \`InvoiceLine\` using its globally unique id."""
+  deleteInvoiceLineById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteInvoiceLineByIdInput!
+  ): DeleteInvoiceLinePayload
+
+  """Deletes a single \`InvoiceLine\` using a unique key."""
+  deleteInvoiceLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteInvoiceLineInput!
+  ): DeleteInvoiceLinePayload
 
   """Deletes a single \`CryptoLot\` using its globally unique id."""
   deleteCryptoLotById(
@@ -21147,54 +21188,6 @@ input EstimateLineInput {
   sortOrder: Int
 }
 
-"""The output of our create \`InvoiceLine\` mutation."""
-type CreateInvoiceLinePayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`InvoiceLine\` that was created by this mutation."""
-  invoiceLine: InvoiceLine
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`InvoiceLine\`. May be used by Relay 1."""
-  invoiceLineEdge(
-    """The method to use when ordering \`InvoiceLine\`."""
-    orderBy: [InvoiceLineOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): InvoiceLineEdge
-}
-
-"""All input for the create \`InvoiceLine\` mutation."""
-input CreateInvoiceLineInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The \`InvoiceLine\` to be created by this mutation."""
-  invoiceLine: InvoiceLineInput!
-}
-
-"""An input for mutations affecting \`InvoiceLine\`"""
-input InvoiceLineInput {
-  rowId: UUID
-  invoiceId: UUID!
-  description: String!
-  quantity: BigFloat
-  unitPrice: BigFloat
-  amount: BigFloat
-  incomeAccountId: UUID!
-  taxJurisdictionId: UUID
-  sortOrder: Int
-}
-
 """The output of our create \`BillPayment\` mutation."""
 type CreateBillPaymentPayload {
   """
@@ -21340,6 +21333,55 @@ input ReconciliationStatementInput {
   completedAt: Datetime
   discrepancy: BigFloat
   createdAt: Datetime
+}
+
+"""The output of our create \`InvoiceLine\` mutation."""
+type CreateInvoiceLinePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`InvoiceLine\` that was created by this mutation."""
+  invoiceLine: InvoiceLine
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`InvoiceLine\`. May be used by Relay 1."""
+  invoiceLineEdge(
+    """The method to use when ordering \`InvoiceLine\`."""
+    orderBy: [InvoiceLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): InvoiceLineEdge
+}
+
+"""All input for the create \`InvoiceLine\` mutation."""
+input CreateInvoiceLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`InvoiceLine\` to be created by this mutation."""
+  invoiceLine: InvoiceLineInput!
+}
+
+"""An input for mutations affecting \`InvoiceLine\`"""
+input InvoiceLineInput {
+  rowId: UUID
+  invoiceId: UUID!
+  description: String!
+  quantity: BigFloat
+  unitPrice: BigFloat
+  amount: BigFloat
+  incomeAccountId: UUID!
+  taxJurisdictionId: UUID
+  sortOrder: Int
+  inventoryItemId: UUID
 }
 
 """The output of our create \`CryptoLot\` mutation."""
@@ -23490,78 +23532,6 @@ input UpdateEstimateLineInput {
   patch: EstimateLinePatch!
 }
 
-"""The output of our update \`InvoiceLine\` mutation."""
-type UpdateInvoiceLinePayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`InvoiceLine\` that was updated by this mutation."""
-  invoiceLine: InvoiceLine
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`InvoiceLine\`. May be used by Relay 1."""
-  invoiceLineEdge(
-    """The method to use when ordering \`InvoiceLine\`."""
-    orderBy: [InvoiceLineOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): InvoiceLineEdge
-}
-
-"""All input for the \`updateInvoiceLineById\` mutation."""
-input UpdateInvoiceLineByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`InvoiceLine\` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the \`InvoiceLine\` being updated.
-  """
-  patch: InvoiceLinePatch!
-}
-
-"""
-Represents an update to a \`InvoiceLine\`. Fields that are set will be updated.
-"""
-input InvoiceLinePatch {
-  rowId: UUID
-  invoiceId: UUID
-  description: String
-  quantity: BigFloat
-  unitPrice: BigFloat
-  amount: BigFloat
-  incomeAccountId: UUID
-  taxJurisdictionId: UUID
-  sortOrder: Int
-}
-
-"""All input for the \`updateInvoiceLine\` mutation."""
-input UpdateInvoiceLineInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the \`InvoiceLine\` being updated.
-  """
-  patch: InvoiceLinePatch!
-}
-
 """The output of our update \`BillPayment\` mutation."""
 type UpdateBillPaymentPayload {
   """
@@ -23779,6 +23749,79 @@ input UpdateReconciliationStatementInput {
   An object where the defined keys will be set on the \`ReconciliationStatement\` being updated.
   """
   patch: ReconciliationStatementPatch!
+}
+
+"""The output of our update \`InvoiceLine\` mutation."""
+type UpdateInvoiceLinePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`InvoiceLine\` that was updated by this mutation."""
+  invoiceLine: InvoiceLine
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`InvoiceLine\`. May be used by Relay 1."""
+  invoiceLineEdge(
+    """The method to use when ordering \`InvoiceLine\`."""
+    orderBy: [InvoiceLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): InvoiceLineEdge
+}
+
+"""All input for the \`updateInvoiceLineById\` mutation."""
+input UpdateInvoiceLineByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`InvoiceLine\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`InvoiceLine\` being updated.
+  """
+  patch: InvoiceLinePatch!
+}
+
+"""
+Represents an update to a \`InvoiceLine\`. Fields that are set will be updated.
+"""
+input InvoiceLinePatch {
+  rowId: UUID
+  invoiceId: UUID
+  description: String
+  quantity: BigFloat
+  unitPrice: BigFloat
+  amount: BigFloat
+  incomeAccountId: UUID
+  taxJurisdictionId: UUID
+  sortOrder: Int
+  inventoryItemId: UUID
+}
+
+"""All input for the \`updateInvoiceLine\` mutation."""
+input UpdateInvoiceLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`InvoiceLine\` being updated.
+  """
+  patch: InvoiceLinePatch!
 }
 
 """The output of our update \`CryptoLot\` mutation."""
@@ -25937,54 +25980,6 @@ input DeleteEstimateLineInput {
   rowId: UUID!
 }
 
-"""The output of our delete \`InvoiceLine\` mutation."""
-type DeleteInvoiceLinePayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`InvoiceLine\` that was deleted by this mutation."""
-  invoiceLine: InvoiceLine
-  deletedInvoiceLineId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`InvoiceLine\`. May be used by Relay 1."""
-  invoiceLineEdge(
-    """The method to use when ordering \`InvoiceLine\`."""
-    orderBy: [InvoiceLineOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): InvoiceLineEdge
-}
-
-"""All input for the \`deleteInvoiceLineById\` mutation."""
-input DeleteInvoiceLineByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`InvoiceLine\` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the \`deleteInvoiceLine\` mutation."""
-input DeleteInvoiceLineInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete \`BillPayment\` mutation."""
 type DeleteBillPaymentPayload {
   """
@@ -26121,6 +26116,54 @@ input DeleteReconciliationStatementByIdInput {
 
 """All input for the \`deleteReconciliationStatement\` mutation."""
 input DeleteReconciliationStatementInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`InvoiceLine\` mutation."""
+type DeleteInvoiceLinePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`InvoiceLine\` that was deleted by this mutation."""
+  invoiceLine: InvoiceLine
+  deletedInvoiceLineId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`InvoiceLine\`. May be used by Relay 1."""
+  invoiceLineEdge(
+    """The method to use when ordering \`InvoiceLine\`."""
+    orderBy: [InvoiceLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): InvoiceLineEdge
+}
+
+"""All input for the \`deleteInvoiceLineById\` mutation."""
+input DeleteInvoiceLineByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`InvoiceLine\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteInvoiceLine\` mutation."""
+input DeleteInvoiceLineInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -32941,6 +32984,14 @@ export const objects = {
       },
       incomeAccount: InvoiceLine_incomeAccountPlan,
       incomeAccountId: InvoiceLine_incomeAccountIdPlan,
+      inventoryItem($record) {
+        return resource_inventory_itemPgResource.get({
+          id: $record.get("inventory_item_id")
+        });
+      },
+      inventoryItemId($record) {
+        return $record.get("inventory_item_id");
+      },
       invoice: InvoiceLine_invoicePlan,
       invoiceId: InvoiceLine_invoiceIdPlan,
       rowId: JournalLineTag_rowIdPlan,
@@ -37355,6 +37406,12 @@ export const inputObjects = {
       incomeAccount($where, value) {
         return pgConnectionFilterApplySingleRelation(resource_accountPgResource, accountIdentifier, registryConfig.pgRelations.invoiceLine.accountByMyIncomeAccountId.localAttributes, registryConfig.pgRelations.invoiceLine.accountByMyIncomeAccountId.remoteAttributes, $where, value);
       },
+      inventoryItem($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_inventory_itemPgResource, inventoryItemIdentifier, registryConfig.pgRelations.invoiceLine.inventoryItemByMyInventoryItemId.localAttributes, registryConfig.pgRelations.invoiceLine.inventoryItemByMyInventoryItemId.remoteAttributes, $where, value);
+      },
+      inventoryItemExists($where, value) {
+        return pgConnectionFilterApplyForwardRelationExists(resource_inventory_itemPgResource, inventoryItemIdentifier, registryConfig.pgRelations.invoiceLine.inventoryItemByMyInventoryItemId.localAttributes, registryConfig.pgRelations.invoiceLine.inventoryItemByMyInventoryItemId.remoteAttributes, $where, value);
+      },
       invoice($where, value) {
         return pgConnectionFilterApplySingleRelation(resource_invoicePgResource, invoiceIdentifier, registryConfig.pgRelations.invoiceLine.invoiceByMyInvoiceId.localAttributes, registryConfig.pgRelations.invoiceLine.invoiceByMyInvoiceId.remoteAttributes, $where, value);
       },
@@ -37380,7 +37437,8 @@ export const inputObjects = {
       amount: BillLineInput_amountApply,
       description: BillLineInput_descriptionApply,
       incomeAccountId: EstimateLineInput_incomeAccountIdApply,
-      invoiceId: InvoiceLineInput_invoiceIdApply,
+      inventoryItemId: InvoiceLineInput_inventoryItemIdApply,
+      invoiceId: InvoicePaymentInput_invoiceIdApply,
       quantity: InventoryTransactionInput_quantityApply,
       rowId: JournalLineTagInput_rowIdApply,
       sortOrder: BillLineInput_sortOrderApply,
@@ -37394,7 +37452,8 @@ export const inputObjects = {
       amount: BillLineInput_amountApply,
       description: BillLineInput_descriptionApply,
       incomeAccountId: EstimateLineInput_incomeAccountIdApply,
-      invoiceId: InvoiceLineInput_invoiceIdApply,
+      inventoryItemId: InvoiceLineInput_inventoryItemIdApply,
+      invoiceId: InvoicePaymentInput_invoiceIdApply,
       quantity: InventoryTransactionInput_quantityApply,
       rowId: JournalLineTagInput_rowIdApply,
       sortOrder: BillLineInput_sortOrderApply,
@@ -37470,7 +37529,7 @@ export const inputObjects = {
       createdAt: TagGroupInput_createdAtApply,
       date: NetWorthSnapshotInput_dateApply,
       depositAccountId: InvoicePaymentInput_depositAccountIdApply,
-      invoiceId: InvoiceLineInput_invoiceIdApply,
+      invoiceId: InvoicePaymentInput_invoiceIdApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       method: BillPaymentInput_methodApply,
       reference: BillPaymentInput_referenceApply,
@@ -37485,7 +37544,7 @@ export const inputObjects = {
       createdAt: TagGroupInput_createdAtApply,
       date: NetWorthSnapshotInput_dateApply,
       depositAccountId: InvoicePaymentInput_depositAccountIdApply,
-      invoiceId: InvoiceLineInput_invoiceIdApply,
+      invoiceId: InvoicePaymentInput_invoiceIdApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       method: BillPaymentInput_methodApply,
       reference: BillPaymentInput_referenceApply,
