@@ -1580,6 +1580,126 @@ const spec_billLine = {
   executor: executor
 };
 const billLineCodec = recordCodec(spec_billLine);
+const estimateLineIdentifier = sql.identifier("public", "estimate_line");
+const spec_estimateLine = {
+  name: "estimateLine",
+  identifier: estimateLineIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    estimate_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    description: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    quantity: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    unit_price: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    amount: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    income_account_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    tax_jurisdiction_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    sort_order: {
+      codec: TYPES.int,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "17809",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "estimate_line"
+    }
+  },
+  executor: executor
+};
+const estimateLineCodec = recordCodec(spec_estimateLine);
 const invoiceLineIdentifier = sql.identifier("public", "invoice_line");
 const spec_invoiceLine = {
   name: "invoiceLine",
@@ -2754,6 +2874,174 @@ const spec_budget = {
   executor: executor
 };
 const budgetCodec = recordCodec(spec_budget);
+const estimateIdentifier = sql.identifier("public", "estimate");
+const spec_estimate = {
+  name: "estimate",
+  identifier: estimateIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    customer_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    number: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    status: {
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    estimate_date: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    expiry_date: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    subtotal: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    total: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    memo: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    terms: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    converted_invoice_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "17788",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "estimate"
+    }
+  },
+  executor: executor
+};
+const estimateCodec = recordCodec(spec_estimate);
 const reconciliationQueueIdentifier = sql.identifier("public", "reconciliation_queue");
 const spec_reconciliationQueue = {
   name: "reconciliationQueue",
@@ -4858,6 +5146,29 @@ const bill_line_resourceOptionsConfig = {
   },
   uniques: bill_lineUniques
 };
+const estimate_lineUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const estimate_line_resourceOptionsConfig = {
+  executor: executor,
+  name: "estimate_line",
+  identifier: "main.public.estimate_line",
+  from: estimateLineIdentifier,
+  codec: estimateLineCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "estimate_line"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: estimate_lineUniques
+};
 const invoice_lineUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -5064,6 +5375,29 @@ const budget_resourceOptionsConfig = {
     canDelete: true
   },
   uniques: budgetUniques
+};
+const estimateUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const estimate_resourceOptionsConfig = {
+  executor: executor,
+  name: "estimate",
+  identifier: "main.public.estimate",
+  from: estimateIdentifier,
+  codec: estimateCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "estimate"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: estimateUniques
 };
 const reconciliation_queueUniques = [{
   attributes: ["id"],
@@ -5326,6 +5660,7 @@ const registryConfig = {
     accountingPeriod: accountingPeriodCodec,
     payrollConnection: payrollConnectionCodec,
     billLine: billLineCodec,
+    estimateLine: estimateLineCodec,
     invoiceLine: invoiceLineCodec,
     billPayment: billPaymentCodec,
     invoicePayment: invoicePaymentCodec,
@@ -5336,6 +5671,7 @@ const registryConfig = {
     mileageLog: mileageLogCodec,
     budget: budgetCodec,
     budgetPeriod: budgetPeriodCodec,
+    estimate: estimateCodec,
     reconciliationQueue: reconciliationQueueCodec,
     customer: customerCodec,
     vendor: vendorCodec,
@@ -5387,6 +5723,7 @@ const registryConfig = {
     accounting_period: accounting_period_resourceOptionsConfig,
     payroll_connection: payroll_connection_resourceOptionsConfig,
     bill_line: bill_line_resourceOptionsConfig,
+    estimate_line: estimate_line_resourceOptionsConfig,
     invoice_line: invoice_line_resourceOptionsConfig,
     bill_payment: bill_payment_resourceOptionsConfig,
     invoice_payment: invoice_payment_resourceOptionsConfig,
@@ -5396,6 +5733,7 @@ const registryConfig = {
     journal_entry: journal_entry_resourceOptionsConfig,
     mileage_log: mileage_log_resourceOptionsConfig,
     budget: budget_resourceOptionsConfig,
+    estimate: estimate_resourceOptionsConfig,
     reconciliation_queue: reconciliation_queue_resourceOptionsConfig,
     customer: customer_resourceOptionsConfig,
     vendor: vendor_resourceOptionsConfig,
@@ -5645,6 +5983,17 @@ const registryConfig = {
         remoteResourceOptions: bill_payment_resourceOptionsConfig,
         localAttributes: ["id"],
         remoteAttributes: ["payment_account_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
+      },
+      estimateLinesByTheirIncomeAccountId: {
+        localCodec: accountCodec,
+        remoteResourceOptions: estimate_line_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["income_account_id"],
         isReferencee: true,
         extensions: {
           __proto__: null,
@@ -5973,6 +6322,13 @@ const registryConfig = {
         localAttributes: ["id"],
         remoteAttributes: ["book_id"],
         isReferencee: true
+      },
+      estimatesByTheirBookId: {
+        localCodec: bookCodec,
+        remoteResourceOptions: estimate_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["book_id"],
+        isReferencee: true
       }
     },
     bookAccess: {
@@ -6099,6 +6455,68 @@ const registryConfig = {
         localAttributes: ["id"],
         remoteAttributes: ["customer_id"],
         isReferencee: true
+      },
+      estimatesByTheirCustomerId: {
+        localCodec: customerCodec,
+        remoteResourceOptions: estimate_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["customer_id"],
+        isReferencee: true
+      }
+    },
+    estimate: {
+      __proto__: null,
+      bookByMyBookId: {
+        localCodec: estimateCodec,
+        remoteResourceOptions: book_resourceOptionsConfig,
+        localAttributes: ["book_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      invoiceByMyConvertedInvoiceId: {
+        localCodec: estimateCodec,
+        remoteResourceOptions: invoice_resourceOptionsConfig,
+        localAttributes: ["converted_invoice_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      customerByMyCustomerId: {
+        localCodec: estimateCodec,
+        remoteResourceOptions: customer_resourceOptionsConfig,
+        localAttributes: ["customer_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      estimateLinesByTheirEstimateId: {
+        localCodec: estimateCodec,
+        remoteResourceOptions: estimate_line_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["estimate_id"],
+        isReferencee: true
+      }
+    },
+    estimateLine: {
+      __proto__: null,
+      estimateByMyEstimateId: {
+        localCodec: estimateLineCodec,
+        remoteResourceOptions: estimate_resourceOptionsConfig,
+        localAttributes: ["estimate_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      accountByMyIncomeAccountId: {
+        localCodec: estimateLineCodec,
+        remoteResourceOptions: account_resourceOptionsConfig,
+        localAttributes: ["income_account_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      taxJurisdictionByMyTaxJurisdictionId: {
+        localCodec: estimateLineCodec,
+        remoteResourceOptions: tax_jurisdiction_resourceOptionsConfig,
+        localAttributes: ["tax_jurisdiction_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
       }
     },
     fixedAsset: {
@@ -6178,6 +6596,17 @@ const registryConfig = {
         localAttributes: ["id"],
         remoteAttributes: ["invoice_id"],
         isReferencee: true
+      },
+      estimatesByTheirConvertedInvoiceId: {
+        localCodec: invoiceCodec,
+        remoteResourceOptions: estimate_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["converted_invoice_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
       }
     },
     invoiceLine: {
@@ -6574,6 +7003,17 @@ const registryConfig = {
           __proto__: null,
           isIndexed: false
         }
+      },
+      estimateLinesByTheirTaxJurisdictionId: {
+        localCodec: taxJurisdictionCodec,
+        remoteResourceOptions: estimate_line_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["tax_jurisdiction_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
       }
     },
     vehicle: {
@@ -6640,6 +7080,7 @@ const resource_net_worth_snapshotPgResource = registry.pgResources["net_worth_sn
 const resource_accounting_periodPgResource = registry.pgResources["accounting_period"];
 const resource_payroll_connectionPgResource = registry.pgResources["payroll_connection"];
 const resource_bill_linePgResource = registry.pgResources["bill_line"];
+const resource_estimate_linePgResource = registry.pgResources["estimate_line"];
 const resource_invoice_linePgResource = registry.pgResources["invoice_line"];
 const resource_bill_paymentPgResource = registry.pgResources["bill_payment"];
 const resource_invoice_paymentPgResource = registry.pgResources["invoice_payment"];
@@ -6649,6 +7090,7 @@ const resource_connected_accountPgResource = registry.pgResources["connected_acc
 const resource_journal_entryPgResource = registry.pgResources["journal_entry"];
 const resource_mileage_logPgResource = registry.pgResources["mileage_log"];
 const resource_budgetPgResource = registry.pgResources["budget"];
+const resource_estimatePgResource = registry.pgResources["estimate"];
 const resource_reconciliation_queuePgResource = registry.pgResources["reconciliation_queue"];
 const resource_customerPgResource = registry.pgResources["customer"];
 const resource_vendorPgResource = registry.pgResources["vendor"];
@@ -6879,6 +7321,17 @@ const nodeFetcher_BillLine = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_BillLine));
   return nodeIdHandler_BillLine.get(nodeIdHandler_BillLine.getSpec($decoded));
 };
+const nodeIdHandler_EstimateLine = makeTableNodeIdHandler({
+  typeName: "EstimateLine",
+  identifier: "EstimateLine",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_estimate_linePgResource,
+  pk: estimate_lineUniques[0].attributes
+});
+const nodeFetcher_EstimateLine = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_EstimateLine));
+  return nodeIdHandler_EstimateLine.get(nodeIdHandler_EstimateLine.getSpec($decoded));
+};
 const nodeIdHandler_InvoiceLine = makeTableNodeIdHandler({
   typeName: "InvoiceLine",
   identifier: "InvoiceLine",
@@ -6977,6 +7430,17 @@ const nodeIdHandler_Budget = makeTableNodeIdHandler({
 const nodeFetcher_Budget = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Budget));
   return nodeIdHandler_Budget.get(nodeIdHandler_Budget.getSpec($decoded));
+};
+const nodeIdHandler_Estimate = makeTableNodeIdHandler({
+  typeName: "Estimate",
+  identifier: "Estimate",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_estimatePgResource,
+  pk: estimateUniques[0].attributes
+});
+const nodeFetcher_Estimate = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Estimate));
+  return nodeIdHandler_Estimate.get(nodeIdHandler_Estimate.getSpec($decoded));
 };
 const nodeIdHandler_ReconciliationQueue = makeTableNodeIdHandler({
   typeName: "ReconciliationQueue",
@@ -7156,6 +7620,7 @@ const nodeIdHandlerByTypeName = {
   AccountingPeriod: nodeIdHandler_AccountingPeriod,
   PayrollConnection: nodeIdHandler_PayrollConnection,
   BillLine: nodeIdHandler_BillLine,
+  EstimateLine: nodeIdHandler_EstimateLine,
   InvoiceLine: nodeIdHandler_InvoiceLine,
   BillPayment: nodeIdHandler_BillPayment,
   InvoicePayment: nodeIdHandler_InvoicePayment,
@@ -7165,6 +7630,7 @@ const nodeIdHandlerByTypeName = {
   JournalEntry: nodeIdHandler_JournalEntry,
   MileageLog: nodeIdHandler_MileageLog,
   Budget: nodeIdHandler_Budget,
+  Estimate: nodeIdHandler_Estimate,
   ReconciliationQueue: nodeIdHandler_ReconciliationQueue,
   Customer: nodeIdHandler_Customer,
   Vendor: nodeIdHandler_Vendor,
@@ -7666,9 +8132,21 @@ const JournalEntryOrderBy_DATE_DESCApply = queryBuilder => {
   });
 };
 const JSONSerialize = value => value;
+const Invoice_customerIdPlan = $record => {
+  return $record.get("customer_id");
+};
+const Invoice_customerPlan = $record => resource_customerPgResource.get({
+  id: $record.get("customer_id")
+});
 const InvoiceLine_invoiceIdPlan = $record => {
   return $record.get("invoice_id");
 };
+const InvoiceLine_incomeAccountIdPlan = $record => {
+  return $record.get("income_account_id");
+};
+const InvoiceLine_incomeAccountPlan = $record => resource_accountPgResource.get({
+  id: $record.get("income_account_id")
+});
 const InvoiceLine_invoicePlan = $record => resource_invoicePgResource.get({
   id: $record.get("invoice_id")
 });
@@ -7682,6 +8160,19 @@ const InvoiceLineOrderBy_INVOICE_ID_ASCApply = queryBuilder => {
 const InvoiceLineOrderBy_INVOICE_ID_DESCApply = queryBuilder => {
   queryBuilder.orderBy({
     attribute: "invoice_id",
+    direction: "DESC"
+  });
+};
+const InvoiceCondition_customerIdApply = ($condition, val) => applyAttributeCondition("customer_id", TYPES.uuid, $condition, val);
+const InvoiceOrderBy_CUSTOMER_ID_ASCApply = queryBuilder => {
+  queryBuilder.orderBy({
+    attribute: "customer_id",
+    direction: "ASC"
+  });
+};
+const InvoiceOrderBy_CUSTOMER_ID_DESCApply = queryBuilder => {
+  queryBuilder.orderBy({
+    attribute: "customer_id",
     direction: "DESC"
   });
 };
@@ -7755,6 +8246,10 @@ const specFromArgs_BillLine = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_BillLine, $nodeId);
 };
+const specFromArgs_EstimateLine = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_EstimateLine, $nodeId);
+};
 const specFromArgs_InvoiceLine = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_InvoiceLine, $nodeId);
@@ -7790,6 +8285,10 @@ const specFromArgs_MileageLog = args => {
 const specFromArgs_Budget = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Budget, $nodeId);
+};
+const specFromArgs_Estimate = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_Estimate, $nodeId);
 };
 const specFromArgs_ReconciliationQueue = args => {
   const $nodeId = args.getRaw(["input", "id"]);
@@ -8072,12 +8571,16 @@ function BillLineInput_taxJurisdictionIdApply(obj, val, info) {
 function BillLineInput_sortOrderApply(obj, val, info) {
   obj.set("sort_order", bakedInputRuntime(info.schema, info.field.type, val));
 }
+const CreateEstimateLinePayload_estimateLineEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_estimate_linePgResource, estimate_lineUniques[0].attributes, $mutation, fieldArgs);
+function EstimateLineInput_estimateIdApply(obj, val, info) {
+  obj.set("estimate_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function EstimateLineInput_incomeAccountIdApply(obj, val, info) {
+  obj.set("income_account_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
 const CreateInvoiceLinePayload_invoiceLineEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_invoice_linePgResource, invoice_lineUniques[0].attributes, $mutation, fieldArgs);
 function InvoiceLineInput_invoiceIdApply(obj, val, info) {
   obj.set("invoice_id", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function InvoiceLineInput_incomeAccountIdApply(obj, val, info) {
-  obj.set("income_account_id", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateBillPaymentPayload_billPaymentEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_bill_paymentPgResource, bill_paymentUniques[0].attributes, $mutation, fieldArgs);
 function BillPaymentInput_paymentAccountIdApply(obj, val, info) {
@@ -8183,6 +8686,31 @@ function BudgetInput_periodApply(obj, val, info) {
 function BudgetInput_rolloverApply(obj, val, info) {
   obj.set("rollover", bakedInputRuntime(info.schema, info.field.type, val));
 }
+const CreateEstimatePayload_estimateEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_estimatePgResource, estimateUniques[0].attributes, $mutation, fieldArgs);
+function EstimateInput_customerIdApply(obj, val, info) {
+  obj.set("customer_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function EstimateInput_numberApply(obj, val, info) {
+  obj.set("number", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function EstimateInput_estimateDateApply(obj, val, info) {
+  obj.set("estimate_date", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function EstimateInput_expiryDateApply(obj, val, info) {
+  obj.set("expiry_date", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function EstimateInput_subtotalApply(obj, val, info) {
+  obj.set("subtotal", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function EstimateInput_totalApply(obj, val, info) {
+  obj.set("total", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function EstimateInput_termsApply(obj, val, info) {
+  obj.set("terms", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function EstimateInput_convertedInvoiceIdApply(obj, val, info) {
+  obj.set("converted_invoice_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
 const CreateReconciliationQueuePayload_reconciliationQueueEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_reconciliation_queuePgResource, reconciliation_queueUniques[0].attributes, $mutation, fieldArgs);
 function ReconciliationQueueInput_reviewedAtApply(obj, val, info) {
   obj.set("reviewed_at", bakedInputRuntime(info.schema, info.field.type, val));
@@ -8266,23 +8794,14 @@ function CryptoAssetInput_costBasisMethodApply(obj, val, info) {
   obj.set("cost_basis_method", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateBillPayload_billEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_billPgResource, billUniques[0].attributes, $mutation, fieldArgs);
-function BillInput_numberApply(obj, val, info) {
-  obj.set("number", bakedInputRuntime(info.schema, info.field.type, val));
-}
 function BillInput_billDateApply(obj, val, info) {
   obj.set("bill_date", bakedInputRuntime(info.schema, info.field.type, val));
 }
 function BillInput_dueDateApply(obj, val, info) {
   obj.set("due_date", bakedInputRuntime(info.schema, info.field.type, val));
 }
-function BillInput_subtotalApply(obj, val, info) {
-  obj.set("subtotal", bakedInputRuntime(info.schema, info.field.type, val));
-}
 function BillInput_taxAmountApply(obj, val, info) {
   obj.set("tax_amount", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function BillInput_totalApply(obj, val, info) {
-  obj.set("total", bakedInputRuntime(info.schema, info.field.type, val));
 }
 function BillInput_amountPaidApply(obj, val, info) {
   obj.set("amount_paid", bakedInputRuntime(info.schema, info.field.type, val));
@@ -8341,14 +8860,8 @@ function FixedAssetInput_disposalProceedsApply(obj, val, info) {
   obj.set("disposal_proceeds", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateInvoicePayload_invoiceEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_invoicePgResource, invoiceUniques[0].attributes, $mutation, fieldArgs);
-function InvoiceInput_customerIdApply(obj, val, info) {
-  obj.set("customer_id", bakedInputRuntime(info.schema, info.field.type, val));
-}
 function InvoiceInput_issueDateApply(obj, val, info) {
   obj.set("issue_date", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function InvoiceInput_termsApply(obj, val, info) {
-  obj.set("terms", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateRecurringTransactionPayload_recurringTransactionEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_recurring_transactionPgResource, recurring_transactionUniques[0].attributes, $mutation, fieldArgs);
 function RecurringTransactionInput_frequencyApply(obj, val, info) {
@@ -8440,6 +8953,9 @@ type Query implements Node {
   """Get a single \`BillLine\`."""
   billLine(rowId: UUID!): BillLine
 
+  """Get a single \`EstimateLine\`."""
+  estimateLine(rowId: UUID!): EstimateLine
+
   """Get a single \`InvoiceLine\`."""
   invoiceLine(rowId: UUID!): InvoiceLine
 
@@ -8466,6 +8982,9 @@ type Query implements Node {
 
   """Get a single \`Budget\`."""
   budget(rowId: UUID!): Budget
+
+  """Get a single \`Estimate\`."""
+  estimate(rowId: UUID!): Estimate
 
   """Get a single \`ReconciliationQueue\`."""
   reconciliationQueue(rowId: UUID!): ReconciliationQueue
@@ -8615,6 +9134,14 @@ type Query implements Node {
     id: ID!
   ): BillLine
 
+  """Reads a single \`EstimateLine\` using its globally unique \`ID\`."""
+  estimateLineById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`EstimateLine\`.
+    """
+    id: ID!
+  ): EstimateLine
+
   """Reads a single \`InvoiceLine\` using its globally unique \`ID\`."""
   invoiceLineById(
     """
@@ -8684,6 +9211,12 @@ type Query implements Node {
     """The globally unique \`ID\` to be used in selecting a single \`Budget\`."""
     id: ID!
   ): Budget
+
+  """Reads a single \`Estimate\` using its globally unique \`ID\`."""
+  estimateById(
+    """The globally unique \`ID\` to be used in selecting a single \`Estimate\`."""
+    id: ID!
+  ): Estimate
 
   """Reads a single \`ReconciliationQueue\` using its globally unique \`ID\`."""
   reconciliationQueueById(
@@ -9299,6 +9832,40 @@ type Query implements Node {
     orderBy: [BillLineOrderBy!] = [PRIMARY_KEY_ASC]
   ): BillLineConnection
 
+  """Reads and enables pagination through a set of \`EstimateLine\`."""
+  estimateLines(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EstimateLineCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: EstimateLineFilter
+
+    """The method to use when ordering \`EstimateLine\`."""
+    orderBy: [EstimateLineOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EstimateLineConnection
+
   """Reads and enables pagination through a set of \`InvoiceLine\`."""
   invoiceLines(
     """Only read the first \`n\` values of the set."""
@@ -9606,6 +10173,40 @@ type Query implements Node {
     """The method to use when ordering \`Budget\`."""
     orderBy: [BudgetOrderBy!] = [PRIMARY_KEY_ASC]
   ): BudgetConnection
+
+  """Reads and enables pagination through a set of \`Estimate\`."""
+  estimates(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EstimateCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: EstimateFilter
+
+    """The method to use when ordering \`Estimate\`."""
+    orderBy: [EstimateOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EstimateConnection
 
   """Reads and enables pagination through a set of \`ReconciliationQueue\`."""
   reconciliationQueues(
@@ -11144,6 +11745,40 @@ type Book implements Node {
     """The method to use when ordering \`BillPayment\`."""
     orderBy: [BillPaymentOrderBy!] = [PRIMARY_KEY_ASC]
   ): BillPaymentConnection!
+
+  """Reads and enables pagination through a set of \`Estimate\`."""
+  estimates(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EstimateCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: EstimateFilter
+
+    """The method to use when ordering \`Estimate\`."""
+    orderBy: [EstimateOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EstimateConnection!
 }
 
 """A connection to a list of \`Account\` values."""
@@ -11584,6 +12219,12 @@ input BookFilter {
 
   """Some related \`billPayments\` exist."""
   billPaymentsExist: Boolean
+
+  """Filter by the object’s \`estimates\` relation."""
+  estimates: BookToManyEstimateFilter
+
+  """Some related \`estimates\` exist."""
+  estimatesExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [BookFilter!]
@@ -13288,6 +13929,12 @@ input CustomerFilter {
   """Some related \`invoices\` exist."""
   invoicesExist: Boolean
 
+  """Filter by the object’s \`estimates\` relation."""
+  estimates: CustomerToManyEstimateFilter
+
+  """Some related \`estimates\` exist."""
+  estimatesExist: Boolean
+
   """Filter by the object’s \`book\` relation."""
   book: BookFilter
 
@@ -13485,6 +14132,125 @@ input InvoicePaymentFilter {
 }
 
 """
+A filter to be used against many \`Estimate\` object types. All fields are combined with a logical ‘and.’
+"""
+input CustomerToManyEstimateFilter {
+  """
+  Every related \`Estimate\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: EstimateFilter
+
+  """
+  Some related \`Estimate\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: EstimateFilter
+
+  """
+  No related \`Estimate\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: EstimateFilter
+}
+
+"""
+A filter to be used against \`Estimate\` object types. All fields are combined with a logical ‘and.’
+"""
+input EstimateFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`bookId\` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s \`customerId\` field."""
+  customerId: UUIDFilter
+
+  """Filter by the object’s \`number\` field."""
+  number: StringFilter
+
+  """Filter by the object’s \`status\` field."""
+  status: StringFilter
+
+  """Filter by the object’s \`estimateLines\` relation."""
+  estimateLines: EstimateToManyEstimateLineFilter
+
+  """Some related \`estimateLines\` exist."""
+  estimateLinesExist: Boolean
+
+  """Filter by the object’s \`book\` relation."""
+  book: BookFilter
+
+  """Filter by the object’s \`convertedInvoice\` relation."""
+  convertedInvoice: InvoiceFilter
+
+  """A related \`convertedInvoice\` exists."""
+  convertedInvoiceExists: Boolean
+
+  """Filter by the object’s \`customer\` relation."""
+  customer: CustomerFilter
+
+  """Checks for all expressions in this list."""
+  and: [EstimateFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [EstimateFilter!]
+
+  """Negates the expression."""
+  not: EstimateFilter
+}
+
+"""
+A filter to be used against many \`EstimateLine\` object types. All fields are combined with a logical ‘and.’
+"""
+input EstimateToManyEstimateLineFilter {
+  """
+  Every related \`EstimateLine\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: EstimateLineFilter
+
+  """
+  Some related \`EstimateLine\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: EstimateLineFilter
+
+  """
+  No related \`EstimateLine\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: EstimateLineFilter
+}
+
+"""
+A filter to be used against \`EstimateLine\` object types. All fields are combined with a logical ‘and.’
+"""
+input EstimateLineFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`estimateId\` field."""
+  estimateId: UUIDFilter
+
+  """Filter by the object’s \`estimate\` relation."""
+  estimate: EstimateFilter
+
+  """Filter by the object’s \`incomeAccount\` relation."""
+  incomeAccount: AccountFilter
+
+  """Filter by the object’s \`taxJurisdiction\` relation."""
+  taxJurisdiction: TaxJurisdictionFilter
+
+  """A related \`taxJurisdiction\` exists."""
+  taxJurisdictionExists: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [EstimateLineFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [EstimateLineFilter!]
+
+  """Negates the expression."""
+  not: EstimateLineFilter
+}
+
+"""
 A filter to be used against many \`Invoice\` object types. All fields are combined with a logical ‘and.’
 """
 input BookToManyInvoiceFilter {
@@ -13562,6 +14328,26 @@ input BookToManyBillPaymentFilter {
   No related \`BillPayment\` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
   none: BillPaymentFilter
+}
+
+"""
+A filter to be used against many \`Estimate\` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyEstimateFilter {
+  """
+  Every related \`Estimate\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: EstimateFilter
+
+  """
+  Some related \`Estimate\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: EstimateFilter
+
+  """
+  No related \`Estimate\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: EstimateFilter
 }
 
 """
@@ -16055,6 +16841,40 @@ type Customer implements Node {
     """The method to use when ordering \`Invoice\`."""
     orderBy: [InvoiceOrderBy!] = [PRIMARY_KEY_ASC]
   ): InvoiceConnection!
+
+  """Reads and enables pagination through a set of \`Estimate\`."""
+  estimates(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EstimateCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: EstimateFilter
+
+    """The method to use when ordering \`Estimate\`."""
+    orderBy: [EstimateOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EstimateConnection!
 }
 
 """A connection to a list of \`Invoice\` values."""
@@ -16367,6 +17187,210 @@ input InvoiceCondition {
 
 """Methods to use when ordering \`Invoice\`."""
 enum InvoiceOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+  CUSTOMER_ID_ASC
+  CUSTOMER_ID_DESC
+  NUMBER_ASC
+  NUMBER_DESC
+  STATUS_ASC
+  STATUS_DESC
+}
+
+"""A connection to a list of \`Estimate\` values."""
+type EstimateConnection {
+  """A list of \`Estimate\` objects."""
+  nodes: [Estimate]!
+
+  """
+  A list of edges which contains the \`Estimate\` and cursor to aid in pagination.
+  """
+  edges: [EstimateEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* \`Estimate\` you could get from the connection."""
+  totalCount: Int!
+}
+
+type Estimate implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  customerId: UUID!
+  number: String!
+  status: String!
+  estimateDate: String!
+  expiryDate: String
+  subtotal: BigFloat!
+  total: BigFloat!
+  memo: String
+  terms: String
+  convertedInvoiceId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """Reads a single \`Book\` that is related to this \`Estimate\`."""
+  book: Book
+
+  """Reads a single \`Invoice\` that is related to this \`Estimate\`."""
+  convertedInvoice: Invoice
+
+  """Reads a single \`Customer\` that is related to this \`Estimate\`."""
+  customer: Customer
+
+  """Reads and enables pagination through a set of \`EstimateLine\`."""
+  estimateLines(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EstimateLineCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: EstimateLineFilter
+
+    """The method to use when ordering \`EstimateLine\`."""
+    orderBy: [EstimateLineOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EstimateLineConnection!
+}
+
+"""A connection to a list of \`EstimateLine\` values."""
+type EstimateLineConnection {
+  """A list of \`EstimateLine\` objects."""
+  nodes: [EstimateLine]!
+
+  """
+  A list of edges which contains the \`EstimateLine\` and cursor to aid in pagination.
+  """
+  edges: [EstimateLineEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* \`EstimateLine\` you could get from the connection."""
+  totalCount: Int!
+}
+
+type EstimateLine implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  estimateId: UUID!
+  description: String!
+  quantity: BigFloat!
+  unitPrice: BigFloat!
+  amount: BigFloat!
+  incomeAccountId: UUID!
+  taxJurisdictionId: UUID
+  sortOrder: Int!
+
+  """Reads a single \`Estimate\` that is related to this \`EstimateLine\`."""
+  estimate: Estimate
+
+  """Reads a single \`Account\` that is related to this \`EstimateLine\`."""
+  incomeAccount: Account
+
+  """
+  Reads a single \`TaxJurisdiction\` that is related to this \`EstimateLine\`.
+  """
+  taxJurisdiction: TaxJurisdiction
+}
+
+"""A \`EstimateLine\` edge in the connection."""
+type EstimateLineEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`EstimateLine\` at the end of the edge."""
+  node: EstimateLine
+}
+
+"""
+A condition to be used against \`EstimateLine\` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input EstimateLineCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`estimateId\` field."""
+  estimateId: UUID
+}
+
+"""Methods to use when ordering \`EstimateLine\`."""
+enum EstimateLineOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  ESTIMATE_ID_ASC
+  ESTIMATE_ID_DESC
+}
+
+"""A \`Estimate\` edge in the connection."""
+type EstimateEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`Estimate\` at the end of the edge."""
+  node: Estimate
+}
+
+"""
+A condition to be used against \`Estimate\` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input EstimateCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`bookId\` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s \`customerId\` field."""
+  customerId: UUID
+
+  """Checks for equality with the object’s \`number\` field."""
+  number: String
+
+  """Checks for equality with the object’s \`status\` field."""
+  status: String
+}
+
+"""Methods to use when ordering \`Estimate\`."""
+enum EstimateOrderBy {
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
@@ -16755,6 +17779,14 @@ type Mutation {
     input: CreateBillLineInput!
   ): CreateBillLinePayload
 
+  """Creates a single \`EstimateLine\`."""
+  createEstimateLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateEstimateLineInput!
+  ): CreateEstimateLinePayload
+
   """Creates a single \`InvoiceLine\`."""
   createInvoiceLine(
     """
@@ -16826,6 +17858,14 @@ type Mutation {
     """
     input: CreateBudgetInput!
   ): CreateBudgetPayload
+
+  """Creates a single \`Estimate\`."""
+  createEstimate(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateEstimateInput!
+  ): CreateEstimatePayload
 
   """Creates a single \`ReconciliationQueue\`."""
   createReconciliationQueue(
@@ -17186,6 +18226,24 @@ type Mutation {
   ): UpdateBillLinePayload
 
   """
+  Updates a single \`EstimateLine\` using its globally unique id and a patch.
+  """
+  updateEstimateLineById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateEstimateLineByIdInput!
+  ): UpdateEstimateLinePayload
+
+  """Updates a single \`EstimateLine\` using a unique key and a patch."""
+  updateEstimateLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateEstimateLineInput!
+  ): UpdateEstimateLinePayload
+
+  """
   Updates a single \`InvoiceLine\` using its globally unique id and a patch.
   """
   updateInvoiceLineById(
@@ -17344,6 +18402,22 @@ type Mutation {
     """
     input: UpdateBudgetInput!
   ): UpdateBudgetPayload
+
+  """Updates a single \`Estimate\` using its globally unique id and a patch."""
+  updateEstimateById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateEstimateByIdInput!
+  ): UpdateEstimatePayload
+
+  """Updates a single \`Estimate\` using a unique key and a patch."""
+  updateEstimate(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateEstimateInput!
+  ): UpdateEstimatePayload
 
   """
   Updates a single \`ReconciliationQueue\` using its globally unique id and a patch.
@@ -17773,6 +18847,22 @@ type Mutation {
     input: DeleteBillLineInput!
   ): DeleteBillLinePayload
 
+  """Deletes a single \`EstimateLine\` using its globally unique id."""
+  deleteEstimateLineById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteEstimateLineByIdInput!
+  ): DeleteEstimateLinePayload
+
+  """Deletes a single \`EstimateLine\` using a unique key."""
+  deleteEstimateLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteEstimateLineInput!
+  ): DeleteEstimateLinePayload
+
   """Deletes a single \`InvoiceLine\` using its globally unique id."""
   deleteInvoiceLineById(
     """
@@ -17918,6 +19008,22 @@ type Mutation {
     """
     input: DeleteBudgetInput!
   ): DeleteBudgetPayload
+
+  """Deletes a single \`Estimate\` using its globally unique id."""
+  deleteEstimateById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteEstimateByIdInput!
+  ): DeleteEstimatePayload
+
+  """Deletes a single \`Estimate\` using a unique key."""
+  deleteEstimate(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteEstimateInput!
+  ): DeleteEstimatePayload
 
   """Deletes a single \`ReconciliationQueue\` using its globally unique id."""
   deleteReconciliationQueueById(
@@ -18817,6 +19923,54 @@ input BillLineInput {
   sortOrder: Int
 }
 
+"""The output of our create \`EstimateLine\` mutation."""
+type CreateEstimateLinePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`EstimateLine\` that was created by this mutation."""
+  estimateLine: EstimateLine
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`EstimateLine\`. May be used by Relay 1."""
+  estimateLineEdge(
+    """The method to use when ordering \`EstimateLine\`."""
+    orderBy: [EstimateLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): EstimateLineEdge
+}
+
+"""All input for the create \`EstimateLine\` mutation."""
+input CreateEstimateLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`EstimateLine\` to be created by this mutation."""
+  estimateLine: EstimateLineInput!
+}
+
+"""An input for mutations affecting \`EstimateLine\`"""
+input EstimateLineInput {
+  rowId: UUID
+  estimateId: UUID!
+  description: String!
+  quantity: BigFloat
+  unitPrice: BigFloat
+  amount: BigFloat
+  incomeAccountId: UUID!
+  taxJurisdictionId: UUID
+  sortOrder: Int
+}
+
 """The output of our create \`InvoiceLine\` mutation."""
 type CreateInvoiceLinePayload {
   """
@@ -19257,6 +20411,59 @@ input BudgetInput {
   amount: BigFloat!
   period: BudgetPeriod
   rollover: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""The output of our create \`Estimate\` mutation."""
+type CreateEstimatePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Estimate\` that was created by this mutation."""
+  estimate: Estimate
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Estimate\`. May be used by Relay 1."""
+  estimateEdge(
+    """The method to use when ordering \`Estimate\`."""
+    orderBy: [EstimateOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): EstimateEdge
+}
+
+"""All input for the create \`Estimate\` mutation."""
+input CreateEstimateInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`Estimate\` to be created by this mutation."""
+  estimate: EstimateInput!
+}
+
+"""An input for mutations affecting \`Estimate\`"""
+input EstimateInput {
+  rowId: UUID
+  bookId: UUID!
+  customerId: UUID!
+  number: String!
+  status: String
+  estimateDate: String!
+  expiryDate: String
+  subtotal: BigFloat
+  total: BigFloat
+  memo: String
+  terms: String
+  convertedInvoiceId: UUID
   createdAt: Datetime
   updatedAt: Datetime
 }
@@ -20909,6 +22116,78 @@ input UpdateBillLineInput {
   patch: BillLinePatch!
 }
 
+"""The output of our update \`EstimateLine\` mutation."""
+type UpdateEstimateLinePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`EstimateLine\` that was updated by this mutation."""
+  estimateLine: EstimateLine
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`EstimateLine\`. May be used by Relay 1."""
+  estimateLineEdge(
+    """The method to use when ordering \`EstimateLine\`."""
+    orderBy: [EstimateLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): EstimateLineEdge
+}
+
+"""All input for the \`updateEstimateLineById\` mutation."""
+input UpdateEstimateLineByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`EstimateLine\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`EstimateLine\` being updated.
+  """
+  patch: EstimateLinePatch!
+}
+
+"""
+Represents an update to a \`EstimateLine\`. Fields that are set will be updated.
+"""
+input EstimateLinePatch {
+  rowId: UUID
+  estimateId: UUID
+  description: String
+  quantity: BigFloat
+  unitPrice: BigFloat
+  amount: BigFloat
+  incomeAccountId: UUID
+  taxJurisdictionId: UUID
+  sortOrder: Int
+}
+
+"""All input for the \`updateEstimateLine\` mutation."""
+input UpdateEstimateLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`EstimateLine\` being updated.
+  """
+  patch: EstimateLinePatch!
+}
+
 """The output of our update \`InvoiceLine\` mutation."""
 type UpdateInvoiceLinePayload {
   """
@@ -21567,6 +22846,83 @@ input UpdateBudgetInput {
   An object where the defined keys will be set on the \`Budget\` being updated.
   """
   patch: BudgetPatch!
+}
+
+"""The output of our update \`Estimate\` mutation."""
+type UpdateEstimatePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Estimate\` that was updated by this mutation."""
+  estimate: Estimate
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Estimate\`. May be used by Relay 1."""
+  estimateEdge(
+    """The method to use when ordering \`Estimate\`."""
+    orderBy: [EstimateOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): EstimateEdge
+}
+
+"""All input for the \`updateEstimateById\` mutation."""
+input UpdateEstimateByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`Estimate\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`Estimate\` being updated.
+  """
+  patch: EstimatePatch!
+}
+
+"""
+Represents an update to a \`Estimate\`. Fields that are set will be updated.
+"""
+input EstimatePatch {
+  rowId: UUID
+  bookId: UUID
+  customerId: UUID
+  number: String
+  status: String
+  estimateDate: String
+  expiryDate: String
+  subtotal: BigFloat
+  total: BigFloat
+  memo: String
+  terms: String
+  convertedInvoiceId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the \`updateEstimate\` mutation."""
+input UpdateEstimateInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`Estimate\` being updated.
+  """
+  patch: EstimatePatch!
 }
 
 """The output of our update \`ReconciliationQueue\` mutation."""
@@ -23106,6 +24462,54 @@ input DeleteBillLineInput {
   rowId: UUID!
 }
 
+"""The output of our delete \`EstimateLine\` mutation."""
+type DeleteEstimateLinePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`EstimateLine\` that was deleted by this mutation."""
+  estimateLine: EstimateLine
+  deletedEstimateLineId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`EstimateLine\`. May be used by Relay 1."""
+  estimateLineEdge(
+    """The method to use when ordering \`EstimateLine\`."""
+    orderBy: [EstimateLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): EstimateLineEdge
+}
+
+"""All input for the \`deleteEstimateLineById\` mutation."""
+input DeleteEstimateLineByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`EstimateLine\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteEstimateLine\` mutation."""
+input DeleteEstimateLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete \`InvoiceLine\` mutation."""
 type DeleteInvoiceLinePayload {
   """
@@ -23530,6 +24934,54 @@ input DeleteBudgetByIdInput {
 
 """All input for the \`deleteBudget\` mutation."""
 input DeleteBudgetInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`Estimate\` mutation."""
+type DeleteEstimatePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Estimate\` that was deleted by this mutation."""
+  estimate: Estimate
+  deletedEstimateId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Estimate\`. May be used by Relay 1."""
+  estimateEdge(
+    """The method to use when ordering \`Estimate\`."""
+    orderBy: [EstimateOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): EstimateEdge
+}
+
+"""All input for the \`deleteEstimateById\` mutation."""
+input DeleteEstimateByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`Estimate\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteEstimate\` mutation."""
+input DeleteEstimateInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -24413,6 +25865,58 @@ export const objects = {
           orderBy: applyOrderByArgToConnection
         }
       },
+      estimate(_$root, {
+        $rowId
+      }) {
+        return resource_estimatePgResource.get({
+          id: $rowId
+        });
+      },
+      estimateById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_Estimate($nodeId);
+      },
+      estimateLine(_$root, {
+        $rowId
+      }) {
+        return resource_estimate_linePgResource.get({
+          id: $rowId
+        });
+      },
+      estimateLineById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_EstimateLine($nodeId);
+      },
+      estimateLines: {
+        plan() {
+          return connection(resource_estimate_linePgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineTagsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      estimates: {
+        plan() {
+          return connection(resource_estimatePgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineTagsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       fixedAsset(_$root, {
         $rowId
       }) {
@@ -25128,6 +26632,30 @@ export const objects = {
           input: applyInputToInsert
         }
       },
+      createEstimate: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_estimatePgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
+      createEstimateLine: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_estimate_linePgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
       createFixedAsset: {
         plan(_, args) {
           const $insert = pgInsertSingle(resource_fixed_assetPgResource);
@@ -25749,6 +27277,58 @@ export const objects = {
       deleteDrizzleMigrationById: {
         plan(_$root, args) {
           const $delete = pgDeleteSingle(resource___drizzle_migrationsPgResource, specFromArgs__DrizzleMigration(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteEstimate: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_estimatePgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteEstimateById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_estimatePgResource, specFromArgs_Estimate(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteEstimateLine: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_estimate_linePgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteEstimateLineById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_estimate_linePgResource, specFromArgs_EstimateLine(args));
           args.apply($delete);
           return object({
             result: $delete
@@ -26659,6 +28239,58 @@ export const objects = {
       updateDrizzleMigrationById: {
         plan(_$root, args) {
           const $update = pgUpdateSingle(resource___drizzle_migrationsPgResource, specFromArgs__DrizzleMigration(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateEstimate: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_estimatePgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateEstimateById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_estimatePgResource, specFromArgs_Estimate(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateEstimateLine: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_estimate_linePgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateEstimateLineById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_estimate_linePgResource, specFromArgs_EstimateLine(args));
           args.apply($update);
           return object({
             result: $update
@@ -27733,6 +29365,24 @@ export const objects = {
           orderBy: applyOrderByArgToConnection
         }
       },
+      estimates: {
+        plan($record) {
+          const $records = resource_estimatePgResource.find({
+            book_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineTagsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       fiscalYearStartMonth($record) {
         return $record.get("fiscal_year_start_month");
       },
@@ -28309,6 +29959,24 @@ export const objects = {
       query: queryPlan
     }
   },
+  CreateEstimateLinePayload: {
+    assertStep: assertStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      estimateLine: planCreatePayloadResult,
+      estimateLineEdge: CreateEstimateLinePayload_estimateLineEdgePlan,
+      query: queryPlan
+    }
+  },
+  CreateEstimatePayload: {
+    assertStep: assertStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      estimate: planCreatePayloadResult,
+      estimateEdge: CreateEstimatePayload_estimateEdgePlan,
+      query: queryPlan
+    }
+  },
   CreateFixedAssetPayload: {
     assertStep: assertStep,
     plans: {
@@ -28591,6 +30259,24 @@ export const objects = {
       bookId: Account_bookIdPlan,
       businessName: Vendor_businessNamePlan,
       createdAt: Account_createdAtPlan,
+      estimates: {
+        plan($record) {
+          const $records = resource_estimatePgResource.find({
+            customer_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineTagsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       id($parent) {
         const specifier = nodeIdHandler_Customer.plan($parent);
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_Customer.codec.name].encode);
@@ -28836,6 +30522,34 @@ export const objects = {
           specifier = nodeIdHandler__DrizzleMigration.plan($record);
         return lambda(specifier, base64JSONNodeIdCodec.encode);
       },
+      query: queryPlan
+    }
+  },
+  DeleteEstimateLinePayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedEstimateLineId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_EstimateLine.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      estimateLine: planCreatePayloadResult,
+      estimateLineEdge: CreateEstimateLinePayload_estimateLineEdgePlan,
+      query: queryPlan
+    }
+  },
+  DeleteEstimatePayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedEstimateId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_Estimate.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      estimate: planCreatePayloadResult,
+      estimateEdge: CreateEstimatePayload_estimateEdgePlan,
       query: queryPlan
     }
   },
@@ -29119,6 +30833,100 @@ export const objects = {
       vendorEdge: CreateVendorPayload_vendorEdgePlan
     }
   },
+  Estimate: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      book: Account_bookPlan,
+      bookId: Account_bookIdPlan,
+      convertedInvoice($record) {
+        return resource_invoicePgResource.get({
+          id: $record.get("converted_invoice_id")
+        });
+      },
+      convertedInvoiceId($record) {
+        return $record.get("converted_invoice_id");
+      },
+      createdAt: Account_createdAtPlan,
+      customer: Invoice_customerPlan,
+      customerId: Invoice_customerIdPlan,
+      estimateDate($record) {
+        return $record.get("estimate_date");
+      },
+      estimateLines: {
+        plan($record) {
+          const $records = resource_estimate_linePgResource.find({
+            estimate_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineTagsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      expiryDate($record) {
+        return $record.get("expiry_date");
+      },
+      id($parent) {
+        const specifier = nodeIdHandler_Estimate.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_Estimate.codec.name].encode);
+      },
+      rowId: JournalLineTag_rowIdPlan,
+      updatedAt: Account_updatedAtPlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of estimateUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_estimatePgResource.get(spec);
+    }
+  },
+  EstimateConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
+  EstimateLine: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      estimate($record) {
+        return resource_estimatePgResource.get({
+          id: $record.get("estimate_id")
+        });
+      },
+      estimateId($record) {
+        return $record.get("estimate_id");
+      },
+      id($parent) {
+        const specifier = nodeIdHandler_EstimateLine.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_EstimateLine.codec.name].encode);
+      },
+      incomeAccount: InvoiceLine_incomeAccountPlan,
+      incomeAccountId: InvoiceLine_incomeAccountIdPlan,
+      rowId: JournalLineTag_rowIdPlan,
+      sortOrder: BillLine_sortOrderPlan,
+      taxJurisdiction: BillLine_taxJurisdictionPlan,
+      taxJurisdictionId: BillLine_taxJurisdictionIdPlan,
+      unitPrice: BillLine_unitPricePlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of estimate_lineUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_estimate_linePgResource.get(spec);
+    }
+  },
+  EstimateLineConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
   FixedAsset: {
     assertStep: assertPgClassSingleStep,
     plans: {
@@ -29227,14 +31035,8 @@ export const objects = {
       book: Account_bookPlan,
       bookId: Account_bookIdPlan,
       createdAt: Account_createdAtPlan,
-      customer($record) {
-        return resource_customerPgResource.get({
-          id: $record.get("customer_id")
-        });
-      },
-      customerId($record) {
-        return $record.get("customer_id");
-      },
+      customer: Invoice_customerPlan,
+      customerId: Invoice_customerIdPlan,
       dueDate: Bill_dueDatePlan,
       id($parent) {
         const specifier = nodeIdHandler_Invoice.plan($parent);
@@ -29304,14 +31106,8 @@ export const objects = {
         const specifier = nodeIdHandler_InvoiceLine.plan($parent);
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_InvoiceLine.codec.name].encode);
       },
-      incomeAccount($record) {
-        return resource_accountPgResource.get({
-          id: $record.get("income_account_id")
-        });
-      },
-      incomeAccountId($record) {
-        return $record.get("income_account_id");
-      },
+      incomeAccount: InvoiceLine_incomeAccountPlan,
+      incomeAccountId: InvoiceLine_incomeAccountIdPlan,
       invoice: InvoiceLine_invoicePlan,
       invoiceId: InvoiceLine_invoiceIdPlan,
       rowId: JournalLineTag_rowIdPlan,
@@ -30032,6 +31828,24 @@ export const objects = {
       _drizzleMigration: planCreatePayloadResult,
       _drizzleMigrationEdge: CreateDrizzleMigrationPayload__drizzleMigrationEdgePlan,
       clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan
+    }
+  },
+  UpdateEstimateLinePayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      estimateLine: planCreatePayloadResult,
+      estimateLineEdge: CreateEstimateLinePayload_estimateLineEdgePlan,
+      query: queryPlan
+    }
+  },
+  UpdateEstimatePayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      estimate: planCreatePayloadResult,
+      estimateEdge: CreateEstimatePayload_estimateEdgePlan,
       query: queryPlan
     }
   },
@@ -30802,12 +32616,12 @@ export const inputObjects = {
       dueDate: BillInput_dueDateApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       memo: JournalLineInput_memoApply,
-      number: BillInput_numberApply,
+      number: EstimateInput_numberApply,
       rowId: JournalLineTagInput_rowIdApply,
       status: AccountingPeriodInput_statusApply,
-      subtotal: BillInput_subtotalApply,
+      subtotal: EstimateInput_subtotalApply,
       taxAmount: BillInput_taxAmountApply,
-      total: BillInput_totalApply,
+      total: EstimateInput_totalApply,
       updatedAt: AccountMappingInput_updatedAtApply,
       vendorId: JournalEntryInput_vendorIdApply
     }
@@ -30882,12 +32696,12 @@ export const inputObjects = {
       dueDate: BillInput_dueDateApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       memo: JournalLineInput_memoApply,
-      number: BillInput_numberApply,
+      number: EstimateInput_numberApply,
       rowId: JournalLineTagInput_rowIdApply,
       status: AccountingPeriodInput_statusApply,
-      subtotal: BillInput_subtotalApply,
+      subtotal: EstimateInput_subtotalApply,
       taxAmount: BillInput_taxAmountApply,
-      total: BillInput_totalApply,
+      total: EstimateInput_totalApply,
       updatedAt: AccountMappingInput_updatedAtApply,
       vendorId: JournalEntryInput_vendorIdApply
     }
@@ -31298,6 +33112,30 @@ export const inputObjects = {
         });
         registryConfig.pgRelations.book.customersByTheirBookId.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = registryConfig.pgRelations.book.customersByTheirBookId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
+      estimates($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: estimateIdentifier,
+          alias: resource_estimatePgResource.name,
+          localAttributes: registryConfig.pgRelations.book.estimatesByTheirBookId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.book.estimatesByTheirBookId.remoteAttributes
+        };
+        return $rel;
+      },
+      estimatesExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: estimateIdentifier,
+          alias: resource_estimatePgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.book.estimatesByTheirBookId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.book.estimatesByTheirBookId.remoteAttributes[i];
           $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
         });
       },
@@ -31774,6 +33612,13 @@ export const inputObjects = {
       some: AccountToManyAccountFilter_someApply
     }
   },
+  BookToManyEstimateFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
   BookToManyFixedAssetFilter: {
     plans: {
       every: AccountToManyAccountFilter_everyApply,
@@ -32174,6 +34019,18 @@ export const inputObjects = {
       clientMutationId: applyClientMutationIdForCreate
     }
   },
+  CreateEstimateInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      estimate: applyCreateFields
+    }
+  },
+  CreateEstimateLineInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      estimateLine: applyCreateFields
+    }
+  },
   CreateFixedAssetInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
@@ -32460,6 +34317,30 @@ export const inputObjects = {
       bookId(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("bookId", "book_id", spec_customer.attributes.book_id, queryBuilder, value);
       },
+      estimates($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: estimateIdentifier,
+          alias: resource_estimatePgResource.name,
+          localAttributes: registryConfig.pgRelations.customer.estimatesByTheirCustomerId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.customer.estimatesByTheirCustomerId.remoteAttributes
+        };
+        return $rel;
+      },
+      estimatesExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: estimateIdentifier,
+          alias: resource_estimatePgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.customer.estimatesByTheirCustomerId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.customer.estimatesByTheirCustomerId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
       invoices($where, value) {
         assertAllowed(value, "object");
         const $rel = $where.andPlan();
@@ -32527,6 +34408,13 @@ export const inputObjects = {
       state: CustomerInput_stateApply,
       updatedAt: AccountMappingInput_updatedAtApply,
       zip: CustomerInput_zipApply
+    }
+  },
+  CustomerToManyEstimateFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
     }
   },
   CustomerToManyInvoiceFilter: {
@@ -32697,6 +34585,26 @@ export const inputObjects = {
     }
   },
   DeleteDrizzleMigrationInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteEstimateByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteEstimateInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteEstimateLineByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteEstimateLineInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate
     }
@@ -32901,6 +34809,179 @@ export const inputObjects = {
       clientMutationId: applyClientMutationIdForCreate
     }
   },
+  EstimateCondition: {
+    plans: {
+      bookId: AccountCondition_bookIdApply,
+      customerId: InvoiceCondition_customerIdApply,
+      number: BillCondition_numberApply,
+      rowId: AccountCondition_rowIdApply,
+      status: BillCondition_statusApply
+    }
+  },
+  EstimateFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      book($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_bookPgResource, bookIdentifier, registryConfig.pgRelations.estimate.bookByMyBookId.localAttributes, registryConfig.pgRelations.estimate.bookByMyBookId.remoteAttributes, $where, value);
+      },
+      bookId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("bookId", "book_id", spec_estimate.attributes.book_id, queryBuilder, value);
+      },
+      convertedInvoice($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_invoicePgResource, invoiceIdentifier, registryConfig.pgRelations.estimate.invoiceByMyConvertedInvoiceId.localAttributes, registryConfig.pgRelations.estimate.invoiceByMyConvertedInvoiceId.remoteAttributes, $where, value);
+      },
+      convertedInvoiceExists($where, value) {
+        return pgConnectionFilterApplyForwardRelationExists(resource_invoicePgResource, invoiceIdentifier, registryConfig.pgRelations.estimate.invoiceByMyConvertedInvoiceId.localAttributes, registryConfig.pgRelations.estimate.invoiceByMyConvertedInvoiceId.remoteAttributes, $where, value);
+      },
+      customer($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_customerPgResource, customerIdentifier, registryConfig.pgRelations.estimate.customerByMyCustomerId.localAttributes, registryConfig.pgRelations.estimate.customerByMyCustomerId.remoteAttributes, $where, value);
+      },
+      customerId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("customerId", "customer_id", spec_estimate.attributes.customer_id, queryBuilder, value);
+      },
+      estimateLines($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: estimateLineIdentifier,
+          alias: resource_estimate_linePgResource.name,
+          localAttributes: registryConfig.pgRelations.estimate.estimateLinesByTheirEstimateId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.estimate.estimateLinesByTheirEstimateId.remoteAttributes
+        };
+        return $rel;
+      },
+      estimateLinesExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: estimateLineIdentifier,
+          alias: resource_estimate_linePgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.estimate.estimateLinesByTheirEstimateId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.estimate.estimateLinesByTheirEstimateId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
+      not: AccountFilter_notApply,
+      number(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("number", "number", spec_estimate.attributes.number, queryBuilder, value);
+      },
+      or: AccountFilter_orApply,
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_estimate.attributes.id, queryBuilder, value);
+      },
+      status(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("status", "status", spec_estimate.attributes.status, queryBuilder, value);
+      }
+    }
+  },
+  EstimateInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      bookId: TagGroupInput_bookIdApply,
+      convertedInvoiceId: EstimateInput_convertedInvoiceIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      customerId: EstimateInput_customerIdApply,
+      estimateDate: EstimateInput_estimateDateApply,
+      expiryDate: EstimateInput_expiryDateApply,
+      memo: JournalLineInput_memoApply,
+      number: EstimateInput_numberApply,
+      rowId: JournalLineTagInput_rowIdApply,
+      status: AccountingPeriodInput_statusApply,
+      subtotal: EstimateInput_subtotalApply,
+      terms: EstimateInput_termsApply,
+      total: EstimateInput_totalApply,
+      updatedAt: AccountMappingInput_updatedAtApply
+    }
+  },
+  EstimateLineCondition: {
+    plans: {
+      estimateId($condition, val) {
+        return applyAttributeCondition("estimate_id", TYPES.uuid, $condition, val);
+      },
+      rowId: AccountCondition_rowIdApply
+    }
+  },
+  EstimateLineFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      estimate($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_estimatePgResource, estimateIdentifier, registryConfig.pgRelations.estimateLine.estimateByMyEstimateId.localAttributes, registryConfig.pgRelations.estimateLine.estimateByMyEstimateId.remoteAttributes, $where, value);
+      },
+      estimateId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("estimateId", "estimate_id", spec_estimateLine.attributes.estimate_id, queryBuilder, value);
+      },
+      incomeAccount($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_accountPgResource, accountIdentifier, registryConfig.pgRelations.estimateLine.accountByMyIncomeAccountId.localAttributes, registryConfig.pgRelations.estimateLine.accountByMyIncomeAccountId.remoteAttributes, $where, value);
+      },
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_estimateLine.attributes.id, queryBuilder, value);
+      },
+      taxJurisdiction($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_tax_jurisdictionPgResource, taxJurisdictionIdentifier, registryConfig.pgRelations.estimateLine.taxJurisdictionByMyTaxJurisdictionId.localAttributes, registryConfig.pgRelations.estimateLine.taxJurisdictionByMyTaxJurisdictionId.remoteAttributes, $where, value);
+      },
+      taxJurisdictionExists($where, value) {
+        return pgConnectionFilterApplyForwardRelationExists(resource_tax_jurisdictionPgResource, taxJurisdictionIdentifier, registryConfig.pgRelations.estimateLine.taxJurisdictionByMyTaxJurisdictionId.localAttributes, registryConfig.pgRelations.estimateLine.taxJurisdictionByMyTaxJurisdictionId.remoteAttributes, $where, value);
+      }
+    }
+  },
+  EstimateLineInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      amount: BillLineInput_amountApply,
+      description: BillLineInput_descriptionApply,
+      estimateId: EstimateLineInput_estimateIdApply,
+      incomeAccountId: EstimateLineInput_incomeAccountIdApply,
+      quantity: BillLineInput_quantityApply,
+      rowId: JournalLineTagInput_rowIdApply,
+      sortOrder: BillLineInput_sortOrderApply,
+      taxJurisdictionId: BillLineInput_taxJurisdictionIdApply,
+      unitPrice: BillLineInput_unitPriceApply
+    }
+  },
+  EstimateLinePatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      amount: BillLineInput_amountApply,
+      description: BillLineInput_descriptionApply,
+      estimateId: EstimateLineInput_estimateIdApply,
+      incomeAccountId: EstimateLineInput_incomeAccountIdApply,
+      quantity: BillLineInput_quantityApply,
+      rowId: JournalLineTagInput_rowIdApply,
+      sortOrder: BillLineInput_sortOrderApply,
+      taxJurisdictionId: BillLineInput_taxJurisdictionIdApply,
+      unitPrice: BillLineInput_unitPriceApply
+    }
+  },
+  EstimatePatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      bookId: TagGroupInput_bookIdApply,
+      convertedInvoiceId: EstimateInput_convertedInvoiceIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      customerId: EstimateInput_customerIdApply,
+      estimateDate: EstimateInput_estimateDateApply,
+      expiryDate: EstimateInput_expiryDateApply,
+      memo: JournalLineInput_memoApply,
+      number: EstimateInput_numberApply,
+      rowId: JournalLineTagInput_rowIdApply,
+      status: AccountingPeriodInput_statusApply,
+      subtotal: EstimateInput_subtotalApply,
+      terms: EstimateInput_termsApply,
+      total: EstimateInput_totalApply,
+      updatedAt: AccountMappingInput_updatedAtApply
+    }
+  },
+  EstimateToManyEstimateLineFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
   FixedAssetCondition: {
     plans: {
       bookId: AccountCondition_bookIdApply,
@@ -33040,9 +35121,7 @@ export const inputObjects = {
   InvoiceCondition: {
     plans: {
       bookId: AccountCondition_bookIdApply,
-      customerId($condition, val) {
-        return applyAttributeCondition("customer_id", TYPES.uuid, $condition, val);
-      },
+      customerId: InvoiceCondition_customerIdApply,
       number: BillCondition_numberApply,
       rowId: AccountCondition_rowIdApply,
       status: BillCondition_statusApply
@@ -33137,18 +35216,18 @@ export const inputObjects = {
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
       currency: BookInput_currencyApply,
-      customerId: InvoiceInput_customerIdApply,
+      customerId: EstimateInput_customerIdApply,
       dueDate: BillInput_dueDateApply,
       issueDate: InvoiceInput_issueDateApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       memo: JournalLineInput_memoApply,
-      number: BillInput_numberApply,
+      number: EstimateInput_numberApply,
       rowId: JournalLineTagInput_rowIdApply,
       status: AccountingPeriodInput_statusApply,
-      subtotal: BillInput_subtotalApply,
+      subtotal: EstimateInput_subtotalApply,
       taxAmount: BillInput_taxAmountApply,
-      terms: InvoiceInput_termsApply,
-      total: BillInput_totalApply,
+      terms: EstimateInput_termsApply,
+      total: EstimateInput_totalApply,
       updatedAt: AccountMappingInput_updatedAtApply
     }
   },
@@ -33188,7 +35267,7 @@ export const inputObjects = {
     plans: {
       amount: BillLineInput_amountApply,
       description: BillLineInput_descriptionApply,
-      incomeAccountId: InvoiceLineInput_incomeAccountIdApply,
+      incomeAccountId: EstimateLineInput_incomeAccountIdApply,
       invoiceId: InvoiceLineInput_invoiceIdApply,
       quantity: BillLineInput_quantityApply,
       rowId: JournalLineTagInput_rowIdApply,
@@ -33202,7 +35281,7 @@ export const inputObjects = {
     plans: {
       amount: BillLineInput_amountApply,
       description: BillLineInput_descriptionApply,
-      incomeAccountId: InvoiceLineInput_incomeAccountIdApply,
+      incomeAccountId: EstimateLineInput_incomeAccountIdApply,
       invoiceId: InvoiceLineInput_invoiceIdApply,
       quantity: BillLineInput_quantityApply,
       rowId: JournalLineTagInput_rowIdApply,
@@ -33218,18 +35297,18 @@ export const inputObjects = {
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
       currency: BookInput_currencyApply,
-      customerId: InvoiceInput_customerIdApply,
+      customerId: EstimateInput_customerIdApply,
       dueDate: BillInput_dueDateApply,
       issueDate: InvoiceInput_issueDateApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       memo: JournalLineInput_memoApply,
-      number: BillInput_numberApply,
+      number: EstimateInput_numberApply,
       rowId: JournalLineTagInput_rowIdApply,
       status: AccountingPeriodInput_statusApply,
-      subtotal: BillInput_subtotalApply,
+      subtotal: EstimateInput_subtotalApply,
       taxAmount: BillInput_taxAmountApply,
-      terms: InvoiceInput_termsApply,
-      total: BillInput_totalApply,
+      terms: EstimateInput_termsApply,
+      total: EstimateInput_totalApply,
       updatedAt: AccountMappingInput_updatedAtApply
     }
   },
@@ -34464,6 +36543,30 @@ export const inputObjects = {
       patch: applyCreateFields
     }
   },
+  UpdateEstimateByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateEstimateInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateEstimateLineByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateEstimateLineInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
   UpdateFixedAssetByIdInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
@@ -35497,6 +37600,74 @@ export const enums = {
       ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply
     }
   },
+  EstimateLineOrderBy: {
+    values: {
+      ESTIMATE_ID_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "estimate_id",
+          direction: "ASC"
+        });
+      },
+      ESTIMATE_ID_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "estimate_id",
+          direction: "DESC"
+        });
+      },
+      PRIMARY_KEY_ASC(queryBuilder) {
+        estimate_lineUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        estimate_lineUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply
+    }
+  },
+  EstimateOrderBy: {
+    values: {
+      BOOK_ID_ASC: AccountOrderBy_BOOK_ID_ASCApply,
+      BOOK_ID_DESC: AccountOrderBy_BOOK_ID_DESCApply,
+      CUSTOMER_ID_ASC: InvoiceOrderBy_CUSTOMER_ID_ASCApply,
+      CUSTOMER_ID_DESC: InvoiceOrderBy_CUSTOMER_ID_DESCApply,
+      NUMBER_ASC: BillOrderBy_NUMBER_ASCApply,
+      NUMBER_DESC: BillOrderBy_NUMBER_DESCApply,
+      PRIMARY_KEY_ASC(queryBuilder) {
+        estimateUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        estimateUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply,
+      STATUS_ASC: BillOrderBy_STATUS_ASCApply,
+      STATUS_DESC: BillOrderBy_STATUS_DESCApply
+    }
+  },
   FixedAssetOrderBy: {
     values: {
       BOOK_ID_ASC: AccountOrderBy_BOOK_ID_ASCApply,
@@ -35589,18 +37760,8 @@ export const enums = {
     values: {
       BOOK_ID_ASC: AccountOrderBy_BOOK_ID_ASCApply,
       BOOK_ID_DESC: AccountOrderBy_BOOK_ID_DESCApply,
-      CUSTOMER_ID_ASC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "customer_id",
-          direction: "ASC"
-        });
-      },
-      CUSTOMER_ID_DESC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "customer_id",
-          direction: "DESC"
-        });
-      },
+      CUSTOMER_ID_ASC: InvoiceOrderBy_CUSTOMER_ID_ASCApply,
+      CUSTOMER_ID_DESC: InvoiceOrderBy_CUSTOMER_ID_DESCApply,
       NUMBER_ASC: BillOrderBy_NUMBER_ASCApply,
       NUMBER_DESC: BillOrderBy_NUMBER_DESCApply,
       PRIMARY_KEY_ASC(queryBuilder) {

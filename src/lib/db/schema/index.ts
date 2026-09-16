@@ -12,6 +12,8 @@ export * from "./connectedAccount.table";
 export * from "./cryptoAsset.table";
 export * from "./cryptoLot.table";
 export * from "./customer.table";
+export * from "./estimate.table";
+export * from "./estimateLine.table";
 export * from "./fixedAsset.table";
 export * from "./importProfile.table";
 export * from "./invoice.table";

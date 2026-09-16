@@ -65,6 +65,9 @@ type Query implements Node {
   """Get a single `BillLine`."""
   billLine(rowId: UUID!): BillLine
 
+  """Get a single `EstimateLine`."""
+  estimateLine(rowId: UUID!): EstimateLine
+
   """Get a single `InvoiceLine`."""
   invoiceLine(rowId: UUID!): InvoiceLine
 
@@ -91,6 +94,9 @@ type Query implements Node {
 
   """Get a single `Budget`."""
   budget(rowId: UUID!): Budget
+
+  """Get a single `Estimate`."""
+  estimate(rowId: UUID!): Estimate
 
   """Get a single `ReconciliationQueue`."""
   reconciliationQueue(rowId: UUID!): ReconciliationQueue
@@ -240,6 +246,14 @@ type Query implements Node {
     id: ID!
   ): BillLine
 
+  """Reads a single `EstimateLine` using its globally unique `ID`."""
+  estimateLineById(
+    """
+    The globally unique `ID` to be used in selecting a single `EstimateLine`.
+    """
+    id: ID!
+  ): EstimateLine
+
   """Reads a single `InvoiceLine` using its globally unique `ID`."""
   invoiceLineById(
     """
@@ -309,6 +323,12 @@ type Query implements Node {
     """The globally unique `ID` to be used in selecting a single `Budget`."""
     id: ID!
   ): Budget
+
+  """Reads a single `Estimate` using its globally unique `ID`."""
+  estimateById(
+    """The globally unique `ID` to be used in selecting a single `Estimate`."""
+    id: ID!
+  ): Estimate
 
   """Reads a single `ReconciliationQueue` using its globally unique `ID`."""
   reconciliationQueueById(
@@ -924,6 +944,40 @@ type Query implements Node {
     orderBy: [BillLineOrderBy!] = [PRIMARY_KEY_ASC]
   ): BillLineConnection
 
+  """Reads and enables pagination through a set of `EstimateLine`."""
+  estimateLines(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EstimateLineCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: EstimateLineFilter
+
+    """The method to use when ordering `EstimateLine`."""
+    orderBy: [EstimateLineOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EstimateLineConnection
+
   """Reads and enables pagination through a set of `InvoiceLine`."""
   invoiceLines(
     """Only read the first `n` values of the set."""
@@ -1231,6 +1285,40 @@ type Query implements Node {
     """The method to use when ordering `Budget`."""
     orderBy: [BudgetOrderBy!] = [PRIMARY_KEY_ASC]
   ): BudgetConnection
+
+  """Reads and enables pagination through a set of `Estimate`."""
+  estimates(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EstimateCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: EstimateFilter
+
+    """The method to use when ordering `Estimate`."""
+    orderBy: [EstimateOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EstimateConnection
 
   """Reads and enables pagination through a set of `ReconciliationQueue`."""
   reconciliationQueues(
@@ -2769,6 +2857,40 @@ type Book implements Node {
     """The method to use when ordering `BillPayment`."""
     orderBy: [BillPaymentOrderBy!] = [PRIMARY_KEY_ASC]
   ): BillPaymentConnection!
+
+  """Reads and enables pagination through a set of `Estimate`."""
+  estimates(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EstimateCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: EstimateFilter
+
+    """The method to use when ordering `Estimate`."""
+    orderBy: [EstimateOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EstimateConnection!
 }
 
 """A connection to a list of `Account` values."""
@@ -3209,6 +3331,12 @@ input BookFilter {
 
   """Some related `billPayments` exist."""
   billPaymentsExist: Boolean
+
+  """Filter by the object’s `estimates` relation."""
+  estimates: BookToManyEstimateFilter
+
+  """Some related `estimates` exist."""
+  estimatesExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [BookFilter!]
@@ -4913,6 +5041,12 @@ input CustomerFilter {
   """Some related `invoices` exist."""
   invoicesExist: Boolean
 
+  """Filter by the object’s `estimates` relation."""
+  estimates: CustomerToManyEstimateFilter
+
+  """Some related `estimates` exist."""
+  estimatesExist: Boolean
+
   """Filter by the object’s `book` relation."""
   book: BookFilter
 
@@ -5110,6 +5244,125 @@ input InvoicePaymentFilter {
 }
 
 """
+A filter to be used against many `Estimate` object types. All fields are combined with a logical ‘and.’
+"""
+input CustomerToManyEstimateFilter {
+  """
+  Every related `Estimate` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: EstimateFilter
+
+  """
+  Some related `Estimate` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: EstimateFilter
+
+  """
+  No related `Estimate` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: EstimateFilter
+}
+
+"""
+A filter to be used against `Estimate` object types. All fields are combined with a logical ‘and.’
+"""
+input EstimateFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `bookId` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s `customerId` field."""
+  customerId: UUIDFilter
+
+  """Filter by the object’s `number` field."""
+  number: StringFilter
+
+  """Filter by the object’s `status` field."""
+  status: StringFilter
+
+  """Filter by the object’s `estimateLines` relation."""
+  estimateLines: EstimateToManyEstimateLineFilter
+
+  """Some related `estimateLines` exist."""
+  estimateLinesExist: Boolean
+
+  """Filter by the object’s `book` relation."""
+  book: BookFilter
+
+  """Filter by the object’s `convertedInvoice` relation."""
+  convertedInvoice: InvoiceFilter
+
+  """A related `convertedInvoice` exists."""
+  convertedInvoiceExists: Boolean
+
+  """Filter by the object’s `customer` relation."""
+  customer: CustomerFilter
+
+  """Checks for all expressions in this list."""
+  and: [EstimateFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [EstimateFilter!]
+
+  """Negates the expression."""
+  not: EstimateFilter
+}
+
+"""
+A filter to be used against many `EstimateLine` object types. All fields are combined with a logical ‘and.’
+"""
+input EstimateToManyEstimateLineFilter {
+  """
+  Every related `EstimateLine` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: EstimateLineFilter
+
+  """
+  Some related `EstimateLine` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: EstimateLineFilter
+
+  """
+  No related `EstimateLine` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: EstimateLineFilter
+}
+
+"""
+A filter to be used against `EstimateLine` object types. All fields are combined with a logical ‘and.’
+"""
+input EstimateLineFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `estimateId` field."""
+  estimateId: UUIDFilter
+
+  """Filter by the object’s `estimate` relation."""
+  estimate: EstimateFilter
+
+  """Filter by the object’s `incomeAccount` relation."""
+  incomeAccount: AccountFilter
+
+  """Filter by the object’s `taxJurisdiction` relation."""
+  taxJurisdiction: TaxJurisdictionFilter
+
+  """A related `taxJurisdiction` exists."""
+  taxJurisdictionExists: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [EstimateLineFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [EstimateLineFilter!]
+
+  """Negates the expression."""
+  not: EstimateLineFilter
+}
+
+"""
 A filter to be used against many `Invoice` object types. All fields are combined with a logical ‘and.’
 """
 input BookToManyInvoiceFilter {
@@ -5187,6 +5440,26 @@ input BookToManyBillPaymentFilter {
   No related `BillPayment` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
   none: BillPaymentFilter
+}
+
+"""
+A filter to be used against many `Estimate` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyEstimateFilter {
+  """
+  Every related `Estimate` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: EstimateFilter
+
+  """
+  Some related `Estimate` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: EstimateFilter
+
+  """
+  No related `Estimate` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: EstimateFilter
 }
 
 """
@@ -7680,6 +7953,40 @@ type Customer implements Node {
     """The method to use when ordering `Invoice`."""
     orderBy: [InvoiceOrderBy!] = [PRIMARY_KEY_ASC]
   ): InvoiceConnection!
+
+  """Reads and enables pagination through a set of `Estimate`."""
+  estimates(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EstimateCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: EstimateFilter
+
+    """The method to use when ordering `Estimate`."""
+    orderBy: [EstimateOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EstimateConnection!
 }
 
 """A connection to a list of `Invoice` values."""
@@ -7992,6 +8299,210 @@ input InvoiceCondition {
 
 """Methods to use when ordering `Invoice`."""
 enum InvoiceOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+  CUSTOMER_ID_ASC
+  CUSTOMER_ID_DESC
+  NUMBER_ASC
+  NUMBER_DESC
+  STATUS_ASC
+  STATUS_DESC
+}
+
+"""A connection to a list of `Estimate` values."""
+type EstimateConnection {
+  """A list of `Estimate` objects."""
+  nodes: [Estimate]!
+
+  """
+  A list of edges which contains the `Estimate` and cursor to aid in pagination.
+  """
+  edges: [EstimateEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Estimate` you could get from the connection."""
+  totalCount: Int!
+}
+
+type Estimate implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  customerId: UUID!
+  number: String!
+  status: String!
+  estimateDate: String!
+  expiryDate: String
+  subtotal: BigFloat!
+  total: BigFloat!
+  memo: String
+  terms: String
+  convertedInvoiceId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """Reads a single `Book` that is related to this `Estimate`."""
+  book: Book
+
+  """Reads a single `Invoice` that is related to this `Estimate`."""
+  convertedInvoice: Invoice
+
+  """Reads a single `Customer` that is related to this `Estimate`."""
+  customer: Customer
+
+  """Reads and enables pagination through a set of `EstimateLine`."""
+  estimateLines(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EstimateLineCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: EstimateLineFilter
+
+    """The method to use when ordering `EstimateLine`."""
+    orderBy: [EstimateLineOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EstimateLineConnection!
+}
+
+"""A connection to a list of `EstimateLine` values."""
+type EstimateLineConnection {
+  """A list of `EstimateLine` objects."""
+  nodes: [EstimateLine]!
+
+  """
+  A list of edges which contains the `EstimateLine` and cursor to aid in pagination.
+  """
+  edges: [EstimateLineEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `EstimateLine` you could get from the connection."""
+  totalCount: Int!
+}
+
+type EstimateLine implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  estimateId: UUID!
+  description: String!
+  quantity: BigFloat!
+  unitPrice: BigFloat!
+  amount: BigFloat!
+  incomeAccountId: UUID!
+  taxJurisdictionId: UUID
+  sortOrder: Int!
+
+  """Reads a single `Estimate` that is related to this `EstimateLine`."""
+  estimate: Estimate
+
+  """Reads a single `Account` that is related to this `EstimateLine`."""
+  incomeAccount: Account
+
+  """
+  Reads a single `TaxJurisdiction` that is related to this `EstimateLine`.
+  """
+  taxJurisdiction: TaxJurisdiction
+}
+
+"""A `EstimateLine` edge in the connection."""
+type EstimateLineEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `EstimateLine` at the end of the edge."""
+  node: EstimateLine
+}
+
+"""
+A condition to be used against `EstimateLine` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input EstimateLineCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `estimateId` field."""
+  estimateId: UUID
+}
+
+"""Methods to use when ordering `EstimateLine`."""
+enum EstimateLineOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  ESTIMATE_ID_ASC
+  ESTIMATE_ID_DESC
+}
+
+"""A `Estimate` edge in the connection."""
+type EstimateEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Estimate` at the end of the edge."""
+  node: Estimate
+}
+
+"""
+A condition to be used against `Estimate` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input EstimateCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `bookId` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s `customerId` field."""
+  customerId: UUID
+
+  """Checks for equality with the object’s `number` field."""
+  number: String
+
+  """Checks for equality with the object’s `status` field."""
+  status: String
+}
+
+"""Methods to use when ordering `Estimate`."""
+enum EstimateOrderBy {
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
@@ -8380,6 +8891,14 @@ type Mutation {
     input: CreateBillLineInput!
   ): CreateBillLinePayload
 
+  """Creates a single `EstimateLine`."""
+  createEstimateLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateEstimateLineInput!
+  ): CreateEstimateLinePayload
+
   """Creates a single `InvoiceLine`."""
   createInvoiceLine(
     """
@@ -8451,6 +8970,14 @@ type Mutation {
     """
     input: CreateBudgetInput!
   ): CreateBudgetPayload
+
+  """Creates a single `Estimate`."""
+  createEstimate(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateEstimateInput!
+  ): CreateEstimatePayload
 
   """Creates a single `ReconciliationQueue`."""
   createReconciliationQueue(
@@ -8811,6 +9338,24 @@ type Mutation {
   ): UpdateBillLinePayload
 
   """
+  Updates a single `EstimateLine` using its globally unique id and a patch.
+  """
+  updateEstimateLineById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateEstimateLineByIdInput!
+  ): UpdateEstimateLinePayload
+
+  """Updates a single `EstimateLine` using a unique key and a patch."""
+  updateEstimateLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateEstimateLineInput!
+  ): UpdateEstimateLinePayload
+
+  """
   Updates a single `InvoiceLine` using its globally unique id and a patch.
   """
   updateInvoiceLineById(
@@ -8969,6 +9514,22 @@ type Mutation {
     """
     input: UpdateBudgetInput!
   ): UpdateBudgetPayload
+
+  """Updates a single `Estimate` using its globally unique id and a patch."""
+  updateEstimateById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateEstimateByIdInput!
+  ): UpdateEstimatePayload
+
+  """Updates a single `Estimate` using a unique key and a patch."""
+  updateEstimate(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateEstimateInput!
+  ): UpdateEstimatePayload
 
   """
   Updates a single `ReconciliationQueue` using its globally unique id and a patch.
@@ -9398,6 +9959,22 @@ type Mutation {
     input: DeleteBillLineInput!
   ): DeleteBillLinePayload
 
+  """Deletes a single `EstimateLine` using its globally unique id."""
+  deleteEstimateLineById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteEstimateLineByIdInput!
+  ): DeleteEstimateLinePayload
+
+  """Deletes a single `EstimateLine` using a unique key."""
+  deleteEstimateLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteEstimateLineInput!
+  ): DeleteEstimateLinePayload
+
   """Deletes a single `InvoiceLine` using its globally unique id."""
   deleteInvoiceLineById(
     """
@@ -9543,6 +10120,22 @@ type Mutation {
     """
     input: DeleteBudgetInput!
   ): DeleteBudgetPayload
+
+  """Deletes a single `Estimate` using its globally unique id."""
+  deleteEstimateById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteEstimateByIdInput!
+  ): DeleteEstimatePayload
+
+  """Deletes a single `Estimate` using a unique key."""
+  deleteEstimate(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteEstimateInput!
+  ): DeleteEstimatePayload
 
   """Deletes a single `ReconciliationQueue` using its globally unique id."""
   deleteReconciliationQueueById(
@@ -10442,6 +11035,54 @@ input BillLineInput {
   sortOrder: Int
 }
 
+"""The output of our create `EstimateLine` mutation."""
+type CreateEstimateLinePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `EstimateLine` that was created by this mutation."""
+  estimateLine: EstimateLine
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `EstimateLine`. May be used by Relay 1."""
+  estimateLineEdge(
+    """The method to use when ordering `EstimateLine`."""
+    orderBy: [EstimateLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): EstimateLineEdge
+}
+
+"""All input for the create `EstimateLine` mutation."""
+input CreateEstimateLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `EstimateLine` to be created by this mutation."""
+  estimateLine: EstimateLineInput!
+}
+
+"""An input for mutations affecting `EstimateLine`"""
+input EstimateLineInput {
+  rowId: UUID
+  estimateId: UUID!
+  description: String!
+  quantity: BigFloat
+  unitPrice: BigFloat
+  amount: BigFloat
+  incomeAccountId: UUID!
+  taxJurisdictionId: UUID
+  sortOrder: Int
+}
+
 """The output of our create `InvoiceLine` mutation."""
 type CreateInvoiceLinePayload {
   """
@@ -10882,6 +11523,59 @@ input BudgetInput {
   amount: BigFloat!
   period: BudgetPeriod
   rollover: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""The output of our create `Estimate` mutation."""
+type CreateEstimatePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Estimate` that was created by this mutation."""
+  estimate: Estimate
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Estimate`. May be used by Relay 1."""
+  estimateEdge(
+    """The method to use when ordering `Estimate`."""
+    orderBy: [EstimateOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): EstimateEdge
+}
+
+"""All input for the create `Estimate` mutation."""
+input CreateEstimateInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Estimate` to be created by this mutation."""
+  estimate: EstimateInput!
+}
+
+"""An input for mutations affecting `Estimate`"""
+input EstimateInput {
+  rowId: UUID
+  bookId: UUID!
+  customerId: UUID!
+  number: String!
+  status: String
+  estimateDate: String!
+  expiryDate: String
+  subtotal: BigFloat
+  total: BigFloat
+  memo: String
+  terms: String
+  convertedInvoiceId: UUID
   createdAt: Datetime
   updatedAt: Datetime
 }
@@ -12534,6 +13228,78 @@ input UpdateBillLineInput {
   patch: BillLinePatch!
 }
 
+"""The output of our update `EstimateLine` mutation."""
+type UpdateEstimateLinePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `EstimateLine` that was updated by this mutation."""
+  estimateLine: EstimateLine
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `EstimateLine`. May be used by Relay 1."""
+  estimateLineEdge(
+    """The method to use when ordering `EstimateLine`."""
+    orderBy: [EstimateLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): EstimateLineEdge
+}
+
+"""All input for the `updateEstimateLineById` mutation."""
+input UpdateEstimateLineByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `EstimateLine` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `EstimateLine` being updated.
+  """
+  patch: EstimateLinePatch!
+}
+
+"""
+Represents an update to a `EstimateLine`. Fields that are set will be updated.
+"""
+input EstimateLinePatch {
+  rowId: UUID
+  estimateId: UUID
+  description: String
+  quantity: BigFloat
+  unitPrice: BigFloat
+  amount: BigFloat
+  incomeAccountId: UUID
+  taxJurisdictionId: UUID
+  sortOrder: Int
+}
+
+"""All input for the `updateEstimateLine` mutation."""
+input UpdateEstimateLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `EstimateLine` being updated.
+  """
+  patch: EstimateLinePatch!
+}
+
 """The output of our update `InvoiceLine` mutation."""
 type UpdateInvoiceLinePayload {
   """
@@ -13192,6 +13958,83 @@ input UpdateBudgetInput {
   An object where the defined keys will be set on the `Budget` being updated.
   """
   patch: BudgetPatch!
+}
+
+"""The output of our update `Estimate` mutation."""
+type UpdateEstimatePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Estimate` that was updated by this mutation."""
+  estimate: Estimate
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Estimate`. May be used by Relay 1."""
+  estimateEdge(
+    """The method to use when ordering `Estimate`."""
+    orderBy: [EstimateOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): EstimateEdge
+}
+
+"""All input for the `updateEstimateById` mutation."""
+input UpdateEstimateByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Estimate` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `Estimate` being updated.
+  """
+  patch: EstimatePatch!
+}
+
+"""
+Represents an update to a `Estimate`. Fields that are set will be updated.
+"""
+input EstimatePatch {
+  rowId: UUID
+  bookId: UUID
+  customerId: UUID
+  number: String
+  status: String
+  estimateDate: String
+  expiryDate: String
+  subtotal: BigFloat
+  total: BigFloat
+  memo: String
+  terms: String
+  convertedInvoiceId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the `updateEstimate` mutation."""
+input UpdateEstimateInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `Estimate` being updated.
+  """
+  patch: EstimatePatch!
 }
 
 """The output of our update `ReconciliationQueue` mutation."""
@@ -14731,6 +15574,54 @@ input DeleteBillLineInput {
   rowId: UUID!
 }
 
+"""The output of our delete `EstimateLine` mutation."""
+type DeleteEstimateLinePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `EstimateLine` that was deleted by this mutation."""
+  estimateLine: EstimateLine
+  deletedEstimateLineId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `EstimateLine`. May be used by Relay 1."""
+  estimateLineEdge(
+    """The method to use when ordering `EstimateLine`."""
+    orderBy: [EstimateLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): EstimateLineEdge
+}
+
+"""All input for the `deleteEstimateLineById` mutation."""
+input DeleteEstimateLineByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `EstimateLine` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteEstimateLine` mutation."""
+input DeleteEstimateLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete `InvoiceLine` mutation."""
 type DeleteInvoiceLinePayload {
   """
@@ -15155,6 +16046,54 @@ input DeleteBudgetByIdInput {
 
 """All input for the `deleteBudget` mutation."""
 input DeleteBudgetInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `Estimate` mutation."""
+type DeleteEstimatePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Estimate` that was deleted by this mutation."""
+  estimate: Estimate
+  deletedEstimateId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Estimate`. May be used by Relay 1."""
+  estimateEdge(
+    """The method to use when ordering `Estimate`."""
+    orderBy: [EstimateOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): EstimateEdge
+}
+
+"""All input for the `deleteEstimateById` mutation."""
+input DeleteEstimateByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Estimate` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteEstimate` mutation."""
+input DeleteEstimateInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
