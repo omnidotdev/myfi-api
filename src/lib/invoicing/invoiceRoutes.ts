@@ -124,6 +124,7 @@ const invoiceRoutes = new Elysia({ prefix: "/api/invoices" })
             unitPrice: t.Number(),
             incomeAccountId: t.String(),
             taxJurisdictionId: t.Optional(t.String()),
+            inventoryItemId: t.Optional(t.String()),
           }),
         ),
       }),

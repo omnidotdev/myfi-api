@@ -10,6 +10,8 @@ interface DraftLineInput {
   unitPrice: number;
   incomeAccountId: string;
   taxJurisdictionId?: string | null;
+  /** optional inventory item this line sells (drives auto-COGS on posting) */
+  inventoryItemId?: string | null;
 }
 
 interface CreateInvoiceDraftOptions {
@@ -86,6 +88,7 @@ export const createInvoiceDraft = async (
         amount: line.amount.toFixed(4),
         incomeAccountId: line.incomeAccountId,
         taxJurisdictionId: line.taxJurisdictionId ?? null,
+        inventoryItemId: line.inventoryItemId ?? null,
         sortOrder: line.sortOrder,
       } satisfies InferInsertModel<typeof invoiceLineTable>);
     }

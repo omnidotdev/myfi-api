@@ -1,14 +1,17 @@
-import { and, eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 
 import { dbPool } from "lib/db/db";
 import {
   accountTable,
+  inventoryItemTable,
+  inventoryTransactionTable,
   invoiceLineTable,
   invoiceTable,
   journalEntryTable,
   journalLineTable,
   taxJurisdictionTable,
 } from "lib/db/schema";
+import { movementValue } from "lib/inventory/valuation";
 import {
   buildInvoicePostings,
   computeInvoiceTotals,
@@ -77,6 +80,7 @@ export const postInvoice = async (
       quantity: invoiceLineTable.quantity,
       unitPrice: invoiceLineTable.unitPrice,
       incomeAccountId: invoiceLineTable.incomeAccountId,
+      inventoryItemId: invoiceLineTable.inventoryItemId,
       taxRate: taxJurisdictionTable.rate,
       taxPayableAccountId: taxJurisdictionTable.taxPayableAccountId,
     })
@@ -130,6 +134,57 @@ export const postInvoice = async (
     lines: priced,
   });
 
+  // Sum the quantity sold per inventory item across the invoice's lines, so an
+  // item appearing on several lines posts one COGS entry and one stock movement
+  const soldByItem = new Map<string, number>();
+  for (const row of lineRows) {
+    if (row.inventoryItemId) {
+      soldByItem.set(
+        row.inventoryItemId,
+        (soldByItem.get(row.inventoryItemId) ?? 0) + Number(row.quantity),
+      );
+    }
+  }
+
+  // Plan the COGS postings and stock decrements from each item's current
+  // weighted-average cost. Overselling into negative stock is allowed (matching
+  // common accounting-software behavior) rather than blocking the invoice
+  const cogsPlan: {
+    itemId: string;
+    quantity: number;
+    unitCost: number;
+    cogs: number;
+    cogsAccountId: string;
+    assetAccountId: string;
+    newQuantityOnHand: number;
+  }[] = [];
+  if (soldByItem.size > 0) {
+    const items = await dbPool
+      .select()
+      .from(inventoryItemTable)
+      .where(inArray(inventoryItemTable.id, [...soldByItem.keys()]));
+    const itemById = new Map(items.map((it) => [it.id, it]));
+    for (const [itemId, quantity] of soldByItem) {
+      const item = itemById.get(itemId);
+      // an item on another book, or a stale reference, must not post here
+      if (!item || item.bookId !== invoice.bookId) {
+        throw new Error(
+          "Invoice references an inventory item not in this book",
+        );
+      }
+      const unitCost = Number(item.averageCost);
+      cogsPlan.push({
+        itemId,
+        quantity,
+        unitCost,
+        cogs: movementValue(quantity, unitCost),
+        cogsAccountId: item.cogsAccountId,
+        assetAccountId: item.assetAccountId,
+        newQuantityOnHand: Number(item.quantityOnHand) - quantity,
+      });
+    }
+  }
+
   return dbPool.transaction(async (tx) => {
     const [entryRow] = await tx
       .insert(journalEntryTable)
@@ -153,6 +208,44 @@ export const postInvoice = async (
         debit: posting.debit.toFixed(4),
         credit: posting.credit.toFixed(4),
       } satisfies InferInsertModel<typeof journalLineTable>);
+    }
+
+    // Auto-COGS: for each inventory item sold, add a balanced DR COGS / CR
+    // inventory-asset pair to the same entry, record the stock movement, and
+    // decrement the item. The COGS pair is self-balancing so the entry stays
+    // in balance
+    for (const plan of cogsPlan) {
+      if (plan.cogs !== 0) {
+        await tx.insert(journalLineTable).values({
+          journalEntryId: entryRow.id,
+          accountId: plan.cogsAccountId,
+          debit: plan.cogs.toFixed(4),
+          credit: "0.0000",
+        } satisfies InferInsertModel<typeof journalLineTable>);
+        await tx.insert(journalLineTable).values({
+          journalEntryId: entryRow.id,
+          accountId: plan.assetAccountId,
+          debit: "0.0000",
+          credit: plan.cogs.toFixed(4),
+        } satisfies InferInsertModel<typeof journalLineTable>);
+      }
+      await tx.insert(inventoryTransactionTable).values({
+        bookId: invoice.bookId,
+        itemId: plan.itemId,
+        date: invoice.issueDate,
+        type: "sale",
+        quantity: (-plan.quantity).toFixed(4),
+        unitCost: plan.unitCost.toFixed(4),
+        note: `Invoice ${invoice.number}`,
+        journalEntryId: entryRow.id,
+      } satisfies InferInsertModel<typeof inventoryTransactionTable>);
+      await tx
+        .update(inventoryItemTable)
+        .set({
+          quantityOnHand: plan.newQuantityOnHand.toFixed(4),
+          updatedAt: new Date().toISOString(),
+        })
+        .where(eq(inventoryItemTable.id, plan.itemId));
     }
 
     await tx
