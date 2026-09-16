@@ -25,6 +25,7 @@ import {
 import { cryptoRoutes, lotRoutes } from "lib/crypto";
 import { dbPool, pgPool } from "lib/db/db";
 import { netWorthSnapshotTable } from "lib/db/schema";
+import estimateRoutes from "lib/estimates/estimateRoutes";
 import createGraphqlContext from "lib/graphql/createGraphqlContext";
 import { armorPlugin, authenticationPlugin } from "lib/graphql/plugins";
 import importRoutes from "lib/import/importRoutes";
@@ -178,6 +179,7 @@ const app = new Elysia()
   .use(importRoutes)
   .use(invoiceRoutes)
   .use(billRoutes)
+  .use(estimateRoutes)
   .use(migrationRoutes)
   .use(profileRoutes)
   .use(ofxRoutes)
