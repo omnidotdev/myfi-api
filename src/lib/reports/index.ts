@@ -2,6 +2,8 @@ export { default as generateAgingReport } from "./aging";
 export { default as generateArAging } from "./arAging";
 export { default as generateBalanceSheet } from "./balanceSheet";
 export { default as generateCashFlow } from "./cashFlow";
+export { default as generateComparativeBalanceSheet } from "./comparativeBalanceSheet";
+export { default as generateComparativeProfitAndLoss } from "./comparativeProfitAndLoss";
 export { default as exportReport } from "./exportReport";
 export { default as generateGeneralLedger } from "./generalLedger";
 export { default as generatePayrollSummary } from "./payrollSummary";

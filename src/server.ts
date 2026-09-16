@@ -50,6 +50,8 @@ import {
   generateArAging,
   generateBalanceSheet,
   generateCashFlow,
+  generateComparativeBalanceSheet,
+  generateComparativeProfitAndLoss,
   generateGeneralLedger,
   generatePayrollSummary,
   generateProfitAndLoss,
@@ -219,6 +221,49 @@ const app = new Elysia()
       ? query.tagIds.split(",").filter(Boolean)
       : undefined;
     return generateBalanceSheet({ bookId, asOfDate, tagIds });
+  })
+  .get("/api/reports/comparative-profit-and-loss", async ({ query }) => {
+    const { bookId, startDate, endDate, priorStartDate, priorEndDate } = query;
+    if (!bookId || !startDate || !endDate || !priorStartDate || !priorEndDate) {
+      return new Response(
+        JSON.stringify({
+          error:
+            "bookId, startDate, endDate, priorStartDate, and priorEndDate are required",
+        }),
+        { status: 400, headers: { "Content-Type": "application/json" } },
+      );
+    }
+    const tagIds = query.tagIds
+      ? query.tagIds.split(",").filter(Boolean)
+      : undefined;
+    return generateComparativeProfitAndLoss({
+      bookId,
+      startDate,
+      endDate,
+      priorStartDate,
+      priorEndDate,
+      tagIds,
+    });
+  })
+  .get("/api/reports/comparative-balance-sheet", async ({ query }) => {
+    const { bookId, asOfDate, priorAsOfDate } = query;
+    if (!bookId || !asOfDate || !priorAsOfDate) {
+      return new Response(
+        JSON.stringify({
+          error: "bookId, asOfDate, and priorAsOfDate are required",
+        }),
+        { status: 400, headers: { "Content-Type": "application/json" } },
+      );
+    }
+    const tagIds = query.tagIds
+      ? query.tagIds.split(",").filter(Boolean)
+      : undefined;
+    return generateComparativeBalanceSheet({
+      bookId,
+      asOfDate,
+      priorAsOfDate,
+      tagIds,
+    });
   })
   .get("/api/reports/trial-balance", async ({ query }) => {
     const { bookId, startDate, endDate } = query;
