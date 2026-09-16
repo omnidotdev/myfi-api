@@ -122,6 +122,22 @@ const runMonthlyClose = async (): Promise<CloseResult[]> => {
       );
     }
 
+    // Post amortization entries for the period
+    try {
+      const { postAmortization } = await import("lib/amortization");
+      const amortResult = await postAmortization(book.id, year, month);
+      if (amortResult.postedCount > 0) {
+        console.info(
+          `[MonthlyClose] Posted ${amortResult.postedCount} amortization entries for "${book.name}"`,
+        );
+      }
+    } catch (err) {
+      console.error(
+        `[MonthlyClose] Failed to post amortization for "${book.name}":`,
+        err,
+      );
+    }
+
     // Check for pending review items in this period
     const pendingItems = await dbPool
       .select({ id: reconciliationQueueTable.id })
