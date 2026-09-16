@@ -61,6 +61,7 @@ import {
   generateSalesTaxReport,
   generateStatementOfEquity,
   generateTrialBalance,
+  getSalesByState,
 } from "lib/reports";
 import accountRoutes from "lib/routes/accountRoutes";
 import bookAccessRoutes from "lib/routes/bookAccessRoutes";
@@ -348,6 +349,25 @@ const app = new Elysia()
       bookId,
       year: Number.parseInt(year, 10),
       jurisdictionId: query.jurisdictionId || undefined,
+    });
+  })
+  .get("/api/reports/sales-by-state", async ({ query }) => {
+    const { bookId, year } = query;
+    if (!bookId || !year) {
+      return new Response(
+        JSON.stringify({ error: "bookId and year are required" }),
+        { status: 400, headers: { "Content-Type": "application/json" } },
+      );
+    }
+    return getSalesByState({
+      bookId,
+      year: Number.parseInt(year, 10),
+      thresholdAmount: query.thresholdAmount
+        ? Number.parseFloat(query.thresholdAmount)
+        : undefined,
+      thresholdTransactions: query.thresholdTransactions
+        ? Number.parseInt(query.thresholdTransactions, 10)
+        : undefined,
     });
   })
   .get("/api/reports/payroll", async ({ query }) => {

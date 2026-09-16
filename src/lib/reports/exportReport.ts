@@ -7,6 +7,7 @@ import renderReportHtml from "./htmlRenderer";
 import generatePayrollSummary from "./payrollSummary";
 import renderReportPdf from "./pdfRenderer";
 import generateProfitAndLoss from "./profitAndLoss";
+import getSalesByState from "./salesByState";
 import generateSalesTaxReport from "./salesTax";
 import generateTrialBalance from "./trialBalance";
 import renderReportXlsx from "./xlsxRenderer";
@@ -386,6 +387,37 @@ const exportReport = async (params: ExportParams): Promise<ExportResult> => {
         "Totals",
         ...vs.months.map((m) => fmt(vs.monthlyTotals[m] ?? "0")),
         fmt(vs.grandTotal),
+      ];
+      break;
+    }
+
+    case "sales-by-state": {
+      if (!year) {
+        throw new Error("year is required for sales-by-state");
+      }
+
+      const sbs = await getSalesByState({
+        bookId,
+        year: Number.parseInt(year, 10),
+      });
+
+      title = "Sales by State";
+      subtitle = `Year ${year}`;
+      filenameBase = `sales-by-state_${year}`;
+      headers = ["State", "Sales", "Invoices", "Meets Threshold"];
+
+      rows = sbs.states.map((s) => [
+        s.state,
+        fmt(s.salesTotal),
+        String(s.transactionCount),
+        s.exceedsThreshold ? "Yes" : "",
+      ]);
+
+      totals = [
+        "Total",
+        fmt(sbs.totalSales),
+        String(sbs.totalTransactions),
+        "",
       ];
       break;
     }
