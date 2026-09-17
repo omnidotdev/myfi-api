@@ -1,10 +1,14 @@
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 
 import { emitAudit } from "lib/audit";
 import { dbPool } from "lib/db/db";
-import { journalEntryTable, vendorTable } from "lib/db/schema";
+import { accountTable, journalEntryTable, vendorTable } from "lib/db/schema";
 import { decryptToken, encryptToken } from "lib/encryption/tokenEncryption";
+import {
+  recategorizeVendorLines,
+  validateRecategorize,
+} from "lib/vendors/recategorize";
 
 // Mask an encrypted TIN for safe display
 const maskTin = (
@@ -233,6 +237,90 @@ const vendorRoutes = new Elysia({ prefix: "/api/vendors" })
     },
     {
       params: t.Object({ id: t.String() }),
+    },
+  )
+  // Bulk-recategorize a vendor's transactions from one account to another.
+  // dryRun returns the impact counts without mutating, so the UI can confirm
+  // the exact effect (including how many reconciled entries are skipped) first
+  .post(
+    "/:id/recategorize",
+    async ({ params, body, set }) => {
+      const { bookId, fromAccountId, toAccountId } = body;
+
+      const [[vendor], [fromAcct], [toAcct]] = await Promise.all([
+        dbPool
+          .select({ id: vendorTable.id })
+          .from(vendorTable)
+          .where(
+            and(eq(vendorTable.id, params.id), eq(vendorTable.bookId, bookId)),
+          ),
+        dbPool
+          .select({ id: accountTable.id })
+          .from(accountTable)
+          .where(
+            and(
+              eq(accountTable.id, fromAccountId),
+              eq(accountTable.bookId, bookId),
+            ),
+          ),
+        dbPool
+          .select({ id: accountTable.id })
+          .from(accountTable)
+          .where(
+            and(
+              eq(accountTable.id, toAccountId),
+              eq(accountTable.bookId, bookId),
+            ),
+          ),
+      ]);
+
+      const validation = validateRecategorize({
+        fromAccountId,
+        toAccountId,
+        vendorInBook: Boolean(vendor),
+        fromAccountInBook: Boolean(fromAcct),
+        toAccountInBook: Boolean(toAcct),
+      });
+
+      if (!validation.ok) {
+        set.status = 400;
+        return { error: validation.error };
+      }
+
+      const dryRun = body.dryRun ?? false;
+      const result = await recategorizeVendorLines({
+        bookId,
+        vendorId: params.id,
+        fromAccountId,
+        toAccountId,
+        dryRun,
+      });
+
+      if (!dryRun && result.updated > 0) {
+        emitAudit({
+          type: "myfi.vendor.recategorized",
+          organizationId: bookId,
+          resource: { type: "vendor", id: params.id },
+          data: {
+            bookId,
+            fromAccountId,
+            toAccountId,
+            updatedLines: result.updated,
+            skippedReconciled: result.skippedReconciled,
+          },
+        });
+      }
+
+      return { result };
+    },
+    {
+      params: t.Object({ id: t.String() }),
+      body: t.Object({
+        bookId: t.String(),
+        fromAccountId: t.String(),
+        toAccountId: t.String(),
+        dryRun: t.Optional(t.Boolean()),
+      }),
     },
   );
 
