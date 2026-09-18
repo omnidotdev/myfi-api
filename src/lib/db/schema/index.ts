@@ -34,6 +34,7 @@ export * from "./mileageLog.table";
 export * from "./netWorthSnapshot.table";
 export * from "./payrollConnection.table";
 export * from "./project.table";
+export * from "./rdExpense.table";
 export * from "./reconciliationQueue.table";
 export * from "./reconciliationStatement.table";
 export * from "./recurringTransaction.table";

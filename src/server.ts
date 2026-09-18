@@ -88,6 +88,7 @@ import mappingRoutes from "lib/routes/mappingRoutes";
 import mileageRoutes from "lib/routes/mileageRoutes";
 import periodRoutes from "lib/routes/periodRoutes";
 import projectRoutes from "lib/routes/projectRoutes";
+import rdExpenseRoutes from "lib/routes/rdExpenseRoutes";
 import reconciliationRoutes from "lib/routes/reconciliationRoutes";
 import savingsRoutes from "lib/routes/savingsRoutes";
 import statementReconciliationRoutes from "lib/routes/statementReconciliationRoutes";
@@ -101,9 +102,11 @@ import {
   getVendorSpend,
 } from "lib/spending";
 import {
+  calculateDelawareFranchiseTax,
   generate1099Nec,
   generateForm8949,
   generateQuarterlyEstimates,
+  generateRdCredit,
   generateScheduleC,
   generateTaxLossHarvesting,
 } from "lib/tax";
@@ -215,6 +218,7 @@ const app = new Elysia()
   .use(periodRoutes)
   .use(closeReviewRoutes)
   .use(projectRoutes)
+  .use(rdExpenseRoutes)
   .use(tagRoutes)
   .use(taxJurisdictionRoutes)
   .use(customerRoutes)
@@ -709,6 +713,49 @@ const app = new Elysia()
       });
     }
     return generateTaxLossHarvesting({ bookId });
+  })
+  .get("/api/tax/delaware-franchise-tax", async ({ query }) => {
+    // bookId scopes access (each book files its own DE return); the remaining
+    // inputs feed the pure calculator.
+    const {
+      bookId,
+      authorizedShares,
+      issuedShares,
+      totalGrossAssets,
+      parValuePerShare,
+    } = query;
+    if (
+      !bookId ||
+      !authorizedShares ||
+      !issuedShares ||
+      totalGrossAssets == null
+    ) {
+      return new Response(
+        JSON.stringify({
+          error:
+            "bookId, authorizedShares, issuedShares and totalGrossAssets are required",
+        }),
+        { status: 400, headers: { "Content-Type": "application/json" } },
+      );
+    }
+    return calculateDelawareFranchiseTax({
+      authorizedShares: Number.parseInt(authorizedShares, 10),
+      issuedShares: Number.parseInt(issuedShares, 10),
+      totalGrossAssets: Number.parseFloat(totalGrossAssets),
+      parValuePerShare: parValuePerShare
+        ? Number.parseFloat(parValuePerShare)
+        : 0,
+    });
+  })
+  .get("/api/tax/rd-credit", async ({ query }) => {
+    const { bookId, year } = query;
+    if (!bookId || !year) {
+      return new Response(
+        JSON.stringify({ error: "bookId and year are required" }),
+        { status: 400, headers: { "Content-Type": "application/json" } },
+      );
+    }
+    return generateRdCredit({ bookId, year: Number.parseInt(year, 10) });
   })
   // Report export (HTML, CSV, XLSX, PDF)
   .get("/api/reports/export", async ({ query }) => {
