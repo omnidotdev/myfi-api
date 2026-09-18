@@ -28,6 +28,7 @@ const CATEGORIES = [
   "w9",
   "statement",
   "receipt",
+  "cap_table",
   "other",
 ];
 

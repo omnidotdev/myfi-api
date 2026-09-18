@@ -26,7 +26,7 @@ export const documentTable = pgTable(
     bookId: uuid("book_id")
       .notNull()
       .references(() => bookTable.id, { onDelete: "cascade" }),
-    // articles | ein | bylaws | tax_return | w9 | statement | receipt | other
+    // articles | ein | bylaws | tax_return | w9 | statement | receipt | cap_table | other
     category: text().notNull().default("other"),
     name: text().notNull(),
     filename: text().notNull(),
