@@ -14,6 +14,12 @@ import { postDepreciation } from "lib/depreciation";
 import { saveNetWorthSnapshot } from "lib/netWorth/netWorthService";
 import syncTransactions from "lib/plaid/syncTransactions";
 import { notifications } from "lib/providers";
+import { buildBooksReadyEmail } from "./closeNotifications";
+
+// Close notifications go to the MyFi admin address. Per-owner/editor delivery
+// would need a Gatekeeper userId -> email lookup (identity is not stored
+// locally), so both the blocked and books-ready emails use this address.
+const CLOSE_NOTIFICATION_RECIPIENT = "admin@omni.dev";
 
 type CloseResult = {
   bookId: string;
@@ -222,7 +228,7 @@ const runMonthlyClose = async (): Promise<CloseResult[]> => {
         data: { year, month, bookName: book.name, blockers },
       });
 
-      // Notify book owners/editors about the blocker
+      // Notify the admin about the blocker
       notifyBlockedPeriod(book.name, year, month, blockers).catch((err) =>
         console.error(
           `[MonthlyClose] Failed to send blocker notification for "${book.name}":`,
@@ -291,6 +297,15 @@ const runMonthlyClose = async (): Promise<CloseResult[]> => {
 
       console.info(`[MonthlyClose] Book "${book.name}" period closed`);
 
+      // Let the owner know the books are ready (fire-and-forget, like the
+      // blocked-period notification)
+      notifyBooksReady(book.name, year, month).catch((err) =>
+        console.error(
+          `[MonthlyClose] Failed to send books-ready notification for "${book.name}":`,
+          err,
+        ),
+      );
+
       // If this is the final month of the fiscal year, trigger year-end close
       const finalMonth =
         book.fiscalYearStartMonth === 1 ? 12 : book.fiscalYearStartMonth - 1;
@@ -335,8 +350,23 @@ const runMonthlyClose = async (): Promise<CloseResult[]> => {
 };
 
 /**
+ * Send email notification when a period closes cleanly.
+ */
+const notifyBooksReady = async (
+  bookName: string,
+  year: number,
+  month: number,
+) => {
+  const { subject, body } = buildBooksReadyEmail({ bookName, year, month });
+  await notifications.sendEmail({
+    to: CLOSE_NOTIFICATION_RECIPIENT,
+    subject,
+    body,
+  });
+};
+
+/**
  * Send email notification when a period close is blocked.
- * Sends to all owners and editors of the book.
  */
 const notifyBlockedPeriod = async (
   bookName: string,
@@ -367,7 +397,7 @@ const notifyBlockedPeriod = async (
   ].join("\n");
 
   await notifications.sendEmail({
-    to: "admin@omni.dev",
+    to: CLOSE_NOTIFICATION_RECIPIENT,
     subject,
     body,
   });
