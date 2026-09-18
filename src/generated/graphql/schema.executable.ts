@@ -65,6 +65,56 @@ const executor = new PgExecutor({
     });
   }
 });
+const journalLineProjectIdentifier = sql.identifier("public", "journal_line_project");
+const spec_journalLineProject = {
+  name: "journalLineProject",
+  identifier: journalLineProjectIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    journal_line_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    project_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    }
+  },
+  extensions: {
+    oid: "17706",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "journal_line_project"
+    }
+  },
+  executor: executor
+};
+const journalLineProjectCodec = recordCodec(spec_journalLineProject);
 const journalLineTagIdentifier = sql.identifier("public", "journal_line_tag");
 const spec_journalLineTag = {
   name: "journalLineTag",
@@ -104,7 +154,7 @@ const spec_journalLineTag = {
     }
   },
   extensions: {
-    oid: "17093",
+    oid: "16984",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -166,7 +216,7 @@ const spec_tagGroup = {
     }
   },
   extensions: {
-    oid: "17116",
+    oid: "17000",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -311,7 +361,7 @@ const spec_accountMapping = {
     }
   },
   extensions: {
-    oid: "16561",
+    oid: "16553",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -404,7 +454,7 @@ const spec_bookAccess = {
     }
   },
   extensions: {
-    oid: "17234",
+    oid: "17102",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -488,7 +538,7 @@ const spec_tag = {
     }
   },
   extensions: {
-    oid: "17102",
+    oid: "16990",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -592,7 +642,7 @@ const spec_taxJurisdiction = {
     }
   },
   extensions: {
-    oid: "17186",
+    oid: "17063",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -694,7 +744,7 @@ const spec_vehicle = {
     }
   },
   extensions: {
-    oid: "17312",
+    oid: "17161",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -790,7 +840,7 @@ const spec_journalLine = {
     }
   },
   extensions: {
-    oid: "16674",
+    oid: "16627",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -895,7 +945,7 @@ const spec_savingsGoal = {
     }
   },
   extensions: {
-    oid: "16738",
+    oid: "16668",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -992,7 +1042,7 @@ const spec_importProfile = {
     }
   },
   extensions: {
-    oid: "17345",
+    oid: "17191",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1096,7 +1146,7 @@ const spec_netWorthSnapshot = {
     }
   },
   extensions: {
-    oid: "16689",
+    oid: "16637",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1218,7 +1268,7 @@ const spec_accountingPeriod = {
     }
   },
   extensions: {
-    oid: "16973",
+    oid: "16892",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1229,6 +1279,132 @@ const spec_accountingPeriod = {
   executor: executor
 };
 const accountingPeriodCodec = recordCodec(spec_accountingPeriod);
+const attachmentIdentifier = sql.identifier("public", "attachment");
+const spec_attachment = {
+  name: "attachment",
+  identifier: attachmentIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    journal_entry_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    filename: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    content_type: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    size_bytes: {
+      codec: TYPES.int,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    storage_key: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    upload_status: {
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    created_by: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "17687",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "attachment"
+    }
+  },
+  executor: executor
+};
+const attachmentCodec = recordCodec(spec_attachment);
 const inventoryTransactionIdentifier = sql.identifier("public", "inventory_transaction");
 const spec_inventoryTransaction = {
   name: "inventoryTransaction",
@@ -1344,7 +1520,7 @@ const spec_inventoryTransaction = {
     }
   },
   extensions: {
-    oid: "17890",
+    oid: "17621",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1464,7 +1640,7 @@ const spec_book = {
     }
   },
   extensions: {
-    oid: "16576",
+    oid: "16563",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1587,7 +1763,7 @@ const spec_payrollConnection = {
     }
   },
   extensions: {
-    oid: "17212",
+    oid: "17084",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1707,7 +1883,7 @@ const spec_billLine = {
     }
   },
   extensions: {
-    oid: "17693",
+    oid: "17464",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1827,7 +2003,7 @@ const spec_estimateLine = {
     }
   },
   extensions: {
-    oid: "17809",
+    oid: "17558",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1951,7 +2127,7 @@ const spec_billPayment = {
     }
   },
   extensions: {
-    oid: "17713",
+    oid: "17476",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1962,6 +2138,130 @@ const spec_billPayment = {
   executor: executor
 };
 const billPaymentCodec = recordCodec(spec_billPayment);
+const categorizationRuleSplitIdentifier = sql.identifier("public", "categorization_rule_split");
+const spec_categorizationRuleSplit = {
+  name: "categorizationRuleSplit",
+  identifier: categorizationRuleSplitIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    rule_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    account_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    side: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    percentage: {
+      codec: TYPES.numeric,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    fixed_amount: {
+      codec: TYPES.numeric,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    memo: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    tag_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    project_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    sort_order: {
+      codec: TYPES.int,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "17697",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "categorization_rule_split"
+    }
+  },
+  executor: executor
+};
+const categorizationRuleSplitCodec = recordCodec(spec_categorizationRuleSplit);
 const invoicePaymentIdentifier = sql.identifier("public", "invoice_payment");
 const spec_invoicePayment = {
   name: "invoicePayment",
@@ -2075,7 +2375,7 @@ const spec_invoicePayment = {
     }
   },
   extensions: {
-    oid: "17583",
+    oid: "17372",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2201,7 +2501,7 @@ const spec_reconciliationStatement = {
     }
   },
   extensions: {
-    oid: "17263",
+    oid: "17126",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2212,6 +2512,277 @@ const spec_reconciliationStatement = {
   executor: executor
 };
 const reconciliationStatementCodec = recordCodec(spec_reconciliationStatement);
+const rdExpenseIdentifier = sql.identifier("public", "rd_expense");
+const spec_rdExpense = {
+  name: "rdExpense",
+  identifier: rdExpenseIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    year: {
+      codec: TYPES.int,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    category: {
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    description: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    amount: {
+      codec: TYPES.numeric,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    is_foreign: {
+      codec: TYPES.boolean,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    project_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    notes: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "17858",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "rd_expense"
+    }
+  },
+  executor: executor
+};
+const rdExpenseCodec = recordCodec(spec_rdExpense);
+const projectIdentifier = sql.identifier("public", "project");
+const spec_project = {
+  name: "project",
+  identifier: projectIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    name: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    code: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    status: {
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    budget_amount: {
+      codec: TYPES.numeric,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    start_date: {
+      codec: TYPES.timestamptz,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    end_date: {
+      codec: TYPES.timestamptz,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    notes: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "17724",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "project"
+    }
+  },
+  executor: executor
+};
+const projectCodec = recordCodec(spec_project);
 const invoiceLineIdentifier = sql.identifier("public", "invoice_line");
 const spec_invoiceLine = {
   name: "invoiceLine",
@@ -2331,7 +2902,7 @@ const spec_invoiceLine = {
     }
   },
   extensions: {
-    oid: "17563",
+    oid: "17360",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2342,6 +2913,144 @@ const spec_invoiceLine = {
   executor: executor
 };
 const invoiceLineCodec = recordCodec(spec_invoiceLine);
+const amortizationEntryIdentifier = sql.identifier("public", "amortization_entry");
+const spec_amortizationEntry = {
+  name: "amortizationEntry",
+  identifier: amortizationEntryIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    loan_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    sequence_number: {
+      codec: TYPES.int,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    due_date: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    payment_amount: {
+      codec: TYPES.numeric,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    principal_amount: {
+      codec: TYPES.numeric,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    interest_amount: {
+      codec: TYPES.numeric,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    extra_principal: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    balance_after: {
+      codec: TYPES.numeric,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    journal_entry_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    status: {
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    }
+  },
+  extensions: {
+    oid: "17677",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "amortization_entry"
+    }
+  },
+  executor: executor
+};
+const amortizationEntryCodec = recordCodec(spec_amortizationEntry);
 const cryptoLotIdentifier = sql.identifier("public", "crypto_lot");
 const spec_cryptoLot = {
   name: "cryptoLot",
@@ -2456,7 +3165,7 @@ const spec_cryptoLot = {
     }
   },
   extensions: {
-    oid: "16642",
+    oid: "16607",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2599,7 +3308,7 @@ const spec_connectedAccount = {
     }
   },
   extensions: {
-    oid: "16610",
+    oid: "16585",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2735,7 +3444,7 @@ const spec_journalEntry = {
     }
   },
   extensions: {
-    oid: "16655",
+    oid: "16614",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2890,7 +3599,7 @@ const spec_mileageLog = {
     }
   },
   extensions: {
-    oid: "17295",
+    oid: "17150",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2908,7 +3617,7 @@ const budgetPeriodCodec = enumCodec({
   values: ["monthly", "quarterly", "yearly"],
   description: undefined,
   extensions: {
-    oid: "16470",
+    oid: "16468",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -3011,7 +3720,7 @@ const spec_budget = {
     }
   },
   extensions: {
-    oid: "16594",
+    oid: "16575",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -3022,6 +3731,163 @@ const spec_budget = {
   executor: executor
 };
 const budgetCodec = recordCodec(spec_budget);
+const documentIdentifier = sql.identifier("public", "document");
+const spec_document = {
+  name: "document",
+  identifier: documentIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    category: {
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    name: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    filename: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    content_type: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    size_bytes: {
+      codec: TYPES.int,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    storage_key: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    vendor_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    year: {
+      codec: TYPES.int,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    notes: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_by: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "17834",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "document"
+    }
+  },
+  executor: executor
+};
+const documentCodec = recordCodec(spec_document);
 const estimateIdentifier = sql.identifier("public", "estimate");
 const spec_estimate = {
   name: "estimate",
@@ -3179,7 +4045,7 @@ const spec_estimate = {
     }
   },
   extensions: {
-    oid: "17788",
+    oid: "17545",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -3344,7 +4210,7 @@ const spec_reconciliationQueue = {
     }
   },
   extensions: {
-    oid: "16704",
+    oid: "16646",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -3509,7 +4375,7 @@ const spec_customer = {
     }
   },
   extensions: {
-    oid: "17520",
+    oid: "17333",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -3683,7 +4549,7 @@ const spec_inventoryItem = {
     }
   },
   extensions: {
-    oid: "17866",
+    oid: "17607",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -3847,7 +4713,7 @@ const spec_vendor = {
     }
   },
   extensions: {
-    oid: "17160",
+    oid: "17041",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -3865,7 +4731,7 @@ const costBasisMethodCodec = enumCodec({
   values: ["fifo", "lifo", "hifo", "acb"],
   description: undefined,
   extensions: {
-    oid: "16498",
+    oid: "16496",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -3998,7 +4864,7 @@ const spec_cryptoAsset = {
     }
   },
   extensions: {
-    oid: "16624",
+    oid: "16595",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -4193,7 +5059,7 @@ const spec_bill = {
     }
   },
   extensions: {
-    oid: "17665",
+    oid: "17448",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -4204,198 +5070,6 @@ const spec_bill = {
   executor: executor
 };
 const billCodec = recordCodec(spec_bill);
-const categorizationRuleIdentifier = sql.identifier("public", "categorization_rule");
-const spec_categorizationRule = {
-  name: "categorizationRule",
-  identifier: categorizationRuleIdentifier,
-  attributes: {
-    __proto__: null,
-    id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    book_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    name: {
-      codec: TYPES.text,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    match_field: {
-      codec: TYPES.text,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    match_type: {
-      codec: TYPES.text,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    match_value: {
-      codec: TYPES.text,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    amount_min: {
-      codec: TYPES.numeric,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    amount_max: {
-      codec: TYPES.numeric,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    debit_account_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    credit_account_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    confidence: {
-      codec: TYPES.numeric,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    priority: {
-      codec: TYPES.int,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    hit_count: {
-      codec: TYPES.int,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    last_hit_at: {
-      codec: TYPES.timestamptz,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    created_at: {
-      codec: TYPES.timestamptz,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    tag_id: {
-      codec: TYPES.uuid,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    }
-  },
-  extensions: {
-    oid: "16988",
-    isTableLike: true,
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "categorization_rule"
-    }
-  },
-  executor: executor
-};
-const categorizationRuleCodec = recordCodec(spec_categorizationRule);
 const fixedAssetIdentifier = sql.identifier("public", "fixed_asset");
 const spec_fixedAsset = {
   name: "fixedAsset",
@@ -4575,7 +5249,7 @@ const spec_fixedAsset = {
     }
   },
   extensions: {
-    oid: "17049",
+    oid: "16951",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -4780,7 +5454,7 @@ const spec_invoice = {
     }
   },
   extensions: {
-    oid: "17535",
+    oid: "17344",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -4798,7 +5472,7 @@ const recurringFrequencyCodec = enumCodec({
   values: ["weekly", "biweekly", "monthly", "quarterly", "yearly"],
   description: undefined,
   extensions: {
-    oid: "16530",
+    oid: "16528",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -4944,7 +5618,7 @@ const spec_recurringTransaction = {
     }
   },
   extensions: {
-    oid: "16718",
+    oid: "16656",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -4955,6 +5629,412 @@ const spec_recurringTransaction = {
   executor: executor
 };
 const recurringTransactionCodec = recordCodec(spec_recurringTransaction);
+const categorizationRuleIdentifier = sql.identifier("public", "categorization_rule");
+const spec_categorizationRule = {
+  name: "categorizationRule",
+  identifier: categorizationRuleIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    name: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    match_field: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    match_type: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    match_value: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    amount_min: {
+      codec: TYPES.numeric,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    amount_max: {
+      codec: TYPES.numeric,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    debit_account_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    credit_account_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    confidence: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    priority: {
+      codec: TYPES.int,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    hit_count: {
+      codec: TYPES.int,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    last_hit_at: {
+      codec: TYPES.timestamptz,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    tag_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    project_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "16902",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "categorization_rule"
+    }
+  },
+  executor: executor
+};
+const categorizationRuleCodec = recordCodec(spec_categorizationRule);
+const loanIdentifier = sql.identifier("public", "loan");
+const spec_loan = {
+  name: "loan",
+  identifier: loanIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    name: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    liability_account_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    interest_account_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    payment_account_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    original_principal: {
+      codec: TYPES.numeric,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    annual_rate: {
+      codec: TYPES.numeric,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    term_months: {
+      codec: TYPES.int,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    start_date: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    payment_day: {
+      codec: TYPES.int,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    payment_amount: {
+      codec: TYPES.numeric,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    extra_principal: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    status: {
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    notes: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "17712",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "loan"
+    }
+  },
+  executor: executor
+};
+const loanCodec = recordCodec(spec_loan);
 const accountIdentifier = sql.identifier("public", "account");
 const accountTypeCodec = enumCodec({
   name: "accountType",
@@ -4962,7 +6042,7 @@ const accountTypeCodec = enumCodec({
   values: ["asset", "liability", "equity", "revenue", "expense"],
   description: undefined,
   extensions: {
-    oid: "16452",
+    oid: "16450",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -4976,7 +6056,7 @@ const accountSubTypeCodec = enumCodec({
   values: ["cash", "bank", "accounts_receivable", "inventory", "crypto_wallet", "investment", "fixed_asset", "other_asset", "credit_card", "accounts_payable", "loan", "mortgage", "other_liability", "owners_equity", "retained_earnings", "other_equity", "sales", "service_revenue", "interest_income", "crypto_gains", "other_revenue", "cost_of_goods", "operating_expense", "payroll", "tax_expense", "crypto_losses", "other_expense"],
   description: undefined,
   extensions: {
-    oid: "16397",
+    oid: "16395",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -5108,7 +6188,7 @@ const spec_account = {
     }
   },
   extensions: {
-    oid: "16543",
+    oid: "16541",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -5119,6 +6199,29 @@ const spec_account = {
   executor: executor
 };
 const accountCodec = recordCodec(spec_account);
+const journal_line_projectUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const journal_line_project_resourceOptionsConfig = {
+  executor: executor,
+  name: "journal_line_project",
+  identifier: "main.public.journal_line_project",
+  from: journalLineProjectIdentifier,
+  codec: journalLineProjectCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "journal_line_project"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: journal_line_projectUniques
+};
 const journal_line_tagUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -5399,6 +6502,29 @@ const accounting_period_resourceOptionsConfig = {
   },
   uniques: accounting_periodUniques
 };
+const attachmentUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const attachment_resourceOptionsConfig = {
+  executor: executor,
+  name: "attachment",
+  identifier: "main.public.attachment",
+  from: attachmentIdentifier,
+  codec: attachmentCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "attachment"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: attachmentUniques
+};
 const inventory_transactionUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -5537,6 +6663,29 @@ const bill_payment_resourceOptionsConfig = {
   },
   uniques: bill_paymentUniques
 };
+const categorization_rule_splitUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const categorization_rule_split_resourceOptionsConfig = {
+  executor: executor,
+  name: "categorization_rule_split",
+  identifier: "main.public.categorization_rule_split",
+  from: categorizationRuleSplitIdentifier,
+  codec: categorizationRuleSplitCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "categorization_rule_split"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: categorization_rule_splitUniques
+};
 const invoice_paymentUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -5583,6 +6732,52 @@ const reconciliation_statement_resourceOptionsConfig = {
   },
   uniques: reconciliation_statementUniques
 };
+const rd_expenseUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const rd_expense_resourceOptionsConfig = {
+  executor: executor,
+  name: "rd_expense",
+  identifier: "main.public.rd_expense",
+  from: rdExpenseIdentifier,
+  codec: rdExpenseCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "rd_expense"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: rd_expenseUniques
+};
+const projectUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const project_resourceOptionsConfig = {
+  executor: executor,
+  name: "project",
+  identifier: "main.public.project",
+  from: projectIdentifier,
+  codec: projectCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "project"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: projectUniques
+};
 const invoice_lineUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -5605,6 +6800,29 @@ const invoice_line_resourceOptionsConfig = {
     canDelete: true
   },
   uniques: invoice_lineUniques
+};
+const amortization_entryUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const amortization_entry_resourceOptionsConfig = {
+  executor: executor,
+  name: "amortization_entry",
+  identifier: "main.public.amortization_entry",
+  from: amortizationEntryIdentifier,
+  codec: amortizationEntryCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "amortization_entry"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: amortization_entryUniques
 };
 const crypto_lotUniques = [{
   attributes: ["id"],
@@ -5720,6 +6938,29 @@ const budget_resourceOptionsConfig = {
     canDelete: true
   },
   uniques: budgetUniques
+};
+const documentUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const document_resourceOptionsConfig = {
+  executor: executor,
+  name: "document",
+  identifier: "main.public.document",
+  from: documentIdentifier,
+  codec: documentCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "document"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: documentUniques
 };
 const estimateUniques = [{
   attributes: ["id"],
@@ -5882,29 +7123,6 @@ const bill_resourceOptionsConfig = {
   },
   uniques: billUniques
 };
-const categorization_ruleUniques = [{
-  attributes: ["id"],
-  isPrimary: true
-}];
-const categorization_rule_resourceOptionsConfig = {
-  executor: executor,
-  name: "categorization_rule",
-  identifier: "main.public.categorization_rule",
-  from: categorizationRuleIdentifier,
-  codec: categorizationRuleCodec,
-  extensions: {
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "categorization_rule"
-    },
-    canSelect: true,
-    canInsert: true,
-    canUpdate: true,
-    canDelete: true
-  },
-  uniques: categorization_ruleUniques
-};
 const fixed_assetUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -5974,6 +7192,52 @@ const recurring_transaction_resourceOptionsConfig = {
   },
   uniques: recurring_transactionUniques
 };
+const categorization_ruleUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const categorization_rule_resourceOptionsConfig = {
+  executor: executor,
+  name: "categorization_rule",
+  identifier: "main.public.categorization_rule",
+  from: categorizationRuleIdentifier,
+  codec: categorizationRuleCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "categorization_rule"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: categorization_ruleUniques
+};
+const loanUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const loan_resourceOptionsConfig = {
+  executor: executor,
+  name: "loan",
+  identifier: "main.public.loan",
+  from: loanIdentifier,
+  codec: loanCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "loan"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: loanUniques
+};
 const accountUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -6004,8 +7268,9 @@ const registryConfig = {
   },
   pgCodecs: {
     __proto__: null,
-    journalLineTag: journalLineTagCodec,
+    journalLineProject: journalLineProjectCodec,
     uuid: TYPES.uuid,
+    journalLineTag: journalLineTagCodec,
     tagGroup: tagGroupCodec,
     text: TYPES.text,
     timestamptz: TYPES.timestamptz,
@@ -6025,21 +7290,27 @@ const registryConfig = {
     jsonb: TYPES.jsonb,
     netWorthSnapshot: netWorthSnapshotCodec,
     accountingPeriod: accountingPeriodCodec,
+    attachment: attachmentCodec,
     inventoryTransaction: inventoryTransactionCodec,
     book: bookCodec,
     payrollConnection: payrollConnectionCodec,
     billLine: billLineCodec,
     estimateLine: estimateLineCodec,
     billPayment: billPaymentCodec,
+    categorizationRuleSplit: categorizationRuleSplitCodec,
     invoicePayment: invoicePaymentCodec,
     reconciliationStatement: reconciliationStatementCodec,
+    rdExpense: rdExpenseCodec,
+    project: projectCodec,
     invoiceLine: invoiceLineCodec,
+    amortizationEntry: amortizationEntryCodec,
     cryptoLot: cryptoLotCodec,
     connectedAccount: connectedAccountCodec,
     journalEntry: journalEntryCodec,
     mileageLog: mileageLogCodec,
     budget: budgetCodec,
     budgetPeriod: budgetPeriodCodec,
+    document: documentCodec,
     estimate: estimateCodec,
     reconciliationQueue: reconciliationQueueCodec,
     customer: customerCodec,
@@ -6048,17 +7319,19 @@ const registryConfig = {
     cryptoAsset: cryptoAssetCodec,
     costBasisMethod: costBasisMethodCodec,
     bill: billCodec,
-    categorizationRule: categorizationRuleCodec,
     fixedAsset: fixedAssetCodec,
     invoice: invoiceCodec,
     recurringTransaction: recurringTransactionCodec,
     recurringFrequency: recurringFrequencyCodec,
+    categorizationRule: categorizationRuleCodec,
+    loan: loanCodec,
     account: accountCodec,
     accountType: accountTypeCodec,
     accountSubType: accountSubTypeCodec
   },
   pgResources: {
     __proto__: null,
+    journal_line_project: journal_line_project_resourceOptionsConfig,
     journal_line_tag: journal_line_tag_resourceOptionsConfig,
     tag_group: tag_group_resourceOptionsConfig,
     "__drizzle_migrations": {
@@ -6090,20 +7363,26 @@ const registryConfig = {
     import_profile: import_profile_resourceOptionsConfig,
     net_worth_snapshot: net_worth_snapshot_resourceOptionsConfig,
     accounting_period: accounting_period_resourceOptionsConfig,
+    attachment: attachment_resourceOptionsConfig,
     inventory_transaction: inventory_transaction_resourceOptionsConfig,
     book: book_resourceOptionsConfig,
     payroll_connection: payroll_connection_resourceOptionsConfig,
     bill_line: bill_line_resourceOptionsConfig,
     estimate_line: estimate_line_resourceOptionsConfig,
     bill_payment: bill_payment_resourceOptionsConfig,
+    categorization_rule_split: categorization_rule_split_resourceOptionsConfig,
     invoice_payment: invoice_payment_resourceOptionsConfig,
     reconciliation_statement: reconciliation_statement_resourceOptionsConfig,
+    rd_expense: rd_expense_resourceOptionsConfig,
+    project: project_resourceOptionsConfig,
     invoice_line: invoice_line_resourceOptionsConfig,
+    amortization_entry: amortization_entry_resourceOptionsConfig,
     crypto_lot: crypto_lot_resourceOptionsConfig,
     connected_account: connected_account_resourceOptionsConfig,
     journal_entry: journal_entry_resourceOptionsConfig,
     mileage_log: mileage_log_resourceOptionsConfig,
     budget: budget_resourceOptionsConfig,
+    document: document_resourceOptionsConfig,
     estimate: estimate_resourceOptionsConfig,
     reconciliation_queue: reconciliation_queue_resourceOptionsConfig,
     customer: customer_resourceOptionsConfig,
@@ -6111,10 +7390,11 @@ const registryConfig = {
     vendor: vendor_resourceOptionsConfig,
     crypto_asset: crypto_asset_resourceOptionsConfig,
     bill: bill_resourceOptionsConfig,
-    categorization_rule: categorization_rule_resourceOptionsConfig,
     fixed_asset: fixed_asset_resourceOptionsConfig,
     invoice: invoice_resourceOptionsConfig,
     recurring_transaction: recurring_transaction_resourceOptionsConfig,
+    categorization_rule: categorization_rule_resourceOptionsConfig,
+    loan: loan_resourceOptionsConfig,
     account: account_resourceOptionsConfig
   },
   pgRelations: {
@@ -6404,6 +7684,50 @@ const registryConfig = {
           __proto__: null,
           isIndexed: false
         }
+      },
+      categorizationRuleSplitsByTheirAccountId: {
+        localCodec: accountCodec,
+        remoteResourceOptions: categorization_rule_split_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["account_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
+      },
+      loansByTheirInterestAccountId: {
+        localCodec: accountCodec,
+        remoteResourceOptions: loan_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["interest_account_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
+      },
+      loansByTheirLiabilityAccountId: {
+        localCodec: accountCodec,
+        remoteResourceOptions: loan_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["liability_account_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
+      },
+      loansByTheirPaymentAccountId: {
+        localCodec: accountCodec,
+        remoteResourceOptions: loan_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["payment_account_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
       }
     },
     accountMapping: {
@@ -6436,6 +7760,40 @@ const registryConfig = {
         localCodec: accountingPeriodCodec,
         remoteResourceOptions: book_resourceOptionsConfig,
         localAttributes: ["book_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      }
+    },
+    amortizationEntry: {
+      __proto__: null,
+      journalEntryByMyJournalEntryId: {
+        localCodec: amortizationEntryCodec,
+        remoteResourceOptions: journal_entry_resourceOptionsConfig,
+        localAttributes: ["journal_entry_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      loanByMyLoanId: {
+        localCodec: amortizationEntryCodec,
+        remoteResourceOptions: loan_resourceOptionsConfig,
+        localAttributes: ["loan_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      }
+    },
+    attachment: {
+      __proto__: null,
+      bookByMyBookId: {
+        localCodec: attachmentCodec,
+        remoteResourceOptions: book_resourceOptionsConfig,
+        localAttributes: ["book_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      journalEntryByMyJournalEntryId: {
+        localCodec: attachmentCodec,
+        remoteResourceOptions: journal_entry_resourceOptionsConfig,
+        localAttributes: ["journal_entry_id"],
         remoteAttributes: ["id"],
         isUnique: true
       }
@@ -6748,6 +8106,41 @@ const registryConfig = {
         localAttributes: ["id"],
         remoteAttributes: ["book_id"],
         isReferencee: true
+      },
+      attachmentsByTheirBookId: {
+        localCodec: bookCodec,
+        remoteResourceOptions: attachment_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["book_id"],
+        isReferencee: true
+      },
+      loansByTheirBookId: {
+        localCodec: bookCodec,
+        remoteResourceOptions: loan_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["book_id"],
+        isReferencee: true
+      },
+      projectsByTheirBookId: {
+        localCodec: bookCodec,
+        remoteResourceOptions: project_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["book_id"],
+        isReferencee: true
+      },
+      documentsByTheirBookId: {
+        localCodec: bookCodec,
+        remoteResourceOptions: document_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["book_id"],
+        isReferencee: true
+      },
+      rdExpensesByTheirBookId: {
+        localCodec: bookCodec,
+        remoteResourceOptions: rd_expense_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["book_id"],
+        isReferencee: true
       }
     },
     bookAccess: {
@@ -6800,8 +8193,53 @@ const registryConfig = {
         remoteAttributes: ["id"],
         isUnique: true
       },
+      projectByMyProjectId: {
+        localCodec: categorizationRuleCodec,
+        remoteResourceOptions: project_resourceOptionsConfig,
+        localAttributes: ["project_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
       tagByMyTagId: {
         localCodec: categorizationRuleCodec,
+        remoteResourceOptions: tag_resourceOptionsConfig,
+        localAttributes: ["tag_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      categorizationRuleSplitsByTheirRuleId: {
+        localCodec: categorizationRuleCodec,
+        remoteResourceOptions: categorization_rule_split_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["rule_id"],
+        isReferencee: true
+      }
+    },
+    categorizationRuleSplit: {
+      __proto__: null,
+      accountByMyAccountId: {
+        localCodec: categorizationRuleSplitCodec,
+        remoteResourceOptions: account_resourceOptionsConfig,
+        localAttributes: ["account_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      projectByMyProjectId: {
+        localCodec: categorizationRuleSplitCodec,
+        remoteResourceOptions: project_resourceOptionsConfig,
+        localAttributes: ["project_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      categorizationRuleByMyRuleId: {
+        localCodec: categorizationRuleSplitCodec,
+        remoteResourceOptions: categorization_rule_resourceOptionsConfig,
+        localAttributes: ["rule_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      tagByMyTagId: {
+        localCodec: categorizationRuleSplitCodec,
         remoteResourceOptions: tag_resourceOptionsConfig,
         localAttributes: ["tag_id"],
         remoteAttributes: ["id"],
@@ -6881,6 +8319,23 @@ const registryConfig = {
         localAttributes: ["id"],
         remoteAttributes: ["customer_id"],
         isReferencee: true
+      }
+    },
+    document: {
+      __proto__: null,
+      bookByMyBookId: {
+        localCodec: documentCodec,
+        remoteResourceOptions: book_resourceOptionsConfig,
+        localAttributes: ["book_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      vendorByMyVendorId: {
+        localCodec: documentCodec,
+        remoteResourceOptions: vendor_resourceOptionsConfig,
+        localAttributes: ["vendor_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
       }
     },
     estimate: {
@@ -7262,6 +8717,24 @@ const registryConfig = {
           __proto__: null,
           isIndexed: false
         }
+      },
+      amortizationEntriesByTheirJournalEntryId: {
+        localCodec: journalEntryCodec,
+        remoteResourceOptions: amortization_entry_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["journal_entry_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
+      },
+      attachmentsByTheirJournalEntryId: {
+        localCodec: journalEntryCodec,
+        remoteResourceOptions: attachment_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["journal_entry_id"],
+        isReferencee: true
       }
     },
     journalLine: {
@@ -7286,6 +8759,30 @@ const registryConfig = {
         localAttributes: ["id"],
         remoteAttributes: ["journal_line_id"],
         isReferencee: true
+      },
+      journalLineProjectsByTheirJournalLineId: {
+        localCodec: journalLineCodec,
+        remoteResourceOptions: journal_line_project_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["journal_line_id"],
+        isReferencee: true
+      }
+    },
+    journalLineProject: {
+      __proto__: null,
+      journalLineByMyJournalLineId: {
+        localCodec: journalLineProjectCodec,
+        remoteResourceOptions: journal_line_resourceOptionsConfig,
+        localAttributes: ["journal_line_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      projectByMyProjectId: {
+        localCodec: journalLineProjectCodec,
+        remoteResourceOptions: project_resourceOptionsConfig,
+        localAttributes: ["project_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
       }
     },
     journalLineTag: {
@@ -7303,6 +8800,44 @@ const registryConfig = {
         localAttributes: ["tag_id"],
         remoteAttributes: ["id"],
         isUnique: true
+      }
+    },
+    loan: {
+      __proto__: null,
+      bookByMyBookId: {
+        localCodec: loanCodec,
+        remoteResourceOptions: book_resourceOptionsConfig,
+        localAttributes: ["book_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      accountByMyInterestAccountId: {
+        localCodec: loanCodec,
+        remoteResourceOptions: account_resourceOptionsConfig,
+        localAttributes: ["interest_account_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      accountByMyLiabilityAccountId: {
+        localCodec: loanCodec,
+        remoteResourceOptions: account_resourceOptionsConfig,
+        localAttributes: ["liability_account_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      accountByMyPaymentAccountId: {
+        localCodec: loanCodec,
+        remoteResourceOptions: account_resourceOptionsConfig,
+        localAttributes: ["payment_account_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      amortizationEntriesByTheirLoanId: {
+        localCodec: loanCodec,
+        remoteResourceOptions: amortization_entry_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["loan_id"],
+        isReferencee: true
       }
     },
     mileageLog: {
@@ -7338,6 +8873,69 @@ const registryConfig = {
         localCodec: payrollConnectionCodec,
         remoteResourceOptions: book_resourceOptionsConfig,
         localAttributes: ["book_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      }
+    },
+    project: {
+      __proto__: null,
+      bookByMyBookId: {
+        localCodec: projectCodec,
+        remoteResourceOptions: book_resourceOptionsConfig,
+        localAttributes: ["book_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      categorizationRulesByTheirProjectId: {
+        localCodec: projectCodec,
+        remoteResourceOptions: categorization_rule_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["project_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
+      },
+      categorizationRuleSplitsByTheirProjectId: {
+        localCodec: projectCodec,
+        remoteResourceOptions: categorization_rule_split_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["project_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
+      },
+      journalLineProjectsByTheirProjectId: {
+        localCodec: projectCodec,
+        remoteResourceOptions: journal_line_project_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["project_id"],
+        isReferencee: true
+      },
+      rdExpensesByTheirProjectId: {
+        localCodec: projectCodec,
+        remoteResourceOptions: rd_expense_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["project_id"],
+        isReferencee: true
+      }
+    },
+    rdExpense: {
+      __proto__: null,
+      bookByMyBookId: {
+        localCodec: rdExpenseCodec,
+        remoteResourceOptions: book_resourceOptionsConfig,
+        localAttributes: ["book_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      projectByMyProjectId: {
+        localCodec: rdExpenseCodec,
+        remoteResourceOptions: project_resourceOptionsConfig,
+        localAttributes: ["project_id"],
         remoteAttributes: ["id"],
         isUnique: true
       }
@@ -7457,6 +9055,17 @@ const registryConfig = {
         localAttributes: ["id"],
         remoteAttributes: ["tag_id"],
         isReferencee: true
+      },
+      categorizationRuleSplitsByTheirTagId: {
+        localCodec: tagCodec,
+        remoteResourceOptions: categorization_rule_split_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["tag_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
       }
     },
     tagGroup: {
@@ -7569,11 +9178,19 @@ const registryConfig = {
         localAttributes: ["id"],
         remoteAttributes: ["vendor_id"],
         isReferencee: true
+      },
+      documentsByTheirVendorId: {
+        localCodec: vendorCodec,
+        remoteResourceOptions: document_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["vendor_id"],
+        isReferencee: true
       }
     }
   }
 };
 const registry = makeRegistry(registryConfig);
+const resource_journal_line_projectPgResource = registry.pgResources["journal_line_project"];
 const resource_journal_line_tagPgResource = registry.pgResources["journal_line_tag"];
 const resource_tag_groupPgResource = registry.pgResources["tag_group"];
 const resource___drizzle_migrationsPgResource = registry.pgResources["__drizzle_migrations"];
@@ -7587,20 +9204,26 @@ const resource_savings_goalPgResource = registry.pgResources["savings_goal"];
 const resource_import_profilePgResource = registry.pgResources["import_profile"];
 const resource_net_worth_snapshotPgResource = registry.pgResources["net_worth_snapshot"];
 const resource_accounting_periodPgResource = registry.pgResources["accounting_period"];
+const resource_attachmentPgResource = registry.pgResources["attachment"];
 const resource_inventory_transactionPgResource = registry.pgResources["inventory_transaction"];
 const resource_bookPgResource = registry.pgResources["book"];
 const resource_payroll_connectionPgResource = registry.pgResources["payroll_connection"];
 const resource_bill_linePgResource = registry.pgResources["bill_line"];
 const resource_estimate_linePgResource = registry.pgResources["estimate_line"];
 const resource_bill_paymentPgResource = registry.pgResources["bill_payment"];
+const resource_categorization_rule_splitPgResource = registry.pgResources["categorization_rule_split"];
 const resource_invoice_paymentPgResource = registry.pgResources["invoice_payment"];
 const resource_reconciliation_statementPgResource = registry.pgResources["reconciliation_statement"];
+const resource_rd_expensePgResource = registry.pgResources["rd_expense"];
+const resource_projectPgResource = registry.pgResources["project"];
 const resource_invoice_linePgResource = registry.pgResources["invoice_line"];
+const resource_amortization_entryPgResource = registry.pgResources["amortization_entry"];
 const resource_crypto_lotPgResource = registry.pgResources["crypto_lot"];
 const resource_connected_accountPgResource = registry.pgResources["connected_account"];
 const resource_journal_entryPgResource = registry.pgResources["journal_entry"];
 const resource_mileage_logPgResource = registry.pgResources["mileage_log"];
 const resource_budgetPgResource = registry.pgResources["budget"];
+const resource_documentPgResource = registry.pgResources["document"];
 const resource_estimatePgResource = registry.pgResources["estimate"];
 const resource_reconciliation_queuePgResource = registry.pgResources["reconciliation_queue"];
 const resource_customerPgResource = registry.pgResources["customer"];
@@ -7608,10 +9231,11 @@ const resource_inventory_itemPgResource = registry.pgResources["inventory_item"]
 const resource_vendorPgResource = registry.pgResources["vendor"];
 const resource_crypto_assetPgResource = registry.pgResources["crypto_asset"];
 const resource_billPgResource = registry.pgResources["bill"];
-const resource_categorization_rulePgResource = registry.pgResources["categorization_rule"];
 const resource_fixed_assetPgResource = registry.pgResources["fixed_asset"];
 const resource_invoicePgResource = registry.pgResources["invoice"];
 const resource_recurring_transactionPgResource = registry.pgResources["recurring_transaction"];
+const resource_categorization_rulePgResource = registry.pgResources["categorization_rule"];
+const resource_loanPgResource = registry.pgResources["loan"];
 const resource_accountPgResource = registry.pgResources["account"];
 const makeTableNodeIdHandler = ({
   typeName,
@@ -7642,12 +9266,12 @@ const makeTableNodeIdHandler = ({
     deprecationReason
   };
 };
-const nodeIdHandler_JournalLineTag = makeTableNodeIdHandler({
-  typeName: "JournalLineTag",
-  identifier: "JournalLineTag",
+const nodeIdHandler_JournalLineProject = makeTableNodeIdHandler({
+  typeName: "JournalLineProject",
+  identifier: "JournalLineProject",
   nodeIdCodec: base64JSONNodeIdCodec,
-  resource: resource_journal_line_tagPgResource,
-  pk: journal_line_tagUniques[0].attributes
+  resource: resource_journal_line_projectPgResource,
+  pk: journal_line_projectUniques[0].attributes
 });
 const specForHandlerCache = new Map();
 function specForHandler(handler) {
@@ -7664,6 +9288,17 @@ function specForHandler(handler) {
   specForHandlerCache.set(handler, spec);
   return spec;
 }
+const nodeFetcher_JournalLineProject = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_JournalLineProject));
+  return nodeIdHandler_JournalLineProject.get(nodeIdHandler_JournalLineProject.getSpec($decoded));
+};
+const nodeIdHandler_JournalLineTag = makeTableNodeIdHandler({
+  typeName: "JournalLineTag",
+  identifier: "JournalLineTag",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_journal_line_tagPgResource,
+  pk: journal_line_tagUniques[0].attributes
+});
 const nodeFetcher_JournalLineTag = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_JournalLineTag));
   return nodeIdHandler_JournalLineTag.get(nodeIdHandler_JournalLineTag.getSpec($decoded));
@@ -7800,6 +9435,17 @@ const nodeFetcher_AccountingPeriod = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_AccountingPeriod));
   return nodeIdHandler_AccountingPeriod.get(nodeIdHandler_AccountingPeriod.getSpec($decoded));
 };
+const nodeIdHandler_Attachment = makeTableNodeIdHandler({
+  typeName: "Attachment",
+  identifier: "Attachment",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_attachmentPgResource,
+  pk: attachmentUniques[0].attributes
+});
+const nodeFetcher_Attachment = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Attachment));
+  return nodeIdHandler_Attachment.get(nodeIdHandler_Attachment.getSpec($decoded));
+};
 const nodeIdHandler_InventoryTransaction = makeTableNodeIdHandler({
   typeName: "InventoryTransaction",
   identifier: "InventoryTransaction",
@@ -7866,6 +9512,17 @@ const nodeFetcher_BillPayment = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_BillPayment));
   return nodeIdHandler_BillPayment.get(nodeIdHandler_BillPayment.getSpec($decoded));
 };
+const nodeIdHandler_CategorizationRuleSplit = makeTableNodeIdHandler({
+  typeName: "CategorizationRuleSplit",
+  identifier: "CategorizationRuleSplit",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_categorization_rule_splitPgResource,
+  pk: categorization_rule_splitUniques[0].attributes
+});
+const nodeFetcher_CategorizationRuleSplit = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_CategorizationRuleSplit));
+  return nodeIdHandler_CategorizationRuleSplit.get(nodeIdHandler_CategorizationRuleSplit.getSpec($decoded));
+};
 const nodeIdHandler_InvoicePayment = makeTableNodeIdHandler({
   typeName: "InvoicePayment",
   identifier: "InvoicePayment",
@@ -7888,6 +9545,28 @@ const nodeFetcher_ReconciliationStatement = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_ReconciliationStatement));
   return nodeIdHandler_ReconciliationStatement.get(nodeIdHandler_ReconciliationStatement.getSpec($decoded));
 };
+const nodeIdHandler_RdExpense = makeTableNodeIdHandler({
+  typeName: "RdExpense",
+  identifier: "RdExpense",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_rd_expensePgResource,
+  pk: rd_expenseUniques[0].attributes
+});
+const nodeFetcher_RdExpense = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_RdExpense));
+  return nodeIdHandler_RdExpense.get(nodeIdHandler_RdExpense.getSpec($decoded));
+};
+const nodeIdHandler_Project = makeTableNodeIdHandler({
+  typeName: "Project",
+  identifier: "Project",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_projectPgResource,
+  pk: projectUniques[0].attributes
+});
+const nodeFetcher_Project = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Project));
+  return nodeIdHandler_Project.get(nodeIdHandler_Project.getSpec($decoded));
+};
 const nodeIdHandler_InvoiceLine = makeTableNodeIdHandler({
   typeName: "InvoiceLine",
   identifier: "InvoiceLine",
@@ -7898,6 +9577,17 @@ const nodeIdHandler_InvoiceLine = makeTableNodeIdHandler({
 const nodeFetcher_InvoiceLine = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_InvoiceLine));
   return nodeIdHandler_InvoiceLine.get(nodeIdHandler_InvoiceLine.getSpec($decoded));
+};
+const nodeIdHandler_AmortizationEntry = makeTableNodeIdHandler({
+  typeName: "AmortizationEntry",
+  identifier: "AmortizationEntry",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_amortization_entryPgResource,
+  pk: amortization_entryUniques[0].attributes
+});
+const nodeFetcher_AmortizationEntry = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_AmortizationEntry));
+  return nodeIdHandler_AmortizationEntry.get(nodeIdHandler_AmortizationEntry.getSpec($decoded));
 };
 const nodeIdHandler_CryptoLot = makeTableNodeIdHandler({
   typeName: "CryptoLot",
@@ -7953,6 +9643,17 @@ const nodeIdHandler_Budget = makeTableNodeIdHandler({
 const nodeFetcher_Budget = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Budget));
   return nodeIdHandler_Budget.get(nodeIdHandler_Budget.getSpec($decoded));
+};
+const nodeIdHandler_Document = makeTableNodeIdHandler({
+  typeName: "Document",
+  identifier: "Document",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_documentPgResource,
+  pk: documentUniques[0].attributes
+});
+const nodeFetcher_Document = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Document));
+  return nodeIdHandler_Document.get(nodeIdHandler_Document.getSpec($decoded));
 };
 const nodeIdHandler_Estimate = makeTableNodeIdHandler({
   typeName: "Estimate",
@@ -8031,17 +9732,6 @@ const nodeFetcher_Bill = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Bill));
   return nodeIdHandler_Bill.get(nodeIdHandler_Bill.getSpec($decoded));
 };
-const nodeIdHandler_CategorizationRule = makeTableNodeIdHandler({
-  typeName: "CategorizationRule",
-  identifier: "CategorizationRule",
-  nodeIdCodec: base64JSONNodeIdCodec,
-  resource: resource_categorization_rulePgResource,
-  pk: categorization_ruleUniques[0].attributes
-});
-const nodeFetcher_CategorizationRule = $nodeId => {
-  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_CategorizationRule));
-  return nodeIdHandler_CategorizationRule.get(nodeIdHandler_CategorizationRule.getSpec($decoded));
-};
 const nodeIdHandler_FixedAsset = makeTableNodeIdHandler({
   typeName: "FixedAsset",
   identifier: "FixedAsset",
@@ -8074,6 +9764,28 @@ const nodeIdHandler_RecurringTransaction = makeTableNodeIdHandler({
 const nodeFetcher_RecurringTransaction = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_RecurringTransaction));
   return nodeIdHandler_RecurringTransaction.get(nodeIdHandler_RecurringTransaction.getSpec($decoded));
+};
+const nodeIdHandler_CategorizationRule = makeTableNodeIdHandler({
+  typeName: "CategorizationRule",
+  identifier: "CategorizationRule",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_categorization_rulePgResource,
+  pk: categorization_ruleUniques[0].attributes
+});
+const nodeFetcher_CategorizationRule = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_CategorizationRule));
+  return nodeIdHandler_CategorizationRule.get(nodeIdHandler_CategorizationRule.getSpec($decoded));
+};
+const nodeIdHandler_Loan = makeTableNodeIdHandler({
+  typeName: "Loan",
+  identifier: "Loan",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_loanPgResource,
+  pk: loanUniques[0].attributes
+});
+const nodeFetcher_Loan = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Loan));
+  return nodeIdHandler_Loan.get(nodeIdHandler_Loan.getSpec($decoded));
 };
 const nodeIdHandler_Account = makeTableNodeIdHandler({
   typeName: "Account",
@@ -8122,7 +9834,7 @@ function assertAllowed(value, mode) {
   }
   if (!false && value === null) throw Object.assign(Error("Null literals are forbidden in filter argument input."), {});
 }
-function Query_journalLineTagsfilterApplyPlan(_, $connection, fieldArg) {
+function Query_journalLineProjectsfilterApplyPlan(_, $connection, fieldArg) {
   const $pgSelect = $connection.getSubplan();
   fieldArg.apply($pgSelect, (queryBuilder, value) => {
     assertAllowed(value, "object");
@@ -8138,6 +9850,7 @@ function applyOrderByArgToConnection(parent, $connection, value) {
 const nodeIdHandlerByTypeName = {
   __proto__: null,
   Query: nodeIdHandler_Query,
+  JournalLineProject: nodeIdHandler_JournalLineProject,
   JournalLineTag: nodeIdHandler_JournalLineTag,
   TagGroup: nodeIdHandler_TagGroup,
   _DrizzleMigration: nodeIdHandler__DrizzleMigration,
@@ -8151,20 +9864,26 @@ const nodeIdHandlerByTypeName = {
   ImportProfile: nodeIdHandler_ImportProfile,
   NetWorthSnapshot: nodeIdHandler_NetWorthSnapshot,
   AccountingPeriod: nodeIdHandler_AccountingPeriod,
+  Attachment: nodeIdHandler_Attachment,
   InventoryTransaction: nodeIdHandler_InventoryTransaction,
   Book: nodeIdHandler_Book,
   PayrollConnection: nodeIdHandler_PayrollConnection,
   BillLine: nodeIdHandler_BillLine,
   EstimateLine: nodeIdHandler_EstimateLine,
   BillPayment: nodeIdHandler_BillPayment,
+  CategorizationRuleSplit: nodeIdHandler_CategorizationRuleSplit,
   InvoicePayment: nodeIdHandler_InvoicePayment,
   ReconciliationStatement: nodeIdHandler_ReconciliationStatement,
+  RdExpense: nodeIdHandler_RdExpense,
+  Project: nodeIdHandler_Project,
   InvoiceLine: nodeIdHandler_InvoiceLine,
+  AmortizationEntry: nodeIdHandler_AmortizationEntry,
   CryptoLot: nodeIdHandler_CryptoLot,
   ConnectedAccount: nodeIdHandler_ConnectedAccount,
   JournalEntry: nodeIdHandler_JournalEntry,
   MileageLog: nodeIdHandler_MileageLog,
   Budget: nodeIdHandler_Budget,
+  Document: nodeIdHandler_Document,
   Estimate: nodeIdHandler_Estimate,
   ReconciliationQueue: nodeIdHandler_ReconciliationQueue,
   Customer: nodeIdHandler_Customer,
@@ -8172,10 +9891,11 @@ const nodeIdHandlerByTypeName = {
   Vendor: nodeIdHandler_Vendor,
   CryptoAsset: nodeIdHandler_CryptoAsset,
   Bill: nodeIdHandler_Bill,
-  CategorizationRule: nodeIdHandler_CategorizationRule,
   FixedAsset: nodeIdHandler_FixedAsset,
   Invoice: nodeIdHandler_Invoice,
   RecurringTransaction: nodeIdHandler_RecurringTransaction,
+  CategorizationRule: nodeIdHandler_CategorizationRule,
+  Loan: nodeIdHandler_Loan,
   Account: nodeIdHandler_Account
 };
 const decodeNodeId = makeDecodeNodeId(Object.values(nodeIdHandlerByTypeName));
@@ -8188,14 +9908,20 @@ function findTypeNameMatch(specifier) {
   console.warn(`Could not find a type that matched the specifier '${inspect(specifier)}'`);
   return null;
 }
-const JournalLineTag_rowIdPlan = $record => {
+const JournalLineProject_rowIdPlan = $record => {
   return $record.get("id");
 };
-const JournalLineTag_tagIdPlan = $record => {
-  return $record.get("tag_id");
+const JournalLineProject_journalLineIdPlan = $record => {
+  return $record.get("journal_line_id");
 };
-const JournalLineTag_tagPlan = $record => resource_tagPgResource.get({
-  id: $record.get("tag_id")
+const JournalLineProject_projectIdPlan = $record => {
+  return $record.get("project_id");
+};
+const JournalLineProject_journalLinePlan = $record => resource_journal_linePgResource.get({
+  id: $record.get("journal_line_id")
+});
+const JournalLineProject_projectPlan = $record => resource_projectPgResource.get({
+  id: $record.get("project_id")
 });
 function toString(value) {
   return "" + value;
@@ -8628,8 +10354,27 @@ const BillLineOrderBy_BILL_ID_DESCApply = queryBuilder => {
     direction: "DESC"
   });
 };
+const BillPayment_paymentAccountIdPlan = $record => {
+  return $record.get("payment_account_id");
+};
+const BillPayment_paymentAccountPlan = $record => resource_accountPgResource.get({
+  id: $record.get("payment_account_id")
+});
+const BillCondition_vendorIdApply = ($condition, val) => applyAttributeCondition("vendor_id", TYPES.uuid, $condition, val);
 const BillCondition_numberApply = ($condition, val) => applyAttributeCondition("number", TYPES.text, $condition, val);
 const BillCondition_statusApply = ($condition, val) => applyAttributeCondition("status", TYPES.text, $condition, val);
+const BillOrderBy_VENDOR_ID_ASCApply = queryBuilder => {
+  queryBuilder.orderBy({
+    attribute: "vendor_id",
+    direction: "ASC"
+  });
+};
+const BillOrderBy_VENDOR_ID_DESCApply = queryBuilder => {
+  queryBuilder.orderBy({
+    attribute: "vendor_id",
+    direction: "DESC"
+  });
+};
 const BillOrderBy_NUMBER_ASCApply = queryBuilder => {
   queryBuilder.orderBy({
     attribute: "number",
@@ -8654,6 +10399,31 @@ const BillOrderBy_STATUS_DESCApply = queryBuilder => {
     direction: "DESC"
   });
 };
+const Document_contentTypePlan = $record => {
+  return $record.get("content_type");
+};
+const Document_sizeBytesPlan = $record => {
+  return $record.get("size_bytes");
+};
+const Document_storageKeyPlan = $record => {
+  return $record.get("storage_key");
+};
+const Document_createdByPlan = $record => {
+  return $record.get("created_by");
+};
+const JournalLineCondition_journalEntryIdApply = ($condition, val) => applyAttributeCondition("journal_entry_id", TYPES.uuid, $condition, val);
+const JournalLineOrderBy_JOURNAL_ENTRY_ID_ASCApply = queryBuilder => {
+  queryBuilder.orderBy({
+    attribute: "journal_entry_id",
+    direction: "ASC"
+  });
+};
+const JournalLineOrderBy_JOURNAL_ENTRY_ID_DESCApply = queryBuilder => {
+  queryBuilder.orderBy({
+    attribute: "journal_entry_id",
+    direction: "DESC"
+  });
+};
 const JournalEntryCondition_dateApply = ($condition, val) => applyAttributeCondition("date", TYPES.timestamptz, $condition, val);
 const JournalEntryOrderBy_DATE_ASCApply = queryBuilder => {
   queryBuilder.orderBy({
@@ -8668,6 +10438,54 @@ const JournalEntryOrderBy_DATE_DESCApply = queryBuilder => {
   });
 };
 const JSONSerialize = value => value;
+const AccountingPeriodCondition_yearApply = ($condition, val) => applyAttributeCondition("year", TYPES.int, $condition, val);
+const AccountingPeriodOrderBy_YEAR_ASCApply = queryBuilder => {
+  queryBuilder.orderBy({
+    attribute: "year",
+    direction: "ASC"
+  });
+};
+const AccountingPeriodOrderBy_YEAR_DESCApply = queryBuilder => {
+  queryBuilder.orderBy({
+    attribute: "year",
+    direction: "DESC"
+  });
+};
+const CategorizationRule_tagIdPlan = $record => {
+  return $record.get("tag_id");
+};
+const CategorizationRule_tagPlan = $record => resource_tagPgResource.get({
+  id: $record.get("tag_id")
+});
+const Project_startDatePlan = $record => {
+  return $record.get("start_date");
+};
+const JournalLineProjectCondition_journalLineIdApply = ($condition, val) => applyAttributeCondition("journal_line_id", TYPES.uuid, $condition, val);
+const JournalLineProjectCondition_projectIdApply = ($condition, val) => applyAttributeCondition("project_id", TYPES.uuid, $condition, val);
+const JournalLineProjectOrderBy_JOURNAL_LINE_ID_ASCApply = queryBuilder => {
+  queryBuilder.orderBy({
+    attribute: "journal_line_id",
+    direction: "ASC"
+  });
+};
+const JournalLineProjectOrderBy_JOURNAL_LINE_ID_DESCApply = queryBuilder => {
+  queryBuilder.orderBy({
+    attribute: "journal_line_id",
+    direction: "DESC"
+  });
+};
+const JournalLineProjectOrderBy_PROJECT_ID_ASCApply = queryBuilder => {
+  queryBuilder.orderBy({
+    attribute: "project_id",
+    direction: "ASC"
+  });
+};
+const JournalLineProjectOrderBy_PROJECT_ID_DESCApply = queryBuilder => {
+  queryBuilder.orderBy({
+    attribute: "project_id",
+    direction: "DESC"
+  });
+};
 const FixedAsset_assetAccountIdPlan = $record => {
   return $record.get("asset_account_id");
 };
@@ -8718,16 +10536,26 @@ const InvoiceOrderBy_CUSTOMER_ID_DESCApply = queryBuilder => {
     direction: "DESC"
   });
 };
+const Loan_paymentAmountPlan = $record => {
+  return $record.get("payment_amount");
+};
+const Loan_extraPrincipalPlan = $record => {
+  return $record.get("extra_principal");
+};
 function applyInputToInsert(_, $object) {
+  return $object;
+}
+const specFromArgs_JournalLineProject = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_JournalLineProject, $nodeId);
+};
+function applyInputToUpdateOrDelete(_, $object) {
   return $object;
 }
 const specFromArgs_JournalLineTag = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_JournalLineTag, $nodeId);
 };
-function applyInputToUpdateOrDelete(_, $object) {
-  return $object;
-}
 const specFromArgs_TagGroup = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_TagGroup, $nodeId);
@@ -8776,6 +10604,10 @@ const specFromArgs_AccountingPeriod = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_AccountingPeriod, $nodeId);
 };
+const specFromArgs_Attachment = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_Attachment, $nodeId);
+};
 const specFromArgs_InventoryTransaction = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_InventoryTransaction, $nodeId);
@@ -8800,6 +10632,10 @@ const specFromArgs_BillPayment = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_BillPayment, $nodeId);
 };
+const specFromArgs_CategorizationRuleSplit = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_CategorizationRuleSplit, $nodeId);
+};
 const specFromArgs_InvoicePayment = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_InvoicePayment, $nodeId);
@@ -8808,9 +10644,21 @@ const specFromArgs_ReconciliationStatement = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_ReconciliationStatement, $nodeId);
 };
+const specFromArgs_RdExpense = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_RdExpense, $nodeId);
+};
+const specFromArgs_Project = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_Project, $nodeId);
+};
 const specFromArgs_InvoiceLine = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_InvoiceLine, $nodeId);
+};
+const specFromArgs_AmortizationEntry = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_AmortizationEntry, $nodeId);
 };
 const specFromArgs_CryptoLot = args => {
   const $nodeId = args.getRaw(["input", "id"]);
@@ -8831,6 +10679,10 @@ const specFromArgs_MileageLog = args => {
 const specFromArgs_Budget = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Budget, $nodeId);
+};
+const specFromArgs_Document = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_Document, $nodeId);
 };
 const specFromArgs_Estimate = args => {
   const $nodeId = args.getRaw(["input", "id"]);
@@ -8860,10 +10712,6 @@ const specFromArgs_Bill = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Bill, $nodeId);
 };
-const specFromArgs_CategorizationRule = args => {
-  const $nodeId = args.getRaw(["input", "id"]);
-  return specFromNodeId(nodeIdHandler_CategorizationRule, $nodeId);
-};
 const specFromArgs_FixedAsset = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_FixedAsset, $nodeId);
@@ -8875,6 +10723,14 @@ const specFromArgs_Invoice = args => {
 const specFromArgs_RecurringTransaction = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_RecurringTransaction, $nodeId);
+};
+const specFromArgs_CategorizationRule = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_CategorizationRule, $nodeId);
+};
+const specFromArgs_Loan = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_Loan, $nodeId);
 };
 const specFromArgs_Account = args => {
   const $nodeId = args.getRaw(["input", "id"]);
@@ -8907,19 +10763,23 @@ const pgMutationPayloadEdge = (resource, pkAttributes, $mutation, fieldArgs) => 
   const $connection = connection($select);
   return new EdgeStep($connection, first($connection));
 };
-const CreateJournalLineTagPayload_journalLineTagEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_journal_line_tagPgResource, journal_line_tagUniques[0].attributes, $mutation, fieldArgs);
+const CreateJournalLineProjectPayload_journalLineProjectEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_journal_line_projectPgResource, journal_line_projectUniques[0].attributes, $mutation, fieldArgs);
 function applyClientMutationIdForCreate(qb, val) {
   qb.setMeta("clientMutationId", val);
 }
 function applyCreateFields(qb, arg) {
   if (arg != null) return qb.setBuilder();
 }
-function JournalLineTagInput_rowIdApply(obj, val, info) {
+function JournalLineProjectInput_rowIdApply(obj, val, info) {
   obj.set("id", bakedInputRuntime(info.schema, info.field.type, val));
 }
-function JournalLineTagInput_journalLineIdApply(obj, val, info) {
+function JournalLineProjectInput_journalLineIdApply(obj, val, info) {
   obj.set("journal_line_id", bakedInputRuntime(info.schema, info.field.type, val));
 }
+function JournalLineProjectInput_projectIdApply(obj, val, info) {
+  obj.set("project_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+const CreateJournalLineTagPayload_journalLineTagEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_journal_line_tagPgResource, journal_line_tagUniques[0].attributes, $mutation, fieldArgs);
 function JournalLineTagInput_tagIdApply(obj, val, info) {
   obj.set("tag_id", bakedInputRuntime(info.schema, info.field.type, val));
 }
@@ -9064,6 +10924,25 @@ function AccountingPeriodInput_reopenedAtApply(obj, val, info) {
 function AccountingPeriodInput_blockersApply(obj, val, info) {
   obj.set("blockers", bakedInputRuntime(info.schema, info.field.type, val));
 }
+const CreateAttachmentPayload_attachmentEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_attachmentPgResource, attachmentUniques[0].attributes, $mutation, fieldArgs);
+function AttachmentInput_filenameApply(obj, val, info) {
+  obj.set("filename", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function AttachmentInput_contentTypeApply(obj, val, info) {
+  obj.set("content_type", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function AttachmentInput_sizeBytesApply(obj, val, info) {
+  obj.set("size_bytes", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function AttachmentInput_storageKeyApply(obj, val, info) {
+  obj.set("storage_key", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function AttachmentInput_uploadStatusApply(obj, val, info) {
+  obj.set("upload_status", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function AttachmentInput_createdByApply(obj, val, info) {
+  obj.set("created_by", bakedInputRuntime(info.schema, info.field.type, val));
+}
 const CreateInventoryTransactionPayload_inventoryTransactionEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_inventory_transactionPgResource, inventory_transactionUniques[0].attributes, $mutation, fieldArgs);
 function InventoryTransactionInput_itemIdApply(obj, val, info) {
   obj.set("item_id", bakedInputRuntime(info.schema, info.field.type, val));
@@ -9151,6 +11030,19 @@ function BillPaymentInput_methodApply(obj, val, info) {
 function BillPaymentInput_referenceApply(obj, val, info) {
   obj.set("reference", bakedInputRuntime(info.schema, info.field.type, val));
 }
+const CreateCategorizationRuleSplitPayload_categorizationRuleSplitEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_categorization_rule_splitPgResource, categorization_rule_splitUniques[0].attributes, $mutation, fieldArgs);
+function CategorizationRuleSplitInput_ruleIdApply(obj, val, info) {
+  obj.set("rule_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function CategorizationRuleSplitInput_sideApply(obj, val, info) {
+  obj.set("side", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function CategorizationRuleSplitInput_percentageApply(obj, val, info) {
+  obj.set("percentage", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function CategorizationRuleSplitInput_fixedAmountApply(obj, val, info) {
+  obj.set("fixed_amount", bakedInputRuntime(info.schema, info.field.type, val));
+}
 const CreateInvoicePaymentPayload_invoicePaymentEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_invoice_paymentPgResource, invoice_paymentUniques[0].attributes, $mutation, fieldArgs);
 function InvoicePaymentInput_invoiceIdApply(obj, val, info) {
   obj.set("invoice_id", bakedInputRuntime(info.schema, info.field.type, val));
@@ -9174,9 +11066,54 @@ function ReconciliationStatementInput_completedAtApply(obj, val, info) {
 function ReconciliationStatementInput_discrepancyApply(obj, val, info) {
   obj.set("discrepancy", bakedInputRuntime(info.schema, info.field.type, val));
 }
+const CreateRdExpensePayload_rdExpenseEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_rd_expensePgResource, rd_expenseUniques[0].attributes, $mutation, fieldArgs);
+function RdExpenseInput_categoryApply(obj, val, info) {
+  obj.set("category", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function RdExpenseInput_isForeignApply(obj, val, info) {
+  obj.set("is_foreign", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function RdExpenseInput_notesApply(obj, val, info) {
+  obj.set("notes", bakedInputRuntime(info.schema, info.field.type, val));
+}
+const CreateProjectPayload_projectEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_projectPgResource, projectUniques[0].attributes, $mutation, fieldArgs);
+function ProjectInput_budgetAmountApply(obj, val, info) {
+  obj.set("budget_amount", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function ProjectInput_startDateApply(obj, val, info) {
+  obj.set("start_date", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function ProjectInput_endDateApply(obj, val, info) {
+  obj.set("end_date", bakedInputRuntime(info.schema, info.field.type, val));
+}
 const CreateInvoiceLinePayload_invoiceLineEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_invoice_linePgResource, invoice_lineUniques[0].attributes, $mutation, fieldArgs);
 function InvoiceLineInput_inventoryItemIdApply(obj, val, info) {
   obj.set("inventory_item_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+const CreateAmortizationEntryPayload_amortizationEntryEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_amortization_entryPgResource, amortization_entryUniques[0].attributes, $mutation, fieldArgs);
+function AmortizationEntryInput_loanIdApply(obj, val, info) {
+  obj.set("loan_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function AmortizationEntryInput_sequenceNumberApply(obj, val, info) {
+  obj.set("sequence_number", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function AmortizationEntryInput_dueDateApply(obj, val, info) {
+  obj.set("due_date", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function AmortizationEntryInput_paymentAmountApply(obj, val, info) {
+  obj.set("payment_amount", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function AmortizationEntryInput_principalAmountApply(obj, val, info) {
+  obj.set("principal_amount", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function AmortizationEntryInput_interestAmountApply(obj, val, info) {
+  obj.set("interest_amount", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function AmortizationEntryInput_extraPrincipalApply(obj, val, info) {
+  obj.set("extra_principal", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function AmortizationEntryInput_balanceAfterApply(obj, val, info) {
+  obj.set("balance_after", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateCryptoLotPayload_cryptoLotEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_crypto_lotPgResource, crypto_lotUniques[0].attributes, $mutation, fieldArgs);
 function CryptoLotInput_cryptoAssetIdApply(obj, val, info) {
@@ -9252,6 +11189,7 @@ function BudgetInput_periodApply(obj, val, info) {
 function BudgetInput_rolloverApply(obj, val, info) {
   obj.set("rollover", bakedInputRuntime(info.schema, info.field.type, val));
 }
+const CreateDocumentPayload_documentEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_documentPgResource, documentUniques[0].attributes, $mutation, fieldArgs);
 const CreateEstimatePayload_estimateEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_estimatePgResource, estimateUniques[0].attributes, $mutation, fieldArgs);
 function EstimateInput_customerIdApply(obj, val, info) {
   obj.set("customer_id", bakedInputRuntime(info.schema, info.field.type, val));
@@ -9327,9 +11265,6 @@ function CustomerInput_stateApply(obj, val, info) {
 function CustomerInput_zipApply(obj, val, info) {
   obj.set("zip", bakedInputRuntime(info.schema, info.field.type, val));
 }
-function CustomerInput_notesApply(obj, val, info) {
-  obj.set("notes", bakedInputRuntime(info.schema, info.field.type, val));
-}
 const CreateInventoryItemPayload_inventoryItemEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_inventory_itemPgResource, inventory_itemUniques[0].attributes, $mutation, fieldArgs);
 function InventoryItemInput_skuApply(obj, val, info) {
   obj.set("sku", bakedInputRuntime(info.schema, info.field.type, val));
@@ -9382,36 +11317,11 @@ const CreateBillPayload_billEdgePlan = ($mutation, fieldArgs) => pgMutationPaylo
 function BillInput_billDateApply(obj, val, info) {
   obj.set("bill_date", bakedInputRuntime(info.schema, info.field.type, val));
 }
-function BillInput_dueDateApply(obj, val, info) {
-  obj.set("due_date", bakedInputRuntime(info.schema, info.field.type, val));
-}
 function BillInput_taxAmountApply(obj, val, info) {
   obj.set("tax_amount", bakedInputRuntime(info.schema, info.field.type, val));
 }
 function BillInput_amountPaidApply(obj, val, info) {
   obj.set("amount_paid", bakedInputRuntime(info.schema, info.field.type, val));
-}
-const CreateCategorizationRulePayload_categorizationRuleEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_categorization_rulePgResource, categorization_ruleUniques[0].attributes, $mutation, fieldArgs);
-function CategorizationRuleInput_matchFieldApply(obj, val, info) {
-  obj.set("match_field", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function CategorizationRuleInput_matchTypeApply(obj, val, info) {
-  obj.set("match_type", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function CategorizationRuleInput_matchValueApply(obj, val, info) {
-  obj.set("match_value", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function CategorizationRuleInput_amountMinApply(obj, val, info) {
-  obj.set("amount_min", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function CategorizationRuleInput_amountMaxApply(obj, val, info) {
-  obj.set("amount_max", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function CategorizationRuleInput_hitCountApply(obj, val, info) {
-  obj.set("hit_count", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function CategorizationRuleInput_lastHitAtApply(obj, val, info) {
-  obj.set("last_hit_at", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateFixedAssetPayload_fixedAssetEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_fixed_assetPgResource, fixed_assetUniques[0].attributes, $mutation, fieldArgs);
 function FixedAssetInput_depreciationExpenseAccountIdApply(obj, val, info) {
@@ -9458,6 +11368,47 @@ function RecurringTransactionInput_isAutoDetectedApply(obj, val, info) {
 function RecurringTransactionInput_nextExpectedDateApply(obj, val, info) {
   obj.set("next_expected_date", bakedInputRuntime(info.schema, info.field.type, val));
 }
+const CreateCategorizationRulePayload_categorizationRuleEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_categorization_rulePgResource, categorization_ruleUniques[0].attributes, $mutation, fieldArgs);
+function CategorizationRuleInput_matchFieldApply(obj, val, info) {
+  obj.set("match_field", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function CategorizationRuleInput_matchTypeApply(obj, val, info) {
+  obj.set("match_type", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function CategorizationRuleInput_matchValueApply(obj, val, info) {
+  obj.set("match_value", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function CategorizationRuleInput_amountMinApply(obj, val, info) {
+  obj.set("amount_min", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function CategorizationRuleInput_amountMaxApply(obj, val, info) {
+  obj.set("amount_max", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function CategorizationRuleInput_hitCountApply(obj, val, info) {
+  obj.set("hit_count", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function CategorizationRuleInput_lastHitAtApply(obj, val, info) {
+  obj.set("last_hit_at", bakedInputRuntime(info.schema, info.field.type, val));
+}
+const CreateLoanPayload_loanEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_loanPgResource, loanUniques[0].attributes, $mutation, fieldArgs);
+function LoanInput_liabilityAccountIdApply(obj, val, info) {
+  obj.set("liability_account_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function LoanInput_interestAccountIdApply(obj, val, info) {
+  obj.set("interest_account_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function LoanInput_originalPrincipalApply(obj, val, info) {
+  obj.set("original_principal", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function LoanInput_annualRateApply(obj, val, info) {
+  obj.set("annual_rate", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function LoanInput_termMonthsApply(obj, val, info) {
+  obj.set("term_months", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function LoanInput_paymentDayApply(obj, val, info) {
+  obj.set("payment_day", bakedInputRuntime(info.schema, info.field.type, val));
+}
 const CreateAccountPayload_accountEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_accountPgResource, accountUniques[0].attributes, $mutation, fieldArgs);
 function AccountInput_parentIdApply(obj, val, info) {
   obj.set("parent_id", bakedInputRuntime(info.schema, info.field.type, val));
@@ -9486,6 +11437,9 @@ type Query implements Node {
     """The globally unique \`ID\`."""
     id: ID!
   ): Node
+
+  """Get a single \`JournalLineProject\`."""
+  journalLineProject(rowId: UUID!): JournalLineProject
 
   """Get a single \`JournalLineTag\`."""
   journalLineTag(rowId: UUID!): JournalLineTag
@@ -9526,6 +11480,9 @@ type Query implements Node {
   """Get a single \`AccountingPeriod\`."""
   accountingPeriod(rowId: UUID!): AccountingPeriod
 
+  """Get a single \`Attachment\`."""
+  attachment(rowId: UUID!): Attachment
+
   """Get a single \`InventoryTransaction\`."""
   inventoryTransaction(rowId: UUID!): InventoryTransaction
 
@@ -9544,14 +11501,26 @@ type Query implements Node {
   """Get a single \`BillPayment\`."""
   billPayment(rowId: UUID!): BillPayment
 
+  """Get a single \`CategorizationRuleSplit\`."""
+  categorizationRuleSplit(rowId: UUID!): CategorizationRuleSplit
+
   """Get a single \`InvoicePayment\`."""
   invoicePayment(rowId: UUID!): InvoicePayment
 
   """Get a single \`ReconciliationStatement\`."""
   reconciliationStatement(rowId: UUID!): ReconciliationStatement
 
+  """Get a single \`RdExpense\`."""
+  rdExpense(rowId: UUID!): RdExpense
+
+  """Get a single \`Project\`."""
+  project(rowId: UUID!): Project
+
   """Get a single \`InvoiceLine\`."""
   invoiceLine(rowId: UUID!): InvoiceLine
+
+  """Get a single \`AmortizationEntry\`."""
+  amortizationEntry(rowId: UUID!): AmortizationEntry
 
   """Get a single \`CryptoLot\`."""
   cryptoLot(rowId: UUID!): CryptoLot
@@ -9567,6 +11536,9 @@ type Query implements Node {
 
   """Get a single \`Budget\`."""
   budget(rowId: UUID!): Budget
+
+  """Get a single \`Document\`."""
+  document(rowId: UUID!): Document
 
   """Get a single \`Estimate\`."""
   estimate(rowId: UUID!): Estimate
@@ -9589,9 +11561,6 @@ type Query implements Node {
   """Get a single \`Bill\`."""
   bill(rowId: UUID!): Bill
 
-  """Get a single \`CategorizationRule\`."""
-  categorizationRule(rowId: UUID!): CategorizationRule
-
   """Get a single \`FixedAsset\`."""
   fixedAsset(rowId: UUID!): FixedAsset
 
@@ -9601,8 +11570,22 @@ type Query implements Node {
   """Get a single \`RecurringTransaction\`."""
   recurringTransaction(rowId: UUID!): RecurringTransaction
 
+  """Get a single \`CategorizationRule\`."""
+  categorizationRule(rowId: UUID!): CategorizationRule
+
+  """Get a single \`Loan\`."""
+  loan(rowId: UUID!): Loan
+
   """Get a single \`Account\`."""
   account(rowId: UUID!): Account
+
+  """Reads a single \`JournalLineProject\` using its globally unique \`ID\`."""
+  journalLineProjectById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`JournalLineProject\`.
+    """
+    id: ID!
+  ): JournalLineProject
 
   """Reads a single \`JournalLineTag\` using its globally unique \`ID\`."""
   journalLineTagById(
@@ -9702,6 +11685,14 @@ type Query implements Node {
     id: ID!
   ): AccountingPeriod
 
+  """Reads a single \`Attachment\` using its globally unique \`ID\`."""
+  attachmentById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`Attachment\`.
+    """
+    id: ID!
+  ): Attachment
+
   """Reads a single \`InventoryTransaction\` using its globally unique \`ID\`."""
   inventoryTransactionById(
     """
@@ -9746,6 +11737,16 @@ type Query implements Node {
     id: ID!
   ): BillPayment
 
+  """
+  Reads a single \`CategorizationRuleSplit\` using its globally unique \`ID\`.
+  """
+  categorizationRuleSplitById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`CategorizationRuleSplit\`.
+    """
+    id: ID!
+  ): CategorizationRuleSplit
+
   """Reads a single \`InvoicePayment\` using its globally unique \`ID\`."""
   invoicePaymentById(
     """
@@ -9764,6 +11765,18 @@ type Query implements Node {
     id: ID!
   ): ReconciliationStatement
 
+  """Reads a single \`RdExpense\` using its globally unique \`ID\`."""
+  rdExpenseById(
+    """The globally unique \`ID\` to be used in selecting a single \`RdExpense\`."""
+    id: ID!
+  ): RdExpense
+
+  """Reads a single \`Project\` using its globally unique \`ID\`."""
+  projectById(
+    """The globally unique \`ID\` to be used in selecting a single \`Project\`."""
+    id: ID!
+  ): Project
+
   """Reads a single \`InvoiceLine\` using its globally unique \`ID\`."""
   invoiceLineById(
     """
@@ -9771,6 +11784,14 @@ type Query implements Node {
     """
     id: ID!
   ): InvoiceLine
+
+  """Reads a single \`AmortizationEntry\` using its globally unique \`ID\`."""
+  amortizationEntryById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`AmortizationEntry\`.
+    """
+    id: ID!
+  ): AmortizationEntry
 
   """Reads a single \`CryptoLot\` using its globally unique \`ID\`."""
   cryptoLotById(
@@ -9807,6 +11828,12 @@ type Query implements Node {
     """The globally unique \`ID\` to be used in selecting a single \`Budget\`."""
     id: ID!
   ): Budget
+
+  """Reads a single \`Document\` using its globally unique \`ID\`."""
+  documentById(
+    """The globally unique \`ID\` to be used in selecting a single \`Document\`."""
+    id: ID!
+  ): Document
 
   """Reads a single \`Estimate\` using its globally unique \`ID\`."""
   estimateById(
@@ -9856,14 +11883,6 @@ type Query implements Node {
     id: ID!
   ): Bill
 
-  """Reads a single \`CategorizationRule\` using its globally unique \`ID\`."""
-  categorizationRuleById(
-    """
-    The globally unique \`ID\` to be used in selecting a single \`CategorizationRule\`.
-    """
-    id: ID!
-  ): CategorizationRule
-
   """Reads a single \`FixedAsset\` using its globally unique \`ID\`."""
   fixedAssetById(
     """
@@ -9886,11 +11905,59 @@ type Query implements Node {
     id: ID!
   ): RecurringTransaction
 
+  """Reads a single \`CategorizationRule\` using its globally unique \`ID\`."""
+  categorizationRuleById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`CategorizationRule\`.
+    """
+    id: ID!
+  ): CategorizationRule
+
+  """Reads a single \`Loan\` using its globally unique \`ID\`."""
+  loanById(
+    """The globally unique \`ID\` to be used in selecting a single \`Loan\`."""
+    id: ID!
+  ): Loan
+
   """Reads a single \`Account\` using its globally unique \`ID\`."""
   accountById(
     """The globally unique \`ID\` to be used in selecting a single \`Account\`."""
     id: ID!
   ): Account
+
+  """Reads and enables pagination through a set of \`JournalLineProject\`."""
+  journalLineProjects(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: JournalLineProjectCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: JournalLineProjectFilter
+
+    """The method to use when ordering \`JournalLineProject\`."""
+    orderBy: [JournalLineProjectOrderBy!] = [PRIMARY_KEY_ASC]
+  ): JournalLineProjectConnection
 
   """Reads and enables pagination through a set of \`JournalLineTag\`."""
   journalLineTags(
@@ -10334,6 +12401,40 @@ type Query implements Node {
     orderBy: [AccountingPeriodOrderBy!] = [PRIMARY_KEY_ASC]
   ): AccountingPeriodConnection
 
+  """Reads and enables pagination through a set of \`Attachment\`."""
+  attachments(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AttachmentCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: AttachmentFilter
+
+    """The method to use when ordering \`Attachment\`."""
+    orderBy: [AttachmentOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AttachmentConnection
+
   """Reads and enables pagination through a set of \`InventoryTransaction\`."""
   inventoryTransactions(
     """Only read the first \`n\` values of the set."""
@@ -10538,6 +12639,42 @@ type Query implements Node {
     orderBy: [BillPaymentOrderBy!] = [PRIMARY_KEY_ASC]
   ): BillPaymentConnection
 
+  """
+  Reads and enables pagination through a set of \`CategorizationRuleSplit\`.
+  """
+  categorizationRuleSplits(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CategorizationRuleSplitCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CategorizationRuleSplitFilter
+
+    """The method to use when ordering \`CategorizationRuleSplit\`."""
+    orderBy: [CategorizationRuleSplitOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CategorizationRuleSplitConnection
+
   """Reads and enables pagination through a set of \`InvoicePayment\`."""
   invoicePayments(
     """Only read the first \`n\` values of the set."""
@@ -10608,6 +12745,74 @@ type Query implements Node {
     orderBy: [ReconciliationStatementOrderBy!] = [PRIMARY_KEY_ASC]
   ): ReconciliationStatementConnection
 
+  """Reads and enables pagination through a set of \`RdExpense\`."""
+  rdExpenses(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: RdExpenseCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: RdExpenseFilter
+
+    """The method to use when ordering \`RdExpense\`."""
+    orderBy: [RdExpenseOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RdExpenseConnection
+
+  """Reads and enables pagination through a set of \`Project\`."""
+  projects(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ProjectCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ProjectFilter
+
+    """The method to use when ordering \`Project\`."""
+    orderBy: [ProjectOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ProjectConnection
+
   """Reads and enables pagination through a set of \`InvoiceLine\`."""
   invoiceLines(
     """Only read the first \`n\` values of the set."""
@@ -10641,6 +12846,40 @@ type Query implements Node {
     """The method to use when ordering \`InvoiceLine\`."""
     orderBy: [InvoiceLineOrderBy!] = [PRIMARY_KEY_ASC]
   ): InvoiceLineConnection
+
+  """Reads and enables pagination through a set of \`AmortizationEntry\`."""
+  amortizationEntries(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AmortizationEntryCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: AmortizationEntryFilter
+
+    """The method to use when ordering \`AmortizationEntry\`."""
+    orderBy: [AmortizationEntryOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AmortizationEntryConnection
 
   """Reads and enables pagination through a set of \`CryptoLot\`."""
   cryptoLots(
@@ -10811,6 +13050,40 @@ type Query implements Node {
     """The method to use when ordering \`Budget\`."""
     orderBy: [BudgetOrderBy!] = [PRIMARY_KEY_ASC]
   ): BudgetConnection
+
+  """Reads and enables pagination through a set of \`Document\`."""
+  documents(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: DocumentCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: DocumentFilter
+
+    """The method to use when ordering \`Document\`."""
+    orderBy: [DocumentOrderBy!] = [PRIMARY_KEY_ASC]
+  ): DocumentConnection
 
   """Reads and enables pagination through a set of \`Estimate\`."""
   estimates(
@@ -11050,40 +13323,6 @@ type Query implements Node {
     orderBy: [BillOrderBy!] = [PRIMARY_KEY_ASC]
   ): BillConnection
 
-  """Reads and enables pagination through a set of \`CategorizationRule\`."""
-  categorizationRules(
-    """Only read the first \`n\` values of the set."""
-    first: Int
-
-    """Only read the last \`n\` values of the set."""
-    last: Int
-
-    """
-    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
-    based pagination. May not be used with \`last\`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: CategorizationRuleCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: CategorizationRuleFilter
-
-    """The method to use when ordering \`CategorizationRule\`."""
-    orderBy: [CategorizationRuleOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CategorizationRuleConnection
-
   """Reads and enables pagination through a set of \`FixedAsset\`."""
   fixedAssets(
     """Only read the first \`n\` values of the set."""
@@ -11186,6 +13425,74 @@ type Query implements Node {
     orderBy: [RecurringTransactionOrderBy!] = [PRIMARY_KEY_ASC]
   ): RecurringTransactionConnection
 
+  """Reads and enables pagination through a set of \`CategorizationRule\`."""
+  categorizationRules(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CategorizationRuleCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CategorizationRuleFilter
+
+    """The method to use when ordering \`CategorizationRule\`."""
+    orderBy: [CategorizationRuleOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CategorizationRuleConnection
+
+  """Reads and enables pagination through a set of \`Loan\`."""
+  loans(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: LoanCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: LoanFilter
+
+    """The method to use when ordering \`Loan\`."""
+    orderBy: [LoanOrderBy!] = [PRIMARY_KEY_ASC]
+  ): LoanConnection
+
   """Reads and enables pagination through a set of \`Account\`."""
   accounts(
     """Only read the first \`n\` values of the set."""
@@ -11229,20 +13536,22 @@ interface Node {
   id: ID!
 }
 
-type JournalLineTag implements Node {
+type JournalLineProject implements Node {
   """
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
   """
   id: ID!
   rowId: UUID!
   journalLineId: UUID!
-  tagId: UUID!
+  projectId: UUID!
 
-  """Reads a single \`JournalLine\` that is related to this \`JournalLineTag\`."""
+  """
+  Reads a single \`JournalLine\` that is related to this \`JournalLineProject\`.
+  """
   journalLine: JournalLine
 
-  """Reads a single \`Tag\` that is related to this \`JournalLineTag\`."""
-  tag: Tag
+  """Reads a single \`Project\` that is related to this \`JournalLineProject\`."""
+  project: Project
 }
 
 """
@@ -11302,6 +13611,40 @@ type JournalLine implements Node {
     """The method to use when ordering \`JournalLineTag\`."""
     orderBy: [JournalLineTagOrderBy!] = [PRIMARY_KEY_ASC]
   ): JournalLineTagConnection!
+
+  """Reads and enables pagination through a set of \`JournalLineProject\`."""
+  journalLineProjects(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: JournalLineProjectCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: JournalLineProjectFilter
+
+    """The method to use when ordering \`JournalLineProject\`."""
+    orderBy: [JournalLineProjectOrderBy!] = [PRIMARY_KEY_ASC]
+  ): JournalLineProjectConnection!
 }
 
 """
@@ -12520,6 +14863,176 @@ type Book implements Node {
     """The method to use when ordering \`InventoryTransaction\`."""
     orderBy: [InventoryTransactionOrderBy!] = [PRIMARY_KEY_ASC]
   ): InventoryTransactionConnection!
+
+  """Reads and enables pagination through a set of \`Attachment\`."""
+  attachments(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AttachmentCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: AttachmentFilter
+
+    """The method to use when ordering \`Attachment\`."""
+    orderBy: [AttachmentOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AttachmentConnection!
+
+  """Reads and enables pagination through a set of \`Loan\`."""
+  loans(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: LoanCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: LoanFilter
+
+    """The method to use when ordering \`Loan\`."""
+    orderBy: [LoanOrderBy!] = [PRIMARY_KEY_ASC]
+  ): LoanConnection!
+
+  """Reads and enables pagination through a set of \`Project\`."""
+  projects(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ProjectCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ProjectFilter
+
+    """The method to use when ordering \`Project\`."""
+    orderBy: [ProjectOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ProjectConnection!
+
+  """Reads and enables pagination through a set of \`Document\`."""
+  documents(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: DocumentCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: DocumentFilter
+
+    """The method to use when ordering \`Document\`."""
+    orderBy: [DocumentOrderBy!] = [PRIMARY_KEY_ASC]
+  ): DocumentConnection!
+
+  """Reads and enables pagination through a set of \`RdExpense\`."""
+  rdExpenses(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: RdExpenseCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: RdExpenseFilter
+
+    """The method to use when ordering \`RdExpense\`."""
+    orderBy: [RdExpenseOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RdExpenseConnection!
 }
 
 """A connection to a list of \`Account\` values."""
@@ -12979,6 +15492,36 @@ input BookFilter {
   """Some related \`inventoryTransactions\` exist."""
   inventoryTransactionsExist: Boolean
 
+  """Filter by the object’s \`attachments\` relation."""
+  attachments: BookToManyAttachmentFilter
+
+  """Some related \`attachments\` exist."""
+  attachmentsExist: Boolean
+
+  """Filter by the object’s \`loans\` relation."""
+  loans: BookToManyLoanFilter
+
+  """Some related \`loans\` exist."""
+  loansExist: Boolean
+
+  """Filter by the object’s \`projects\` relation."""
+  projects: BookToManyProjectFilter
+
+  """Some related \`projects\` exist."""
+  projectsExist: Boolean
+
+  """Filter by the object’s \`documents\` relation."""
+  documents: BookToManyDocumentFilter
+
+  """Some related \`documents\` exist."""
+  documentsExist: Boolean
+
+  """Filter by the object’s \`rdExpenses\` relation."""
+  rdExpenses: BookToManyRdExpenseFilter
+
+  """Some related \`rdExpenses\` exist."""
+  rdExpensesExist: Boolean
+
   """Checks for all expressions in this list."""
   and: [BookFilter!]
 
@@ -13391,6 +15934,12 @@ input JournalEntryFilter {
   """Some related \`journalLines\` exist."""
   journalLinesExist: Boolean
 
+  """Filter by the object’s \`attachments\` relation."""
+  attachments: JournalEntryToManyAttachmentFilter
+
+  """Some related \`attachments\` exist."""
+  attachmentsExist: Boolean
+
   """Filter by the object’s \`book\` relation."""
   book: BookFilter
 
@@ -13490,6 +16039,12 @@ input JournalLineFilter {
 
   """Some related \`journalLineTags\` exist."""
   journalLineTagsExist: Boolean
+
+  """Filter by the object’s \`journalLineProjects\` relation."""
+  journalLineProjects: JournalLineToManyJournalLineProjectFilter
+
+  """Some related \`journalLineProjects\` exist."""
+  journalLineProjectsExist: Boolean
 
   """Filter by the object’s \`account\` relation."""
   account: AccountFilter
@@ -13655,6 +16210,265 @@ input TagGroupToManyTagFilter {
 }
 
 """
+A filter to be used against many \`JournalLineProject\` object types. All fields are combined with a logical ‘and.’
+"""
+input JournalLineToManyJournalLineProjectFilter {
+  """
+  Every related \`JournalLineProject\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: JournalLineProjectFilter
+
+  """
+  Some related \`JournalLineProject\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: JournalLineProjectFilter
+
+  """
+  No related \`JournalLineProject\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: JournalLineProjectFilter
+}
+
+"""
+A filter to be used against \`JournalLineProject\` object types. All fields are combined with a logical ‘and.’
+"""
+input JournalLineProjectFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`journalLineId\` field."""
+  journalLineId: UUIDFilter
+
+  """Filter by the object’s \`projectId\` field."""
+  projectId: UUIDFilter
+
+  """Filter by the object’s \`journalLine\` relation."""
+  journalLine: JournalLineFilter
+
+  """Filter by the object’s \`project\` relation."""
+  project: ProjectFilter
+
+  """Checks for all expressions in this list."""
+  and: [JournalLineProjectFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [JournalLineProjectFilter!]
+
+  """Negates the expression."""
+  not: JournalLineProjectFilter
+}
+
+"""
+A filter to be used against \`Project\` object types. All fields are combined with a logical ‘and.’
+"""
+input ProjectFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`bookId\` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s \`status\` field."""
+  status: StringFilter
+
+  """Filter by the object’s \`journalLineProjects\` relation."""
+  journalLineProjects: ProjectToManyJournalLineProjectFilter
+
+  """Some related \`journalLineProjects\` exist."""
+  journalLineProjectsExist: Boolean
+
+  """Filter by the object’s \`rdExpenses\` relation."""
+  rdExpenses: ProjectToManyRdExpenseFilter
+
+  """Some related \`rdExpenses\` exist."""
+  rdExpensesExist: Boolean
+
+  """Filter by the object’s \`book\` relation."""
+  book: BookFilter
+
+  """Checks for all expressions in this list."""
+  and: [ProjectFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [ProjectFilter!]
+
+  """Negates the expression."""
+  not: ProjectFilter
+}
+
+"""
+A filter to be used against many \`JournalLineProject\` object types. All fields are combined with a logical ‘and.’
+"""
+input ProjectToManyJournalLineProjectFilter {
+  """
+  Every related \`JournalLineProject\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: JournalLineProjectFilter
+
+  """
+  Some related \`JournalLineProject\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: JournalLineProjectFilter
+
+  """
+  No related \`JournalLineProject\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: JournalLineProjectFilter
+}
+
+"""
+A filter to be used against many \`RdExpense\` object types. All fields are combined with a logical ‘and.’
+"""
+input ProjectToManyRdExpenseFilter {
+  """
+  Every related \`RdExpense\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: RdExpenseFilter
+
+  """
+  Some related \`RdExpense\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: RdExpenseFilter
+
+  """
+  No related \`RdExpense\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: RdExpenseFilter
+}
+
+"""
+A filter to be used against \`RdExpense\` object types. All fields are combined with a logical ‘and.’
+"""
+input RdExpenseFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`bookId\` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s \`year\` field."""
+  year: IntFilter
+
+  """Filter by the object’s \`projectId\` field."""
+  projectId: UUIDFilter
+
+  """Filter by the object’s \`book\` relation."""
+  book: BookFilter
+
+  """Filter by the object’s \`project\` relation."""
+  project: ProjectFilter
+
+  """A related \`project\` exists."""
+  projectExists: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [RdExpenseFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [RdExpenseFilter!]
+
+  """Negates the expression."""
+  not: RdExpenseFilter
+}
+
+"""
+A filter to be used against Int fields. All fields are combined with a logical ‘and.’
+"""
+input IntFilter {
+  """
+  Is null (if \`true\` is specified) or is not null (if \`false\` is specified).
+  """
+  isNull: Boolean
+
+  """Equal to the specified value."""
+  equalTo: Int
+
+  """Not equal to the specified value."""
+  notEqualTo: Int
+
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: Int
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: Int
+
+  """Included in the specified list."""
+  in: [Int!]
+
+  """Not included in the specified list."""
+  notIn: [Int!]
+
+  """Less than the specified value."""
+  lessThan: Int
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: Int
+
+  """Greater than the specified value."""
+  greaterThan: Int
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: Int
+}
+
+"""
+A filter to be used against many \`Attachment\` object types. All fields are combined with a logical ‘and.’
+"""
+input JournalEntryToManyAttachmentFilter {
+  """
+  Every related \`Attachment\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: AttachmentFilter
+
+  """
+  Some related \`Attachment\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: AttachmentFilter
+
+  """
+  No related \`Attachment\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: AttachmentFilter
+}
+
+"""
+A filter to be used against \`Attachment\` object types. All fields are combined with a logical ‘and.’
+"""
+input AttachmentFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`bookId\` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s \`journalEntryId\` field."""
+  journalEntryId: UUIDFilter
+
+  """Filter by the object’s \`uploadStatus\` field."""
+  uploadStatus: StringFilter
+
+  """Filter by the object’s \`book\` relation."""
+  book: BookFilter
+
+  """Filter by the object’s \`journalEntry\` relation."""
+  journalEntry: JournalEntryFilter
+
+  """A related \`journalEntry\` exists."""
+  journalEntryExists: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [AttachmentFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [AttachmentFilter!]
+
+  """Negates the expression."""
+  not: AttachmentFilter
+}
+
+"""
 A filter to be used against \`Vendor\` object types. All fields are combined with a logical ‘and.’
 """
 input VendorFilter {
@@ -13669,6 +16483,12 @@ input VendorFilter {
 
   """Some related \`bills\` exist."""
   billsExist: Boolean
+
+  """Filter by the object’s \`documents\` relation."""
+  documents: VendorToManyDocumentFilter
+
+  """Some related \`documents\` exist."""
+  documentsExist: Boolean
 
   """Filter by the object’s \`book\` relation."""
   book: BookFilter
@@ -13890,6 +16710,61 @@ input BillPaymentFilter {
 
   """Negates the expression."""
   not: BillPaymentFilter
+}
+
+"""
+A filter to be used against many \`Document\` object types. All fields are combined with a logical ‘and.’
+"""
+input VendorToManyDocumentFilter {
+  """
+  Every related \`Document\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: DocumentFilter
+
+  """
+  Some related \`Document\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: DocumentFilter
+
+  """
+  No related \`Document\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: DocumentFilter
+}
+
+"""
+A filter to be used against \`Document\` object types. All fields are combined with a logical ‘and.’
+"""
+input DocumentFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`bookId\` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s \`category\` field."""
+  category: StringFilter
+
+  """Filter by the object’s \`vendorId\` field."""
+  vendorId: UUIDFilter
+
+  """Filter by the object’s \`book\` relation."""
+  book: BookFilter
+
+  """Filter by the object’s \`vendor\` relation."""
+  vendor: VendorFilter
+
+  """A related \`vendor\` exists."""
+  vendorExists: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [DocumentFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [DocumentFilter!]
+
+  """Negates the expression."""
+  not: DocumentFilter
 }
 
 """
@@ -14170,48 +17045,6 @@ input AccountingPeriodFilter {
 }
 
 """
-A filter to be used against Int fields. All fields are combined with a logical ‘and.’
-"""
-input IntFilter {
-  """
-  Is null (if \`true\` is specified) or is not null (if \`false\` is specified).
-  """
-  isNull: Boolean
-
-  """Equal to the specified value."""
-  equalTo: Int
-
-  """Not equal to the specified value."""
-  notEqualTo: Int
-
-  """
-  Not equal to the specified value, treating null like an ordinary value.
-  """
-  distinctFrom: Int
-
-  """Equal to the specified value, treating null like an ordinary value."""
-  notDistinctFrom: Int
-
-  """Included in the specified list."""
-  in: [Int!]
-
-  """Not included in the specified list."""
-  notIn: [Int!]
-
-  """Less than the specified value."""
-  lessThan: Int
-
-  """Less than or equal to the specified value."""
-  lessThanOrEqualTo: Int
-
-  """Greater than the specified value."""
-  greaterThan: Int
-
-  """Greater than or equal to the specified value."""
-  greaterThanOrEqualTo: Int
-}
-
-"""
 A filter to be used against many \`CategorizationRule\` object types. All fields are combined with a logical ‘and.’
 """
 input BookToManyCategorizationRuleFilter {
@@ -14244,6 +17077,12 @@ input CategorizationRuleFilter {
   """Filter by the object’s \`matchField\` field."""
   matchField: StringFilter
 
+  """Filter by the object’s \`categorizationRuleSplitsByRuleId\` relation."""
+  categorizationRuleSplitsByRuleId: CategorizationRuleToManyCategorizationRuleSplitFilter
+
+  """Some related \`categorizationRuleSplitsByRuleId\` exist."""
+  categorizationRuleSplitsByRuleIdExist: Boolean
+
   """Filter by the object’s \`book\` relation."""
   book: BookFilter
 
@@ -14252,6 +17091,12 @@ input CategorizationRuleFilter {
 
   """Filter by the object’s \`debitAccount\` relation."""
   debitAccount: AccountFilter
+
+  """Filter by the object’s \`project\` relation."""
+  project: ProjectFilter
+
+  """A related \`project\` exists."""
+  projectExists: Boolean
 
   """Filter by the object’s \`tag\` relation."""
   tag: TagFilter
@@ -14267,6 +17112,64 @@ input CategorizationRuleFilter {
 
   """Negates the expression."""
   not: CategorizationRuleFilter
+}
+
+"""
+A filter to be used against many \`CategorizationRuleSplit\` object types. All fields are combined with a logical ‘and.’
+"""
+input CategorizationRuleToManyCategorizationRuleSplitFilter {
+  """
+  Every related \`CategorizationRuleSplit\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: CategorizationRuleSplitFilter
+
+  """
+  Some related \`CategorizationRuleSplit\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: CategorizationRuleSplitFilter
+
+  """
+  No related \`CategorizationRuleSplit\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: CategorizationRuleSplitFilter
+}
+
+"""
+A filter to be used against \`CategorizationRuleSplit\` object types. All fields are combined with a logical ‘and.’
+"""
+input CategorizationRuleSplitFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`ruleId\` field."""
+  ruleId: UUIDFilter
+
+  """Filter by the object’s \`account\` relation."""
+  account: AccountFilter
+
+  """Filter by the object’s \`project\` relation."""
+  project: ProjectFilter
+
+  """A related \`project\` exists."""
+  projectExists: Boolean
+
+  """Filter by the object’s \`rule\` relation."""
+  rule: CategorizationRuleFilter
+
+  """Filter by the object’s \`tag\` relation."""
+  tag: TagFilter
+
+  """A related \`tag\` exists."""
+  tagExists: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [CategorizationRuleSplitFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [CategorizationRuleSplitFilter!]
+
+  """Negates the expression."""
+  not: CategorizationRuleSplitFilter
 }
 
 """
@@ -15243,6 +18146,202 @@ input BookToManyInventoryTransactionFilter {
 }
 
 """
+A filter to be used against many \`Attachment\` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyAttachmentFilter {
+  """
+  Every related \`Attachment\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: AttachmentFilter
+
+  """
+  Some related \`Attachment\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: AttachmentFilter
+
+  """
+  No related \`Attachment\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: AttachmentFilter
+}
+
+"""
+A filter to be used against many \`Loan\` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyLoanFilter {
+  """
+  Every related \`Loan\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: LoanFilter
+
+  """
+  Some related \`Loan\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: LoanFilter
+
+  """
+  No related \`Loan\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: LoanFilter
+}
+
+"""
+A filter to be used against \`Loan\` object types. All fields are combined with a logical ‘and.’
+"""
+input LoanFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`bookId\` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s \`status\` field."""
+  status: StringFilter
+
+  """Filter by the object’s \`amortizationEntries\` relation."""
+  amortizationEntries: LoanToManyAmortizationEntryFilter
+
+  """Some related \`amortizationEntries\` exist."""
+  amortizationEntriesExist: Boolean
+
+  """Filter by the object’s \`book\` relation."""
+  book: BookFilter
+
+  """Filter by the object’s \`interestAccount\` relation."""
+  interestAccount: AccountFilter
+
+  """Filter by the object’s \`liabilityAccount\` relation."""
+  liabilityAccount: AccountFilter
+
+  """Filter by the object’s \`paymentAccount\` relation."""
+  paymentAccount: AccountFilter
+
+  """Checks for all expressions in this list."""
+  and: [LoanFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [LoanFilter!]
+
+  """Negates the expression."""
+  not: LoanFilter
+}
+
+"""
+A filter to be used against many \`AmortizationEntry\` object types. All fields are combined with a logical ‘and.’
+"""
+input LoanToManyAmortizationEntryFilter {
+  """
+  Every related \`AmortizationEntry\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: AmortizationEntryFilter
+
+  """
+  Some related \`AmortizationEntry\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: AmortizationEntryFilter
+
+  """
+  No related \`AmortizationEntry\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: AmortizationEntryFilter
+}
+
+"""
+A filter to be used against \`AmortizationEntry\` object types. All fields are combined with a logical ‘and.’
+"""
+input AmortizationEntryFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`loanId\` field."""
+  loanId: UUIDFilter
+
+  """Filter by the object’s \`dueDate\` field."""
+  dueDate: StringFilter
+
+  """Filter by the object’s \`status\` field."""
+  status: StringFilter
+
+  """Filter by the object’s \`journalEntry\` relation."""
+  journalEntry: JournalEntryFilter
+
+  """A related \`journalEntry\` exists."""
+  journalEntryExists: Boolean
+
+  """Filter by the object’s \`loan\` relation."""
+  loan: LoanFilter
+
+  """Checks for all expressions in this list."""
+  and: [AmortizationEntryFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [AmortizationEntryFilter!]
+
+  """Negates the expression."""
+  not: AmortizationEntryFilter
+}
+
+"""
+A filter to be used against many \`Project\` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyProjectFilter {
+  """
+  Every related \`Project\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: ProjectFilter
+
+  """
+  Some related \`Project\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: ProjectFilter
+
+  """
+  No related \`Project\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: ProjectFilter
+}
+
+"""
+A filter to be used against many \`Document\` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyDocumentFilter {
+  """
+  Every related \`Document\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: DocumentFilter
+
+  """
+  Some related \`Document\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: DocumentFilter
+
+  """
+  No related \`Document\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: DocumentFilter
+}
+
+"""
+A filter to be used against many \`RdExpense\` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyRdExpenseFilter {
+  """
+  Every related \`RdExpense\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: RdExpenseFilter
+
+  """
+  Some related \`RdExpense\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: RdExpenseFilter
+
+  """
+  No related \`RdExpense\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: RdExpenseFilter
+}
+
+"""
 A filter to be used against many \`JournalLine\` object types. All fields are combined with a logical ‘and.’
 """
 input AccountToManyJournalLineFilter {
@@ -15708,6 +18807,40 @@ type JournalEntry implements Node {
     """The method to use when ordering \`JournalLine\`."""
     orderBy: [JournalLineOrderBy!] = [PRIMARY_KEY_ASC]
   ): JournalLineConnection!
+
+  """Reads and enables pagination through a set of \`Attachment\`."""
+  attachments(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AttachmentCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: AttachmentFilter
+
+    """The method to use when ordering \`Attachment\`."""
+    orderBy: [AttachmentOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AttachmentConnection!
 }
 
 type Vendor implements Node {
@@ -15766,6 +18899,40 @@ type Vendor implements Node {
     """The method to use when ordering \`Bill\`."""
     orderBy: [BillOrderBy!] = [PRIMARY_KEY_ASC]
   ): BillConnection!
+
+  """Reads and enables pagination through a set of \`Document\`."""
+  documents(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: DocumentCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: DocumentFilter
+
+    """The method to use when ordering \`Document\`."""
+    orderBy: [DocumentOrderBy!] = [PRIMARY_KEY_ASC]
+  ): DocumentConnection!
 }
 
 """A connection to a list of \`Bill\` values."""
@@ -16109,6 +19276,91 @@ enum BillOrderBy {
   STATUS_DESC
 }
 
+"""A connection to a list of \`Document\` values."""
+type DocumentConnection {
+  """A list of \`Document\` objects."""
+  nodes: [Document]!
+
+  """
+  A list of edges which contains the \`Document\` and cursor to aid in pagination.
+  """
+  edges: [DocumentEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* \`Document\` you could get from the connection."""
+  totalCount: Int!
+}
+
+type Document implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  category: String!
+  name: String!
+  filename: String!
+  contentType: String!
+  sizeBytes: Int!
+  storageKey: String!
+  vendorId: UUID
+  year: Int
+  notes: String
+  createdBy: String!
+  createdAt: Datetime
+
+  """Reads a single \`Book\` that is related to this \`Document\`."""
+  book: Book
+
+  """Reads a single \`Vendor\` that is related to this \`Document\`."""
+  vendor: Vendor
+}
+
+"""A \`Document\` edge in the connection."""
+type DocumentEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`Document\` at the end of the edge."""
+  node: Document
+}
+
+"""
+A condition to be used against \`Document\` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input DocumentCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`bookId\` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s \`category\` field."""
+  category: String
+
+  """Checks for equality with the object’s \`vendorId\` field."""
+  vendorId: UUID
+}
+
+"""Methods to use when ordering \`Document\`."""
+enum DocumentOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+  CATEGORY_ASC
+  CATEGORY_DESC
+  VENDOR_ID_ASC
+  VENDOR_ID_DESC
+}
+
 """A connection to a list of \`JournalLine\` values."""
 type JournalLineConnection {
   """A list of \`JournalLine\` objects."""
@@ -16161,6 +19413,88 @@ enum JournalLineOrderBy {
   JOURNAL_ENTRY_ID_DESC
   ACCOUNT_ID_ASC
   ACCOUNT_ID_DESC
+}
+
+"""A connection to a list of \`Attachment\` values."""
+type AttachmentConnection {
+  """A list of \`Attachment\` objects."""
+  nodes: [Attachment]!
+
+  """
+  A list of edges which contains the \`Attachment\` and cursor to aid in pagination.
+  """
+  edges: [AttachmentEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* \`Attachment\` you could get from the connection."""
+  totalCount: Int!
+}
+
+type Attachment implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  journalEntryId: UUID
+  filename: String!
+  contentType: String!
+  sizeBytes: Int!
+  storageKey: String!
+  uploadStatus: String!
+  createdBy: String!
+  createdAt: Datetime
+
+  """Reads a single \`Book\` that is related to this \`Attachment\`."""
+  book: Book
+
+  """Reads a single \`JournalEntry\` that is related to this \`Attachment\`."""
+  journalEntry: JournalEntry
+}
+
+"""A \`Attachment\` edge in the connection."""
+type AttachmentEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`Attachment\` at the end of the edge."""
+  node: Attachment
+}
+
+"""
+A condition to be used against \`Attachment\` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input AttachmentCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`bookId\` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s \`journalEntryId\` field."""
+  journalEntryId: UUID
+
+  """Checks for equality with the object’s \`uploadStatus\` field."""
+  uploadStatus: String
+}
+
+"""Methods to use when ordering \`Attachment\`."""
+enum AttachmentOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+  JOURNAL_ENTRY_ID_ASC
+  JOURNAL_ENTRY_ID_DESC
+  UPLOAD_STATUS_ASC
+  UPLOAD_STATUS_DESC
 }
 
 """A \`CryptoLot\` edge in the connection."""
@@ -16757,6 +20091,7 @@ type CategorizationRule implements Node {
   lastHitAt: Datetime
   createdAt: Datetime
   tagId: UUID
+  projectId: UUID
 
   """Reads a single \`Book\` that is related to this \`CategorizationRule\`."""
   book: Book
@@ -16767,8 +20102,275 @@ type CategorizationRule implements Node {
   """Reads a single \`Account\` that is related to this \`CategorizationRule\`."""
   debitAccount: Account
 
+  """Reads a single \`Project\` that is related to this \`CategorizationRule\`."""
+  project: Project
+
   """Reads a single \`Tag\` that is related to this \`CategorizationRule\`."""
   tag: Tag
+
+  """
+  Reads and enables pagination through a set of \`CategorizationRuleSplit\`.
+  """
+  categorizationRuleSplitsByRuleId(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CategorizationRuleSplitCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CategorizationRuleSplitFilter
+
+    """The method to use when ordering \`CategorizationRuleSplit\`."""
+    orderBy: [CategorizationRuleSplitOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CategorizationRuleSplitConnection!
+}
+
+type Project implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  name: String!
+  code: String
+  status: String!
+  budgetAmount: BigFloat
+  startDate: Datetime
+  endDate: Datetime
+  notes: String
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """Reads a single \`Book\` that is related to this \`Project\`."""
+  book: Book
+
+  """Reads and enables pagination through a set of \`JournalLineProject\`."""
+  journalLineProjects(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: JournalLineProjectCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: JournalLineProjectFilter
+
+    """The method to use when ordering \`JournalLineProject\`."""
+    orderBy: [JournalLineProjectOrderBy!] = [PRIMARY_KEY_ASC]
+  ): JournalLineProjectConnection!
+
+  """Reads and enables pagination through a set of \`RdExpense\`."""
+  rdExpenses(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: RdExpenseCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: RdExpenseFilter
+
+    """The method to use when ordering \`RdExpense\`."""
+    orderBy: [RdExpenseOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RdExpenseConnection!
+}
+
+"""A connection to a list of \`JournalLineProject\` values."""
+type JournalLineProjectConnection {
+  """A list of \`JournalLineProject\` objects."""
+  nodes: [JournalLineProject]!
+
+  """
+  A list of edges which contains the \`JournalLineProject\` and cursor to aid in pagination.
+  """
+  edges: [JournalLineProjectEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* \`JournalLineProject\` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A \`JournalLineProject\` edge in the connection."""
+type JournalLineProjectEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`JournalLineProject\` at the end of the edge."""
+  node: JournalLineProject
+}
+
+"""
+A condition to be used against \`JournalLineProject\` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input JournalLineProjectCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`journalLineId\` field."""
+  journalLineId: UUID
+
+  """Checks for equality with the object’s \`projectId\` field."""
+  projectId: UUID
+}
+
+"""Methods to use when ordering \`JournalLineProject\`."""
+enum JournalLineProjectOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  JOURNAL_LINE_ID_ASC
+  JOURNAL_LINE_ID_DESC
+  PROJECT_ID_ASC
+  PROJECT_ID_DESC
+}
+
+"""A connection to a list of \`RdExpense\` values."""
+type RdExpenseConnection {
+  """A list of \`RdExpense\` objects."""
+  nodes: [RdExpense]!
+
+  """
+  A list of edges which contains the \`RdExpense\` and cursor to aid in pagination.
+  """
+  edges: [RdExpenseEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* \`RdExpense\` you could get from the connection."""
+  totalCount: Int!
+}
+
+type RdExpense implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  year: Int!
+  category: String!
+  description: String!
+  amount: BigFloat!
+  isForeign: Boolean!
+  projectId: UUID
+  notes: String
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """Reads a single \`Book\` that is related to this \`RdExpense\`."""
+  book: Book
+
+  """Reads a single \`Project\` that is related to this \`RdExpense\`."""
+  project: Project
+}
+
+"""A \`RdExpense\` edge in the connection."""
+type RdExpenseEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`RdExpense\` at the end of the edge."""
+  node: RdExpense
+}
+
+"""
+A condition to be used against \`RdExpense\` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input RdExpenseCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`bookId\` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s \`year\` field."""
+  year: Int
+
+  """Checks for equality with the object’s \`projectId\` field."""
+  projectId: UUID
+}
+
+"""Methods to use when ordering \`RdExpense\`."""
+enum RdExpenseOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+  YEAR_ASC
+  YEAR_DESC
+  PROJECT_ID_ASC
+  PROJECT_ID_DESC
 }
 
 type Tag implements Node {
@@ -16934,6 +20536,22 @@ type JournalLineTagConnection {
   totalCount: Int!
 }
 
+type JournalLineTag implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  journalLineId: UUID!
+  tagId: UUID!
+
+  """Reads a single \`JournalLine\` that is related to this \`JournalLineTag\`."""
+  journalLine: JournalLine
+
+  """Reads a single \`Tag\` that is related to this \`JournalLineTag\`."""
+  tag: Tag
+}
+
 """A \`JournalLineTag\` edge in the connection."""
 type JournalLineTagEdge {
   """A cursor for use in pagination."""
@@ -16969,6 +20587,94 @@ enum JournalLineTagOrderBy {
   JOURNAL_LINE_ID_DESC
   TAG_ID_ASC
   TAG_ID_DESC
+}
+
+"""A connection to a list of \`CategorizationRuleSplit\` values."""
+type CategorizationRuleSplitConnection {
+  """A list of \`CategorizationRuleSplit\` objects."""
+  nodes: [CategorizationRuleSplit]!
+
+  """
+  A list of edges which contains the \`CategorizationRuleSplit\` and cursor to aid in pagination.
+  """
+  edges: [CategorizationRuleSplitEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* \`CategorizationRuleSplit\` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+type CategorizationRuleSplit implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  ruleId: UUID!
+  accountId: UUID!
+  side: String!
+  percentage: BigFloat
+  fixedAmount: BigFloat
+  memo: String
+  tagId: UUID
+  projectId: UUID
+  sortOrder: Int!
+
+  """
+  Reads a single \`Account\` that is related to this \`CategorizationRuleSplit\`.
+  """
+  account: Account
+
+  """
+  Reads a single \`Project\` that is related to this \`CategorizationRuleSplit\`.
+  """
+  project: Project
+
+  """
+  Reads a single \`CategorizationRule\` that is related to this \`CategorizationRuleSplit\`.
+  """
+  rule: CategorizationRule
+
+  """
+  Reads a single \`Tag\` that is related to this \`CategorizationRuleSplit\`.
+  """
+  tag: Tag
+}
+
+"""A \`CategorizationRuleSplit\` edge in the connection."""
+type CategorizationRuleSplitEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`CategorizationRuleSplit\` at the end of the edge."""
+  node: CategorizationRuleSplit
+}
+
+"""
+A condition to be used against \`CategorizationRuleSplit\` object types. All
+fields are tested for equality and combined with a logical ‘and.’
+"""
+input CategorizationRuleSplitCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`ruleId\` field."""
+  ruleId: UUID
+}
+
+"""Methods to use when ordering \`CategorizationRuleSplit\`."""
+enum CategorizationRuleSplitOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  RULE_ID_ASC
+  RULE_ID_DESC
 }
 
 """A \`CategorizationRule\` edge in the connection."""
@@ -18536,6 +22242,269 @@ enum InventoryItemOrderBy {
   BOOK_ID_DESC
 }
 
+"""A connection to a list of \`Loan\` values."""
+type LoanConnection {
+  """A list of \`Loan\` objects."""
+  nodes: [Loan]!
+
+  """
+  A list of edges which contains the \`Loan\` and cursor to aid in pagination.
+  """
+  edges: [LoanEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* \`Loan\` you could get from the connection."""
+  totalCount: Int!
+}
+
+type Loan implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  name: String!
+  liabilityAccountId: UUID!
+  interestAccountId: UUID!
+  paymentAccountId: UUID!
+  originalPrincipal: BigFloat!
+  annualRate: BigFloat!
+  termMonths: Int!
+  startDate: String!
+  paymentDay: Int!
+  paymentAmount: BigFloat
+  extraPrincipal: BigFloat!
+  status: String!
+  notes: String
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """Reads a single \`Book\` that is related to this \`Loan\`."""
+  book: Book
+
+  """Reads a single \`Account\` that is related to this \`Loan\`."""
+  interestAccount: Account
+
+  """Reads a single \`Account\` that is related to this \`Loan\`."""
+  liabilityAccount: Account
+
+  """Reads a single \`Account\` that is related to this \`Loan\`."""
+  paymentAccount: Account
+
+  """Reads and enables pagination through a set of \`AmortizationEntry\`."""
+  amortizationEntries(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: AmortizationEntryCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: AmortizationEntryFilter
+
+    """The method to use when ordering \`AmortizationEntry\`."""
+    orderBy: [AmortizationEntryOrderBy!] = [PRIMARY_KEY_ASC]
+  ): AmortizationEntryConnection!
+}
+
+"""A connection to a list of \`AmortizationEntry\` values."""
+type AmortizationEntryConnection {
+  """A list of \`AmortizationEntry\` objects."""
+  nodes: [AmortizationEntry]!
+
+  """
+  A list of edges which contains the \`AmortizationEntry\` and cursor to aid in pagination.
+  """
+  edges: [AmortizationEntryEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* \`AmortizationEntry\` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+type AmortizationEntry implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  loanId: UUID!
+  sequenceNumber: Int!
+  dueDate: String!
+  paymentAmount: BigFloat!
+  principalAmount: BigFloat!
+  interestAmount: BigFloat!
+  extraPrincipal: BigFloat!
+  balanceAfter: BigFloat!
+  journalEntryId: UUID
+  status: String!
+
+  """
+  Reads a single \`JournalEntry\` that is related to this \`AmortizationEntry\`.
+  """
+  journalEntry: JournalEntry
+
+  """Reads a single \`Loan\` that is related to this \`AmortizationEntry\`."""
+  loan: Loan
+}
+
+"""A \`AmortizationEntry\` edge in the connection."""
+type AmortizationEntryEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`AmortizationEntry\` at the end of the edge."""
+  node: AmortizationEntry
+}
+
+"""
+A condition to be used against \`AmortizationEntry\` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input AmortizationEntryCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`loanId\` field."""
+  loanId: UUID
+
+  """Checks for equality with the object’s \`dueDate\` field."""
+  dueDate: String
+
+  """Checks for equality with the object’s \`status\` field."""
+  status: String
+}
+
+"""Methods to use when ordering \`AmortizationEntry\`."""
+enum AmortizationEntryOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  LOAN_ID_ASC
+  LOAN_ID_DESC
+  DUE_DATE_ASC
+  DUE_DATE_DESC
+  STATUS_ASC
+  STATUS_DESC
+}
+
+"""A \`Loan\` edge in the connection."""
+type LoanEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`Loan\` at the end of the edge."""
+  node: Loan
+}
+
+"""
+A condition to be used against \`Loan\` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input LoanCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`bookId\` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s \`status\` field."""
+  status: String
+}
+
+"""Methods to use when ordering \`Loan\`."""
+enum LoanOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+  STATUS_ASC
+  STATUS_DESC
+}
+
+"""A connection to a list of \`Project\` values."""
+type ProjectConnection {
+  """A list of \`Project\` objects."""
+  nodes: [Project]!
+
+  """
+  A list of edges which contains the \`Project\` and cursor to aid in pagination.
+  """
+  edges: [ProjectEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* \`Project\` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A \`Project\` edge in the connection."""
+type ProjectEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`Project\` at the end of the edge."""
+  node: Project
+}
+
+"""
+A condition to be used against \`Project\` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input ProjectCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`bookId\` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s \`status\` field."""
+  status: String
+}
+
+"""Methods to use when ordering \`Project\`."""
+enum ProjectOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+  STATUS_ASC
+  STATUS_DESC
+}
+
 type _DrizzleMigration implements Node {
   """
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
@@ -18749,6 +22718,14 @@ enum BookOrderBy {
 The root mutation type which contains root level fields which mutate data.
 """
 type Mutation {
+  """Creates a single \`JournalLineProject\`."""
+  createJournalLineProject(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateJournalLineProjectInput!
+  ): CreateJournalLineProjectPayload
+
   """Creates a single \`JournalLineTag\`."""
   createJournalLineTag(
     """
@@ -18853,6 +22830,14 @@ type Mutation {
     input: CreateAccountingPeriodInput!
   ): CreateAccountingPeriodPayload
 
+  """Creates a single \`Attachment\`."""
+  createAttachment(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateAttachmentInput!
+  ): CreateAttachmentPayload
+
   """Creates a single \`InventoryTransaction\`."""
   createInventoryTransaction(
     """
@@ -18901,6 +22886,14 @@ type Mutation {
     input: CreateBillPaymentInput!
   ): CreateBillPaymentPayload
 
+  """Creates a single \`CategorizationRuleSplit\`."""
+  createCategorizationRuleSplit(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateCategorizationRuleSplitInput!
+  ): CreateCategorizationRuleSplitPayload
+
   """Creates a single \`InvoicePayment\`."""
   createInvoicePayment(
     """
@@ -18917,6 +22910,22 @@ type Mutation {
     input: CreateReconciliationStatementInput!
   ): CreateReconciliationStatementPayload
 
+  """Creates a single \`RdExpense\`."""
+  createRdExpense(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateRdExpenseInput!
+  ): CreateRdExpensePayload
+
+  """Creates a single \`Project\`."""
+  createProject(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateProjectInput!
+  ): CreateProjectPayload
+
   """Creates a single \`InvoiceLine\`."""
   createInvoiceLine(
     """
@@ -18924,6 +22933,14 @@ type Mutation {
     """
     input: CreateInvoiceLineInput!
   ): CreateInvoiceLinePayload
+
+  """Creates a single \`AmortizationEntry\`."""
+  createAmortizationEntry(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateAmortizationEntryInput!
+  ): CreateAmortizationEntryPayload
 
   """Creates a single \`CryptoLot\`."""
   createCryptoLot(
@@ -18964,6 +22981,14 @@ type Mutation {
     """
     input: CreateBudgetInput!
   ): CreateBudgetPayload
+
+  """Creates a single \`Document\`."""
+  createDocument(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateDocumentInput!
+  ): CreateDocumentPayload
 
   """Creates a single \`Estimate\`."""
   createEstimate(
@@ -19021,14 +23046,6 @@ type Mutation {
     input: CreateBillInput!
   ): CreateBillPayload
 
-  """Creates a single \`CategorizationRule\`."""
-  createCategorizationRule(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateCategorizationRuleInput!
-  ): CreateCategorizationRulePayload
-
   """Creates a single \`FixedAsset\`."""
   createFixedAsset(
     """
@@ -19053,6 +23070,22 @@ type Mutation {
     input: CreateRecurringTransactionInput!
   ): CreateRecurringTransactionPayload
 
+  """Creates a single \`CategorizationRule\`."""
+  createCategorizationRule(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateCategorizationRuleInput!
+  ): CreateCategorizationRulePayload
+
+  """Creates a single \`Loan\`."""
+  createLoan(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateLoanInput!
+  ): CreateLoanPayload
+
   """Creates a single \`Account\`."""
   createAccount(
     """
@@ -19060,6 +23093,24 @@ type Mutation {
     """
     input: CreateAccountInput!
   ): CreateAccountPayload
+
+  """
+  Updates a single \`JournalLineProject\` using its globally unique id and a patch.
+  """
+  updateJournalLineProjectById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateJournalLineProjectByIdInput!
+  ): UpdateJournalLineProjectPayload
+
+  """Updates a single \`JournalLineProject\` using a unique key and a patch."""
+  updateJournalLineProject(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateJournalLineProjectInput!
+  ): UpdateJournalLineProjectPayload
 
   """
   Updates a single \`JournalLineTag\` using its globally unique id and a patch.
@@ -19290,6 +23341,24 @@ type Mutation {
   ): UpdateAccountingPeriodPayload
 
   """
+  Updates a single \`Attachment\` using its globally unique id and a patch.
+  """
+  updateAttachmentById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateAttachmentByIdInput!
+  ): UpdateAttachmentPayload
+
+  """Updates a single \`Attachment\` using a unique key and a patch."""
+  updateAttachment(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateAttachmentInput!
+  ): UpdateAttachmentPayload
+
+  """
   Updates a single \`InventoryTransaction\` using its globally unique id and a patch.
   """
   updateInventoryTransactionById(
@@ -19396,6 +23465,26 @@ type Mutation {
   ): UpdateBillPaymentPayload
 
   """
+  Updates a single \`CategorizationRuleSplit\` using its globally unique id and a patch.
+  """
+  updateCategorizationRuleSplitById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateCategorizationRuleSplitByIdInput!
+  ): UpdateCategorizationRuleSplitPayload
+
+  """
+  Updates a single \`CategorizationRuleSplit\` using a unique key and a patch.
+  """
+  updateCategorizationRuleSplit(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateCategorizationRuleSplitInput!
+  ): UpdateCategorizationRuleSplitPayload
+
+  """
   Updates a single \`InvoicePayment\` using its globally unique id and a patch.
   """
   updateInvoicePaymentById(
@@ -19433,6 +23522,38 @@ type Mutation {
     input: UpdateReconciliationStatementInput!
   ): UpdateReconciliationStatementPayload
 
+  """Updates a single \`RdExpense\` using its globally unique id and a patch."""
+  updateRdExpenseById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateRdExpenseByIdInput!
+  ): UpdateRdExpensePayload
+
+  """Updates a single \`RdExpense\` using a unique key and a patch."""
+  updateRdExpense(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateRdExpenseInput!
+  ): UpdateRdExpensePayload
+
+  """Updates a single \`Project\` using its globally unique id and a patch."""
+  updateProjectById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateProjectByIdInput!
+  ): UpdateProjectPayload
+
+  """Updates a single \`Project\` using a unique key and a patch."""
+  updateProject(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateProjectInput!
+  ): UpdateProjectPayload
+
   """
   Updates a single \`InvoiceLine\` using its globally unique id and a patch.
   """
@@ -19450,6 +23571,24 @@ type Mutation {
     """
     input: UpdateInvoiceLineInput!
   ): UpdateInvoiceLinePayload
+
+  """
+  Updates a single \`AmortizationEntry\` using its globally unique id and a patch.
+  """
+  updateAmortizationEntryById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateAmortizationEntryByIdInput!
+  ): UpdateAmortizationEntryPayload
+
+  """Updates a single \`AmortizationEntry\` using a unique key and a patch."""
+  updateAmortizationEntry(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateAmortizationEntryInput!
+  ): UpdateAmortizationEntryPayload
 
   """Updates a single \`CryptoLot\` using its globally unique id and a patch."""
   updateCryptoLotById(
@@ -19536,6 +23675,22 @@ type Mutation {
     """
     input: UpdateBudgetInput!
   ): UpdateBudgetPayload
+
+  """Updates a single \`Document\` using its globally unique id and a patch."""
+  updateDocumentById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateDocumentByIdInput!
+  ): UpdateDocumentPayload
+
+  """Updates a single \`Document\` using a unique key and a patch."""
+  updateDocument(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateDocumentInput!
+  ): UpdateDocumentPayload
 
   """Updates a single \`Estimate\` using its globally unique id and a patch."""
   updateEstimateById(
@@ -19656,24 +23811,6 @@ type Mutation {
   ): UpdateBillPayload
 
   """
-  Updates a single \`CategorizationRule\` using its globally unique id and a patch.
-  """
-  updateCategorizationRuleById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateCategorizationRuleByIdInput!
-  ): UpdateCategorizationRulePayload
-
-  """Updates a single \`CategorizationRule\` using a unique key and a patch."""
-  updateCategorizationRule(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateCategorizationRuleInput!
-  ): UpdateCategorizationRulePayload
-
-  """
   Updates a single \`FixedAsset\` using its globally unique id and a patch.
   """
   updateFixedAssetById(
@@ -19727,6 +23864,40 @@ type Mutation {
     input: UpdateRecurringTransactionInput!
   ): UpdateRecurringTransactionPayload
 
+  """
+  Updates a single \`CategorizationRule\` using its globally unique id and a patch.
+  """
+  updateCategorizationRuleById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateCategorizationRuleByIdInput!
+  ): UpdateCategorizationRulePayload
+
+  """Updates a single \`CategorizationRule\` using a unique key and a patch."""
+  updateCategorizationRule(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateCategorizationRuleInput!
+  ): UpdateCategorizationRulePayload
+
+  """Updates a single \`Loan\` using its globally unique id and a patch."""
+  updateLoanById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateLoanByIdInput!
+  ): UpdateLoanPayload
+
+  """Updates a single \`Loan\` using a unique key and a patch."""
+  updateLoan(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateLoanInput!
+  ): UpdateLoanPayload
+
   """Updates a single \`Account\` using its globally unique id and a patch."""
   updateAccountById(
     """
@@ -19742,6 +23913,22 @@ type Mutation {
     """
     input: UpdateAccountInput!
   ): UpdateAccountPayload
+
+  """Deletes a single \`JournalLineProject\` using its globally unique id."""
+  deleteJournalLineProjectById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteJournalLineProjectByIdInput!
+  ): DeleteJournalLineProjectPayload
+
+  """Deletes a single \`JournalLineProject\` using a unique key."""
+  deleteJournalLineProject(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteJournalLineProjectInput!
+  ): DeleteJournalLineProjectPayload
 
   """Deletes a single \`JournalLineTag\` using its globally unique id."""
   deleteJournalLineTagById(
@@ -19951,6 +24138,22 @@ type Mutation {
     input: DeleteAccountingPeriodInput!
   ): DeleteAccountingPeriodPayload
 
+  """Deletes a single \`Attachment\` using its globally unique id."""
+  deleteAttachmentById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteAttachmentByIdInput!
+  ): DeleteAttachmentPayload
+
+  """Deletes a single \`Attachment\` using a unique key."""
+  deleteAttachment(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteAttachmentInput!
+  ): DeleteAttachmentPayload
+
   """Deletes a single \`InventoryTransaction\` using its globally unique id."""
   deleteInventoryTransactionById(
     """
@@ -20047,6 +24250,24 @@ type Mutation {
     input: DeleteBillPaymentInput!
   ): DeleteBillPaymentPayload
 
+  """
+  Deletes a single \`CategorizationRuleSplit\` using its globally unique id.
+  """
+  deleteCategorizationRuleSplitById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCategorizationRuleSplitByIdInput!
+  ): DeleteCategorizationRuleSplitPayload
+
+  """Deletes a single \`CategorizationRuleSplit\` using a unique key."""
+  deleteCategorizationRuleSplit(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCategorizationRuleSplitInput!
+  ): DeleteCategorizationRuleSplitPayload
+
   """Deletes a single \`InvoicePayment\` using its globally unique id."""
   deleteInvoicePaymentById(
     """
@@ -20081,6 +24302,38 @@ type Mutation {
     input: DeleteReconciliationStatementInput!
   ): DeleteReconciliationStatementPayload
 
+  """Deletes a single \`RdExpense\` using its globally unique id."""
+  deleteRdExpenseById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteRdExpenseByIdInput!
+  ): DeleteRdExpensePayload
+
+  """Deletes a single \`RdExpense\` using a unique key."""
+  deleteRdExpense(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteRdExpenseInput!
+  ): DeleteRdExpensePayload
+
+  """Deletes a single \`Project\` using its globally unique id."""
+  deleteProjectById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteProjectByIdInput!
+  ): DeleteProjectPayload
+
+  """Deletes a single \`Project\` using a unique key."""
+  deleteProject(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteProjectInput!
+  ): DeleteProjectPayload
+
   """Deletes a single \`InvoiceLine\` using its globally unique id."""
   deleteInvoiceLineById(
     """
@@ -20096,6 +24349,22 @@ type Mutation {
     """
     input: DeleteInvoiceLineInput!
   ): DeleteInvoiceLinePayload
+
+  """Deletes a single \`AmortizationEntry\` using its globally unique id."""
+  deleteAmortizationEntryById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteAmortizationEntryByIdInput!
+  ): DeleteAmortizationEntryPayload
+
+  """Deletes a single \`AmortizationEntry\` using a unique key."""
+  deleteAmortizationEntry(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteAmortizationEntryInput!
+  ): DeleteAmortizationEntryPayload
 
   """Deletes a single \`CryptoLot\` using its globally unique id."""
   deleteCryptoLotById(
@@ -20176,6 +24445,22 @@ type Mutation {
     """
     input: DeleteBudgetInput!
   ): DeleteBudgetPayload
+
+  """Deletes a single \`Document\` using its globally unique id."""
+  deleteDocumentById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteDocumentByIdInput!
+  ): DeleteDocumentPayload
+
+  """Deletes a single \`Document\` using a unique key."""
+  deleteDocument(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteDocumentInput!
+  ): DeleteDocumentPayload
 
   """Deletes a single \`Estimate\` using its globally unique id."""
   deleteEstimateById(
@@ -20289,22 +24574,6 @@ type Mutation {
     input: DeleteBillInput!
   ): DeleteBillPayload
 
-  """Deletes a single \`CategorizationRule\` using its globally unique id."""
-  deleteCategorizationRuleById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteCategorizationRuleByIdInput!
-  ): DeleteCategorizationRulePayload
-
-  """Deletes a single \`CategorizationRule\` using a unique key."""
-  deleteCategorizationRule(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteCategorizationRuleInput!
-  ): DeleteCategorizationRulePayload
-
   """Deletes a single \`FixedAsset\` using its globally unique id."""
   deleteFixedAssetById(
     """
@@ -20353,6 +24622,38 @@ type Mutation {
     input: DeleteRecurringTransactionInput!
   ): DeleteRecurringTransactionPayload
 
+  """Deletes a single \`CategorizationRule\` using its globally unique id."""
+  deleteCategorizationRuleById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCategorizationRuleByIdInput!
+  ): DeleteCategorizationRulePayload
+
+  """Deletes a single \`CategorizationRule\` using a unique key."""
+  deleteCategorizationRule(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCategorizationRuleInput!
+  ): DeleteCategorizationRulePayload
+
+  """Deletes a single \`Loan\` using its globally unique id."""
+  deleteLoanById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteLoanByIdInput!
+  ): DeleteLoanPayload
+
+  """Deletes a single \`Loan\` using a unique key."""
+  deleteLoan(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteLoanInput!
+  ): DeleteLoanPayload
+
   """Deletes a single \`Account\` using its globally unique id."""
   deleteAccountById(
     """
@@ -20368,6 +24669,48 @@ type Mutation {
     """
     input: DeleteAccountInput!
   ): DeleteAccountPayload
+}
+
+"""The output of our create \`JournalLineProject\` mutation."""
+type CreateJournalLineProjectPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`JournalLineProject\` that was created by this mutation."""
+  journalLineProject: JournalLineProject
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`JournalLineProject\`. May be used by Relay 1."""
+  journalLineProjectEdge(
+    """The method to use when ordering \`JournalLineProject\`."""
+    orderBy: [JournalLineProjectOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): JournalLineProjectEdge
+}
+
+"""All input for the create \`JournalLineProject\` mutation."""
+input CreateJournalLineProjectInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`JournalLineProject\` to be created by this mutation."""
+  journalLineProject: JournalLineProjectInput!
+}
+
+"""An input for mutations affecting \`JournalLineProject\`"""
+input JournalLineProjectInput {
+  rowId: UUID
+  journalLineId: UUID!
+  projectId: UUID!
 }
 
 """The output of our create \`JournalLineTag\` mutation."""
@@ -20963,6 +25306,55 @@ input AccountingPeriodInput {
   createdAt: Datetime
 }
 
+"""The output of our create \`Attachment\` mutation."""
+type CreateAttachmentPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Attachment\` that was created by this mutation."""
+  attachment: Attachment
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Attachment\`. May be used by Relay 1."""
+  attachmentEdge(
+    """The method to use when ordering \`Attachment\`."""
+    orderBy: [AttachmentOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): AttachmentEdge
+}
+
+"""All input for the create \`Attachment\` mutation."""
+input CreateAttachmentInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`Attachment\` to be created by this mutation."""
+  attachment: AttachmentInput!
+}
+
+"""An input for mutations affecting \`Attachment\`"""
+input AttachmentInput {
+  rowId: UUID
+  bookId: UUID!
+  journalEntryId: UUID
+  filename: String!
+  contentType: String!
+  sizeBytes: Int!
+  storageKey: String!
+  uploadStatus: String
+  createdBy: String!
+  createdAt: Datetime
+}
+
 """The output of our create \`InventoryTransaction\` mutation."""
 type CreateInventoryTransactionPayload {
   """
@@ -21254,6 +25646,55 @@ input BillPaymentInput {
   createdAt: Datetime
 }
 
+"""The output of our create \`CategorizationRuleSplit\` mutation."""
+type CreateCategorizationRuleSplitPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`CategorizationRuleSplit\` that was created by this mutation."""
+  categorizationRuleSplit: CategorizationRuleSplit
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`CategorizationRuleSplit\`. May be used by Relay 1."""
+  categorizationRuleSplitEdge(
+    """The method to use when ordering \`CategorizationRuleSplit\`."""
+    orderBy: [CategorizationRuleSplitOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CategorizationRuleSplitEdge
+}
+
+"""All input for the create \`CategorizationRuleSplit\` mutation."""
+input CreateCategorizationRuleSplitInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`CategorizationRuleSplit\` to be created by this mutation."""
+  categorizationRuleSplit: CategorizationRuleSplitInput!
+}
+
+"""An input for mutations affecting \`CategorizationRuleSplit\`"""
+input CategorizationRuleSplitInput {
+  rowId: UUID
+  ruleId: UUID!
+  accountId: UUID!
+  side: String!
+  percentage: BigFloat
+  fixedAmount: BigFloat
+  memo: String
+  tagId: UUID
+  projectId: UUID
+  sortOrder: Int
+}
+
 """The output of our create \`InvoicePayment\` mutation."""
 type CreateInvoicePaymentPayload {
   """
@@ -21352,6 +25793,106 @@ input ReconciliationStatementInput {
   createdAt: Datetime
 }
 
+"""The output of our create \`RdExpense\` mutation."""
+type CreateRdExpensePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`RdExpense\` that was created by this mutation."""
+  rdExpense: RdExpense
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`RdExpense\`. May be used by Relay 1."""
+  rdExpenseEdge(
+    """The method to use when ordering \`RdExpense\`."""
+    orderBy: [RdExpenseOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): RdExpenseEdge
+}
+
+"""All input for the create \`RdExpense\` mutation."""
+input CreateRdExpenseInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`RdExpense\` to be created by this mutation."""
+  rdExpense: RdExpenseInput!
+}
+
+"""An input for mutations affecting \`RdExpense\`"""
+input RdExpenseInput {
+  rowId: UUID
+  bookId: UUID!
+  year: Int!
+  category: String
+  description: String!
+  amount: BigFloat!
+  isForeign: Boolean
+  projectId: UUID
+  notes: String
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""The output of our create \`Project\` mutation."""
+type CreateProjectPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Project\` that was created by this mutation."""
+  project: Project
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Project\`. May be used by Relay 1."""
+  projectEdge(
+    """The method to use when ordering \`Project\`."""
+    orderBy: [ProjectOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ProjectEdge
+}
+
+"""All input for the create \`Project\` mutation."""
+input CreateProjectInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`Project\` to be created by this mutation."""
+  project: ProjectInput!
+}
+
+"""An input for mutations affecting \`Project\`"""
+input ProjectInput {
+  rowId: UUID
+  bookId: UUID!
+  name: String!
+  code: String
+  status: String
+  budgetAmount: BigFloat
+  startDate: Datetime
+  endDate: Datetime
+  notes: String
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
 """The output of our create \`InvoiceLine\` mutation."""
 type CreateInvoiceLinePayload {
   """
@@ -21399,6 +25940,56 @@ input InvoiceLineInput {
   taxJurisdictionId: UUID
   sortOrder: Int
   inventoryItemId: UUID
+}
+
+"""The output of our create \`AmortizationEntry\` mutation."""
+type CreateAmortizationEntryPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`AmortizationEntry\` that was created by this mutation."""
+  amortizationEntry: AmortizationEntry
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`AmortizationEntry\`. May be used by Relay 1."""
+  amortizationEntryEdge(
+    """The method to use when ordering \`AmortizationEntry\`."""
+    orderBy: [AmortizationEntryOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): AmortizationEntryEdge
+}
+
+"""All input for the create \`AmortizationEntry\` mutation."""
+input CreateAmortizationEntryInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`AmortizationEntry\` to be created by this mutation."""
+  amortizationEntry: AmortizationEntryInput!
+}
+
+"""An input for mutations affecting \`AmortizationEntry\`"""
+input AmortizationEntryInput {
+  rowId: UUID
+  loanId: UUID!
+  sequenceNumber: Int!
+  dueDate: String!
+  paymentAmount: BigFloat!
+  principalAmount: BigFloat!
+  interestAmount: BigFloat!
+  extraPrincipal: BigFloat
+  balanceAfter: BigFloat!
+  journalEntryId: UUID
+  status: String
 }
 
 """The output of our create \`CryptoLot\` mutation."""
@@ -21648,6 +26239,58 @@ input BudgetInput {
   rollover: Boolean
   createdAt: Datetime
   updatedAt: Datetime
+}
+
+"""The output of our create \`Document\` mutation."""
+type CreateDocumentPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Document\` that was created by this mutation."""
+  document: Document
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Document\`. May be used by Relay 1."""
+  documentEdge(
+    """The method to use when ordering \`Document\`."""
+    orderBy: [DocumentOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): DocumentEdge
+}
+
+"""All input for the create \`Document\` mutation."""
+input CreateDocumentInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`Document\` to be created by this mutation."""
+  document: DocumentInput!
+}
+
+"""An input for mutations affecting \`Document\`"""
+input DocumentInput {
+  rowId: UUID
+  bookId: UUID!
+  category: String
+  name: String!
+  filename: String!
+  contentType: String!
+  sizeBytes: Int!
+  storageKey: String!
+  vendorId: UUID
+  year: Int
+  notes: String
+  createdBy: String!
+  createdAt: Datetime
 }
 
 """The output of our create \`Estimate\` mutation."""
@@ -22020,61 +26663,6 @@ input BillInput {
   updatedAt: Datetime
 }
 
-"""The output of our create \`CategorizationRule\` mutation."""
-type CreateCategorizationRulePayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`CategorizationRule\` that was created by this mutation."""
-  categorizationRule: CategorizationRule
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`CategorizationRule\`. May be used by Relay 1."""
-  categorizationRuleEdge(
-    """The method to use when ordering \`CategorizationRule\`."""
-    orderBy: [CategorizationRuleOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): CategorizationRuleEdge
-}
-
-"""All input for the create \`CategorizationRule\` mutation."""
-input CreateCategorizationRuleInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The \`CategorizationRule\` to be created by this mutation."""
-  categorizationRule: CategorizationRuleInput!
-}
-
-"""An input for mutations affecting \`CategorizationRule\`"""
-input CategorizationRuleInput {
-  rowId: UUID
-  bookId: UUID!
-  name: String!
-  matchField: String!
-  matchType: String!
-  matchValue: String!
-  amountMin: BigFloat
-  amountMax: BigFloat
-  debitAccountId: UUID!
-  creditAccountId: UUID!
-  confidence: BigFloat
-  priority: Int
-  hitCount: Int
-  lastHitAt: Datetime
-  createdAt: Datetime
-  tagId: UUID
-}
-
 """The output of our create \`FixedAsset\` mutation."""
 type CreateFixedAssetPayload {
   """
@@ -22237,6 +26825,118 @@ input RecurringTransactionInput {
   updatedAt: Datetime
 }
 
+"""The output of our create \`CategorizationRule\` mutation."""
+type CreateCategorizationRulePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`CategorizationRule\` that was created by this mutation."""
+  categorizationRule: CategorizationRule
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`CategorizationRule\`. May be used by Relay 1."""
+  categorizationRuleEdge(
+    """The method to use when ordering \`CategorizationRule\`."""
+    orderBy: [CategorizationRuleOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CategorizationRuleEdge
+}
+
+"""All input for the create \`CategorizationRule\` mutation."""
+input CreateCategorizationRuleInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`CategorizationRule\` to be created by this mutation."""
+  categorizationRule: CategorizationRuleInput!
+}
+
+"""An input for mutations affecting \`CategorizationRule\`"""
+input CategorizationRuleInput {
+  rowId: UUID
+  bookId: UUID!
+  name: String!
+  matchField: String!
+  matchType: String!
+  matchValue: String!
+  amountMin: BigFloat
+  amountMax: BigFloat
+  debitAccountId: UUID!
+  creditAccountId: UUID!
+  confidence: BigFloat
+  priority: Int
+  hitCount: Int
+  lastHitAt: Datetime
+  createdAt: Datetime
+  tagId: UUID
+  projectId: UUID
+}
+
+"""The output of our create \`Loan\` mutation."""
+type CreateLoanPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Loan\` that was created by this mutation."""
+  loan: Loan
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Loan\`. May be used by Relay 1."""
+  loanEdge(
+    """The method to use when ordering \`Loan\`."""
+    orderBy: [LoanOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): LoanEdge
+}
+
+"""All input for the create \`Loan\` mutation."""
+input CreateLoanInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`Loan\` to be created by this mutation."""
+  loan: LoanInput!
+}
+
+"""An input for mutations affecting \`Loan\`"""
+input LoanInput {
+  rowId: UUID
+  bookId: UUID!
+  name: String!
+  liabilityAccountId: UUID!
+  interestAccountId: UUID!
+  paymentAccountId: UUID!
+  originalPrincipal: BigFloat!
+  annualRate: BigFloat!
+  termMonths: Int!
+  startDate: String!
+  paymentDay: Int!
+  paymentAmount: BigFloat
+  extraPrincipal: BigFloat
+  status: String
+  notes: String
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
 """The output of our create \`Account\` mutation."""
 type CreateAccountPayload {
   """
@@ -22285,6 +26985,72 @@ input AccountInput {
   isActive: Boolean
   createdAt: Datetime
   updatedAt: Datetime
+}
+
+"""The output of our update \`JournalLineProject\` mutation."""
+type UpdateJournalLineProjectPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`JournalLineProject\` that was updated by this mutation."""
+  journalLineProject: JournalLineProject
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`JournalLineProject\`. May be used by Relay 1."""
+  journalLineProjectEdge(
+    """The method to use when ordering \`JournalLineProject\`."""
+    orderBy: [JournalLineProjectOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): JournalLineProjectEdge
+}
+
+"""All input for the \`updateJournalLineProjectById\` mutation."""
+input UpdateJournalLineProjectByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`JournalLineProject\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`JournalLineProject\` being updated.
+  """
+  patch: JournalLineProjectPatch!
+}
+
+"""
+Represents an update to a \`JournalLineProject\`. Fields that are set will be updated.
+"""
+input JournalLineProjectPatch {
+  rowId: UUID
+  journalLineId: UUID
+  projectId: UUID
+}
+
+"""All input for the \`updateJournalLineProject\` mutation."""
+input UpdateJournalLineProjectInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`JournalLineProject\` being updated.
+  """
+  patch: JournalLineProjectPatch!
 }
 
 """The output of our update \`JournalLineTag\` mutation."""
@@ -23190,6 +27956,79 @@ input UpdateAccountingPeriodInput {
   patch: AccountingPeriodPatch!
 }
 
+"""The output of our update \`Attachment\` mutation."""
+type UpdateAttachmentPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Attachment\` that was updated by this mutation."""
+  attachment: Attachment
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Attachment\`. May be used by Relay 1."""
+  attachmentEdge(
+    """The method to use when ordering \`Attachment\`."""
+    orderBy: [AttachmentOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): AttachmentEdge
+}
+
+"""All input for the \`updateAttachmentById\` mutation."""
+input UpdateAttachmentByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`Attachment\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`Attachment\` being updated.
+  """
+  patch: AttachmentPatch!
+}
+
+"""
+Represents an update to a \`Attachment\`. Fields that are set will be updated.
+"""
+input AttachmentPatch {
+  rowId: UUID
+  bookId: UUID
+  journalEntryId: UUID
+  filename: String
+  contentType: String
+  sizeBytes: Int
+  storageKey: String
+  uploadStatus: String
+  createdBy: String
+  createdAt: Datetime
+}
+
+"""All input for the \`updateAttachment\` mutation."""
+input UpdateAttachmentInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`Attachment\` being updated.
+  """
+  patch: AttachmentPatch!
+}
+
 """The output of our update \`InventoryTransaction\` mutation."""
 type UpdateInventoryTransactionPayload {
   """
@@ -23623,6 +28462,79 @@ input UpdateBillPaymentInput {
   patch: BillPaymentPatch!
 }
 
+"""The output of our update \`CategorizationRuleSplit\` mutation."""
+type UpdateCategorizationRuleSplitPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`CategorizationRuleSplit\` that was updated by this mutation."""
+  categorizationRuleSplit: CategorizationRuleSplit
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`CategorizationRuleSplit\`. May be used by Relay 1."""
+  categorizationRuleSplitEdge(
+    """The method to use when ordering \`CategorizationRuleSplit\`."""
+    orderBy: [CategorizationRuleSplitOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CategorizationRuleSplitEdge
+}
+
+"""All input for the \`updateCategorizationRuleSplitById\` mutation."""
+input UpdateCategorizationRuleSplitByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`CategorizationRuleSplit\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`CategorizationRuleSplit\` being updated.
+  """
+  patch: CategorizationRuleSplitPatch!
+}
+
+"""
+Represents an update to a \`CategorizationRuleSplit\`. Fields that are set will be updated.
+"""
+input CategorizationRuleSplitPatch {
+  rowId: UUID
+  ruleId: UUID
+  accountId: UUID
+  side: String
+  percentage: BigFloat
+  fixedAmount: BigFloat
+  memo: String
+  tagId: UUID
+  projectId: UUID
+  sortOrder: Int
+}
+
+"""All input for the \`updateCategorizationRuleSplit\` mutation."""
+input UpdateCategorizationRuleSplitInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`CategorizationRuleSplit\` being updated.
+  """
+  patch: CategorizationRuleSplitPatch!
+}
+
 """The output of our update \`InvoicePayment\` mutation."""
 type UpdateInvoicePaymentPayload {
   """
@@ -23769,6 +28681,154 @@ input UpdateReconciliationStatementInput {
   patch: ReconciliationStatementPatch!
 }
 
+"""The output of our update \`RdExpense\` mutation."""
+type UpdateRdExpensePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`RdExpense\` that was updated by this mutation."""
+  rdExpense: RdExpense
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`RdExpense\`. May be used by Relay 1."""
+  rdExpenseEdge(
+    """The method to use when ordering \`RdExpense\`."""
+    orderBy: [RdExpenseOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): RdExpenseEdge
+}
+
+"""All input for the \`updateRdExpenseById\` mutation."""
+input UpdateRdExpenseByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`RdExpense\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`RdExpense\` being updated.
+  """
+  patch: RdExpensePatch!
+}
+
+"""
+Represents an update to a \`RdExpense\`. Fields that are set will be updated.
+"""
+input RdExpensePatch {
+  rowId: UUID
+  bookId: UUID
+  year: Int
+  category: String
+  description: String
+  amount: BigFloat
+  isForeign: Boolean
+  projectId: UUID
+  notes: String
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the \`updateRdExpense\` mutation."""
+input UpdateRdExpenseInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`RdExpense\` being updated.
+  """
+  patch: RdExpensePatch!
+}
+
+"""The output of our update \`Project\` mutation."""
+type UpdateProjectPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Project\` that was updated by this mutation."""
+  project: Project
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Project\`. May be used by Relay 1."""
+  projectEdge(
+    """The method to use when ordering \`Project\`."""
+    orderBy: [ProjectOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ProjectEdge
+}
+
+"""All input for the \`updateProjectById\` mutation."""
+input UpdateProjectByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`Project\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`Project\` being updated.
+  """
+  patch: ProjectPatch!
+}
+
+"""
+Represents an update to a \`Project\`. Fields that are set will be updated.
+"""
+input ProjectPatch {
+  rowId: UUID
+  bookId: UUID
+  name: String
+  code: String
+  status: String
+  budgetAmount: BigFloat
+  startDate: Datetime
+  endDate: Datetime
+  notes: String
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the \`updateProject\` mutation."""
+input UpdateProjectInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`Project\` being updated.
+  """
+  patch: ProjectPatch!
+}
+
 """The output of our update \`InvoiceLine\` mutation."""
 type UpdateInvoiceLinePayload {
   """
@@ -23840,6 +28900,80 @@ input UpdateInvoiceLineInput {
   An object where the defined keys will be set on the \`InvoiceLine\` being updated.
   """
   patch: InvoiceLinePatch!
+}
+
+"""The output of our update \`AmortizationEntry\` mutation."""
+type UpdateAmortizationEntryPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`AmortizationEntry\` that was updated by this mutation."""
+  amortizationEntry: AmortizationEntry
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`AmortizationEntry\`. May be used by Relay 1."""
+  amortizationEntryEdge(
+    """The method to use when ordering \`AmortizationEntry\`."""
+    orderBy: [AmortizationEntryOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): AmortizationEntryEdge
+}
+
+"""All input for the \`updateAmortizationEntryById\` mutation."""
+input UpdateAmortizationEntryByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`AmortizationEntry\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`AmortizationEntry\` being updated.
+  """
+  patch: AmortizationEntryPatch!
+}
+
+"""
+Represents an update to a \`AmortizationEntry\`. Fields that are set will be updated.
+"""
+input AmortizationEntryPatch {
+  rowId: UUID
+  loanId: UUID
+  sequenceNumber: Int
+  dueDate: String
+  paymentAmount: BigFloat
+  principalAmount: BigFloat
+  interestAmount: BigFloat
+  extraPrincipal: BigFloat
+  balanceAfter: BigFloat
+  journalEntryId: UUID
+  status: String
+}
+
+"""All input for the \`updateAmortizationEntry\` mutation."""
+input UpdateAmortizationEntryInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`AmortizationEntry\` being updated.
+  """
+  patch: AmortizationEntryPatch!
 }
 
 """The output of our update \`CryptoLot\` mutation."""
@@ -24209,6 +29343,82 @@ input UpdateBudgetInput {
   An object where the defined keys will be set on the \`Budget\` being updated.
   """
   patch: BudgetPatch!
+}
+
+"""The output of our update \`Document\` mutation."""
+type UpdateDocumentPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Document\` that was updated by this mutation."""
+  document: Document
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Document\`. May be used by Relay 1."""
+  documentEdge(
+    """The method to use when ordering \`Document\`."""
+    orderBy: [DocumentOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): DocumentEdge
+}
+
+"""All input for the \`updateDocumentById\` mutation."""
+input UpdateDocumentByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`Document\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`Document\` being updated.
+  """
+  patch: DocumentPatch!
+}
+
+"""
+Represents an update to a \`Document\`. Fields that are set will be updated.
+"""
+input DocumentPatch {
+  rowId: UUID
+  bookId: UUID
+  category: String
+  name: String
+  filename: String
+  contentType: String
+  sizeBytes: Int
+  storageKey: String
+  vendorId: UUID
+  year: Int
+  notes: String
+  createdBy: String
+  createdAt: Datetime
+}
+
+"""All input for the \`updateDocument\` mutation."""
+input UpdateDocumentInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`Document\` being updated.
+  """
+  patch: DocumentPatch!
 }
 
 """The output of our update \`Estimate\` mutation."""
@@ -24747,85 +29957,6 @@ input UpdateBillInput {
   patch: BillPatch!
 }
 
-"""The output of our update \`CategorizationRule\` mutation."""
-type UpdateCategorizationRulePayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`CategorizationRule\` that was updated by this mutation."""
-  categorizationRule: CategorizationRule
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`CategorizationRule\`. May be used by Relay 1."""
-  categorizationRuleEdge(
-    """The method to use when ordering \`CategorizationRule\`."""
-    orderBy: [CategorizationRuleOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): CategorizationRuleEdge
-}
-
-"""All input for the \`updateCategorizationRuleById\` mutation."""
-input UpdateCategorizationRuleByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`CategorizationRule\` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the \`CategorizationRule\` being updated.
-  """
-  patch: CategorizationRulePatch!
-}
-
-"""
-Represents an update to a \`CategorizationRule\`. Fields that are set will be updated.
-"""
-input CategorizationRulePatch {
-  rowId: UUID
-  bookId: UUID
-  name: String
-  matchField: String
-  matchType: String
-  matchValue: String
-  amountMin: BigFloat
-  amountMax: BigFloat
-  debitAccountId: UUID
-  creditAccountId: UUID
-  confidence: BigFloat
-  priority: Int
-  hitCount: Int
-  lastHitAt: Datetime
-  createdAt: Datetime
-  tagId: UUID
-}
-
-"""All input for the \`updateCategorizationRule\` mutation."""
-input UpdateCategorizationRuleInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the \`CategorizationRule\` being updated.
-  """
-  patch: CategorizationRulePatch!
-}
-
 """The output of our update \`FixedAsset\` mutation."""
 type UpdateFixedAssetPayload {
   """
@@ -25060,6 +30191,164 @@ input UpdateRecurringTransactionInput {
   patch: RecurringTransactionPatch!
 }
 
+"""The output of our update \`CategorizationRule\` mutation."""
+type UpdateCategorizationRulePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`CategorizationRule\` that was updated by this mutation."""
+  categorizationRule: CategorizationRule
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`CategorizationRule\`. May be used by Relay 1."""
+  categorizationRuleEdge(
+    """The method to use when ordering \`CategorizationRule\`."""
+    orderBy: [CategorizationRuleOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CategorizationRuleEdge
+}
+
+"""All input for the \`updateCategorizationRuleById\` mutation."""
+input UpdateCategorizationRuleByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`CategorizationRule\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`CategorizationRule\` being updated.
+  """
+  patch: CategorizationRulePatch!
+}
+
+"""
+Represents an update to a \`CategorizationRule\`. Fields that are set will be updated.
+"""
+input CategorizationRulePatch {
+  rowId: UUID
+  bookId: UUID
+  name: String
+  matchField: String
+  matchType: String
+  matchValue: String
+  amountMin: BigFloat
+  amountMax: BigFloat
+  debitAccountId: UUID
+  creditAccountId: UUID
+  confidence: BigFloat
+  priority: Int
+  hitCount: Int
+  lastHitAt: Datetime
+  createdAt: Datetime
+  tagId: UUID
+  projectId: UUID
+}
+
+"""All input for the \`updateCategorizationRule\` mutation."""
+input UpdateCategorizationRuleInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`CategorizationRule\` being updated.
+  """
+  patch: CategorizationRulePatch!
+}
+
+"""The output of our update \`Loan\` mutation."""
+type UpdateLoanPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Loan\` that was updated by this mutation."""
+  loan: Loan
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Loan\`. May be used by Relay 1."""
+  loanEdge(
+    """The method to use when ordering \`Loan\`."""
+    orderBy: [LoanOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): LoanEdge
+}
+
+"""All input for the \`updateLoanById\` mutation."""
+input UpdateLoanByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`Loan\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`Loan\` being updated.
+  """
+  patch: LoanPatch!
+}
+
+"""Represents an update to a \`Loan\`. Fields that are set will be updated."""
+input LoanPatch {
+  rowId: UUID
+  bookId: UUID
+  name: String
+  liabilityAccountId: UUID
+  interestAccountId: UUID
+  paymentAccountId: UUID
+  originalPrincipal: BigFloat
+  annualRate: BigFloat
+  termMonths: Int
+  startDate: String
+  paymentDay: Int
+  paymentAmount: BigFloat
+  extraPrincipal: BigFloat
+  status: String
+  notes: String
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the \`updateLoan\` mutation."""
+input UpdateLoanInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`Loan\` being updated.
+  """
+  patch: LoanPatch!
+}
+
 """The output of our update \`Account\` mutation."""
 type UpdateAccountPayload {
   """
@@ -25132,6 +30421,54 @@ input UpdateAccountInput {
   An object where the defined keys will be set on the \`Account\` being updated.
   """
   patch: AccountPatch!
+}
+
+"""The output of our delete \`JournalLineProject\` mutation."""
+type DeleteJournalLineProjectPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`JournalLineProject\` that was deleted by this mutation."""
+  journalLineProject: JournalLineProject
+  deletedJournalLineProjectId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`JournalLineProject\`. May be used by Relay 1."""
+  journalLineProjectEdge(
+    """The method to use when ordering \`JournalLineProject\`."""
+    orderBy: [JournalLineProjectOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): JournalLineProjectEdge
+}
+
+"""All input for the \`deleteJournalLineProjectById\` mutation."""
+input DeleteJournalLineProjectByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`JournalLineProject\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteJournalLineProject\` mutation."""
+input DeleteJournalLineProjectInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
 }
 
 """The output of our delete \`JournalLineTag\` mutation."""
@@ -25758,6 +31095,54 @@ input DeleteAccountingPeriodInput {
   rowId: UUID!
 }
 
+"""The output of our delete \`Attachment\` mutation."""
+type DeleteAttachmentPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Attachment\` that was deleted by this mutation."""
+  attachment: Attachment
+  deletedAttachmentId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Attachment\`. May be used by Relay 1."""
+  attachmentEdge(
+    """The method to use when ordering \`Attachment\`."""
+    orderBy: [AttachmentOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): AttachmentEdge
+}
+
+"""All input for the \`deleteAttachmentById\` mutation."""
+input DeleteAttachmentByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`Attachment\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteAttachment\` mutation."""
+input DeleteAttachmentInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete \`InventoryTransaction\` mutation."""
 type DeleteInventoryTransactionPayload {
   """
@@ -26046,6 +31431,54 @@ input DeleteBillPaymentInput {
   rowId: UUID!
 }
 
+"""The output of our delete \`CategorizationRuleSplit\` mutation."""
+type DeleteCategorizationRuleSplitPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`CategorizationRuleSplit\` that was deleted by this mutation."""
+  categorizationRuleSplit: CategorizationRuleSplit
+  deletedCategorizationRuleSplitId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`CategorizationRuleSplit\`. May be used by Relay 1."""
+  categorizationRuleSplitEdge(
+    """The method to use when ordering \`CategorizationRuleSplit\`."""
+    orderBy: [CategorizationRuleSplitOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CategorizationRuleSplitEdge
+}
+
+"""All input for the \`deleteCategorizationRuleSplitById\` mutation."""
+input DeleteCategorizationRuleSplitByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`CategorizationRuleSplit\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteCategorizationRuleSplit\` mutation."""
+input DeleteCategorizationRuleSplitInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete \`InvoicePayment\` mutation."""
 type DeleteInvoicePaymentPayload {
   """
@@ -26142,6 +31575,102 @@ input DeleteReconciliationStatementInput {
   rowId: UUID!
 }
 
+"""The output of our delete \`RdExpense\` mutation."""
+type DeleteRdExpensePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`RdExpense\` that was deleted by this mutation."""
+  rdExpense: RdExpense
+  deletedRdExpenseId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`RdExpense\`. May be used by Relay 1."""
+  rdExpenseEdge(
+    """The method to use when ordering \`RdExpense\`."""
+    orderBy: [RdExpenseOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): RdExpenseEdge
+}
+
+"""All input for the \`deleteRdExpenseById\` mutation."""
+input DeleteRdExpenseByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`RdExpense\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteRdExpense\` mutation."""
+input DeleteRdExpenseInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`Project\` mutation."""
+type DeleteProjectPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Project\` that was deleted by this mutation."""
+  project: Project
+  deletedProjectId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Project\`. May be used by Relay 1."""
+  projectEdge(
+    """The method to use when ordering \`Project\`."""
+    orderBy: [ProjectOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ProjectEdge
+}
+
+"""All input for the \`deleteProjectById\` mutation."""
+input DeleteProjectByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`Project\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteProject\` mutation."""
+input DeleteProjectInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete \`InvoiceLine\` mutation."""
 type DeleteInvoiceLinePayload {
   """
@@ -26182,6 +31711,54 @@ input DeleteInvoiceLineByIdInput {
 
 """All input for the \`deleteInvoiceLine\` mutation."""
 input DeleteInvoiceLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`AmortizationEntry\` mutation."""
+type DeleteAmortizationEntryPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`AmortizationEntry\` that was deleted by this mutation."""
+  amortizationEntry: AmortizationEntry
+  deletedAmortizationEntryId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`AmortizationEntry\`. May be used by Relay 1."""
+  amortizationEntryEdge(
+    """The method to use when ordering \`AmortizationEntry\`."""
+    orderBy: [AmortizationEntryOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): AmortizationEntryEdge
+}
+
+"""All input for the \`deleteAmortizationEntryById\` mutation."""
+input DeleteAmortizationEntryByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`AmortizationEntry\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteAmortizationEntry\` mutation."""
+input DeleteAmortizationEntryInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -26422,6 +31999,54 @@ input DeleteBudgetByIdInput {
 
 """All input for the \`deleteBudget\` mutation."""
 input DeleteBudgetInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`Document\` mutation."""
+type DeleteDocumentPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Document\` that was deleted by this mutation."""
+  document: Document
+  deletedDocumentId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Document\`. May be used by Relay 1."""
+  documentEdge(
+    """The method to use when ordering \`Document\`."""
+    orderBy: [DocumentOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): DocumentEdge
+}
+
+"""All input for the \`deleteDocumentById\` mutation."""
+input DeleteDocumentByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`Document\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteDocument\` mutation."""
+input DeleteDocumentInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -26766,54 +32391,6 @@ input DeleteBillInput {
   rowId: UUID!
 }
 
-"""The output of our delete \`CategorizationRule\` mutation."""
-type DeleteCategorizationRulePayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`CategorizationRule\` that was deleted by this mutation."""
-  categorizationRule: CategorizationRule
-  deletedCategorizationRuleId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`CategorizationRule\`. May be used by Relay 1."""
-  categorizationRuleEdge(
-    """The method to use when ordering \`CategorizationRule\`."""
-    orderBy: [CategorizationRuleOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): CategorizationRuleEdge
-}
-
-"""All input for the \`deleteCategorizationRuleById\` mutation."""
-input DeleteCategorizationRuleByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`CategorizationRule\` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the \`deleteCategorizationRule\` mutation."""
-input DeleteCategorizationRuleInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete \`FixedAsset\` mutation."""
 type DeleteFixedAssetPayload {
   """
@@ -26958,6 +32535,102 @@ input DeleteRecurringTransactionInput {
   rowId: UUID!
 }
 
+"""The output of our delete \`CategorizationRule\` mutation."""
+type DeleteCategorizationRulePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`CategorizationRule\` that was deleted by this mutation."""
+  categorizationRule: CategorizationRule
+  deletedCategorizationRuleId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`CategorizationRule\`. May be used by Relay 1."""
+  categorizationRuleEdge(
+    """The method to use when ordering \`CategorizationRule\`."""
+    orderBy: [CategorizationRuleOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CategorizationRuleEdge
+}
+
+"""All input for the \`deleteCategorizationRuleById\` mutation."""
+input DeleteCategorizationRuleByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`CategorizationRule\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteCategorizationRule\` mutation."""
+input DeleteCategorizationRuleInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`Loan\` mutation."""
+type DeleteLoanPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Loan\` that was deleted by this mutation."""
+  loan: Loan
+  deletedLoanId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Loan\`. May be used by Relay 1."""
+  loanEdge(
+    """The method to use when ordering \`Loan\`."""
+    orderBy: [LoanOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): LoanEdge
+}
+
+"""All input for the \`deleteLoanById\` mutation."""
+input DeleteLoanByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`Loan\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteLoan\` mutation."""
+input DeleteLoanInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete \`Account\` mutation."""
 type DeleteAccountPayload {
   """
@@ -27033,7 +32706,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -27070,7 +32743,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -27096,7 +32769,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -27111,7 +32784,59 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      amortizationEntries: {
+        plan() {
+          return connection(resource_amortization_entryPgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      amortizationEntry(_$root, {
+        $rowId
+      }) {
+        return resource_amortization_entryPgResource.get({
+          id: $rowId
+        });
+      },
+      amortizationEntryById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_AmortizationEntry($nodeId);
+      },
+      attachment(_$root, {
+        $rowId
+      }) {
+        return resource_attachmentPgResource.get({
+          id: $rowId
+        });
+      },
+      attachmentById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_Attachment($nodeId);
+      },
+      attachments: {
+        plan() {
+          return connection(resource_attachmentPgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -27148,7 +32873,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -27174,7 +32899,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -27189,7 +32914,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -27222,7 +32947,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -27241,7 +32966,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -27267,7 +32992,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -27293,7 +33018,33 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      categorizationRuleSplit(_$root, {
+        $rowId
+      }) {
+        return resource_categorization_rule_splitPgResource.get({
+          id: $rowId
+        });
+      },
+      categorizationRuleSplitById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_CategorizationRuleSplit($nodeId);
+      },
+      categorizationRuleSplits: {
+        plan() {
+          return connection(resource_categorization_rule_splitPgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -27319,7 +33070,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -27345,7 +33096,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -27371,7 +33122,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -27397,7 +33148,33 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      document(_$root, {
+        $rowId
+      }) {
+        return resource_documentPgResource.get({
+          id: $rowId
+        });
+      },
+      documentById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_Document($nodeId);
+      },
+      documents: {
+        plan() {
+          return connection(resource_documentPgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -27434,7 +33211,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -27449,7 +33226,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -27475,7 +33252,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -27505,7 +33282,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -27531,7 +33308,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -27557,7 +33334,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -27594,7 +33371,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -27620,7 +33397,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -27635,7 +33412,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -27650,7 +33427,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -27676,6 +33453,32 @@ export const objects = {
         const $nodeId = args.getRaw("id");
         return nodeFetcher_JournalLine($nodeId);
       },
+      journalLineProject(_$root, {
+        $rowId
+      }) {
+        return resource_journal_line_projectPgResource.get({
+          id: $rowId
+        });
+      },
+      journalLineProjectById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_JournalLineProject($nodeId);
+      },
+      journalLineProjects: {
+        plan() {
+          return connection(resource_journal_line_projectPgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       journalLines: {
         plan() {
           return connection(resource_journal_linePgResource.find());
@@ -27687,7 +33490,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -27713,7 +33516,33 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      loan(_$root, {
+        $rowId
+      }) {
+        return resource_loanPgResource.get({
+          id: $rowId
+        });
+      },
+      loanById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_Loan($nodeId);
+      },
+      loans: {
+        plan() {
+          return connection(resource_loanPgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -27739,7 +33568,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -27765,7 +33594,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -27794,12 +33623,64 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      project(_$root, {
+        $rowId
+      }) {
+        return resource_projectPgResource.get({
+          id: $rowId
+        });
+      },
+      projectById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_Project($nodeId);
+      },
+      projects: {
+        plan() {
+          return connection(resource_projectPgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
       query() {
         return rootValue();
+      },
+      rdExpense(_$root, {
+        $rowId
+      }) {
+        return resource_rd_expensePgResource.get({
+          id: $rowId
+        });
+      },
+      rdExpenseById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_RdExpense($nodeId);
+      },
+      rdExpenses: {
+        plan() {
+          return connection(resource_rd_expensePgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
       },
       reconciliationQueue(_$root, {
         $rowId
@@ -27823,7 +33704,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -27849,7 +33730,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -27875,7 +33756,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -27901,7 +33782,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -27938,7 +33819,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -27953,7 +33834,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -27979,7 +33860,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -28005,7 +33886,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -28031,7 +33912,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       }
@@ -28067,6 +33948,30 @@ export const objects = {
       createAccountMapping: {
         plan(_, args) {
           const $insert = pgInsertSingle(resource_account_mappingPgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
+      createAmortizationEntry: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_amortization_entryPgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
+      createAttachment: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_attachmentPgResource);
           args.apply($insert);
           return object({
             result: $insert
@@ -28160,6 +34065,18 @@ export const objects = {
           input: applyInputToInsert
         }
       },
+      createCategorizationRuleSplit: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_categorization_rule_splitPgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
       createConnectedAccount: {
         plan(_, args) {
           const $insert = pgInsertSingle(resource_connected_accountPgResource);
@@ -28199,6 +34116,18 @@ export const objects = {
       createCustomer: {
         plan(_, args) {
           const $insert = pgInsertSingle(resource_customerPgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
+      createDocument: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_documentPgResource);
           args.apply($insert);
           return object({
             result: $insert
@@ -28352,9 +34281,33 @@ export const objects = {
           input: applyInputToInsert
         }
       },
+      createJournalLineProject: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_journal_line_projectPgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
       createJournalLineTag: {
         plan(_, args) {
           const $insert = pgInsertSingle(resource_journal_line_tagPgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
+      createLoan: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_loanPgResource);
           args.apply($insert);
           return object({
             result: $insert
@@ -28391,6 +34344,30 @@ export const objects = {
       createPayrollConnection: {
         plan(_, args) {
           const $insert = pgInsertSingle(resource_payroll_connectionPgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
+      createProject: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_projectPgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
+      createRdExpense: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_rd_expensePgResource);
           args.apply($insert);
           return object({
             result: $insert
@@ -28586,6 +34563,58 @@ export const objects = {
           input: applyInputToUpdateOrDelete
         }
       },
+      deleteAmortizationEntry: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_amortization_entryPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteAmortizationEntryById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_amortization_entryPgResource, specFromArgs_AmortizationEntry(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteAttachment: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_attachmentPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteAttachmentById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_attachmentPgResource, specFromArgs_Attachment(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
       deleteBill: {
         plan(_$root, args) {
           const $delete = pgDeleteSingle(resource_billPgResource, {
@@ -28768,6 +34797,32 @@ export const objects = {
           input: applyInputToUpdateOrDelete
         }
       },
+      deleteCategorizationRuleSplit: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_categorization_rule_splitPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteCategorizationRuleSplitById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_categorization_rule_splitPgResource, specFromArgs_CategorizationRuleSplit(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
       deleteConnectedAccount: {
         plan(_$root, args) {
           const $delete = pgDeleteSingle(resource_connected_accountPgResource, {
@@ -28863,6 +34918,32 @@ export const objects = {
       deleteCustomerById: {
         plan(_$root, args) {
           const $delete = pgDeleteSingle(resource_customerPgResource, specFromArgs_Customer(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteDocument: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_documentPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteDocumentById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_documentPgResource, specFromArgs_Document(args));
           args.apply($delete);
           return object({
             result: $delete
@@ -29184,6 +35265,32 @@ export const objects = {
           input: applyInputToUpdateOrDelete
         }
       },
+      deleteJournalLineProject: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_journal_line_projectPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteJournalLineProjectById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_journal_line_projectPgResource, specFromArgs_JournalLineProject(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
       deleteJournalLineTag: {
         plan(_$root, args) {
           const $delete = pgDeleteSingle(resource_journal_line_tagPgResource, {
@@ -29201,6 +35308,32 @@ export const objects = {
       deleteJournalLineTagById: {
         plan(_$root, args) {
           const $delete = pgDeleteSingle(resource_journal_line_tagPgResource, specFromArgs_JournalLineTag(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteLoan: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_loanPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteLoanById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_loanPgResource, specFromArgs_Loan(args));
           args.apply($delete);
           return object({
             result: $delete
@@ -29279,6 +35412,58 @@ export const objects = {
       deletePayrollConnectionById: {
         plan(_$root, args) {
           const $delete = pgDeleteSingle(resource_payroll_connectionPgResource, specFromArgs_PayrollConnection(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteProject: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_projectPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteProjectById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_projectPgResource, specFromArgs_Project(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteRdExpense: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_rd_expensePgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteRdExpenseById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_rd_expensePgResource, specFromArgs_RdExpense(args));
           args.apply($delete);
           return object({
             result: $delete
@@ -29600,6 +35785,58 @@ export const objects = {
           input: applyInputToUpdateOrDelete
         }
       },
+      updateAmortizationEntry: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_amortization_entryPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateAmortizationEntryById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_amortization_entryPgResource, specFromArgs_AmortizationEntry(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateAttachment: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_attachmentPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateAttachmentById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_attachmentPgResource, specFromArgs_Attachment(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
       updateBill: {
         plan(_$root, args) {
           const $update = pgUpdateSingle(resource_billPgResource, {
@@ -29782,6 +36019,32 @@ export const objects = {
           input: applyInputToUpdateOrDelete
         }
       },
+      updateCategorizationRuleSplit: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_categorization_rule_splitPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateCategorizationRuleSplitById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_categorization_rule_splitPgResource, specFromArgs_CategorizationRuleSplit(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
       updateConnectedAccount: {
         plan(_$root, args) {
           const $update = pgUpdateSingle(resource_connected_accountPgResource, {
@@ -29877,6 +36140,32 @@ export const objects = {
       updateCustomerById: {
         plan(_$root, args) {
           const $update = pgUpdateSingle(resource_customerPgResource, specFromArgs_Customer(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateDocument: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_documentPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateDocumentById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_documentPgResource, specFromArgs_Document(args));
           args.apply($update);
           return object({
             result: $update
@@ -30198,6 +36487,32 @@ export const objects = {
           input: applyInputToUpdateOrDelete
         }
       },
+      updateJournalLineProject: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_journal_line_projectPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateJournalLineProjectById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_journal_line_projectPgResource, specFromArgs_JournalLineProject(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
       updateJournalLineTag: {
         plan(_$root, args) {
           const $update = pgUpdateSingle(resource_journal_line_tagPgResource, {
@@ -30215,6 +36530,32 @@ export const objects = {
       updateJournalLineTagById: {
         plan(_$root, args) {
           const $update = pgUpdateSingle(resource_journal_line_tagPgResource, specFromArgs_JournalLineTag(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateLoan: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_loanPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateLoanById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_loanPgResource, specFromArgs_Loan(args));
           args.apply($update);
           return object({
             result: $update
@@ -30293,6 +36634,58 @@ export const objects = {
       updatePayrollConnectionById: {
         plan(_$root, args) {
           const $update = pgUpdateSingle(resource_payroll_connectionPgResource, specFromArgs_PayrollConnection(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateProject: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_projectPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateProjectById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_projectPgResource, specFromArgs_Project(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateRdExpense: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_rd_expensePgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateRdExpenseById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_rd_expensePgResource, specFromArgs_RdExpense(args));
           args.apply($update);
           return object({
             result: $update
@@ -30546,7 +36939,7 @@ export const objects = {
         const specifier = nodeIdHandler__DrizzleMigration.plan($parent);
         return lambda(specifier, nodeIdCodecs[nodeIdHandler__DrizzleMigration.codec.name].encode);
       },
-      rowId: JournalLineTag_rowIdPlan
+      rowId: JournalLineProject_rowIdPlan
     },
     planType($specifier) {
       const spec = Object.create(null);
@@ -30579,7 +36972,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -30597,7 +36990,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -30624,7 +37017,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -30650,11 +37043,11 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
-      rowId: JournalLineTag_rowIdPlan,
+      rowId: JournalLineProject_rowIdPlan,
       subType($record) {
         return $record.get("sub_type");
       },
@@ -30691,7 +37084,7 @@ export const objects = {
       reopenedAt($record) {
         return $record.get("reopened_at");
       },
-      rowId: JournalLineTag_rowIdPlan
+      rowId: JournalLineProject_rowIdPlan
     },
     planType($specifier) {
       const spec = Object.create(null);
@@ -30722,7 +37115,7 @@ export const objects = {
         const specifier = nodeIdHandler_AccountMapping.plan($parent);
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_AccountMapping.codec.name].encode);
       },
-      rowId: JournalLineTag_rowIdPlan,
+      rowId: JournalLineProject_rowIdPlan,
       updatedAt: Account_updatedAtPlan
     },
     planType($specifier) {
@@ -30732,6 +37125,85 @@ export const objects = {
     }
   },
   AccountMappingConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
+  AmortizationEntry: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      balanceAfter($record) {
+        return $record.get("balance_after");
+      },
+      dueDate: Bill_dueDatePlan,
+      extraPrincipal: Loan_extraPrincipalPlan,
+      id($parent) {
+        const specifier = nodeIdHandler_AmortizationEntry.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_AmortizationEntry.codec.name].encode);
+      },
+      interestAmount($record) {
+        return $record.get("interest_amount");
+      },
+      journalEntry: JournalLine_journalEntryPlan,
+      journalEntryId: JournalLine_journalEntryIdPlan,
+      loan($record) {
+        return resource_loanPgResource.get({
+          id: $record.get("loan_id")
+        });
+      },
+      loanId($record) {
+        return $record.get("loan_id");
+      },
+      paymentAmount: Loan_paymentAmountPlan,
+      principalAmount($record) {
+        return $record.get("principal_amount");
+      },
+      rowId: JournalLineProject_rowIdPlan,
+      sequenceNumber($record) {
+        return $record.get("sequence_number");
+      }
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of amortization_entryUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_amortization_entryPgResource.get(spec);
+    }
+  },
+  AmortizationEntryConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
+  Attachment: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      book: Account_bookPlan,
+      bookId: Account_bookIdPlan,
+      contentType: Document_contentTypePlan,
+      createdAt: Account_createdAtPlan,
+      createdBy: Document_createdByPlan,
+      id($parent) {
+        const specifier = nodeIdHandler_Attachment.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_Attachment.codec.name].encode);
+      },
+      journalEntry: JournalLine_journalEntryPlan,
+      journalEntryId: JournalLine_journalEntryIdPlan,
+      rowId: JournalLineProject_rowIdPlan,
+      sizeBytes: Document_sizeBytesPlan,
+      storageKey: Document_storageKeyPlan,
+      uploadStatus($record) {
+        return $record.get("upload_status");
+      }
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of attachmentUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_attachmentPgResource.get(spec);
+    }
+  },
+  AttachmentConnection: {
     assertStep: ConnectionStep,
     plans: {
       totalCount: totalCountConnectionPlan
@@ -30758,7 +37230,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -30776,7 +37248,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -30790,7 +37262,7 @@ export const objects = {
       },
       journalEntry: JournalLine_journalEntryPlan,
       journalEntryId: JournalLine_journalEntryIdPlan,
-      rowId: JournalLineTag_rowIdPlan,
+      rowId: JournalLineProject_rowIdPlan,
       taxAmount: Bill_taxAmountPlan,
       updatedAt: Account_updatedAtPlan,
       vendor: JournalEntry_vendorPlan,
@@ -30825,7 +37297,7 @@ export const objects = {
         const specifier = nodeIdHandler_BillLine.plan($parent);
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_BillLine.codec.name].encode);
       },
-      rowId: JournalLineTag_rowIdPlan,
+      rowId: JournalLineProject_rowIdPlan,
       sortOrder: BillLine_sortOrderPlan,
       taxJurisdiction: BillLine_taxJurisdictionPlan,
       taxJurisdictionId: BillLine_taxJurisdictionIdPlan,
@@ -30857,15 +37329,9 @@ export const objects = {
       },
       journalEntry: JournalLine_journalEntryPlan,
       journalEntryId: JournalLine_journalEntryIdPlan,
-      paymentAccount($record) {
-        return resource_accountPgResource.get({
-          id: $record.get("payment_account_id")
-        });
-      },
-      paymentAccountId($record) {
-        return $record.get("payment_account_id");
-      },
-      rowId: JournalLineTag_rowIdPlan
+      paymentAccount: BillPayment_paymentAccountPlan,
+      paymentAccountId: BillPayment_paymentAccountIdPlan,
+      rowId: JournalLineProject_rowIdPlan
     },
     planType($specifier) {
       const spec = Object.create(null);
@@ -30896,7 +37362,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -30914,7 +37380,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -30932,7 +37398,25 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      attachments: {
+        plan($record) {
+          const $records = resource_attachmentPgResource.find({
+            book_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -30950,7 +37434,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -30968,7 +37452,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -30986,7 +37470,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -31004,7 +37488,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -31022,7 +37506,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -31040,7 +37524,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -31059,7 +37543,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -31077,7 +37561,25 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      documents: {
+        plan($record) {
+          const $records = resource_documentPgResource.find({
+            book_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -31095,7 +37597,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -31116,7 +37618,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -31138,7 +37640,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -31156,7 +37658,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -31174,7 +37676,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -31192,7 +37694,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -31213,7 +37715,25 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      loans: {
+        plan($record) {
+          const $records = resource_loanPgResource.find({
+            book_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -31231,7 +37751,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -31249,7 +37769,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -31270,7 +37790,43 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      projects: {
+        plan($record) {
+          const $records = resource_projectPgResource.find({
+            book_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      rdExpenses: {
+        plan($record) {
+          const $records = resource_rd_expensePgResource.find({
+            book_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -31288,7 +37844,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -31306,7 +37862,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -31324,11 +37880,11 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
-      rowId: JournalLineTag_rowIdPlan,
+      rowId: JournalLineProject_rowIdPlan,
       savingsGoals: {
         plan($record) {
           const $records = resource_savings_goalPgResource.find({
@@ -31343,7 +37899,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -31361,7 +37917,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -31379,7 +37935,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -31398,7 +37954,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -31416,7 +37972,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       }
@@ -31443,7 +37999,7 @@ export const objects = {
       invitedBy($record) {
         return $record.get("invited_by");
       },
-      rowId: JournalLineTag_rowIdPlan,
+      rowId: JournalLineProject_rowIdPlan,
       userId($record) {
         return $record.get("user_id");
       }
@@ -31478,7 +38034,7 @@ export const objects = {
         const specifier = nodeIdHandler_Budget.plan($parent);
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_Budget.codec.name].encode);
       },
-      rowId: JournalLineTag_rowIdPlan,
+      rowId: JournalLineProject_rowIdPlan,
       updatedAt: Account_updatedAtPlan
     },
     planType($specifier) {
@@ -31504,6 +38060,24 @@ export const objects = {
       },
       book: Account_bookPlan,
       bookId: Account_bookIdPlan,
+      categorizationRuleSplitsByRuleId: {
+        plan($record) {
+          const $records = resource_categorization_rule_splitPgResource.find({
+            rule_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       createdAt: Account_createdAtPlan,
       creditAccount: AccountMapping_creditAccountPlan,
       creditAccountId: AccountMapping_creditAccountIdPlan,
@@ -31528,9 +38102,11 @@ export const objects = {
       matchValue($record) {
         return $record.get("match_value");
       },
-      rowId: JournalLineTag_rowIdPlan,
-      tag: JournalLineTag_tagPlan,
-      tagId: JournalLineTag_tagIdPlan
+      project: JournalLineProject_projectPlan,
+      projectId: JournalLineProject_projectIdPlan,
+      rowId: JournalLineProject_rowIdPlan,
+      tag: CategorizationRule_tagPlan,
+      tagId: CategorizationRule_tagIdPlan
     },
     planType($specifier) {
       const spec = Object.create(null);
@@ -31539,6 +38115,45 @@ export const objects = {
     }
   },
   CategorizationRuleConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
+  CategorizationRuleSplit: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      account: JournalLine_accountPlan,
+      accountId: JournalLine_accountIdPlan,
+      fixedAmount($record) {
+        return $record.get("fixed_amount");
+      },
+      id($parent) {
+        const specifier = nodeIdHandler_CategorizationRuleSplit.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_CategorizationRuleSplit.codec.name].encode);
+      },
+      project: JournalLineProject_projectPlan,
+      projectId: JournalLineProject_projectIdPlan,
+      rowId: JournalLineProject_rowIdPlan,
+      rule($record) {
+        return resource_categorization_rulePgResource.get({
+          id: $record.get("rule_id")
+        });
+      },
+      ruleId($record) {
+        return $record.get("rule_id");
+      },
+      sortOrder: BillLine_sortOrderPlan,
+      tag: CategorizationRule_tagPlan,
+      tagId: CategorizationRule_tagIdPlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of categorization_rule_splitUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_categorization_rule_splitPgResource.get(spec);
+    }
+  },
+  CategorizationRuleSplitConnection: {
     assertStep: ConnectionStep,
     plans: {
       totalCount: totalCountConnectionPlan
@@ -31564,7 +38179,7 @@ export const objects = {
       providerAccountId($record) {
         return $record.get("provider_account_id");
       },
-      rowId: JournalLineTag_rowIdPlan,
+      rowId: JournalLineProject_rowIdPlan,
       syncCursor: ConnectedAccount_syncCursorPlan
     },
     planType($specifier) {
@@ -31602,6 +38217,24 @@ export const objects = {
     plans: {
       account: planCreatePayloadResult,
       accountEdge: CreateAccountPayload_accountEdgePlan,
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan
+    }
+  },
+  CreateAmortizationEntryPayload: {
+    assertStep: assertStep,
+    plans: {
+      amortizationEntry: planCreatePayloadResult,
+      amortizationEntryEdge: CreateAmortizationEntryPayload_amortizationEntryEdgePlan,
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan
+    }
+  },
+  CreateAttachmentPayload: {
+    assertStep: assertStep,
+    plans: {
+      attachment: planCreatePayloadResult,
+      attachmentEdge: CreateAttachmentPayload_attachmentEdgePlan,
       clientMutationId: getClientMutationIdForCreatePlan,
       query: queryPlan
     }
@@ -31669,6 +38302,15 @@ export const objects = {
       query: queryPlan
     }
   },
+  CreateCategorizationRuleSplitPayload: {
+    assertStep: assertStep,
+    plans: {
+      categorizationRuleSplit: planCreatePayloadResult,
+      categorizationRuleSplitEdge: CreateCategorizationRuleSplitPayload_categorizationRuleSplitEdgePlan,
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan
+    }
+  },
   CreateConnectedAccountPayload: {
     assertStep: assertStep,
     plans: {
@@ -31702,6 +38344,15 @@ export const objects = {
       clientMutationId: getClientMutationIdForCreatePlan,
       customer: planCreatePayloadResult,
       customerEdge: CreateCustomerPayload_customerEdgePlan,
+      query: queryPlan
+    }
+  },
+  CreateDocumentPayload: {
+    assertStep: assertStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      document: planCreatePayloadResult,
+      documentEdge: CreateDocumentPayload_documentEdgePlan,
       query: queryPlan
     }
   },
@@ -31813,12 +38464,30 @@ export const objects = {
       query: queryPlan
     }
   },
+  CreateJournalLineProjectPayload: {
+    assertStep: assertStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      journalLineProject: planCreatePayloadResult,
+      journalLineProjectEdge: CreateJournalLineProjectPayload_journalLineProjectEdgePlan,
+      query: queryPlan
+    }
+  },
   CreateJournalLineTagPayload: {
     assertStep: assertStep,
     plans: {
       clientMutationId: getClientMutationIdForCreatePlan,
       journalLineTag: planCreatePayloadResult,
       journalLineTagEdge: CreateJournalLineTagPayload_journalLineTagEdgePlan,
+      query: queryPlan
+    }
+  },
+  CreateLoanPayload: {
+    assertStep: assertStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      loan: planCreatePayloadResult,
+      loanEdge: CreateLoanPayload_loanEdgePlan,
       query: queryPlan
     }
   },
@@ -31847,6 +38516,24 @@ export const objects = {
       payrollConnection: planCreatePayloadResult,
       payrollConnectionEdge: CreatePayrollConnectionPayload_payrollConnectionEdgePlan,
       query: queryPlan
+    }
+  },
+  CreateProjectPayload: {
+    assertStep: assertStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      project: planCreatePayloadResult,
+      projectEdge: CreateProjectPayload_projectEdgePlan,
+      query: queryPlan
+    }
+  },
+  CreateRdExpensePayload: {
+    assertStep: assertStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan,
+      rdExpense: planCreatePayloadResult,
+      rdExpenseEdge: CreateRdExpensePayload_rdExpenseEdgePlan
     }
   },
   CreateReconciliationQueuePayload: {
@@ -31953,7 +38640,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -31962,7 +38649,7 @@ export const objects = {
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_CryptoAsset.codec.name].encode);
       },
       lastSyncedAt: ConnectedAccount_lastSyncedAtPlan,
-      rowId: JournalLineTag_rowIdPlan,
+      rowId: JournalLineProject_rowIdPlan,
       updatedAt: Account_updatedAtPlan,
       walletAddress($record) {
         return $record.get("wallet_address");
@@ -32011,7 +38698,7 @@ export const objects = {
       remainingQuantity($record) {
         return $record.get("remaining_quantity");
       },
-      rowId: JournalLineTag_rowIdPlan
+      rowId: JournalLineProject_rowIdPlan
     },
     planType($specifier) {
       const spec = Object.create(null);
@@ -32046,7 +38733,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -32068,12 +38755,12 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
       isActive: Account_isActivePlan,
-      rowId: JournalLineTag_rowIdPlan,
+      rowId: JournalLineProject_rowIdPlan,
       updatedAt: Account_updatedAtPlan
     },
     planType($specifier) {
@@ -32125,6 +38812,34 @@ export const objects = {
       deletedAccountId($object) {
         const $record = $object.getStepForKey("result"),
           specifier = nodeIdHandler_Account.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      query: queryPlan
+    }
+  },
+  DeleteAmortizationEntryPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      amortizationEntry: planCreatePayloadResult,
+      amortizationEntryEdge: CreateAmortizationEntryPayload_amortizationEntryEdgePlan,
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedAmortizationEntryId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_AmortizationEntry.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      query: queryPlan
+    }
+  },
+  DeleteAttachmentPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      attachment: planCreatePayloadResult,
+      attachmentEdge: CreateAttachmentPayload_attachmentEdgePlan,
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedAttachmentId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_Attachment.plan($record);
         return lambda(specifier, base64JSONNodeIdCodec.encode);
       },
       query: queryPlan
@@ -32228,6 +38943,20 @@ export const objects = {
       query: queryPlan
     }
   },
+  DeleteCategorizationRuleSplitPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      categorizationRuleSplit: planCreatePayloadResult,
+      categorizationRuleSplitEdge: CreateCategorizationRuleSplitPayload_categorizationRuleSplitEdgePlan,
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedCategorizationRuleSplitId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_CategorizationRuleSplit.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      query: queryPlan
+    }
+  },
   DeleteConnectedAccountPayload: {
     assertStep: ObjectStep,
     plans: {
@@ -32281,6 +39010,20 @@ export const objects = {
           specifier = nodeIdHandler_Customer.plan($record);
         return lambda(specifier, base64JSONNodeIdCodec.encode);
       },
+      query: queryPlan
+    }
+  },
+  DeleteDocumentPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedDocumentId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_Document.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      document: planCreatePayloadResult,
+      documentEdge: CreateDocumentPayload_documentEdgePlan,
       query: queryPlan
     }
   },
@@ -32452,6 +39195,20 @@ export const objects = {
       query: queryPlan
     }
   },
+  DeleteJournalLineProjectPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedJournalLineProjectId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_JournalLineProject.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      journalLineProject: planCreatePayloadResult,
+      journalLineProjectEdge: CreateJournalLineProjectPayload_journalLineProjectEdgePlan,
+      query: queryPlan
+    }
+  },
   DeleteJournalLineTagPayload: {
     assertStep: ObjectStep,
     plans: {
@@ -32463,6 +39220,20 @@ export const objects = {
       },
       journalLineTag: planCreatePayloadResult,
       journalLineTagEdge: CreateJournalLineTagPayload_journalLineTagEdgePlan,
+      query: queryPlan
+    }
+  },
+  DeleteLoanPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedLoanId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_Loan.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      loan: planCreatePayloadResult,
+      loanEdge: CreateLoanPayload_loanEdgePlan,
       query: queryPlan
     }
   },
@@ -32506,6 +39277,34 @@ export const objects = {
       payrollConnection: planCreatePayloadResult,
       payrollConnectionEdge: CreatePayrollConnectionPayload_payrollConnectionEdgePlan,
       query: queryPlan
+    }
+  },
+  DeleteProjectPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedProjectId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_Project.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      project: planCreatePayloadResult,
+      projectEdge: CreateProjectPayload_projectEdgePlan,
+      query: queryPlan
+    }
+  },
+  DeleteRdExpensePayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedRdExpenseId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_RdExpense.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      query: queryPlan,
+      rdExpense: planCreatePayloadResult,
+      rdExpenseEdge: CreateRdExpensePayload_rdExpenseEdgePlan
     }
   },
   DeleteReconciliationQueuePayload: {
@@ -32634,6 +39433,36 @@ export const objects = {
       vendorEdge: CreateVendorPayload_vendorEdgePlan
     }
   },
+  Document: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      book: Account_bookPlan,
+      bookId: Account_bookIdPlan,
+      contentType: Document_contentTypePlan,
+      createdAt: Account_createdAtPlan,
+      createdBy: Document_createdByPlan,
+      id($parent) {
+        const specifier = nodeIdHandler_Document.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_Document.codec.name].encode);
+      },
+      rowId: JournalLineProject_rowIdPlan,
+      sizeBytes: Document_sizeBytesPlan,
+      storageKey: Document_storageKeyPlan,
+      vendor: JournalEntry_vendorPlan,
+      vendorId: JournalEntry_vendorIdPlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of documentUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_documentPgResource.get(spec);
+    }
+  },
+  DocumentConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
   Estimate: {
     assertStep: assertPgClassSingleStep,
     plans: {
@@ -32667,7 +39496,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -32678,7 +39507,7 @@ export const objects = {
         const specifier = nodeIdHandler_Estimate.plan($parent);
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_Estimate.codec.name].encode);
       },
-      rowId: JournalLineTag_rowIdPlan,
+      rowId: JournalLineProject_rowIdPlan,
       updatedAt: Account_updatedAtPlan
     },
     planType($specifier) {
@@ -32710,7 +39539,7 @@ export const objects = {
       },
       incomeAccount: InvoiceLine_incomeAccountPlan,
       incomeAccountId: InvoiceLine_incomeAccountIdPlan,
-      rowId: JournalLineTag_rowIdPlan,
+      rowId: JournalLineProject_rowIdPlan,
       sortOrder: BillLine_sortOrderPlan,
       taxJurisdiction: BillLine_taxJurisdictionPlan,
       taxJurisdictionId: BillLine_taxJurisdictionIdPlan,
@@ -32772,7 +39601,7 @@ export const objects = {
       macrsClass($record) {
         return $record.get("macrs_class");
       },
-      rowId: JournalLineTag_rowIdPlan,
+      rowId: JournalLineProject_rowIdPlan,
       salvageValue($record) {
         return $record.get("salvage_value");
       },
@@ -32808,7 +39637,7 @@ export const objects = {
         const specifier = nodeIdHandler_ImportProfile.plan($parent);
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_ImportProfile.codec.name].encode);
       },
-      rowId: JournalLineTag_rowIdPlan,
+      rowId: JournalLineProject_rowIdPlan,
       updatedAt: Account_updatedAtPlan
     },
     planType($specifier) {
@@ -32862,7 +39691,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -32870,7 +39699,7 @@ export const objects = {
       quantityOnHand($record) {
         return $record.get("quantity_on_hand");
       },
-      rowId: JournalLineTag_rowIdPlan,
+      rowId: JournalLineProject_rowIdPlan,
       salePrice($record) {
         return $record.get("sale_price");
       },
@@ -32908,7 +39737,7 @@ export const objects = {
       },
       journalEntry: JournalLine_journalEntryPlan,
       journalEntryId: JournalLine_journalEntryIdPlan,
-      rowId: JournalLineTag_rowIdPlan,
+      rowId: JournalLineProject_rowIdPlan,
       unitCost($record) {
         return $record.get("unit_cost");
       }
@@ -32953,7 +39782,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -32971,7 +39800,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -32980,7 +39809,7 @@ export const objects = {
       },
       journalEntry: JournalLine_journalEntryPlan,
       journalEntryId: JournalLine_journalEntryIdPlan,
-      rowId: JournalLineTag_rowIdPlan,
+      rowId: JournalLineProject_rowIdPlan,
       taxAmount: Bill_taxAmountPlan,
       updatedAt: Account_updatedAtPlan
     },
@@ -33015,7 +39844,7 @@ export const objects = {
       },
       invoice: InvoiceLine_invoicePlan,
       invoiceId: InvoiceLine_invoiceIdPlan,
-      rowId: JournalLineTag_rowIdPlan,
+      rowId: JournalLineProject_rowIdPlan,
       sortOrder: BillLine_sortOrderPlan,
       taxJurisdiction: BillLine_taxJurisdictionPlan,
       taxJurisdictionId: BillLine_taxJurisdictionIdPlan,
@@ -33055,7 +39884,7 @@ export const objects = {
       invoiceId: InvoiceLine_invoiceIdPlan,
       journalEntry: JournalLine_journalEntryPlan,
       journalEntryId: JournalLine_journalEntryIdPlan,
-      rowId: JournalLineTag_rowIdPlan
+      rowId: JournalLineProject_rowIdPlan
     },
     planType($specifier) {
       const spec = Object.create(null);
@@ -33072,6 +39901,24 @@ export const objects = {
   JournalEntry: {
     assertStep: assertPgClassSingleStep,
     plans: {
+      attachments: {
+        plan($record) {
+          const $records = resource_attachmentPgResource.find({
+            journal_entry_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       book: Account_bookPlan,
       bookId: Account_bookIdPlan,
       createdAt: Account_createdAtPlan,
@@ -33099,11 +39946,11 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
-      rowId: JournalLineTag_rowIdPlan,
+      rowId: JournalLineProject_rowIdPlan,
       sourceReferenceId($record) {
         return $record.get("source_reference_id");
       },
@@ -33134,6 +39981,24 @@ export const objects = {
       },
       journalEntry: JournalLine_journalEntryPlan,
       journalEntryId: JournalLine_journalEntryIdPlan,
+      journalLineProjects: {
+        plan($record) {
+          const $records = resource_journal_line_projectPgResource.find({
+            journal_line_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       journalLineTags: {
         plan($record) {
           const $records = resource_journal_line_tagPgResource.find({
@@ -33148,11 +40013,11 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
-      rowId: JournalLineTag_rowIdPlan
+      rowId: JournalLineProject_rowIdPlan
     },
     planType($specifier) {
       const spec = Object.create(null);
@@ -33166,6 +40031,31 @@ export const objects = {
       totalCount: totalCountConnectionPlan
     }
   },
+  JournalLineProject: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      id($parent) {
+        const specifier = nodeIdHandler_JournalLineProject.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_JournalLineProject.codec.name].encode);
+      },
+      journalLine: JournalLineProject_journalLinePlan,
+      journalLineId: JournalLineProject_journalLineIdPlan,
+      project: JournalLineProject_projectPlan,
+      projectId: JournalLineProject_projectIdPlan,
+      rowId: JournalLineProject_rowIdPlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of journal_line_projectUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_journal_line_projectPgResource.get(spec);
+    }
+  },
+  JournalLineProjectConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
   JournalLineTag: {
     assertStep: assertPgClassSingleStep,
     plans: {
@@ -33173,17 +40063,11 @@ export const objects = {
         const specifier = nodeIdHandler_JournalLineTag.plan($parent);
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_JournalLineTag.codec.name].encode);
       },
-      journalLine($record) {
-        return resource_journal_linePgResource.get({
-          id: $record.get("journal_line_id")
-        });
-      },
-      journalLineId($record) {
-        return $record.get("journal_line_id");
-      },
-      rowId: JournalLineTag_rowIdPlan,
-      tag: JournalLineTag_tagPlan,
-      tagId: JournalLineTag_tagIdPlan
+      journalLine: JournalLineProject_journalLinePlan,
+      journalLineId: JournalLineProject_journalLineIdPlan,
+      rowId: JournalLineProject_rowIdPlan,
+      tag: CategorizationRule_tagPlan,
+      tagId: CategorizationRule_tagIdPlan
     },
     planType($specifier) {
       const spec = Object.create(null);
@@ -33192,6 +40076,82 @@ export const objects = {
     }
   },
   JournalLineTagConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
+  Loan: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      amortizationEntries: {
+        plan($record) {
+          const $records = resource_amortization_entryPgResource.find({
+            loan_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      annualRate($record) {
+        return $record.get("annual_rate");
+      },
+      book: Account_bookPlan,
+      bookId: Account_bookIdPlan,
+      createdAt: Account_createdAtPlan,
+      extraPrincipal: Loan_extraPrincipalPlan,
+      id($parent) {
+        const specifier = nodeIdHandler_Loan.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_Loan.codec.name].encode);
+      },
+      interestAccount($record) {
+        return resource_accountPgResource.get({
+          id: $record.get("interest_account_id")
+        });
+      },
+      interestAccountId($record) {
+        return $record.get("interest_account_id");
+      },
+      liabilityAccount($record) {
+        return resource_accountPgResource.get({
+          id: $record.get("liability_account_id")
+        });
+      },
+      liabilityAccountId($record) {
+        return $record.get("liability_account_id");
+      },
+      originalPrincipal($record) {
+        return $record.get("original_principal");
+      },
+      paymentAccount: BillPayment_paymentAccountPlan,
+      paymentAccountId: BillPayment_paymentAccountIdPlan,
+      paymentAmount: Loan_paymentAmountPlan,
+      paymentDay($record) {
+        return $record.get("payment_day");
+      },
+      rowId: JournalLineProject_rowIdPlan,
+      startDate: Project_startDatePlan,
+      termMonths($record) {
+        return $record.get("term_months");
+      },
+      updatedAt: Account_updatedAtPlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of loanUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_loanPgResource.get(spec);
+    }
+  },
+  LoanConnection: {
     assertStep: ConnectionStep,
     plans: {
       totalCount: totalCountConnectionPlan
@@ -33216,7 +40176,7 @@ export const objects = {
       odometerStart($record) {
         return $record.get("odometer_start");
       },
-      rowId: JournalLineTag_rowIdPlan,
+      rowId: JournalLineProject_rowIdPlan,
       updatedAt: Account_updatedAtPlan,
       vehicle($record) {
         return resource_vehiclePgResource.get({
@@ -33252,7 +40212,7 @@ export const objects = {
       netWorth($record) {
         return $record.get("net_worth");
       },
-      rowId: JournalLineTag_rowIdPlan,
+      rowId: JournalLineProject_rowIdPlan,
       totalAssets($record) {
         return $record.get("total_assets");
       },
@@ -33290,7 +40250,7 @@ export const objects = {
       refreshToken($record) {
         return $record.get("refresh_token");
       },
-      rowId: JournalLineTag_rowIdPlan,
+      rowId: JournalLineProject_rowIdPlan,
       syncCursor: ConnectedAccount_syncCursorPlan
     },
     planType($specifier) {
@@ -33300,6 +40260,104 @@ export const objects = {
     }
   },
   PayrollConnectionConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
+  Project: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      book: Account_bookPlan,
+      bookId: Account_bookIdPlan,
+      budgetAmount($record) {
+        return $record.get("budget_amount");
+      },
+      createdAt: Account_createdAtPlan,
+      endDate($record) {
+        return $record.get("end_date");
+      },
+      id($parent) {
+        const specifier = nodeIdHandler_Project.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_Project.codec.name].encode);
+      },
+      journalLineProjects: {
+        plan($record) {
+          const $records = resource_journal_line_projectPgResource.find({
+            project_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      rdExpenses: {
+        plan($record) {
+          const $records = resource_rd_expensePgResource.find({
+            project_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      rowId: JournalLineProject_rowIdPlan,
+      startDate: Project_startDatePlan,
+      updatedAt: Account_updatedAtPlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of projectUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_projectPgResource.get(spec);
+    }
+  },
+  ProjectConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
+  RdExpense: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      book: Account_bookPlan,
+      bookId: Account_bookIdPlan,
+      createdAt: Account_createdAtPlan,
+      id($parent) {
+        const specifier = nodeIdHandler_RdExpense.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_RdExpense.codec.name].encode);
+      },
+      isForeign($record) {
+        return $record.get("is_foreign");
+      },
+      project: JournalLineProject_projectPlan,
+      projectId: JournalLineProject_projectIdPlan,
+      rowId: JournalLineProject_rowIdPlan,
+      updatedAt: Account_updatedAtPlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of rd_expenseUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_rd_expensePgResource.get(spec);
+    }
+  },
+  RdExpenseConnection: {
     assertStep: ConnectionStep,
     plans: {
       totalCount: totalCountConnectionPlan
@@ -33332,7 +40390,7 @@ export const objects = {
       reviewedBy($record) {
         return $record.get("reviewed_by");
       },
-      rowId: JournalLineTag_rowIdPlan,
+      rowId: JournalLineProject_rowIdPlan,
       suggestedCreditAccount($record) {
         return resource_accountPgResource.get({
           id: $record.get("suggested_credit_account_id")
@@ -33380,7 +40438,7 @@ export const objects = {
         const specifier = nodeIdHandler_ReconciliationStatement.plan($parent);
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_ReconciliationStatement.codec.name].encode);
       },
-      rowId: JournalLineTag_rowIdPlan,
+      rowId: JournalLineProject_rowIdPlan,
       statementBalance($record) {
         return $record.get("statement_balance");
       },
@@ -33427,7 +40485,7 @@ export const objects = {
       nextExpectedDate($record) {
         return $record.get("next_expected_date");
       },
-      rowId: JournalLineTag_rowIdPlan,
+      rowId: JournalLineProject_rowIdPlan,
       updatedAt: Account_updatedAtPlan
     },
     planType($specifier) {
@@ -33454,7 +40512,7 @@ export const objects = {
         const specifier = nodeIdHandler_SavingsGoal.plan($parent);
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_SavingsGoal.codec.name].encode);
       },
-      rowId: JournalLineTag_rowIdPlan,
+      rowId: JournalLineProject_rowIdPlan,
       targetAmount($record) {
         return $record.get("target_amount");
       },
@@ -33498,11 +40556,11 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
-      rowId: JournalLineTag_rowIdPlan,
+      rowId: JournalLineProject_rowIdPlan,
       tagGroup($record) {
         return resource_tag_groupPgResource.get({
           id: $record.get("tag_group_id")
@@ -33534,7 +40592,7 @@ export const objects = {
         const specifier = nodeIdHandler_TagGroup.plan($parent);
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_TagGroup.codec.name].encode);
       },
-      rowId: JournalLineTag_rowIdPlan,
+      rowId: JournalLineProject_rowIdPlan,
       tags: {
         plan($record) {
           const $records = resource_tagPgResource.find({
@@ -33549,7 +40607,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       }
@@ -33579,7 +40637,7 @@ export const objects = {
         const specifier = nodeIdHandler_TaxJurisdiction.plan($parent);
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_TaxJurisdiction.codec.name].encode);
       },
-      rowId: JournalLineTag_rowIdPlan,
+      rowId: JournalLineProject_rowIdPlan,
       taxPayableAccount($record) {
         return resource_accountPgResource.get({
           id: $record.get("tax_payable_account_id")
@@ -33624,6 +40682,24 @@ export const objects = {
     plans: {
       account: planCreatePayloadResult,
       accountEdge: CreateAccountPayload_accountEdgePlan,
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan
+    }
+  },
+  UpdateAmortizationEntryPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      amortizationEntry: planCreatePayloadResult,
+      amortizationEntryEdge: CreateAmortizationEntryPayload_amortizationEntryEdgePlan,
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan
+    }
+  },
+  UpdateAttachmentPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      attachment: planCreatePayloadResult,
+      attachmentEdge: CreateAttachmentPayload_attachmentEdgePlan,
       clientMutationId: getClientMutationIdForCreatePlan,
       query: queryPlan
     }
@@ -33691,6 +40767,15 @@ export const objects = {
       query: queryPlan
     }
   },
+  UpdateCategorizationRuleSplitPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      categorizationRuleSplit: planCreatePayloadResult,
+      categorizationRuleSplitEdge: CreateCategorizationRuleSplitPayload_categorizationRuleSplitEdgePlan,
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan
+    }
+  },
   UpdateConnectedAccountPayload: {
     assertStep: ObjectStep,
     plans: {
@@ -33724,6 +40809,15 @@ export const objects = {
       clientMutationId: getClientMutationIdForCreatePlan,
       customer: planCreatePayloadResult,
       customerEdge: CreateCustomerPayload_customerEdgePlan,
+      query: queryPlan
+    }
+  },
+  UpdateDocumentPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      document: planCreatePayloadResult,
+      documentEdge: CreateDocumentPayload_documentEdgePlan,
       query: queryPlan
     }
   },
@@ -33835,12 +40929,30 @@ export const objects = {
       query: queryPlan
     }
   },
+  UpdateJournalLineProjectPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      journalLineProject: planCreatePayloadResult,
+      journalLineProjectEdge: CreateJournalLineProjectPayload_journalLineProjectEdgePlan,
+      query: queryPlan
+    }
+  },
   UpdateJournalLineTagPayload: {
     assertStep: ObjectStep,
     plans: {
       clientMutationId: getClientMutationIdForCreatePlan,
       journalLineTag: planCreatePayloadResult,
       journalLineTagEdge: CreateJournalLineTagPayload_journalLineTagEdgePlan,
+      query: queryPlan
+    }
+  },
+  UpdateLoanPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      loan: planCreatePayloadResult,
+      loanEdge: CreateLoanPayload_loanEdgePlan,
       query: queryPlan
     }
   },
@@ -33869,6 +40981,24 @@ export const objects = {
       payrollConnection: planCreatePayloadResult,
       payrollConnectionEdge: CreatePayrollConnectionPayload_payrollConnectionEdgePlan,
       query: queryPlan
+    }
+  },
+  UpdateProjectPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      project: planCreatePayloadResult,
+      projectEdge: CreateProjectPayload_projectEdgePlan,
+      query: queryPlan
+    }
+  },
+  UpdateRdExpensePayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan,
+      rdExpense: planCreatePayloadResult,
+      rdExpenseEdge: CreateRdExpensePayload_rdExpenseEdgePlan
     }
   },
   UpdateReconciliationQueuePayload: {
@@ -33979,11 +41109,11 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
-      rowId: JournalLineTag_rowIdPlan
+      rowId: JournalLineProject_rowIdPlan
     },
     planType($specifier) {
       const spec = Object.create(null);
@@ -34014,7 +41144,7 @@ export const objects = {
           before: applyBeforeArg,
           after: applyAfterArg,
           condition: applyConditionArgToConnection,
-          filter: Query_journalLineTagsfilterApplyPlan,
+          filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
       },
@@ -34022,6 +41152,24 @@ export const objects = {
       bookId: Account_bookIdPlan,
       businessName: Vendor_businessNamePlan,
       createdAt: Account_createdAtPlan,
+      documents: {
+        plan($record) {
+          const $records = resource_documentPgResource.find({
+            vendor_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       id($parent) {
         const specifier = nodeIdHandler_Vendor.plan($parent);
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_Vendor.codec.name].encode);
@@ -34029,7 +41177,7 @@ export const objects = {
       is1099Eligible($record) {
         return $record.get("is_1099_eligible");
       },
-      rowId: JournalLineTag_rowIdPlan,
+      rowId: JournalLineProject_rowIdPlan,
       taxId($record) {
         return $record.get("tax_id");
       },
@@ -34087,7 +41235,7 @@ export const inputObjects = {
     plans: {
       createdAt: TagGroupInput_createdAtApply,
       hash: _DrizzleMigrationInput_hashApply,
-      rowId: JournalLineTagInput_rowIdApply
+      rowId: JournalLineProjectInput_rowIdApply
     }
   },
   _DrizzleMigrationPatch: {
@@ -34095,7 +41243,7 @@ export const inputObjects = {
     plans: {
       createdAt: TagGroupInput_createdAtApply,
       hash: _DrizzleMigrationInput_hashApply,
-      rowId: JournalLineTagInput_rowIdApply
+      rowId: JournalLineProjectInput_rowIdApply
     }
   },
   AccountCondition: {
@@ -34242,9 +41390,7 @@ export const inputObjects = {
       },
       rowId: AccountCondition_rowIdApply,
       status: BillCondition_statusApply,
-      year($condition, val) {
-        return applyAttributeCondition("year", TYPES.int, $condition, val);
-      }
+      year: AccountingPeriodCondition_yearApply
     }
   },
   AccountingPeriodFilter: {
@@ -34282,7 +41428,7 @@ export const inputObjects = {
       createdAt: TagGroupInput_createdAtApply,
       month: AccountingPeriodInput_monthApply,
       reopenedAt: AccountingPeriodInput_reopenedAtApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       status: AccountingPeriodInput_statusApply,
       year: VehicleInput_yearApply
     }
@@ -34297,7 +41443,7 @@ export const inputObjects = {
       createdAt: TagGroupInput_createdAtApply,
       month: AccountingPeriodInput_monthApply,
       reopenedAt: AccountingPeriodInput_reopenedAtApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       status: AccountingPeriodInput_statusApply,
       year: VehicleInput_yearApply
     }
@@ -34312,7 +41458,7 @@ export const inputObjects = {
       isPlaceholder: AccountInput_isPlaceholderApply,
       name: TagGroupInput_nameApply,
       parentId: AccountInput_parentIdApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       subType: AccountInput_subTypeApply,
       type: InventoryTransactionInput_typeApply,
       updatedAt: AccountMappingInput_updatedAtApply
@@ -34360,7 +41506,7 @@ export const inputObjects = {
       creditAccountId: AccountMappingInput_creditAccountIdApply,
       debitAccountId: AccountMappingInput_debitAccountIdApply,
       eventType: AccountMappingInput_eventTypeApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       updatedAt: AccountMappingInput_updatedAtApply
     }
   },
@@ -34372,7 +41518,7 @@ export const inputObjects = {
       creditAccountId: AccountMappingInput_creditAccountIdApply,
       debitAccountId: AccountMappingInput_debitAccountIdApply,
       eventType: AccountMappingInput_eventTypeApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       updatedAt: AccountMappingInput_updatedAtApply
     }
   },
@@ -34386,7 +41532,7 @@ export const inputObjects = {
       isPlaceholder: AccountInput_isPlaceholderApply,
       name: TagGroupInput_nameApply,
       parentId: AccountInput_parentIdApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       subType: AccountInput_subTypeApply,
       type: InventoryTransactionInput_typeApply,
       updatedAt: AccountMappingInput_updatedAtApply
@@ -34435,15 +41581,153 @@ export const inputObjects = {
       notIn: pgAggregatesApply_notIn
     }
   },
+  AmortizationEntryCondition: {
+    plans: {
+      dueDate($condition, val) {
+        return applyAttributeCondition("due_date", TYPES.text, $condition, val);
+      },
+      loanId($condition, val) {
+        return applyAttributeCondition("loan_id", TYPES.uuid, $condition, val);
+      },
+      rowId: AccountCondition_rowIdApply,
+      status: BillCondition_statusApply
+    }
+  },
+  AmortizationEntryFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      dueDate(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("dueDate", "due_date", spec_amortizationEntry.attributes.due_date, queryBuilder, value);
+      },
+      journalEntry($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_journal_entryPgResource, journalEntryIdentifier, registryConfig.pgRelations.amortizationEntry.journalEntryByMyJournalEntryId.localAttributes, registryConfig.pgRelations.amortizationEntry.journalEntryByMyJournalEntryId.remoteAttributes, $where, value);
+      },
+      journalEntryExists($where, value) {
+        return pgConnectionFilterApplyForwardRelationExists(resource_journal_entryPgResource, journalEntryIdentifier, registryConfig.pgRelations.amortizationEntry.journalEntryByMyJournalEntryId.localAttributes, registryConfig.pgRelations.amortizationEntry.journalEntryByMyJournalEntryId.remoteAttributes, $where, value);
+      },
+      loan($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_loanPgResource, loanIdentifier, registryConfig.pgRelations.amortizationEntry.loanByMyLoanId.localAttributes, registryConfig.pgRelations.amortizationEntry.loanByMyLoanId.remoteAttributes, $where, value);
+      },
+      loanId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("loanId", "loan_id", spec_amortizationEntry.attributes.loan_id, queryBuilder, value);
+      },
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_amortizationEntry.attributes.id, queryBuilder, value);
+      },
+      status(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("status", "status", spec_amortizationEntry.attributes.status, queryBuilder, value);
+      }
+    }
+  },
+  AmortizationEntryInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      balanceAfter: AmortizationEntryInput_balanceAfterApply,
+      dueDate: AmortizationEntryInput_dueDateApply,
+      extraPrincipal: AmortizationEntryInput_extraPrincipalApply,
+      interestAmount: AmortizationEntryInput_interestAmountApply,
+      journalEntryId: JournalLineInput_journalEntryIdApply,
+      loanId: AmortizationEntryInput_loanIdApply,
+      paymentAmount: AmortizationEntryInput_paymentAmountApply,
+      principalAmount: AmortizationEntryInput_principalAmountApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      sequenceNumber: AmortizationEntryInput_sequenceNumberApply,
+      status: AccountingPeriodInput_statusApply
+    }
+  },
+  AmortizationEntryPatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      balanceAfter: AmortizationEntryInput_balanceAfterApply,
+      dueDate: AmortizationEntryInput_dueDateApply,
+      extraPrincipal: AmortizationEntryInput_extraPrincipalApply,
+      interestAmount: AmortizationEntryInput_interestAmountApply,
+      journalEntryId: JournalLineInput_journalEntryIdApply,
+      loanId: AmortizationEntryInput_loanIdApply,
+      paymentAmount: AmortizationEntryInput_paymentAmountApply,
+      principalAmount: AmortizationEntryInput_principalAmountApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      sequenceNumber: AmortizationEntryInput_sequenceNumberApply,
+      status: AccountingPeriodInput_statusApply
+    }
+  },
+  AttachmentCondition: {
+    plans: {
+      bookId: AccountCondition_bookIdApply,
+      journalEntryId: JournalLineCondition_journalEntryIdApply,
+      rowId: AccountCondition_rowIdApply,
+      uploadStatus($condition, val) {
+        return applyAttributeCondition("upload_status", TYPES.text, $condition, val);
+      }
+    }
+  },
+  AttachmentFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      book($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_bookPgResource, bookIdentifier, registryConfig.pgRelations.attachment.bookByMyBookId.localAttributes, registryConfig.pgRelations.attachment.bookByMyBookId.remoteAttributes, $where, value);
+      },
+      bookId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("bookId", "book_id", spec_attachment.attributes.book_id, queryBuilder, value);
+      },
+      journalEntry($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_journal_entryPgResource, journalEntryIdentifier, registryConfig.pgRelations.attachment.journalEntryByMyJournalEntryId.localAttributes, registryConfig.pgRelations.attachment.journalEntryByMyJournalEntryId.remoteAttributes, $where, value);
+      },
+      journalEntryExists($where, value) {
+        return pgConnectionFilterApplyForwardRelationExists(resource_journal_entryPgResource, journalEntryIdentifier, registryConfig.pgRelations.attachment.journalEntryByMyJournalEntryId.localAttributes, registryConfig.pgRelations.attachment.journalEntryByMyJournalEntryId.remoteAttributes, $where, value);
+      },
+      journalEntryId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("journalEntryId", "journal_entry_id", spec_attachment.attributes.journal_entry_id, queryBuilder, value);
+      },
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_attachment.attributes.id, queryBuilder, value);
+      },
+      uploadStatus(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("uploadStatus", "upload_status", spec_attachment.attributes.upload_status, queryBuilder, value);
+      }
+    }
+  },
+  AttachmentInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      bookId: TagGroupInput_bookIdApply,
+      contentType: AttachmentInput_contentTypeApply,
+      createdAt: TagGroupInput_createdAtApply,
+      createdBy: AttachmentInput_createdByApply,
+      filename: AttachmentInput_filenameApply,
+      journalEntryId: JournalLineInput_journalEntryIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      sizeBytes: AttachmentInput_sizeBytesApply,
+      storageKey: AttachmentInput_storageKeyApply,
+      uploadStatus: AttachmentInput_uploadStatusApply
+    }
+  },
+  AttachmentPatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      bookId: TagGroupInput_bookIdApply,
+      contentType: AttachmentInput_contentTypeApply,
+      createdAt: TagGroupInput_createdAtApply,
+      createdBy: AttachmentInput_createdByApply,
+      filename: AttachmentInput_filenameApply,
+      journalEntryId: JournalLineInput_journalEntryIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      sizeBytes: AttachmentInput_sizeBytesApply,
+      storageKey: AttachmentInput_storageKeyApply,
+      uploadStatus: AttachmentInput_uploadStatusApply
+    }
+  },
   BillCondition: {
     plans: {
       bookId: AccountCondition_bookIdApply,
       number: BillCondition_numberApply,
       rowId: AccountCondition_rowIdApply,
       status: BillCondition_statusApply,
-      vendorId($condition, val) {
-        return applyAttributeCondition("vendor_id", TYPES.uuid, $condition, val);
-      }
+      vendorId: BillCondition_vendorIdApply
     }
   },
   BillFilter: {
@@ -34536,11 +41820,11 @@ export const inputObjects = {
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
       currency: BookInput_currencyApply,
-      dueDate: BillInput_dueDateApply,
+      dueDate: AmortizationEntryInput_dueDateApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       memo: JournalLineInput_memoApply,
       number: EstimateInput_numberApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       status: AccountingPeriodInput_statusApply,
       subtotal: EstimateInput_subtotalApply,
       taxAmount: BillInput_taxAmountApply,
@@ -34588,7 +41872,7 @@ export const inputObjects = {
       description: BillLineInput_descriptionApply,
       expenseAccountId: BillLineInput_expenseAccountIdApply,
       quantity: InventoryTransactionInput_quantityApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       sortOrder: BillLineInput_sortOrderApply,
       taxJurisdictionId: BillLineInput_taxJurisdictionIdApply,
       unitPrice: BillLineInput_unitPriceApply
@@ -34602,7 +41886,7 @@ export const inputObjects = {
       description: BillLineInput_descriptionApply,
       expenseAccountId: BillLineInput_expenseAccountIdApply,
       quantity: InventoryTransactionInput_quantityApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       sortOrder: BillLineInput_sortOrderApply,
       taxJurisdictionId: BillLineInput_taxJurisdictionIdApply,
       unitPrice: BillLineInput_unitPriceApply
@@ -34616,11 +41900,11 @@ export const inputObjects = {
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
       currency: BookInput_currencyApply,
-      dueDate: BillInput_dueDateApply,
+      dueDate: AmortizationEntryInput_dueDateApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       memo: JournalLineInput_memoApply,
       number: EstimateInput_numberApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       status: AccountingPeriodInput_statusApply,
       subtotal: EstimateInput_subtotalApply,
       taxAmount: BillInput_taxAmountApply,
@@ -34679,7 +41963,7 @@ export const inputObjects = {
       method: BillPaymentInput_methodApply,
       paymentAccountId: BillPaymentInput_paymentAccountIdApply,
       reference: BillPaymentInput_referenceApply,
-      rowId: JournalLineTagInput_rowIdApply
+      rowId: JournalLineProjectInput_rowIdApply
     }
   },
   BillPaymentPatch: {
@@ -34694,7 +41978,7 @@ export const inputObjects = {
       method: BillPaymentInput_methodApply,
       paymentAccountId: BillPaymentInput_paymentAccountIdApply,
       reference: BillPaymentInput_referenceApply,
-      rowId: JournalLineTagInput_rowIdApply
+      rowId: JournalLineProjectInput_rowIdApply
     }
   },
   BillToManyBillLineFilter: {
@@ -34747,7 +42031,7 @@ export const inputObjects = {
       invitedAt: BookAccessInput_invitedAtApply,
       invitedBy: BookAccessInput_invitedByApply,
       role: BookAccessInput_roleApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       userId: BookAccessInput_userIdApply
     }
   },
@@ -34759,7 +42043,7 @@ export const inputObjects = {
       invitedAt: BookAccessInput_invitedAtApply,
       invitedBy: BookAccessInput_invitedByApply,
       role: BookAccessInput_roleApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       userId: BookAccessInput_userIdApply
     }
   },
@@ -34846,6 +42130,30 @@ export const inputObjects = {
         });
       },
       and: AccountFilter_andApply,
+      attachments($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: attachmentIdentifier,
+          alias: resource_attachmentPgResource.name,
+          localAttributes: registryConfig.pgRelations.book.attachmentsByTheirBookId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.book.attachmentsByTheirBookId.remoteAttributes
+        };
+        return $rel;
+      },
+      attachmentsExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: attachmentIdentifier,
+          alias: resource_attachmentPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.book.attachmentsByTheirBookId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.book.attachmentsByTheirBookId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
       billPayments($where, value) {
         assertAllowed(value, "object");
         const $rel = $where.andPlan();
@@ -35038,6 +42346,30 @@ export const inputObjects = {
           $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
         });
       },
+      documents($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: documentIdentifier,
+          alias: resource_documentPgResource.name,
+          localAttributes: registryConfig.pgRelations.book.documentsByTheirBookId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.book.documentsByTheirBookId.remoteAttributes
+        };
+        return $rel;
+      },
+      documentsExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: documentIdentifier,
+          alias: resource_documentPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.book.documentsByTheirBookId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.book.documentsByTheirBookId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
       estimates($where, value) {
         assertAllowed(value, "object");
         const $rel = $where.andPlan();
@@ -35206,6 +42538,30 @@ export const inputObjects = {
           $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
         });
       },
+      loans($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: loanIdentifier,
+          alias: resource_loanPgResource.name,
+          localAttributes: registryConfig.pgRelations.book.loansByTheirBookId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.book.loansByTheirBookId.remoteAttributes
+        };
+        return $rel;
+      },
+      loansExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: loanIdentifier,
+          alias: resource_loanPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.book.loansByTheirBookId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.book.loansByTheirBookId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
       mileageLogs($where, value) {
         assertAllowed(value, "object");
         const $rel = $where.andPlan();
@@ -35280,6 +42636,54 @@ export const inputObjects = {
         });
         registryConfig.pgRelations.book.payrollConnectionsByTheirBookId.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = registryConfig.pgRelations.book.payrollConnectionsByTheirBookId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
+      projects($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: projectIdentifier,
+          alias: resource_projectPgResource.name,
+          localAttributes: registryConfig.pgRelations.book.projectsByTheirBookId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.book.projectsByTheirBookId.remoteAttributes
+        };
+        return $rel;
+      },
+      projectsExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: projectIdentifier,
+          alias: resource_projectPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.book.projectsByTheirBookId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.book.projectsByTheirBookId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
+      rdExpenses($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: rdExpenseIdentifier,
+          alias: resource_rd_expensePgResource.name,
+          localAttributes: registryConfig.pgRelations.book.rdExpensesByTheirBookId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.book.rdExpensesByTheirBookId.remoteAttributes
+        };
+        return $rel;
+      },
+      rdExpensesExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: rdExpenseIdentifier,
+          alias: resource_rd_expensePgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.book.rdExpensesByTheirBookId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.book.rdExpensesByTheirBookId.remoteAttributes[i];
           $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
         });
       },
@@ -35489,7 +42893,7 @@ export const inputObjects = {
       invoiceSource: BookInput_invoiceSourceApply,
       name: TagGroupInput_nameApply,
       organizationId: BookInput_organizationIdApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       type: InventoryTransactionInput_typeApply,
       updatedAt: AccountMappingInput_updatedAtApply
     }
@@ -35503,7 +42907,7 @@ export const inputObjects = {
       invoiceSource: BookInput_invoiceSourceApply,
       name: TagGroupInput_nameApply,
       organizationId: BookInput_organizationIdApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       type: InventoryTransactionInput_typeApply,
       updatedAt: AccountMappingInput_updatedAtApply
     }
@@ -35523,6 +42927,13 @@ export const inputObjects = {
     }
   },
   BookToManyAccountMappingFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
+  BookToManyAttachmentFilter: {
     plans: {
       every: AccountToManyAccountFilter_everyApply,
       none: AccountToManyAccountFilter_noneApply,
@@ -35585,6 +42996,13 @@ export const inputObjects = {
       some: AccountToManyAccountFilter_someApply
     }
   },
+  BookToManyDocumentFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
   BookToManyEstimateFilter: {
     plans: {
       every: AccountToManyAccountFilter_everyApply,
@@ -35634,6 +43052,13 @@ export const inputObjects = {
       some: AccountToManyAccountFilter_someApply
     }
   },
+  BookToManyLoanFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
   BookToManyMileageLogFilter: {
     plans: {
       every: AccountToManyAccountFilter_everyApply,
@@ -35649,6 +43074,20 @@ export const inputObjects = {
     }
   },
   BookToManyPayrollConnectionFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
+  BookToManyProjectFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
+  BookToManyRdExpenseFilter: {
     plans: {
       every: AccountToManyAccountFilter_everyApply,
       none: AccountToManyAccountFilter_noneApply,
@@ -35749,7 +43188,7 @@ export const inputObjects = {
       createdAt: TagGroupInput_createdAtApply,
       period: BudgetInput_periodApply,
       rollover: BudgetInput_rolloverApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       updatedAt: AccountMappingInput_updatedAtApply
     }
   },
@@ -35762,7 +43201,7 @@ export const inputObjects = {
       createdAt: TagGroupInput_createdAtApply,
       period: BudgetInput_periodApply,
       rollover: BudgetInput_rolloverApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       updatedAt: AccountMappingInput_updatedAtApply
     }
   },
@@ -35784,6 +43223,30 @@ export const inputObjects = {
       bookId(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("bookId", "book_id", spec_categorizationRule.attributes.book_id, queryBuilder, value);
       },
+      categorizationRuleSplitsByRuleId($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: categorizationRuleSplitIdentifier,
+          alias: resource_categorization_rule_splitPgResource.name,
+          localAttributes: registryConfig.pgRelations.categorizationRule.categorizationRuleSplitsByTheirRuleId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.categorizationRule.categorizationRuleSplitsByTheirRuleId.remoteAttributes
+        };
+        return $rel;
+      },
+      categorizationRuleSplitsByRuleIdExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: categorizationRuleSplitIdentifier,
+          alias: resource_categorization_rule_splitPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.categorizationRule.categorizationRuleSplitsByTheirRuleId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.categorizationRule.categorizationRuleSplitsByTheirRuleId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
       creditAccount($where, value) {
         return pgConnectionFilterApplySingleRelation(resource_accountPgResource, accountIdentifier, registryConfig.pgRelations.categorizationRule.accountByMyCreditAccountId.localAttributes, registryConfig.pgRelations.categorizationRule.accountByMyCreditAccountId.remoteAttributes, $where, value);
       },
@@ -35795,6 +43258,12 @@ export const inputObjects = {
       },
       not: AccountFilter_notApply,
       or: AccountFilter_orApply,
+      project($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_projectPgResource, projectIdentifier, registryConfig.pgRelations.categorizationRule.projectByMyProjectId.localAttributes, registryConfig.pgRelations.categorizationRule.projectByMyProjectId.remoteAttributes, $where, value);
+      },
+      projectExists($where, value) {
+        return pgConnectionFilterApplyForwardRelationExists(resource_projectPgResource, projectIdentifier, registryConfig.pgRelations.categorizationRule.projectByMyProjectId.localAttributes, registryConfig.pgRelations.categorizationRule.projectByMyProjectId.remoteAttributes, $where, value);
+      },
       rowId(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("rowId", "id", spec_categorizationRule.attributes.id, queryBuilder, value);
       },
@@ -35823,7 +43292,8 @@ export const inputObjects = {
       matchValue: CategorizationRuleInput_matchValueApply,
       name: TagGroupInput_nameApply,
       priority: ReconciliationQueueInput_priorityApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      projectId: JournalLineProjectInput_projectIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       tagId: JournalLineTagInput_tagIdApply
     }
   },
@@ -35844,8 +43314,85 @@ export const inputObjects = {
       matchValue: CategorizationRuleInput_matchValueApply,
       name: TagGroupInput_nameApply,
       priority: ReconciliationQueueInput_priorityApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      projectId: JournalLineProjectInput_projectIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       tagId: JournalLineTagInput_tagIdApply
+    }
+  },
+  CategorizationRuleSplitCondition: {
+    plans: {
+      rowId: AccountCondition_rowIdApply,
+      ruleId($condition, val) {
+        return applyAttributeCondition("rule_id", TYPES.uuid, $condition, val);
+      }
+    }
+  },
+  CategorizationRuleSplitFilter: {
+    plans: {
+      account($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_accountPgResource, accountIdentifier, registryConfig.pgRelations.categorizationRuleSplit.accountByMyAccountId.localAttributes, registryConfig.pgRelations.categorizationRuleSplit.accountByMyAccountId.remoteAttributes, $where, value);
+      },
+      and: AccountFilter_andApply,
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      project($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_projectPgResource, projectIdentifier, registryConfig.pgRelations.categorizationRuleSplit.projectByMyProjectId.localAttributes, registryConfig.pgRelations.categorizationRuleSplit.projectByMyProjectId.remoteAttributes, $where, value);
+      },
+      projectExists($where, value) {
+        return pgConnectionFilterApplyForwardRelationExists(resource_projectPgResource, projectIdentifier, registryConfig.pgRelations.categorizationRuleSplit.projectByMyProjectId.localAttributes, registryConfig.pgRelations.categorizationRuleSplit.projectByMyProjectId.remoteAttributes, $where, value);
+      },
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_categorizationRuleSplit.attributes.id, queryBuilder, value);
+      },
+      rule($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_categorization_rulePgResource, categorizationRuleIdentifier, registryConfig.pgRelations.categorizationRuleSplit.categorizationRuleByMyRuleId.localAttributes, registryConfig.pgRelations.categorizationRuleSplit.categorizationRuleByMyRuleId.remoteAttributes, $where, value);
+      },
+      ruleId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("ruleId", "rule_id", spec_categorizationRuleSplit.attributes.rule_id, queryBuilder, value);
+      },
+      tag($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_tagPgResource, tagIdentifier, registryConfig.pgRelations.categorizationRuleSplit.tagByMyTagId.localAttributes, registryConfig.pgRelations.categorizationRuleSplit.tagByMyTagId.remoteAttributes, $where, value);
+      },
+      tagExists($where, value) {
+        return pgConnectionFilterApplyForwardRelationExists(resource_tagPgResource, tagIdentifier, registryConfig.pgRelations.categorizationRuleSplit.tagByMyTagId.localAttributes, registryConfig.pgRelations.categorizationRuleSplit.tagByMyTagId.remoteAttributes, $where, value);
+      }
+    }
+  },
+  CategorizationRuleSplitInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      accountId: JournalLineInput_accountIdApply,
+      fixedAmount: CategorizationRuleSplitInput_fixedAmountApply,
+      memo: JournalLineInput_memoApply,
+      percentage: CategorizationRuleSplitInput_percentageApply,
+      projectId: JournalLineProjectInput_projectIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      ruleId: CategorizationRuleSplitInput_ruleIdApply,
+      side: CategorizationRuleSplitInput_sideApply,
+      sortOrder: BillLineInput_sortOrderApply,
+      tagId: JournalLineTagInput_tagIdApply
+    }
+  },
+  CategorizationRuleSplitPatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      accountId: JournalLineInput_accountIdApply,
+      fixedAmount: CategorizationRuleSplitInput_fixedAmountApply,
+      memo: JournalLineInput_memoApply,
+      percentage: CategorizationRuleSplitInput_percentageApply,
+      projectId: JournalLineProjectInput_projectIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      ruleId: CategorizationRuleSplitInput_ruleIdApply,
+      side: CategorizationRuleSplitInput_sideApply,
+      sortOrder: BillLineInput_sortOrderApply,
+      tagId: JournalLineTagInput_tagIdApply
+    }
+  },
+  CategorizationRuleToManyCategorizationRuleSplitFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
     }
   },
   ConnectedAccountCondition: {
@@ -35894,7 +43441,7 @@ export const inputObjects = {
       mask: ConnectedAccountInput_maskApply,
       provider: PayrollConnectionInput_providerApply,
       providerAccountId: ConnectedAccountInput_providerAccountIdApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       status: AccountingPeriodInput_statusApply,
       syncCursor: PayrollConnectionInput_syncCursorApply
     }
@@ -35911,7 +43458,7 @@ export const inputObjects = {
       mask: ConnectedAccountInput_maskApply,
       provider: PayrollConnectionInput_providerApply,
       providerAccountId: ConnectedAccountInput_providerAccountIdApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       status: AccountingPeriodInput_statusApply,
       syncCursor: PayrollConnectionInput_syncCursorApply
     }
@@ -35931,6 +43478,18 @@ export const inputObjects = {
   CreateAccountMappingInput: {
     plans: {
       accountMapping: applyCreateFields,
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  CreateAmortizationEntryInput: {
+    plans: {
+      amortizationEntry: applyCreateFields,
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  CreateAttachmentInput: {
+    plans: {
+      attachment: applyCreateFields,
       clientMutationId: applyClientMutationIdForCreate
     }
   },
@@ -35976,6 +43535,12 @@ export const inputObjects = {
       clientMutationId: applyClientMutationIdForCreate
     }
   },
+  CreateCategorizationRuleSplitInput: {
+    plans: {
+      categorizationRuleSplit: applyCreateFields,
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
   CreateConnectedAccountInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
@@ -35998,6 +43563,12 @@ export const inputObjects = {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
       customer: applyCreateFields
+    }
+  },
+  CreateDocumentInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      document: applyCreateFields
     }
   },
   CreateDrizzleMigrationInput: {
@@ -36072,10 +43643,22 @@ export const inputObjects = {
       journalLine: applyCreateFields
     }
   },
+  CreateJournalLineProjectInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      journalLineProject: applyCreateFields
+    }
+  },
   CreateJournalLineTagInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
       journalLineTag: applyCreateFields
+    }
+  },
+  CreateLoanInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      loan: applyCreateFields
     }
   },
   CreateMileageLogInput: {
@@ -36094,6 +43677,18 @@ export const inputObjects = {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
       payrollConnection: applyCreateFields
+    }
+  },
+  CreateProjectInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      project: applyCreateFields
+    }
+  },
+  CreateRdExpenseInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      rdExpense: applyCreateFields
     }
   },
   CreateReconciliationQueueInput: {
@@ -36212,7 +43807,7 @@ export const inputObjects = {
       lastSyncedAt: PayrollConnectionInput_lastSyncedAtApply,
       name: TagGroupInput_nameApply,
       network: CryptoAssetInput_networkApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       symbol: CryptoAssetInput_symbolApply,
       updatedAt: AccountMappingInput_updatedAtApply,
       walletAddress: CryptoAssetInput_walletAddressApply
@@ -36228,7 +43823,7 @@ export const inputObjects = {
       lastSyncedAt: PayrollConnectionInput_lastSyncedAtApply,
       name: TagGroupInput_nameApply,
       network: CryptoAssetInput_networkApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       symbol: CryptoAssetInput_symbolApply,
       updatedAt: AccountMappingInput_updatedAtApply,
       walletAddress: CryptoAssetInput_walletAddressApply
@@ -36283,7 +43878,7 @@ export const inputObjects = {
       proceedsPerUnit: CryptoLotInput_proceedsPerUnitApply,
       quantity: InventoryTransactionInput_quantityApply,
       remainingQuantity: CryptoLotInput_remainingQuantityApply,
-      rowId: JournalLineTagInput_rowIdApply
+      rowId: JournalLineProjectInput_rowIdApply
     }
   },
   CryptoLotPatch: {
@@ -36298,7 +43893,7 @@ export const inputObjects = {
       proceedsPerUnit: CryptoLotInput_proceedsPerUnitApply,
       quantity: InventoryTransactionInput_quantityApply,
       remainingQuantity: CryptoLotInput_remainingQuantityApply,
-      rowId: JournalLineTagInput_rowIdApply
+      rowId: JournalLineProjectInput_rowIdApply
     }
   },
   CustomerCondition: {
@@ -36382,9 +43977,9 @@ export const inputObjects = {
       email: CustomerInput_emailApply,
       isActive: TagInput_isActiveApply,
       name: TagGroupInput_nameApply,
-      notes: CustomerInput_notesApply,
+      notes: RdExpenseInput_notesApply,
       phone: CustomerInput_phoneApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       state: CustomerInput_stateApply,
       updatedAt: AccountMappingInput_updatedAtApply,
       zip: CustomerInput_zipApply
@@ -36401,9 +43996,9 @@ export const inputObjects = {
       email: CustomerInput_emailApply,
       isActive: TagInput_isActiveApply,
       name: TagGroupInput_nameApply,
-      notes: CustomerInput_notesApply,
+      notes: RdExpenseInput_notesApply,
       phone: CustomerInput_phoneApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       state: CustomerInput_stateApply,
       updatedAt: AccountMappingInput_updatedAtApply,
       zip: CustomerInput_zipApply
@@ -36464,6 +44059,26 @@ export const inputObjects = {
     }
   },
   DeleteAccountMappingInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteAmortizationEntryByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteAmortizationEntryInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteAttachmentByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteAttachmentInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate
     }
@@ -36538,6 +44153,16 @@ export const inputObjects = {
       clientMutationId: applyClientMutationIdForCreate
     }
   },
+  DeleteCategorizationRuleSplitByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteCategorizationRuleSplitInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
   DeleteConnectedAccountByIdInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate
@@ -36574,6 +44199,16 @@ export const inputObjects = {
     }
   },
   DeleteCustomerInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteDocumentByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteDocumentInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate
     }
@@ -36698,12 +44333,32 @@ export const inputObjects = {
       clientMutationId: applyClientMutationIdForCreate
     }
   },
+  DeleteJournalLineProjectByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteJournalLineProjectInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
   DeleteJournalLineTagByIdInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate
     }
   },
   DeleteJournalLineTagInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteLoanByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteLoanInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate
     }
@@ -36734,6 +44389,26 @@ export const inputObjects = {
     }
   },
   DeletePayrollConnectionInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteProjectByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteProjectInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteRdExpenseByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteRdExpenseInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate
     }
@@ -36828,6 +44503,80 @@ export const inputObjects = {
       clientMutationId: applyClientMutationIdForCreate
     }
   },
+  DocumentCondition: {
+    plans: {
+      bookId: AccountCondition_bookIdApply,
+      category($condition, val) {
+        return applyAttributeCondition("category", TYPES.text, $condition, val);
+      },
+      rowId: AccountCondition_rowIdApply,
+      vendorId: BillCondition_vendorIdApply
+    }
+  },
+  DocumentFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      book($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_bookPgResource, bookIdentifier, registryConfig.pgRelations.document.bookByMyBookId.localAttributes, registryConfig.pgRelations.document.bookByMyBookId.remoteAttributes, $where, value);
+      },
+      bookId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("bookId", "book_id", spec_document.attributes.book_id, queryBuilder, value);
+      },
+      category(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("category", "category", spec_document.attributes.category, queryBuilder, value);
+      },
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_document.attributes.id, queryBuilder, value);
+      },
+      vendor($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_vendorPgResource, vendorIdentifier, registryConfig.pgRelations.document.vendorByMyVendorId.localAttributes, registryConfig.pgRelations.document.vendorByMyVendorId.remoteAttributes, $where, value);
+      },
+      vendorExists($where, value) {
+        return pgConnectionFilterApplyForwardRelationExists(resource_vendorPgResource, vendorIdentifier, registryConfig.pgRelations.document.vendorByMyVendorId.localAttributes, registryConfig.pgRelations.document.vendorByMyVendorId.remoteAttributes, $where, value);
+      },
+      vendorId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("vendorId", "vendor_id", spec_document.attributes.vendor_id, queryBuilder, value);
+      }
+    }
+  },
+  DocumentInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      bookId: TagGroupInput_bookIdApply,
+      category: RdExpenseInput_categoryApply,
+      contentType: AttachmentInput_contentTypeApply,
+      createdAt: TagGroupInput_createdAtApply,
+      createdBy: AttachmentInput_createdByApply,
+      filename: AttachmentInput_filenameApply,
+      name: TagGroupInput_nameApply,
+      notes: RdExpenseInput_notesApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      sizeBytes: AttachmentInput_sizeBytesApply,
+      storageKey: AttachmentInput_storageKeyApply,
+      vendorId: JournalEntryInput_vendorIdApply,
+      year: VehicleInput_yearApply
+    }
+  },
+  DocumentPatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      bookId: TagGroupInput_bookIdApply,
+      category: RdExpenseInput_categoryApply,
+      contentType: AttachmentInput_contentTypeApply,
+      createdAt: TagGroupInput_createdAtApply,
+      createdBy: AttachmentInput_createdByApply,
+      filename: AttachmentInput_filenameApply,
+      name: TagGroupInput_nameApply,
+      notes: RdExpenseInput_notesApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      sizeBytes: AttachmentInput_sizeBytesApply,
+      storageKey: AttachmentInput_storageKeyApply,
+      vendorId: JournalEntryInput_vendorIdApply,
+      year: VehicleInput_yearApply
+    }
+  },
   EstimateCondition: {
     plans: {
       bookId: AccountCondition_bookIdApply,
@@ -36906,7 +44655,7 @@ export const inputObjects = {
       expiryDate: EstimateInput_expiryDateApply,
       memo: JournalLineInput_memoApply,
       number: EstimateInput_numberApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       status: AccountingPeriodInput_statusApply,
       subtotal: EstimateInput_subtotalApply,
       terms: EstimateInput_termsApply,
@@ -36955,7 +44704,7 @@ export const inputObjects = {
       estimateId: EstimateLineInput_estimateIdApply,
       incomeAccountId: EstimateLineInput_incomeAccountIdApply,
       quantity: InventoryTransactionInput_quantityApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       sortOrder: BillLineInput_sortOrderApply,
       taxJurisdictionId: BillLineInput_taxJurisdictionIdApply,
       unitPrice: BillLineInput_unitPriceApply
@@ -36969,7 +44718,7 @@ export const inputObjects = {
       estimateId: EstimateLineInput_estimateIdApply,
       incomeAccountId: EstimateLineInput_incomeAccountIdApply,
       quantity: InventoryTransactionInput_quantityApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       sortOrder: BillLineInput_sortOrderApply,
       taxJurisdictionId: BillLineInput_taxJurisdictionIdApply,
       unitPrice: BillLineInput_unitPriceApply
@@ -36986,7 +44735,7 @@ export const inputObjects = {
       expiryDate: EstimateInput_expiryDateApply,
       memo: JournalLineInput_memoApply,
       number: EstimateInput_numberApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       status: AccountingPeriodInput_statusApply,
       subtotal: EstimateInput_subtotalApply,
       terms: EstimateInput_termsApply,
@@ -37054,7 +44803,7 @@ export const inputObjects = {
       disposedAt: CryptoLotInput_disposedAtApply,
       macrsClass: FixedAssetInput_macrsClassApply,
       name: TagGroupInput_nameApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       salvageValue: FixedAssetInput_salvageValueApply,
       usefulLifeMonths: FixedAssetInput_usefulLifeMonthsApply
     }
@@ -37075,7 +44824,7 @@ export const inputObjects = {
       disposedAt: CryptoLotInput_disposedAtApply,
       macrsClass: FixedAssetInput_macrsClassApply,
       name: TagGroupInput_nameApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       salvageValue: FixedAssetInput_salvageValueApply,
       usefulLifeMonths: FixedAssetInput_usefulLifeMonthsApply
     }
@@ -37106,7 +44855,7 @@ export const inputObjects = {
       createdAt: TagGroupInput_createdAtApply,
       headerRows: ImportProfileInput_headerRowsApply,
       name: TagGroupInput_nameApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       updatedAt: AccountMappingInput_updatedAtApply
     }
   },
@@ -37118,7 +44867,7 @@ export const inputObjects = {
       createdAt: TagGroupInput_createdAtApply,
       headerRows: ImportProfileInput_headerRowsApply,
       name: TagGroupInput_nameApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       updatedAt: AccountMappingInput_updatedAtApply
     }
   },
@@ -37205,7 +44954,7 @@ export const inputObjects = {
       isActive: TagInput_isActiveApply,
       name: TagGroupInput_nameApply,
       quantityOnHand: InventoryItemInput_quantityOnHandApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       salePrice: InventoryItemInput_salePriceApply,
       sku: InventoryItemInput_skuApply,
       updatedAt: AccountMappingInput_updatedAtApply
@@ -37224,7 +44973,7 @@ export const inputObjects = {
       isActive: TagInput_isActiveApply,
       name: TagGroupInput_nameApply,
       quantityOnHand: InventoryItemInput_quantityOnHandApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       salePrice: InventoryItemInput_salePriceApply,
       sku: InventoryItemInput_skuApply,
       updatedAt: AccountMappingInput_updatedAtApply
@@ -37284,7 +45033,7 @@ export const inputObjects = {
       journalEntryId: JournalLineInput_journalEntryIdApply,
       note: InventoryTransactionInput_noteApply,
       quantity: InventoryTransactionInput_quantityApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       type: InventoryTransactionInput_typeApply,
       unitCost: InventoryTransactionInput_unitCostApply
     }
@@ -37299,7 +45048,7 @@ export const inputObjects = {
       journalEntryId: JournalLineInput_journalEntryIdApply,
       note: InventoryTransactionInput_noteApply,
       quantity: InventoryTransactionInput_quantityApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       type: InventoryTransactionInput_typeApply,
       unitCost: InventoryTransactionInput_unitCostApply
     }
@@ -37403,12 +45152,12 @@ export const inputObjects = {
       createdAt: TagGroupInput_createdAtApply,
       currency: BookInput_currencyApply,
       customerId: EstimateInput_customerIdApply,
-      dueDate: BillInput_dueDateApply,
+      dueDate: AmortizationEntryInput_dueDateApply,
       issueDate: InvoiceInput_issueDateApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       memo: JournalLineInput_memoApply,
       number: EstimateInput_numberApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       status: AccountingPeriodInput_statusApply,
       subtotal: EstimateInput_subtotalApply,
       taxAmount: BillInput_taxAmountApply,
@@ -37463,7 +45212,7 @@ export const inputObjects = {
       inventoryItemId: InvoiceLineInput_inventoryItemIdApply,
       invoiceId: InvoicePaymentInput_invoiceIdApply,
       quantity: InventoryTransactionInput_quantityApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       sortOrder: BillLineInput_sortOrderApply,
       taxJurisdictionId: BillLineInput_taxJurisdictionIdApply,
       unitPrice: BillLineInput_unitPriceApply
@@ -37478,7 +45227,7 @@ export const inputObjects = {
       inventoryItemId: InvoiceLineInput_inventoryItemIdApply,
       invoiceId: InvoicePaymentInput_invoiceIdApply,
       quantity: InventoryTransactionInput_quantityApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       sortOrder: BillLineInput_sortOrderApply,
       taxJurisdictionId: BillLineInput_taxJurisdictionIdApply,
       unitPrice: BillLineInput_unitPriceApply
@@ -37492,12 +45241,12 @@ export const inputObjects = {
       createdAt: TagGroupInput_createdAtApply,
       currency: BookInput_currencyApply,
       customerId: EstimateInput_customerIdApply,
-      dueDate: BillInput_dueDateApply,
+      dueDate: AmortizationEntryInput_dueDateApply,
       issueDate: InvoiceInput_issueDateApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       memo: JournalLineInput_memoApply,
       number: EstimateInput_numberApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       status: AccountingPeriodInput_statusApply,
       subtotal: EstimateInput_subtotalApply,
       taxAmount: BillInput_taxAmountApply,
@@ -37556,7 +45305,7 @@ export const inputObjects = {
       journalEntryId: JournalLineInput_journalEntryIdApply,
       method: BillPaymentInput_methodApply,
       reference: BillPaymentInput_referenceApply,
-      rowId: JournalLineTagInput_rowIdApply
+      rowId: JournalLineProjectInput_rowIdApply
     }
   },
   InvoicePaymentPatch: {
@@ -37571,7 +45320,7 @@ export const inputObjects = {
       journalEntryId: JournalLineInput_journalEntryIdApply,
       method: BillPaymentInput_methodApply,
       reference: BillPaymentInput_referenceApply,
-      rowId: JournalLineTagInput_rowIdApply
+      rowId: JournalLineProjectInput_rowIdApply
     }
   },
   InvoiceToManyInvoiceLineFilter: {
@@ -37604,6 +45353,30 @@ export const inputObjects = {
   JournalEntryFilter: {
     plans: {
       and: AccountFilter_andApply,
+      attachments($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: attachmentIdentifier,
+          alias: resource_attachmentPgResource.name,
+          localAttributes: registryConfig.pgRelations.journalEntry.attachmentsByTheirJournalEntryId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.journalEntry.attachmentsByTheirJournalEntryId.remoteAttributes
+        };
+        return $rel;
+      },
+      attachmentsExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: attachmentIdentifier,
+          alias: resource_attachmentPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.journalEntry.attachmentsByTheirJournalEntryId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.journalEntry.attachmentsByTheirJournalEntryId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
       book($where, value) {
         return pgConnectionFilterApplySingleRelation(resource_bookPgResource, bookIdentifier, registryConfig.pgRelations.journalEntry.bookByMyBookId.localAttributes, registryConfig.pgRelations.journalEntry.bookByMyBookId.remoteAttributes, $where, value);
       },
@@ -37665,7 +45438,7 @@ export const inputObjects = {
       isReconciled: JournalEntryInput_isReconciledApply,
       isReviewed: JournalEntryInput_isReviewedApply,
       memo: JournalLineInput_memoApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       source: JournalEntryInput_sourceApply,
       sourceReferenceId: JournalEntryInput_sourceReferenceIdApply,
       updatedAt: AccountMappingInput_updatedAtApply,
@@ -37681,11 +45454,18 @@ export const inputObjects = {
       isReconciled: JournalEntryInput_isReconciledApply,
       isReviewed: JournalEntryInput_isReviewedApply,
       memo: JournalLineInput_memoApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       source: JournalEntryInput_sourceApply,
       sourceReferenceId: JournalEntryInput_sourceReferenceIdApply,
       updatedAt: AccountMappingInput_updatedAtApply,
       vendorId: JournalEntryInput_vendorIdApply
+    }
+  },
+  JournalEntryToManyAttachmentFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
     }
   },
   JournalEntryToManyJournalLineFilter: {
@@ -37698,9 +45478,7 @@ export const inputObjects = {
   JournalLineCondition: {
     plans: {
       accountId: BudgetCondition_accountIdApply,
-      journalEntryId($condition, val) {
-        return applyAttributeCondition("journal_entry_id", TYPES.uuid, $condition, val);
-      },
+      journalEntryId: JournalLineCondition_journalEntryIdApply,
       rowId: AccountCondition_rowIdApply
     }
   },
@@ -37718,6 +45496,30 @@ export const inputObjects = {
       },
       journalEntryId(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("journalEntryId", "journal_entry_id", spec_journalLine.attributes.journal_entry_id, queryBuilder, value);
+      },
+      journalLineProjects($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: journalLineProjectIdentifier,
+          alias: resource_journal_line_projectPgResource.name,
+          localAttributes: registryConfig.pgRelations.journalLine.journalLineProjectsByTheirJournalLineId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.journalLine.journalLineProjectsByTheirJournalLineId.remoteAttributes
+        };
+        return $rel;
+      },
+      journalLineProjectsExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: journalLineProjectIdentifier,
+          alias: resource_journal_line_projectPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.journalLine.journalLineProjectsByTheirJournalLineId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.journalLine.journalLineProjectsByTheirJournalLineId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
       },
       journalLineTags($where, value) {
         assertAllowed(value, "object");
@@ -37759,7 +45561,7 @@ export const inputObjects = {
       debit: JournalLineInput_debitApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       memo: JournalLineInput_memoApply,
-      rowId: JournalLineTagInput_rowIdApply
+      rowId: JournalLineProjectInput_rowIdApply
     }
   },
   JournalLinePatch: {
@@ -37771,14 +45573,57 @@ export const inputObjects = {
       debit: JournalLineInput_debitApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       memo: JournalLineInput_memoApply,
-      rowId: JournalLineTagInput_rowIdApply
+      rowId: JournalLineProjectInput_rowIdApply
+    }
+  },
+  JournalLineProjectCondition: {
+    plans: {
+      journalLineId: JournalLineProjectCondition_journalLineIdApply,
+      projectId: JournalLineProjectCondition_projectIdApply,
+      rowId: AccountCondition_rowIdApply
+    }
+  },
+  JournalLineProjectFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      journalLine($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_journal_linePgResource, journalLineIdentifier, registryConfig.pgRelations.journalLineProject.journalLineByMyJournalLineId.localAttributes, registryConfig.pgRelations.journalLineProject.journalLineByMyJournalLineId.remoteAttributes, $where, value);
+      },
+      journalLineId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("journalLineId", "journal_line_id", spec_journalLineProject.attributes.journal_line_id, queryBuilder, value);
+      },
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      project($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_projectPgResource, projectIdentifier, registryConfig.pgRelations.journalLineProject.projectByMyProjectId.localAttributes, registryConfig.pgRelations.journalLineProject.projectByMyProjectId.remoteAttributes, $where, value);
+      },
+      projectId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("projectId", "project_id", spec_journalLineProject.attributes.project_id, queryBuilder, value);
+      },
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_journalLineProject.attributes.id, queryBuilder, value);
+      }
+    }
+  },
+  JournalLineProjectInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      journalLineId: JournalLineProjectInput_journalLineIdApply,
+      projectId: JournalLineProjectInput_projectIdApply,
+      rowId: JournalLineProjectInput_rowIdApply
+    }
+  },
+  JournalLineProjectPatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      journalLineId: JournalLineProjectInput_journalLineIdApply,
+      projectId: JournalLineProjectInput_projectIdApply,
+      rowId: JournalLineProjectInput_rowIdApply
     }
   },
   JournalLineTagCondition: {
     plans: {
-      journalLineId($condition, val) {
-        return applyAttributeCondition("journal_line_id", TYPES.uuid, $condition, val);
-      },
+      journalLineId: JournalLineProjectCondition_journalLineIdApply,
       rowId: AccountCondition_rowIdApply,
       tagId($condition, val) {
         return applyAttributeCondition("tag_id", TYPES.uuid, $condition, val);
@@ -37810,20 +45655,137 @@ export const inputObjects = {
   JournalLineTagInput: {
     baked: createObjectAndApplyChildren,
     plans: {
-      journalLineId: JournalLineTagInput_journalLineIdApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      journalLineId: JournalLineProjectInput_journalLineIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       tagId: JournalLineTagInput_tagIdApply
     }
   },
   JournalLineTagPatch: {
     baked: createObjectAndApplyChildren,
     plans: {
-      journalLineId: JournalLineTagInput_journalLineIdApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      journalLineId: JournalLineProjectInput_journalLineIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       tagId: JournalLineTagInput_tagIdApply
     }
   },
+  JournalLineToManyJournalLineProjectFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
   JournalLineToManyJournalLineTagFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
+  LoanCondition: {
+    plans: {
+      bookId: AccountCondition_bookIdApply,
+      rowId: AccountCondition_rowIdApply,
+      status: BillCondition_statusApply
+    }
+  },
+  LoanFilter: {
+    plans: {
+      amortizationEntries($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: amortizationEntryIdentifier,
+          alias: resource_amortization_entryPgResource.name,
+          localAttributes: registryConfig.pgRelations.loan.amortizationEntriesByTheirLoanId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.loan.amortizationEntriesByTheirLoanId.remoteAttributes
+        };
+        return $rel;
+      },
+      amortizationEntriesExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: amortizationEntryIdentifier,
+          alias: resource_amortization_entryPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.loan.amortizationEntriesByTheirLoanId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.loan.amortizationEntriesByTheirLoanId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
+      and: AccountFilter_andApply,
+      book($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_bookPgResource, bookIdentifier, registryConfig.pgRelations.loan.bookByMyBookId.localAttributes, registryConfig.pgRelations.loan.bookByMyBookId.remoteAttributes, $where, value);
+      },
+      bookId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("bookId", "book_id", spec_loan.attributes.book_id, queryBuilder, value);
+      },
+      interestAccount($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_accountPgResource, accountIdentifier, registryConfig.pgRelations.loan.accountByMyInterestAccountId.localAttributes, registryConfig.pgRelations.loan.accountByMyInterestAccountId.remoteAttributes, $where, value);
+      },
+      liabilityAccount($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_accountPgResource, accountIdentifier, registryConfig.pgRelations.loan.accountByMyLiabilityAccountId.localAttributes, registryConfig.pgRelations.loan.accountByMyLiabilityAccountId.remoteAttributes, $where, value);
+      },
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      paymentAccount($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_accountPgResource, accountIdentifier, registryConfig.pgRelations.loan.accountByMyPaymentAccountId.localAttributes, registryConfig.pgRelations.loan.accountByMyPaymentAccountId.remoteAttributes, $where, value);
+      },
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_loan.attributes.id, queryBuilder, value);
+      },
+      status(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("status", "status", spec_loan.attributes.status, queryBuilder, value);
+      }
+    }
+  },
+  LoanInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      annualRate: LoanInput_annualRateApply,
+      bookId: TagGroupInput_bookIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      extraPrincipal: AmortizationEntryInput_extraPrincipalApply,
+      interestAccountId: LoanInput_interestAccountIdApply,
+      liabilityAccountId: LoanInput_liabilityAccountIdApply,
+      name: TagGroupInput_nameApply,
+      notes: RdExpenseInput_notesApply,
+      originalPrincipal: LoanInput_originalPrincipalApply,
+      paymentAccountId: BillPaymentInput_paymentAccountIdApply,
+      paymentAmount: AmortizationEntryInput_paymentAmountApply,
+      paymentDay: LoanInput_paymentDayApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      startDate: ProjectInput_startDateApply,
+      status: AccountingPeriodInput_statusApply,
+      termMonths: LoanInput_termMonthsApply,
+      updatedAt: AccountMappingInput_updatedAtApply
+    }
+  },
+  LoanPatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      annualRate: LoanInput_annualRateApply,
+      bookId: TagGroupInput_bookIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      extraPrincipal: AmortizationEntryInput_extraPrincipalApply,
+      interestAccountId: LoanInput_interestAccountIdApply,
+      liabilityAccountId: LoanInput_liabilityAccountIdApply,
+      name: TagGroupInput_nameApply,
+      notes: RdExpenseInput_notesApply,
+      originalPrincipal: LoanInput_originalPrincipalApply,
+      paymentAccountId: BillPaymentInput_paymentAccountIdApply,
+      paymentAmount: AmortizationEntryInput_paymentAmountApply,
+      paymentDay: LoanInput_paymentDayApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      startDate: ProjectInput_startDateApply,
+      status: AccountingPeriodInput_statusApply,
+      termMonths: LoanInput_termMonthsApply,
+      updatedAt: AccountMappingInput_updatedAtApply
+    }
+  },
+  LoanToManyAmortizationEntryFilter: {
     plans: {
       every: AccountToManyAccountFilter_everyApply,
       none: AccountToManyAccountFilter_noneApply,
@@ -37880,7 +45842,7 @@ export const inputObjects = {
       odometerEnd: MileageLogInput_odometerEndApply,
       odometerStart: MileageLogInput_odometerStartApply,
       origin: MileageLogInput_originApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       updatedAt: AccountMappingInput_updatedAtApply,
       vehicleId: MileageLogInput_vehicleIdApply
     }
@@ -37898,7 +45860,7 @@ export const inputObjects = {
       odometerEnd: MileageLogInput_odometerEndApply,
       odometerStart: MileageLogInput_odometerStartApply,
       origin: MileageLogInput_originApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       updatedAt: AccountMappingInput_updatedAtApply,
       vehicleId: MileageLogInput_vehicleIdApply
     }
@@ -37937,7 +45899,7 @@ export const inputObjects = {
       createdAt: TagGroupInput_createdAtApply,
       date: NetWorthSnapshotInput_dateApply,
       netWorth: NetWorthSnapshotInput_netWorthApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       totalAssets: NetWorthSnapshotInput_totalAssetsApply,
       totalLiabilities: NetWorthSnapshotInput_totalLiabilitiesApply
     }
@@ -37950,7 +45912,7 @@ export const inputObjects = {
       createdAt: TagGroupInput_createdAtApply,
       date: NetWorthSnapshotInput_dateApply,
       netWorth: NetWorthSnapshotInput_netWorthApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       totalAssets: NetWorthSnapshotInput_totalAssetsApply,
       totalLiabilities: NetWorthSnapshotInput_totalLiabilitiesApply
     }
@@ -37991,7 +45953,7 @@ export const inputObjects = {
       lastSyncedAt: PayrollConnectionInput_lastSyncedAtApply,
       provider: PayrollConnectionInput_providerApply,
       refreshToken: PayrollConnectionInput_refreshTokenApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       status: AccountingPeriodInput_statusApply,
       syncCursor: PayrollConnectionInput_syncCursorApply
     }
@@ -38006,9 +45968,197 @@ export const inputObjects = {
       lastSyncedAt: PayrollConnectionInput_lastSyncedAtApply,
       provider: PayrollConnectionInput_providerApply,
       refreshToken: PayrollConnectionInput_refreshTokenApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       status: AccountingPeriodInput_statusApply,
       syncCursor: PayrollConnectionInput_syncCursorApply
+    }
+  },
+  ProjectCondition: {
+    plans: {
+      bookId: AccountCondition_bookIdApply,
+      rowId: AccountCondition_rowIdApply,
+      status: BillCondition_statusApply
+    }
+  },
+  ProjectFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      book($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_bookPgResource, bookIdentifier, registryConfig.pgRelations.project.bookByMyBookId.localAttributes, registryConfig.pgRelations.project.bookByMyBookId.remoteAttributes, $where, value);
+      },
+      bookId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("bookId", "book_id", spec_project.attributes.book_id, queryBuilder, value);
+      },
+      journalLineProjects($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: journalLineProjectIdentifier,
+          alias: resource_journal_line_projectPgResource.name,
+          localAttributes: registryConfig.pgRelations.project.journalLineProjectsByTheirProjectId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.project.journalLineProjectsByTheirProjectId.remoteAttributes
+        };
+        return $rel;
+      },
+      journalLineProjectsExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: journalLineProjectIdentifier,
+          alias: resource_journal_line_projectPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.project.journalLineProjectsByTheirProjectId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.project.journalLineProjectsByTheirProjectId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      rdExpenses($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: rdExpenseIdentifier,
+          alias: resource_rd_expensePgResource.name,
+          localAttributes: registryConfig.pgRelations.project.rdExpensesByTheirProjectId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.project.rdExpensesByTheirProjectId.remoteAttributes
+        };
+        return $rel;
+      },
+      rdExpensesExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: rdExpenseIdentifier,
+          alias: resource_rd_expensePgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.project.rdExpensesByTheirProjectId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.project.rdExpensesByTheirProjectId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_project.attributes.id, queryBuilder, value);
+      },
+      status(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("status", "status", spec_project.attributes.status, queryBuilder, value);
+      }
+    }
+  },
+  ProjectInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      bookId: TagGroupInput_bookIdApply,
+      budgetAmount: ProjectInput_budgetAmountApply,
+      code: TagInput_codeApply,
+      createdAt: TagGroupInput_createdAtApply,
+      endDate: ProjectInput_endDateApply,
+      name: TagGroupInput_nameApply,
+      notes: RdExpenseInput_notesApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      startDate: ProjectInput_startDateApply,
+      status: AccountingPeriodInput_statusApply,
+      updatedAt: AccountMappingInput_updatedAtApply
+    }
+  },
+  ProjectPatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      bookId: TagGroupInput_bookIdApply,
+      budgetAmount: ProjectInput_budgetAmountApply,
+      code: TagInput_codeApply,
+      createdAt: TagGroupInput_createdAtApply,
+      endDate: ProjectInput_endDateApply,
+      name: TagGroupInput_nameApply,
+      notes: RdExpenseInput_notesApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      startDate: ProjectInput_startDateApply,
+      status: AccountingPeriodInput_statusApply,
+      updatedAt: AccountMappingInput_updatedAtApply
+    }
+  },
+  ProjectToManyJournalLineProjectFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
+  ProjectToManyRdExpenseFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
+  RdExpenseCondition: {
+    plans: {
+      bookId: AccountCondition_bookIdApply,
+      projectId: JournalLineProjectCondition_projectIdApply,
+      rowId: AccountCondition_rowIdApply,
+      year: AccountingPeriodCondition_yearApply
+    }
+  },
+  RdExpenseFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      book($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_bookPgResource, bookIdentifier, registryConfig.pgRelations.rdExpense.bookByMyBookId.localAttributes, registryConfig.pgRelations.rdExpense.bookByMyBookId.remoteAttributes, $where, value);
+      },
+      bookId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("bookId", "book_id", spec_rdExpense.attributes.book_id, queryBuilder, value);
+      },
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      project($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_projectPgResource, projectIdentifier, registryConfig.pgRelations.rdExpense.projectByMyProjectId.localAttributes, registryConfig.pgRelations.rdExpense.projectByMyProjectId.remoteAttributes, $where, value);
+      },
+      projectExists($where, value) {
+        return pgConnectionFilterApplyForwardRelationExists(resource_projectPgResource, projectIdentifier, registryConfig.pgRelations.rdExpense.projectByMyProjectId.localAttributes, registryConfig.pgRelations.rdExpense.projectByMyProjectId.remoteAttributes, $where, value);
+      },
+      projectId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("projectId", "project_id", spec_rdExpense.attributes.project_id, queryBuilder, value);
+      },
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_rdExpense.attributes.id, queryBuilder, value);
+      },
+      year(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("year", "year", spec_rdExpense.attributes.year, queryBuilder, value);
+      }
+    }
+  },
+  RdExpenseInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      amount: BillLineInput_amountApply,
+      bookId: TagGroupInput_bookIdApply,
+      category: RdExpenseInput_categoryApply,
+      createdAt: TagGroupInput_createdAtApply,
+      description: BillLineInput_descriptionApply,
+      isForeign: RdExpenseInput_isForeignApply,
+      notes: RdExpenseInput_notesApply,
+      projectId: JournalLineProjectInput_projectIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      updatedAt: AccountMappingInput_updatedAtApply,
+      year: VehicleInput_yearApply
+    }
+  },
+  RdExpensePatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      amount: BillLineInput_amountApply,
+      bookId: TagGroupInput_bookIdApply,
+      category: RdExpenseInput_categoryApply,
+      createdAt: TagGroupInput_createdAtApply,
+      description: BillLineInput_descriptionApply,
+      isForeign: RdExpenseInput_isForeignApply,
+      notes: RdExpenseInput_notesApply,
+      projectId: JournalLineProjectInput_projectIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      updatedAt: AccountMappingInput_updatedAtApply,
+      year: VehicleInput_yearApply
     }
   },
   ReconciliationQueueCondition: {
@@ -38065,7 +46215,7 @@ export const inputObjects = {
       priority: ReconciliationQueueInput_priorityApply,
       reviewedAt: ReconciliationQueueInput_reviewedAtApply,
       reviewedBy: ReconciliationQueueInput_reviewedByApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       status: AccountingPeriodInput_statusApply,
       suggestedCreditAccountId: ReconciliationQueueInput_suggestedCreditAccountIdApply,
       suggestedDebitAccountId: ReconciliationQueueInput_suggestedDebitAccountIdApply
@@ -38084,7 +46234,7 @@ export const inputObjects = {
       priority: ReconciliationQueueInput_priorityApply,
       reviewedAt: ReconciliationQueueInput_reviewedAtApply,
       reviewedBy: ReconciliationQueueInput_reviewedByApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       status: AccountingPeriodInput_statusApply,
       suggestedCreditAccountId: ReconciliationQueueInput_suggestedCreditAccountIdApply,
       suggestedDebitAccountId: ReconciliationQueueInput_suggestedDebitAccountIdApply
@@ -38128,7 +46278,7 @@ export const inputObjects = {
       completedAt: ReconciliationStatementInput_completedAtApply,
       createdAt: TagGroupInput_createdAtApply,
       discrepancy: ReconciliationStatementInput_discrepancyApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       statementBalance: ReconciliationStatementInput_statementBalanceApply,
       statementDate: ReconciliationStatementInput_statementDateApply,
       status: AccountingPeriodInput_statusApply
@@ -38143,7 +46293,7 @@ export const inputObjects = {
       completedAt: ReconciliationStatementInput_completedAtApply,
       createdAt: TagGroupInput_createdAtApply,
       discrepancy: ReconciliationStatementInput_discrepancyApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       statementBalance: ReconciliationStatementInput_statementBalanceApply,
       statementDate: ReconciliationStatementInput_statementDateApply,
       status: AccountingPeriodInput_statusApply
@@ -38193,7 +46343,7 @@ export const inputObjects = {
       isAutoDetected: RecurringTransactionInput_isAutoDetectedApply,
       name: TagGroupInput_nameApply,
       nextExpectedDate: RecurringTransactionInput_nextExpectedDateApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       updatedAt: AccountMappingInput_updatedAtApply
     }
   },
@@ -38210,7 +46360,7 @@ export const inputObjects = {
       isAutoDetected: RecurringTransactionInput_isAutoDetectedApply,
       name: TagGroupInput_nameApply,
       nextExpectedDate: RecurringTransactionInput_nextExpectedDateApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       updatedAt: AccountMappingInput_updatedAtApply
     }
   },
@@ -38246,7 +46396,7 @@ export const inputObjects = {
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
       name: TagGroupInput_nameApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       targetAmount: SavingsGoalInput_targetAmountApply,
       targetDate: SavingsGoalInput_targetDateApply,
       updatedAt: AccountMappingInput_updatedAtApply
@@ -38259,7 +46409,7 @@ export const inputObjects = {
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
       name: TagGroupInput_nameApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       targetAmount: SavingsGoalInput_targetAmountApply,
       targetDate: SavingsGoalInput_targetDateApply,
       updatedAt: AccountMappingInput_updatedAtApply
@@ -38458,7 +46608,7 @@ export const inputObjects = {
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
       name: TagGroupInput_nameApply,
-      rowId: JournalLineTagInput_rowIdApply
+      rowId: JournalLineProjectInput_rowIdApply
     }
   },
   TagGroupPatch: {
@@ -38467,7 +46617,7 @@ export const inputObjects = {
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
       name: TagGroupInput_nameApply,
-      rowId: JournalLineTagInput_rowIdApply
+      rowId: JournalLineProjectInput_rowIdApply
     }
   },
   TagGroupToManyTagFilter: {
@@ -38484,7 +46634,7 @@ export const inputObjects = {
       createdAt: TagGroupInput_createdAtApply,
       isActive: TagInput_isActiveApply,
       name: TagGroupInput_nameApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       tagGroupId: TagInput_tagGroupIdApply
     }
   },
@@ -38495,7 +46645,7 @@ export const inputObjects = {
       createdAt: TagGroupInput_createdAtApply,
       isActive: TagInput_isActiveApply,
       name: TagGroupInput_nameApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       tagGroupId: TagInput_tagGroupIdApply
     }
   },
@@ -38540,7 +46690,7 @@ export const inputObjects = {
       filingFrequency: TaxJurisdictionInput_filingFrequencyApply,
       name: TagGroupInput_nameApply,
       rate: TaxJurisdictionInput_rateApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       taxPayableAccountId: TaxJurisdictionInput_taxPayableAccountIdApply
     }
   },
@@ -38553,7 +46703,7 @@ export const inputObjects = {
       filingFrequency: TaxJurisdictionInput_filingFrequencyApply,
       name: TagGroupInput_nameApply,
       rate: TaxJurisdictionInput_rateApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       taxPayableAccountId: TaxJurisdictionInput_taxPayableAccountIdApply
     }
   },
@@ -38588,6 +46738,30 @@ export const inputObjects = {
     }
   },
   UpdateAccountMappingInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateAmortizationEntryByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateAmortizationEntryInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateAttachmentByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateAttachmentInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
       patch: applyCreateFields
@@ -38677,6 +46851,18 @@ export const inputObjects = {
       patch: applyCreateFields
     }
   },
+  UpdateCategorizationRuleSplitByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateCategorizationRuleSplitInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
   UpdateConnectedAccountByIdInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
@@ -38720,6 +46906,18 @@ export const inputObjects = {
     }
   },
   UpdateCustomerInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateDocumentByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateDocumentInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
       patch: applyCreateFields
@@ -38869,6 +47067,18 @@ export const inputObjects = {
       patch: applyCreateFields
     }
   },
+  UpdateJournalLineProjectByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateJournalLineProjectInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
   UpdateJournalLineTagByIdInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
@@ -38876,6 +47086,18 @@ export const inputObjects = {
     }
   },
   UpdateJournalLineTagInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateLoanByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateLoanInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
       patch: applyCreateFields
@@ -38912,6 +47134,30 @@ export const inputObjects = {
     }
   },
   UpdatePayrollConnectionInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateProjectByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateProjectInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateRdExpenseByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateRdExpenseInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
       patch: applyCreateFields
@@ -39095,7 +47341,7 @@ export const inputObjects = {
       make: VehicleInput_makeApply,
       model: VehicleInput_modelApply,
       name: TagGroupInput_nameApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       year: VehicleInput_yearApply
     }
   },
@@ -39108,7 +47354,7 @@ export const inputObjects = {
       make: VehicleInput_makeApply,
       model: VehicleInput_modelApply,
       name: TagGroupInput_nameApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       year: VehicleInput_yearApply
     }
   },
@@ -39158,6 +47404,30 @@ export const inputObjects = {
       bookId(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("bookId", "book_id", spec_vendor.attributes.book_id, queryBuilder, value);
       },
+      documents($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: documentIdentifier,
+          alias: resource_documentPgResource.name,
+          localAttributes: registryConfig.pgRelations.vendor.documentsByTheirVendorId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.vendor.documentsByTheirVendorId.remoteAttributes
+        };
+        return $rel;
+      },
+      documentsExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: documentIdentifier,
+          alias: resource_documentPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.vendor.documentsByTheirVendorId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.vendor.documentsByTheirVendorId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
       not: AccountFilter_notApply,
       or: AccountFilter_orApply,
       rowId(queryBuilder, value) {
@@ -39176,7 +47446,7 @@ export const inputObjects = {
       email: CustomerInput_emailApply,
       is1099Eligible: VendorInput_is1099EligibleApply,
       name: TagGroupInput_nameApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       state: CustomerInput_stateApply,
       taxId: VendorInput_taxIdApply,
       taxIdType: VendorInput_taxIdTypeApply,
@@ -39195,7 +47465,7 @@ export const inputObjects = {
       email: CustomerInput_emailApply,
       is1099Eligible: VendorInput_is1099EligibleApply,
       name: TagGroupInput_nameApply,
-      rowId: JournalLineTagInput_rowIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
       state: CustomerInput_stateApply,
       taxId: VendorInput_taxIdApply,
       taxIdType: VendorInput_taxIdTypeApply,
@@ -39204,6 +47474,13 @@ export const inputObjects = {
     }
   },
   VendorToManyBillFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
+  VendorToManyDocumentFilter: {
     plans: {
       every: AccountToManyAccountFilter_everyApply,
       none: AccountToManyAccountFilter_noneApply,
@@ -39354,18 +47631,8 @@ export const enums = {
       ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply,
       STATUS_ASC: BillOrderBy_STATUS_ASCApply,
       STATUS_DESC: BillOrderBy_STATUS_DESCApply,
-      YEAR_ASC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "year",
-          direction: "ASC"
-        });
-      },
-      YEAR_DESC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "year",
-          direction: "DESC"
-        });
-      }
+      YEAR_ASC: AccountingPeriodOrderBy_YEAR_ASCApply,
+      YEAR_DESC: AccountingPeriodOrderBy_YEAR_DESCApply
     }
   },
   AccountMappingOrderBy: {
@@ -39444,6 +47711,96 @@ export const enums = {
       ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply
     }
   },
+  AmortizationEntryOrderBy: {
+    values: {
+      DUE_DATE_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "due_date",
+          direction: "ASC"
+        });
+      },
+      DUE_DATE_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "due_date",
+          direction: "DESC"
+        });
+      },
+      LOAN_ID_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "loan_id",
+          direction: "ASC"
+        });
+      },
+      LOAN_ID_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "loan_id",
+          direction: "DESC"
+        });
+      },
+      PRIMARY_KEY_ASC(queryBuilder) {
+        amortization_entryUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        amortization_entryUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply,
+      STATUS_ASC: BillOrderBy_STATUS_ASCApply,
+      STATUS_DESC: BillOrderBy_STATUS_DESCApply
+    }
+  },
+  AttachmentOrderBy: {
+    values: {
+      BOOK_ID_ASC: AccountOrderBy_BOOK_ID_ASCApply,
+      BOOK_ID_DESC: AccountOrderBy_BOOK_ID_DESCApply,
+      JOURNAL_ENTRY_ID_ASC: JournalLineOrderBy_JOURNAL_ENTRY_ID_ASCApply,
+      JOURNAL_ENTRY_ID_DESC: JournalLineOrderBy_JOURNAL_ENTRY_ID_DESCApply,
+      PRIMARY_KEY_ASC(queryBuilder) {
+        attachmentUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        attachmentUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply,
+      UPLOAD_STATUS_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "upload_status",
+          direction: "ASC"
+        });
+      },
+      UPLOAD_STATUS_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "upload_status",
+          direction: "DESC"
+        });
+      }
+    }
+  },
   BillLineOrderBy: {
     values: {
       BILL_ID_ASC: BillLineOrderBy_BILL_ID_ASCApply,
@@ -39498,18 +47855,8 @@ export const enums = {
       ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply,
       STATUS_ASC: BillOrderBy_STATUS_ASCApply,
       STATUS_DESC: BillOrderBy_STATUS_DESCApply,
-      VENDOR_ID_ASC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "vendor_id",
-          direction: "ASC"
-        });
-      },
-      VENDOR_ID_DESC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "vendor_id",
-          direction: "DESC"
-        });
-      }
+      VENDOR_ID_ASC: BillOrderBy_VENDOR_ID_ASCApply,
+      VENDOR_ID_DESC: BillOrderBy_VENDOR_ID_DESCApply
     }
   },
   BillPaymentOrderBy: {
@@ -39680,6 +48027,42 @@ export const enums = {
       ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply
     }
   },
+  CategorizationRuleSplitOrderBy: {
+    values: {
+      PRIMARY_KEY_ASC(queryBuilder) {
+        categorization_rule_splitUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        categorization_rule_splitUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply,
+      RULE_ID_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "rule_id",
+          direction: "ASC"
+        });
+      },
+      RULE_ID_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "rule_id",
+          direction: "DESC"
+        });
+      }
+    }
+  },
   ConnectedAccountOrderBy: {
     values: {
       BOOK_ID_ASC: AccountOrderBy_BOOK_ID_ASCApply,
@@ -39816,6 +48199,46 @@ export const enums = {
       },
       ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
       ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply
+    }
+  },
+  DocumentOrderBy: {
+    values: {
+      BOOK_ID_ASC: AccountOrderBy_BOOK_ID_ASCApply,
+      BOOK_ID_DESC: AccountOrderBy_BOOK_ID_DESCApply,
+      CATEGORY_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "category",
+          direction: "ASC"
+        });
+      },
+      CATEGORY_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "category",
+          direction: "DESC"
+        });
+      },
+      PRIMARY_KEY_ASC(queryBuilder) {
+        documentUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        documentUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply,
+      VENDOR_ID_ASC: BillOrderBy_VENDOR_ID_ASCApply,
+      VENDOR_ID_DESC: BillOrderBy_VENDOR_ID_DESCApply
     }
   },
   EstimateLineOrderBy: {
@@ -40154,18 +48577,8 @@ export const enums = {
     values: {
       ACCOUNT_ID_ASC: BudgetOrderBy_ACCOUNT_ID_ASCApply,
       ACCOUNT_ID_DESC: BudgetOrderBy_ACCOUNT_ID_DESCApply,
-      JOURNAL_ENTRY_ID_ASC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "journal_entry_id",
-          direction: "ASC"
-        });
-      },
-      JOURNAL_ENTRY_ID_DESC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "journal_entry_id",
-          direction: "DESC"
-        });
-      },
+      JOURNAL_ENTRY_ID_ASC: JournalLineOrderBy_JOURNAL_ENTRY_ID_ASCApply,
+      JOURNAL_ENTRY_ID_DESC: JournalLineOrderBy_JOURNAL_ENTRY_ID_DESCApply,
       PRIMARY_KEY_ASC(queryBuilder) {
         journal_lineUniques[0].attributes.forEach(attributeName => {
           queryBuilder.orderBy({
@@ -40188,20 +48601,38 @@ export const enums = {
       ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply
     }
   },
+  JournalLineProjectOrderBy: {
+    values: {
+      JOURNAL_LINE_ID_ASC: JournalLineProjectOrderBy_JOURNAL_LINE_ID_ASCApply,
+      JOURNAL_LINE_ID_DESC: JournalLineProjectOrderBy_JOURNAL_LINE_ID_DESCApply,
+      PRIMARY_KEY_ASC(queryBuilder) {
+        journal_line_projectUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        journal_line_projectUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PROJECT_ID_ASC: JournalLineProjectOrderBy_PROJECT_ID_ASCApply,
+      PROJECT_ID_DESC: JournalLineProjectOrderBy_PROJECT_ID_DESCApply,
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply
+    }
+  },
   JournalLineTagOrderBy: {
     values: {
-      JOURNAL_LINE_ID_ASC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "journal_line_id",
-          direction: "ASC"
-        });
-      },
-      JOURNAL_LINE_ID_DESC(queryBuilder) {
-        queryBuilder.orderBy({
-          attribute: "journal_line_id",
-          direction: "DESC"
-        });
-      },
+      JOURNAL_LINE_ID_ASC: JournalLineProjectOrderBy_JOURNAL_LINE_ID_ASCApply,
+      JOURNAL_LINE_ID_DESC: JournalLineProjectOrderBy_JOURNAL_LINE_ID_DESCApply,
       PRIMARY_KEY_ASC(queryBuilder) {
         journal_line_tagUniques[0].attributes.forEach(attributeName => {
           queryBuilder.orderBy({
@@ -40234,6 +48665,34 @@ export const enums = {
           direction: "DESC"
         });
       }
+    }
+  },
+  LoanOrderBy: {
+    values: {
+      BOOK_ID_ASC: AccountOrderBy_BOOK_ID_ASCApply,
+      BOOK_ID_DESC: AccountOrderBy_BOOK_ID_DESCApply,
+      PRIMARY_KEY_ASC(queryBuilder) {
+        loanUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        loanUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply,
+      STATUS_ASC: BillOrderBy_STATUS_ASCApply,
+      STATUS_DESC: BillOrderBy_STATUS_DESCApply
     }
   },
   MileageLogOrderBy: {
@@ -40330,6 +48789,64 @@ export const enums = {
       ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply,
       STATUS_ASC: BillOrderBy_STATUS_ASCApply,
       STATUS_DESC: BillOrderBy_STATUS_DESCApply
+    }
+  },
+  ProjectOrderBy: {
+    values: {
+      BOOK_ID_ASC: AccountOrderBy_BOOK_ID_ASCApply,
+      BOOK_ID_DESC: AccountOrderBy_BOOK_ID_DESCApply,
+      PRIMARY_KEY_ASC(queryBuilder) {
+        projectUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        projectUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply,
+      STATUS_ASC: BillOrderBy_STATUS_ASCApply,
+      STATUS_DESC: BillOrderBy_STATUS_DESCApply
+    }
+  },
+  RdExpenseOrderBy: {
+    values: {
+      BOOK_ID_ASC: AccountOrderBy_BOOK_ID_ASCApply,
+      BOOK_ID_DESC: AccountOrderBy_BOOK_ID_DESCApply,
+      PRIMARY_KEY_ASC(queryBuilder) {
+        rd_expenseUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        rd_expenseUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PROJECT_ID_ASC: JournalLineProjectOrderBy_PROJECT_ID_ASCApply,
+      PROJECT_ID_DESC: JournalLineProjectOrderBy_PROJECT_ID_DESCApply,
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply,
+      YEAR_ASC: AccountingPeriodOrderBy_YEAR_ASCApply,
+      YEAR_DESC: AccountingPeriodOrderBy_YEAR_DESCApply
     }
   },
   ReconciliationQueueOrderBy: {
