@@ -26,9 +26,11 @@ import { cryptoRoutes, lotRoutes } from "lib/crypto";
 import { dbPool, pgPool } from "lib/db/db";
 import {
   amortizationEntryTable,
+  bookTable,
   loanTable,
   netWorthSnapshotTable,
 } from "lib/db/schema";
+import { decryptToken } from "lib/encryption/tokenEncryption";
 import estimateRoutes from "lib/estimates/estimateRoutes";
 import createGraphqlContext from "lib/graphql/createGraphqlContext";
 import { armorPlugin, authenticationPlugin } from "lib/graphql/plugins";
@@ -104,6 +106,7 @@ import {
 import {
   calculateDelawareFranchiseTax,
   generate1099Nec,
+  generate1099NecIrisCsv,
   generateForm8949,
   generateQuarterlyEstimates,
   generateRdCredit,
@@ -670,6 +673,55 @@ const app = new Elysia()
       );
     }
     return generate1099Nec({ bookId, year: Number.parseInt(year, 10) });
+  })
+  .get("/api/tax/1099-nec/iris-csv", async ({ query, set }) => {
+    const { bookId, year } = query;
+    if (!bookId || !year) {
+      return new Response(
+        JSON.stringify({ error: "bookId and year are required" }),
+        { status: 400, headers: { "Content-Type": "application/json" } },
+      );
+    }
+
+    const [book] = await dbPool
+      .select()
+      .from(bookTable)
+      .where(eq(bookTable.id, bookId));
+    if (!book) {
+      return new Response(JSON.stringify({ error: "Book not found" }), {
+        status: 404,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    const report = await generate1099Nec({
+      bookId,
+      year: Number.parseInt(year, 10),
+    });
+
+    let ein: string | null = null;
+    if (book.ein) {
+      try {
+        ein = decryptToken(book.ein);
+      } catch {
+        ein = null;
+      }
+    }
+
+    const csv = generate1099NecIrisCsv(report, {
+      ein,
+      name: book.legalName ?? book.name,
+      address: book.address,
+      city: book.city,
+      state: book.state,
+      zip: book.zip,
+      phone: book.phone,
+    });
+
+    set.headers["Content-Type"] = "text/csv";
+    set.headers["Content-Disposition"] =
+      `attachment; filename="1099-nec-iris-${year}.csv"`;
+    return csv;
   })
   .get("/api/tax/schedule-c", async ({ query }) => {
     const { bookId, year } = query;

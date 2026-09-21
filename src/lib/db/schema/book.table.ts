@@ -25,6 +25,16 @@ export const bookTable = pgTable(
     // "myfi" (native, standalone) or "mantle" (Mantle owns them; MyFi records
     // the accounting from Mantle CloudEvents). Guarantees a single SSOT per book
     invoiceSource: text("invoice_source").notNull().default("myfi"),
+    // Filer (payer) details for information-return e-filing (1099s via IRS IRIS).
+    // legalName falls back to name when absent; ein is encrypted at rest, like
+    // vendor tax ids
+    legalName: text("legal_name"),
+    ein: text(),
+    address: text(),
+    city: text(),
+    state: text(),
+    zip: text(),
+    phone: text(),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),
   },

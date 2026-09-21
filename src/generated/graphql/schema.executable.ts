@@ -1531,126 +1531,6 @@ const spec_inventoryTransaction = {
   executor: executor
 };
 const inventoryTransactionCodec = recordCodec(spec_inventoryTransaction);
-const bookIdentifier = sql.identifier("public", "book");
-const spec_book = {
-  name: "book",
-  identifier: bookIdentifier,
-  attributes: {
-    __proto__: null,
-    id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    organization_id: {
-      codec: TYPES.text,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    name: {
-      codec: TYPES.text,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    type: {
-      codec: TYPES.text,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    currency: {
-      codec: TYPES.text,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    fiscal_year_start_month: {
-      codec: TYPES.int,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    created_at: {
-      codec: TYPES.timestamptz,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    updated_at: {
-      codec: TYPES.timestamptz,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    invoice_source: {
-      codec: TYPES.text,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    }
-  },
-  extensions: {
-    oid: "16563",
-    isTableLike: true,
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "book"
-    }
-  },
-  executor: executor
-};
-const bookCodec = recordCodec(spec_book);
 const payrollConnectionIdentifier = sql.identifier("public", "payroll_connection");
 const spec_payrollConnection = {
   name: "payrollConnection",
@@ -5629,6 +5509,196 @@ const spec_recurringTransaction = {
   executor: executor
 };
 const recurringTransactionCodec = recordCodec(spec_recurringTransaction);
+const bookIdentifier = sql.identifier("public", "book");
+const spec_book = {
+  name: "book",
+  identifier: bookIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    organization_id: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    name: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    type: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    currency: {
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    fiscal_year_start_month: {
+      codec: TYPES.int,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    invoice_source: {
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    legal_name: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    ein: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    address: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    city: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    state: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    zip: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    phone: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "16563",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "book"
+    }
+  },
+  executor: executor
+};
+const bookCodec = recordCodec(spec_book);
 const categorizationRuleIdentifier = sql.identifier("public", "categorization_rule");
 const spec_categorizationRule = {
   name: "categorizationRule",
@@ -6548,29 +6618,6 @@ const inventory_transaction_resourceOptionsConfig = {
   },
   uniques: inventory_transactionUniques
 };
-const bookUniques = [{
-  attributes: ["id"],
-  isPrimary: true
-}];
-const book_resourceOptionsConfig = {
-  executor: executor,
-  name: "book",
-  identifier: "main.public.book",
-  from: bookIdentifier,
-  codec: bookCodec,
-  extensions: {
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "book"
-    },
-    canSelect: true,
-    canInsert: true,
-    canUpdate: true,
-    canDelete: true
-  },
-  uniques: bookUniques
-};
 const payroll_connectionUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -7192,6 +7239,29 @@ const recurring_transaction_resourceOptionsConfig = {
   },
   uniques: recurring_transactionUniques
 };
+const bookUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const book_resourceOptionsConfig = {
+  executor: executor,
+  name: "book",
+  identifier: "main.public.book",
+  from: bookIdentifier,
+  codec: bookCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "book"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: bookUniques
+};
 const categorization_ruleUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -7292,7 +7362,6 @@ const registryConfig = {
     accountingPeriod: accountingPeriodCodec,
     attachment: attachmentCodec,
     inventoryTransaction: inventoryTransactionCodec,
-    book: bookCodec,
     payrollConnection: payrollConnectionCodec,
     billLine: billLineCodec,
     estimateLine: estimateLineCodec,
@@ -7323,6 +7392,7 @@ const registryConfig = {
     invoice: invoiceCodec,
     recurringTransaction: recurringTransactionCodec,
     recurringFrequency: recurringFrequencyCodec,
+    book: bookCodec,
     categorizationRule: categorizationRuleCodec,
     loan: loanCodec,
     account: accountCodec,
@@ -7365,7 +7435,6 @@ const registryConfig = {
     accounting_period: accounting_period_resourceOptionsConfig,
     attachment: attachment_resourceOptionsConfig,
     inventory_transaction: inventory_transaction_resourceOptionsConfig,
-    book: book_resourceOptionsConfig,
     payroll_connection: payroll_connection_resourceOptionsConfig,
     bill_line: bill_line_resourceOptionsConfig,
     estimate_line: estimate_line_resourceOptionsConfig,
@@ -7393,6 +7462,7 @@ const registryConfig = {
     fixed_asset: fixed_asset_resourceOptionsConfig,
     invoice: invoice_resourceOptionsConfig,
     recurring_transaction: recurring_transaction_resourceOptionsConfig,
+    book: book_resourceOptionsConfig,
     categorization_rule: categorization_rule_resourceOptionsConfig,
     loan: loan_resourceOptionsConfig,
     account: account_resourceOptionsConfig
@@ -9206,7 +9276,6 @@ const resource_net_worth_snapshotPgResource = registry.pgResources["net_worth_sn
 const resource_accounting_periodPgResource = registry.pgResources["accounting_period"];
 const resource_attachmentPgResource = registry.pgResources["attachment"];
 const resource_inventory_transactionPgResource = registry.pgResources["inventory_transaction"];
-const resource_bookPgResource = registry.pgResources["book"];
 const resource_payroll_connectionPgResource = registry.pgResources["payroll_connection"];
 const resource_bill_linePgResource = registry.pgResources["bill_line"];
 const resource_estimate_linePgResource = registry.pgResources["estimate_line"];
@@ -9234,6 +9303,7 @@ const resource_billPgResource = registry.pgResources["bill"];
 const resource_fixed_assetPgResource = registry.pgResources["fixed_asset"];
 const resource_invoicePgResource = registry.pgResources["invoice"];
 const resource_recurring_transactionPgResource = registry.pgResources["recurring_transaction"];
+const resource_bookPgResource = registry.pgResources["book"];
 const resource_categorization_rulePgResource = registry.pgResources["categorization_rule"];
 const resource_loanPgResource = registry.pgResources["loan"];
 const resource_accountPgResource = registry.pgResources["account"];
@@ -9456,17 +9526,6 @@ const nodeIdHandler_InventoryTransaction = makeTableNodeIdHandler({
 const nodeFetcher_InventoryTransaction = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_InventoryTransaction));
   return nodeIdHandler_InventoryTransaction.get(nodeIdHandler_InventoryTransaction.getSpec($decoded));
-};
-const nodeIdHandler_Book = makeTableNodeIdHandler({
-  typeName: "Book",
-  identifier: "Book",
-  nodeIdCodec: base64JSONNodeIdCodec,
-  resource: resource_bookPgResource,
-  pk: bookUniques[0].attributes
-});
-const nodeFetcher_Book = $nodeId => {
-  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Book));
-  return nodeIdHandler_Book.get(nodeIdHandler_Book.getSpec($decoded));
 };
 const nodeIdHandler_PayrollConnection = makeTableNodeIdHandler({
   typeName: "PayrollConnection",
@@ -9765,6 +9824,17 @@ const nodeFetcher_RecurringTransaction = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_RecurringTransaction));
   return nodeIdHandler_RecurringTransaction.get(nodeIdHandler_RecurringTransaction.getSpec($decoded));
 };
+const nodeIdHandler_Book = makeTableNodeIdHandler({
+  typeName: "Book",
+  identifier: "Book",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_bookPgResource,
+  pk: bookUniques[0].attributes
+});
+const nodeFetcher_Book = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Book));
+  return nodeIdHandler_Book.get(nodeIdHandler_Book.getSpec($decoded));
+};
 const nodeIdHandler_CategorizationRule = makeTableNodeIdHandler({
   typeName: "CategorizationRule",
   identifier: "CategorizationRule",
@@ -9866,7 +9936,6 @@ const nodeIdHandlerByTypeName = {
   AccountingPeriod: nodeIdHandler_AccountingPeriod,
   Attachment: nodeIdHandler_Attachment,
   InventoryTransaction: nodeIdHandler_InventoryTransaction,
-  Book: nodeIdHandler_Book,
   PayrollConnection: nodeIdHandler_PayrollConnection,
   BillLine: nodeIdHandler_BillLine,
   EstimateLine: nodeIdHandler_EstimateLine,
@@ -9894,6 +9963,7 @@ const nodeIdHandlerByTypeName = {
   FixedAsset: nodeIdHandler_FixedAsset,
   Invoice: nodeIdHandler_Invoice,
   RecurringTransaction: nodeIdHandler_RecurringTransaction,
+  Book: nodeIdHandler_Book,
   CategorizationRule: nodeIdHandler_CategorizationRule,
   Loan: nodeIdHandler_Loan,
   Account: nodeIdHandler_Account
@@ -10612,10 +10682,6 @@ const specFromArgs_InventoryTransaction = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_InventoryTransaction, $nodeId);
 };
-const specFromArgs_Book = args => {
-  const $nodeId = args.getRaw(["input", "id"]);
-  return specFromNodeId(nodeIdHandler_Book, $nodeId);
-};
 const specFromArgs_PayrollConnection = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_PayrollConnection, $nodeId);
@@ -10723,6 +10789,10 @@ const specFromArgs_Invoice = args => {
 const specFromArgs_RecurringTransaction = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_RecurringTransaction, $nodeId);
+};
+const specFromArgs_Book = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_Book, $nodeId);
 };
 const specFromArgs_CategorizationRule = args => {
   const $nodeId = args.getRaw(["input", "id"]);
@@ -10958,19 +11028,6 @@ function InventoryTransactionInput_unitCostApply(obj, val, info) {
 }
 function InventoryTransactionInput_noteApply(obj, val, info) {
   obj.set("note", bakedInputRuntime(info.schema, info.field.type, val));
-}
-const CreateBookPayload_bookEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_bookPgResource, bookUniques[0].attributes, $mutation, fieldArgs);
-function BookInput_organizationIdApply(obj, val, info) {
-  obj.set("organization_id", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function BookInput_currencyApply(obj, val, info) {
-  obj.set("currency", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function BookInput_fiscalYearStartMonthApply(obj, val, info) {
-  obj.set("fiscal_year_start_month", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function BookInput_invoiceSourceApply(obj, val, info) {
-  obj.set("invoice_source", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreatePayrollConnectionPayload_payrollConnectionEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_payroll_connectionPgResource, payroll_connectionUniques[0].attributes, $mutation, fieldArgs);
 function PayrollConnectionInput_providerApply(obj, val, info) {
@@ -11323,6 +11380,9 @@ function BillInput_taxAmountApply(obj, val, info) {
 function BillInput_amountPaidApply(obj, val, info) {
   obj.set("amount_paid", bakedInputRuntime(info.schema, info.field.type, val));
 }
+function BillInput_currencyApply(obj, val, info) {
+  obj.set("currency", bakedInputRuntime(info.schema, info.field.type, val));
+}
 const CreateFixedAssetPayload_fixedAssetEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_fixed_assetPgResource, fixed_assetUniques[0].attributes, $mutation, fieldArgs);
 function FixedAssetInput_depreciationExpenseAccountIdApply(obj, val, info) {
   obj.set("depreciation_expense_account_id", bakedInputRuntime(info.schema, info.field.type, val));
@@ -11367,6 +11427,22 @@ function RecurringTransactionInput_isAutoDetectedApply(obj, val, info) {
 }
 function RecurringTransactionInput_nextExpectedDateApply(obj, val, info) {
   obj.set("next_expected_date", bakedInputRuntime(info.schema, info.field.type, val));
+}
+const CreateBookPayload_bookEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_bookPgResource, bookUniques[0].attributes, $mutation, fieldArgs);
+function BookInput_organizationIdApply(obj, val, info) {
+  obj.set("organization_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function BookInput_fiscalYearStartMonthApply(obj, val, info) {
+  obj.set("fiscal_year_start_month", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function BookInput_invoiceSourceApply(obj, val, info) {
+  obj.set("invoice_source", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function BookInput_legalNameApply(obj, val, info) {
+  obj.set("legal_name", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function BookInput_einApply(obj, val, info) {
+  obj.set("ein", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateCategorizationRulePayload_categorizationRuleEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_categorization_rulePgResource, categorization_ruleUniques[0].attributes, $mutation, fieldArgs);
 function CategorizationRuleInput_matchFieldApply(obj, val, info) {
@@ -11486,9 +11562,6 @@ type Query implements Node {
   """Get a single \`InventoryTransaction\`."""
   inventoryTransaction(rowId: UUID!): InventoryTransaction
 
-  """Get a single \`Book\`."""
-  book(rowId: UUID!): Book
-
   """Get a single \`PayrollConnection\`."""
   payrollConnection(rowId: UUID!): PayrollConnection
 
@@ -11569,6 +11642,9 @@ type Query implements Node {
 
   """Get a single \`RecurringTransaction\`."""
   recurringTransaction(rowId: UUID!): RecurringTransaction
+
+  """Get a single \`Book\`."""
+  book(rowId: UUID!): Book
 
   """Get a single \`CategorizationRule\`."""
   categorizationRule(rowId: UUID!): CategorizationRule
@@ -11700,12 +11776,6 @@ type Query implements Node {
     """
     id: ID!
   ): InventoryTransaction
-
-  """Reads a single \`Book\` using its globally unique \`ID\`."""
-  bookById(
-    """The globally unique \`ID\` to be used in selecting a single \`Book\`."""
-    id: ID!
-  ): Book
 
   """Reads a single \`PayrollConnection\` using its globally unique \`ID\`."""
   payrollConnectionById(
@@ -11904,6 +11974,12 @@ type Query implements Node {
     """
     id: ID!
   ): RecurringTransaction
+
+  """Reads a single \`Book\` using its globally unique \`ID\`."""
+  bookById(
+    """The globally unique \`ID\` to be used in selecting a single \`Book\`."""
+    id: ID!
+  ): Book
 
   """Reads a single \`CategorizationRule\` using its globally unique \`ID\`."""
   categorizationRuleById(
@@ -12468,40 +12544,6 @@ type Query implements Node {
     """The method to use when ordering \`InventoryTransaction\`."""
     orderBy: [InventoryTransactionOrderBy!] = [PRIMARY_KEY_ASC]
   ): InventoryTransactionConnection
-
-  """Reads and enables pagination through a set of \`Book\`."""
-  books(
-    """Only read the first \`n\` values of the set."""
-    first: Int
-
-    """Only read the last \`n\` values of the set."""
-    last: Int
-
-    """
-    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
-    based pagination. May not be used with \`last\`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: BookCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: BookFilter
-
-    """The method to use when ordering \`Book\`."""
-    orderBy: [BookOrderBy!] = [PRIMARY_KEY_ASC]
-  ): BookConnection
 
   """Reads and enables pagination through a set of \`PayrollConnection\`."""
   payrollConnections(
@@ -13425,6 +13467,40 @@ type Query implements Node {
     orderBy: [RecurringTransactionOrderBy!] = [PRIMARY_KEY_ASC]
   ): RecurringTransactionConnection
 
+  """Reads and enables pagination through a set of \`Book\`."""
+  books(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: BookCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: BookFilter
+
+    """The method to use when ordering \`Book\`."""
+    orderBy: [BookOrderBy!] = [PRIMARY_KEY_ASC]
+  ): BookConnection
+
   """Reads and enables pagination through a set of \`CategorizationRule\`."""
   categorizationRules(
     """Only read the first \`n\` values of the set."""
@@ -13875,6 +13951,13 @@ type Book implements Node {
   createdAt: Datetime
   updatedAt: Datetime
   invoiceSource: String!
+  legalName: String
+  ein: String
+  address: String
+  city: String
+  state: String
+  zip: String
+  phone: String
 
   """Reads and enables pagination through a set of \`Account\`."""
   accounts(
@@ -22846,14 +22929,6 @@ type Mutation {
     input: CreateInventoryTransactionInput!
   ): CreateInventoryTransactionPayload
 
-  """Creates a single \`Book\`."""
-  createBook(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateBookInput!
-  ): CreateBookPayload
-
   """Creates a single \`PayrollConnection\`."""
   createPayrollConnection(
     """
@@ -23069,6 +23144,14 @@ type Mutation {
     """
     input: CreateRecurringTransactionInput!
   ): CreateRecurringTransactionPayload
+
+  """Creates a single \`Book\`."""
+  createBook(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateBookInput!
+  ): CreateBookPayload
 
   """Creates a single \`CategorizationRule\`."""
   createCategorizationRule(
@@ -23377,22 +23460,6 @@ type Mutation {
     """
     input: UpdateInventoryTransactionInput!
   ): UpdateInventoryTransactionPayload
-
-  """Updates a single \`Book\` using its globally unique id and a patch."""
-  updateBookById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateBookByIdInput!
-  ): UpdateBookPayload
-
-  """Updates a single \`Book\` using a unique key and a patch."""
-  updateBook(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateBookInput!
-  ): UpdateBookPayload
 
   """
   Updates a single \`PayrollConnection\` using its globally unique id and a patch.
@@ -23864,6 +23931,22 @@ type Mutation {
     input: UpdateRecurringTransactionInput!
   ): UpdateRecurringTransactionPayload
 
+  """Updates a single \`Book\` using its globally unique id and a patch."""
+  updateBookById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateBookByIdInput!
+  ): UpdateBookPayload
+
+  """Updates a single \`Book\` using a unique key and a patch."""
+  updateBook(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateBookInput!
+  ): UpdateBookPayload
+
   """
   Updates a single \`CategorizationRule\` using its globally unique id and a patch.
   """
@@ -24169,22 +24252,6 @@ type Mutation {
     """
     input: DeleteInventoryTransactionInput!
   ): DeleteInventoryTransactionPayload
-
-  """Deletes a single \`Book\` using its globally unique id."""
-  deleteBookById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteBookByIdInput!
-  ): DeleteBookPayload
-
-  """Deletes a single \`Book\` using a unique key."""
-  deleteBook(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteBookInput!
-  ): DeleteBookPayload
 
   """Deletes a single \`PayrollConnection\` using its globally unique id."""
   deletePayrollConnectionById(
@@ -24621,6 +24688,22 @@ type Mutation {
     """
     input: DeleteRecurringTransactionInput!
   ): DeleteRecurringTransactionPayload
+
+  """Deletes a single \`Book\` using its globally unique id."""
+  deleteBookById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteBookByIdInput!
+  ): DeleteBookPayload
+
+  """Deletes a single \`Book\` using a unique key."""
+  deleteBook(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteBookInput!
+  ): DeleteBookPayload
 
   """Deletes a single \`CategorizationRule\` using its globally unique id."""
   deleteCategorizationRuleById(
@@ -25402,54 +25485,6 @@ input InventoryTransactionInput {
   note: String
   journalEntryId: UUID
   createdAt: Datetime
-}
-
-"""The output of our create \`Book\` mutation."""
-type CreateBookPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`Book\` that was created by this mutation."""
-  book: Book
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`Book\`. May be used by Relay 1."""
-  bookEdge(
-    """The method to use when ordering \`Book\`."""
-    orderBy: [BookOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): BookEdge
-}
-
-"""All input for the create \`Book\` mutation."""
-input CreateBookInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The \`Book\` to be created by this mutation."""
-  book: BookInput!
-}
-
-"""An input for mutations affecting \`Book\`"""
-input BookInput {
-  rowId: UUID
-  organizationId: String!
-  name: String!
-  type: String!
-  currency: String
-  fiscalYearStartMonth: Int
-  createdAt: Datetime
-  updatedAt: Datetime
-  invoiceSource: String
 }
 
 """The output of our create \`PayrollConnection\` mutation."""
@@ -26825,6 +26860,61 @@ input RecurringTransactionInput {
   updatedAt: Datetime
 }
 
+"""The output of our create \`Book\` mutation."""
+type CreateBookPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Book\` that was created by this mutation."""
+  book: Book
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Book\`. May be used by Relay 1."""
+  bookEdge(
+    """The method to use when ordering \`Book\`."""
+    orderBy: [BookOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BookEdge
+}
+
+"""All input for the create \`Book\` mutation."""
+input CreateBookInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`Book\` to be created by this mutation."""
+  book: BookInput!
+}
+
+"""An input for mutations affecting \`Book\`"""
+input BookInput {
+  rowId: UUID
+  organizationId: String!
+  name: String!
+  type: String!
+  currency: String
+  fiscalYearStartMonth: Int
+  createdAt: Datetime
+  updatedAt: Datetime
+  invoiceSource: String
+  legalName: String
+  ein: String
+  address: String
+  city: String
+  state: String
+  zip: String
+  phone: String
+}
+
 """The output of our create \`CategorizationRule\` mutation."""
 type CreateCategorizationRulePayload {
   """
@@ -28100,76 +28190,6 @@ input UpdateInventoryTransactionInput {
   An object where the defined keys will be set on the \`InventoryTransaction\` being updated.
   """
   patch: InventoryTransactionPatch!
-}
-
-"""The output of our update \`Book\` mutation."""
-type UpdateBookPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`Book\` that was updated by this mutation."""
-  book: Book
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`Book\`. May be used by Relay 1."""
-  bookEdge(
-    """The method to use when ordering \`Book\`."""
-    orderBy: [BookOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): BookEdge
-}
-
-"""All input for the \`updateBookById\` mutation."""
-input UpdateBookByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`Book\` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the \`Book\` being updated.
-  """
-  patch: BookPatch!
-}
-
-"""Represents an update to a \`Book\`. Fields that are set will be updated."""
-input BookPatch {
-  rowId: UUID
-  organizationId: String
-  name: String
-  type: String
-  currency: String
-  fiscalYearStartMonth: Int
-  createdAt: Datetime
-  updatedAt: Datetime
-  invoiceSource: String
-}
-
-"""All input for the \`updateBook\` mutation."""
-input UpdateBookInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the \`Book\` being updated.
-  """
-  patch: BookPatch!
 }
 
 """The output of our update \`PayrollConnection\` mutation."""
@@ -30191,6 +30211,83 @@ input UpdateRecurringTransactionInput {
   patch: RecurringTransactionPatch!
 }
 
+"""The output of our update \`Book\` mutation."""
+type UpdateBookPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Book\` that was updated by this mutation."""
+  book: Book
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Book\`. May be used by Relay 1."""
+  bookEdge(
+    """The method to use when ordering \`Book\`."""
+    orderBy: [BookOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BookEdge
+}
+
+"""All input for the \`updateBookById\` mutation."""
+input UpdateBookByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`Book\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`Book\` being updated.
+  """
+  patch: BookPatch!
+}
+
+"""Represents an update to a \`Book\`. Fields that are set will be updated."""
+input BookPatch {
+  rowId: UUID
+  organizationId: String
+  name: String
+  type: String
+  currency: String
+  fiscalYearStartMonth: Int
+  createdAt: Datetime
+  updatedAt: Datetime
+  invoiceSource: String
+  legalName: String
+  ein: String
+  address: String
+  city: String
+  state: String
+  zip: String
+  phone: String
+}
+
+"""All input for the \`updateBook\` mutation."""
+input UpdateBookInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`Book\` being updated.
+  """
+  patch: BookPatch!
+}
+
 """The output of our update \`CategorizationRule\` mutation."""
 type UpdateCategorizationRulePayload {
   """
@@ -31183,54 +31280,6 @@ input DeleteInventoryTransactionByIdInput {
 
 """All input for the \`deleteInventoryTransaction\` mutation."""
 input DeleteInventoryTransactionInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
-"""The output of our delete \`Book\` mutation."""
-type DeleteBookPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`Book\` that was deleted by this mutation."""
-  book: Book
-  deletedBookId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`Book\`. May be used by Relay 1."""
-  bookEdge(
-    """The method to use when ordering \`Book\`."""
-    orderBy: [BookOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): BookEdge
-}
-
-"""All input for the \`deleteBookById\` mutation."""
-input DeleteBookByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`Book\` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the \`deleteBook\` mutation."""
-input DeleteBookInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -32527,6 +32576,54 @@ input DeleteRecurringTransactionByIdInput {
 
 """All input for the \`deleteRecurringTransaction\` mutation."""
 input DeleteRecurringTransactionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`Book\` mutation."""
+type DeleteBookPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Book\` that was deleted by this mutation."""
+  book: Book
+  deletedBookId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Book\`. May be used by Relay 1."""
+  bookEdge(
+    """The method to use when ordering \`Book\`."""
+    orderBy: [BookOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BookEdge
+}
+
+"""All input for the \`deleteBookById\` mutation."""
+input DeleteBookByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`Book\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteBook\` mutation."""
+input DeleteBookInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -37719,6 +37816,9 @@ export const objects = {
           orderBy: applyOrderByArgToConnection
         }
       },
+      legalName($record) {
+        return $record.get("legal_name");
+      },
       loans: {
         plan($record) {
           const $records = resource_loanPgResource.find({
@@ -41819,7 +41919,7 @@ export const inputObjects = {
       billDate: BillInput_billDateApply,
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
-      currency: BookInput_currencyApply,
+      currency: BillInput_currencyApply,
       dueDate: AmortizationEntryInput_dueDateApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       memo: JournalLineInput_memoApply,
@@ -41899,7 +41999,7 @@ export const inputObjects = {
       billDate: BillInput_billDateApply,
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
-      currency: BookInput_currencyApply,
+      currency: BillInput_currencyApply,
       dueDate: AmortizationEntryInput_dueDateApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       memo: JournalLineInput_memoApply,
@@ -42887,29 +42987,43 @@ export const inputObjects = {
   BookInput: {
     baked: createObjectAndApplyChildren,
     plans: {
+      address: CustomerInput_addressApply,
+      city: CustomerInput_cityApply,
       createdAt: TagGroupInput_createdAtApply,
-      currency: BookInput_currencyApply,
+      currency: BillInput_currencyApply,
+      ein: BookInput_einApply,
       fiscalYearStartMonth: BookInput_fiscalYearStartMonthApply,
       invoiceSource: BookInput_invoiceSourceApply,
+      legalName: BookInput_legalNameApply,
       name: TagGroupInput_nameApply,
       organizationId: BookInput_organizationIdApply,
+      phone: CustomerInput_phoneApply,
       rowId: JournalLineProjectInput_rowIdApply,
+      state: CustomerInput_stateApply,
       type: InventoryTransactionInput_typeApply,
-      updatedAt: AccountMappingInput_updatedAtApply
+      updatedAt: AccountMappingInput_updatedAtApply,
+      zip: CustomerInput_zipApply
     }
   },
   BookPatch: {
     baked: createObjectAndApplyChildren,
     plans: {
+      address: CustomerInput_addressApply,
+      city: CustomerInput_cityApply,
       createdAt: TagGroupInput_createdAtApply,
-      currency: BookInput_currencyApply,
+      currency: BillInput_currencyApply,
+      ein: BookInput_einApply,
       fiscalYearStartMonth: BookInput_fiscalYearStartMonthApply,
       invoiceSource: BookInput_invoiceSourceApply,
+      legalName: BookInput_legalNameApply,
       name: TagGroupInput_nameApply,
       organizationId: BookInput_organizationIdApply,
+      phone: CustomerInput_phoneApply,
       rowId: JournalLineProjectInput_rowIdApply,
+      state: CustomerInput_stateApply,
       type: InventoryTransactionInput_typeApply,
-      updatedAt: AccountMappingInput_updatedAtApply
+      updatedAt: AccountMappingInput_updatedAtApply,
+      zip: CustomerInput_zipApply
     }
   },
   BookToManyAccountFilter: {
@@ -45150,7 +45264,7 @@ export const inputObjects = {
       amountPaid: BillInput_amountPaidApply,
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
-      currency: BookInput_currencyApply,
+      currency: BillInput_currencyApply,
       customerId: EstimateInput_customerIdApply,
       dueDate: AmortizationEntryInput_dueDateApply,
       issueDate: InvoiceInput_issueDateApply,
@@ -45239,7 +45353,7 @@ export const inputObjects = {
       amountPaid: BillInput_amountPaidApply,
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
-      currency: BookInput_currencyApply,
+      currency: BillInput_currencyApply,
       customerId: EstimateInput_customerIdApply,
       dueDate: AmortizationEntryInput_dueDateApply,
       issueDate: InvoiceInput_issueDateApply,

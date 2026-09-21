@@ -10,6 +10,7 @@ import {
   personalTemplate,
   soleProprietorTemplate,
 } from "lib/db/templates";
+import { decryptToken, encryptToken } from "lib/encryption/tokenEncryption";
 
 import type { InsertAccount } from "lib/db/schema";
 import type { AccountTemplate } from "lib/db/templates";
@@ -68,6 +69,26 @@ const TEMPLATE_MAP: Record<string, AccountTemplate[]> = {
   llc: llcTemplate,
 };
 
+/** Mask a stored (encrypted) filer EIN to its last four digits for display. */
+const maskEin = (encrypted: string | null): string | null => {
+  if (!encrypted) return null;
+  try {
+    const last4 = decryptToken(encrypted).replace(/\D/g, "").slice(-4);
+    return last4 ? `**-***${last4}` : null;
+  } catch {
+    return null;
+  }
+};
+
+/**
+ * Shape a book row for the API: never return the encrypted EIN, only a masked
+ * hint so the owner can confirm what is on file.
+ */
+const toPublicBook = <T extends { ein: string | null }>(book: T) => {
+  const { ein, ...rest } = book;
+  return { ...rest, einMasked: maskEin(ein) };
+};
+
 // Book CRUD routes
 const bookRoutes = new Elysia({ prefix: "/api/books" })
   .get("/", async ({ query, set, request }) => {
@@ -100,7 +121,7 @@ const bookRoutes = new Elysia({ prefix: "/api/books" })
     // Filter to only books the user has access to
     const filteredBooks = books.filter((b) => accessibleBookIds.includes(b.id));
 
-    return { books: filteredBooks };
+    return { books: filteredBooks.map(toPublicBook) };
   })
   .post(
     "/",
@@ -155,7 +176,7 @@ const bookRoutes = new Elysia({ prefix: "/api/books" })
         data: { bookType: book.type },
       });
 
-      return { book };
+      return { book: toPublicBook(book) };
     },
     {
       body: t.Object({
@@ -194,6 +215,19 @@ const bookRoutes = new Elysia({ prefix: "/api/books" })
           type: body.type,
           currency: body.currency,
           fiscalYearStartMonth: body.fiscalYearStartMonth,
+          legalName: body.legalName,
+          // encrypt the EIN at rest; an empty string clears it, undefined skips
+          ein:
+            body.ein === undefined
+              ? undefined
+              : body.ein
+                ? encryptToken(body.ein)
+                : null,
+          address: body.address,
+          city: body.city,
+          state: body.state,
+          zip: body.zip,
+          phone: body.phone,
           updatedAt: new Date().toISOString(),
         })
         .where(eq(bookTable.id, id))
@@ -206,7 +240,7 @@ const bookRoutes = new Elysia({ prefix: "/api/books" })
         resource: { type: "book", id: book.id, name: book.name },
       });
 
-      return { book };
+      return { book: toPublicBook(book) };
     },
     {
       params: t.Object({ id: t.String() }),
@@ -217,6 +251,13 @@ const bookRoutes = new Elysia({ prefix: "/api/books" })
         ),
         currency: t.Optional(t.String()),
         fiscalYearStartMonth: t.Optional(t.Number()),
+        legalName: t.Optional(t.String()),
+        ein: t.Optional(t.String()),
+        address: t.Optional(t.String()),
+        city: t.Optional(t.String()),
+        state: t.Optional(t.String()),
+        zip: t.Optional(t.String()),
+        phone: t.Optional(t.String()),
       }),
     },
   )
