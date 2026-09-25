@@ -112,6 +112,7 @@ import {
   generateRdCredit,
   generateScheduleC,
   generateTaxLossHarvesting,
+  maskForm1099NecReport,
 } from "lib/tax";
 
 import type { ExportFormat } from "lib/reports";
@@ -672,7 +673,12 @@ const app = new Elysia()
         { status: 400, headers: { "Content-Type": "application/json" } },
       );
     }
-    return generate1099Nec({ bookId, year: Number.parseInt(year, 10) });
+    // Mask recipient TINs; full TINs are only emitted by the IRIS CSV export
+    const report = await generate1099Nec({
+      bookId,
+      year: Number.parseInt(year, 10),
+    });
+    return maskForm1099NecReport(report);
   })
   .get("/api/tax/1099-nec/iris-csv", async ({ query, set }) => {
     const { bookId, year } = query;

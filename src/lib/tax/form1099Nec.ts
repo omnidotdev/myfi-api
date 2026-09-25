@@ -128,4 +128,39 @@ const generate1099Nec = async (params: {
   };
 };
 
+/**
+ * Mask an already-decrypted TIN for safe display, matching the vendor-route
+ * convention. Full TINs must never leave the API in a JSON response
+ * @param tin - Decrypted TIN, or null
+ * @param type - TIN type ("ssn" | "ein"), controls the mask shape
+ * @returns Masked TIN showing only the last four digits, or null
+ */
+const maskDecryptedTin = (
+  tin: string | null,
+  type: string | null,
+): string | null => {
+  if (!tin) return null;
+  const last4 = tin.slice(-4);
+  if (type === "ssn") return `***-**-${last4}`;
+  if (type === "ein") return `**-***${last4}`;
+  return `****${last4}`;
+};
+
+/**
+ * Return a copy of a 1099-NEC report with every recipient TIN masked. Apply at
+ * the JSON API boundary so plaintext SSNs/EINs are never serialized to clients.
+ * The unmasked report is reserved for the IRS IRIS CSV filing export
+ * @param report - Report with decrypted recipient TINs
+ * @returns New report with masked TINs; input is not mutated
+ */
+export const maskForm1099NecReport = (
+  report: Form1099NecReport,
+): Form1099NecReport => ({
+  ...report,
+  forms: report.forms.map((form) => ({
+    ...form,
+    recipientTin: maskDecryptedTin(form.recipientTin, form.recipientTinType),
+  })),
+});
+
 export default generate1099Nec;
