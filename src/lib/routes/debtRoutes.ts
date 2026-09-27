@@ -9,6 +9,7 @@ import {
   journalLineTable,
 } from "lib/db/schema";
 import { buildDebtOpeningLines } from "lib/debts/buildDebtOpeningLines";
+import { buildDebtPaymentLines } from "lib/debts/buildDebtPaymentLines";
 
 import type { InferInsertModel } from "drizzle-orm";
 
@@ -176,6 +177,119 @@ const debtRoutes = new Elysia({ prefix: "/api/debts" })
         bookId: t.String(),
         name: t.String(),
         amount: t.String(),
+      }),
+    },
+  )
+  // Record a payment against a debt: debit the liability, credit the funding
+  // account (an asset) or, when no source is given, an equity account
+  .post(
+    "/:id/payment",
+    async ({ params, body, set }) => {
+      const amount = Number.parseFloat(body.amount);
+      if (Number.isNaN(amount) || amount <= 0) {
+        set.status = 400;
+        return { error: "amount must be a positive number" };
+      }
+
+      // The debt must be a liability account in this book
+      const [debt] = await dbPool
+        .select({ id: accountTable.id, name: accountTable.name })
+        .from(accountTable)
+        .where(
+          and(
+            eq(accountTable.id, params.id),
+            eq(accountTable.bookId, body.bookId),
+            eq(accountTable.type, "liability"),
+          ),
+        );
+      if (!debt) {
+        set.status = 404;
+        return { error: "Debt not found" };
+      }
+
+      // Resolve where the payment comes from: the given asset account (verified
+      // to belong to this book), else an equity/net-worth account
+      let creditAccountId: string | undefined;
+      if (body.fromAccountId) {
+        const [asset] = await dbPool
+          .select({ id: accountTable.id })
+          .from(accountTable)
+          .where(
+            and(
+              eq(accountTable.id, body.fromAccountId),
+              eq(accountTable.bookId, body.bookId),
+            ),
+          );
+        if (!asset) {
+          set.status = 400;
+          return { error: "Payment source account not found" };
+        }
+        creditAccountId = asset.id;
+      } else {
+        const equityAccounts = await dbPool
+          .select({ id: accountTable.id, subType: accountTable.subType })
+          .from(accountTable)
+          .where(
+            and(
+              eq(accountTable.bookId, body.bookId),
+              eq(accountTable.type, "equity"),
+              eq(accountTable.isPlaceholder, false),
+            ),
+          );
+        creditAccountId = (
+          equityAccounts.find((a) => a.subType === "owners_equity") ??
+          equityAccounts[0]
+        )?.id;
+      }
+
+      if (!creditAccountId) {
+        set.status = 400;
+        return { error: "No account to credit the payment against" };
+      }
+
+      const lines = buildDebtPaymentLines({
+        liabilityAccountId: debt.id,
+        creditAccountId,
+        amount,
+      });
+      if (!lines) {
+        set.status = 400;
+        return { error: "Nothing to record" };
+      }
+
+      const entryId = await dbPool.transaction(async (tx) => {
+        const [entry] = await tx
+          .insert(journalEntryTable)
+          .values({
+            bookId: body.bookId,
+            date: new Date().toISOString(),
+            memo: `Payment: ${debt.name}`,
+            source: "debt_payment",
+            sourceReferenceId: debt.id,
+          } satisfies InferInsertModel<typeof journalEntryTable>)
+          .returning();
+        if (!entry) throw new Error("Failed to write the payment entry");
+
+        for (const line of lines) {
+          await tx.insert(journalLineTable).values({
+            journalEntryId: entry.id,
+            accountId: line.accountId,
+            debit: line.debit,
+            credit: line.credit,
+          } satisfies InferInsertModel<typeof journalLineTable>);
+        }
+        return entry.id;
+      });
+
+      set.status = 201;
+      return { entryId };
+    },
+    {
+      params: t.Object({ id: t.String() }),
+      body: t.Object({
+        bookId: t.String(),
+        amount: t.String(),
+        fromAccountId: t.Optional(t.String()),
       }),
     },
   );
