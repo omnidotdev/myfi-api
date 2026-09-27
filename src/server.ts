@@ -82,6 +82,7 @@ import closeReviewRoutes from "lib/routes/closeReviewRoutes";
 import connectionRoutes from "lib/routes/connectionRoutes";
 import customerRoutes from "lib/routes/customerRoutes";
 import dashboardRoutes from "lib/routes/dashboardRoutes";
+import debtRoutes from "lib/routes/debtRoutes";
 import documentRoutes from "lib/routes/documentRoutes";
 import fixedAssetRoutes from "lib/routes/fixedAssetRoutes";
 import journalRoutes from "lib/routes/journalRoutes";
@@ -208,6 +209,7 @@ const app = new Elysia()
   .use(dashboardRoutes)
   .use(fixedAssetRoutes)
   .use(loanRoutes)
+  .use(debtRoutes)
   .use(attachmentRoutes)
   .use(documentRoutes)
   .use(importRoutes)
