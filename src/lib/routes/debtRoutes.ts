@@ -292,6 +292,82 @@ const debtRoutes = new Elysia({ prefix: "/api/debts" })
         fromAccountId: t.Optional(t.String()),
       }),
     },
+  )
+  // Remove a debt: delete the liability account and unwind its own journal
+  // entries (opening balance + payments). Refuses if the account is entangled
+  // with anything else (e.g. an amortizing loan), which must not be deleted here
+  .delete(
+    "/:id",
+    async ({ params, query, set }) => {
+      const bookId = query.bookId;
+      if (!bookId) {
+        set.status = 400;
+        return { error: "bookId is required" };
+      }
+
+      const [debt] = await dbPool
+        .select({ id: accountTable.id })
+        .from(accountTable)
+        .where(
+          and(
+            eq(accountTable.id, params.id),
+            eq(accountTable.bookId, bookId),
+            eq(accountTable.type, "liability"),
+          ),
+        );
+      if (!debt) {
+        set.status = 404;
+        return { error: "Debt not found" };
+      }
+
+      // Every entry touching this account must be one of the debt's own (its
+      // opening balance or a payment); otherwise it is used elsewhere and we
+      // will not delete it here
+      const touching = await dbPool
+        .select({ source: journalEntryTable.source })
+        .from(journalLineTable)
+        .innerJoin(
+          journalEntryTable,
+          eq(journalLineTable.journalEntryId, journalEntryTable.id),
+        )
+        .where(eq(journalLineTable.accountId, params.id));
+
+      const debtSources = new Set([DEBT_OPENING_SOURCE, "debt_payment"]);
+      const entangled = touching.some((t) => !debtSources.has(t.source));
+      if (entangled) {
+        set.status = 409;
+        return {
+          error:
+            "This debt has other activity and can't be removed automatically",
+        };
+      }
+
+      await dbPool.transaction(async (tx) => {
+        // Deleting the entries cascades their lines (both sides of each entry)
+        await tx
+          .delete(journalEntryTable)
+          .where(
+            and(
+              eq(journalEntryTable.bookId, bookId),
+              eq(journalEntryTable.sourceReferenceId, params.id),
+            ),
+          );
+        await tx.delete(accountTable).where(eq(accountTable.id, params.id));
+      });
+
+      emitAudit({
+        type: "myfi.account.deleted",
+        organizationId: bookId,
+        resource: { type: "account", id: params.id },
+        data: { bookId, accountType: "liability", debt: true },
+      });
+
+      return { deleted: true };
+    },
+    {
+      params: t.Object({ id: t.String() }),
+      query: t.Object({ bookId: t.String() }),
+    },
   );
 
 export default debtRoutes;
