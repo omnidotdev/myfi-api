@@ -119,9 +119,19 @@ const processTransaction = async (
 
   // Create journal lines when categorized
   if (debitAccountId && creditAccountId) {
-    if (catResult?.splits && catResult.splits.length >= 2) {
+    const splits = catResult?.splits;
+    // Only split when the rule has lines on BOTH sides; a one-sided (or single)
+    // split cannot balance, so fall back to the standard two-line entry rather
+    // than posting an unbalanced entry
+    const splitsHaveBothSides =
+      !!splits &&
+      splits.length >= 2 &&
+      splits.some((s) => s.side === "debit") &&
+      splits.some((s) => s.side === "credit");
+
+    if (splits && splitsHaveBothSides) {
       // Split transaction: multiple lines per side
-      const splitLines = catResult.splits.map((split) => {
+      const splitLines = splits.map((split) => {
         const splitAmount = split.percentage
           ? (amount * Number(split.percentage)) / 100
           : Number(split.fixedAmount);
@@ -162,8 +172,8 @@ const processTransaction = async (
 
       // Auto-tag split lines using per-split tagIds
       const tagAssignments: { journalLineId: string; tagId: string }[] = [];
-      for (let i = 0; i < catResult.splits.length; i++) {
-        const splitTagId = catResult.splits[i].tagId;
+      for (let i = 0; i < splits.length; i++) {
+        const splitTagId = splits[i].tagId;
         if (splitTagId && insertedLines[i]) {
           tagAssignments.push({
             journalLineId: insertedLines[i].id,
@@ -178,8 +188,8 @@ const processTransaction = async (
       // Auto-assign projects from per-split projectIds, with rule-level fallback
       const projectAssignments: { journalLineId: string; projectId: string }[] =
         [];
-      for (let i = 0; i < catResult.splits.length; i++) {
-        const splitProjectId = catResult.splits[i].projectId;
+      for (let i = 0; i < splits.length; i++) {
+        const splitProjectId = splits[i].projectId;
         if (splitProjectId && insertedLines[i]) {
           projectAssignments.push({
             journalLineId: insertedLines[i].id,
@@ -188,8 +198,8 @@ const processTransaction = async (
         }
       }
       if (catResult.projectId) {
-        for (let i = 0; i < catResult.splits.length; i++) {
-          if (!catResult.splits[i].projectId && insertedLines[i]) {
+        for (let i = 0; i < splits.length; i++) {
+          if (!splits[i].projectId && insertedLines[i]) {
             projectAssignments.push({
               journalLineId: insertedLines[i].id,
               projectId: catResult.projectId,
