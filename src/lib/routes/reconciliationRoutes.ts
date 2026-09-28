@@ -9,6 +9,7 @@ import {
   journalLineTable,
   reconciliationQueueTable,
 } from "lib/db/schema";
+import { authorizeBook } from "lib/middleware/bookAccess.middleware";
 
 // Reconciliation queue routes
 const reconciliationRoutes = new Elysia({ prefix: "/api/reconciliation" })
@@ -44,7 +45,7 @@ const reconciliationRoutes = new Elysia({ prefix: "/api/reconciliation" })
   })
   .patch(
     "/:id",
-    async ({ params, body, set }) => {
+    async ({ params, body, set, request }) => {
       const { id } = params;
 
       const [existing] = await dbPool
@@ -56,6 +57,11 @@ const reconciliationRoutes = new Elysia({ prefix: "/api/reconciliation" })
         set.status = 404;
         return { error: "Reconciliation item not found" };
       }
+
+      // Addressed by item id, not a `bookId` field, so the global middleware
+      // does not guard it: require editor on the item's own book
+      const auth = await authorizeBook(request, existing.bookId, "editor", set);
+      if (!auth) return { error: "Forbidden" };
 
       const { status, reviewedBy, debitAccountId, creditAccountId } = body;
       const hasCorrectionAccounts = debitAccountId && creditAccountId;

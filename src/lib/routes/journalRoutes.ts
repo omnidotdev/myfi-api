@@ -10,6 +10,7 @@ import {
   journalLineTable,
 } from "lib/db/schema";
 import { validateJournalLines } from "lib/journal/validateEntry";
+import { authorizeBook } from "lib/middleware/bookAccess.middleware";
 
 import type { InsertJournalEntry } from "lib/db/schema";
 
@@ -182,7 +183,7 @@ const journalRoutes = new Elysia({ prefix: "/api/journal-entries" })
   )
   .post(
     "/batch",
-    async ({ body, set }) => {
+    async ({ body, set, request }) => {
       const { entries } = body;
 
       if (entries.length > 100) {
@@ -193,6 +194,14 @@ const journalRoutes = new Elysia({ prefix: "/api/journal-entries" })
       if (entries.length === 0) {
         set.status = 400;
         return { error: "At least one entry required" };
+      }
+
+      // The bookId is per-entry, not a top-level field, so the global
+      // middleware does not guard it: require editor on every distinct book
+      const bookIds = [...new Set(entries.map((e) => e.bookId))];
+      for (const bookId of bookIds) {
+        const auth = await authorizeBook(request, bookId, "editor", set);
+        if (!auth) return { error: "Forbidden" };
       }
 
       // Validate all entries before creating any, using the same server-side
@@ -284,7 +293,7 @@ const journalRoutes = new Elysia({ prefix: "/api/journal-entries" })
   )
   .patch(
     "/:id",
-    async ({ params, body, set }) => {
+    async ({ params, body, set, request }) => {
       const { id } = params;
 
       const [existing] = await dbPool
@@ -296,6 +305,11 @@ const journalRoutes = new Elysia({ prefix: "/api/journal-entries" })
         set.status = 404;
         return { error: "Journal entry not found" };
       }
+
+      // Addressed by entry id, not a `bookId` field, so the global middleware
+      // does not guard it: resolve the entry's own book and require editor
+      const auth = await authorizeBook(request, existing.bookId, "editor", set);
+      if (!auth) return { error: "Forbidden" };
 
       if (body.lines) {
         try {
@@ -401,7 +415,7 @@ const journalRoutes = new Elysia({ prefix: "/api/journal-entries" })
   // a posted entry, which CPAs use instead of editing/deleting history
   .post(
     "/:id/reverse",
-    async ({ params, body, set }) => {
+    async ({ params, body, set, request }) => {
       const { id } = params;
 
       const [original] = await dbPool
@@ -412,6 +426,11 @@ const journalRoutes = new Elysia({ prefix: "/api/journal-entries" })
         set.status = 404;
         return { error: "Journal entry not found" };
       }
+
+      // Addressed by entry id, not a `bookId` field, so the global middleware
+      // does not guard it: resolve the entry's own book and require editor
+      const auth = await authorizeBook(request, original.bookId, "editor", set);
+      if (!auth) return { error: "Forbidden" };
 
       const reversalDate = body.date ?? new Date().toISOString().slice(0, 10);
       if (await isPeriodLocked(original.bookId, reversalDate)) {
@@ -473,7 +492,7 @@ const journalRoutes = new Elysia({ prefix: "/api/journal-entries" })
   )
   .delete(
     "/:id",
-    async ({ params, set }) => {
+    async ({ params, set, request }) => {
       const { id } = params;
 
       const [existing] = await dbPool
@@ -494,6 +513,13 @@ const journalRoutes = new Elysia({ prefix: "/api/journal-entries" })
         })
         .from(journalEntryTable)
         .where(eq(journalEntryTable.id, id));
+
+      // Addressed by entry id, not a `bookId` field, so the global middleware
+      // does not guard it: resolve the entry's own book and require editor
+      if (full) {
+        const auth = await authorizeBook(request, full.bookId, "editor", set);
+        if (!auth) return { error: "Forbidden" };
+      }
 
       if (full && (await isPeriodLocked(full.bookId, full.date))) {
         set.status = 409;

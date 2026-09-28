@@ -8,6 +8,7 @@ import {
   journalLineTable,
   reconciliationStatementTable,
 } from "lib/db/schema";
+import { authorizeBook } from "lib/middleware/bookAccess.middleware";
 
 import type { SelectReconciliationStatement } from "lib/db/schema";
 
@@ -129,7 +130,7 @@ const statementReconciliationRoutes = new Elysia({
     },
   )
   // Get reconciliation detail with lines
-  .get("/:id", async ({ params, set }) => {
+  .get("/:id", async ({ params, set, request }) => {
     const { id } = params;
 
     const [reconciliation] = await dbPool
@@ -141,6 +142,16 @@ const statementReconciliationRoutes = new Elysia({
       set.status = 404;
       return { error: "Reconciliation not found" };
     }
+
+    // Addressed by reconciliation id, not a `bookId` field, so the global
+    // middleware does not guard it: require viewer on its own book
+    const auth = await authorizeBook(
+      request,
+      reconciliation.bookId,
+      "viewer",
+      set,
+    );
+    if (!auth) return { error: "Forbidden" };
 
     const { lines, clearedBalance, difference } =
       await computeReconciliation(reconciliation);
@@ -155,7 +166,7 @@ const statementReconciliationRoutes = new Elysia({
   // Toggle cleared status on a line
   .patch(
     "/:id/lines/:lineId",
-    async ({ params, body, set }) => {
+    async ({ params, body, set, request }) => {
       const { id, lineId } = params;
 
       const [reconciliation] = await dbPool
@@ -167,6 +178,16 @@ const statementReconciliationRoutes = new Elysia({
         set.status = 404;
         return { error: "Reconciliation not found" };
       }
+
+      // Addressed by reconciliation id, not a `bookId` field, so the global
+      // middleware does not guard it: require editor on its own book
+      const auth = await authorizeBook(
+        request,
+        reconciliation.bookId,
+        "editor",
+        set,
+      );
+      if (!auth) return { error: "Forbidden" };
 
       if (reconciliation.status === "completed") {
         set.status = 409;
@@ -186,7 +207,7 @@ const statementReconciliationRoutes = new Elysia({
     },
   )
   // Complete reconciliation
-  .post("/:id/complete", async ({ params, set }) => {
+  .post("/:id/complete", async ({ params, set, request }) => {
     const { id } = params;
 
     const [existing] = await dbPool
@@ -198,6 +219,11 @@ const statementReconciliationRoutes = new Elysia({
       set.status = 404;
       return { error: "Reconciliation not found" };
     }
+
+    // Addressed by reconciliation id, not a `bookId` field, so the global
+    // middleware does not guard it: require editor on its own book
+    const auth = await authorizeBook(request, existing.bookId, "editor", set);
+    if (!auth) return { error: "Forbidden" };
 
     if (existing.status === "completed") {
       set.status = 409;

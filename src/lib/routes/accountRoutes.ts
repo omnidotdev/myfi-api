@@ -4,6 +4,7 @@ import { Elysia, t } from "elysia";
 import { emitAudit } from "lib/audit";
 import { dbPool } from "lib/db/db";
 import { accountTable } from "lib/db/schema";
+import { authorizeBook } from "lib/middleware/bookAccess.middleware";
 
 import type { InsertAccount } from "lib/db/schema";
 
@@ -81,7 +82,7 @@ const accountRoutes = new Elysia({ prefix: "/api/accounts" })
   )
   .put(
     "/:id",
-    async ({ params, body, set }) => {
+    async ({ params, body, set, request }) => {
       const { id } = params;
 
       const [existing] = await dbPool
@@ -96,6 +97,11 @@ const accountRoutes = new Elysia({ prefix: "/api/accounts" })
         set.status = 404;
         return { error: "Account not found" };
       }
+
+      // Addressed by account id, not a `bookId` field, so the global
+      // middleware does not guard it: require editor on the account's own book
+      const auth = await authorizeBook(request, existing.bookId, "editor", set);
+      if (!auth) return { error: "Forbidden" };
 
       const [account] = await dbPool
         .update(accountTable)
@@ -141,7 +147,7 @@ const accountRoutes = new Elysia({ prefix: "/api/accounts" })
   )
   .patch(
     "/:id",
-    async ({ params, set }) => {
+    async ({ params, set, request }) => {
       const { id } = params;
 
       const [existing] = await dbPool
@@ -158,6 +164,11 @@ const accountRoutes = new Elysia({ prefix: "/api/accounts" })
         set.status = 404;
         return { error: "Account not found" };
       }
+
+      // Addressed by account id, not a `bookId` field, so the global
+      // middleware does not guard it: require editor on the account's own book
+      const auth = await authorizeBook(request, existing.bookId, "editor", set);
+      if (!auth) return { error: "Forbidden" };
 
       const [account] = await dbPool
         .update(accountTable)
@@ -184,7 +195,7 @@ const accountRoutes = new Elysia({ prefix: "/api/accounts" })
   )
   .delete(
     "/:id",
-    async ({ params, set }) => {
+    async ({ params, set, request }) => {
       const { id } = params;
 
       const [existing] = await dbPool
@@ -200,6 +211,11 @@ const accountRoutes = new Elysia({ prefix: "/api/accounts" })
         set.status = 404;
         return { error: "Account not found" };
       }
+
+      // Addressed by account id, not a `bookId` field, so the global
+      // middleware does not guard it: require editor on the account's own book
+      const auth = await authorizeBook(request, existing.bookId, "editor", set);
+      if (!auth) return { error: "Forbidden" };
 
       await dbPool.delete(accountTable).where(eq(accountTable.id, id));
 

@@ -6,6 +6,7 @@ import { Elysia, t } from "elysia";
 import { emitAudit } from "lib/audit";
 import { dbPool } from "lib/db/db";
 import { attachmentTable, journalEntryTable } from "lib/db/schema";
+import { authorizeBook } from "lib/middleware/bookAccess.middleware";
 import {
   deleteObject,
   getObject,
@@ -217,7 +218,7 @@ const attachmentRoutes = new Elysia({ prefix: "/api/attachments" })
   )
   .patch(
     "/:id",
-    async ({ params, body, set }) => {
+    async ({ params, body, set, request }) => {
       const { id } = params;
 
       const [current] = await dbPool
@@ -229,6 +230,11 @@ const attachmentRoutes = new Elysia({ prefix: "/api/attachments" })
         set.status = 404;
         return { error: "Attachment not found" };
       }
+
+      // Addressed by attachment id, not a `bookId` field, so the global
+      // middleware does not guard it: require editor on the attachment's book
+      const auth = await authorizeBook(request, current.bookId, "editor", set);
+      if (!auth) return { error: "Forbidden" };
 
       const nextJournalEntryId = body.journalEntryId ?? null;
 
@@ -277,7 +283,7 @@ const attachmentRoutes = new Elysia({ prefix: "/api/attachments" })
   )
   .delete(
     "/:id",
-    async ({ params, set }) => {
+    async ({ params, set, request }) => {
       const { id } = params;
 
       const [attachment] = await dbPool
@@ -289,6 +295,16 @@ const attachmentRoutes = new Elysia({ prefix: "/api/attachments" })
         set.status = 404;
         return { error: "Attachment not found" };
       }
+
+      // Addressed by attachment id, not a `bookId` field, so the global
+      // middleware does not guard it: require editor on the attachment's book
+      const auth = await authorizeBook(
+        request,
+        attachment.bookId,
+        "editor",
+        set,
+      );
+      if (!auth) return { error: "Forbidden" };
 
       try {
         await deleteObject(attachment.storageKey);
