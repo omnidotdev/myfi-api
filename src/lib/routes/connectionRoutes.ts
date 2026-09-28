@@ -5,6 +5,21 @@ import { emitAudit } from "lib/audit";
 import { dbPool } from "lib/db/db";
 import { connectedAccountTable } from "lib/db/schema";
 
+// Columns safe to return to clients: never the encrypted `accessToken` (the
+// Plaid/OFX credential blob). Used by every read AND every write's .returning()
+const publicConnectionColumns = {
+  id: connectedAccountTable.id,
+  bookId: connectedAccountTable.bookId,
+  provider: connectedAccountTable.provider,
+  providerAccountId: connectedAccountTable.providerAccountId,
+  accountId: connectedAccountTable.accountId,
+  institutionName: connectedAccountTable.institutionName,
+  mask: connectedAccountTable.mask,
+  status: connectedAccountTable.status,
+  lastSyncedAt: connectedAccountTable.lastSyncedAt,
+  createdAt: connectedAccountTable.createdAt,
+};
+
 // Connected account routes
 const connectionRoutes = new Elysia({ prefix: "/api/connections" })
   .get("/", async ({ query, set }) => {
@@ -16,18 +31,7 @@ const connectionRoutes = new Elysia({ prefix: "/api/connections" })
     }
 
     const connections = await dbPool
-      .select({
-        id: connectedAccountTable.id,
-        bookId: connectedAccountTable.bookId,
-        provider: connectedAccountTable.provider,
-        providerAccountId: connectedAccountTable.providerAccountId,
-        accountId: connectedAccountTable.accountId,
-        institutionName: connectedAccountTable.institutionName,
-        mask: connectedAccountTable.mask,
-        status: connectedAccountTable.status,
-        lastSyncedAt: connectedAccountTable.lastSyncedAt,
-        createdAt: connectedAccountTable.createdAt,
-      })
+      .select(publicConnectionColumns)
       .from(connectedAccountTable)
       .where(eq(connectedAccountTable.bookId, bookId));
 
@@ -56,7 +60,7 @@ const connectionRoutes = new Elysia({ prefix: "/api/connections" })
         .update(connectedAccountTable)
         .set({ accountId: body.accountId })
         .where(eq(connectedAccountTable.id, id))
-        .returning();
+        .returning(publicConnectionColumns);
 
       emitAudit({
         type: "myfi.connection.linked",
@@ -101,7 +105,7 @@ const connectionRoutes = new Elysia({ prefix: "/api/connections" })
         .update(connectedAccountTable)
         .set({ status: "disconnected" })
         .where(eq(connectedAccountTable.id, id))
-        .returning();
+        .returning(publicConnectionColumns);
 
       emitAudit({
         type: "myfi.connection.unlinked",

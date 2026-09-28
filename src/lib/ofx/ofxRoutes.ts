@@ -5,6 +5,7 @@ import { dbPool } from "lib/db/db";
 import { connectedAccountTable } from "lib/db/schema";
 import { decryptToken, encryptToken } from "lib/encryption/tokenEncryption";
 import { importTransactions } from "lib/import";
+import { authorizeBook } from "lib/middleware/bookAccess.middleware";
 import { fetchOfxTransactions } from "./ofxClient";
 
 import type { OfxConnectionConfig } from "./ofxClient";
@@ -90,7 +91,7 @@ const ofxRoutes = new Elysia({ prefix: "/api/ofx" })
   )
   .post(
     "/sync",
-    async ({ body, set }) => {
+    async ({ request, body, set }) => {
       const { connectedAccountId } = body;
 
       const [account] = await dbPool
@@ -102,6 +103,11 @@ const ofxRoutes = new Elysia({ prefix: "/api/ofx" })
         set.status = 404;
         return { error: "OFX connected account not found" };
       }
+
+      // The account is addressed by id, not bookId, so the global middleware
+      // can't guard it: verify access before decrypting stored credentials
+      const auth = await authorizeBook(request, account.bookId, "editor", set);
+      if (!auth) return { error: "Forbidden" };
 
       if (!account.accessToken) {
         set.status = 400;

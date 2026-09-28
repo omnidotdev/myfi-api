@@ -40,12 +40,33 @@ export const checkBookAccess = async (
   return userLevel >= requiredLevel ? (access.role as BookRole) : null;
 };
 
-class BookAccessError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = "BookAccessError";
+/**
+ * Per-handler book authorization for routes the global middleware can't guard
+ * (those addressed by a path id with no `bookId` in query/body, so the handler
+ * must resolve the resource's `bookId` itself and call this). Self-contained:
+ * resolves the caller from the bearer token so it needs nothing from context.
+ * On denial it sets a 403 status and returns null; on success returns the
+ * caller's user id. Usage:
+ *   const auth = await authorizeBook(request, bookId, "editor", set);
+ *   if (!auth) return { error: "Forbidden" };
+ * @returns `{ userId }` when allowed, `null` (and a 403 status) when denied
+ */
+export const authorizeBook = async (
+  request: Request,
+  bookId: string,
+  requiredRole: BookRole,
+  set: { status?: number | string },
+): Promise<{ userId: string } | null> => {
+  const token = extractBearerToken(request.headers.get("authorization"));
+  const user = token ? await resolveUserFromToken(token) : null;
+
+  if (user?.id && (await checkBookAccess(user.id, bookId, requiredRole))) {
+    return { userId: user.id };
   }
-}
+
+  set.status = 403;
+  return null;
+};
 
 /**
  * Extract bookId from the request query string or body.
@@ -72,15 +93,13 @@ const extractBookId = (
  * Write operations (POST, PUT, PATCH, DELETE) require at least editor role.
  */
 const bookAccessMiddleware = new Elysia({ name: "book-access-middleware" })
-  .error({ BookAccessError })
-  .onError(({ error, set }) => {
-    if (error instanceof BookAccessError) {
-      set.status = 403;
-
-      return { error: "Forbidden", message: error.message };
-    }
-  })
-  .onBeforeHandle(async ({ request, query, body }) => {
+  // `as: "global"` is essential: without a scope the hook is `local` and never
+  // runs for the route plugins mounted after this middleware on the root app, so
+  // book-level authorization silently does nothing (the whole reason this was a
+  // no-op). We return the 403 response directly rather than throwing, because a
+  // globally-scoped hook throws in the root lifecycle where this plugin's local
+  // onError does not catch it. Verified by the mounted integration test
+  .onBeforeHandle({ as: "global" }, async ({ request, query, body, set }) => {
     const bookId = extractBookId(
       query as Record<string, string | undefined>,
       body,
@@ -89,28 +108,27 @@ const bookAccessMiddleware = new Elysia({ name: "book-access-middleware" })
     // Skip access check if no bookId in request (e.g. listing books)
     if (!bookId) return;
 
+    const forbidden = (message: string) => {
+      set.status = 403;
+      return { error: "Forbidden", message };
+    };
+
     // Resolve user from the auth header (already verified by auth middleware)
     const authHeader = request.headers.get("authorization");
     const token = extractBearerToken(authHeader);
 
-    if (!token) {
-      throw new BookAccessError("Authentication required for book access");
-    }
+    if (!token) return forbidden("Authentication required for book access");
 
     const user = await resolveUserFromToken(token);
 
-    if (!user?.id) {
-      throw new BookAccessError("Authentication required for book access");
-    }
+    if (!user?.id) return forbidden("Authentication required for book access");
 
     const method = request.method.toUpperCase();
     const requiredRole: BookRole = method === "GET" ? "viewer" : "editor";
 
     const role = await checkBookAccess(user.id, bookId, requiredRole);
 
-    if (!role) {
-      throw new BookAccessError(`Insufficient permissions for book ${bookId}`);
-    }
+    if (!role) return forbidden(`Insufficient permissions for book ${bookId}`);
   });
 
 export default bookAccessMiddleware;

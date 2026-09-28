@@ -4,6 +4,7 @@ import { Elysia, t } from "elysia";
 import { emitAudit } from "lib/audit";
 import { dbPool } from "lib/db/db";
 import { bookAccessTable } from "lib/db/schema";
+import { authorizeBook } from "lib/middleware/bookAccess.middleware";
 
 // Book access management routes
 const bookAccessRoutes = new Elysia({ prefix: "/api/book-access" })
@@ -26,14 +27,19 @@ const bookAccessRoutes = new Elysia({ prefix: "/api/book-access" })
   // Create access record
   .post(
     "/",
-    async ({ body, set }) => {
+    async ({ request, body, set }) => {
+      // Managing who can access a book is an owner-only action, and the
+      // inviter is the authenticated caller (never a forgeable body field)
+      const auth = await authorizeBook(request, body.bookId, "owner", set);
+      if (!auth) return { error: "Forbidden" };
+
       const [record] = await dbPool
         .insert(bookAccessTable)
         .values({
           bookId: body.bookId,
           userId: body.userId,
           role: body.role,
-          invitedBy: body.invitedBy ?? null,
+          invitedBy: auth.userId,
         })
         .returning();
 
@@ -42,7 +48,7 @@ const bookAccessRoutes = new Elysia({ prefix: "/api/book-access" })
       emitAudit({
         type: "myfi.book_access.created",
         organizationId: body.bookId,
-        actor: { id: body.invitedBy ?? "unknown" },
+        actor: { id: auth.userId },
         resource: { type: "book_access", id: record.id, name: body.userId },
         data: { bookId: body.bookId, role: body.role },
       });
@@ -58,14 +64,13 @@ const bookAccessRoutes = new Elysia({ prefix: "/api/book-access" })
           t.Literal("editor"),
           t.Literal("viewer"),
         ]),
-        invitedBy: t.Optional(t.String()),
       }),
     },
   )
   // Update role
   .patch(
     "/:id",
-    async ({ params, body, set }) => {
+    async ({ request, params, body, set }) => {
       const [existing] = await dbPool
         .select()
         .from(bookAccessTable)
@@ -75,6 +80,9 @@ const bookAccessRoutes = new Elysia({ prefix: "/api/book-access" })
         set.status = 404;
         return { error: "Access record not found" };
       }
+
+      const auth = await authorizeBook(request, existing.bookId, "owner", set);
+      if (!auth) return { error: "Forbidden" };
 
       const [record] = await dbPool
         .update(bookAccessTable)
@@ -113,7 +121,7 @@ const bookAccessRoutes = new Elysia({ prefix: "/api/book-access" })
   // Remove access
   .delete(
     "/:id",
-    async ({ params, set }) => {
+    async ({ request, params, set }) => {
       const [existing] = await dbPool
         .select()
         .from(bookAccessTable)
@@ -123,6 +131,9 @@ const bookAccessRoutes = new Elysia({ prefix: "/api/book-access" })
         set.status = 404;
         return { error: "Access record not found" };
       }
+
+      const auth = await authorizeBook(request, existing.bookId, "owner", set);
+      if (!auth) return { error: "Forbidden" };
 
       await dbPool
         .delete(bookAccessTable)

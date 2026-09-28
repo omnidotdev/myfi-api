@@ -5,6 +5,7 @@ import { CountryCode, Products } from "plaid";
 import { dbPool } from "lib/db/db";
 import { connectedAccountTable } from "lib/db/schema";
 import { encryptToken } from "lib/encryption/tokenEncryption";
+import { authorizeBook } from "lib/middleware/bookAccess.middleware";
 import plaidClient from "./plaidClient";
 import syncTransactions from "./syncTransactions";
 
@@ -70,7 +71,7 @@ const plaidRoutes = new Elysia({ prefix: "/api/plaid" })
   )
   .post(
     "/sync",
-    async ({ body, set }) => {
+    async ({ request, body, set }) => {
       const { connectedAccountId } = body;
 
       const [account] = await dbPool
@@ -82,6 +83,11 @@ const plaidRoutes = new Elysia({ prefix: "/api/plaid" })
         set.status = 404;
         return { error: "Connected account not found" };
       }
+
+      // Addressed by id, not bookId: verify access before syncing (which
+      // decrypts and uses the stored Plaid credentials)
+      const auth = await authorizeBook(request, account.bookId, "editor", set);
+      if (!auth) return { error: "Forbidden" };
 
       const result = await syncTransactions(account);
 

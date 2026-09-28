@@ -11,6 +11,7 @@ import {
   soleProprietorTemplate,
 } from "lib/db/templates";
 import { decryptToken, encryptToken } from "lib/encryption/tokenEncryption";
+import { authorizeBook } from "lib/middleware/bookAccess.middleware";
 
 import type { InsertAccount } from "lib/db/schema";
 import type { AccountTemplate } from "lib/db/templates";
@@ -208,6 +209,11 @@ const bookRoutes = new Elysia({ prefix: "/api/books" })
         return { error: "Book not found" };
       }
 
+      // Addressed by book id, not a `bookId` field, so the global middleware
+      // does not guard it: editing book settings (legal name, EIN) is owner-only
+      const auth = await authorizeBook(request, id, "owner", set);
+      if (!auth) return { error: "Forbidden" };
+
       const [book] = await dbPool
         .update(bookTable)
         .set({
@@ -280,6 +286,11 @@ const bookRoutes = new Elysia({ prefix: "/api/books" })
         set.status = 404;
         return { error: "Book not found" };
       }
+
+      // Deleting a book (cascades all its data) is owner-only; addressed by id
+      // so the global middleware does not guard it
+      const auth = await authorizeBook(request, id, "owner", set);
+      if (!auth) return { error: "Forbidden" };
 
       await dbPool.delete(bookTable).where(eq(bookTable.id, id));
 
