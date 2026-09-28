@@ -11,38 +11,11 @@ import {
   reconciliationQueueTable,
 } from "lib/db/schema";
 import { decryptToken } from "lib/encryption/tokenEncryption";
+import { validateJournalLines } from "lib/journal/validateEntry";
+import { buildPayrollLines } from "./buildPayrollLines";
 import { fetchPayrolls } from "./gustoClient";
 
 import type { SelectPayrollConnection } from "lib/db/schema";
-
-/** Mapping event types for each payroll component */
-const PAYROLL_COMPONENTS = [
-  {
-    eventType: "payroll_gross_wages",
-    field: "gross_pay" as const,
-    side: "debit" as const,
-  },
-  {
-    eventType: "payroll_employer_tax",
-    field: "employer_taxes" as const,
-    side: "debit" as const,
-  },
-  {
-    eventType: "payroll_net_pay",
-    field: "net_pay" as const,
-    side: "credit" as const,
-  },
-  {
-    eventType: "payroll_employee_tax",
-    field: "employee_taxes" as const,
-    side: "credit" as const,
-  },
-  {
-    eventType: "payroll_benefits",
-    field: "employee_benefits_deductions" as const,
-    side: "credit" as const,
-  },
-];
 
 /**
  * Sync processed payrolls from Gusto into journal entries.
@@ -120,33 +93,16 @@ const syncPayroll = async (
       continue;
     }
 
-    // Build journal lines from components with non-zero amounts and configured mappings
-    const lines: {
-      accountId: string;
-      debit: string;
-      credit: string;
-    }[] = [];
+    // Build balanced journal lines (employer taxes post as an expense/liability
+    // pair, which the old per-side loop omitted, leaving every entry unbalanced)
+    const lines = buildPayrollLines(payroll.totals, mappingsByEvent);
 
-    for (const component of PAYROLL_COMPONENTS) {
-      const raw = payroll.totals[component.field];
-      const amount = Number.parseFloat(raw);
-
-      if (!amount) continue;
-
-      const mapping = mappingsByEvent.get(component.eventType);
-
-      if (!mapping) continue;
-
-      const accountId =
-        component.side === "debit"
-          ? mapping.debitAccountId
-          : mapping.creditAccountId;
-
-      lines.push({
-        accountId,
-        debit: component.side === "debit" ? amount.toFixed(4) : "0.0000",
-        credit: component.side === "credit" ? amount.toFixed(4) : "0.0000",
-      });
+    // Guard: never post an unbalanced entry (e.g. an incomplete mapping); skip
+    try {
+      validateJournalLines(lines);
+    } catch {
+      skippedCount++;
+      continue;
     }
 
     const checkDate = payroll.check_date;

@@ -44,7 +44,9 @@ const makePayroll = (uuid: string, checkDate: string) => ({
   payroll_uuid: uuid,
   check_date: checkDate,
   totals: {
-    gross_pay: "5000.00",
+    // Gross must equal net + employee withholdings (3800 + 600 + 200); employer
+    // taxes are separate and post as their own expense/liability pair
+    gross_pay: "4600.00",
     employer_taxes: "400.00",
     net_pay: "3800.00",
     employee_taxes: "600.00",
@@ -63,7 +65,7 @@ const allMappings = [
     eventType: "payroll_employer_tax",
     bookId: "book-1",
     debitAccountId: "acct-er-tax",
-    creditAccountId: null,
+    creditAccountId: "acct-er-tax-liab",
   },
   {
     eventType: "payroll_net_pay",
@@ -137,11 +139,12 @@ describe("syncPayroll", () => {
     expect(mockInsertValues).not.toHaveBeenCalled();
   });
 
-  test("skips components without account mappings", async () => {
+  test("skips a payroll whose mapped lines don't balance", async () => {
     const payroll = makePayroll("pr-1", "2026-03-15");
     mockFetchPayrolls.mockResolvedValueOnce([payroll] as never);
 
-    // Only provide mappings for gross wages and net pay (2 of 5 components)
+    // Only gross wages + net pay mapped: gross (4600) debit vs net (3800)
+    // credit is unbalanced, so the payroll must be skipped, not posted
     const partialMappings = allMappings.filter(
       (m) =>
         m.eventType === "payroll_gross_wages" ||
@@ -152,15 +155,11 @@ describe("syncPayroll", () => {
 
     const result = await syncPayroll(baseConnection);
 
-    expect(result.syncedCount).toBe(1);
+    expect(result.syncedCount).toBe(0);
+    expect(result.skippedCount).toBe(1);
 
-    // Insert 1: journal entry (returning), Insert 2: journal lines, Insert 3: reconciliation queue
-    expect(mockInsertValues).toHaveBeenCalledTimes(3);
-
-    // Verify journal lines insert was called with only 2 lines (mapped components)
-    const linesInsertCall = mockInsertValues.mock.calls[1] as unknown[];
-    const linesArg = linesInsertCall[0] as Array<Record<string, unknown>>;
-    expect(linesArg).toHaveLength(2);
+    // No journal entry, lines, or queue rows are inserted for a skipped payroll
+    expect(mockInsertValues).not.toHaveBeenCalled();
   });
 
   test("emits audit event with correct type", async () => {
@@ -186,7 +185,9 @@ describe("syncPayroll", () => {
     const data = auditArg.data as Record<string, unknown>;
     expect(data.payrollUuid).toBe("pr-1");
     expect(data.checkDate).toBe("2026-03-15");
-    expect(data.linesCreated).toBe(5);
+    // 6 lines: gross debit, employer-tax debit + credit (pair), net, employee
+    // tax, and benefits credits
+    expect(data.linesCreated).toBe(6);
   });
 
   test("handles empty payroll list", async () => {

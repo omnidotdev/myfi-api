@@ -17,6 +17,7 @@ import {
   reconciliationQueueTable,
 } from "lib/db/schema";
 import { encryptToken } from "lib/encryption/tokenEncryption";
+import { validateJournalLines } from "lib/journal/validateEntry";
 import { buildOauthRedirect } from "lib/oauth/redirect";
 import { signOauthState, verifyOauthState } from "lib/oauth/state";
 import syncPayroll from "./syncPayroll";
@@ -403,6 +404,15 @@ const payrollRoutes = new Elysia({ prefix: "/api/payroll" })
             debit: "0.0000",
             credit: netPay.toFixed(4),
           });
+        }
+
+        // Never post an unbalanced entry (e.g. a CSV whose FICA column is an
+        // employer-side tax with no matching expense debit): skip the row
+        try {
+          validateJournalLines(journalLines);
+        } catch {
+          skippedCount++;
+          continue;
         }
 
         const [entry] = await dbPool

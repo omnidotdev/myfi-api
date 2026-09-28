@@ -1,5 +1,6 @@
 import { and, eq, sql } from "drizzle-orm";
 
+import { buildAmortizationLines } from "lib/amortization/buildAmortizationLines";
 import { SYSTEM_ACTOR, emitAudit } from "lib/audit";
 import { dbPool } from "lib/db/db";
 import {
@@ -77,34 +78,24 @@ const postAmortization = async (
           } satisfies InferInsertModel<typeof journalEntryTable>)
           .returning();
 
-        const principalTotal =
-          Number(entry.principalAmount) + Number(entry.extraPrincipal);
-        const totalPayment =
-          Number(entry.paymentAmount) + Number(entry.extraPrincipal);
+        const lines = buildAmortizationLines({
+          interestAccountId: loan.interestAccountId,
+          liabilityAccountId: loan.liabilityAccountId,
+          paymentAccountId: loan.paymentAccountId,
+          interestAmount: entry.interestAmount,
+          principalAmount: entry.principalAmount,
+          extraPrincipal: entry.extraPrincipal,
+        });
 
-        await tx.insert(journalLineTable).values([
-          {
-            journalEntryId: journalEntry.id,
-            accountId: loan.interestAccountId,
-            debit: entry.interestAmount,
-            credit: "0.0000",
-            memo: "Interest",
-          } satisfies InferInsertModel<typeof journalLineTable>,
-          {
-            journalEntryId: journalEntry.id,
-            accountId: loan.liabilityAccountId,
-            debit: principalTotal.toFixed(4),
-            credit: "0.0000",
-            memo: "Principal",
-          } satisfies InferInsertModel<typeof journalLineTable>,
-          {
-            journalEntryId: journalEntry.id,
-            accountId: loan.paymentAccountId,
-            debit: "0.0000",
-            credit: totalPayment.toFixed(4),
-            memo: "Payment",
-          } satisfies InferInsertModel<typeof journalLineTable>,
-        ]);
+        await tx.insert(journalLineTable).values(
+          lines.map(
+            (line) =>
+              ({
+                journalEntryId: journalEntry.id,
+                ...line,
+              }) satisfies InferInsertModel<typeof journalLineTable>,
+          ),
+        );
 
         await tx.insert(reconciliationQueueTable).values({
           bookId,

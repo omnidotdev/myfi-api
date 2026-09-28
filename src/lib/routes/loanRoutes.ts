@@ -5,12 +5,15 @@ import { calculateSchedule } from "lib/amortization/calculateSchedule";
 import { emitAudit } from "lib/audit";
 import { dbPool } from "lib/db/db";
 import {
+  accountTable,
   amortizationEntryTable,
   journalEntryTable,
   journalLineTable,
   loanTable,
   reconciliationQueueTable,
 } from "lib/db/schema";
+import { buildLoanPayoffLines } from "lib/loans/buildLoanPayoffLines";
+import { authorizeBook } from "lib/middleware/bookAccess.middleware";
 
 import type { InferInsertModel } from "drizzle-orm";
 
@@ -336,7 +339,7 @@ const loanRoutes = new Elysia({ prefix: "/api/loans" })
   )
   .post(
     "/:id/payoff",
-    async ({ params, body, set }) => {
+    async ({ params, body, set, request }) => {
       const { id } = params;
 
       const [loan] = await dbPool
@@ -354,14 +357,55 @@ const loanRoutes = new Elysia({ prefix: "/api/loans" })
         return { error: "Loan is already paid off" };
       }
 
+      // Addressed by loan id and posts journal entries: gate on book access
+      const auth = await authorizeBook(request, loan.bookId, "editor", set);
+      if (!auth) return { error: "Forbidden" };
+
       const currentBalance = await getCurrentBalance(loan);
+      const payoffAmount = Number(body.payoffAmount);
+      if (Number.isNaN(payoffAmount) || payoffAmount <= 0) {
+        set.status = 400;
+        return { error: "payoffAmount must be a positive number" };
+      }
+
+      // A settlement (payoff below the balance) books the forgiven difference
+      // to an equity account, so resolve one (preferring owners' equity)
+      const equityAccounts = await dbPool
+        .select({ id: accountTable.id, subType: accountTable.subType })
+        .from(accountTable)
+        .where(
+          and(
+            eq(accountTable.bookId, loan.bookId),
+            eq(accountTable.type, "equity"),
+            eq(accountTable.isPlaceholder, false),
+          ),
+        );
+      const equityAccountId =
+        (
+          equityAccounts.find((a) => a.subType === "owners_equity") ??
+          equityAccounts[0]
+        )?.id ?? null;
+
+      const payoffLines = buildLoanPayoffLines({
+        liabilityAccountId: loan.liabilityAccountId,
+        interestAccountId: loan.interestAccountId,
+        paymentAccountId: body.payoffAccountId,
+        equityAccountId,
+        currentBalance,
+        payoffAmount,
+      });
+      if (!payoffLines) {
+        set.status = 400;
+        return {
+          error:
+            "Settling below the balance needs an equity account to record the forgiveness",
+        };
+      }
 
       const { journalEntry, updatedLoan } = await dbPool.transaction(
         async (tx) => {
           const payoffDate = `${body.payoffDate}T00:00:00.000000+00`;
-          const payoffAmount = Number(body.payoffAmount);
 
-          // Create payoff journal entry
           const [entry] = await tx
             .insert(journalEntryTable)
             .values({
@@ -374,38 +418,15 @@ const loanRoutes = new Elysia({ prefix: "/api/loans" })
             } satisfies InferInsertModel<typeof journalEntryTable>)
             .returning();
 
-          // Debit liability (pay off remaining balance), credit bank
-          const lines: InferInsertModel<typeof journalLineTable>[] = [
-            {
-              journalEntryId: entry.id,
-              accountId: loan.liabilityAccountId,
-              debit: currentBalance.toFixed(4),
-              credit: "0.0000",
-              memo: "Payoff principal",
-            },
-          ];
-
-          // If payoff amount exceeds balance, the difference is interest
-          const interestPortion = payoffAmount - currentBalance;
-          if (interestPortion > 0.005) {
-            lines.push({
-              journalEntryId: entry.id,
-              accountId: loan.interestAccountId,
-              debit: interestPortion.toFixed(4),
-              credit: "0.0000",
-              memo: "Payoff interest",
-            });
-          }
-
-          lines.push({
-            journalEntryId: entry.id,
-            accountId: body.payoffAccountId,
-            debit: "0.0000",
-            credit: payoffAmount.toFixed(4),
-            memo: "Payoff payment",
-          });
-
-          await tx.insert(journalLineTable).values(lines);
+          await tx.insert(journalLineTable).values(
+            payoffLines.map(
+              (line) =>
+                ({
+                  journalEntryId: entry.id,
+                  ...line,
+                }) satisfies InferInsertModel<typeof journalLineTable>,
+            ),
+          );
 
           await tx.insert(reconciliationQueueTable).values({
             bookId: loan.bookId,
@@ -446,7 +467,7 @@ const loanRoutes = new Elysia({ prefix: "/api/loans" })
       emitAudit({
         type: "myfi.loan.paid_off",
         organizationId: loan.bookId,
-        actor: { id: "unknown" },
+        actor: { id: auth.userId },
         resource: { type: "loan", id: loan.id, name: loan.name },
         data: {
           payoffDate: body.payoffDate,
