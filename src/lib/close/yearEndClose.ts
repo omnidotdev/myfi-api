@@ -1,6 +1,7 @@
 import { and, eq, sql } from "drizzle-orm";
 
 import { SYSTEM_ACTOR, emitAudit } from "lib/audit";
+import { buildYearEndCloseLines } from "lib/close/buildYearEndCloseLines";
 import { dbPool } from "lib/db/db";
 import {
   accountTable,
@@ -9,6 +10,7 @@ import {
   journalEntryTable,
   journalLineTable,
 } from "lib/db/schema";
+import { validateJournalLines } from "lib/journal/validateEntry";
 
 type YearEndResult =
   | {
@@ -173,101 +175,41 @@ const runYearEndClose = async (params: {
     retainedEarningsId = created!.id;
   }
 
-  // Calculate totals
-  const totalRevenue = revenueBalances.reduce(
-    (sum, r) => sum + Number(r.balance),
-    0,
-  );
-  const totalExpenses = expenseBalances.reduce(
-    (sum, r) => sum + Number(r.balance),
-    0,
-  );
-  const netIncome = totalRevenue - totalExpenses;
-
-  // Post the closing journal entry
-  await dbPool.insert(journalEntryTable).values({
-    bookId,
-    date: fyEnd,
-    memo: `Year-end closing entry for fiscal year ${year}`,
-    source: "year_end_close",
-    sourceReferenceId: sourceRefId,
-    isReviewed: true,
-    isReconciled: true,
+  // Build the balanced closing lines (each account closed in the direction that
+  // zeroes its signed balance, so contra balances don't unbalance the entry)
+  const { lines, netIncome } = buildYearEndCloseLines({
+    revenueBalances,
+    expenseBalances,
+    retainedEarningsId,
   });
 
-  // Fetch the created entry
-  const [closingEntry] = await dbPool
-    .select()
-    .from(journalEntryTable)
-    .where(
-      and(
-        eq(journalEntryTable.bookId, bookId),
-        eq(journalEntryTable.sourceReferenceId, sourceRefId),
-      ),
-    );
+  // Post the header and its lines atomically, so a mid-write failure can't leave
+  // an orphan closing entry that the idempotency check then treats as done
+  await dbPool.transaction(async (tx) => {
+    const [closingEntry] = await tx
+      .insert(journalEntryTable)
+      .values({
+        bookId,
+        date: fyEnd,
+        memo: `Year-end closing entry for fiscal year ${year}`,
+        source: "year_end_close",
+        sourceReferenceId: sourceRefId,
+        isReviewed: true,
+        isReconciled: true,
+      })
+      .returning();
 
-  const lines: Array<{
-    journalEntryId: string;
-    accountId: string;
-    debit: string;
-    credit: string;
-    memo: string;
-  }> = [];
+    if (!closingEntry) throw new Error("Failed to write the closing entry");
 
-  // Debit each revenue account to zero it
-  for (const rev of revenueBalances) {
-    const bal = Number(rev.balance);
-    if (Math.abs(bal) < 0.005) continue;
-
-    lines.push({
-      journalEntryId: closingEntry!.id,
-      accountId: rev.accountId,
-      debit: Math.abs(bal).toFixed(4),
-      credit: "0.0000",
-      memo: "Close revenue to retained earnings",
-    });
-  }
-
-  // Credit each expense account to zero it
-  for (const exp of expenseBalances) {
-    const bal = Number(exp.balance);
-    if (Math.abs(bal) < 0.005) continue;
-
-    lines.push({
-      journalEntryId: closingEntry!.id,
-      accountId: exp.accountId,
-      debit: "0.0000",
-      credit: Math.abs(bal).toFixed(4),
-      memo: "Close expense to retained earnings",
-    });
-  }
-
-  // Net difference to retained earnings
-  if (Math.abs(netIncome) >= 0.005) {
-    if (netIncome > 0) {
-      // Net income: credit retained earnings
-      lines.push({
-        journalEntryId: closingEntry!.id,
-        accountId: retainedEarningsId,
-        debit: "0.0000",
-        credit: netIncome.toFixed(4),
-        memo: "Net income to retained earnings",
-      });
-    } else {
-      // Net loss: debit retained earnings
-      lines.push({
-        journalEntryId: closingEntry!.id,
-        accountId: retainedEarningsId,
-        debit: Math.abs(netIncome).toFixed(4),
-        credit: "0.0000",
-        memo: "Net loss to retained earnings",
-      });
+    if (lines.length > 0) {
+      const entryLines = lines.map((line) => ({
+        journalEntryId: closingEntry.id,
+        ...line,
+      }));
+      validateJournalLines(entryLines);
+      await tx.insert(journalLineTable).values(entryLines);
     }
-  }
-
-  if (lines.length > 0) {
-    await dbPool.insert(journalLineTable).values(lines);
-  }
+  });
 
   emitAudit({
     type: "myfi.year_end.closed",

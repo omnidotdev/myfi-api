@@ -4,6 +4,7 @@ import {
   mockDbPool,
   mockInsertValues,
   resetDbMock,
+  setInsertReturningData,
   setSelectResults,
 } from "lib/test/mockDb";
 
@@ -37,6 +38,8 @@ const makeClosedPeriods = (count: number) =>
 describe("runYearEndClose", () => {
   beforeEach(() => {
     resetDbMock();
+    // The closing entry is now written with .returning() inside a transaction
+    setInsertReturningData([{ id: "je-1", bookId: "book-1" }]);
   });
 
   test("posts closing entries for revenue and expense accounts", async () => {
