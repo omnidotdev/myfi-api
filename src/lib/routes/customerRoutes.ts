@@ -4,6 +4,7 @@ import { Elysia, t } from "elysia";
 import { emitAudit } from "lib/audit";
 import { dbPool } from "lib/db/db";
 import { customerTable, invoiceTable } from "lib/db/schema";
+import { authorizeBook } from "lib/middleware/bookAccess.middleware";
 
 // Customer CRUD routes. Book access is enforced by the global
 // bookAccessMiddleware from the bookId in the query or body
@@ -26,7 +27,7 @@ const customerRoutes = new Elysia({ prefix: "/api/customers" })
   // Get a single customer
   .get(
     "/:id",
-    async ({ params, set }) => {
+    async ({ params, set, request }) => {
       const [customer] = await dbPool
         .select()
         .from(customerTable)
@@ -36,6 +37,11 @@ const customerRoutes = new Elysia({ prefix: "/api/customers" })
         set.status = 404;
         return { error: "Customer not found" };
       }
+
+      // Addressed by customer id, not a `bookId` field, so the global
+      // middleware does not guard it: require viewer on the customer's own book
+      const auth = await authorizeBook(request, customer.bookId, "viewer", set);
+      if (!auth) return { error: "Forbidden" };
 
       return { customer };
     },
@@ -90,7 +96,7 @@ const customerRoutes = new Elysia({ prefix: "/api/customers" })
   // Update a customer
   .patch(
     "/:id",
-    async ({ params, body, set }) => {
+    async ({ params, body, set, request }) => {
       const [existing] = await dbPool
         .select()
         .from(customerTable)
@@ -99,6 +105,11 @@ const customerRoutes = new Elysia({ prefix: "/api/customers" })
         set.status = 404;
         return { error: "Customer not found" };
       }
+
+      // Addressed by customer id, not a `bookId` field, so the global
+      // middleware does not guard it: require editor on the customer's own book
+      const auth = await authorizeBook(request, existing.bookId, "editor", set);
+      if (!auth) return { error: "Forbidden" };
 
       const updates: Record<string, unknown> = {
         updatedAt: new Date().toISOString(),
@@ -145,7 +156,7 @@ const customerRoutes = new Elysia({ prefix: "/api/customers" })
   // Delete a customer (refused when invoices reference it)
   .delete(
     "/:id",
-    async ({ params, set }) => {
+    async ({ params, set, request }) => {
       const [existing] = await dbPool
         .select()
         .from(customerTable)
@@ -154,6 +165,11 @@ const customerRoutes = new Elysia({ prefix: "/api/customers" })
         set.status = 404;
         return { error: "Customer not found" };
       }
+
+      // Addressed by customer id, not a `bookId` field, so the global
+      // middleware does not guard it: require editor on the customer's own book
+      const auth = await authorizeBook(request, existing.bookId, "editor", set);
+      if (!auth) return { error: "Forbidden" };
 
       const linked = await dbPool
         .select({ id: invoiceTable.id })
