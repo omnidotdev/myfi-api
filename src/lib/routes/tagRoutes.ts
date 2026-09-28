@@ -1,9 +1,16 @@
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 
 import { emitAudit } from "lib/audit";
 import { dbPool } from "lib/db/db";
-import { journalLineTagTable, tagGroupTable, tagTable } from "lib/db/schema";
+import {
+  journalEntryTable,
+  journalLineTable,
+  journalLineTagTable,
+  tagGroupTable,
+  tagTable,
+} from "lib/db/schema";
+import { authorizeBook } from "lib/middleware/bookAccess.middleware";
 
 // Tag CRUD routes
 const tagRoutes = new Elysia({ prefix: "/api/tags" })
@@ -64,7 +71,7 @@ const tagRoutes = new Elysia({ prefix: "/api/tags" })
   // Delete tag group
   .delete(
     "/groups/:id",
-    async ({ params, set }) => {
+    async ({ params, set, request }) => {
       const [existing] = await dbPool
         .select()
         .from(tagGroupTable)
@@ -74,6 +81,11 @@ const tagRoutes = new Elysia({ prefix: "/api/tags" })
         set.status = 404;
         return { error: "Tag group not found" };
       }
+
+      // Addressed by group id, not a `bookId` field, so the global middleware
+      // does not guard it: require editor on the group's own book
+      const auth = await authorizeBook(request, existing.bookId, "editor", set);
+      if (!auth) return { error: "Forbidden" };
 
       await dbPool.delete(tagGroupTable).where(eq(tagGroupTable.id, params.id));
 
@@ -96,7 +108,7 @@ const tagRoutes = new Elysia({ prefix: "/api/tags" })
   // Create tag
   .post(
     "/",
-    async ({ body, set }) => {
+    async ({ body, set, request }) => {
       const [group] = await dbPool
         .select({ bookId: tagGroupTable.bookId })
         .from(tagGroupTable)
@@ -106,6 +118,11 @@ const tagRoutes = new Elysia({ prefix: "/api/tags" })
         set.status = 404;
         return { error: "Tag group not found" };
       }
+
+      // Keyed by tag group, not a `bookId` field, so the global middleware
+      // does not guard it: require editor on the group's own book
+      const auth = await authorizeBook(request, group.bookId, "editor", set);
+      if (!auth) return { error: "Forbidden" };
 
       const [tag] = await dbPool
         .insert(tagTable)
@@ -138,7 +155,7 @@ const tagRoutes = new Elysia({ prefix: "/api/tags" })
   // Update tag
   .patch(
     "/:id",
-    async ({ params, body, set }) => {
+    async ({ params, body, set, request }) => {
       const [existing] = await dbPool
         .select({
           id: tagTable.id,
@@ -153,6 +170,11 @@ const tagRoutes = new Elysia({ prefix: "/api/tags" })
         set.status = 404;
         return { error: "Tag not found" };
       }
+
+      // Addressed by tag id, not a `bookId` field, so the global middleware
+      // does not guard it: require editor on the tag's own book
+      const auth = await authorizeBook(request, existing.bookId, "editor", set);
+      if (!auth) return { error: "Forbidden" };
 
       const [tag] = await dbPool
         .update(tagTable)
@@ -184,7 +206,7 @@ const tagRoutes = new Elysia({ prefix: "/api/tags" })
   // Delete tag
   .delete(
     "/:id",
-    async ({ params, set }) => {
+    async ({ params, set, request }) => {
       const [existing] = await dbPool
         .select({
           id: tagTable.id,
@@ -199,6 +221,11 @@ const tagRoutes = new Elysia({ prefix: "/api/tags" })
         set.status = 404;
         return { error: "Tag not found" };
       }
+
+      // Addressed by tag id, not a `bookId` field, so the global middleware
+      // does not guard it: require editor on the tag's own book
+      const auth = await authorizeBook(request, existing.bookId, "editor", set);
+      if (!auth) return { error: "Forbidden" };
 
       await dbPool.delete(tagTable).where(eq(tagTable.id, params.id));
 
@@ -221,7 +248,48 @@ const tagRoutes = new Elysia({ prefix: "/api/tags" })
   // Bulk tag journal lines
   .post(
     "/line-tags",
-    async ({ body }) => {
+    async ({ body, set, request }) => {
+      // Keyed by journal line and tag ids, not a `bookId` field, so the global
+      // middleware does not guard it: resolve the book of every referenced
+      // line and tag, then require editor on each distinct book
+      const journalLineIds = [
+        ...new Set(body.tags.map((tag) => tag.journalLineId)),
+      ];
+      const tagIds = [...new Set(body.tags.map((tag) => tag.tagId))];
+
+      const [lines, tags] = await Promise.all([
+        journalLineIds.length
+          ? dbPool
+              .select({ bookId: journalEntryTable.bookId })
+              .from(journalLineTable)
+              .innerJoin(
+                journalEntryTable,
+                eq(journalLineTable.journalEntryId, journalEntryTable.id),
+              )
+              .where(inArray(journalLineTable.id, journalLineIds))
+          : Promise.resolve([]),
+        tagIds.length
+          ? dbPool
+              .select({ bookId: tagGroupTable.bookId })
+              .from(tagTable)
+              .innerJoin(
+                tagGroupTable,
+                eq(tagTable.tagGroupId, tagGroupTable.id),
+              )
+              .where(inArray(tagTable.id, tagIds))
+          : Promise.resolve([]),
+      ]);
+
+      const bookIds = new Set<string>([
+        ...lines.map((line) => line.bookId),
+        ...tags.map((tag) => tag.bookId),
+      ]);
+
+      for (const bookId of bookIds) {
+        const auth = await authorizeBook(request, bookId, "editor", set);
+        if (!auth) return { error: "Forbidden" };
+      }
+
       const rows = await dbPool
         .insert(journalLineTagTable)
         .values(
@@ -254,16 +322,26 @@ const tagRoutes = new Elysia({ prefix: "/api/tags" })
   // Remove tag from journal line
   .delete(
     "/line-tags/:id",
-    async ({ params, set }) => {
+    async ({ params, set, request }) => {
       const [existing] = await dbPool
-        .select({ id: journalLineTagTable.id })
+        .select({
+          id: journalLineTagTable.id,
+          bookId: tagGroupTable.bookId,
+        })
         .from(journalLineTagTable)
+        .innerJoin(tagTable, eq(journalLineTagTable.tagId, tagTable.id))
+        .innerJoin(tagGroupTable, eq(tagTable.tagGroupId, tagGroupTable.id))
         .where(eq(journalLineTagTable.id, params.id));
 
       if (!existing) {
         set.status = 404;
         return { error: "Journal line tag not found" };
       }
+
+      // Addressed by row id, not a `bookId` field, so the global middleware
+      // does not guard it: resolve the book via the tag and require editor
+      const auth = await authorizeBook(request, existing.bookId, "editor", set);
+      if (!auth) return { error: "Forbidden" };
 
       await dbPool
         .delete(journalLineTagTable)

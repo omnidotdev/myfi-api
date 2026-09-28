@@ -4,6 +4,7 @@ import { Elysia, t } from "elysia";
 import { emitAudit } from "lib/audit";
 import { dbPool } from "lib/db/db";
 import { taxJurisdictionTable } from "lib/db/schema";
+import { authorizeBook } from "lib/middleware/bookAccess.middleware";
 
 // Tax jurisdiction CRUD routes
 const taxJurisdictionRoutes = new Elysia({
@@ -65,7 +66,7 @@ const taxJurisdictionRoutes = new Elysia({
   )
   .patch(
     "/:id",
-    async ({ params, body, set }) => {
+    async ({ params, body, set, request }) => {
       const [existing] = await dbPool
         .select()
         .from(taxJurisdictionTable)
@@ -75,6 +76,11 @@ const taxJurisdictionRoutes = new Elysia({
         set.status = 404;
         return { error: "Tax jurisdiction not found" };
       }
+
+      // Addressed by jurisdiction id, not a `bookId` field, so the global
+      // middleware does not guard it: require editor on its own book
+      const auth = await authorizeBook(request, existing.bookId, "editor", set);
+      if (!auth) return { error: "Forbidden" };
 
       const updates: Record<string, unknown> = {};
       if (body.name !== undefined) updates.name = body.name;
@@ -115,7 +121,7 @@ const taxJurisdictionRoutes = new Elysia({
   )
   .delete(
     "/:id",
-    async ({ params, set }) => {
+    async ({ params, set, request }) => {
       const [existing] = await dbPool
         .select()
         .from(taxJurisdictionTable)
@@ -125,6 +131,11 @@ const taxJurisdictionRoutes = new Elysia({
         set.status = 404;
         return { error: "Tax jurisdiction not found" };
       }
+
+      // Addressed by jurisdiction id, not a `bookId` field, so the global
+      // middleware does not guard it: require editor on its own book
+      const auth = await authorizeBook(request, existing.bookId, "editor", set);
+      if (!auth) return { error: "Forbidden" };
 
       await dbPool
         .delete(taxJurisdictionTable)

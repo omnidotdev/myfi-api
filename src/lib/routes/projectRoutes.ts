@@ -10,6 +10,7 @@ import {
   journalLineTable,
   projectTable,
 } from "lib/db/schema";
+import { authorizeBook } from "lib/middleware/bookAccess.middleware";
 
 /**
  * Compute total expense spend assigned to a given project by summing
@@ -118,7 +119,7 @@ const projectRoutes = new Elysia({ prefix: "/api/projects" })
   )
   .patch(
     "/:id",
-    async ({ params, body, set }) => {
+    async ({ params, body, set, request }) => {
       const [existing] = await dbPool
         .select()
         .from(projectTable)
@@ -128,6 +129,11 @@ const projectRoutes = new Elysia({ prefix: "/api/projects" })
         set.status = 404;
         return { error: "Project not found" };
       }
+
+      // Addressed by project id, not a `bookId` field, so the global
+      // middleware does not guard it: require editor on the project's own book
+      const auth = await authorizeBook(request, existing.bookId, "editor", set);
+      if (!auth) return { error: "Forbidden" };
 
       const updates: Record<string, unknown> = {};
       if (body.name !== undefined) updates.name = body.name;
@@ -170,7 +176,7 @@ const projectRoutes = new Elysia({ prefix: "/api/projects" })
   )
   .delete(
     "/:id",
-    async ({ params, set }) => {
+    async ({ params, set, request }) => {
       const [existing] = await dbPool
         .select()
         .from(projectTable)
@@ -180,6 +186,11 @@ const projectRoutes = new Elysia({ prefix: "/api/projects" })
         set.status = 404;
         return { error: "Project not found" };
       }
+
+      // Addressed by project id, not a `bookId` field, so the global
+      // middleware does not guard it: require editor on the project's own book
+      const auth = await authorizeBook(request, existing.bookId, "editor", set);
+      if (!auth) return { error: "Forbidden" };
 
       await dbPool.delete(projectTable).where(eq(projectTable.id, params.id));
 
@@ -198,7 +209,7 @@ const projectRoutes = new Elysia({ prefix: "/api/projects" })
   )
   .post(
     "/:id/complete",
-    async ({ params, set }) => {
+    async ({ params, set, request }) => {
       const [existing] = await dbPool
         .select()
         .from(projectTable)
@@ -208,6 +219,11 @@ const projectRoutes = new Elysia({ prefix: "/api/projects" })
         set.status = 404;
         return { error: "Project not found" };
       }
+
+      // Addressed by project id, not a `bookId` field, so the global
+      // middleware does not guard it: require editor on the project's own book
+      const auth = await authorizeBook(request, existing.bookId, "editor", set);
+      if (!auth) return { error: "Forbidden" };
 
       const [project] = await dbPool
         .update(projectTable)
@@ -231,7 +247,7 @@ const projectRoutes = new Elysia({ prefix: "/api/projects" })
   )
   .post(
     "/:id/archive",
-    async ({ params, set }) => {
+    async ({ params, set, request }) => {
       const [existing] = await dbPool
         .select()
         .from(projectTable)
@@ -241,6 +257,11 @@ const projectRoutes = new Elysia({ prefix: "/api/projects" })
         set.status = 404;
         return { error: "Project not found" };
       }
+
+      // Addressed by project id, not a `bookId` field, so the global
+      // middleware does not guard it: require editor on the project's own book
+      const auth = await authorizeBook(request, existing.bookId, "editor", set);
+      if (!auth) return { error: "Forbidden" };
 
       const [project] = await dbPool
         .update(projectTable)
@@ -264,7 +285,7 @@ const projectRoutes = new Elysia({ prefix: "/api/projects" })
   )
   .post(
     "/line-assignments",
-    async ({ body, set }) => {
+    async ({ body, set, request }) => {
       /**
        * Tenancy check: ensure every referenced project and journal line
        * belong to the same book before inserting. Project rows carry
@@ -317,6 +338,12 @@ const projectRoutes = new Elysia({ prefix: "/api/projects" })
         return { error: "All assignments must be within the same book" };
       }
 
+      // Referenced by project/line ids, not a `bookId` field, so the global
+      // middleware does not guard it: require editor on the resolved book
+      const [resolvedBookId] = [...bookIds];
+      const auth = await authorizeBook(request, resolvedBookId, "editor", set);
+      if (!auth) return { error: "Forbidden" };
+
       const rows = await dbPool
         .insert(journalLineProjectTable)
         .values(
@@ -343,16 +370,28 @@ const projectRoutes = new Elysia({ prefix: "/api/projects" })
   )
   .delete(
     "/line-assignments/:id",
-    async ({ params, set }) => {
+    async ({ params, set, request }) => {
       const [existing] = await dbPool
-        .select()
+        .select({
+          id: journalLineProjectTable.id,
+          bookId: projectTable.bookId,
+        })
         .from(journalLineProjectTable)
+        .innerJoin(
+          projectTable,
+          eq(journalLineProjectTable.projectId, projectTable.id),
+        )
         .where(eq(journalLineProjectTable.id, params.id));
 
       if (!existing) {
         set.status = 404;
         return { error: "Assignment not found" };
       }
+
+      // Addressed by assignment id, not a `bookId` field, so the global
+      // middleware does not guard it: resolve the book via the parent project
+      const auth = await authorizeBook(request, existing.bookId, "editor", set);
+      if (!auth) return { error: "Forbidden" };
 
       await dbPool
         .delete(journalLineProjectTable)

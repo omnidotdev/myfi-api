@@ -3,6 +3,7 @@ import { Elysia, t } from "elysia";
 
 import { dbPool } from "lib/db/db";
 import { savingsGoalTable } from "lib/db/schema";
+import { authorizeBook } from "lib/middleware/bookAccess.middleware";
 
 // Savings goal CRUD routes
 const savingsRoutes = new Elysia({ prefix: "/api/savings-goals" })
@@ -51,11 +52,11 @@ const savingsRoutes = new Elysia({ prefix: "/api/savings-goals" })
   )
   .delete(
     "/:id",
-    async ({ params, set }) => {
+    async ({ params, set, request }) => {
       const { id } = params;
 
       const [existing] = await dbPool
-        .select({ id: savingsGoalTable.id })
+        .select({ id: savingsGoalTable.id, bookId: savingsGoalTable.bookId })
         .from(savingsGoalTable)
         .where(eq(savingsGoalTable.id, id));
 
@@ -63,6 +64,11 @@ const savingsRoutes = new Elysia({ prefix: "/api/savings-goals" })
         set.status = 404;
         return { error: "Savings goal not found" };
       }
+
+      // Addressed by goal id, not a `bookId` field, so the global middleware
+      // does not guard it: require editor on the goal's own book
+      const auth = await authorizeBook(request, existing.bookId, "editor", set);
+      if (!auth) return { error: "Forbidden" };
 
       await dbPool.delete(savingsGoalTable).where(eq(savingsGoalTable.id, id));
 

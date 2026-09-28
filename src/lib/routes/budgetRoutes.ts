@@ -3,6 +3,7 @@ import { Elysia, t } from "elysia";
 
 import { dbPool } from "lib/db/db";
 import { budgetTable } from "lib/db/schema";
+import { authorizeBook } from "lib/middleware/bookAccess.middleware";
 
 // Budget CRUD routes
 const budgetRoutes = new Elysia({ prefix: "/api/budgets" })
@@ -57,11 +58,11 @@ const budgetRoutes = new Elysia({ prefix: "/api/budgets" })
   )
   .put(
     "/:id",
-    async ({ params, body, set }) => {
+    async ({ params, body, set, request }) => {
       const { id } = params;
 
       const [existing] = await dbPool
-        .select({ id: budgetTable.id })
+        .select({ id: budgetTable.id, bookId: budgetTable.bookId })
         .from(budgetTable)
         .where(eq(budgetTable.id, id));
 
@@ -69,6 +70,11 @@ const budgetRoutes = new Elysia({ prefix: "/api/budgets" })
         set.status = 404;
         return { error: "Budget not found" };
       }
+
+      // Addressed by budget id, not a `bookId` field, so the global middleware
+      // does not guard it: require editor on the budget's own book
+      const auth = await authorizeBook(request, existing.bookId, "editor", set);
+      if (!auth) return { error: "Forbidden" };
 
       const [budget] = await dbPool
         .update(budgetTable)
@@ -102,11 +108,11 @@ const budgetRoutes = new Elysia({ prefix: "/api/budgets" })
   )
   .delete(
     "/:id",
-    async ({ params, set }) => {
+    async ({ params, set, request }) => {
       const { id } = params;
 
       const [existing] = await dbPool
-        .select({ id: budgetTable.id })
+        .select({ id: budgetTable.id, bookId: budgetTable.bookId })
         .from(budgetTable)
         .where(eq(budgetTable.id, id));
 
@@ -114,6 +120,11 @@ const budgetRoutes = new Elysia({ prefix: "/api/budgets" })
         set.status = 404;
         return { error: "Budget not found" };
       }
+
+      // Addressed by budget id, not a `bookId` field, so the global middleware
+      // does not guard it: require editor on the budget's own book
+      const auth = await authorizeBook(request, existing.bookId, "editor", set);
+      if (!auth) return { error: "Forbidden" };
 
       await dbPool.delete(budgetTable).where(eq(budgetTable.id, id));
 

@@ -11,6 +11,12 @@ import {
 
 mock.module("lib/db/db", () => ({ dbPool: mockDbPool }));
 
+// Grant book access so per-handler `authorizeBook` guards pass; access control
+// itself is covered by the middleware's own mounted integration test
+mock.module("lib/middleware/bookAccess.middleware", () => ({
+  authorizeBook: mock(async () => ({ userId: "user-1" })),
+}));
+
 const { default: mileageRoutes } = await import("./mileageRoutes");
 
 const app = mileageRoutes;

@@ -3,6 +3,7 @@ import { Elysia, t } from "elysia";
 
 import { dbPool } from "lib/db/db";
 import { mileageLogTable, vehicleTable } from "lib/db/schema";
+import { authorizeBook } from "lib/middleware/bookAccess.middleware";
 
 // Standard IRS mileage rates by tax year
 const IRS_MILEAGE_RATES: Record<number, number> = {
@@ -100,11 +101,11 @@ const mileageRoutes = new Elysia({ prefix: "/api/mileage" })
   )
   .delete(
     "/:id",
-    async ({ params, set }) => {
+    async ({ params, set, request }) => {
       const { id } = params;
 
       const [existing] = await dbPool
-        .select({ id: mileageLogTable.id })
+        .select({ id: mileageLogTable.id, bookId: mileageLogTable.bookId })
         .from(mileageLogTable)
         .where(eq(mileageLogTable.id, id));
 
@@ -112,6 +113,11 @@ const mileageRoutes = new Elysia({ prefix: "/api/mileage" })
         set.status = 404;
         return { error: "Mileage log not found" };
       }
+
+      // Addressed by log id, not a `bookId` field, so the global middleware
+      // does not guard it: require editor on the log's own book
+      const auth = await authorizeBook(request, existing.bookId, "editor", set);
+      if (!auth) return { error: "Forbidden" };
 
       await dbPool.delete(mileageLogTable).where(eq(mileageLogTable.id, id));
 
@@ -204,11 +210,11 @@ const mileageRoutes = new Elysia({ prefix: "/api/mileage" })
   )
   .delete(
     "/vehicles/:id",
-    async ({ params, set }) => {
+    async ({ params, set, request }) => {
       const { id } = params;
 
       const [existing] = await dbPool
-        .select({ id: vehicleTable.id })
+        .select({ id: vehicleTable.id, bookId: vehicleTable.bookId })
         .from(vehicleTable)
         .where(eq(vehicleTable.id, id));
 
@@ -216,6 +222,11 @@ const mileageRoutes = new Elysia({ prefix: "/api/mileage" })
         set.status = 404;
         return { error: "Vehicle not found" };
       }
+
+      // Addressed by vehicle id, not a `bookId` field, so the global
+      // middleware does not guard it: require editor on the vehicle's own book
+      const auth = await authorizeBook(request, existing.bookId, "editor", set);
+      if (!auth) return { error: "Forbidden" };
 
       await dbPool.delete(vehicleTable).where(eq(vehicleTable.id, id));
 

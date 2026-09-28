@@ -4,6 +4,7 @@ import { Elysia, t } from "elysia";
 import { emitAudit } from "lib/audit";
 import { dbPool } from "lib/db/db";
 import { recurringTransactionTable } from "lib/db/schema";
+import { authorizeBook } from "lib/middleware/bookAccess.middleware";
 import { materializeRecurring } from "./materializeRecurring";
 
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
@@ -132,7 +133,7 @@ const recurringRoutes = new Elysia({ prefix: "/api/recurring-transactions" })
   )
   .delete(
     "/:id",
-    async ({ params, set }) => {
+    async ({ params, set, request }) => {
       const [existing] = await dbPool
         .select()
         .from(recurringTransactionTable)
@@ -141,6 +142,10 @@ const recurringRoutes = new Elysia({ prefix: "/api/recurring-transactions" })
         set.status = 404;
         return { error: "Recurring transaction not found" };
       }
+      // Addressed by id, not a `bookId` field, so the global middleware does
+      // not guard it: require editor on the transaction's own book
+      const auth = await authorizeBook(request, existing.bookId, "editor", set);
+      if (!auth) return { error: "Forbidden" };
       await dbPool
         .delete(recurringTransactionTable)
         .where(eq(recurringTransactionTable.id, params.id));

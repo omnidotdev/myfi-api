@@ -13,6 +13,7 @@ import {
   calculateMonthlyDepreciation,
   postDepreciation,
 } from "lib/depreciation";
+import { authorizeBook } from "lib/middleware/bookAccess.middleware";
 
 import type { InferInsertModel } from "drizzle-orm";
 
@@ -256,7 +257,7 @@ const fixedAssetRoutes = new Elysia({ prefix: "/api/fixed-assets" })
   )
   .delete(
     "/:id",
-    async ({ params, set }) => {
+    async ({ params, set, request }) => {
       const { id } = params;
 
       const [asset] = await dbPool
@@ -268,6 +269,11 @@ const fixedAssetRoutes = new Elysia({ prefix: "/api/fixed-assets" })
         set.status = 404;
         return { error: "Asset not found" };
       }
+
+      // Addressed by asset id, not a `bookId` field, so the global middleware
+      // does not guard it: require editor on the asset's own book
+      const auth = await authorizeBook(request, asset.bookId, "editor", set);
+      if (!auth) return { error: "Forbidden" };
 
       // Check for existing depreciation entries
       const [depEntry] = await dbPool
@@ -302,7 +308,7 @@ const fixedAssetRoutes = new Elysia({ prefix: "/api/fixed-assets" })
   )
   .post(
     "/:id/dispose",
-    async ({ params, body, set }) => {
+    async ({ params, body, set, request }) => {
       const { id } = params;
 
       const [asset] = await dbPool
@@ -314,6 +320,11 @@ const fixedAssetRoutes = new Elysia({ prefix: "/api/fixed-assets" })
         set.status = 404;
         return { error: "Asset not found" };
       }
+
+      // Addressed by asset id, not a `bookId` field, so the global middleware
+      // does not guard it: require editor on the asset's own book
+      const auth = await authorizeBook(request, asset.bookId, "editor", set);
+      if (!auth) return { error: "Forbidden" };
 
       if (asset.disposedAt) {
         set.status = 409;

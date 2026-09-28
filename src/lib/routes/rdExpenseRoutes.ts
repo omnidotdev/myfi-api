@@ -4,6 +4,7 @@ import { Elysia, t } from "elysia";
 import { emitAudit } from "lib/audit";
 import { dbPool } from "lib/db/db";
 import { rdExpenseTable } from "lib/db/schema";
+import { authorizeBook } from "lib/middleware/bookAccess.middleware";
 
 const CATEGORIES = [
   "wages",
@@ -91,7 +92,7 @@ const rdExpenseRoutes = new Elysia({ prefix: "/api/rd-expenses" })
   )
   .patch(
     "/:id",
-    async ({ params, body, set }) => {
+    async ({ params, body, set, request }) => {
       const [existing] = await dbPool
         .select()
         .from(rdExpenseTable)
@@ -101,6 +102,11 @@ const rdExpenseRoutes = new Elysia({ prefix: "/api/rd-expenses" })
         set.status = 404;
         return { error: "Expense not found" };
       }
+
+      // Addressed by expense id, not a `bookId` field, so the global
+      // middleware does not guard it: require editor on the expense's own book
+      const auth = await authorizeBook(request, existing.bookId, "editor", set);
+      if (!auth) return { error: "Forbidden" };
 
       if (body.category !== undefined && !CATEGORIES.includes(body.category)) {
         set.status = 400;
@@ -152,7 +158,7 @@ const rdExpenseRoutes = new Elysia({ prefix: "/api/rd-expenses" })
   )
   .delete(
     "/:id",
-    async ({ params, set }) => {
+    async ({ params, set, request }) => {
       const [existing] = await dbPool
         .select()
         .from(rdExpenseTable)
@@ -162,6 +168,11 @@ const rdExpenseRoutes = new Elysia({ prefix: "/api/rd-expenses" })
         set.status = 404;
         return { error: "Expense not found" };
       }
+
+      // Addressed by expense id, not a `bookId` field, so the global
+      // middleware does not guard it: require editor on the expense's own book
+      const auth = await authorizeBook(request, existing.bookId, "editor", set);
+      if (!auth) return { error: "Forbidden" };
 
       await dbPool
         .delete(rdExpenseTable)
