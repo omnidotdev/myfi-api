@@ -331,9 +331,14 @@ const fixedAssetRoutes = new Elysia({ prefix: "/api/fixed-assets" })
         return { error: "Asset is already disposed" };
       }
 
+      const proceeds = Number(body.disposalProceeds);
+      if (Number.isNaN(proceeds) || proceeds < 0) {
+        set.status = 400;
+        return { error: "disposalProceeds must be a non-negative number" };
+      }
+
       const totalDepreciated = await getTotalDepreciated(asset.id);
       const acquisitionCost = Number(asset.acquisitionCost);
-      const proceeds = Number(body.disposalProceeds);
       const bookValue = acquisitionCost - totalDepreciated;
       const gainLoss = proceeds - bookValue;
 
