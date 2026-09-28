@@ -34,7 +34,11 @@ import {
 import { decryptToken } from "lib/encryption/tokenEncryption";
 import estimateRoutes from "lib/estimates/estimateRoutes";
 import createGraphqlContext from "lib/graphql/createGraphqlContext";
-import { armorPlugin, authenticationPlugin } from "lib/graphql/plugins";
+import {
+  armorPlugin,
+  authenticationPlugin,
+  denySensitiveFieldsPlugin,
+} from "lib/graphql/plugins";
 import importRoutes from "lib/import/importRoutes";
 import profileRoutes from "lib/import/profileRoutes";
 import inventoryRoutes from "lib/inventory/inventoryRoutes";
@@ -179,6 +183,7 @@ const app = new Elysia()
       plugins: [
         ...armorPlugin,
         authenticationPlugin,
+        denySensitiveFieldsPlugin,
         isProdEnv && useDisableIntrospection(),
         useParserCache(),
         useValidationCache(),
