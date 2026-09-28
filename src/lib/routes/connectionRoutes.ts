@@ -4,6 +4,7 @@ import { Elysia, t } from "elysia";
 import { emitAudit } from "lib/audit";
 import { dbPool } from "lib/db/db";
 import { connectedAccountTable } from "lib/db/schema";
+import { authorizeBook } from "lib/middleware/bookAccess.middleware";
 
 // Columns safe to return to clients: never the encrypted `accessToken` (the
 // Plaid/OFX credential blob). Used by every read AND every write's .returning()
@@ -39,7 +40,7 @@ const connectionRoutes = new Elysia({ prefix: "/api/connections" })
   })
   .patch(
     "/:id",
-    async ({ params, body, set }) => {
+    async ({ params, body, set, request }) => {
       const { id } = params;
 
       const [existing] = await dbPool
@@ -55,6 +56,11 @@ const connectionRoutes = new Elysia({ prefix: "/api/connections" })
         set.status = 404;
         return { error: "Connected account not found" };
       }
+
+      // Addressed by connection id, not a `bookId` field, so the global
+      // middleware does not guard it: require editor on the connection's book
+      const auth = await authorizeBook(request, existing.bookId, "editor", set);
+      if (!auth) return { error: "Forbidden" };
 
       const [connection] = await dbPool
         .update(connectedAccountTable)
@@ -83,7 +89,7 @@ const connectionRoutes = new Elysia({ prefix: "/api/connections" })
   )
   .delete(
     "/:id",
-    async ({ params, set }) => {
+    async ({ params, set, request }) => {
       const { id } = params;
 
       const [existing] = await dbPool
@@ -99,6 +105,11 @@ const connectionRoutes = new Elysia({ prefix: "/api/connections" })
         set.status = 404;
         return { error: "Connected account not found" };
       }
+
+      // Addressed by connection id, not a `bookId` field, so the global
+      // middleware does not guard it: require editor on the connection's book
+      const auth = await authorizeBook(request, existing.bookId, "editor", set);
+      if (!auth) return { error: "Forbidden" };
 
       // Soft-delete: set status to disconnected instead of removing
       const [connection] = await dbPool

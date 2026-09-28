@@ -1,5 +1,9 @@
+import { eq } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 
+import { dbPool } from "lib/db/db";
+import { cryptoAssetTable } from "lib/db/schema";
+import { authorizeBook } from "lib/middleware/bookAccess.middleware";
 import {
   acquireLot,
   disposeLot,
@@ -7,11 +11,34 @@ import {
   listLots,
 } from "./costBasis";
 
+// Resolve the book that owns a crypto asset so lot routes (keyed on
+// cryptoAssetId, not a bookId) can be authorized against the asset's own book
+const resolveAssetBookId = async (
+  cryptoAssetId: string,
+): Promise<string | null> => {
+  const [asset] = await dbPool
+    .select({ bookId: cryptoAssetTable.bookId })
+    .from(cryptoAssetTable)
+    .where(eq(cryptoAssetTable.id, cryptoAssetId));
+
+  return asset?.bookId ?? null;
+};
+
 // REST routes for crypto lot operations (cost-basis tracking)
 const lotRoutes = new Elysia({ prefix: "/api/crypto/lots" })
   .post(
     "/acquire",
-    async ({ body, set }) => {
+    async ({ body, set, request }) => {
+      // Keyed on cryptoAssetId, not a `bookId` field, so the global middleware
+      // does not guard it: require editor on the asset's own book
+      const bookId = await resolveAssetBookId(body.cryptoAssetId);
+      if (!bookId) {
+        set.status = 404;
+        return { error: "Crypto asset not found" };
+      }
+      const auth = await authorizeBook(request, bookId, "editor", set);
+      if (!auth) return { error: "Forbidden" };
+
       try {
         const lot = await acquireLot(body);
 
@@ -39,7 +66,17 @@ const lotRoutes = new Elysia({ prefix: "/api/crypto/lots" })
   )
   .post(
     "/dispose",
-    async ({ body, set }) => {
+    async ({ body, set, request }) => {
+      // Keyed on cryptoAssetId, not a `bookId` field, so the global middleware
+      // does not guard it: require editor on the asset's own book
+      const bookId = await resolveAssetBookId(body.cryptoAssetId);
+      if (!bookId) {
+        set.status = 404;
+        return { error: "Crypto asset not found" };
+      }
+      const auth = await authorizeBook(request, bookId, "editor", set);
+      if (!auth) return { error: "Forbidden" };
+
       try {
         const result = await disposeLot(body);
 
@@ -65,7 +102,7 @@ const lotRoutes = new Elysia({ prefix: "/api/crypto/lots" })
   )
   .get(
     "/unrealized",
-    async ({ query, set }) => {
+    async ({ query, set, request }) => {
       const { cryptoAssetId, currentPriceUsd } = query;
 
       if (!cryptoAssetId || !currentPriceUsd) {
@@ -76,6 +113,16 @@ const lotRoutes = new Elysia({ prefix: "/api/crypto/lots" })
             "cryptoAssetId and currentPriceUsd query parameters are required",
         };
       }
+
+      // Keyed on cryptoAssetId, not a `bookId` field, so the global middleware
+      // does not guard it: require viewer on the asset's own book
+      const bookId = await resolveAssetBookId(cryptoAssetId);
+      if (!bookId) {
+        set.status = 404;
+        return { error: "Crypto asset not found" };
+      }
+      const auth = await authorizeBook(request, bookId, "viewer", set);
+      if (!auth) return { error: "Forbidden" };
 
       const price = Number(currentPriceUsd);
 
@@ -107,7 +154,7 @@ const lotRoutes = new Elysia({ prefix: "/api/crypto/lots" })
   )
   .get(
     "/",
-    async ({ query, set }) => {
+    async ({ query, set, request }) => {
       const { cryptoAssetId } = query;
 
       if (!cryptoAssetId) {
@@ -115,6 +162,16 @@ const lotRoutes = new Elysia({ prefix: "/api/crypto/lots" })
 
         return { error: "cryptoAssetId query parameter is required" };
       }
+
+      // Keyed on cryptoAssetId, not a `bookId` field, so the global middleware
+      // does not guard it: require viewer on the asset's own book
+      const bookId = await resolveAssetBookId(cryptoAssetId);
+      if (!bookId) {
+        set.status = 404;
+        return { error: "Crypto asset not found" };
+      }
+      const auth = await authorizeBook(request, bookId, "viewer", set);
+      if (!auth) return { error: "Forbidden" };
 
       try {
         const lots = await listLots(cryptoAssetId);

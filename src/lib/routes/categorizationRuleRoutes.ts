@@ -7,6 +7,7 @@ import {
   categorizationRuleSplitTable,
   categorizationRuleTable,
 } from "lib/db/schema";
+import { authorizeBook } from "lib/middleware/bookAccess.middleware";
 
 interface SplitInput {
   accountId: string;
@@ -229,7 +230,7 @@ const categorizationRuleRoutes = new Elysia({
   )
   .patch(
     "/:id",
-    async ({ params, body, set }) => {
+    async ({ params, body, set, request }) => {
       const { id } = params;
 
       const [existing] = await dbPool
@@ -241,6 +242,11 @@ const categorizationRuleRoutes = new Elysia({
         set.status = 404;
         return { error: "Categorization rule not found" };
       }
+
+      // Addressed by rule id, not a `bookId` field, so the global middleware
+      // does not guard it: require editor on the rule's own book
+      const auth = await authorizeBook(request, existing.bookId, "editor", set);
+      if (!auth) return { error: "Forbidden" };
 
       if (body.splits !== undefined && body.splits.length > 0) {
         const validation = validateSplits(body.splits);
@@ -314,7 +320,7 @@ const categorizationRuleRoutes = new Elysia({
   )
   .delete(
     "/:id",
-    async ({ params, set }) => {
+    async ({ params, set, request }) => {
       const { id } = params;
 
       const [existing] = await dbPool
@@ -326,6 +332,11 @@ const categorizationRuleRoutes = new Elysia({
         set.status = 404;
         return { error: "Categorization rule not found" };
       }
+
+      // Addressed by rule id, not a `bookId` field, so the global middleware
+      // does not guard it: require editor on the rule's own book
+      const auth = await authorizeBook(request, existing.bookId, "editor", set);
+      if (!auth) return { error: "Forbidden" };
 
       await dbPool
         .delete(categorizationRuleTable)

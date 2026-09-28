@@ -16,6 +16,12 @@ mock.module("lib/audit", () => ({
   SYSTEM_ACTOR: { id: "system" },
 }));
 
+// Grant book access so per-handler `authorizeBook` guards pass; access control
+// itself is covered by the middleware's own mounted integration test
+mock.module("lib/middleware/bookAccess.middleware", () => ({
+  authorizeBook: mock(async () => ({ userId: "user-1" })),
+}));
+
 const { default: connectionRoutes } = await import("./connectionRoutes");
 
 const app = connectionRoutes;

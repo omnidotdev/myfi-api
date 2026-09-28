@@ -3,6 +3,7 @@ import { Elysia, t } from "elysia";
 
 import { dbPool } from "lib/db/db";
 import { importProfileTable } from "lib/db/schema";
+import { authorizeBook } from "lib/middleware/bookAccess.middleware";
 
 const profileRoutes = new Elysia({ prefix: "/api/import/profiles" })
   .get(
@@ -45,7 +46,25 @@ const profileRoutes = new Elysia({ prefix: "/api/import/profiles" })
   )
   .delete(
     "/:id",
-    async ({ params }) => {
+    async ({ params, set, request }) => {
+      // Addressed by profile id, not a `bookId` field, so the global
+      // middleware does not guard it: resolve the profile's own book and
+      // require editor before deleting a real row
+      const [existing] = await dbPool
+        .select({ bookId: importProfileTable.bookId })
+        .from(importProfileTable)
+        .where(eq(importProfileTable.id, params.id));
+
+      if (existing) {
+        const auth = await authorizeBook(
+          request,
+          existing.bookId,
+          "editor",
+          set,
+        );
+        if (!auth) return { error: "Forbidden" };
+      }
+
       await dbPool
         .delete(importProfileTable)
         .where(eq(importProfileTable.id, params.id));

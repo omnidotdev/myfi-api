@@ -3,6 +3,7 @@ import { Elysia, t } from "elysia";
 
 import { dbPool } from "lib/db/db";
 import { cryptoAssetTable } from "lib/db/schema";
+import { authorizeBook } from "lib/middleware/bookAccess.middleware";
 import { fetchHistoricalPrice, fetchPrices } from "./priceService";
 import { fetchWalletBalance, validateWalletAddress } from "./walletService";
 
@@ -136,7 +137,7 @@ const cryptoRoutes = new Elysia({ prefix: "/api/crypto" })
   )
   .post(
     "/wallets/:id/refresh",
-    async ({ params, set }) => {
+    async ({ params, set, request }) => {
       const { id } = params;
 
       const [asset] = await dbPool
@@ -148,6 +149,11 @@ const cryptoRoutes = new Elysia({ prefix: "/api/crypto" })
         set.status = 404;
         return { error: "Crypto asset not found" };
       }
+
+      // Addressed by asset id, not a `bookId` field, so the global middleware
+      // does not guard it: require editor on the asset's own book
+      const auth = await authorizeBook(request, asset.bookId, "editor", set);
+      if (!auth) return { error: "Forbidden" };
 
       // Fetch latest price for the asset
       let currentPrice: number | null = null;
