@@ -32,13 +32,22 @@ const resolveUser: ResolveUserFn<Observer, GraphQLContext> = async (ctx) => {
 
 /**
  * Authentication plugin.
- * Uses "resolve-only" mode to allow unauthenticated queries.
+ *
+ * "protect-all" requires a valid access token for every GraphQL operation, so
+ * the endpoint is not anonymously queryable. This matters because the schema is
+ * generated straight from the tables (Postgraphile Amber) and would otherwise
+ * expose cross-tenant data to unauthenticated callers. The app itself is
+ * REST-only, so nothing legitimately queries GraphQL without a token.
+ *
+ * NOTE: this enforces authentication, not per-book authorization. Tenant
+ * scoping (so an authenticated user cannot read another workspace's rows) and
+ * omitting the encrypted secret columns still need to be layered on.
  * @see https://the-guild.dev/graphql/envelop/plugins/use-generic-auth
  */
 const authenticationPlugin = useGenericAuth({
   contextFieldName: "observer",
   resolveUserFn: resolveUser,
-  mode: "resolve-only",
+  mode: "protect-all",
 });
 
 export default authenticationPlugin;
