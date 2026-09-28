@@ -18,6 +18,7 @@ import runYearEndClose from "lib/close/yearEndClose";
 import appConfig from "lib/config/app.config";
 import {
   CORS_ALLOWED_ORIGINS,
+  INTERNAL_JOB_TOKEN,
   PORT,
   isDevEnv,
   isProdEnv,
@@ -884,7 +885,18 @@ const app = new Elysia()
     }
   })
   // Job trigger endpoints
-  .post("/api/jobs/monthly-close", async () => {
+  .post("/api/jobs/monthly-close", async ({ request, set }) => {
+    // System-wide (all books), so gate behind an internal ops token rather than
+    // letting any authenticated user trigger it. Scheduled runs go through the
+    // in-process scheduler, not this endpoint. Fail closed if unconfigured
+    if (
+      !INTERNAL_JOB_TOKEN ||
+      request.headers.get("x-internal-token") !== INTERNAL_JOB_TOKEN
+    ) {
+      set.status = 403;
+      return { error: "Forbidden" };
+    }
+
     const results = await runMonthlyClose();
     return { results };
   })

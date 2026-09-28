@@ -21,6 +21,9 @@ export const {
   HERALD_API_URL,
   HERALD_API_KEY,
   NOTIFICATION_FROM_EMAIL,
+  // Shared secret for the manual system-job trigger endpoints (e.g. monthly
+  // close). Scheduled runs happen in-process; these HTTP triggers are ops-only
+  INTERNAL_JOB_TOKEN,
 } = process.env;
 
 export const isDevEnv = NODE_ENV === "development",
