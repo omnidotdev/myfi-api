@@ -2,7 +2,11 @@ import { eq } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 
 import { emitAudit } from "lib/audit";
-import { extractBearerToken, resolveUserFromToken } from "lib/auth";
+import {
+  extractBearerToken,
+  resolveUserFromToken,
+  resolveUserOrgIds,
+} from "lib/auth";
 import { dbPool } from "lib/db/db";
 import { accountTable, bookAccessTable, bookTable } from "lib/db/schema";
 import {
@@ -136,6 +140,15 @@ const bookRoutes = new Elysia({ prefix: "/api/books" })
         template,
       } = body;
       const actor = await getActor(request);
+
+      // Only let a user create a book into an organization they belong to
+      // (the org comes from the request body, so the middleware can't guard it)
+      const token = extractBearerToken(request.headers.get("authorization"));
+      const orgIds = token ? await resolveUserOrgIds(token) : [];
+      if (!orgIds.includes(organizationId)) {
+        set.status = 403;
+        return { error: "Forbidden" };
+      }
 
       const [book] = await dbPool
         .insert(bookTable)

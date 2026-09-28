@@ -1,4 +1,4 @@
-import { resolveAccessToken } from "@omnidotdev/providers";
+import { extractOrgClaims, resolveAccessToken } from "@omnidotdev/providers";
 
 import { AUTH_JWKS_URL } from "lib/config/env.config";
 
@@ -95,5 +95,29 @@ export const resolveUserFromToken = async (
     console.error("[Auth] Token verification failed:", (err as Error).message);
 
     return null;
+  }
+};
+
+/**
+ * Resolve the organization ids the caller is a member of, from the token's
+ * Omni org claims. Used to authorize actions keyed on an organizationId (rather
+ * than a bookId), e.g. creating a book into an organization. Returns [] when the
+ * token cannot be resolved or carries no org claims
+ * @param accessToken - Bearer access token
+ */
+export const resolveUserOrgIds = async (
+  accessToken: string,
+): Promise<string[]> => {
+  if (!AUTH_BASE_URL || !USERINFO_URL) return [];
+
+  try {
+    const claims = await resolveAccessToken(accessToken, {
+      authBaseUrl: AUTH_BASE_URL,
+      userinfoUrl: USERINFO_URL,
+    });
+
+    return extractOrgClaims(claims).map((org) => org.id);
+  } catch {
+    return [];
   }
 };
