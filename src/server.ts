@@ -38,6 +38,7 @@ import {
   armorPlugin,
   authenticationPlugin,
   denySensitiveFieldsPlugin,
+  tenantScopePlugin,
 } from "lib/graphql/plugins";
 import importRoutes from "lib/import/importRoutes";
 import profileRoutes from "lib/import/profileRoutes";
@@ -184,6 +185,7 @@ const app = new Elysia()
         ...armorPlugin,
         authenticationPlugin,
         denySensitiveFieldsPlugin,
+        tenantScopePlugin,
         isProdEnv && useDisableIntrospection(),
         useParserCache(),
         useValidationCache(),
