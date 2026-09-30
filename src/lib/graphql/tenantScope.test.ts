@@ -46,6 +46,14 @@ describe("extractScopeRequirements", () => {
     expect("error" in r && r.error).toMatch(/Only read queries/);
   });
 
+  test("auditLog is org-scoped via a direct argument (not a condition)", () => {
+    const r = scope(
+      'query Q($o: ID!) { auditLog(organizationId: $o, product: "myfi") { id } }',
+      { o: "org-7" },
+    );
+    expect(r).toEqual({ bookIds: [], organizationIds: ["org-7"] });
+  });
+
   test("collects ids across multiple root fields", () => {
     const r = scope(
       '{ accounts(condition: { bookId: "b1" }) { nodes { id } } budgets(condition: { bookId: "b2" }) { nodes { id } } }',

@@ -1,4 +1,9 @@
-import type { DocumentNode, FieldNode, OperationDefinitionNode } from "graphql";
+import type {
+  DocumentNode,
+  FieldNode,
+  OperationDefinitionNode,
+  ValueNode,
+} from "graphql";
 
 // The only root query fields the app uses over GraphQL. Everything else in the
 // auto-generated Postgraphile schema (e.g. allVendors, connectedAccounts) is an
@@ -12,40 +17,55 @@ const ALLOWED_QUERY_FIELDS = new Set([
   "journalEntries",
   "reconciliationQueues",
   "savingsGoals",
+  "auditLog",
 ]);
 
-// `books` is scoped by organizationId; the rest are scoped by bookId
-const ORG_SCOPED_FIELDS = new Set(["books"]);
+// `books` and `auditLog` are scoped by organizationId; the rest by bookId
+const ORG_SCOPED_FIELDS = new Set(["books", "auditLog"]);
 
 type ScopeRequirements =
   | { error: string }
   | { bookIds: string[]; organizationIds: string[] };
 
+/** Resolve a value node to a string, following a $variable when needed */
+const valueToString = (
+  value: ValueNode,
+  variableValues: Record<string, unknown>,
+): string | undefined => {
+  if (value.kind === "StringValue") return value.value;
+  if (value.kind === "Variable") {
+    const resolved = variableValues[value.name.value];
+    return typeof resolved === "string" ? resolved : undefined;
+  }
+  return undefined;
+};
+
 /**
- * Pull the scoping id (a UUID string) out of a field's `condition` argument,
- * resolving a `$variable` against the operation's variable values so an inline
- * literal and a variable are both covered
+ * Pull the scoping id (a UUID / org id string) out of a field, whether it is a
+ * direct argument (e.g. `auditLog(organizationId: $o)`) or nested in a
+ * `condition` object (e.g. `accounts(condition: { bookId: $b })`). Resolves a
+ * `$variable` against the operation's variable values so an inline literal and a
+ * variable are both covered
  */
 const extractConditionId = (
   field: FieldNode,
   key: "bookId" | "organizationId",
   variableValues: Record<string, unknown>,
 ): string | undefined => {
+  const directArg = field.arguments?.find((a) => a.name.value === key);
+  if (directArg) {
+    const fromDirect = valueToString(directArg.value, variableValues);
+    if (fromDirect) return fromDirect;
+  }
+
   const conditionArg = field.arguments?.find(
     (a) => a.name.value === "condition",
   );
-  if (!conditionArg || conditionArg.value.kind !== "ObjectValue") {
-    return undefined;
+  if (conditionArg?.value.kind === "ObjectValue") {
+    const idField = conditionArg.value.fields.find((f) => f.name.value === key);
+    if (idField) return valueToString(idField.value, variableValues);
   }
-  const idField = conditionArg.value.fields.find((f) => f.name.value === key);
-  if (!idField) return undefined;
 
-  const value = idField.value;
-  if (value.kind === "StringValue") return value.value;
-  if (value.kind === "Variable") {
-    const resolved = variableValues[value.name.value];
-    return typeof resolved === "string" ? resolved : undefined;
-  }
   return undefined;
 };
 
