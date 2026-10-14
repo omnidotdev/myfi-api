@@ -60,6 +60,7 @@ describe("postBill", () => {
   test("posts a draft bill: expense and tax debits, AP credit, bill opened", async () => {
     setSelectResults([
       [draftBill],
+      [], // isPeriodLocked: open period
       [
         {
           quantity: "1",
@@ -81,17 +82,19 @@ describe("postBill", () => {
       vendorId: "vendor-1",
       memo: "Bill B-1",
     });
-    // supplies debit + tax debit + AP credit
-    expect(insertedLines).toHaveLength(3);
+    // US treatment: tax paid folds into the expense debit, so there are only
+    // two lines (expense incl. tax, and the AP credit), no tax-payable debit
+    expect(insertedLines).toHaveLength(2);
     expect(insertedLines.find((l) => l.accountId === "ap")).toMatchObject({
       credit: "108.2500",
       debit: "0.0000",
     });
     expect(insertedLines.find((l) => l.accountId === "supplies")).toMatchObject(
       {
-        debit: "100.0000",
+        debit: "108.2500",
       },
     );
+    expect(insertedLines.some((l) => l.accountId === "tax")).toBe(false);
     expect(billUpdate).toMatchObject({ status: "open", total: "108.2500" });
     expect(result).toMatchObject({ total: 108.25, alreadyPosted: false });
   });
@@ -113,6 +116,7 @@ describe("postBill", () => {
   test("throws when the book has no Accounts Payable account", async () => {
     setSelectResults([
       [draftBill],
+      [], // isPeriodLocked: open period
       [
         {
           quantity: "1",

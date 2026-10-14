@@ -52,6 +52,7 @@ type ChainableMock = unknown[] & {
   orderBy?: () => ChainableMock;
   groupBy?: () => ChainableMock;
   limit?: () => ChainableMock;
+  for?: () => ChainableMock;
   innerJoin?: () => ChainableMock;
   leftJoin?: () => ChainableMock;
   $dynamic?: () => ChainableMock;
@@ -65,6 +66,8 @@ const buildTerminal = (data: unknown[]): ChainableMock =>
     orderBy: mock(() => buildTerminal(data)),
     groupBy: mock(() => buildTerminal(data)),
     limit: mock(() => buildTerminal(data)),
+    // Row-locking clause (`.for("update")`) resolves to the same rows
+    for: mock(() => buildTerminal(data)),
   }) as ChainableMock;
 
 // Build a result array that also has chainable Drizzle methods
@@ -76,6 +79,7 @@ const buildResult = (data: unknown[]): ChainableMock => {
     orderBy: mock(() => buildTerminal(data)),
     groupBy: mock(() => buildTerminal(data)),
     limit: mock(() => buildTerminal(data)),
+    for: mock(() => buildTerminal(data)),
     innerJoin: mock(() => buildResult(data)),
     leftJoin: mock(() => buildResult(data)),
     // Drizzle's `.$dynamic()` returns the same builder, so mirror the chain

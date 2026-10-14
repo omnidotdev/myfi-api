@@ -111,11 +111,34 @@ export const recordInvoicePayment = async (
     );
   }
 
-  const newPaidUnits = toUnits(Number(invoice.amountPaid)) + toUnits(amount);
-  const invoiceStatus: "partial" | "paid" =
-    newPaidUnits >= toUnits(Number(invoice.total)) ? "paid" : "partial";
-
   return dbPool.transaction(async (tx) => {
+    // Re-read the invoice under a row lock inside the transaction and recompute
+    // the balance here. The outer read is only a fast-fail; without the lock two
+    // concurrent payments both see the stale amountPaid, both pass the check,
+    // and both post a receipt - leaving AR double-credited while the subledger
+    // records a single payment. FOR UPDATE serializes them on the invoice row
+    const [locked] = await tx
+      .select()
+      .from(invoiceTable)
+      .where(eq(invoiceTable.id, invoiceId))
+      .for("update");
+    if (!locked || locked.bookId !== bookId) {
+      throw new Error("Invoice not found");
+    }
+    if (locked.status !== "open" && locked.status !== "partial") {
+      throw new Error("Only a posted, unpaid invoice can take a payment");
+    }
+
+    const lockedBalanceDueUnits =
+      toUnits(Number(locked.total)) - toUnits(Number(locked.amountPaid));
+    if (toUnits(amount) > lockedBalanceDueUnits) {
+      throw new Error("Payment exceeds the balance due");
+    }
+
+    const newPaidUnits = toUnits(Number(locked.amountPaid)) + toUnits(amount);
+    const invoiceStatus: "partial" | "paid" =
+      newPaidUnits >= toUnits(Number(locked.total)) ? "paid" : "partial";
+
     const [paymentRow] = await tx
       .insert(invoicePaymentTable)
       .values({

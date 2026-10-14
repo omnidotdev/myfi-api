@@ -1,5 +1,6 @@
 import { eq, inArray } from "drizzle-orm";
 
+import { isPeriodLocked } from "lib/accounting/periodLock";
 import { dbPool } from "lib/db/db";
 import {
   inventoryItemTable,
@@ -7,7 +8,13 @@ import {
   invoicePaymentTable,
   invoiceTable,
   journalEntryTable,
+  journalLineTable,
 } from "lib/db/schema";
+
+import type { InferInsertModel } from "drizzle-orm";
+
+/** Journal-entry source marking the reversal of a voided invoice */
+const INVOICE_VOID_SOURCE = "invoice_void";
 
 interface VoidInvoiceResult {
   invoiceId: string;
@@ -16,12 +23,14 @@ interface VoidInvoiceResult {
 }
 
 /**
- * Void an invoice: reverse its ledger effect by deleting its journal entry (the
- * lines cascade) and mark it void. Any inventory sold by the invoice is returned
- * to stock and its stock movements removed, so voiding fully reverses COGS and
- * quantity. Refused when payments exist, since a paid invoice must be handled
- * with a credit/refund rather than a silent void. A draft invoice (never posted)
- * is simply marked void with no ledger change
+ * Void an invoice by posting a dated reversing journal entry (each original
+ * line's debit and credit swapped) in the current open period, rather than
+ * deleting the original entry. Deleting would silently rewrite history and,
+ * when the original sits in a closed period, mutate that closed period; a
+ * reversal preserves the audit trail and leaves closed periods untouched. Any
+ * inventory the invoice sold is returned to stock with offsetting movements, so
+ * COGS and quantity reverse too. Refused when payments exist (handle with a
+ * credit/refund). A draft invoice (never posted) is simply marked void
  */
 export const voidInvoice = async (
   invoiceId: string,
@@ -51,21 +60,46 @@ export const voidInvoice = async (
     throw new Error("Cannot void an invoice that has payments");
   }
 
-  // Plan any inventory restock: the invoice's stock movements are linked to its
-  // journal entry, with quantity stored negative (a sale), so restoring adds the
-  // absolute quantity back to the item on hand
-  const restock: { itemId: string; newQuantityOnHand: number }[] = [];
-  if (invoice.journalEntryId) {
-    const movements = await dbPool
-      .select({
-        itemId: inventoryTransactionTable.itemId,
-        quantity: inventoryTransactionTable.quantity,
-      })
-      .from(inventoryTransactionTable)
-      .where(
-        eq(inventoryTransactionTable.journalEntryId, invoice.journalEntryId),
-      );
+  // A draft invoice never posted to the ledger: just mark it void
+  if (!invoice.journalEntryId) {
+    await dbPool
+      .update(invoiceTable)
+      .set({ status: "void", updatedAt: new Date().toISOString() })
+      .where(eq(invoiceTable.id, invoiceId));
+    return { invoiceId, alreadyVoid: false };
+  }
 
+  // The reversal posts in today's (open) period; refuse if that is closed
+  const voidDate = new Date().toISOString().slice(0, 10);
+  if (await isPeriodLocked(bookId, voidDate)) {
+    throw new Error("Cannot void into a closed period");
+  }
+
+  // Original ledger lines, reversed (debit <-> credit) one-for-one
+  const originalLines = await dbPool
+    .select({
+      accountId: journalLineTable.accountId,
+      debit: journalLineTable.debit,
+      credit: journalLineTable.credit,
+    })
+    .from(journalLineTable)
+    .where(eq(journalLineTable.journalEntryId, invoice.journalEntryId));
+
+  // Original stock movements: reverse each (negate quantity) and restock
+  const movements = await dbPool
+    .select({
+      itemId: inventoryTransactionTable.itemId,
+      quantity: inventoryTransactionTable.quantity,
+      unitCost: inventoryTransactionTable.unitCost,
+      date: inventoryTransactionTable.date,
+    })
+    .from(inventoryTransactionTable)
+    .where(
+      eq(inventoryTransactionTable.journalEntryId, invoice.journalEntryId),
+    );
+
+  const restock: { itemId: string; newQuantityOnHand: number }[] = [];
+  if (movements.length > 0) {
     const returnByItem = new Map<string, number>();
     for (const m of movements) {
       returnByItem.set(
@@ -73,25 +107,61 @@ export const voidInvoice = async (
         (returnByItem.get(m.itemId) ?? 0) - Number(m.quantity),
       );
     }
-    if (returnByItem.size > 0) {
-      const items = await dbPool
-        .select({
-          id: inventoryItemTable.id,
-          quantityOnHand: inventoryItemTable.quantityOnHand,
-        })
-        .from(inventoryItemTable)
-        .where(inArray(inventoryItemTable.id, [...returnByItem.keys()]));
-      for (const item of items) {
-        restock.push({
-          itemId: item.id,
-          newQuantityOnHand:
-            Number(item.quantityOnHand) + (returnByItem.get(item.id) ?? 0),
-        });
-      }
+    const items = await dbPool
+      .select({
+        id: inventoryItemTable.id,
+        quantityOnHand: inventoryItemTable.quantityOnHand,
+      })
+      .from(inventoryItemTable)
+      .where(inArray(inventoryItemTable.id, [...returnByItem.keys()]));
+    for (const item of items) {
+      restock.push({
+        itemId: item.id,
+        newQuantityOnHand:
+          Number(item.quantityOnHand) + (returnByItem.get(item.id) ?? 0),
+      });
     }
   }
 
   return dbPool.transaction(async (tx) => {
+    const [reversal] = await tx
+      .insert(journalEntryTable)
+      .values({
+        bookId,
+        date: voidDate,
+        memo: `Void invoice ${invoice.number}`,
+        source: INVOICE_VOID_SOURCE,
+        sourceReferenceId: invoiceId,
+        isReviewed: true,
+      } satisfies InferInsertModel<typeof journalEntryTable>)
+      .returning();
+
+    await tx.insert(journalLineTable).values(
+      originalLines.map((line) => ({
+        journalEntryId: reversal.id,
+        accountId: line.accountId,
+        // Swap sides to reverse the original posting
+        debit: line.credit,
+        credit: line.debit,
+      })),
+    );
+
+    // Offsetting stock movements (negated quantity) tied to the reversal, and
+    // restock the on-hand quantity
+    if (movements.length > 0) {
+      await tx.insert(inventoryTransactionTable).values(
+        movements.map((m) => ({
+          bookId,
+          itemId: m.itemId,
+          date: voidDate,
+          type: "adjustment",
+          quantity: (-Number(m.quantity)).toFixed(4),
+          unitCost: m.unitCost,
+          note: `Void invoice ${invoice.number}`,
+          journalEntryId: reversal.id,
+        })),
+      );
+    }
     for (const r of restock) {
       await tx
         .update(inventoryItemTable)
@@ -102,25 +172,9 @@ export const voidInvoice = async (
         .where(eq(inventoryItemTable.id, r.itemId));
     }
 
-    if (invoice.journalEntryId) {
-      // remove the stock movements tied to this invoice's entry, then the entry
-      await tx
-        .delete(inventoryTransactionTable)
-        .where(
-          eq(inventoryTransactionTable.journalEntryId, invoice.journalEntryId),
-        );
-      await tx
-        .delete(journalEntryTable)
-        .where(eq(journalEntryTable.id, invoice.journalEntryId));
-    }
-
     await tx
       .update(invoiceTable)
-      .set({
-        status: "void",
-        journalEntryId: null,
-        updatedAt: new Date().toISOString(),
-      })
+      .set({ status: "void", updatedAt: new Date().toISOString() })
       .where(eq(invoiceTable.id, invoiceId));
 
     return { invoiceId, alreadyVoid: false };

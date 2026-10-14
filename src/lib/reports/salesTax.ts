@@ -1,4 +1,4 @@
-import { and, between, eq, sum } from "drizzle-orm";
+import { and, eq, sql, sum } from "drizzle-orm";
 
 import { dbPool } from "lib/db/db";
 import {
@@ -109,7 +109,9 @@ const queryPeriodTotals = async (
     .where(
       and(
         eq(journalLineTable.accountId, accountId),
-        between(journalEntryTable.date, startDate, endDate),
+        // Cast the timestamptz to a calendar date so an entry with a time-of-day
+        // on the last day of the period is not dropped
+        sql`${journalEntryTable.date}::date between ${startDate} and ${endDate}`,
       ),
     );
 
@@ -161,6 +163,10 @@ const generateSalesTaxReport = async (params: {
         period.endDate,
       );
 
+      // Credits to the tax-payable account are tax collected on sales; debits
+      // are remittances to the authority. Vendor-bill tax paid no longer debits
+      // this account (it is folded into expense under US treatment), so debits
+      // here represent deliberate remittances rather than input-tax credits
       const collected = Number.parseFloat(totals.credits) || 0;
       const remitted = Number.parseFloat(totals.debits) || 0;
       const owed = collected - remitted;

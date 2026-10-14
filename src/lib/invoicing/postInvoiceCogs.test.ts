@@ -68,6 +68,7 @@ describe("postInvoice auto-COGS", () => {
   test("posts COGS, records the stock movement, and decrements the item", async () => {
     setSelectResults([
       [draftInvoice],
+      [], // isPeriodLocked: open period
       [
         {
           quantity: "2",
@@ -118,6 +119,7 @@ describe("postInvoice auto-COGS", () => {
   test("throws when a line references an item from another book", async () => {
     setSelectResults([
       [draftInvoice],
+      [], // isPeriodLocked: open period
       [
         {
           quantity: "1",

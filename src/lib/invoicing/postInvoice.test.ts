@@ -60,6 +60,7 @@ describe("postInvoice", () => {
   test("posts a draft invoice: AR debit, income and tax credits, invoice opened", async () => {
     setSelectResults([
       [draftInvoice],
+      [], // isPeriodLocked: open period
       [
         {
           quantity: "2",
@@ -137,6 +138,7 @@ describe("postInvoice", () => {
   test("throws when the book has no Accounts Receivable account", async () => {
     setSelectResults([
       [draftInvoice],
+      [], // isPeriodLocked: open period
       [
         {
           quantity: "1",
@@ -167,7 +169,7 @@ describe("postInvoice", () => {
   });
 
   test("throws when a draft invoice has no lines", async () => {
-    setSelectResults([[draftInvoice], [], [{ id: "ar" }]]);
+    setSelectResults([[draftInvoice], [], [], [{ id: "ar" }]]);
     await expect(postInvoice("inv-1", "book-1")).rejects.toThrow(/no lines/);
     expect(mockTransaction).not.toHaveBeenCalled();
   });

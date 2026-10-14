@@ -2,15 +2,20 @@ import { beforeEach, describe, expect, mock, test } from "bun:test";
 
 import { mockDbPool, resetDbMock, setSelectResults } from "lib/test/mockDb";
 
-// Exercises voidInvoice returning inventory to stock when the voided invoice had
-// sold items
+// Exercises voidInvoice returning inventory to stock (via offsetting movements)
+// when the voided invoice had sold items
 let itemUpdate: Record<string, unknown> | null = null;
 let invoiceUpdate: Record<string, unknown> | null = null;
-let deletes = 0;
+let insertedInventory: Array<Record<string, unknown>> | null = null;
 
-const txDeleteWhere = mock(() => {
-  deletes += 1;
-  return {};
+const txInsertValues = mock((values: unknown) => {
+  if (Array.isArray(values)) {
+    const arr = values as Array<Record<string, unknown>>;
+    // Inventory movement rows carry itemId; journal lines do not
+    if (arr[0]?.itemId !== undefined) insertedInventory = arr;
+    return {};
+  }
+  return { returning: mock(() => [{ id: "reversal-1" }]) };
 });
 const txUpdateWhere = mock(() => ({}));
 const txUpdateSet = mock((values: Record<string, unknown>) => {
@@ -21,7 +26,7 @@ const txUpdateSet = mock((values: Record<string, unknown>) => {
 
 const mockTransaction = mock(async (fn: (tx: unknown) => Promise<unknown>) => {
   const tx = {
-    delete: mock(() => ({ where: txDeleteWhere })),
+    insert: mock(() => ({ values: txInsertValues })),
     update: mock(() => ({ set: txUpdateSet })),
   };
   return await fn(tx);
@@ -36,6 +41,7 @@ const { voidInvoice } = await import("./voidInvoice");
 const postedInvoice = {
   id: "inv-1",
   bookId: "book-1",
+  number: "1001",
   status: "open",
   journalEntryId: "entry-1",
 };
@@ -44,18 +50,20 @@ beforeEach(() => {
   resetDbMock();
   itemUpdate = null;
   invoiceUpdate = null;
-  deletes = 0;
-  txDeleteWhere.mockClear();
+  insertedInventory = null;
+  txInsertValues.mockClear();
   txUpdateSet.mockClear();
   mockTransaction.mockClear();
 });
 
 describe("voidInvoice restock", () => {
-  test("returns sold inventory to stock and voids the invoice", async () => {
+  test("returns sold inventory to stock with an offsetting movement", async () => {
     setSelectResults([
       [postedInvoice], // invoice
       [], // payments
-      [{ itemId: "item-1", quantity: "-2" }], // stock movements on the entry
+      [], // isPeriodLocked: open period
+      [{ accountId: "ar", debit: "100.0000", credit: "0.0000" }], // orig lines
+      [{ itemId: "item-1", quantity: "-2", unitCost: "5", date: "2026-01-01" }], // movements
       [{ id: "item-1", quantityOnHand: "8" }], // current item
     ]);
 
@@ -63,8 +71,14 @@ describe("voidInvoice restock", () => {
 
     // 8 on hand + 2 returned = 10
     expect(itemUpdate).toMatchObject({ quantityOnHand: "10.0000" });
-    // both the stock movements and the journal entry are deleted
-    expect(deletes).toBe(2);
+    // An offsetting (+2) movement is posted rather than deleting the original
+    expect(insertedInventory).toEqual([
+      expect.objectContaining({
+        itemId: "item-1",
+        quantity: "2.0000",
+        journalEntryId: "reversal-1",
+      }),
+    ]);
     expect(invoiceUpdate).toMatchObject({ status: "void" });
     expect(result).toEqual({ invoiceId: "inv-1", alreadyVoid: false });
   });

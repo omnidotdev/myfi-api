@@ -3,7 +3,12 @@ import { Elysia, t } from "elysia";
 
 import { emitAudit } from "lib/audit";
 import { dbPool } from "lib/db/db";
-import { taxJurisdictionTable } from "lib/db/schema";
+import {
+  billLineTable,
+  estimateLineTable,
+  invoiceLineTable,
+  taxJurisdictionTable,
+} from "lib/db/schema";
 import { authorizeBook } from "lib/middleware/bookAccess.middleware";
 
 // Tax jurisdiction CRUD routes
@@ -28,6 +33,14 @@ const taxJurisdictionRoutes = new Elysia({
   .post(
     "/",
     async ({ body, set }) => {
+      // The rate drives the tax computed on every line that points at this
+      // jurisdiction; without it the jurisdiction silently charges 0% tax
+      const rate = Number(body.rate);
+      if (!Number.isFinite(rate) || rate < 0) {
+        set.status = 400;
+        return { error: "rate must be a non-negative number" };
+      }
+
       const [jurisdiction] = await dbPool
         .insert(taxJurisdictionTable)
         .values({
@@ -36,6 +49,7 @@ const taxJurisdictionRoutes = new Elysia({
           code: body.code ?? null,
           filingFrequency: body.filingFrequency,
           taxPayableAccountId: body.taxPayableAccountId,
+          rate: body.rate,
         })
         .returning();
 
@@ -61,6 +75,8 @@ const taxJurisdictionRoutes = new Elysia({
         code: t.Optional(t.String()),
         filingFrequency: t.String(),
         taxPayableAccountId: t.String(),
+        // Tax rate as a fraction string, e.g. "0.0825" for 8.25%
+        rate: t.String(),
       }),
     },
   )
@@ -89,6 +105,14 @@ const taxJurisdictionRoutes = new Elysia({
         updates.filingFrequency = body.filingFrequency;
       if (body.taxPayableAccountId !== undefined)
         updates.taxPayableAccountId = body.taxPayableAccountId;
+      if (body.rate !== undefined) {
+        const rate = Number(body.rate);
+        if (!Number.isFinite(rate) || rate < 0) {
+          set.status = 400;
+          return { error: "rate must be a non-negative number" };
+        }
+        updates.rate = body.rate;
+      }
 
       const [jurisdiction] = await dbPool
         .update(taxJurisdictionTable)
@@ -116,6 +140,7 @@ const taxJurisdictionRoutes = new Elysia({
         code: t.Optional(t.String()),
         filingFrequency: t.Optional(t.String()),
         taxPayableAccountId: t.Optional(t.String()),
+        rate: t.Optional(t.String()),
       }),
     },
   )
@@ -136,6 +161,31 @@ const taxJurisdictionRoutes = new Elysia({
       // middleware does not guard it: require editor on its own book
       const auth = await authorizeBook(request, existing.bookId, "editor", set);
       if (!auth) return { error: "Forbidden" };
+
+      // Refuse deletion while any line references the jurisdiction: a dangling
+      // reference makes that line post with zero tax (the leftJoin rate is null)
+      const [invoiceRef] = await dbPool
+        .select({ id: invoiceLineTable.id })
+        .from(invoiceLineTable)
+        .where(eq(invoiceLineTable.taxJurisdictionId, params.id))
+        .limit(1);
+      const [billRef] = await dbPool
+        .select({ id: billLineTable.id })
+        .from(billLineTable)
+        .where(eq(billLineTable.taxJurisdictionId, params.id))
+        .limit(1);
+      const [estimateRef] = await dbPool
+        .select({ id: estimateLineTable.id })
+        .from(estimateLineTable)
+        .where(eq(estimateLineTable.taxJurisdictionId, params.id))
+        .limit(1);
+      if (invoiceRef || billRef || estimateRef) {
+        set.status = 409;
+        return {
+          error:
+            "Cannot delete a tax jurisdiction referenced by invoice, bill, or estimate lines",
+        };
+      }
 
       await dbPool
         .delete(taxJurisdictionTable)

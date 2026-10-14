@@ -26,8 +26,19 @@ const txUpdateSet = mock((values: Record<string, unknown>) => {
   return { where: txUpdateWhere };
 });
 
+// The invoice returned by the in-transaction FOR UPDATE re-read
+let lockedInvoice: Record<string, unknown> | null = null;
+const txSelect = mock(() => ({
+  from: mock(() => ({
+    where: mock(() => ({
+      for: mock(() => (lockedInvoice ? [lockedInvoice] : [])),
+    })),
+  })),
+}));
+
 const mockTransaction = mock(async (fn: (tx: unknown) => Promise<unknown>) => {
   const tx = {
+    select: txSelect,
     insert: mock(() => ({ values: txInsertValues })),
     update: mock(() => ({ set: txUpdateSet })),
   };
@@ -62,14 +73,17 @@ beforeEach(() => {
   insertedEntry = null;
   insertedLines.length = 0;
   invoiceUpdate = null;
+  lockedInvoice = null;
   txInsertValues.mockClear();
   txUpdateSet.mockClear();
+  txSelect.mockClear();
   mockTransaction.mockClear();
 });
 
 describe("recordInvoicePayment", () => {
   test("posts DR deposit / CR AR and marks the invoice partial", async () => {
     setSelectResults([[openInvoice], [{ id: "cash" }], [{ id: "ar" }]]);
+    lockedInvoice = openInvoice;
 
     const result = await recordInvoicePayment({ ...base, amount: 40 });
 
@@ -109,11 +123,9 @@ describe("recordInvoicePayment", () => {
   });
 
   test("marks the invoice paid when the balance is cleared", async () => {
-    setSelectResults([
-      [{ ...openInvoice, status: "partial", amountPaid: "60" }],
-      [{ id: "cash" }],
-      [{ id: "ar" }],
-    ]);
+    const partial = { ...openInvoice, status: "partial", amountPaid: "60" };
+    setSelectResults([[partial], [{ id: "cash" }], [{ id: "ar" }]]);
+    lockedInvoice = partial;
 
     const result = await recordInvoicePayment({ ...base, amount: 40 });
 
@@ -130,6 +142,19 @@ describe("recordInvoicePayment", () => {
       recordInvoicePayment({ ...base, amount: 150 }),
     ).rejects.toThrow(/exceeds the balance/);
     expect(mockTransaction).not.toHaveBeenCalled();
+  });
+
+  test("rejects a concurrent payment via the in-transaction locked re-read", async () => {
+    // Outer read is stale (nothing paid yet) so the fast-fail check passes, but
+    // a racing payment already cleared the invoice: the FOR UPDATE re-read sees
+    // amountPaid = total and the payment is rejected instead of double-crediting AR
+    setSelectResults([[openInvoice], [{ id: "cash" }], [{ id: "ar" }]]);
+    lockedInvoice = { ...openInvoice, status: "partial", amountPaid: "100" };
+
+    await expect(recordInvoicePayment({ ...base, amount: 40 })).rejects.toThrow(
+      /exceeds the balance/,
+    );
+    expect(invoiceUpdate).toBeNull();
   });
 
   test("rejects a non-positive amount", async () => {

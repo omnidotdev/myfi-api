@@ -98,11 +98,33 @@ export const recordBillPayment = async (
     throw new Error("No active Accounts Payable account exists for this book");
   }
 
-  const newPaidUnits = toUnits(Number(bill.amountPaid)) + toUnits(amount);
-  const billStatus: "partial" | "paid" =
-    newPaidUnits >= toUnits(Number(bill.total)) ? "paid" : "partial";
-
   return dbPool.transaction(async (tx) => {
+    // Re-read under a row lock and recompute inside the transaction; the outer
+    // read is a fast-fail only. Without the lock two concurrent payments both
+    // see the stale amountPaid and both post, double-debiting AP against a
+    // single recorded payment. FOR UPDATE serializes them on the bill row
+    const [locked] = await tx
+      .select()
+      .from(billTable)
+      .where(eq(billTable.id, billId))
+      .for("update");
+    if (!locked || locked.bookId !== bookId) {
+      throw new Error("Bill not found");
+    }
+    if (locked.status !== "open" && locked.status !== "partial") {
+      throw new Error("Only a posted, unpaid bill can take a payment");
+    }
+
+    const lockedBalanceDueUnits =
+      toUnits(Number(locked.total)) - toUnits(Number(locked.amountPaid));
+    if (toUnits(amount) > lockedBalanceDueUnits) {
+      throw new Error("Payment exceeds the balance due");
+    }
+
+    const newPaidUnits = toUnits(Number(locked.amountPaid)) + toUnits(amount);
+    const billStatus: "partial" | "paid" =
+      newPaidUnits >= toUnits(Number(locked.total)) ? "paid" : "partial";
+
     const [paymentRow] = await tx
       .insert(billPaymentTable)
       .values({

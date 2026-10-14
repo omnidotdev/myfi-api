@@ -3,7 +3,7 @@ import { describe, expect, test } from "bun:test";
 import { buildBillPostings } from "./billPosting";
 
 describe("buildBillPostings", () => {
-  test("credits AP for the total and debits expense plus input tax", () => {
+  test("folds sales tax paid into the expense debit (US treatment)", () => {
     const postings = buildBillPostings({
       apAccountId: "ap",
       lines: [
@@ -16,11 +16,13 @@ describe("buildBillPostings", () => {
       ],
     });
 
+    // Tax paid to the vendor is part of the cost: it debits the expense, not
+    // the tax-payable liability (which tracks only tax collected and owed)
     expect(postings).toEqual([
-      { accountId: "supplies", debit: 100, credit: 0 },
-      { accountId: "tax", debit: 8.25, credit: 0 },
+      { accountId: "supplies", debit: 108.25, credit: 0 },
       { accountId: "ap", debit: 0, credit: 108.25 },
     ]);
+    expect(postings.some((p) => p.accountId === "tax")).toBe(false);
   });
 
   test("consolidates multiple lines on the same expense account and balances", () => {
@@ -41,13 +43,21 @@ describe("buildBillPostings", () => {
     expect(debit).toBeCloseTo(credit, 4);
   });
 
-  test("throws when a taxed line has no tax payable account", () => {
-    expect(() =>
-      buildBillPostings({
-        apAccountId: "ap",
-        lines: [{ amount: 100, taxAmount: 5, expenseAccountId: "supplies" }],
-      }),
-    ).toThrow(/tax payable account/);
+  test("a taxed line with no tax-payable account still folds tax into expense", () => {
+    const postings = buildBillPostings({
+      apAccountId: "ap",
+      lines: [{ amount: 100, taxAmount: 5, expenseAccountId: "supplies" }],
+    });
+    expect(postings.find((p) => p.accountId === "supplies")).toEqual({
+      accountId: "supplies",
+      debit: 105,
+      credit: 0,
+    });
+    expect(postings.find((p) => p.accountId === "ap")).toEqual({
+      accountId: "ap",
+      debit: 0,
+      credit: 105,
+    });
   });
 
   test("throws on an empty bill", () => {

@@ -1,5 +1,6 @@
 import { and, eq, inArray } from "drizzle-orm";
 
+import { isPeriodLocked } from "lib/accounting/periodLock";
 import { dbPool } from "lib/db/db";
 import {
   accountTable,
@@ -72,6 +73,12 @@ export const postInvoice = async (
       total: Number(invoice.total),
       alreadyPosted: true,
     };
+  }
+
+  // Posting writes an AR/revenue entry dated at the issue date, so refuse a
+  // closed period just like manual journal entries
+  if (await isPeriodLocked(bookId, invoice.issueDate)) {
+    throw new Error("Cannot post an invoice into a closed period");
   }
 
   // Lines joined to their tax jurisdiction for the rate and payable account

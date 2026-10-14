@@ -8,7 +8,12 @@ export interface PricedBillLine {
   taxAmount: number;
   /** Expense (or asset) account the line's cost debits */
   expenseAccountId: string;
-  /** Liability account the line's tax debits (input tax), required when taxAmount is non-zero */
+  /**
+   * Retained for parity with the invoice line shape, but NOT posted: under US
+   * sales-tax treatment, tax a business pays a vendor is part of the cost of
+   * the purchase, not a recoverable input-tax credit, so it is folded into the
+   * expense debit rather than debited to a tax-payable liability
+   */
   taxPayableAccountId?: string | null;
 }
 
@@ -21,10 +26,12 @@ interface Posting {
 
 /**
  * Build the balanced double-entry postings for a vendor bill: credit Accounts
- * Payable for the full total, debit each expense account for its line cost, and
- * debit each tax jurisdiction's payable account for the input tax. The exact
- * mirror of buildInvoicePostings. Debits are consolidated per account. Throws if
- * the result does not balance
+ * Payable for the full total (cost plus any sales tax paid), and debit each
+ * expense account for its line cost including that tax. Under US treatment the
+ * sales tax a business pays a vendor is part of the purchase cost, not a
+ * recoverable input-tax credit, so it is never debited to the sales-tax-payable
+ * liability (which tracks only tax the business collects and must remit).
+ * Debits are consolidated per account. Throws if the result does not balance
  */
 export const buildBillPostings = (opts: {
   apAccountId: string;
@@ -42,18 +49,11 @@ export const buildBillPostings = (opts: {
 
   let creditUnits = 0;
   for (const line of lines) {
-    const amount = toUnits(line.amount);
+    // Cost plus sales tax paid both debit the expense/asset account (US
+    // treatment); AP is credited for the full cash-outflow total
+    const amount = toUnits(line.amount) + toUnits(line.taxAmount);
     addDebit(line.expenseAccountId, amount);
     creditUnits += amount;
-
-    const tax = toUnits(line.taxAmount);
-    if (tax !== 0) {
-      if (!line.taxPayableAccountId) {
-        throw new Error("A taxed line has no tax payable account");
-      }
-      addDebit(line.taxPayableAccountId, tax);
-      creditUnits += tax;
-    }
   }
 
   const postings: Posting[] = [];

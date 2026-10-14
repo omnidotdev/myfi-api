@@ -1,5 +1,6 @@
 import { and, eq } from "drizzle-orm";
 
+import { isPeriodLocked } from "lib/accounting/periodLock";
 import { dbPool } from "lib/db/db";
 import {
   accountTable,
@@ -62,6 +63,12 @@ export const postBill = async (
       total: Number(bill.total),
       alreadyPosted: true,
     };
+  }
+
+  // Posting writes an AP/expense entry dated at the bill date, so refuse a
+  // closed period just like manual journal entries
+  if (await isPeriodLocked(bookId, bill.billDate)) {
+    throw new Error("Cannot post a bill into a closed period");
   }
 
   const lineRows = await dbPool
