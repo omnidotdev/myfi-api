@@ -1,6 +1,7 @@
 import { and, desc, eq, sql } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 
+import { isPeriodLocked, periodFromDate } from "lib/accounting/periodLock";
 import { calculateSchedule } from "lib/amortization/calculateSchedule";
 import { emitAudit } from "lib/audit";
 import { dbPool } from "lib/db/db";
@@ -368,6 +369,12 @@ const loanRoutes = new Elysia({ prefix: "/api/loans" })
         return { error: "payoffAmount must be a positive number" };
       }
 
+      // Posting the payoff writes to the ledger, so refuse a closed period
+      if (await isPeriodLocked(loan.bookId, body.payoffDate)) {
+        set.status = 409;
+        return { error: "Cannot post a loan payoff in a closed period" };
+      }
+
       // A settlement (payoff below the balance) books the forgiven difference
       // to an equity account, so resolve one (preferring owners' equity)
       const equityAccounts = await dbPool
@@ -435,8 +442,8 @@ const loanRoutes = new Elysia({ prefix: "/api/loans" })
             categorizationSource: "rule",
             confidence: "1.00",
             priority: 0,
-            periodYear: new Date(body.payoffDate).getFullYear(),
-            periodMonth: new Date(body.payoffDate).getMonth() + 1,
+            periodYear: periodFromDate(body.payoffDate).year,
+            periodMonth: periodFromDate(body.payoffDate).month,
           } satisfies InferInsertModel<typeof reconciliationQueueTable>);
 
           // Mark remaining scheduled entries as skipped

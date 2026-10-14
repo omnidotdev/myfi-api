@@ -1,4 +1,4 @@
-import { and, eq } from "drizzle-orm";
+import { and, asc, eq } from "drizzle-orm";
 
 import { dbPool } from "lib/db/db";
 import {
@@ -104,6 +104,9 @@ export const recordInvoicePayment = async (
         eq(accountTable.isActive, true),
       ),
     )
+    // Deterministic pick so posting and payment resolve the same AR account
+    // if a book ever has more than one active one
+    .orderBy(asc(accountTable.createdAt))
     .limit(1);
   if (!arAccount) {
     throw new Error(

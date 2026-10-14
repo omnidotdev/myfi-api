@@ -1,4 +1,4 @@
-import { and, eq } from "drizzle-orm";
+import { and, asc, eq } from "drizzle-orm";
 
 import { isPeriodLocked } from "lib/accounting/periodLock";
 import { dbPool } from "lib/db/db";
@@ -100,6 +100,9 @@ export const postBill = async (
         eq(accountTable.isActive, true),
       ),
     )
+    // Deterministic pick so posting and payment resolve the same AP account
+    // if a book ever has more than one active one
+    .orderBy(asc(accountTable.createdAt))
     .limit(1);
 
   if (!apAccount) {

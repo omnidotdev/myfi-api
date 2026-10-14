@@ -1,4 +1,4 @@
-import { desc, eq, sql } from "drizzle-orm";
+import { and, desc, eq, sql } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 
 import { isPeriodLocked } from "lib/accounting/periodLock";
@@ -411,6 +411,26 @@ const journalRoutes = new Elysia({ prefix: "/api/journal-entries" })
       // does not guard it: resolve the entry's own book and require editor
       const auth = await authorizeBook(request, original.bookId, "editor", set);
       if (!auth) return { error: "Forbidden" };
+
+      // Refuse to reverse a reversal, or an entry already reversed, so a single
+      // correction cannot be applied twice (which would double-count it)
+      if (original.source === "reversal") {
+        set.status = 409;
+        return { error: "Cannot reverse a reversal entry" };
+      }
+      const [existingReversal] = await dbPool
+        .select({ id: journalEntryTable.id })
+        .from(journalEntryTable)
+        .where(
+          and(
+            eq(journalEntryTable.source, "reversal"),
+            eq(journalEntryTable.sourceReferenceId, id),
+          ),
+        );
+      if (existingReversal) {
+        set.status = 409;
+        return { error: "Entry has already been reversed" };
+      }
 
       const reversalDate = body.date ?? new Date().toISOString().slice(0, 10);
       if (await isPeriodLocked(original.bookId, reversalDate)) {
