@@ -1,11 +1,11 @@
-import { and, desc, eq, sql } from "drizzle-orm";
+import { desc, eq, sql } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 
+import { isPeriodLocked } from "lib/accounting/periodLock";
 import { emitAudit } from "lib/audit";
 import { dbPool } from "lib/db/db";
 import {
   accountTable,
-  accountingPeriodTable,
   journalEntryTable,
   journalLineTable,
 } from "lib/db/schema";
@@ -13,31 +13,6 @@ import { validateJournalLines } from "lib/journal/validateEntry";
 import { authorizeBook } from "lib/middleware/bookAccess.middleware";
 
 import type { InsertJournalEntry } from "lib/db/schema";
-
-/**
- * Check if a date falls within a closed accounting period for the given book
- */
-const isPeriodLocked = async (
-  bookId: string,
-  date: string,
-): Promise<boolean> => {
-  const d = new Date(date);
-  const year = d.getFullYear();
-  const month = d.getMonth() + 1;
-
-  const [period] = await dbPool
-    .select({ status: accountingPeriodTable.status })
-    .from(accountingPeriodTable)
-    .where(
-      and(
-        eq(accountingPeriodTable.bookId, bookId),
-        eq(accountingPeriodTable.year, year),
-        eq(accountingPeriodTable.month, month),
-      ),
-    );
-
-  return period?.status === "closed";
-};
 
 // Journal entry CRUD routes
 const journalRoutes = new Elysia({ prefix: "/api/journal-entries" })
@@ -322,9 +297,14 @@ const journalRoutes = new Elysia({ prefix: "/api/journal-entries" })
         }
       }
 
-      const effectiveDate = body.date ?? existing.date;
-
-      if (await isPeriodLocked(existing.bookId, effectiveDate)) {
+      // Reject if EITHER the entry's current period or the target period is
+      // closed: checking only the new date would let a re-date lift an entry
+      // out of a closed period (silently changing that period's totals)
+      const originLocked = await isPeriodLocked(existing.bookId, existing.date);
+      const targetLocked =
+        body.date !== undefined &&
+        (await isPeriodLocked(existing.bookId, body.date));
+      if (originLocked || targetLocked) {
         set.status = 409;
         return { error: "Cannot update entry in a closed period" };
       }

@@ -30,47 +30,61 @@ export const buildYearEndCloseLines = (params: {
   expenseBalances: AccountBalance[];
   retainedEarningsId: string;
 }): { lines: CloseLine[]; netIncome: number } => {
-  const lines: CloseLine[] = [];
+  // Integer ten-thousandths so the emitted lines and the retained-earnings line
+  // balance exactly. Only an exactly-zero balance is skipped; an earlier 0.005
+  // threshold dropped sub-cent lines while still counting them toward net
+  // income, leaving the retained-earnings line with nothing to offset it
+  const SCALE = 10000;
+  const toUnits = (raw: string) =>
+    Math.round((Number.parseFloat(raw) || 0) * SCALE);
+  const fromUnits = (units: number) => (units / SCALE).toFixed(4);
 
-  let totalRevenue = 0;
+  const lines: CloseLine[] = [];
+  let debitUnits = 0;
+  let creditUnits = 0;
+
   for (const rev of params.revenueBalances) {
-    const bal = Number(rev.balance);
-    totalRevenue += bal;
-    if (Math.abs(bal) < 0.005) continue;
+    // Revenue balance is credit - debit; clear a net credit with a debit
+    const units = toUnits(rev.balance);
+    if (units === 0) continue;
     lines.push({
       accountId: rev.accountId,
-      debit: bal > 0 ? bal.toFixed(4) : "0.0000",
-      credit: bal < 0 ? Math.abs(bal).toFixed(4) : "0.0000",
+      debit: units > 0 ? fromUnits(units) : "0.0000",
+      credit: units < 0 ? fromUnits(-units) : "0.0000",
       memo: "Close revenue to retained earnings",
     });
+    if (units > 0) debitUnits += units;
+    else creditUnits += -units;
   }
 
-  let totalExpenses = 0;
   for (const exp of params.expenseBalances) {
-    const bal = Number(exp.balance);
-    totalExpenses += bal;
-    if (Math.abs(bal) < 0.005) continue;
+    // Expense balance is debit - credit; clear a net debit with a credit
+    const units = toUnits(exp.balance);
+    if (units === 0) continue;
     lines.push({
       accountId: exp.accountId,
-      debit: bal < 0 ? Math.abs(bal).toFixed(4) : "0.0000",
-      credit: bal > 0 ? bal.toFixed(4) : "0.0000",
+      debit: units < 0 ? fromUnits(-units) : "0.0000",
+      credit: units > 0 ? fromUnits(units) : "0.0000",
       memo: "Close expense to retained earnings",
     });
+    if (units > 0) creditUnits += units;
+    else debitUnits += -units;
   }
 
-  const netIncome = Math.round((totalRevenue - totalExpenses) * 10000) / 10000;
-
-  if (Math.abs(netIncome) >= 0.005) {
+  // Retained earnings absorbs the exact residual between the emitted debits and
+  // credits (a net credit is net income, a net debit is a net loss)
+  const residualUnits = debitUnits - creditUnits;
+  if (residualUnits !== 0) {
     lines.push({
       accountId: params.retainedEarningsId,
-      debit: netIncome < 0 ? Math.abs(netIncome).toFixed(4) : "0.0000",
-      credit: netIncome > 0 ? netIncome.toFixed(4) : "0.0000",
+      debit: residualUnits < 0 ? fromUnits(-residualUnits) : "0.0000",
+      credit: residualUnits > 0 ? fromUnits(residualUnits) : "0.0000",
       memo:
-        netIncome > 0
+        residualUnits > 0
           ? "Net income to retained earnings"
           : "Net loss to retained earnings",
     });
   }
 
-  return { lines, netIncome };
+  return { lines, netIncome: residualUnits / SCALE };
 };

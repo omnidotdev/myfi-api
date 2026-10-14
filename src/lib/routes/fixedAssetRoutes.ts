@@ -1,6 +1,7 @@
 import { and, eq, like, sql } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 
+import { isPeriodLocked, periodFromDate } from "lib/accounting/periodLock";
 import { emitAudit } from "lib/audit";
 import { dbPool } from "lib/db/db";
 import {
@@ -10,9 +11,11 @@ import {
   reconciliationQueueTable,
 } from "lib/db/schema";
 import {
+  buildDisposalLines,
   calculateMonthlyDepreciation,
   postDepreciation,
 } from "lib/depreciation";
+import { validateJournalLines } from "lib/journal/validateEntry";
 import { authorizeBook } from "lib/middleware/bookAccess.middleware";
 
 import type { InferInsertModel } from "drizzle-orm";
@@ -337,6 +340,12 @@ const fixedAssetRoutes = new Elysia({ prefix: "/api/fixed-assets" })
         return { error: "disposalProceeds must be a non-negative number" };
       }
 
+      // Disposal writes to the ledger, so it must respect the period lock
+      if (await isPeriodLocked(asset.bookId, body.disposedAt)) {
+        set.status = 409;
+        return { error: "Cannot dispose into a closed period" };
+      }
+
       const totalDepreciated = await getTotalDepreciated(asset.id);
       const acquisitionCost = Number(asset.acquisitionCost);
       const bookValue = acquisitionCost - totalDepreciated;
@@ -358,53 +367,27 @@ const fixedAssetRoutes = new Elysia({ prefix: "/api/fixed-assets" })
           } satisfies InferInsertModel<typeof journalEntryTable>)
           .returning();
 
-        const lines: InferInsertModel<typeof journalLineTable>[] = [
-          // Debit cash/proceeds account
-          {
-            journalEntryId: entry.id,
-            accountId: body.proceedsAccountId,
-            debit: proceeds.toFixed(4),
-            credit: "0",
-          },
-          // Debit accumulated depreciation (remove contra-asset)
-          {
-            journalEntryId: entry.id,
-            accountId: asset.accumulatedDepreciationAccountId,
-            debit: totalDepreciated.toFixed(4),
-            credit: "0",
-          },
-          // Credit fixed asset account (remove asset at cost)
-          {
-            journalEntryId: entry.id,
-            accountId: asset.assetAccountId,
-            debit: "0",
-            credit: acquisitionCost.toFixed(4),
-          },
-        ];
+        // Build balanced disposal lines in integer units (the gain/loss line
+        // absorbs the exact residual), then validate before posting so a
+        // disposal can never write an unbalanced entry to the ledger
+        const disposalLines = buildDisposalLines({
+          acquisitionCost,
+          totalDepreciated,
+          proceeds,
+          assetAccountId: asset.assetAccountId,
+          accumulatedDepreciationAccountId:
+            asset.accumulatedDepreciationAccountId,
+          proceedsAccountId: body.proceedsAccountId,
+          gainLossAccountId: body.gainLossAccountId,
+        });
+        validateJournalLines(disposalLines);
 
-        // Gain or loss line to keep the entry balanced
-        if (Math.abs(gainLoss) > 0.005) {
-          if (gainLoss > 0) {
-            // Gain: credit gain/loss account
-            lines.push({
-              journalEntryId: entry.id,
-              accountId: body.gainLossAccountId,
-              debit: "0",
-              credit: gainLoss.toFixed(4),
-            });
-          } else {
-            // Loss: debit gain/loss account
-            lines.push({
-              journalEntryId: entry.id,
-              accountId: body.gainLossAccountId,
-              debit: Math.abs(gainLoss).toFixed(4),
-              credit: "0",
-            });
-          }
-        }
+        const lines: InferInsertModel<typeof journalLineTable>[] =
+          disposalLines.map((line) => ({ ...line, journalEntryId: entry.id }));
 
         await tx.insert(journalLineTable).values(lines);
 
+        const period = periodFromDate(body.disposedAt);
         await tx.insert(reconciliationQueueTable).values({
           bookId: asset.bookId,
           journalEntryId: entry.id,
@@ -412,8 +395,8 @@ const fixedAssetRoutes = new Elysia({ prefix: "/api/fixed-assets" })
           categorizationSource: "rule",
           confidence: "1.00",
           priority: 0,
-          periodYear: new Date(body.disposedAt).getFullYear(),
-          periodMonth: new Date(body.disposedAt).getMonth() + 1,
+          periodYear: period.year,
+          periodMonth: period.month,
         } satisfies InferInsertModel<typeof reconciliationQueueTable>);
 
         return { journalEntry: entry };
@@ -455,7 +438,13 @@ const fixedAssetRoutes = new Elysia({ prefix: "/api/fixed-assets" })
   )
   .post(
     "/run-depreciation",
-    async ({ body }) => {
+    async ({ body, set }) => {
+      // Posting depreciation writes to the ledger, so refuse a closed period
+      const periodDate = `${body.year}-${String(body.month).padStart(2, "0")}-01`;
+      if (await isPeriodLocked(body.bookId, periodDate)) {
+        set.status = 409;
+        return { error: "Cannot run depreciation for a closed period" };
+      }
       const result = await postDepreciation(body.bookId, body.year, body.month);
       return { result };
     },

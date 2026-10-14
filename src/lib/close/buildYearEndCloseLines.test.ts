@@ -37,6 +37,38 @@ describe("buildYearEndCloseLines", () => {
     expect(refund?.credit).toBe("200.0000");
   });
 
+  test("sub-cent account balances stay balanced (no dropped lines)", () => {
+    // Two revenue accounts each 0.0040: an earlier per-line 0.005 skip dropped
+    // both lines while still summing them into net income, producing a
+    // retained-earnings line with nothing to offset it (an unbalanced entry)
+    const { lines } = buildYearEndCloseLines({
+      revenueBalances: [
+        { accountId: "rev1", balance: "0.0040" },
+        { accountId: "rev2", balance: "0.0040" },
+      ],
+      expenseBalances: [],
+      retainedEarningsId: "re",
+    });
+    expect(sum(lines, "debit")).toBe(sum(lines, "credit"));
+    // Both revenue lines are emitted (not dropped), offset by the RE credit
+    expect(lines.filter((l) => l.accountId.startsWith("rev"))).toHaveLength(2);
+    const re = lines.find((l) => l.accountId === "re");
+    expect(re?.credit).toBe("0.0080");
+  });
+
+  test("an exactly-zero balance is skipped", () => {
+    const { lines } = buildYearEndCloseLines({
+      revenueBalances: [
+        { accountId: "rev", balance: "500.0000" },
+        { accountId: "empty", balance: "0.0000" },
+      ],
+      expenseBalances: [],
+      retainedEarningsId: "re",
+    });
+    expect(sum(lines, "debit")).toBe(sum(lines, "credit"));
+    expect(lines.some((l) => l.accountId === "empty")).toBe(false);
+  });
+
   test("balances a net loss (credits retained earnings via a debit)", () => {
     const { lines, netIncome } = buildYearEndCloseLines({
       revenueBalances: [{ accountId: "rev", balance: "400.0000" }],
