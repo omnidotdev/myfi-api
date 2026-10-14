@@ -88,7 +88,7 @@ const generateBalanceSheet = async (params: {
       and(
         eq(journalEntryTable.bookId, bookId),
         lte(journalEntryTable.date, asOfDate),
-        sql`${accountTable.type} in ('asset', 'liability', 'equity')`,
+        sql`${accountTable.type} in ('asset', 'liability', 'equity', 'revenue', 'expense')`,
         tagIds?.length ? inArray(journalLineTagTable.tagId, tagIds) : undefined,
         projectIds?.length
           ? inArray(journalLineProjectTable.projectId, projectIds)
@@ -115,10 +115,26 @@ const generateBalanceSheet = async (params: {
   const cash = basis === "cash";
   let arDropped = 0;
   let apDropped = 0;
+  // Revenue/expense accounts carry this year's activity until a year-end close
+  // sweeps them into retained earnings. Their signed net (revenue credit-normal,
+  // expense debit-normal) is current-year net income, which belongs in equity:
+  // without it a mid-year sheet is off by exactly net income (A = L + E + NI).
+  // Summing every revenue/expense line through asOfDate self-corrects for closed
+  // prior years (the close entry already zeroed those accounts into equity)
+  let currentYearEarnings = 0;
 
   for (const row of results) {
     const debit = Number.parseFloat(row.debitTotal);
     const credit = Number.parseFloat(row.creditTotal);
+
+    if (row.accountType === "revenue") {
+      currentYearEarnings += credit - debit;
+      continue;
+    }
+    if (row.accountType === "expense") {
+      currentYearEarnings -= debit - credit;
+      continue;
+    }
 
     // Assets: debit-normal (debits increase, credits decrease)
     // Liabilities/Equity: credit-normal (credits increase, debits decrease)
@@ -166,6 +182,22 @@ const generateBalanceSheet = async (params: {
       equity.push(item);
       totalEquity += balance;
     }
+  }
+
+  // Surface current-year net income as an equity line so the sheet balances
+  // before any year-end close (mirrors the "Net Income" line QuickBooks shows)
+  const netIncome = Math.round(currentYearEarnings * 10000) / 10000;
+  if (Math.abs(netIncome) >= 0.005) {
+    equity.push({
+      accountId: "current-year-earnings",
+      accountCode: null,
+      accountName: "Current Year Earnings",
+      accountType: "equity",
+      subType: null,
+      parentId: null,
+      balance: netIncome.toFixed(4),
+    });
+    totalEquity += netIncome;
   }
 
   // Reclass the dropped AR/AP into a single cash-basis equity adjustment
