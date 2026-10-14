@@ -34,27 +34,82 @@ type QuarterlyEstimatesReport = {
 /** SE income factor (92.35% of net earnings subject to SE tax) */
 const SE_INCOME_FACTOR = 0.9235;
 
-/** Social Security wage base for 2025 */
-const SS_WAGE_BASE = 168_600;
-
 /** Social Security rate (employer + employee portions) */
 const SS_RATE = 0.124;
 
 /** Medicare rate (employer + employee portions) */
 const MEDICARE_RATE = 0.029;
 
+/** Prior-year AGI above which the safe-harbor floor is 110%, not 100% */
+const HIGH_INCOME_SAFE_HARBOR_THRESHOLD = 150_000;
+
+interface TaxBracket {
+  min: number;
+  max: number;
+  rate: number;
+}
+
+interface YearTaxConstants {
+  /** Social Security wage base (taxable maximum) for the year */
+  ssWageBase: number;
+  /** Single-filer standard deduction for the year */
+  standardDeduction: number;
+  /** Single-filer federal income tax brackets for the year */
+  brackets: TaxBracket[];
+}
+
 /**
- * Simplified 2025 federal income tax brackets (single filer)
+ * Federal tax constants by year (single filer). These change every year, so
+ * they are keyed by year rather than hardcoded to one; an unknown (future) year
+ * falls back to the latest known year. Verified against IRS figures and the
+ * OBBBA-adjusted 2025 standard deduction. Update this table each tax year
  */
-const TAX_BRACKETS = [
-  { min: 0, max: 11_600, rate: 0.1 },
-  { min: 11_600, max: 47_150, rate: 0.12 },
-  { min: 47_150, max: 100_525, rate: 0.22 },
-  { min: 100_525, max: 191_950, rate: 0.24 },
-  { min: 191_950, max: 243_725, rate: 0.32 },
-  { min: 243_725, max: 609_350, rate: 0.35 },
-  { min: 609_350, max: Number.POSITIVE_INFINITY, rate: 0.37 },
-];
+const TAX_YEARS: Record<number, YearTaxConstants> = {
+  2024: {
+    ssWageBase: 168_600,
+    standardDeduction: 14_600,
+    brackets: [
+      { min: 0, max: 11_600, rate: 0.1 },
+      { min: 11_600, max: 47_150, rate: 0.12 },
+      { min: 47_150, max: 100_525, rate: 0.22 },
+      { min: 100_525, max: 191_950, rate: 0.24 },
+      { min: 191_950, max: 243_725, rate: 0.32 },
+      { min: 243_725, max: 609_350, rate: 0.35 },
+      { min: 609_350, max: Number.POSITIVE_INFINITY, rate: 0.37 },
+    ],
+  },
+  2025: {
+    ssWageBase: 176_100,
+    standardDeduction: 15_750,
+    brackets: [
+      { min: 0, max: 11_925, rate: 0.1 },
+      { min: 11_925, max: 48_475, rate: 0.12 },
+      { min: 48_475, max: 103_350, rate: 0.22 },
+      { min: 103_350, max: 197_300, rate: 0.24 },
+      { min: 197_300, max: 250_525, rate: 0.32 },
+      { min: 250_525, max: 626_350, rate: 0.35 },
+      { min: 626_350, max: Number.POSITIVE_INFINITY, rate: 0.37 },
+    ],
+  },
+  2026: {
+    ssWageBase: 184_500,
+    standardDeduction: 16_100,
+    brackets: [
+      { min: 0, max: 12_400, rate: 0.1 },
+      { min: 12_400, max: 50_400, rate: 0.12 },
+      { min: 50_400, max: 105_700, rate: 0.22 },
+      { min: 105_700, max: 201_775, rate: 0.24 },
+      { min: 201_775, max: 256_225, rate: 0.32 },
+      { min: 256_225, max: 640_600, rate: 0.35 },
+      { min: 640_600, max: Number.POSITIVE_INFINITY, rate: 0.37 },
+    ],
+  },
+};
+
+const LATEST_TAX_YEAR = 2026;
+
+const constantsForYear = (year: number): YearTaxConstants =>
+  TAX_YEARS[year] ?? TAX_YEARS[LATEST_TAX_YEAR];
 
 /** IRS quarterly due dates */
 const QUARTER_DUE_DATES: Record<number, { label: string; dueDate: string }> = {
@@ -65,14 +120,17 @@ const QUARTER_DUE_DATES: Record<number, { label: string; dueDate: string }> = {
 };
 
 /**
- * Calculate federal income tax using progressive brackets
+ * Calculate federal income tax using the given year's progressive brackets
  */
-const calculateIncomeTax = (taxableIncome: number): number => {
+const calculateIncomeTax = (
+  taxableIncome: number,
+  brackets: TaxBracket[],
+): number => {
   if (taxableIncome <= 0) return 0;
 
   let tax = 0;
 
-  for (const bracket of TAX_BRACKETS) {
+  for (const bracket of brackets) {
     if (taxableIncome <= bracket.min) break;
 
     const taxableInBracket = Math.min(taxableIncome, bracket.max) - bracket.min;
@@ -83,21 +141,49 @@ const calculateIncomeTax = (taxableIncome: number): number => {
 };
 
 /**
- * Calculate self-employment tax
+ * Calculate self-employment tax against the given year's Social Security base
  */
-const calculateSETax = (netIncome: number): number => {
+const calculateSETax = (netIncome: number, ssWageBase: number): number => {
   if (netIncome <= 0) return 0;
 
   const seIncome = netIncome * SE_INCOME_FACTOR;
 
   // Social Security portion (capped at wage base)
-  const ssTaxable = Math.min(seIncome, SS_WAGE_BASE);
+  const ssTaxable = Math.min(seIncome, ssWageBase);
   const ssTax = ssTaxable * SS_RATE;
 
   // Medicare portion (no cap)
   const medicareTax = seIncome * MEDICARE_RATE;
 
   return ssTax + medicareTax;
+};
+
+/**
+ * Compute SE tax, income tax, and their total for a self-employed single filer
+ * from net self-employment income, using the given year's constants.
+ *
+ * Income tax is computed on taxable income: net income, less the deductible
+ * half of SE tax, less the year's standard deduction (floored at zero). Earlier
+ * code omitted the standard deduction entirely, overstating the income-tax
+ * estimate (and the quarterly payments) by the tax on ~one standard deduction.
+ * The QBI deduction is intentionally not modeled (it is situational); this
+ * stays a conservative single-filer estimate
+ */
+export const computeSelfEmploymentTaxes = (params: {
+  netIncome: number;
+  year: number;
+}): { seTax: number; incomeTax: number; totalTax: number } => {
+  const { netIncome, year } = params;
+  const constants = constantsForYear(year);
+
+  const seTax = calculateSETax(netIncome, constants.ssWageBase);
+  const taxableIncome = Math.max(
+    0,
+    netIncome - seTax / 2 - constants.standardDeduction,
+  );
+  const incomeTax = calculateIncomeTax(taxableIncome, constants.brackets);
+
+  return { seTax, incomeTax, totalTax: seTax + incomeTax };
 };
 
 /**
@@ -179,14 +265,11 @@ const generateQuarterlyEstimates = async (params: {
 
   const projectedAnnualIncome = ytdIncome * projectionFactor;
 
-  // Calculate taxes
-  const seTax = calculateSETax(projectedAnnualIncome);
-
-  // Deduct half of SE tax from income for income tax purposes
-  const adjustedIncome = projectedAnnualIncome - seTax / 2;
-  const incomeTax = calculateIncomeTax(adjustedIncome);
-
-  const totalTax = seTax + incomeTax;
+  // Calculate taxes (SE tax + income tax net of the standard deduction)
+  const { seTax, incomeTax, totalTax } = computeSelfEmploymentTaxes({
+    netIncome: projectedAnnualIncome,
+    year,
+  });
   const perQuarterPayment = totalTax / 4;
 
   // Build per-quarter breakdown
@@ -211,10 +294,10 @@ const generateQuarterlyEstimates = async (params: {
       quarterEndDates[q - 1],
     );
 
-    const cumSeTax = calculateSETax(cumIncome);
-    const cumAdjusted = cumIncome - cumSeTax / 2;
-    const cumIncomeTax = calculateIncomeTax(cumAdjusted);
-    const cumTax = cumSeTax + cumIncomeTax;
+    const { totalTax: cumTax } = computeSelfEmploymentTaxes({
+      netIncome: cumIncome,
+      year,
+    });
 
     quarters.push({
       quarter: q,
@@ -226,8 +309,9 @@ const generateQuarterlyEstimates = async (params: {
     });
   }
 
-  // Safe harbor: 90% of current year or 100% of prior year
-  // Prior year data not available without separate query, so return null
+  // Safe harbor: the smaller of 90% of the current-year tax or the prior-year
+  // floor. That floor is 100% of prior-year tax, but 110% when prior-year
+  // income is above the high-income threshold ($150k), per the IRS rule
   const priorYearStart = `${year - 1}-01-01T00:00:00.000Z`;
   const priorYearEnd = `${year - 1}-12-31T23:59:59.999Z`;
   const priorYearIncome = await queryNetIncome(
@@ -235,10 +319,12 @@ const generateQuarterlyEstimates = async (params: {
     priorYearStart,
     priorYearEnd,
   );
-  const priorSeTax = calculateSETax(priorYearIncome);
-  const priorAdjusted = priorYearIncome - priorSeTax / 2;
-  const priorIncomeTax = calculateIncomeTax(priorAdjusted);
-  const priorTotalTax = priorSeTax + priorIncomeTax;
+  const { totalTax: priorTotalTax } = computeSelfEmploymentTaxes({
+    netIncome: priorYearIncome,
+    year: year - 1,
+  });
+  const priorSafeHarborPct =
+    priorYearIncome > HIGH_INCOME_SAFE_HARBOR_THRESHOLD ? 1.1 : 1.0;
 
   return {
     bookId,
@@ -250,7 +336,11 @@ const generateQuarterlyEstimates = async (params: {
     quarters,
     safeHarbor: {
       currentYear90Pct: (totalTax * 0.9).toFixed(2),
-      priorYear100Pct: priorYearIncome > 0 ? priorTotalTax.toFixed(2) : null,
+      // Prior-year floor: 100% (or 110% for high earners) of prior-year tax
+      priorYear100Pct:
+        priorYearIncome > 0
+          ? (priorTotalTax * priorSafeHarborPct).toFixed(2)
+          : null,
     },
     generatedAt: new Date().toISOString(),
   };
