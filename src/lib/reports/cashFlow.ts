@@ -1,13 +1,13 @@
-import { and, between, eq, inArray, sql } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 
 import { dbPool } from "lib/db/db";
 import {
   accountTable,
   journalEntryTable,
-  journalLineProjectTable,
   journalLineTable,
-  journalLineTagTable,
 } from "lib/db/schema";
+import { entryDateBetween } from "./entryDateFilters";
+import { lineHasAnyProject, lineHasAnyTag } from "./journalLineFilters";
 
 type CashFlowLineItem = {
   accountId: string;
@@ -75,7 +75,7 @@ const generateCashFlow = async (params: {
 }): Promise<CashFlowReport> => {
   const { bookId, startDate, endDate, tagIds, projectIds } = params;
 
-  let query = dbPool
+  const query = dbPool
     .select({
       accountId: accountTable.id,
       accountCode: accountTable.code,
@@ -93,29 +93,15 @@ const generateCashFlow = async (params: {
     .innerJoin(accountTable, eq(journalLineTable.accountId, accountTable.id))
     .$dynamic();
 
-  if (tagIds?.length) {
-    query = query.innerJoin(
-      journalLineTagTable,
-      eq(journalLineTagTable.journalLineId, journalLineTable.id),
-    );
-  }
-
-  if (projectIds?.length) {
-    query = query.innerJoin(
-      journalLineProjectTable,
-      eq(journalLineProjectTable.journalLineId, journalLineTable.id),
-    );
-  }
-
+  // Tag/project filtering uses a subquery membership test rather than a join,
+  // so a line matching multiple tags is not fanned out and double-summed
   const results = await query
     .where(
       and(
         eq(journalEntryTable.bookId, bookId),
-        between(journalEntryTable.date, startDate, endDate),
-        tagIds?.length ? inArray(journalLineTagTable.tagId, tagIds) : undefined,
-        projectIds?.length
-          ? inArray(journalLineProjectTable.projectId, projectIds)
-          : undefined,
+        entryDateBetween(startDate, endDate),
+        tagIds?.length ? lineHasAnyTag(tagIds) : undefined,
+        projectIds?.length ? lineHasAnyProject(projectIds) : undefined,
       ),
     )
     .groupBy(

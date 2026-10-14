@@ -1,4 +1,4 @@
-import { and, between, eq, sql } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 
 import { dbPool } from "lib/db/db";
 import {
@@ -8,6 +8,7 @@ import {
   journalLineTable,
   projectTable,
 } from "lib/db/schema";
+import { entryDateBetween } from "./entryDateFilters";
 
 import type { SelectProject } from "lib/db/schema";
 
@@ -70,9 +71,7 @@ const generateProjectPnl = async (params: {
 
   // Query journal lines assigned to this project, grouped by account
   const dateConditions =
-    startDate && endDate
-      ? [between(journalEntryTable.date, startDate, endDate)]
-      : [];
+    startDate && endDate ? [entryDateBetween(startDate, endDate)] : [];
 
   const results = await dbPool
     .select({

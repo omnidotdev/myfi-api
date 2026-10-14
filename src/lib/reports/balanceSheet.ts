@@ -1,13 +1,13 @@
-import { and, eq, inArray, lte, sql } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 
 import { dbPool } from "lib/db/db";
 import {
   accountTable,
   journalEntryTable,
-  journalLineProjectTable,
   journalLineTable,
-  journalLineTagTable,
 } from "lib/db/schema";
+import { entryDateOnOrBefore } from "./entryDateFilters";
+import { lineHasAnyProject, lineHasAnyTag } from "./journalLineFilters";
 
 type BalanceSheetLineItem = {
   accountId: string;
@@ -50,7 +50,7 @@ const generateBalanceSheet = async (params: {
   const { bookId, asOfDate, tagIds, projectIds } = params;
   const basis: ReportBasis = params.basis === "cash" ? "cash" : "accrual";
 
-  let query = dbPool
+  const query = dbPool
     .select({
       accountId: accountTable.id,
       accountCode: accountTable.code,
@@ -69,30 +69,16 @@ const generateBalanceSheet = async (params: {
     .innerJoin(accountTable, eq(journalLineTable.accountId, accountTable.id))
     .$dynamic();
 
-  if (tagIds?.length) {
-    query = query.innerJoin(
-      journalLineTagTable,
-      eq(journalLineTagTable.journalLineId, journalLineTable.id),
-    );
-  }
-
-  if (projectIds?.length) {
-    query = query.innerJoin(
-      journalLineProjectTable,
-      eq(journalLineProjectTable.journalLineId, journalLineTable.id),
-    );
-  }
-
+  // Tag/project filtering uses a subquery membership test rather than a join,
+  // so a line matching multiple tags is not fanned out and double-summed
   const results = await query
     .where(
       and(
         eq(journalEntryTable.bookId, bookId),
-        lte(journalEntryTable.date, asOfDate),
+        entryDateOnOrBefore(asOfDate),
         sql`${accountTable.type} in ('asset', 'liability', 'equity', 'revenue', 'expense')`,
-        tagIds?.length ? inArray(journalLineTagTable.tagId, tagIds) : undefined,
-        projectIds?.length
-          ? inArray(journalLineProjectTable.projectId, projectIds)
-          : undefined,
+        tagIds?.length ? lineHasAnyTag(tagIds) : undefined,
+        projectIds?.length ? lineHasAnyProject(projectIds) : undefined,
       ),
     )
     .groupBy(

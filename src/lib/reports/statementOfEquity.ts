@@ -1,4 +1,4 @@
-import { and, eq, lt, sql } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 
 import { dbPool } from "lib/db/db";
 import {
@@ -6,6 +6,7 @@ import {
   journalEntryTable,
   journalLineTable,
 } from "lib/db/schema";
+import { entryDateBefore, entryDateBetween } from "./entryDateFilters";
 import generateProfitAndLoss from "./profitAndLoss";
 
 interface EquityAccountRow {
@@ -37,9 +38,10 @@ const equityBalance = (debit: number, credit: number) => credit - debit;
 /**
  * Statement of changes in equity: a rollforward of each equity account from its
  * beginning balance (before the period) through the period's debits and credits
- * to its ending balance, with the period's net income shown as a separate line
- * (it is closed to retained earnings at year-end, so it is reported rather than
- * folded into the account balances to avoid double counting)
+ * to its ending balance. The period's net income is shown as its own line and
+ * rolled into total ending equity (it lives in revenue/expense accounts until a
+ * year-end close moves it into retained earnings), so the total ties to the
+ * balance sheet's current-year-earnings equity line
  */
 const generateStatementOfEquity = async (params: {
   bookId: string;
@@ -65,7 +67,7 @@ const generateStatementOfEquity = async (params: {
       and(
         eq(journalEntryTable.bookId, bookId),
         eq(accountTable.type, "equity"),
-        lt(journalEntryTable.date, startDate),
+        entryDateBefore(startDate),
       ),
     )
     .groupBy(accountTable.id);
@@ -96,7 +98,7 @@ const generateStatementOfEquity = async (params: {
       and(
         eq(journalEntryTable.bookId, bookId),
         eq(accountTable.type, "equity"),
-        sql`${journalEntryTable.date} between ${startDate} and ${endDate}`,
+        entryDateBetween(startDate, endDate),
       ),
     )
     .groupBy(
@@ -150,13 +152,21 @@ const generateStatementOfEquity = async (params: {
 
   const pnl = await generateProfitAndLoss({ bookId, startDate, endDate });
 
+  // Current-period net income is not yet in any equity account (a year-end
+  // close sweeps it into retained earnings later), so fold it into ending
+  // equity: ending = beginning + contributions - distributions + net income.
+  // Summing P&L over the same range self-corrects across a close within the
+  // period (the close zeroes revenue/expense), and this ties the statement to
+  // the balance sheet's current-year-earnings equity line
+  const totalEndingEquity = totalEnding + Number(pnl.netIncome);
+
   return {
     bookId,
     startDate,
     endDate,
     accounts,
     totalBeginningEquity: totalBeginning.toFixed(2),
-    totalEndingEquity: totalEnding.toFixed(2),
+    totalEndingEquity: totalEndingEquity.toFixed(2),
     netIncome: pnl.netIncome,
     generatedAt: new Date().toISOString(),
   };

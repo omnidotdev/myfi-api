@@ -1,17 +1,17 @@
-import { and, between, eq, inArray, sql } from "drizzle-orm";
+import { and, eq, inArray, sql } from "drizzle-orm";
 
 import { dbPool } from "lib/db/db";
 import {
   accountTable,
   journalEntryTable,
-  journalLineProjectTable,
   journalLineTable,
-  journalLineTagTable,
 } from "lib/db/schema";
 import {
   collectedRevenueByAccount,
   paidExpensesByAccount,
 } from "./cashBasisAdjustments";
+import { entryDateBetween } from "./entryDateFilters";
+import { lineHasAnyProject, lineHasAnyTag } from "./journalLineFilters";
 
 type ReportBasis = "accrual" | "cash";
 
@@ -91,7 +91,7 @@ const generateProfitAndLoss = async (params: {
   const basis: ReportBasis = params.basis === "cash" ? "cash" : "accrual";
   const cash = basis === "cash";
 
-  let query = dbPool
+  const query = dbPool
     .select({
       accountId: accountTable.id,
       accountCode: accountTable.code,
@@ -110,40 +110,23 @@ const generateProfitAndLoss = async (params: {
     .innerJoin(accountTable, eq(journalLineTable.accountId, accountTable.id))
     .$dynamic();
 
-  // Tag filtering is only meaningful on the accrual basis
-  if (!cash && tagIds?.length) {
-    query = query.innerJoin(
-      journalLineTagTable,
-      eq(journalLineTagTable.journalLineId, journalLineTable.id),
-    );
-  }
-
-  // Project filtering is likewise accrual-only (cash-basis adjustments are
-  // payment-traced and carry no project assignment)
-  if (!cash && projectIds?.length) {
-    query = query.innerJoin(
-      journalLineProjectTable,
-      eq(journalLineProjectTable.journalLineId, journalLineTable.id),
-    );
-  }
-
+  // Tag/project filtering (accrual-only; cash-basis adjustments are
+  // payment-traced and carry no tag/project assignment) uses a subquery
+  // membership test rather than a join, so a line matching multiple tags is
+  // not fanned out and double-summed
   const results = await query
     .where(
       and(
         eq(journalEntryTable.bookId, bookId),
-        between(journalEntryTable.date, startDate, endDate),
+        entryDateBetween(startDate, endDate),
         sql`${accountTable.type} in ('revenue', 'expense')`,
         // On cash basis, drop the invoice/bill accrual recognitions; their
         // amounts come back in through the payment-traced adjustments below
         cash
           ? sql`${journalEntryTable.source} not in ('invoice', 'bill')`
           : undefined,
-        !cash && tagIds?.length
-          ? inArray(journalLineTagTable.tagId, tagIds)
-          : undefined,
-        !cash && projectIds?.length
-          ? inArray(journalLineProjectTable.projectId, projectIds)
-          : undefined,
+        !cash && tagIds?.length ? lineHasAnyTag(tagIds) : undefined,
+        !cash && projectIds?.length ? lineHasAnyProject(projectIds) : undefined,
       ),
     )
     .groupBy(

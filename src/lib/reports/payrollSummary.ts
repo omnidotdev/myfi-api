@@ -1,4 +1,4 @@
-import { and, between, eq, sql } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 
 import { dbPool } from "lib/db/db";
 import {
@@ -6,6 +6,7 @@ import {
   journalEntryTable,
   journalLineTable,
 } from "lib/db/schema";
+import { entryDateBetween } from "./entryDateFilters";
 
 type PayrollEntry = {
   date: string;
@@ -48,7 +49,7 @@ const generatePayrollSummary = async (params: {
       and(
         eq(journalEntryTable.bookId, bookId),
         sql`${journalEntryTable.source} IN ('payroll_sync', 'payroll_import')`,
-        between(journalEntryTable.date, startDate, endDate),
+        entryDateBetween(startDate, endDate),
       ),
     )
     .orderBy(journalEntryTable.date);

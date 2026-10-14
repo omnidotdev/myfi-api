@@ -2,6 +2,7 @@ import { getVendorSpend } from "lib/spending";
 import { generate1099Nec } from "lib/tax";
 import generateBalanceSheet from "./balanceSheet";
 import generateCashFlow from "./cashFlow";
+import { formatReportCurrency } from "./formatReportCurrency";
 import generateGeneralLedger from "./generalLedger";
 import renderReportHtml from "./htmlRenderer";
 import generatePayrollSummary from "./payrollSummary";
@@ -65,14 +66,8 @@ const renderCsv = (headers: string[], rows: string[][]): string => {
   return lines.join("\n");
 };
 
-/**
- * Format a numeric string as currency for display
- */
-const fmt = (value: string): string => {
-  const n = Number.parseFloat(value);
-
-  return `$${Math.abs(n).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-};
+// Format a numeric string as display currency, preserving the sign
+const fmt = formatReportCurrency;
 
 /**
  * Export a report in the requested format (HTML or CSV).

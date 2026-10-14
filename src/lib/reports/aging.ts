@@ -1,4 +1,4 @@
-import { and, eq, lte } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 
 import { dbPool } from "lib/db/db";
 import {
@@ -7,6 +7,7 @@ import {
   journalLineTable,
   vendorTable,
 } from "lib/db/schema";
+import { entryDateOnOrBefore } from "./entryDateFilters";
 
 type AgingBuckets = {
   current: string;
@@ -67,7 +68,7 @@ const generateAgingReport = async (params: {
       and(
         eq(accountTable.bookId, bookId),
         eq(accountTable.subType, accountSubType),
-        lte(journalEntryTable.date, asOfDate),
+        entryDateOnOrBefore(asOfDate),
       ),
     );
 
