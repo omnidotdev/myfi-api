@@ -1,3 +1,5 @@
+import { createHash } from "node:crypto";
+
 import { and, eq } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 
@@ -118,6 +120,15 @@ export const payrollCallbackRoute = new Elysia().get(
     }),
   },
 );
+
+/**
+ * Parse a CSV money cell tolerant of currency formatting ("$5,000.00"), which
+ * `Number.parseFloat` alone turns into NaN (then 0), silently importing a
+ * payroll row as all-zero. Strips the currency symbol, thousands separators,
+ * and whitespace before parsing
+ */
+const parseCsvAmount = (value: string | undefined): number =>
+  Number.parseFloat(String(value ?? "").replace(/[$,\s]/g, "")) || 0;
 
 /**
  * Protected payroll routes (registered after auth middleware).
@@ -314,7 +325,10 @@ const payrollRoutes = new Elysia({ prefix: "/api/payroll" })
 
         if (row.length < requiredColumns.length) continue;
 
-        const sourceRef = `csv:${file.name}:${i}`;
+        // Idempotency key is a content hash of the row, not the file name and
+        // line number: two different files named the same (e.g. "payroll.csv"
+        // each month) would otherwise collide and silently drop the later rows
+        const sourceRef = `csv:${createHash("sha256").update(lines[i]).digest("hex")}`;
 
         // Idempotency check
         const [existing] = await dbPool
@@ -334,12 +348,12 @@ const payrollRoutes = new Elysia({ prefix: "/api/payroll" })
         }
 
         const date = row[colIndex.date];
-        const grossWages = Number.parseFloat(row[colIndex.gross_wages]) || 0;
-        const federalTax = Number.parseFloat(row[colIndex.federal_tax]) || 0;
-        const stateTax = Number.parseFloat(row[colIndex.state_tax]) || 0;
-        const fica = Number.parseFloat(row[colIndex.fica]) || 0;
-        const benefits = Number.parseFloat(row[colIndex.benefits]) || 0;
-        const netPay = Number.parseFloat(row[colIndex.net_pay]) || 0;
+        const grossWages = parseCsvAmount(row[colIndex.gross_wages]);
+        const federalTax = parseCsvAmount(row[colIndex.federal_tax]);
+        const stateTax = parseCsvAmount(row[colIndex.state_tax]);
+        const fica = parseCsvAmount(row[colIndex.fica]);
+        const benefits = parseCsvAmount(row[colIndex.benefits]);
+        const netPay = parseCsvAmount(row[colIndex.net_pay]);
 
         const journalLines: {
           accountId: string;
@@ -376,11 +390,14 @@ const payrollRoutes = new Elysia({ prefix: "/api/payroll" })
           });
         }
 
-        // FICA (credit to liability, employer tax mapping)
-        const ficaMapping = mappingsByEvent.get("payroll_employer_tax");
-        if (ficaMapping && fica) {
+        // FICA withheld from the employee is an employee withholding (this CSV
+        // is a gross-to-net breakdown: gross = withholdings + net), so it
+        // credits the employee-tax liability like federal/state, not the
+        // employer-tax account. Employer-side payroll tax is not representable
+        // in this single-column format; use the Gusto sync for that
+        if (fedTaxMapping && fica) {
           journalLines.push({
-            accountId: ficaMapping.creditAccountId,
+            accountId: fedTaxMapping.creditAccountId,
             debit: "0.0000",
             credit: fica.toFixed(4),
           });

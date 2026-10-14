@@ -1,4 +1,4 @@
-import { and, eq, gte, lt, sql } from "drizzle-orm";
+import { and, eq, gte, inArray, lt, sql } from "drizzle-orm";
 
 import { dbPool } from "lib/db/db";
 import {
@@ -37,8 +37,15 @@ const DEFAULT_THRESHOLD = 600;
 
 /**
  * Generate 1099-NEC forms for all qualifying vendors in a given tax year.
- * Vendors qualify when their total expense-account debits meet or exceed
- * the per-vendor threshold (default $600)
+ *
+ * Box 1 is the net amount actually PAID to the vendor during the year by
+ * cash/check/ACH, not gross expense accrued. It is computed from money leaving
+ * the book's cash and bank accounts tagged to the vendor (credits), net of any
+ * refunds received back (debits). Payments made by credit card are excluded:
+ * the card processor reports those on a 1099-K, so counting them here would
+ * double-report the vendor to the IRS. An accrued-but-unpaid bill (no cash
+ * movement yet) is likewise excluded, matching the cash basis the 1099 uses.
+ * Vendors qualify when that paid amount meets the per-vendor threshold ($600)
  * @param params - Book ID and tax year
  * @returns Report containing 1099-NEC form records for qualifying vendors
  */
@@ -63,10 +70,13 @@ const generate1099Nec = async (params: {
   let totalAmount = 0;
 
   for (const vendor of vendors) {
-    // Sum expense debits for this vendor in the tax year
+    // Net cash/check/ACH paid to this vendor in the year: money leaving the
+    // book's cash and bank accounts (credit) less refunds received (debit).
+    // Credit-card accounts are excluded, so card-settled spend is not counted
+    // here (it belongs on the processor's 1099-K)
     const [result] = await dbPool
       .select({
-        total: sql<string>`coalesce(sum(${journalLineTable.debit}), 0)`,
+        total: sql<string>`coalesce(sum(${journalLineTable.credit}), 0) - coalesce(sum(${journalLineTable.debit}), 0)`,
       })
       .from(journalLineTable)
       .innerJoin(
@@ -79,7 +89,8 @@ const generate1099Nec = async (params: {
           eq(journalEntryTable.vendorId, vendor.id),
           gte(journalEntryTable.date, startDate),
           lt(journalEntryTable.date, endDate),
-          eq(accountTable.type, "expense"),
+          eq(accountTable.type, "asset"),
+          inArray(accountTable.subType, ["cash", "bank"]),
         ),
       );
 
