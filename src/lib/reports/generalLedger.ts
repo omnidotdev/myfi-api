@@ -1,13 +1,13 @@
-import { and, asc, between, eq, inArray, lt, sql } from "drizzle-orm";
+import { and, asc, eq, sql } from "drizzle-orm";
 
 import { dbPool } from "lib/db/db";
 import {
   accountTable,
   journalEntryTable,
-  journalLineProjectTable,
   journalLineTable,
-  journalLineTagTable,
 } from "lib/db/schema";
+import { entryDateBefore, entryDateBetween } from "./entryDateFilters";
+import { lineHasAnyProject, lineHasAnyTag } from "./journalLineFilters";
 
 type GeneralLedgerEntry = {
   date: string;
@@ -45,7 +45,7 @@ const computeOpeningBalance = async (
   tagIds?: string[],
   projectIds?: string[],
 ): Promise<number> => {
-  let query = dbPool
+  const query = dbPool
     .select({
       debitTotal: sql<string>`coalesce(sum(${journalLineTable.debit}), 0)`,
       creditTotal: sql<string>`coalesce(sum(${journalLineTable.credit}), 0)`,
@@ -57,29 +57,15 @@ const computeOpeningBalance = async (
     )
     .$dynamic();
 
-  if (tagIds?.length) {
-    query = query.innerJoin(
-      journalLineTagTable,
-      eq(journalLineTagTable.journalLineId, journalLineTable.id),
-    );
-  }
-
-  if (projectIds?.length) {
-    query = query.innerJoin(
-      journalLineProjectTable,
-      eq(journalLineProjectTable.journalLineId, journalLineTable.id),
-    );
-  }
-
+  // Subquery membership test instead of a tag/project join, so a line matching
+  // multiple tags is not fanned out and double-summed into the opening balance
   const [result] = await query.where(
     and(
       eq(journalEntryTable.bookId, bookId),
       eq(journalLineTable.accountId, accountId),
-      lt(journalEntryTable.date, beforeDate),
-      tagIds?.length ? inArray(journalLineTagTable.tagId, tagIds) : undefined,
-      projectIds?.length
-        ? inArray(journalLineProjectTable.projectId, projectIds)
-        : undefined,
+      entryDateBefore(beforeDate),
+      tagIds?.length ? lineHasAnyTag(tagIds) : undefined,
+      projectIds?.length ? lineHasAnyProject(projectIds) : undefined,
     ),
   );
 
@@ -150,7 +136,7 @@ const generateGeneralLedger = async (params: {
   );
 
   // Fetch journal lines within the date range for this account
-  let entriesQuery = dbPool
+  const entriesQuery = dbPool
     .select({
       date: journalEntryTable.date,
       entryMemo: journalEntryTable.memo,
@@ -166,33 +152,21 @@ const generateGeneralLedger = async (params: {
     )
     .$dynamic();
 
-  if (tagIds?.length) {
-    entriesQuery = entriesQuery.innerJoin(
-      journalLineTagTable,
-      eq(journalLineTagTable.journalLineId, journalLineTable.id),
-    );
-  }
-
-  if (projectIds?.length) {
-    entriesQuery = entriesQuery.innerJoin(
-      journalLineProjectTable,
-      eq(journalLineProjectTable.journalLineId, journalLineTable.id),
-    );
-  }
-
+  // Subquery membership test instead of a tag/project join, so a line matching
+  // multiple tags is not duplicated into multiple ledger rows (which would also
+  // inflate the running balance and the debit/credit totals)
   const results = await entriesQuery
     .where(
       and(
         eq(journalEntryTable.bookId, bookId),
         eq(journalLineTable.accountId, accountId),
-        between(journalEntryTable.date, startDate, endDate),
-        tagIds?.length ? inArray(journalLineTagTable.tagId, tagIds) : undefined,
-        projectIds?.length
-          ? inArray(journalLineProjectTable.projectId, projectIds)
-          : undefined,
+        entryDateBetween(startDate, endDate),
+        tagIds?.length ? lineHasAnyTag(tagIds) : undefined,
+        projectIds?.length ? lineHasAnyProject(projectIds) : undefined,
       ),
     )
-    .orderBy(asc(journalEntryTable.date));
+    // Stable tiebreaker so the running balance is deterministic within a day
+    .orderBy(asc(journalEntryTable.date), asc(journalEntryTable.createdAt));
 
   const isDebitNormal = account.type === "asset" || account.type === "expense";
   let runningBalance = openingBalance;

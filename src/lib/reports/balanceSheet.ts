@@ -1,13 +1,13 @@
-import { and, eq, inArray, lte, sql } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 
 import { dbPool } from "lib/db/db";
 import {
   accountTable,
   journalEntryTable,
-  journalLineProjectTable,
   journalLineTable,
-  journalLineTagTable,
 } from "lib/db/schema";
+import { entryDateOnOrBefore } from "./entryDateFilters";
+import { lineHasAnyProject, lineHasAnyTag } from "./journalLineFilters";
 
 type BalanceSheetLineItem = {
   accountId: string;
@@ -50,7 +50,7 @@ const generateBalanceSheet = async (params: {
   const { bookId, asOfDate, tagIds, projectIds } = params;
   const basis: ReportBasis = params.basis === "cash" ? "cash" : "accrual";
 
-  let query = dbPool
+  const query = dbPool
     .select({
       accountId: accountTable.id,
       accountCode: accountTable.code,
@@ -69,30 +69,16 @@ const generateBalanceSheet = async (params: {
     .innerJoin(accountTable, eq(journalLineTable.accountId, accountTable.id))
     .$dynamic();
 
-  if (tagIds?.length) {
-    query = query.innerJoin(
-      journalLineTagTable,
-      eq(journalLineTagTable.journalLineId, journalLineTable.id),
-    );
-  }
-
-  if (projectIds?.length) {
-    query = query.innerJoin(
-      journalLineProjectTable,
-      eq(journalLineProjectTable.journalLineId, journalLineTable.id),
-    );
-  }
-
+  // Tag/project filtering uses a subquery membership test rather than a join,
+  // so a line matching multiple tags is not fanned out and double-summed
   const results = await query
     .where(
       and(
         eq(journalEntryTable.bookId, bookId),
-        lte(journalEntryTable.date, asOfDate),
-        sql`${accountTable.type} in ('asset', 'liability', 'equity')`,
-        tagIds?.length ? inArray(journalLineTagTable.tagId, tagIds) : undefined,
-        projectIds?.length
-          ? inArray(journalLineProjectTable.projectId, projectIds)
-          : undefined,
+        entryDateOnOrBefore(asOfDate),
+        sql`${accountTable.type} in ('asset', 'liability', 'equity', 'revenue', 'expense')`,
+        tagIds?.length ? lineHasAnyTag(tagIds) : undefined,
+        projectIds?.length ? lineHasAnyProject(projectIds) : undefined,
       ),
     )
     .groupBy(
@@ -115,10 +101,26 @@ const generateBalanceSheet = async (params: {
   const cash = basis === "cash";
   let arDropped = 0;
   let apDropped = 0;
+  // Revenue/expense accounts carry this year's activity until a year-end close
+  // sweeps them into retained earnings. Their signed net (revenue credit-normal,
+  // expense debit-normal) is current-year net income, which belongs in equity:
+  // without it a mid-year sheet is off by exactly net income (A = L + E + NI).
+  // Summing every revenue/expense line through asOfDate self-corrects for closed
+  // prior years (the close entry already zeroed those accounts into equity)
+  let currentYearEarnings = 0;
 
   for (const row of results) {
     const debit = Number.parseFloat(row.debitTotal);
     const credit = Number.parseFloat(row.creditTotal);
+
+    if (row.accountType === "revenue") {
+      currentYearEarnings += credit - debit;
+      continue;
+    }
+    if (row.accountType === "expense") {
+      currentYearEarnings -= debit - credit;
+      continue;
+    }
 
     // Assets: debit-normal (debits increase, credits decrease)
     // Liabilities/Equity: credit-normal (credits increase, debits decrease)
@@ -166,6 +168,22 @@ const generateBalanceSheet = async (params: {
       equity.push(item);
       totalEquity += balance;
     }
+  }
+
+  // Surface current-year net income as an equity line so the sheet balances
+  // before any year-end close (mirrors the "Net Income" line QuickBooks shows)
+  const netIncome = Math.round(currentYearEarnings * 10000) / 10000;
+  if (Math.abs(netIncome) >= 0.005) {
+    equity.push({
+      accountId: "current-year-earnings",
+      accountCode: null,
+      accountName: "Current Year Earnings",
+      accountType: "equity",
+      subType: null,
+      parentId: null,
+      balance: netIncome.toFixed(4),
+    });
+    totalEquity += netIncome;
   }
 
   // Reclass the dropped AR/AP into a single cash-basis equity adjustment
