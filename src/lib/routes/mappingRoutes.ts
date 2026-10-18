@@ -3,6 +3,7 @@ import { Elysia, t } from "elysia";
 
 import { dbPool } from "lib/db/db";
 import { accountMappingTable } from "lib/db/schema";
+import { seedDefaultMantleMappings } from "lib/mantle/defaultMappings";
 
 // Account mapping routes
 const mappingRoutes = new Elysia({ prefix: "/api/account-mappings" })
@@ -73,6 +74,18 @@ const mappingRoutes = new Elysia({ prefix: "/api/account-mappings" })
         creditAccountId: t.String(),
       }),
     },
+  )
+  // Create the default Mantle mappings for a book from its standard chart of
+  // accounts. Additive: only fills event types that have no mapping yet, and
+  // only those whose standard accounts resolve, so it never overwrites a
+  // hand-tuned mapping. Returns the mappings it created
+  .post(
+    "/seed-mantle-defaults",
+    async ({ body }) => {
+      const created = await seedDefaultMantleMappings(body.bookId);
+      return { created };
+    },
+    { body: t.Object({ bookId: t.String() }) },
   );
 
 export default mappingRoutes;

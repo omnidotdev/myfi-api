@@ -1,0 +1,1 @@
+ALTER TYPE "public"."account_sub_type" ADD VALUE 'customer_credit' BEFORE 'other_liability';
