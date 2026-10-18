@@ -314,6 +314,42 @@ describe("handleMantleEvent payment and credit events (MYFI-3)", () => {
   });
 });
 
+describe("handleMantleEvent payment reversal (MYFI-4)", () => {
+  beforeEach(() => {
+    resetDbMock();
+    mockEmitAudit.mockClear();
+    mockTransaction.mockClear();
+    txInsertValues.mockClear();
+    insertedEntryValues.length = 0;
+    insertedLineValues.length = 0;
+    entrySeq = 0;
+    entryInsertReturnsEmpty = false;
+  });
+
+  test("a deleted payment books a reversing payment.reversed entry", async () => {
+    queueEntryLookups();
+
+    const result = await handleMantleEvent({
+      event: "mantle.payment.deleted",
+      data: {
+        id: "pay-9",
+        invoiceId: INVOICE_ID,
+        organizationId: ORG,
+        currency: "USD",
+        amount: "40.00",
+      },
+    });
+
+    expect(result.success).toBe(true);
+    expect(insertedEntryValues).toHaveLength(1);
+    // Keyed distinctly from the original so it posts rather than deduping
+    expect(insertedEntryValues[0]?.sourceReferenceId).toBe(
+      "pay-9:payment.reversed",
+    );
+    expect(insertedLineValues.map((line) => line.debit)).toContain("40.0000");
+  });
+});
+
 describe("handleMantleEvent tenant-scoped dedup (MYFI-2)", () => {
   const LEGACY_REF = "1001";
   const bookA = { id: "book-a", organizationId: "org-a", name: "Book A" };
