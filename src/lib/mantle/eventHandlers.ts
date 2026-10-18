@@ -115,6 +115,7 @@ type LegacyEvent =
   | "bill.void"
   | "inventory.adjustment"
   | "payment.received"
+  | "payment.reversed"
   | "credit.issued"
   | "credit.applied";
 
@@ -225,13 +226,25 @@ const normalizeMantleEvent = (
     };
   }
 
-  // Payment edits/deletes are not booked yet: recognizing an amended payment or
-  // reversing a deleted one is future work. Acking without booking is safe (it
-  // never mis-books); a deleted payment simply stays booked until that lands
-  if (
-    event === "mantle.payment.updated" ||
-    event === "mantle.payment.deleted"
-  ) {
+  // A deleted payment reverses its cash recognition. Booked as its own
+  // `payment.reversed` accounting event (its mapping posts the opposite of
+  // `payment.received`, e.g. Dr A/R / Cr Cash) and keyed distinctly so it posts
+  // alongside the original rather than deduping against it
+  if (event === "mantle.payment.deleted") {
+    return {
+      accountingEvent: "payment.reversed",
+      organizationId: data.organizationId,
+      referenceId: data.id,
+      amount: parseTotal(data.amount),
+      currency: data.currency,
+      memo: data.memo ?? `Payment ${data.id} reversed`,
+    };
+  }
+
+  // Payment amount edits are not booked: the event carries only the new amount,
+  // not the delta, so a correct adjustment cannot be derived here. Acking
+  // without booking is safe (never mis-books)
+  if (event === "mantle.payment.updated") {
     return undefined;
   }
 
@@ -305,6 +318,7 @@ const buildMemo = (
     "bill.void": `Bill ${data.referenceId} voided (reversal)`,
     "inventory.adjustment": `Inventory adjustment ${data.referenceId}`,
     "payment.received": `Payment received ${data.referenceId}`,
+    "payment.reversed": `Payment ${data.referenceId} reversed`,
     "credit.issued": `Credit issued ${data.referenceId}`,
     "credit.applied": `Credit applied ${data.referenceId}`,
   };
