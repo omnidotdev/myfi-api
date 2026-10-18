@@ -9,6 +9,7 @@ import {
   journalLineTable,
   reconciliationQueueTable,
 } from "lib/db/schema";
+import { seedDefaultMantleMappings } from "lib/mantle/defaultMappings";
 import { adoptMantleSource } from "lib/mantle/invoiceSource";
 
 import type { InferInsertModel } from "drizzle-orm";
@@ -392,6 +393,12 @@ const createJournalEntry = async (
       resource: { type: "book", id: book.id, name: book.name },
       data: { invoiceSource: "mantle", reason: "mantle_event_received" },
     });
+
+    // Seed default Mantle mappings from the book's standard chart of accounts on
+    // first adoption, so a template-seeded book books without manual mapping
+    // setup. Additive and best-effort: it never overwrites an existing mapping,
+    // creates nothing when accounts do not resolve, and must not fail the event
+    await seedDefaultMantleMappings(book.id).catch(() => {});
   }
 
   // Duplicate detection: check for an existing entry with the same book +

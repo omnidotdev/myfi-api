@@ -35,6 +35,7 @@ export const accountSubTypeEnum = pgEnum("account_sub_type", [
   "accounts_payable",
   "loan",
   "mortgage",
+  "customer_credit",
   "other_liability",
   "owners_equity",
   "retained_earnings",

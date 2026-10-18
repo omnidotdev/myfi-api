@@ -95,6 +95,12 @@ const soleProprietorTemplate: AccountTemplate[] = [
         type: "liability",
         subType: "other_liability",
       },
+      {
+        name: "Customer Credits",
+        code: "2050",
+        type: "liability",
+        subType: "customer_credit",
+      },
     ],
   },
   {
