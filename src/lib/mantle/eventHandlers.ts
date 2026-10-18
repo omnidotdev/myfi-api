@@ -19,12 +19,15 @@ type MantleEventBody = {
     // Legacy format
     organizationId?: string;
     referenceId?: string;
-    amount?: number;
+    amount?: number | string;
     currency?: string;
     memo?: string;
     metadata?: Record<string, unknown>;
     // Mantle native format
     id?: string;
+    invoiceId?: string;
+    paymentId?: string;
+    kind?: string;
     companyId?: string;
     contactId?: string;
     invoiceNumber?: string;
@@ -85,13 +88,25 @@ const SUPPORTED_EVENTS = [
   "mantle.quote.created",
   "mantle.quote.updated",
   "mantle.quote.deleted",
+  // Mantle native payment + credit events (per-amount recognition)
+  "mantle.payment.created",
+  "mantle.payment.updated",
+  "mantle.payment.deleted",
+  "mantle.credit.issued",
+  "mantle.credit.applied",
 ] as const;
 
 type SupportedEvent = (typeof SUPPORTED_EVENTS)[number];
 
-// Legacy event types that map to account mappings
-type LegacyEvent = Extract<
-  SupportedEvent,
+/**
+ * Accounting event types that key an `account_mapping` (debit/credit account
+ * pair) and a journal entry. Named "legacy" historically; it is the set of
+ * internal accounting events, which is broader than the on-the-wire event types
+ * (e.g. a `mantle.payment.created` event maps to the `payment.received`
+ * accounting event). The debit/credit DIRECTION for each lives in the per-book
+ * `account_mapping` config, not here.
+ */
+type LegacyEvent =
   | "invoice.sent"
   | "invoice.paid"
   | "invoice.void"
@@ -99,11 +114,18 @@ type LegacyEvent = Extract<
   | "bill.paid"
   | "bill.void"
   | "inventory.adjustment"
->;
+  | "payment.received"
+  | "credit.issued"
+  | "credit.applied";
 
 /**
- * Map Mantle invoice status to the corresponding legacy accounting event.
- * Returns undefined for statuses that don't require a journal entry.
+ * Map a Mantle NATIVE invoice status to its accounting event. Returns undefined
+ * for statuses that book nothing.
+ *
+ * "paid" deliberately books nothing: cash receipt is now recognized per payment
+ * from `mantle.payment.*`, and A/R relief by credit from `mantle.credit.applied`.
+ * Booking the full invoice total here as well would double-count the cash. The
+ * legacy `invoice.paid` event (older emitters) still books via the legacy path.
  */
 const statusToLegacyEvent = (
   status: string | undefined,
@@ -111,8 +133,6 @@ const statusToLegacyEvent = (
   switch (status) {
     case "sent":
       return "invoice.sent";
-    case "paid":
-      return "invoice.paid";
     case "void":
       return "invoice.void";
     default:
@@ -189,6 +209,51 @@ const normalizeMantleEvent = (
     };
   }
 
+  // Payment received against an invoice: book the PAYMENT amount (not the
+  // invoice total) so partial and per-payment cash is recognized. Keyed on the
+  // payment id so each payment books once
+  if (event === "mantle.payment.created") {
+    return {
+      accountingEvent: "payment.received",
+      organizationId: data.organizationId,
+      referenceId: data.id,
+      amount: parseTotal(data.amount),
+      currency: data.currency,
+      memo:
+        data.memo ??
+        `Payment received${data.invoiceId ? ` for invoice ${data.invoiceId}` : ""}`,
+    };
+  }
+
+  // Payment edits/deletes are not booked yet: recognizing an amended payment or
+  // reversing a deleted one is future work. Acking without booking is safe (it
+  // never mis-books); a deleted payment simply stays booked until that lands
+  if (
+    event === "mantle.payment.updated" ||
+    event === "mantle.payment.deleted"
+  ) {
+    return undefined;
+  }
+
+  // Credit issued (overpayment) or applied (drawn against an invoice). The
+  // credit ledger stores application as a negative amount, so book the
+  // magnitude; the debit/credit account direction is in the per-book mapping
+  if (event === "mantle.credit.issued" || event === "mantle.credit.applied") {
+    const accountingEvent: LegacyEvent =
+      event === "mantle.credit.issued" ? "credit.issued" : "credit.applied";
+
+    return {
+      accountingEvent,
+      organizationId: data.organizationId,
+      referenceId: data.id,
+      amount: Math.abs(parseTotal(data.amount)),
+      currency: data.currency,
+      memo:
+        data.memo ??
+        `Credit ${event === "mantle.credit.issued" ? "issued" : "applied"} ${data.id}`,
+    };
+  }
+
   // Quote events: only create journal entries for converted quotes
   // (the resulting invoice event handles the actual AR recognition)
   if (
@@ -239,6 +304,9 @@ const buildMemo = (
     "bill.paid": `Payment for bill ${data.referenceId}`,
     "bill.void": `Bill ${data.referenceId} voided (reversal)`,
     "inventory.adjustment": `Inventory adjustment ${data.referenceId}`,
+    "payment.received": `Payment received ${data.referenceId}`,
+    "credit.issued": `Credit issued ${data.referenceId}`,
+    "credit.applied": `Credit applied ${data.referenceId}`,
   };
 
   return memoMap[event];
@@ -510,7 +578,7 @@ const handleMantleEvent = async (
       accountingEvent: event as LegacyEvent,
       organizationId: data.organizationId,
       referenceId: data.referenceId,
-      amount: data.amount,
+      amount: parseTotal(data.amount),
       currency: data.currency,
       memo: data.memo,
       metadata: data.metadata,

@@ -11,6 +11,10 @@ const mockEmitAudit = mock(() => {});
 // remaining inserts are journal lines + the reconciliation queue item
 const insertedEntryValues: Array<Record<string, unknown>> = [];
 
+// Capture the journal LINE inserts (debit/credit lines), so a test can assert
+// the amount actually booked, not just that an entry was written
+const insertedLineValues: Array<Record<string, unknown>> = [];
+
 let entrySeq = 0;
 // When true, the journal-entry insert returns no row, simulating a concurrent
 // insert that won the (book, source, source_reference_id) unique-constraint race
@@ -19,6 +23,9 @@ const txInsertValues = mock((values: Record<string, unknown>) => {
   // Only the journal entry insert carries `source`; capture those
   if (values.source !== undefined) {
     insertedEntryValues.push(values);
+  } else if (values.debit !== undefined || values.credit !== undefined) {
+    // Journal lines carry debit/credit (the reconciliation item carries neither)
+    insertedLineValues.push(values);
   }
 
   const returning = mock(() =>
@@ -181,6 +188,129 @@ describe("handleMantleEvent fail-closed on transient failures (MYFI-2)", () => {
 
     expect(result.success).toBe(false);
     expect(result.retryable).toBeUndefined();
+  });
+});
+
+describe("handleMantleEvent payment and credit events (MYFI-3)", () => {
+  beforeEach(() => {
+    resetDbMock();
+    mockEmitAudit.mockClear();
+    mockTransaction.mockClear();
+    txInsertValues.mockClear();
+    insertedEntryValues.length = 0;
+    insertedLineValues.length = 0;
+    entrySeq = 0;
+    entryInsertReturnsEmpty = false;
+  });
+
+  test("a payment event books its own amount as payment.received, not the invoice total", async () => {
+    queueEntryLookups();
+
+    const result = await handleMantleEvent({
+      event: "mantle.payment.created",
+      data: {
+        id: "pay-1",
+        invoiceId: INVOICE_ID,
+        organizationId: ORG,
+        currency: "USD",
+        amount: "40.00",
+      },
+    });
+
+    expect(result.success).toBe(true);
+    expect(result.error).toBeUndefined();
+    expect(insertedEntryValues).toHaveLength(1);
+    expect(insertedEntryValues[0]?.sourceReferenceId).toBe(
+      "pay-1:payment.received",
+    );
+    // The payment amount (40) is booked, not any invoice total
+    expect(insertedLineValues.map((line) => line.debit)).toContain("40.0000");
+    expect(insertedLineValues.map((line) => line.credit)).toContain("40.0000");
+  });
+
+  test("an applied-credit event books the magnitude of the signed ledger amount", async () => {
+    queueEntryLookups();
+
+    const result = await handleMantleEvent({
+      event: "mantle.credit.applied",
+      data: {
+        id: "cr-1",
+        organizationId: ORG,
+        currency: "USD",
+        invoiceId: INVOICE_ID,
+        amount: "-40.00",
+        kind: "application",
+      },
+    });
+
+    expect(result.success).toBe(true);
+    expect(insertedEntryValues[0]?.sourceReferenceId).toBe(
+      "cr-1:credit.applied",
+    );
+    // The ledger stores application as negative; the journal books the magnitude
+    expect(insertedLineValues.map((line) => line.debit)).toContain("40.0000");
+  });
+
+  test("an issued-credit (overpayment) event books as credit.issued", async () => {
+    queueEntryLookups();
+
+    const result = await handleMantleEvent({
+      event: "mantle.credit.issued",
+      data: {
+        id: "cr-2",
+        organizationId: ORG,
+        currency: "USD",
+        invoiceId: INVOICE_ID,
+        paymentId: "pay-1",
+        amount: "20.00",
+        kind: "overpayment",
+      },
+    });
+
+    expect(result.success).toBe(true);
+    expect(insertedEntryValues[0]?.sourceReferenceId).toBe(
+      "cr-2:credit.issued",
+    );
+    expect(insertedLineValues.map((line) => line.debit)).toContain("20.0000");
+  });
+
+  test("a native invoice flipping to paid books nothing (cash comes from payment events)", async () => {
+    const result = await handleMantleEvent({
+      event: "mantle.invoice.updated",
+      data: {
+        id: INVOICE_ID,
+        organizationId: ORG,
+        status: "paid",
+        total: "100.00",
+        invoiceNumber: "INV-1",
+      },
+    });
+
+    // Recognizing cash here as well as from payment events would double-count
+    expect(result.success).toBe(true);
+    expect(mockTransaction).not.toHaveBeenCalled();
+    expect(insertedEntryValues).toHaveLength(0);
+  });
+
+  test("a native invoice still books A/R on sent", async () => {
+    queueEntryLookups();
+
+    const result = await handleMantleEvent({
+      event: "mantle.invoice.updated",
+      data: {
+        id: INVOICE_ID,
+        organizationId: ORG,
+        status: "sent",
+        total: "100.00",
+        invoiceNumber: "INV-1",
+      },
+    });
+
+    expect(result.success).toBe(true);
+    expect(insertedEntryValues[0]?.sourceReferenceId).toBe(
+      `${INVOICE_ID}:invoice.sent`,
+    );
+    expect(insertedLineValues.map((line) => line.debit)).toContain("100.0000");
   });
 });
 
