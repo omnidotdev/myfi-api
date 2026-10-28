@@ -232,6 +232,13 @@
       "when": 1793223308184,
       "tag": "0032_shiny_spyke",
       "breakpoints": true
+    },
+    {
+      "idx": 33,
+      "version": "7",
+      "when": 1793224403421,
+      "tag": "0033_fantastic_omega_sentinel",
+      "breakpoints": true
     }
   ]
 }

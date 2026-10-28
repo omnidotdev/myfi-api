@@ -1,6 +1,11 @@
 import { dbPool } from "lib/db/db";
 import { invoiceLineTable, invoiceTable } from "lib/db/schema";
-import { computeLineAmount, fromUnits, toUnits } from "./invoicePosting";
+import {
+  applyLineDiscount,
+  computeLineAmount,
+  fromUnits,
+  toUnits,
+} from "./invoicePosting";
 
 import type { InferInsertModel } from "drizzle-orm";
 
@@ -10,6 +15,8 @@ interface DraftLineInput {
   unitPrice: number;
   incomeAccountId: string;
   taxJurisdictionId?: string | null;
+  /** optional line discount as a fraction (0.1 = 10% off), applied before tax */
+  discountPercent?: number | null;
   /** optional inventory item this line sells (drives auto-COGS on posting) */
   inventoryItemId?: string | null;
 }
@@ -50,7 +57,12 @@ export const createInvoiceDraft = async (
 
   const priced = lines.map((line, index) => ({
     ...line,
-    amount: computeLineAmount(line.quantity, line.unitPrice),
+    // amount is the post-discount net, so the subtotal and the stored line
+    // amount both reflect what the customer actually owes for the line
+    amount: applyLineDiscount(
+      computeLineAmount(line.quantity, line.unitPrice),
+      line.discountPercent,
+    ),
     sortOrder: index,
   }));
 
@@ -86,6 +98,8 @@ export const createInvoiceDraft = async (
         quantity: line.quantity.toFixed(4),
         unitPrice: line.unitPrice.toFixed(4),
         amount: line.amount.toFixed(4),
+        discountPercent:
+          line.discountPercent != null ? line.discountPercent.toFixed(6) : null,
         incomeAccountId: line.incomeAccountId,
         taxJurisdictionId: line.taxJurisdictionId ?? null,
         inventoryItemId: line.inventoryItemId ?? null,

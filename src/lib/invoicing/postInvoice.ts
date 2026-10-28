@@ -14,6 +14,7 @@ import {
 } from "lib/db/schema";
 import { movementValue } from "lib/inventory/valuation";
 import {
+  applyLineDiscount,
   buildInvoicePostings,
   computeInvoiceTotals,
   computeLineAmount,
@@ -89,6 +90,7 @@ export const postInvoice = async (
       incomeAccountId: invoiceLineTable.incomeAccountId,
       inventoryItemId: invoiceLineTable.inventoryItemId,
       taxJurisdictionId: invoiceLineTable.taxJurisdictionId,
+      discountPercent: invoiceLineTable.discountPercent,
       taxRate: taxJurisdictionTable.rate,
       taxPayableAccountId: taxJurisdictionTable.taxPayableAccountId,
     })
@@ -125,9 +127,11 @@ export const postInvoice = async (
   }
 
   const priced: PricedLine[] = lineRows.map((row) => {
-    const amount = computeLineAmount(
-      Number(row.quantity),
-      Number(row.unitPrice),
+    // Net the line by its discount before taxing and crediting income, so the
+    // posting matches the discounted subtotal the draft recorded
+    const amount = applyLineDiscount(
+      computeLineAmount(Number(row.quantity), Number(row.unitPrice)),
+      row.discountPercent === null ? null : Number(row.discountPercent),
     );
     const rate = row.taxRate === null ? 0 : Number(row.taxRate);
     const taxAmount = rate > 0 ? computeLineTax(amount, rate) : 0;

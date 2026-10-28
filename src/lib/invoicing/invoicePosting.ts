@@ -20,6 +20,21 @@ export const computeLineAmount = (
 export const computeLineTax = (amount: number, rate: number): number =>
   fromUnits(Math.round(amount * rate * MONEY_SCALE));
 
+/**
+ * Apply a line discount to an extended amount, returning the net at 4-decimal
+ * scale. The discount is a fraction (e.g. 0.1 for 10% off); null or zero leaves
+ * the amount unchanged. Out-of-range fractions are clamped to [0, 1] so a bad
+ * input can never inflate the amount or drive it negative
+ */
+export const applyLineDiscount = (
+  amount: number,
+  discountPercent?: number | null,
+): number => {
+  if (!discountPercent) return amount;
+  const fraction = Math.min(Math.max(discountPercent, 0), 1);
+  return fromUnits(Math.round(toUnits(amount) * (1 - fraction)));
+};
+
 /** A priced invoice line, ready for totaling and posting */
 export interface PricedLine {
   /** Pre-tax extended amount (quantity times unit price) */

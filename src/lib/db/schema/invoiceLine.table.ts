@@ -29,6 +29,10 @@ export const invoiceLineTable = pgTable(
       .notNull()
       .default("0"),
     amount: numeric({ precision: 19, scale: 4 }).notNull().default("0"),
+    // optional line discount as a fraction (e.g. 0.100000 for 10% off), applied
+    // to the extended amount before tax; null means no discount. amount stores
+    // the post-discount net that credits income and is the tax base
+    discountPercent: numeric("discount_percent", { precision: 9, scale: 6 }),
     // income account the line's revenue credits when posted
     incomeAccountId: uuid("income_account_id")
       .notNull()
