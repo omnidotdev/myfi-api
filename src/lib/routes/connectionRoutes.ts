@@ -5,6 +5,7 @@ import { emitAudit } from "lib/audit";
 import { dbPool } from "lib/db/db";
 import { connectedAccountTable } from "lib/db/schema";
 import { authorizeBook } from "lib/middleware/bookAccess.middleware";
+import { revokePlaidItem } from "lib/plaid/revokePlaidItem";
 
 // Columns safe to return to clients: never the encrypted `accessToken` (the
 // Plaid/OFX credential blob). Used by every read AND every write's .returning()
@@ -97,6 +98,8 @@ const connectionRoutes = new Elysia({ prefix: "/api/connections" })
           id: connectedAccountTable.id,
           bookId: connectedAccountTable.bookId,
           institutionName: connectedAccountTable.institutionName,
+          provider: connectedAccountTable.provider,
+          accessToken: connectedAccountTable.accessToken,
         })
         .from(connectedAccountTable)
         .where(eq(connectedAccountTable.id, id));
@@ -111,10 +114,17 @@ const connectionRoutes = new Elysia({ prefix: "/api/connections" })
       const auth = await authorizeBook(request, existing.bookId, "editor", set);
       if (!auth) return { error: "Forbidden" };
 
-      // Soft-delete: set status to disconnected instead of removing
+      // Revoke the provider credential before disconnecting. A Plaid item left
+      // live keeps billing and keeps access to the institution, so ask Plaid to
+      // remove it (best effort), then clear the stored token regardless
+      if (existing.provider === "plaid" && existing.accessToken) {
+        await revokePlaidItem(existing.accessToken);
+      }
+
+      // Soft-delete: set status to disconnected and drop the now-useless token
       const [connection] = await dbPool
         .update(connectedAccountTable)
-        .set({ status: "disconnected" })
+        .set({ status: "disconnected", accessToken: null })
         .where(eq(connectedAccountTable.id, id))
         .returning(publicConnectionColumns);
 

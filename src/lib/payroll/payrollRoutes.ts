@@ -22,6 +22,7 @@ import { encryptToken } from "lib/encryption/tokenEncryption";
 import { validateJournalLines } from "lib/journal/validateEntry";
 import { buildOauthRedirect } from "lib/oauth/redirect";
 import { signOauthState, verifyOauthState } from "lib/oauth/state";
+import { revokeGustoToken } from "./revokeGustoToken";
 import syncPayroll from "./syncPayroll";
 
 /** Error param appended to the landing URL on a failed connection (no secrets) */
@@ -231,6 +232,7 @@ const payrollRoutes = new Elysia({ prefix: "/api/payroll" })
         .select({
           id: payrollConnectionTable.id,
           bookId: payrollConnectionTable.bookId,
+          accessToken: payrollConnectionTable.accessToken,
         })
         .from(payrollConnectionTable)
         .where(eq(payrollConnectionTable.id, id));
@@ -240,9 +242,16 @@ const payrollRoutes = new Elysia({ prefix: "/api/payroll" })
         return { error: "Payroll connection not found" };
       }
 
+      // Revoke the Gusto token before disconnecting so a stored OAuth token
+      // cannot keep reaching the company's payroll data (best effort), then
+      // clear both tokens regardless
+      if (connection.accessToken) {
+        await revokeGustoToken(connection.accessToken);
+      }
+
       await dbPool
         .update(payrollConnectionTable)
-        .set({ status: "disconnected" })
+        .set({ status: "disconnected", accessToken: null, refreshToken: null })
         .where(eq(payrollConnectionTable.id, id));
 
       // Look up book for audit
