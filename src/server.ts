@@ -61,7 +61,7 @@ import startScheduledRecurring from "lib/recurring/scheduledRecurring";
 import {
   EXPORT_FORMATS,
   exportReport,
-  generateAgingReport,
+  generateApAging,
   generateArAging,
   generateBalanceSheet,
   generateCashFlow,
@@ -487,11 +487,7 @@ const app = new Elysia()
         },
       );
     }
-    return generateAgingReport({
-      bookId,
-      asOfDate,
-      accountSubType: "accounts_payable",
-    });
+    return generateApAging({ bookId, asOfDate });
   })
   .get("/api/reports/ar-aging", async ({ query }) => {
     const { bookId, asOfDate } = query;
