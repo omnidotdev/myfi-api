@@ -21,6 +21,7 @@ type QuarterlyEstimatesReport = {
   year: number;
   annualProjectedIncome: string;
   selfEmploymentTax: string;
+  qbiDeduction: string;
   estimatedIncomeTax: string;
   totalEstimatedTax: string;
   quarters: QuarterEstimate[];
@@ -42,6 +43,9 @@ const MEDICARE_RATE = 0.029;
 
 /** Prior-year AGI above which the safe-harbor floor is 110%, not 100% */
 const HIGH_INCOME_SAFE_HARBOR_THRESHOLD = 150_000;
+
+/** Section 199A qualified business income deduction rate */
+const QBI_RATE = 0.2;
 
 interface TaxBracket {
   min: number;
@@ -159,31 +163,59 @@ const calculateSETax = (netIncome: number, ssWageBase: number): number => {
 };
 
 /**
- * Compute SE tax, income tax, and their total for a self-employed single filer
- * from net self-employment income, using the given year's constants.
+ * The Section 199A taxable-income threshold for the year, above which the
+ * deduction is limited by W-2 wages / UBIA and phased out for specified service
+ * businesses. For a single filer this equals the top of the 24% bracket, so it
+ * is derived from the bracket table rather than hardcoded separately
+ */
+const qbiThresholdForYear = (constants: YearTaxConstants): number =>
+  constants.brackets.find((bracket) => bracket.rate === 0.32)?.min ??
+  Number.POSITIVE_INFINITY;
+
+/**
+ * Compute SE tax, income tax, the QBI deduction, and their total for a
+ * self-employed single filer from net self-employment income, using the given
+ * year's constants.
  *
  * Income tax is computed on taxable income: net income, less the deductible
- * half of SE tax, less the year's standard deduction (floored at zero). Earlier
- * code omitted the standard deduction entirely, overstating the income-tax
- * estimate (and the quarterly payments) by the tax on ~one standard deduction.
- * The QBI deduction is intentionally not modeled (it is situational); this
- * stays a conservative single-filer estimate
+ * half of SE tax, less the year's standard deduction, less the Section 199A
+ * qualified business income (QBI) deduction (each floored at zero).
+ *
+ * QBI is 20% of qualified business income (net income reduced by the deductible
+ * half of SE tax), capped at 20% of taxable income before the deduction. Below
+ * the year's 199A threshold this is the full, correct deduction. At or above the
+ * threshold the deduction is limited by W-2 wages / UBIA and phased out for
+ * service businesses, none of which can be determined from one book, so the
+ * estimate conservatively omits it there rather than risk understating tax
  */
 export const computeSelfEmploymentTaxes = (params: {
   netIncome: number;
   year: number;
-}): { seTax: number; incomeTax: number; totalTax: number } => {
+}): {
+  seTax: number;
+  incomeTax: number;
+  qbiDeduction: number;
+  totalTax: number;
+} => {
   const { netIncome, year } = params;
   const constants = constantsForYear(year);
 
   const seTax = calculateSETax(netIncome, constants.ssWageBase);
-  const taxableIncome = Math.max(
+  const taxableBeforeQbi = Math.max(
     0,
     netIncome - seTax / 2 - constants.standardDeduction,
   );
+
+  const qbiIncome = Math.max(0, netIncome - seTax / 2);
+  const qbiDeduction =
+    taxableBeforeQbi <= qbiThresholdForYear(constants)
+      ? Math.min(QBI_RATE * qbiIncome, QBI_RATE * taxableBeforeQbi)
+      : 0;
+
+  const taxableIncome = Math.max(0, taxableBeforeQbi - qbiDeduction);
   const incomeTax = calculateIncomeTax(taxableIncome, constants.brackets);
 
-  return { seTax, incomeTax, totalTax: seTax + incomeTax };
+  return { seTax, incomeTax, qbiDeduction, totalTax: seTax + incomeTax };
 };
 
 /**
@@ -266,10 +298,11 @@ const generateQuarterlyEstimates = async (params: {
   const projectedAnnualIncome = ytdIncome * projectionFactor;
 
   // Calculate taxes (SE tax + income tax net of the standard deduction)
-  const { seTax, incomeTax, totalTax } = computeSelfEmploymentTaxes({
-    netIncome: projectedAnnualIncome,
-    year,
-  });
+  const { seTax, incomeTax, qbiDeduction, totalTax } =
+    computeSelfEmploymentTaxes({
+      netIncome: projectedAnnualIncome,
+      year,
+    });
   const perQuarterPayment = totalTax / 4;
 
   // Build per-quarter breakdown
@@ -331,6 +364,7 @@ const generateQuarterlyEstimates = async (params: {
     year,
     annualProjectedIncome: projectedAnnualIncome.toFixed(2),
     selfEmploymentTax: seTax.toFixed(2),
+    qbiDeduction: qbiDeduction.toFixed(2),
     estimatedIncomeTax: incomeTax.toFixed(2),
     totalEstimatedTax: totalTax.toFixed(2),
     quarters,

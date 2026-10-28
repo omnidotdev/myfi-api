@@ -3,17 +3,33 @@ import { describe, expect, test } from "bun:test";
 import { computeSelfEmploymentTaxes } from "./quarterlyEstimates";
 
 describe("computeSelfEmploymentTaxes", () => {
-  test("applies SE tax and income tax net of the standard deduction (2025)", () => {
-    const { seTax, incomeTax, totalTax } = computeSelfEmploymentTaxes({
-      netIncome: 50_000,
-      year: 2025,
-    });
+  test("applies SE tax and income tax net of the standard and QBI deductions (2025)", () => {
+    const { seTax, incomeTax, qbiDeduction, totalTax } =
+      computeSelfEmploymentTaxes({
+        netIncome: 50_000,
+        year: 2025,
+      });
     // SE tax: 50000 * 0.9235 = 46175; SS 46175*0.124 + Medicare 46175*0.029
     expect(seTax).toBeCloseTo(7064.775, 3);
-    // Taxable: 50000 - seTax/2 - 15750 std deduction = 30717.61
-    // Tax: 10% of 11925 + 12% of the remainder
-    expect(incomeTax).toBeCloseTo(3447.61, 2);
+    // Taxable before QBI: 50000 - seTax/2 - 15750 std deduction = 30717.61.
+    // QBI = 20% of taxable (the binding limit vs 20% of QBI income) = 6143.52
+    expect(qbiDeduction).toBeCloseTo(6143.52, 2);
+    // Income tax on 30717.61 - 6143.52 = 24574.09: 10% of 11925 + 12% of rest
+    expect(incomeTax).toBeCloseTo(2710.39, 2);
     expect(totalTax).toBeCloseTo(seTax + incomeTax, 2);
+  });
+
+  test("applies the QBI deduction below the threshold but not above it", () => {
+    // Below the 24%-bracket-top threshold ($197,300 single, 2025): full 20% QBI
+    const below = computeSelfEmploymentTaxes({ netIncome: 50_000, year: 2025 });
+    expect(below.qbiDeduction).toBeGreaterThan(0);
+    // Above the threshold the wage/SSTB limits apply and cannot be computed from
+    // one book, so the estimate conservatively omits QBI (never understates tax)
+    const above = computeSelfEmploymentTaxes({
+      netIncome: 300_000,
+      year: 2025,
+    });
+    expect(above.qbiDeduction).toBe(0);
   });
 
   test("standard deduction can zero out the income tax (not the SE tax)", () => {
@@ -41,7 +57,7 @@ describe("computeSelfEmploymentTaxes", () => {
     const y2026 = computeSelfEmploymentTaxes({ netIncome: 50_000, year: 2026 });
     // Different standard deduction and brackets -> different income tax
     expect(y2026.incomeTax).not.toBeCloseTo(y2025.incomeTax, 2);
-    expect(y2026.incomeTax).toBeCloseTo(3396.11, 2);
+    expect(y2026.incomeTax).toBeCloseTo(2667.29, 2);
   });
 
   test("an unknown future year falls back to the latest known year (2026)", () => {
