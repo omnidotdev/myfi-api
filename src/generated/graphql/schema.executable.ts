@@ -465,6 +465,100 @@ const spec_bookAccess = {
   executor: executor
 };
 const bookAccessCodec = recordCodec(spec_bookAccess);
+const creditMemoApplicationIdentifier = sql.identifier("public", "credit_memo_application");
+const spec_creditMemoApplication = {
+  name: "creditMemoApplication",
+  identifier: creditMemoApplicationIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    credit_memo_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    invoice_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    amount: {
+      codec: TYPES.numeric,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    date: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "18255",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "credit_memo_application"
+    }
+  },
+  executor: executor
+};
+const creditMemoApplicationCodec = recordCodec(spec_creditMemoApplication);
 const tagIdentifier = sql.identifier("public", "tag");
 const spec_tag = {
   name: "tag",
@@ -2672,6 +2766,136 @@ const spec_project = {
   executor: executor
 };
 const projectCodec = recordCodec(spec_project);
+const creditMemoLineIdentifier = sql.identifier("public", "credit_memo_line");
+const spec_creditMemoLine = {
+  name: "creditMemoLine",
+  identifier: creditMemoLineIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    credit_memo_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    description: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    quantity: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    unit_price: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    amount: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    discount_percent: {
+      codec: TYPES.numeric,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    income_account_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    tax_jurisdiction_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    sort_order: {
+      codec: TYPES.int,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "18270",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "credit_memo_line"
+    }
+  },
+  executor: executor
+};
+const creditMemoLineCodec = recordCodec(spec_creditMemoLine);
 const amortizationEntryIdentifier = sql.identifier("public", "amortization_entry");
 const spec_amortizationEntry = {
   name: "amortizationEntry",
@@ -4623,6 +4847,190 @@ const spec_vendor = {
   executor: executor
 };
 const vendorCodec = recordCodec(spec_vendor);
+const creditMemoIdentifier = sql.identifier("public", "credit_memo");
+const spec_creditMemo = {
+  name: "creditMemo",
+  identifier: creditMemoIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    customer_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    number: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    status: {
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    date: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    subtotal: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    tax_amount: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    total: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    amount_applied: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    currency: {
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    memo: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    journal_entry_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "18228",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "credit_memo"
+    }
+  },
+  executor: executor
+};
+const creditMemoCodec = recordCodec(spec_creditMemo);
 const cryptoAssetIdentifier = sql.identifier("public", "crypto_asset");
 const costBasisMethodCodec = enumCodec({
   name: "costBasisMethod",
@@ -6407,6 +6815,29 @@ const book_access_resourceOptionsConfig = {
   },
   uniques: book_accessUniques
 };
+const credit_memo_applicationUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const credit_memo_application_resourceOptionsConfig = {
+  executor: executor,
+  name: "credit_memo_application",
+  identifier: "main.public.credit_memo_application",
+  from: creditMemoApplicationIdentifier,
+  codec: creditMemoApplicationCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "credit_memo_application"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: credit_memo_applicationUniques
+};
 const tagUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -6844,6 +7275,29 @@ const project_resourceOptionsConfig = {
   },
   uniques: projectUniques
 };
+const credit_memo_lineUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const credit_memo_line_resourceOptionsConfig = {
+  executor: executor,
+  name: "credit_memo_line",
+  identifier: "main.public.credit_memo_line",
+  from: creditMemoLineIdentifier,
+  codec: creditMemoLineCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "credit_memo_line"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: credit_memo_lineUniques
+};
 const amortization_entryUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -7143,6 +7597,29 @@ const vendor_resourceOptionsConfig = {
   },
   uniques: vendorUniques
 };
+const credit_memoUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const credit_memo_resourceOptionsConfig = {
+  executor: executor,
+  name: "credit_memo",
+  identifier: "main.public.credit_memo",
+  from: creditMemoIdentifier,
+  codec: creditMemoCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "credit_memo"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: credit_memoUniques
+};
 const crypto_assetUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -7368,10 +7845,11 @@ const registryConfig = {
     int8: TYPES.bigint,
     accountMapping: accountMappingCodec,
     bookAccess: bookAccessCodec,
+    creditMemoApplication: creditMemoApplicationCodec,
+    numeric: TYPES.numeric,
     tag: tagCodec,
     bool: TYPES.boolean,
     taxJurisdiction: taxJurisdictionCodec,
-    numeric: TYPES.numeric,
     vehicle: vehicleCodec,
     savingsGoal: savingsGoalCodec,
     importProfile: importProfileCodec,
@@ -7390,6 +7868,7 @@ const registryConfig = {
     reconciliationStatement: reconciliationStatementCodec,
     rdExpense: rdExpenseCodec,
     project: projectCodec,
+    creditMemoLine: creditMemoLineCodec,
     amortizationEntry: amortizationEntryCodec,
     cryptoLot: cryptoLotCodec,
     connectedAccount: connectedAccountCodec,
@@ -7404,6 +7883,7 @@ const registryConfig = {
     customer: customerCodec,
     inventoryItem: inventoryItemCodec,
     vendor: vendorCodec,
+    creditMemo: creditMemoCodec,
     cryptoAsset: cryptoAssetCodec,
     costBasisMethod: costBasisMethodCodec,
     bill: billCodec,
@@ -7444,6 +7924,7 @@ const registryConfig = {
     },
     account_mapping: account_mapping_resourceOptionsConfig,
     book_access: book_access_resourceOptionsConfig,
+    credit_memo_application: credit_memo_application_resourceOptionsConfig,
     tag: tag_resourceOptionsConfig,
     tax_jurisdiction: tax_jurisdiction_resourceOptionsConfig,
     vehicle: vehicle_resourceOptionsConfig,
@@ -7463,6 +7944,7 @@ const registryConfig = {
     reconciliation_statement: reconciliation_statement_resourceOptionsConfig,
     rd_expense: rd_expense_resourceOptionsConfig,
     project: project_resourceOptionsConfig,
+    credit_memo_line: credit_memo_line_resourceOptionsConfig,
     amortization_entry: amortization_entry_resourceOptionsConfig,
     crypto_lot: crypto_lot_resourceOptionsConfig,
     connected_account: connected_account_resourceOptionsConfig,
@@ -7476,6 +7958,7 @@ const registryConfig = {
     customer: customer_resourceOptionsConfig,
     inventory_item: inventory_item_resourceOptionsConfig,
     vendor: vendor_resourceOptionsConfig,
+    credit_memo: credit_memo_resourceOptionsConfig,
     crypto_asset: crypto_asset_resourceOptionsConfig,
     bill: bill_resourceOptionsConfig,
     fixed_asset: fixed_asset_resourceOptionsConfig,
@@ -7812,6 +8295,17 @@ const registryConfig = {
         remoteResourceOptions: loan_resourceOptionsConfig,
         localAttributes: ["id"],
         remoteAttributes: ["payment_account_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
+      },
+      creditMemoLinesByTheirIncomeAccountId: {
+        localCodec: accountCodec,
+        remoteResourceOptions: credit_memo_line_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["income_account_id"],
         isReferencee: true,
         extensions: {
           __proto__: null,
@@ -8230,6 +8724,24 @@ const registryConfig = {
         localAttributes: ["id"],
         remoteAttributes: ["book_id"],
         isReferencee: true
+      },
+      creditMemosByTheirBookId: {
+        localCodec: bookCodec,
+        remoteResourceOptions: credit_memo_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["book_id"],
+        isReferencee: true
+      },
+      creditMemoApplicationsByTheirBookId: {
+        localCodec: bookCodec,
+        remoteResourceOptions: credit_memo_application_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["book_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
       }
     },
     bookAccess: {
@@ -8352,6 +8864,92 @@ const registryConfig = {
         isUnique: true
       }
     },
+    creditMemo: {
+      __proto__: null,
+      bookByMyBookId: {
+        localCodec: creditMemoCodec,
+        remoteResourceOptions: book_resourceOptionsConfig,
+        localAttributes: ["book_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      customerByMyCustomerId: {
+        localCodec: creditMemoCodec,
+        remoteResourceOptions: customer_resourceOptionsConfig,
+        localAttributes: ["customer_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      journalEntryByMyJournalEntryId: {
+        localCodec: creditMemoCodec,
+        remoteResourceOptions: journal_entry_resourceOptionsConfig,
+        localAttributes: ["journal_entry_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      creditMemoApplicationsByTheirCreditMemoId: {
+        localCodec: creditMemoCodec,
+        remoteResourceOptions: credit_memo_application_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["credit_memo_id"],
+        isReferencee: true
+      },
+      creditMemoLinesByTheirCreditMemoId: {
+        localCodec: creditMemoCodec,
+        remoteResourceOptions: credit_memo_line_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["credit_memo_id"],
+        isReferencee: true
+      }
+    },
+    creditMemoApplication: {
+      __proto__: null,
+      bookByMyBookId: {
+        localCodec: creditMemoApplicationCodec,
+        remoteResourceOptions: book_resourceOptionsConfig,
+        localAttributes: ["book_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      creditMemoByMyCreditMemoId: {
+        localCodec: creditMemoApplicationCodec,
+        remoteResourceOptions: credit_memo_resourceOptionsConfig,
+        localAttributes: ["credit_memo_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      invoiceByMyInvoiceId: {
+        localCodec: creditMemoApplicationCodec,
+        remoteResourceOptions: invoice_resourceOptionsConfig,
+        localAttributes: ["invoice_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      }
+    },
+    creditMemoLine: {
+      __proto__: null,
+      creditMemoByMyCreditMemoId: {
+        localCodec: creditMemoLineCodec,
+        remoteResourceOptions: credit_memo_resourceOptionsConfig,
+        localAttributes: ["credit_memo_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      accountByMyIncomeAccountId: {
+        localCodec: creditMemoLineCodec,
+        remoteResourceOptions: account_resourceOptionsConfig,
+        localAttributes: ["income_account_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      taxJurisdictionByMyTaxJurisdictionId: {
+        localCodec: creditMemoLineCodec,
+        remoteResourceOptions: tax_jurisdiction_resourceOptionsConfig,
+        localAttributes: ["tax_jurisdiction_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      }
+    },
     cryptoAsset: {
       __proto__: null,
       bookByMyBookId: {
@@ -8405,6 +9003,13 @@ const registryConfig = {
       estimatesByTheirCustomerId: {
         localCodec: customerCodec,
         remoteResourceOptions: estimate_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["customer_id"],
+        isReferencee: true
+      },
+      creditMemosByTheirCustomerId: {
+        localCodec: customerCodec,
+        remoteResourceOptions: credit_memo_resourceOptionsConfig,
         localAttributes: ["id"],
         remoteAttributes: ["customer_id"],
         isReferencee: true
@@ -8643,6 +9248,13 @@ const registryConfig = {
           __proto__: null,
           isIndexed: false
         }
+      },
+      creditMemoApplicationsByTheirInvoiceId: {
+        localCodec: invoiceCodec,
+        remoteResourceOptions: credit_memo_application_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["invoice_id"],
+        isReferencee: true
       }
     },
     invoiceLine: {
@@ -8824,6 +9436,17 @@ const registryConfig = {
         localAttributes: ["id"],
         remoteAttributes: ["journal_entry_id"],
         isReferencee: true
+      },
+      creditMemosByTheirJournalEntryId: {
+        localCodec: journalEntryCodec,
+        remoteResourceOptions: credit_memo_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["journal_entry_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
       }
     },
     journalLine: {
@@ -9236,6 +9859,17 @@ const registryConfig = {
           __proto__: null,
           isIndexed: false
         }
+      },
+      creditMemoLinesByTheirTaxJurisdictionId: {
+        localCodec: taxJurisdictionCodec,
+        remoteResourceOptions: credit_memo_line_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["tax_jurisdiction_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
       }
     },
     vehicle: {
@@ -9299,6 +9933,7 @@ const resource_tag_groupPgResource = registry.pgResources["tag_group"];
 const resource___drizzle_migrationsPgResource = registry.pgResources["__drizzle_migrations"];
 const resource_account_mappingPgResource = registry.pgResources["account_mapping"];
 const resource_book_accessPgResource = registry.pgResources["book_access"];
+const resource_credit_memo_applicationPgResource = registry.pgResources["credit_memo_application"];
 const resource_tagPgResource = registry.pgResources["tag"];
 const resource_tax_jurisdictionPgResource = registry.pgResources["tax_jurisdiction"];
 const resource_vehiclePgResource = registry.pgResources["vehicle"];
@@ -9318,6 +9953,7 @@ const resource_invoice_paymentPgResource = registry.pgResources["invoice_payment
 const resource_reconciliation_statementPgResource = registry.pgResources["reconciliation_statement"];
 const resource_rd_expensePgResource = registry.pgResources["rd_expense"];
 const resource_projectPgResource = registry.pgResources["project"];
+const resource_credit_memo_linePgResource = registry.pgResources["credit_memo_line"];
 const resource_amortization_entryPgResource = registry.pgResources["amortization_entry"];
 const resource_crypto_lotPgResource = registry.pgResources["crypto_lot"];
 const resource_connected_accountPgResource = registry.pgResources["connected_account"];
@@ -9331,6 +9967,7 @@ const resource_reconciliation_queuePgResource = registry.pgResources["reconcilia
 const resource_customerPgResource = registry.pgResources["customer"];
 const resource_inventory_itemPgResource = registry.pgResources["inventory_item"];
 const resource_vendorPgResource = registry.pgResources["vendor"];
+const resource_credit_memoPgResource = registry.pgResources["credit_memo"];
 const resource_crypto_assetPgResource = registry.pgResources["crypto_asset"];
 const resource_billPgResource = registry.pgResources["bill"];
 const resource_fixed_assetPgResource = registry.pgResources["fixed_asset"];
@@ -9449,6 +10086,17 @@ const nodeIdHandler_BookAccess = makeTableNodeIdHandler({
 const nodeFetcher_BookAccess = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_BookAccess));
   return nodeIdHandler_BookAccess.get(nodeIdHandler_BookAccess.getSpec($decoded));
+};
+const nodeIdHandler_CreditMemoApplication = makeTableNodeIdHandler({
+  typeName: "CreditMemoApplication",
+  identifier: "CreditMemoApplication",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_credit_memo_applicationPgResource,
+  pk: credit_memo_applicationUniques[0].attributes
+});
+const nodeFetcher_CreditMemoApplication = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_CreditMemoApplication));
+  return nodeIdHandler_CreditMemoApplication.get(nodeIdHandler_CreditMemoApplication.getSpec($decoded));
 };
 const nodeIdHandler_Tag = makeTableNodeIdHandler({
   typeName: "Tag",
@@ -9659,6 +10307,17 @@ const nodeFetcher_Project = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Project));
   return nodeIdHandler_Project.get(nodeIdHandler_Project.getSpec($decoded));
 };
+const nodeIdHandler_CreditMemoLine = makeTableNodeIdHandler({
+  typeName: "CreditMemoLine",
+  identifier: "CreditMemoLine",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_credit_memo_linePgResource,
+  pk: credit_memo_lineUniques[0].attributes
+});
+const nodeFetcher_CreditMemoLine = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_CreditMemoLine));
+  return nodeIdHandler_CreditMemoLine.get(nodeIdHandler_CreditMemoLine.getSpec($decoded));
+};
 const nodeIdHandler_AmortizationEntry = makeTableNodeIdHandler({
   typeName: "AmortizationEntry",
   identifier: "AmortizationEntry",
@@ -9801,6 +10460,17 @@ const nodeIdHandler_Vendor = makeTableNodeIdHandler({
 const nodeFetcher_Vendor = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Vendor));
   return nodeIdHandler_Vendor.get(nodeIdHandler_Vendor.getSpec($decoded));
+};
+const nodeIdHandler_CreditMemo = makeTableNodeIdHandler({
+  typeName: "CreditMemo",
+  identifier: "CreditMemo",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_credit_memoPgResource,
+  pk: credit_memoUniques[0].attributes
+});
+const nodeFetcher_CreditMemo = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_CreditMemo));
+  return nodeIdHandler_CreditMemo.get(nodeIdHandler_CreditMemo.getSpec($decoded));
 };
 const nodeIdHandler_CryptoAsset = makeTableNodeIdHandler({
   typeName: "CryptoAsset",
@@ -9959,6 +10629,7 @@ const nodeIdHandlerByTypeName = {
   _DrizzleMigration: nodeIdHandler__DrizzleMigration,
   AccountMapping: nodeIdHandler_AccountMapping,
   BookAccess: nodeIdHandler_BookAccess,
+  CreditMemoApplication: nodeIdHandler_CreditMemoApplication,
   Tag: nodeIdHandler_Tag,
   TaxJurisdiction: nodeIdHandler_TaxJurisdiction,
   Vehicle: nodeIdHandler_Vehicle,
@@ -9978,6 +10649,7 @@ const nodeIdHandlerByTypeName = {
   ReconciliationStatement: nodeIdHandler_ReconciliationStatement,
   RdExpense: nodeIdHandler_RdExpense,
   Project: nodeIdHandler_Project,
+  CreditMemoLine: nodeIdHandler_CreditMemoLine,
   AmortizationEntry: nodeIdHandler_AmortizationEntry,
   CryptoLot: nodeIdHandler_CryptoLot,
   ConnectedAccount: nodeIdHandler_ConnectedAccount,
@@ -9991,6 +10663,7 @@ const nodeIdHandlerByTypeName = {
   Customer: nodeIdHandler_Customer,
   InventoryItem: nodeIdHandler_InventoryItem,
   Vendor: nodeIdHandler_Vendor,
+  CreditMemo: nodeIdHandler_CreditMemo,
   CryptoAsset: nodeIdHandler_CryptoAsset,
   Bill: nodeIdHandler_Bill,
   FixedAsset: nodeIdHandler_FixedAsset,
@@ -10607,6 +11280,9 @@ const InvoiceLine_invoiceIdPlan = $record => {
 const InvoiceLine_incomeAccountIdPlan = $record => {
   return $record.get("income_account_id");
 };
+const InvoiceLine_discountPercentPlan = $record => {
+  return $record.get("discount_percent");
+};
 const InvoiceLine_incomeAccountPlan = $record => resource_accountPgResource.get({
   id: $record.get("income_account_id")
 });
@@ -10623,6 +11299,25 @@ const InvoiceLineOrderBy_INVOICE_ID_ASCApply = queryBuilder => {
 const InvoiceLineOrderBy_INVOICE_ID_DESCApply = queryBuilder => {
   queryBuilder.orderBy({
     attribute: "invoice_id",
+    direction: "DESC"
+  });
+};
+const CreditMemoApplication_creditMemoIdPlan = $record => {
+  return $record.get("credit_memo_id");
+};
+const CreditMemoApplication_creditMemoPlan = $record => resource_credit_memoPgResource.get({
+  id: $record.get("credit_memo_id")
+});
+const CreditMemoApplicationCondition_creditMemoIdApply = ($condition, val) => applyAttributeCondition("credit_memo_id", TYPES.uuid, $condition, val);
+const CreditMemoApplicationOrderBy_CREDIT_MEMO_ID_ASCApply = queryBuilder => {
+  queryBuilder.orderBy({
+    attribute: "credit_memo_id",
+    direction: "ASC"
+  });
+};
+const CreditMemoApplicationOrderBy_CREDIT_MEMO_ID_DESCApply = queryBuilder => {
+  queryBuilder.orderBy({
+    attribute: "credit_memo_id",
     direction: "DESC"
   });
 };
@@ -10674,6 +11369,10 @@ const specFromArgs_AccountMapping = args => {
 const specFromArgs_BookAccess = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_BookAccess, $nodeId);
+};
+const specFromArgs_CreditMemoApplication = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_CreditMemoApplication, $nodeId);
 };
 const specFromArgs_Tag = args => {
   const $nodeId = args.getRaw(["input", "id"]);
@@ -10751,6 +11450,10 @@ const specFromArgs_Project = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Project, $nodeId);
 };
+const specFromArgs_CreditMemoLine = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_CreditMemoLine, $nodeId);
+};
 const specFromArgs_AmortizationEntry = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_AmortizationEntry, $nodeId);
@@ -10802,6 +11505,10 @@ const specFromArgs_InventoryItem = args => {
 const specFromArgs_Vendor = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Vendor, $nodeId);
+};
+const specFromArgs_CreditMemo = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_CreditMemo, $nodeId);
 };
 const specFromArgs_CryptoAsset = args => {
   const $nodeId = args.getRaw(["input", "id"]);
@@ -10926,6 +11633,19 @@ function BookAccessInput_invitedByApply(obj, val, info) {
 function BookAccessInput_invitedAtApply(obj, val, info) {
   obj.set("invited_at", bakedInputRuntime(info.schema, info.field.type, val));
 }
+const CreateCreditMemoApplicationPayload_creditMemoApplicationEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_credit_memo_applicationPgResource, credit_memo_applicationUniques[0].attributes, $mutation, fieldArgs);
+function CreditMemoApplicationInput_creditMemoIdApply(obj, val, info) {
+  obj.set("credit_memo_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function CreditMemoApplicationInput_invoiceIdApply(obj, val, info) {
+  obj.set("invoice_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function CreditMemoApplicationInput_amountApply(obj, val, info) {
+  obj.set("amount", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function CreditMemoApplicationInput_dateApply(obj, val, info) {
+  obj.set("date", bakedInputRuntime(info.schema, info.field.type, val));
+}
 const CreateTagPayload_tagEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_tagPgResource, tagUniques[0].attributes, $mutation, fieldArgs);
 function TagInput_tagGroupIdApply(obj, val, info) {
   obj.set("tag_group_id", bakedInputRuntime(info.schema, info.field.type, val));
@@ -10996,9 +11716,6 @@ function JournalLineInput_taxJurisdictionIdApply(obj, val, info) {
   obj.set("tax_jurisdiction_id", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateNetWorthSnapshotPayload_netWorthSnapshotEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_net_worth_snapshotPgResource, net_worth_snapshotUniques[0].attributes, $mutation, fieldArgs);
-function NetWorthSnapshotInput_dateApply(obj, val, info) {
-  obj.set("date", bakedInputRuntime(info.schema, info.field.type, val));
-}
 function NetWorthSnapshotInput_totalAssetsApply(obj, val, info) {
   obj.set("total_assets", bakedInputRuntime(info.schema, info.field.type, val));
 }
@@ -11094,9 +11811,6 @@ function BillLineInput_descriptionApply(obj, val, info) {
 function BillLineInput_unitPriceApply(obj, val, info) {
   obj.set("unit_price", bakedInputRuntime(info.schema, info.field.type, val));
 }
-function BillLineInput_amountApply(obj, val, info) {
-  obj.set("amount", bakedInputRuntime(info.schema, info.field.type, val));
-}
 function BillLineInput_expenseAccountIdApply(obj, val, info) {
   obj.set("expense_account_id", bakedInputRuntime(info.schema, info.field.type, val));
 }
@@ -11134,9 +11848,6 @@ function CategorizationRuleSplitInput_fixedAmountApply(obj, val, info) {
   obj.set("fixed_amount", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateInvoicePaymentPayload_invoicePaymentEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_invoice_paymentPgResource, invoice_paymentUniques[0].attributes, $mutation, fieldArgs);
-function InvoicePaymentInput_invoiceIdApply(obj, val, info) {
-  obj.set("invoice_id", bakedInputRuntime(info.schema, info.field.type, val));
-}
 function InvoicePaymentInput_depositAccountIdApply(obj, val, info) {
   obj.set("deposit_account_id", bakedInputRuntime(info.schema, info.field.type, val));
 }
@@ -11175,6 +11886,10 @@ function ProjectInput_startDateApply(obj, val, info) {
 }
 function ProjectInput_endDateApply(obj, val, info) {
   obj.set("end_date", bakedInputRuntime(info.schema, info.field.type, val));
+}
+const CreateCreditMemoLinePayload_creditMemoLineEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_credit_memo_linePgResource, credit_memo_lineUniques[0].attributes, $mutation, fieldArgs);
+function CreditMemoLineInput_discountPercentApply(obj, val, info) {
+  obj.set("discount_percent", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateAmortizationEntryPayload_amortizationEntryEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_amortization_entryPgResource, amortization_entryUniques[0].attributes, $mutation, fieldArgs);
 function AmortizationEntryInput_loanIdApply(obj, val, info) {
@@ -11233,9 +11948,6 @@ function ConnectedAccountInput_maskApply(obj, val, info) {
 const CreateInvoiceLinePayload_invoiceLineEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_invoice_linePgResource, invoice_lineUniques[0].attributes, $mutation, fieldArgs);
 function InvoiceLineInput_inventoryItemIdApply(obj, val, info) {
   obj.set("inventory_item_id", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function InvoiceLineInput_discountPercentApply(obj, val, info) {
-  obj.set("discount_percent", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateJournalEntryPayload_journalEntryEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_journal_entryPgResource, journal_entryUniques[0].attributes, $mutation, fieldArgs);
 function JournalEntryInput_sourceApply(obj, val, info) {
@@ -11390,6 +12102,16 @@ function VendorInput_is1099EligibleApply(obj, val, info) {
 function VendorInput_thresholdApply(obj, val, info) {
   obj.set("threshold", bakedInputRuntime(info.schema, info.field.type, val));
 }
+const CreateCreditMemoPayload_creditMemoEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_credit_memoPgResource, credit_memoUniques[0].attributes, $mutation, fieldArgs);
+function CreditMemoInput_taxAmountApply(obj, val, info) {
+  obj.set("tax_amount", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function CreditMemoInput_amountAppliedApply(obj, val, info) {
+  obj.set("amount_applied", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function CreditMemoInput_currencyApply(obj, val, info) {
+  obj.set("currency", bakedInputRuntime(info.schema, info.field.type, val));
+}
 const CreateCryptoAssetPayload_cryptoAssetEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_crypto_assetPgResource, crypto_assetUniques[0].attributes, $mutation, fieldArgs);
 function CryptoAssetInput_symbolApply(obj, val, info) {
   obj.set("symbol", bakedInputRuntime(info.schema, info.field.type, val));
@@ -11410,14 +12132,8 @@ const CreateBillPayload_billEdgePlan = ($mutation, fieldArgs) => pgMutationPaylo
 function BillInput_billDateApply(obj, val, info) {
   obj.set("bill_date", bakedInputRuntime(info.schema, info.field.type, val));
 }
-function BillInput_taxAmountApply(obj, val, info) {
-  obj.set("tax_amount", bakedInputRuntime(info.schema, info.field.type, val));
-}
 function BillInput_amountPaidApply(obj, val, info) {
   obj.set("amount_paid", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function BillInput_currencyApply(obj, val, info) {
-  obj.set("currency", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateFixedAssetPayload_fixedAssetEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_fixed_assetPgResource, fixed_assetUniques[0].attributes, $mutation, fieldArgs);
 function FixedAssetInput_depreciationExpenseAccountIdApply(obj, val, info) {
@@ -11568,6 +12284,9 @@ type Query implements Node {
   """Get a single \`BookAccess\`."""
   bookAccess(rowId: UUID!): BookAccess
 
+  """Get a single \`CreditMemoApplication\`."""
+  creditMemoApplication(rowId: UUID!): CreditMemoApplication
+
   """Get a single \`Tag\`."""
   tag(rowId: UUID!): Tag
 
@@ -11625,6 +12344,9 @@ type Query implements Node {
   """Get a single \`Project\`."""
   project(rowId: UUID!): Project
 
+  """Get a single \`CreditMemoLine\`."""
+  creditMemoLine(rowId: UUID!): CreditMemoLine
+
   """Get a single \`AmortizationEntry\`."""
   amortizationEntry(rowId: UUID!): AmortizationEntry
 
@@ -11663,6 +12385,9 @@ type Query implements Node {
 
   """Get a single \`Vendor\`."""
   vendor(rowId: UUID!): Vendor
+
+  """Get a single \`CreditMemo\`."""
+  creditMemo(rowId: UUID!): CreditMemo
 
   """Get a single \`CryptoAsset\`."""
   cryptoAsset(rowId: UUID!): CryptoAsset
@@ -11736,6 +12461,14 @@ type Query implements Node {
     """
     id: ID!
   ): BookAccess
+
+  """Reads a single \`CreditMemoApplication\` using its globally unique \`ID\`."""
+  creditMemoApplicationById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`CreditMemoApplication\`.
+    """
+    id: ID!
+  ): CreditMemoApplication
 
   """Reads a single \`Tag\` using its globally unique \`ID\`."""
   tagById(
@@ -11883,6 +12616,14 @@ type Query implements Node {
     id: ID!
   ): Project
 
+  """Reads a single \`CreditMemoLine\` using its globally unique \`ID\`."""
+  creditMemoLineById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`CreditMemoLine\`.
+    """
+    id: ID!
+  ): CreditMemoLine
+
   """Reads a single \`AmortizationEntry\` using its globally unique \`ID\`."""
   amortizationEntryById(
     """
@@ -11974,6 +12715,14 @@ type Query implements Node {
     """The globally unique \`ID\` to be used in selecting a single \`Vendor\`."""
     id: ID!
   ): Vendor
+
+  """Reads a single \`CreditMemo\` using its globally unique \`ID\`."""
+  creditMemoById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`CreditMemo\`.
+    """
+    id: ID!
+  ): CreditMemo
 
   """Reads a single \`CryptoAsset\` using its globally unique \`ID\`."""
   cryptoAssetById(
@@ -12240,6 +12989,40 @@ type Query implements Node {
     """The method to use when ordering \`BookAccess\`."""
     orderBy: [BookAccessOrderBy!] = [PRIMARY_KEY_ASC]
   ): BookAccessConnection
+
+  """Reads and enables pagination through a set of \`CreditMemoApplication\`."""
+  creditMemoApplications(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CreditMemoApplicationCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CreditMemoApplicationFilter
+
+    """The method to use when ordering \`CreditMemoApplication\`."""
+    orderBy: [CreditMemoApplicationOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CreditMemoApplicationConnection
 
   """Reads and enables pagination through a set of \`Tag\`."""
   tags(
@@ -12891,6 +13674,40 @@ type Query implements Node {
     orderBy: [ProjectOrderBy!] = [PRIMARY_KEY_ASC]
   ): ProjectConnection
 
+  """Reads and enables pagination through a set of \`CreditMemoLine\`."""
+  creditMemoLines(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CreditMemoLineCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CreditMemoLineFilter
+
+    """The method to use when ordering \`CreditMemoLine\`."""
+    orderBy: [CreditMemoLineOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CreditMemoLineConnection
+
   """Reads and enables pagination through a set of \`AmortizationEntry\`."""
   amortizationEntries(
     """Only read the first \`n\` values of the set."""
@@ -13332,6 +14149,40 @@ type Query implements Node {
     """The method to use when ordering \`Vendor\`."""
     orderBy: [VendorOrderBy!] = [PRIMARY_KEY_ASC]
   ): VendorConnection
+
+  """Reads and enables pagination through a set of \`CreditMemo\`."""
+  creditMemos(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CreditMemoCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CreditMemoFilter
+
+    """The method to use when ordering \`CreditMemo\`."""
+    orderBy: [CreditMemoOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CreditMemoConnection
 
   """Reads and enables pagination through a set of \`CryptoAsset\`."""
   cryptoAssets(
@@ -15159,6 +16010,40 @@ type Book implements Node {
     """The method to use when ordering \`RdExpense\`."""
     orderBy: [RdExpenseOrderBy!] = [PRIMARY_KEY_ASC]
   ): RdExpenseConnection!
+
+  """Reads and enables pagination through a set of \`CreditMemo\`."""
+  creditMemos(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CreditMemoCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CreditMemoFilter
+
+    """The method to use when ordering \`CreditMemo\`."""
+    orderBy: [CreditMemoOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CreditMemoConnection!
 }
 
 """A connection to a list of \`Account\` values."""
@@ -15647,6 +16532,12 @@ input BookFilter {
 
   """Some related \`rdExpenses\` exist."""
   rdExpensesExist: Boolean
+
+  """Filter by the object’s \`creditMemos\` relation."""
+  creditMemos: BookToManyCreditMemoFilter
+
+  """Some related \`creditMemos\` exist."""
+  creditMemosExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [BookFilter!]
@@ -17752,6 +18643,12 @@ input CustomerFilter {
   """Some related \`estimates\` exist."""
   estimatesExist: Boolean
 
+  """Filter by the object’s \`creditMemos\` relation."""
+  creditMemos: CustomerToManyCreditMemoFilter
+
+  """Some related \`creditMemos\` exist."""
+  creditMemosExist: Boolean
+
   """Filter by the object’s \`book\` relation."""
   book: BookFilter
 
@@ -17815,6 +18712,12 @@ input InvoiceFilter {
 
   """Some related \`invoicePayments\` exist."""
   invoicePaymentsExist: Boolean
+
+  """Filter by the object’s \`creditMemoApplications\` relation."""
+  creditMemoApplications: InvoiceToManyCreditMemoApplicationFilter
+
+  """Some related \`creditMemoApplications\` exist."""
+  creditMemoApplicationsExist: Boolean
 
   """Filter by the object’s \`book\` relation."""
   book: BookFilter
@@ -18048,6 +18951,183 @@ input InvoicePaymentFilter {
 }
 
 """
+A filter to be used against many \`CreditMemoApplication\` object types. All fields are combined with a logical ‘and.’
+"""
+input InvoiceToManyCreditMemoApplicationFilter {
+  """
+  Every related \`CreditMemoApplication\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: CreditMemoApplicationFilter
+
+  """
+  Some related \`CreditMemoApplication\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: CreditMemoApplicationFilter
+
+  """
+  No related \`CreditMemoApplication\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: CreditMemoApplicationFilter
+}
+
+"""
+A filter to be used against \`CreditMemoApplication\` object types. All fields are combined with a logical ‘and.’
+"""
+input CreditMemoApplicationFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`creditMemoId\` field."""
+  creditMemoId: UUIDFilter
+
+  """Filter by the object’s \`invoiceId\` field."""
+  invoiceId: UUIDFilter
+
+  """Filter by the object’s \`book\` relation."""
+  book: BookFilter
+
+  """Filter by the object’s \`creditMemo\` relation."""
+  creditMemo: CreditMemoFilter
+
+  """Filter by the object’s \`invoice\` relation."""
+  invoice: InvoiceFilter
+
+  """Checks for all expressions in this list."""
+  and: [CreditMemoApplicationFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [CreditMemoApplicationFilter!]
+
+  """Negates the expression."""
+  not: CreditMemoApplicationFilter
+}
+
+"""
+A filter to be used against \`CreditMemo\` object types. All fields are combined with a logical ‘and.’
+"""
+input CreditMemoFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`bookId\` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s \`customerId\` field."""
+  customerId: UUIDFilter
+
+  """Filter by the object’s \`number\` field."""
+  number: StringFilter
+
+  """Filter by the object’s \`status\` field."""
+  status: StringFilter
+
+  """Filter by the object’s \`creditMemoApplications\` relation."""
+  creditMemoApplications: CreditMemoToManyCreditMemoApplicationFilter
+
+  """Some related \`creditMemoApplications\` exist."""
+  creditMemoApplicationsExist: Boolean
+
+  """Filter by the object’s \`creditMemoLines\` relation."""
+  creditMemoLines: CreditMemoToManyCreditMemoLineFilter
+
+  """Some related \`creditMemoLines\` exist."""
+  creditMemoLinesExist: Boolean
+
+  """Filter by the object’s \`book\` relation."""
+  book: BookFilter
+
+  """Filter by the object’s \`customer\` relation."""
+  customer: CustomerFilter
+
+  """Filter by the object’s \`journalEntry\` relation."""
+  journalEntry: JournalEntryFilter
+
+  """A related \`journalEntry\` exists."""
+  journalEntryExists: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [CreditMemoFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [CreditMemoFilter!]
+
+  """Negates the expression."""
+  not: CreditMemoFilter
+}
+
+"""
+A filter to be used against many \`CreditMemoApplication\` object types. All fields are combined with a logical ‘and.’
+"""
+input CreditMemoToManyCreditMemoApplicationFilter {
+  """
+  Every related \`CreditMemoApplication\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: CreditMemoApplicationFilter
+
+  """
+  Some related \`CreditMemoApplication\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: CreditMemoApplicationFilter
+
+  """
+  No related \`CreditMemoApplication\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: CreditMemoApplicationFilter
+}
+
+"""
+A filter to be used against many \`CreditMemoLine\` object types. All fields are combined with a logical ‘and.’
+"""
+input CreditMemoToManyCreditMemoLineFilter {
+  """
+  Every related \`CreditMemoLine\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: CreditMemoLineFilter
+
+  """
+  Some related \`CreditMemoLine\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: CreditMemoLineFilter
+
+  """
+  No related \`CreditMemoLine\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: CreditMemoLineFilter
+}
+
+"""
+A filter to be used against \`CreditMemoLine\` object types. All fields are combined with a logical ‘and.’
+"""
+input CreditMemoLineFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`creditMemoId\` field."""
+  creditMemoId: UUIDFilter
+
+  """Filter by the object’s \`creditMemo\` relation."""
+  creditMemo: CreditMemoFilter
+
+  """Filter by the object’s \`incomeAccount\` relation."""
+  incomeAccount: AccountFilter
+
+  """Filter by the object’s \`taxJurisdiction\` relation."""
+  taxJurisdiction: TaxJurisdictionFilter
+
+  """A related \`taxJurisdiction\` exists."""
+  taxJurisdictionExists: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [CreditMemoLineFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [CreditMemoLineFilter!]
+
+  """Negates the expression."""
+  not: CreditMemoLineFilter
+}
+
+"""
 A filter to be used against many \`Estimate\` object types. All fields are combined with a logical ‘and.’
 """
 input CustomerToManyEstimateFilter {
@@ -18164,6 +19244,26 @@ input EstimateLineFilter {
 
   """Negates the expression."""
   not: EstimateLineFilter
+}
+
+"""
+A filter to be used against many \`CreditMemo\` object types. All fields are combined with a logical ‘and.’
+"""
+input CustomerToManyCreditMemoFilter {
+  """
+  Every related \`CreditMemo\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: CreditMemoFilter
+
+  """
+  Some related \`CreditMemo\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: CreditMemoFilter
+
+  """
+  No related \`CreditMemo\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: CreditMemoFilter
 }
 
 """
@@ -18500,6 +19600,26 @@ input BookToManyRdExpenseFilter {
   No related \`RdExpense\` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
   none: RdExpenseFilter
+}
+
+"""
+A filter to be used against many \`CreditMemo\` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyCreditMemoFilter {
+  """
+  Every related \`CreditMemo\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: CreditMemoFilter
+
+  """
+  Some related \`CreditMemo\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: CreditMemoFilter
+
+  """
+  No related \`CreditMemo\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: CreditMemoFilter
 }
 
 """
@@ -21673,6 +22793,40 @@ type Customer implements Node {
     """The method to use when ordering \`Estimate\`."""
     orderBy: [EstimateOrderBy!] = [PRIMARY_KEY_ASC]
   ): EstimateConnection!
+
+  """Reads and enables pagination through a set of \`CreditMemo\`."""
+  creditMemos(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CreditMemoCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CreditMemoFilter
+
+    """The method to use when ordering \`CreditMemo\`."""
+    orderBy: [CreditMemoOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CreditMemoConnection!
 }
 
 """A connection to a list of \`Invoice\` values."""
@@ -21791,6 +22945,40 @@ type Invoice implements Node {
     """The method to use when ordering \`InvoicePayment\`."""
     orderBy: [InvoicePaymentOrderBy!] = [PRIMARY_KEY_ASC]
   ): InvoicePaymentConnection!
+
+  """Reads and enables pagination through a set of \`CreditMemoApplication\`."""
+  creditMemoApplications(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CreditMemoApplicationCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CreditMemoApplicationFilter
+
+    """The method to use when ordering \`CreditMemoApplication\`."""
+    orderBy: [CreditMemoApplicationOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CreditMemoApplicationConnection!
 }
 
 """A connection to a list of \`InvoiceLine\` values."""
@@ -22112,6 +23300,265 @@ enum InvoicePaymentOrderBy {
   INVOICE_ID_DESC
 }
 
+"""A connection to a list of \`CreditMemoApplication\` values."""
+type CreditMemoApplicationConnection {
+  """A list of \`CreditMemoApplication\` objects."""
+  nodes: [CreditMemoApplication]!
+
+  """
+  A list of edges which contains the \`CreditMemoApplication\` and cursor to aid in pagination.
+  """
+  edges: [CreditMemoApplicationEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* \`CreditMemoApplication\` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+type CreditMemoApplication implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  creditMemoId: UUID!
+  invoiceId: UUID!
+  amount: BigFloat!
+  date: String!
+  createdAt: Datetime
+
+  """Reads a single \`Book\` that is related to this \`CreditMemoApplication\`."""
+  book: Book
+
+  """
+  Reads a single \`CreditMemo\` that is related to this \`CreditMemoApplication\`.
+  """
+  creditMemo: CreditMemo
+
+  """
+  Reads a single \`Invoice\` that is related to this \`CreditMemoApplication\`.
+  """
+  invoice: Invoice
+}
+
+type CreditMemo implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  customerId: UUID!
+  number: String!
+  status: String!
+  date: String!
+  subtotal: BigFloat!
+  taxAmount: BigFloat!
+  total: BigFloat!
+  amountApplied: BigFloat!
+  currency: String!
+  memo: String
+  journalEntryId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """Reads a single \`Book\` that is related to this \`CreditMemo\`."""
+  book: Book
+
+  """Reads a single \`Customer\` that is related to this \`CreditMemo\`."""
+  customer: Customer
+
+  """Reads a single \`JournalEntry\` that is related to this \`CreditMemo\`."""
+  journalEntry: JournalEntry
+
+  """Reads and enables pagination through a set of \`CreditMemoApplication\`."""
+  creditMemoApplications(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CreditMemoApplicationCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CreditMemoApplicationFilter
+
+    """The method to use when ordering \`CreditMemoApplication\`."""
+    orderBy: [CreditMemoApplicationOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CreditMemoApplicationConnection!
+
+  """Reads and enables pagination through a set of \`CreditMemoLine\`."""
+  creditMemoLines(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CreditMemoLineCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CreditMemoLineFilter
+
+    """The method to use when ordering \`CreditMemoLine\`."""
+    orderBy: [CreditMemoLineOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CreditMemoLineConnection!
+}
+
+"""
+A condition to be used against \`CreditMemoApplication\` object types. All fields
+are tested for equality and combined with a logical ‘and.’
+"""
+input CreditMemoApplicationCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`creditMemoId\` field."""
+  creditMemoId: UUID
+
+  """Checks for equality with the object’s \`invoiceId\` field."""
+  invoiceId: UUID
+}
+
+"""Methods to use when ordering \`CreditMemoApplication\`."""
+enum CreditMemoApplicationOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  CREDIT_MEMO_ID_ASC
+  CREDIT_MEMO_ID_DESC
+  INVOICE_ID_ASC
+  INVOICE_ID_DESC
+}
+
+"""A connection to a list of \`CreditMemoLine\` values."""
+type CreditMemoLineConnection {
+  """A list of \`CreditMemoLine\` objects."""
+  nodes: [CreditMemoLine]!
+
+  """
+  A list of edges which contains the \`CreditMemoLine\` and cursor to aid in pagination.
+  """
+  edges: [CreditMemoLineEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* \`CreditMemoLine\` you could get from the connection."""
+  totalCount: Int!
+}
+
+type CreditMemoLine implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  creditMemoId: UUID!
+  description: String!
+  quantity: BigFloat!
+  unitPrice: BigFloat!
+  amount: BigFloat!
+  discountPercent: BigFloat
+  incomeAccountId: UUID!
+  taxJurisdictionId: UUID
+  sortOrder: Int!
+
+  """Reads a single \`CreditMemo\` that is related to this \`CreditMemoLine\`."""
+  creditMemo: CreditMemo
+
+  """Reads a single \`Account\` that is related to this \`CreditMemoLine\`."""
+  incomeAccount: Account
+
+  """
+  Reads a single \`TaxJurisdiction\` that is related to this \`CreditMemoLine\`.
+  """
+  taxJurisdiction: TaxJurisdiction
+}
+
+"""A \`CreditMemoLine\` edge in the connection."""
+type CreditMemoLineEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`CreditMemoLine\` at the end of the edge."""
+  node: CreditMemoLine
+}
+
+"""
+A condition to be used against \`CreditMemoLine\` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input CreditMemoLineCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`creditMemoId\` field."""
+  creditMemoId: UUID
+}
+
+"""Methods to use when ordering \`CreditMemoLine\`."""
+enum CreditMemoLineOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  CREDIT_MEMO_ID_ASC
+  CREDIT_MEMO_ID_DESC
+}
+
+"""A \`CreditMemoApplication\` edge in the connection."""
+type CreditMemoApplicationEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`CreditMemoApplication\` at the end of the edge."""
+  node: CreditMemoApplication
+}
+
 """A \`Invoice\` edge in the connection."""
 type InvoiceEdge {
   """A cursor for use in pagination."""
@@ -22347,6 +23794,70 @@ input EstimateCondition {
 
 """Methods to use when ordering \`Estimate\`."""
 enum EstimateOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+  CUSTOMER_ID_ASC
+  CUSTOMER_ID_DESC
+  NUMBER_ASC
+  NUMBER_DESC
+  STATUS_ASC
+  STATUS_DESC
+}
+
+"""A connection to a list of \`CreditMemo\` values."""
+type CreditMemoConnection {
+  """A list of \`CreditMemo\` objects."""
+  nodes: [CreditMemo]!
+
+  """
+  A list of edges which contains the \`CreditMemo\` and cursor to aid in pagination.
+  """
+  edges: [CreditMemoEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* \`CreditMemo\` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A \`CreditMemo\` edge in the connection."""
+type CreditMemoEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`CreditMemo\` at the end of the edge."""
+  node: CreditMemo
+}
+
+"""
+A condition to be used against \`CreditMemo\` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input CreditMemoCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`bookId\` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s \`customerId\` field."""
+  customerId: UUID
+
+  """Checks for equality with the object’s \`number\` field."""
+  number: String
+
+  """Checks for equality with the object’s \`status\` field."""
+  status: String
+}
+
+"""Methods to use when ordering \`CreditMemo\`."""
+enum CreditMemoOrderBy {
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
@@ -22967,6 +24478,14 @@ type Mutation {
     input: CreateBookAccessInput!
   ): CreateBookAccessPayload
 
+  """Creates a single \`CreditMemoApplication\`."""
+  createCreditMemoApplication(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateCreditMemoApplicationInput!
+  ): CreateCreditMemoApplicationPayload
+
   """Creates a single \`Tag\`."""
   createTag(
     """
@@ -23119,6 +24638,14 @@ type Mutation {
     input: CreateProjectInput!
   ): CreateProjectPayload
 
+  """Creates a single \`CreditMemoLine\`."""
+  createCreditMemoLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateCreditMemoLineInput!
+  ): CreateCreditMemoLinePayload
+
   """Creates a single \`AmortizationEntry\`."""
   createAmortizationEntry(
     """
@@ -23222,6 +24749,14 @@ type Mutation {
     """
     input: CreateVendorInput!
   ): CreateVendorPayload
+
+  """Creates a single \`CreditMemo\`."""
+  createCreditMemo(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateCreditMemoInput!
+  ): CreateCreditMemoPayload
 
   """Creates a single \`CryptoAsset\`."""
   createCryptoAsset(
@@ -23400,6 +24935,26 @@ type Mutation {
     """
     input: UpdateBookAccessInput!
   ): UpdateBookAccessPayload
+
+  """
+  Updates a single \`CreditMemoApplication\` using its globally unique id and a patch.
+  """
+  updateCreditMemoApplicationById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateCreditMemoApplicationByIdInput!
+  ): UpdateCreditMemoApplicationPayload
+
+  """
+  Updates a single \`CreditMemoApplication\` using a unique key and a patch.
+  """
+  updateCreditMemoApplication(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateCreditMemoApplicationInput!
+  ): UpdateCreditMemoApplicationPayload
 
   """Updates a single \`Tag\` using its globally unique id and a patch."""
   updateTagById(
@@ -23740,6 +25295,24 @@ type Mutation {
   ): UpdateProjectPayload
 
   """
+  Updates a single \`CreditMemoLine\` using its globally unique id and a patch.
+  """
+  updateCreditMemoLineById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateCreditMemoLineByIdInput!
+  ): UpdateCreditMemoLinePayload
+
+  """Updates a single \`CreditMemoLine\` using a unique key and a patch."""
+  updateCreditMemoLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateCreditMemoLineInput!
+  ): UpdateCreditMemoLinePayload
+
+  """
   Updates a single \`AmortizationEntry\` using its globally unique id and a patch.
   """
   updateAmortizationEntryById(
@@ -23960,6 +25533,24 @@ type Mutation {
     """
     input: UpdateVendorInput!
   ): UpdateVendorPayload
+
+  """
+  Updates a single \`CreditMemo\` using its globally unique id and a patch.
+  """
+  updateCreditMemoById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateCreditMemoByIdInput!
+  ): UpdateCreditMemoPayload
+
+  """Updates a single \`CreditMemo\` using a unique key and a patch."""
+  updateCreditMemo(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateCreditMemoInput!
+  ): UpdateCreditMemoPayload
 
   """
   Updates a single \`CryptoAsset\` using its globally unique id and a patch.
@@ -24210,6 +25801,22 @@ type Mutation {
     """
     input: DeleteBookAccessInput!
   ): DeleteBookAccessPayload
+
+  """Deletes a single \`CreditMemoApplication\` using its globally unique id."""
+  deleteCreditMemoApplicationById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCreditMemoApplicationByIdInput!
+  ): DeleteCreditMemoApplicationPayload
+
+  """Deletes a single \`CreditMemoApplication\` using a unique key."""
+  deleteCreditMemoApplication(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCreditMemoApplicationInput!
+  ): DeleteCreditMemoApplicationPayload
 
   """Deletes a single \`Tag\` using its globally unique id."""
   deleteTagById(
@@ -24519,6 +26126,22 @@ type Mutation {
     input: DeleteProjectInput!
   ): DeleteProjectPayload
 
+  """Deletes a single \`CreditMemoLine\` using its globally unique id."""
+  deleteCreditMemoLineById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCreditMemoLineByIdInput!
+  ): DeleteCreditMemoLinePayload
+
+  """Deletes a single \`CreditMemoLine\` using a unique key."""
+  deleteCreditMemoLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCreditMemoLineInput!
+  ): DeleteCreditMemoLinePayload
+
   """Deletes a single \`AmortizationEntry\` using its globally unique id."""
   deleteAmortizationEntryById(
     """
@@ -24726,6 +26349,22 @@ type Mutation {
     """
     input: DeleteVendorInput!
   ): DeleteVendorPayload
+
+  """Deletes a single \`CreditMemo\` using its globally unique id."""
+  deleteCreditMemoById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCreditMemoByIdInput!
+  ): DeleteCreditMemoPayload
+
+  """Deletes a single \`CreditMemo\` using a unique key."""
+  deleteCreditMemo(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCreditMemoInput!
+  ): DeleteCreditMemoPayload
 
   """Deletes a single \`CryptoAsset\` using its globally unique id."""
   deleteCryptoAssetById(
@@ -25130,6 +26769,52 @@ input BookAccessInput {
   role: String!
   invitedBy: String
   invitedAt: Datetime
+  createdAt: Datetime
+}
+
+"""The output of our create \`CreditMemoApplication\` mutation."""
+type CreateCreditMemoApplicationPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`CreditMemoApplication\` that was created by this mutation."""
+  creditMemoApplication: CreditMemoApplication
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`CreditMemoApplication\`. May be used by Relay 1."""
+  creditMemoApplicationEdge(
+    """The method to use when ordering \`CreditMemoApplication\`."""
+    orderBy: [CreditMemoApplicationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CreditMemoApplicationEdge
+}
+
+"""All input for the create \`CreditMemoApplication\` mutation."""
+input CreateCreditMemoApplicationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`CreditMemoApplication\` to be created by this mutation."""
+  creditMemoApplication: CreditMemoApplicationInput!
+}
+
+"""An input for mutations affecting \`CreditMemoApplication\`"""
+input CreditMemoApplicationInput {
+  rowId: UUID
+  bookId: UUID!
+  creditMemoId: UUID!
+  invoiceId: UUID!
+  amount: BigFloat!
+  date: String!
   createdAt: Datetime
 }
 
@@ -26047,6 +27732,55 @@ input ProjectInput {
   updatedAt: Datetime
 }
 
+"""The output of our create \`CreditMemoLine\` mutation."""
+type CreateCreditMemoLinePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`CreditMemoLine\` that was created by this mutation."""
+  creditMemoLine: CreditMemoLine
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`CreditMemoLine\`. May be used by Relay 1."""
+  creditMemoLineEdge(
+    """The method to use when ordering \`CreditMemoLine\`."""
+    orderBy: [CreditMemoLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CreditMemoLineEdge
+}
+
+"""All input for the create \`CreditMemoLine\` mutation."""
+input CreateCreditMemoLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`CreditMemoLine\` to be created by this mutation."""
+  creditMemoLine: CreditMemoLineInput!
+}
+
+"""An input for mutations affecting \`CreditMemoLine\`"""
+input CreditMemoLineInput {
+  rowId: UUID
+  creditMemoId: UUID!
+  description: String!
+  quantity: BigFloat
+  unitPrice: BigFloat
+  amount: BigFloat
+  discountPercent: BigFloat
+  incomeAccountId: UUID!
+  taxJurisdictionId: UUID
+  sortOrder: Int
+}
+
 """The output of our create \`AmortizationEntry\` mutation."""
 type CreateAmortizationEntryPayload {
   """
@@ -26711,6 +28445,60 @@ input VendorInput {
   is1099Eligible: Boolean
   threshold: BigFloat
   createdAt: Datetime
+}
+
+"""The output of our create \`CreditMemo\` mutation."""
+type CreateCreditMemoPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`CreditMemo\` that was created by this mutation."""
+  creditMemo: CreditMemo
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`CreditMemo\`. May be used by Relay 1."""
+  creditMemoEdge(
+    """The method to use when ordering \`CreditMemo\`."""
+    orderBy: [CreditMemoOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CreditMemoEdge
+}
+
+"""All input for the create \`CreditMemo\` mutation."""
+input CreateCreditMemoInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`CreditMemo\` to be created by this mutation."""
+  creditMemo: CreditMemoInput!
+}
+
+"""An input for mutations affecting \`CreditMemo\`"""
+input CreditMemoInput {
+  rowId: UUID
+  bookId: UUID!
+  customerId: UUID!
+  number: String!
+  status: String
+  date: String!
+  subtotal: BigFloat
+  taxAmount: BigFloat
+  total: BigFloat
+  amountApplied: BigFloat
+  currency: String
+  memo: String
+  journalEntryId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
 }
 
 """The output of our create \`CryptoAsset\` mutation."""
@@ -27600,6 +29388,76 @@ input UpdateBookAccessInput {
   An object where the defined keys will be set on the \`BookAccess\` being updated.
   """
   patch: BookAccessPatch!
+}
+
+"""The output of our update \`CreditMemoApplication\` mutation."""
+type UpdateCreditMemoApplicationPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`CreditMemoApplication\` that was updated by this mutation."""
+  creditMemoApplication: CreditMemoApplication
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`CreditMemoApplication\`. May be used by Relay 1."""
+  creditMemoApplicationEdge(
+    """The method to use when ordering \`CreditMemoApplication\`."""
+    orderBy: [CreditMemoApplicationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CreditMemoApplicationEdge
+}
+
+"""All input for the \`updateCreditMemoApplicationById\` mutation."""
+input UpdateCreditMemoApplicationByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`CreditMemoApplication\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`CreditMemoApplication\` being updated.
+  """
+  patch: CreditMemoApplicationPatch!
+}
+
+"""
+Represents an update to a \`CreditMemoApplication\`. Fields that are set will be updated.
+"""
+input CreditMemoApplicationPatch {
+  rowId: UUID
+  bookId: UUID
+  creditMemoId: UUID
+  invoiceId: UUID
+  amount: BigFloat
+  date: String
+  createdAt: Datetime
+}
+
+"""All input for the \`updateCreditMemoApplication\` mutation."""
+input UpdateCreditMemoApplicationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`CreditMemoApplication\` being updated.
+  """
+  patch: CreditMemoApplicationPatch!
 }
 
 """The output of our update \`Tag\` mutation."""
@@ -28970,6 +30828,79 @@ input UpdateProjectInput {
   patch: ProjectPatch!
 }
 
+"""The output of our update \`CreditMemoLine\` mutation."""
+type UpdateCreditMemoLinePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`CreditMemoLine\` that was updated by this mutation."""
+  creditMemoLine: CreditMemoLine
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`CreditMemoLine\`. May be used by Relay 1."""
+  creditMemoLineEdge(
+    """The method to use when ordering \`CreditMemoLine\`."""
+    orderBy: [CreditMemoLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CreditMemoLineEdge
+}
+
+"""All input for the \`updateCreditMemoLineById\` mutation."""
+input UpdateCreditMemoLineByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`CreditMemoLine\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`CreditMemoLine\` being updated.
+  """
+  patch: CreditMemoLinePatch!
+}
+
+"""
+Represents an update to a \`CreditMemoLine\`. Fields that are set will be updated.
+"""
+input CreditMemoLinePatch {
+  rowId: UUID
+  creditMemoId: UUID
+  description: String
+  quantity: BigFloat
+  unitPrice: BigFloat
+  amount: BigFloat
+  discountPercent: BigFloat
+  incomeAccountId: UUID
+  taxJurisdictionId: UUID
+  sortOrder: Int
+}
+
+"""All input for the \`updateCreditMemoLine\` mutation."""
+input UpdateCreditMemoLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`CreditMemoLine\` being updated.
+  """
+  patch: CreditMemoLinePatch!
+}
+
 """The output of our update \`AmortizationEntry\` mutation."""
 type UpdateAmortizationEntryPayload {
   """
@@ -29946,6 +31877,84 @@ input UpdateVendorInput {
   An object where the defined keys will be set on the \`Vendor\` being updated.
   """
   patch: VendorPatch!
+}
+
+"""The output of our update \`CreditMemo\` mutation."""
+type UpdateCreditMemoPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`CreditMemo\` that was updated by this mutation."""
+  creditMemo: CreditMemo
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`CreditMemo\`. May be used by Relay 1."""
+  creditMemoEdge(
+    """The method to use when ordering \`CreditMemo\`."""
+    orderBy: [CreditMemoOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CreditMemoEdge
+}
+
+"""All input for the \`updateCreditMemoById\` mutation."""
+input UpdateCreditMemoByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`CreditMemo\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`CreditMemo\` being updated.
+  """
+  patch: CreditMemoPatch!
+}
+
+"""
+Represents an update to a \`CreditMemo\`. Fields that are set will be updated.
+"""
+input CreditMemoPatch {
+  rowId: UUID
+  bookId: UUID
+  customerId: UUID
+  number: String
+  status: String
+  date: String
+  subtotal: BigFloat
+  taxAmount: BigFloat
+  total: BigFloat
+  amountApplied: BigFloat
+  currency: String
+  memo: String
+  journalEntryId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the \`updateCreditMemo\` mutation."""
+input UpdateCreditMemoInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`CreditMemo\` being updated.
+  """
+  patch: CreditMemoPatch!
 }
 
 """The output of our update \`CryptoAsset\` mutation."""
@@ -30930,6 +32939,54 @@ input DeleteBookAccessInput {
   rowId: UUID!
 }
 
+"""The output of our delete \`CreditMemoApplication\` mutation."""
+type DeleteCreditMemoApplicationPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`CreditMemoApplication\` that was deleted by this mutation."""
+  creditMemoApplication: CreditMemoApplication
+  deletedCreditMemoApplicationId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`CreditMemoApplication\`. May be used by Relay 1."""
+  creditMemoApplicationEdge(
+    """The method to use when ordering \`CreditMemoApplication\`."""
+    orderBy: [CreditMemoApplicationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CreditMemoApplicationEdge
+}
+
+"""All input for the \`deleteCreditMemoApplicationById\` mutation."""
+input DeleteCreditMemoApplicationByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`CreditMemoApplication\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteCreditMemoApplication\` mutation."""
+input DeleteCreditMemoApplicationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete \`Tag\` mutation."""
 type DeleteTagPayload {
   """
@@ -31842,6 +33899,54 @@ input DeleteProjectInput {
   rowId: UUID!
 }
 
+"""The output of our delete \`CreditMemoLine\` mutation."""
+type DeleteCreditMemoLinePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`CreditMemoLine\` that was deleted by this mutation."""
+  creditMemoLine: CreditMemoLine
+  deletedCreditMemoLineId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`CreditMemoLine\`. May be used by Relay 1."""
+  creditMemoLineEdge(
+    """The method to use when ordering \`CreditMemoLine\`."""
+    orderBy: [CreditMemoLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CreditMemoLineEdge
+}
+
+"""All input for the \`deleteCreditMemoLineById\` mutation."""
+input DeleteCreditMemoLineByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`CreditMemoLine\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteCreditMemoLine\` mutation."""
+input DeleteCreditMemoLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete \`AmortizationEntry\` mutation."""
 type DeleteAmortizationEntryPayload {
   """
@@ -32458,6 +34563,54 @@ input DeleteVendorByIdInput {
 
 """All input for the \`deleteVendor\` mutation."""
 input DeleteVendorInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`CreditMemo\` mutation."""
+type DeleteCreditMemoPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`CreditMemo\` that was deleted by this mutation."""
+  creditMemo: CreditMemo
+  deletedCreditMemoId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`CreditMemo\`. May be used by Relay 1."""
+  creditMemoEdge(
+    """The method to use when ordering \`CreditMemo\`."""
+    orderBy: [CreditMemoOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CreditMemoEdge
+}
+
+"""All input for the \`deleteCreditMemoById\` mutation."""
+input DeleteCreditMemoByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`CreditMemo\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteCreditMemo\` mutation."""
+input DeleteCreditMemoInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -33281,6 +35434,84 @@ export const objects = {
       connectedAccounts: {
         plan() {
           return connection(resource_connected_accountPgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      creditMemo(_$root, {
+        $rowId
+      }) {
+        return resource_credit_memoPgResource.get({
+          id: $rowId
+        });
+      },
+      creditMemoApplication(_$root, {
+        $rowId
+      }) {
+        return resource_credit_memo_applicationPgResource.get({
+          id: $rowId
+        });
+      },
+      creditMemoApplicationById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_CreditMemoApplication($nodeId);
+      },
+      creditMemoApplications: {
+        plan() {
+          return connection(resource_credit_memo_applicationPgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      creditMemoById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_CreditMemo($nodeId);
+      },
+      creditMemoLine(_$root, {
+        $rowId
+      }) {
+        return resource_credit_memo_linePgResource.get({
+          id: $rowId
+        });
+      },
+      creditMemoLineById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_CreditMemoLine($nodeId);
+      },
+      creditMemoLines: {
+        plan() {
+          return connection(resource_credit_memo_linePgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      creditMemos: {
+        plan() {
+          return connection(resource_credit_memoPgResource.find());
         },
         args: {
           first: applyFirstArg,
@@ -34308,6 +36539,42 @@ export const objects = {
           input: applyInputToInsert
         }
       },
+      createCreditMemo: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_credit_memoPgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
+      createCreditMemoApplication: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_credit_memo_applicationPgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
+      createCreditMemoLine: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_credit_memo_linePgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
       createCryptoAsset: {
         plan(_, args) {
           const $insert = pgInsertSingle(resource_crypto_assetPgResource);
@@ -35059,6 +37326,84 @@ export const objects = {
       deleteConnectedAccountById: {
         plan(_$root, args) {
           const $delete = pgDeleteSingle(resource_connected_accountPgResource, specFromArgs_ConnectedAccount(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteCreditMemo: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_credit_memoPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteCreditMemoApplication: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_credit_memo_applicationPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteCreditMemoApplicationById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_credit_memo_applicationPgResource, specFromArgs_CreditMemoApplication(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteCreditMemoById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_credit_memoPgResource, specFromArgs_CreditMemo(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteCreditMemoLine: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_credit_memo_linePgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteCreditMemoLineById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_credit_memo_linePgResource, specFromArgs_CreditMemoLine(args));
           args.apply($delete);
           return object({
             result: $delete
@@ -36281,6 +38626,84 @@ export const objects = {
       updateConnectedAccountById: {
         plan(_$root, args) {
           const $update = pgUpdateSingle(resource_connected_accountPgResource, specFromArgs_ConnectedAccount(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateCreditMemo: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_credit_memoPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateCreditMemoApplication: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_credit_memo_applicationPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateCreditMemoApplicationById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_credit_memo_applicationPgResource, specFromArgs_CreditMemoApplication(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateCreditMemoById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_credit_memoPgResource, specFromArgs_CreditMemo(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateCreditMemoLine: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_credit_memo_linePgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateCreditMemoLineById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_credit_memo_linePgResource, specFromArgs_CreditMemoLine(args));
           args.apply($update);
           return object({
             result: $update
@@ -37748,6 +40171,24 @@ export const objects = {
         }
       },
       createdAt: Account_createdAtPlan,
+      creditMemos: {
+        plan($record) {
+          const $records = resource_credit_memoPgResource.find({
+            book_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       cryptoAssets: {
         plan($record) {
           const $records = resource_crypto_assetPgResource.find({
@@ -38542,6 +40983,33 @@ export const objects = {
       query: queryPlan
     }
   },
+  CreateCreditMemoApplicationPayload: {
+    assertStep: assertStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      creditMemoApplication: planCreatePayloadResult,
+      creditMemoApplicationEdge: CreateCreditMemoApplicationPayload_creditMemoApplicationEdgePlan,
+      query: queryPlan
+    }
+  },
+  CreateCreditMemoLinePayload: {
+    assertStep: assertStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      creditMemoLine: planCreatePayloadResult,
+      creditMemoLineEdge: CreateCreditMemoLinePayload_creditMemoLineEdgePlan,
+      query: queryPlan
+    }
+  },
+  CreateCreditMemoPayload: {
+    assertStep: assertStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      creditMemo: planCreatePayloadResult,
+      creditMemoEdge: CreateCreditMemoPayload_creditMemoEdgePlan,
+      query: queryPlan
+    }
+  },
   CreateCryptoAssetPayload: {
     assertStep: assertStep,
     plans: {
@@ -38839,6 +41307,133 @@ export const objects = {
       vendorEdge: CreateVendorPayload_vendorEdgePlan
     }
   },
+  CreditMemo: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      amountApplied($record) {
+        return $record.get("amount_applied");
+      },
+      book: Account_bookPlan,
+      bookId: Account_bookIdPlan,
+      createdAt: Account_createdAtPlan,
+      creditMemoApplications: {
+        plan($record) {
+          const $records = resource_credit_memo_applicationPgResource.find({
+            credit_memo_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      creditMemoLines: {
+        plan($record) {
+          const $records = resource_credit_memo_linePgResource.find({
+            credit_memo_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      customer: Invoice_customerPlan,
+      customerId: Invoice_customerIdPlan,
+      id($parent) {
+        const specifier = nodeIdHandler_CreditMemo.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_CreditMemo.codec.name].encode);
+      },
+      journalEntry: JournalLine_journalEntryPlan,
+      journalEntryId: JournalLine_journalEntryIdPlan,
+      rowId: JournalLineProject_rowIdPlan,
+      taxAmount: Bill_taxAmountPlan,
+      updatedAt: Account_updatedAtPlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of credit_memoUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_credit_memoPgResource.get(spec);
+    }
+  },
+  CreditMemoApplication: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      book: Account_bookPlan,
+      bookId: Account_bookIdPlan,
+      createdAt: Account_createdAtPlan,
+      creditMemo: CreditMemoApplication_creditMemoPlan,
+      creditMemoId: CreditMemoApplication_creditMemoIdPlan,
+      id($parent) {
+        const specifier = nodeIdHandler_CreditMemoApplication.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_CreditMemoApplication.codec.name].encode);
+      },
+      invoice: InvoiceLine_invoicePlan,
+      invoiceId: InvoiceLine_invoiceIdPlan,
+      rowId: JournalLineProject_rowIdPlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of credit_memo_applicationUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_credit_memo_applicationPgResource.get(spec);
+    }
+  },
+  CreditMemoApplicationConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
+  CreditMemoConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
+  CreditMemoLine: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      creditMemo: CreditMemoApplication_creditMemoPlan,
+      creditMemoId: CreditMemoApplication_creditMemoIdPlan,
+      discountPercent: InvoiceLine_discountPercentPlan,
+      id($parent) {
+        const specifier = nodeIdHandler_CreditMemoLine.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_CreditMemoLine.codec.name].encode);
+      },
+      incomeAccount: InvoiceLine_incomeAccountPlan,
+      incomeAccountId: InvoiceLine_incomeAccountIdPlan,
+      rowId: JournalLineProject_rowIdPlan,
+      sortOrder: BillLine_sortOrderPlan,
+      taxJurisdiction: JournalLine_taxJurisdictionPlan,
+      taxJurisdictionId: JournalLine_taxJurisdictionIdPlan,
+      unitPrice: BillLine_unitPricePlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of credit_memo_lineUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_credit_memo_linePgResource.get(spec);
+    }
+  },
+  CreditMemoLineConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
   CryptoAsset: {
     assertStep: assertPgClassSingleStep,
     plans: {
@@ -38941,6 +41536,24 @@ export const objects = {
       bookId: Account_bookIdPlan,
       businessName: Vendor_businessNamePlan,
       createdAt: Account_createdAtPlan,
+      creditMemos: {
+        plan($record) {
+          const $records = resource_credit_memoPgResource.find({
+            customer_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       estimates: {
         plan($record) {
           const $records = resource_estimatePgResource.find({
@@ -39188,6 +41801,48 @@ export const objects = {
       deletedConnectedAccountId($object) {
         const $record = $object.getStepForKey("result"),
           specifier = nodeIdHandler_ConnectedAccount.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      query: queryPlan
+    }
+  },
+  DeleteCreditMemoApplicationPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      creditMemoApplication: planCreatePayloadResult,
+      creditMemoApplicationEdge: CreateCreditMemoApplicationPayload_creditMemoApplicationEdgePlan,
+      deletedCreditMemoApplicationId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_CreditMemoApplication.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      query: queryPlan
+    }
+  },
+  DeleteCreditMemoLinePayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      creditMemoLine: planCreatePayloadResult,
+      creditMemoLineEdge: CreateCreditMemoLinePayload_creditMemoLineEdgePlan,
+      deletedCreditMemoLineId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_CreditMemoLine.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      query: queryPlan
+    }
+  },
+  DeleteCreditMemoPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      creditMemo: planCreatePayloadResult,
+      creditMemoEdge: CreateCreditMemoPayload_creditMemoEdgePlan,
+      deletedCreditMemoId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_CreditMemo.plan($record);
         return lambda(specifier, base64JSONNodeIdCodec.encode);
       },
       query: queryPlan
@@ -39983,6 +42638,24 @@ export const objects = {
       book: Account_bookPlan,
       bookId: Account_bookIdPlan,
       createdAt: Account_createdAtPlan,
+      creditMemoApplications: {
+        plan($record) {
+          const $records = resource_credit_memo_applicationPgResource.find({
+            invoice_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       customer: Invoice_customerPlan,
       customerId: Invoice_customerIdPlan,
       dueDate: Bill_dueDatePlan,
@@ -40050,9 +42723,7 @@ export const objects = {
   InvoiceLine: {
     assertStep: assertPgClassSingleStep,
     plans: {
-      discountPercent($record) {
-        return $record.get("discount_percent");
-      },
+      discountPercent: InvoiceLine_discountPercentPlan,
       id($parent) {
         const specifier = nodeIdHandler_InvoiceLine.plan($parent);
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_InvoiceLine.codec.name].encode);
@@ -41027,6 +43698,33 @@ export const objects = {
       clientMutationId: getClientMutationIdForCreatePlan,
       connectedAccount: planCreatePayloadResult,
       connectedAccountEdge: CreateConnectedAccountPayload_connectedAccountEdgePlan,
+      query: queryPlan
+    }
+  },
+  UpdateCreditMemoApplicationPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      creditMemoApplication: planCreatePayloadResult,
+      creditMemoApplicationEdge: CreateCreditMemoApplicationPayload_creditMemoApplicationEdgePlan,
+      query: queryPlan
+    }
+  },
+  UpdateCreditMemoLinePayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      creditMemoLine: planCreatePayloadResult,
+      creditMemoLineEdge: CreateCreditMemoLinePayload_creditMemoLineEdgePlan,
+      query: queryPlan
+    }
+  },
+  UpdateCreditMemoPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      creditMemo: planCreatePayloadResult,
+      creditMemoEdge: CreateCreditMemoPayload_creditMemoEdgePlan,
       query: queryPlan
     }
   },
@@ -42064,7 +44762,7 @@ export const inputObjects = {
       billDate: BillInput_billDateApply,
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
-      currency: BillInput_currencyApply,
+      currency: CreditMemoInput_currencyApply,
       dueDate: AmortizationEntryInput_dueDateApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       memo: JournalLineInput_memoApply,
@@ -42072,7 +44770,7 @@ export const inputObjects = {
       rowId: JournalLineProjectInput_rowIdApply,
       status: AccountingPeriodInput_statusApply,
       subtotal: EstimateInput_subtotalApply,
-      taxAmount: BillInput_taxAmountApply,
+      taxAmount: CreditMemoInput_taxAmountApply,
       total: EstimateInput_totalApply,
       updatedAt: AccountMappingInput_updatedAtApply,
       vendorId: JournalEntryInput_vendorIdApply
@@ -42112,7 +44810,7 @@ export const inputObjects = {
   BillLineInput: {
     baked: createObjectAndApplyChildren,
     plans: {
-      amount: BillLineInput_amountApply,
+      amount: CreditMemoApplicationInput_amountApply,
       billId: BillLineInput_billIdApply,
       description: BillLineInput_descriptionApply,
       expenseAccountId: BillLineInput_expenseAccountIdApply,
@@ -42126,7 +44824,7 @@ export const inputObjects = {
   BillLinePatch: {
     baked: createObjectAndApplyChildren,
     plans: {
-      amount: BillLineInput_amountApply,
+      amount: CreditMemoApplicationInput_amountApply,
       billId: BillLineInput_billIdApply,
       description: BillLineInput_descriptionApply,
       expenseAccountId: BillLineInput_expenseAccountIdApply,
@@ -42144,7 +44842,7 @@ export const inputObjects = {
       billDate: BillInput_billDateApply,
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
-      currency: BillInput_currencyApply,
+      currency: CreditMemoInput_currencyApply,
       dueDate: AmortizationEntryInput_dueDateApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       memo: JournalLineInput_memoApply,
@@ -42152,7 +44850,7 @@ export const inputObjects = {
       rowId: JournalLineProjectInput_rowIdApply,
       status: AccountingPeriodInput_statusApply,
       subtotal: EstimateInput_subtotalApply,
-      taxAmount: BillInput_taxAmountApply,
+      taxAmount: CreditMemoInput_taxAmountApply,
       total: EstimateInput_totalApply,
       updatedAt: AccountMappingInput_updatedAtApply,
       vendorId: JournalEntryInput_vendorIdApply
@@ -42199,11 +44897,11 @@ export const inputObjects = {
   BillPaymentInput: {
     baked: createObjectAndApplyChildren,
     plans: {
-      amount: BillLineInput_amountApply,
+      amount: CreditMemoApplicationInput_amountApply,
       billId: BillLineInput_billIdApply,
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
-      date: NetWorthSnapshotInput_dateApply,
+      date: CreditMemoApplicationInput_dateApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       method: BillPaymentInput_methodApply,
       paymentAccountId: BillPaymentInput_paymentAccountIdApply,
@@ -42214,11 +44912,11 @@ export const inputObjects = {
   BillPaymentPatch: {
     baked: createObjectAndApplyChildren,
     plans: {
-      amount: BillLineInput_amountApply,
+      amount: CreditMemoApplicationInput_amountApply,
       billId: BillLineInput_billIdApply,
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
-      date: NetWorthSnapshotInput_dateApply,
+      date: CreditMemoApplicationInput_dateApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       method: BillPaymentInput_methodApply,
       paymentAccountId: BillPaymentInput_paymentAccountIdApply,
@@ -42540,6 +45238,30 @@ export const inputObjects = {
         });
         registryConfig.pgRelations.book.connectedAccountsByTheirBookId.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = registryConfig.pgRelations.book.connectedAccountsByTheirBookId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
+      creditMemos($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: creditMemoIdentifier,
+          alias: resource_credit_memoPgResource.name,
+          localAttributes: registryConfig.pgRelations.book.creditMemosByTheirBookId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.book.creditMemosByTheirBookId.remoteAttributes
+        };
+        return $rel;
+      },
+      creditMemosExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: creditMemoIdentifier,
+          alias: resource_credit_memoPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.book.creditMemosByTheirBookId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.book.creditMemosByTheirBookId.remoteAttributes[i];
           $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
         });
       },
@@ -43135,7 +45857,7 @@ export const inputObjects = {
       address: CustomerInput_addressApply,
       city: CustomerInput_cityApply,
       createdAt: TagGroupInput_createdAtApply,
-      currency: BillInput_currencyApply,
+      currency: CreditMemoInput_currencyApply,
       ein: BookInput_einApply,
       fiscalYearStartMonth: BookInput_fiscalYearStartMonthApply,
       invoiceSource: BookInput_invoiceSourceApply,
@@ -43156,7 +45878,7 @@ export const inputObjects = {
       address: CustomerInput_addressApply,
       city: CustomerInput_cityApply,
       createdAt: TagGroupInput_createdAtApply,
-      currency: BillInput_currencyApply,
+      currency: CreditMemoInput_currencyApply,
       ein: BookInput_einApply,
       fiscalYearStartMonth: BookInput_fiscalYearStartMonthApply,
       invoiceSource: BookInput_invoiceSourceApply,
@@ -43235,6 +45957,13 @@ export const inputObjects = {
     }
   },
   BookToManyConnectedAccountFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
+  BookToManyCreditMemoFilter: {
     plans: {
       every: AccountToManyAccountFilter_everyApply,
       none: AccountToManyAccountFilter_noneApply,
@@ -43442,7 +46171,7 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       accountId: SavingsGoalInput_accountIdApply,
-      amount: BillLineInput_amountApply,
+      amount: CreditMemoApplicationInput_amountApply,
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
       period: BudgetInput_periodApply,
@@ -43455,7 +46184,7 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       accountId: SavingsGoalInput_accountIdApply,
-      amount: BillLineInput_amountApply,
+      amount: CreditMemoApplicationInput_amountApply,
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
       period: BudgetInput_periodApply,
@@ -43806,6 +46535,24 @@ export const inputObjects = {
       connectedAccount: applyCreateFields
     }
   },
+  CreateCreditMemoApplicationInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      creditMemoApplication: applyCreateFields
+    }
+  },
+  CreateCreditMemoInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      creditMemo: applyCreateFields
+    }
+  },
+  CreateCreditMemoLineInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      creditMemoLine: applyCreateFields
+    }
+  },
   CreateCryptoAssetInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
@@ -44004,6 +46751,268 @@ export const inputObjects = {
       vendor: applyCreateFields
     }
   },
+  CreditMemoApplicationCondition: {
+    plans: {
+      creditMemoId: CreditMemoApplicationCondition_creditMemoIdApply,
+      invoiceId: InvoiceLineCondition_invoiceIdApply,
+      rowId: AccountCondition_rowIdApply
+    }
+  },
+  CreditMemoApplicationFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      book($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_bookPgResource, bookIdentifier, registryConfig.pgRelations.creditMemoApplication.bookByMyBookId.localAttributes, registryConfig.pgRelations.creditMemoApplication.bookByMyBookId.remoteAttributes, $where, value);
+      },
+      creditMemo($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_credit_memoPgResource, creditMemoIdentifier, registryConfig.pgRelations.creditMemoApplication.creditMemoByMyCreditMemoId.localAttributes, registryConfig.pgRelations.creditMemoApplication.creditMemoByMyCreditMemoId.remoteAttributes, $where, value);
+      },
+      creditMemoId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("creditMemoId", "credit_memo_id", spec_creditMemoApplication.attributes.credit_memo_id, queryBuilder, value);
+      },
+      invoice($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_invoicePgResource, invoiceIdentifier, registryConfig.pgRelations.creditMemoApplication.invoiceByMyInvoiceId.localAttributes, registryConfig.pgRelations.creditMemoApplication.invoiceByMyInvoiceId.remoteAttributes, $where, value);
+      },
+      invoiceId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("invoiceId", "invoice_id", spec_creditMemoApplication.attributes.invoice_id, queryBuilder, value);
+      },
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_creditMemoApplication.attributes.id, queryBuilder, value);
+      }
+    }
+  },
+  CreditMemoApplicationInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      amount: CreditMemoApplicationInput_amountApply,
+      bookId: TagGroupInput_bookIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      creditMemoId: CreditMemoApplicationInput_creditMemoIdApply,
+      date: CreditMemoApplicationInput_dateApply,
+      invoiceId: CreditMemoApplicationInput_invoiceIdApply,
+      rowId: JournalLineProjectInput_rowIdApply
+    }
+  },
+  CreditMemoApplicationPatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      amount: CreditMemoApplicationInput_amountApply,
+      bookId: TagGroupInput_bookIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      creditMemoId: CreditMemoApplicationInput_creditMemoIdApply,
+      date: CreditMemoApplicationInput_dateApply,
+      invoiceId: CreditMemoApplicationInput_invoiceIdApply,
+      rowId: JournalLineProjectInput_rowIdApply
+    }
+  },
+  CreditMemoCondition: {
+    plans: {
+      bookId: AccountCondition_bookIdApply,
+      customerId: InvoiceCondition_customerIdApply,
+      number: BillCondition_numberApply,
+      rowId: AccountCondition_rowIdApply,
+      status: BillCondition_statusApply
+    }
+  },
+  CreditMemoFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      book($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_bookPgResource, bookIdentifier, registryConfig.pgRelations.creditMemo.bookByMyBookId.localAttributes, registryConfig.pgRelations.creditMemo.bookByMyBookId.remoteAttributes, $where, value);
+      },
+      bookId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("bookId", "book_id", spec_creditMemo.attributes.book_id, queryBuilder, value);
+      },
+      creditMemoApplications($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: creditMemoApplicationIdentifier,
+          alias: resource_credit_memo_applicationPgResource.name,
+          localAttributes: registryConfig.pgRelations.creditMemo.creditMemoApplicationsByTheirCreditMemoId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.creditMemo.creditMemoApplicationsByTheirCreditMemoId.remoteAttributes
+        };
+        return $rel;
+      },
+      creditMemoApplicationsExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: creditMemoApplicationIdentifier,
+          alias: resource_credit_memo_applicationPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.creditMemo.creditMemoApplicationsByTheirCreditMemoId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.creditMemo.creditMemoApplicationsByTheirCreditMemoId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
+      creditMemoLines($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: creditMemoLineIdentifier,
+          alias: resource_credit_memo_linePgResource.name,
+          localAttributes: registryConfig.pgRelations.creditMemo.creditMemoLinesByTheirCreditMemoId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.creditMemo.creditMemoLinesByTheirCreditMemoId.remoteAttributes
+        };
+        return $rel;
+      },
+      creditMemoLinesExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: creditMemoLineIdentifier,
+          alias: resource_credit_memo_linePgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.creditMemo.creditMemoLinesByTheirCreditMemoId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.creditMemo.creditMemoLinesByTheirCreditMemoId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
+      customer($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_customerPgResource, customerIdentifier, registryConfig.pgRelations.creditMemo.customerByMyCustomerId.localAttributes, registryConfig.pgRelations.creditMemo.customerByMyCustomerId.remoteAttributes, $where, value);
+      },
+      customerId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("customerId", "customer_id", spec_creditMemo.attributes.customer_id, queryBuilder, value);
+      },
+      journalEntry($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_journal_entryPgResource, journalEntryIdentifier, registryConfig.pgRelations.creditMemo.journalEntryByMyJournalEntryId.localAttributes, registryConfig.pgRelations.creditMemo.journalEntryByMyJournalEntryId.remoteAttributes, $where, value);
+      },
+      journalEntryExists($where, value) {
+        return pgConnectionFilterApplyForwardRelationExists(resource_journal_entryPgResource, journalEntryIdentifier, registryConfig.pgRelations.creditMemo.journalEntryByMyJournalEntryId.localAttributes, registryConfig.pgRelations.creditMemo.journalEntryByMyJournalEntryId.remoteAttributes, $where, value);
+      },
+      not: AccountFilter_notApply,
+      number(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("number", "number", spec_creditMemo.attributes.number, queryBuilder, value);
+      },
+      or: AccountFilter_orApply,
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_creditMemo.attributes.id, queryBuilder, value);
+      },
+      status(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("status", "status", spec_creditMemo.attributes.status, queryBuilder, value);
+      }
+    }
+  },
+  CreditMemoInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      amountApplied: CreditMemoInput_amountAppliedApply,
+      bookId: TagGroupInput_bookIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      currency: CreditMemoInput_currencyApply,
+      customerId: EstimateInput_customerIdApply,
+      date: CreditMemoApplicationInput_dateApply,
+      journalEntryId: JournalLineInput_journalEntryIdApply,
+      memo: JournalLineInput_memoApply,
+      number: EstimateInput_numberApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      status: AccountingPeriodInput_statusApply,
+      subtotal: EstimateInput_subtotalApply,
+      taxAmount: CreditMemoInput_taxAmountApply,
+      total: EstimateInput_totalApply,
+      updatedAt: AccountMappingInput_updatedAtApply
+    }
+  },
+  CreditMemoLineCondition: {
+    plans: {
+      creditMemoId: CreditMemoApplicationCondition_creditMemoIdApply,
+      rowId: AccountCondition_rowIdApply
+    }
+  },
+  CreditMemoLineFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      creditMemo($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_credit_memoPgResource, creditMemoIdentifier, registryConfig.pgRelations.creditMemoLine.creditMemoByMyCreditMemoId.localAttributes, registryConfig.pgRelations.creditMemoLine.creditMemoByMyCreditMemoId.remoteAttributes, $where, value);
+      },
+      creditMemoId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("creditMemoId", "credit_memo_id", spec_creditMemoLine.attributes.credit_memo_id, queryBuilder, value);
+      },
+      incomeAccount($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_accountPgResource, accountIdentifier, registryConfig.pgRelations.creditMemoLine.accountByMyIncomeAccountId.localAttributes, registryConfig.pgRelations.creditMemoLine.accountByMyIncomeAccountId.remoteAttributes, $where, value);
+      },
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_creditMemoLine.attributes.id, queryBuilder, value);
+      },
+      taxJurisdiction($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_tax_jurisdictionPgResource, taxJurisdictionIdentifier, registryConfig.pgRelations.creditMemoLine.taxJurisdictionByMyTaxJurisdictionId.localAttributes, registryConfig.pgRelations.creditMemoLine.taxJurisdictionByMyTaxJurisdictionId.remoteAttributes, $where, value);
+      },
+      taxJurisdictionExists($where, value) {
+        return pgConnectionFilterApplyForwardRelationExists(resource_tax_jurisdictionPgResource, taxJurisdictionIdentifier, registryConfig.pgRelations.creditMemoLine.taxJurisdictionByMyTaxJurisdictionId.localAttributes, registryConfig.pgRelations.creditMemoLine.taxJurisdictionByMyTaxJurisdictionId.remoteAttributes, $where, value);
+      }
+    }
+  },
+  CreditMemoLineInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      amount: CreditMemoApplicationInput_amountApply,
+      creditMemoId: CreditMemoApplicationInput_creditMemoIdApply,
+      description: BillLineInput_descriptionApply,
+      discountPercent: CreditMemoLineInput_discountPercentApply,
+      incomeAccountId: EstimateLineInput_incomeAccountIdApply,
+      quantity: InventoryTransactionInput_quantityApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      sortOrder: BillLineInput_sortOrderApply,
+      taxJurisdictionId: JournalLineInput_taxJurisdictionIdApply,
+      unitPrice: BillLineInput_unitPriceApply
+    }
+  },
+  CreditMemoLinePatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      amount: CreditMemoApplicationInput_amountApply,
+      creditMemoId: CreditMemoApplicationInput_creditMemoIdApply,
+      description: BillLineInput_descriptionApply,
+      discountPercent: CreditMemoLineInput_discountPercentApply,
+      incomeAccountId: EstimateLineInput_incomeAccountIdApply,
+      quantity: InventoryTransactionInput_quantityApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      sortOrder: BillLineInput_sortOrderApply,
+      taxJurisdictionId: JournalLineInput_taxJurisdictionIdApply,
+      unitPrice: BillLineInput_unitPriceApply
+    }
+  },
+  CreditMemoPatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      amountApplied: CreditMemoInput_amountAppliedApply,
+      bookId: TagGroupInput_bookIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      currency: CreditMemoInput_currencyApply,
+      customerId: EstimateInput_customerIdApply,
+      date: CreditMemoApplicationInput_dateApply,
+      journalEntryId: JournalLineInput_journalEntryIdApply,
+      memo: JournalLineInput_memoApply,
+      number: EstimateInput_numberApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      status: AccountingPeriodInput_statusApply,
+      subtotal: EstimateInput_subtotalApply,
+      taxAmount: CreditMemoInput_taxAmountApply,
+      total: EstimateInput_totalApply,
+      updatedAt: AccountMappingInput_updatedAtApply
+    }
+  },
+  CreditMemoToManyCreditMemoApplicationFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
+  CreditMemoToManyCreditMemoLineFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
   CryptoAssetCondition: {
     plans: {
       bookId: AccountCondition_bookIdApply,
@@ -44170,6 +47179,30 @@ export const inputObjects = {
       bookId(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("bookId", "book_id", spec_customer.attributes.book_id, queryBuilder, value);
       },
+      creditMemos($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: creditMemoIdentifier,
+          alias: resource_credit_memoPgResource.name,
+          localAttributes: registryConfig.pgRelations.customer.creditMemosByTheirCustomerId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.customer.creditMemosByTheirCustomerId.remoteAttributes
+        };
+        return $rel;
+      },
+      creditMemosExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: creditMemoIdentifier,
+          alias: resource_credit_memoPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.customer.creditMemosByTheirCustomerId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.customer.creditMemosByTheirCustomerId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
       estimates($where, value) {
         assertAllowed(value, "object");
         const $rel = $where.andPlan();
@@ -44261,6 +47294,13 @@ export const inputObjects = {
       state: CustomerInput_stateApply,
       updatedAt: AccountMappingInput_updatedAtApply,
       zip: CustomerInput_zipApply
+    }
+  },
+  CustomerToManyCreditMemoFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
     }
   },
   CustomerToManyEstimateFilter: {
@@ -44428,6 +47468,36 @@ export const inputObjects = {
     }
   },
   DeleteConnectedAccountInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteCreditMemoApplicationByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteCreditMemoApplicationInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteCreditMemoByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteCreditMemoInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteCreditMemoLineByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteCreditMemoLineInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate
     }
@@ -44958,7 +48028,7 @@ export const inputObjects = {
   EstimateLineInput: {
     baked: createObjectAndApplyChildren,
     plans: {
-      amount: BillLineInput_amountApply,
+      amount: CreditMemoApplicationInput_amountApply,
       description: BillLineInput_descriptionApply,
       estimateId: EstimateLineInput_estimateIdApply,
       incomeAccountId: EstimateLineInput_incomeAccountIdApply,
@@ -44972,7 +48042,7 @@ export const inputObjects = {
   EstimateLinePatch: {
     baked: createObjectAndApplyChildren,
     plans: {
-      amount: BillLineInput_amountApply,
+      amount: CreditMemoApplicationInput_amountApply,
       description: BillLineInput_descriptionApply,
       estimateId: EstimateLineInput_estimateIdApply,
       incomeAccountId: EstimateLineInput_incomeAccountIdApply,
@@ -45287,7 +48357,7 @@ export const inputObjects = {
     plans: {
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
-      date: NetWorthSnapshotInput_dateApply,
+      date: CreditMemoApplicationInput_dateApply,
       itemId: InventoryTransactionInput_itemIdApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       note: InventoryTransactionInput_noteApply,
@@ -45302,7 +48372,7 @@ export const inputObjects = {
     plans: {
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
-      date: NetWorthSnapshotInput_dateApply,
+      date: CreditMemoApplicationInput_dateApply,
       itemId: InventoryTransactionInput_itemIdApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       note: InventoryTransactionInput_noteApply,
@@ -45329,6 +48399,30 @@ export const inputObjects = {
       },
       bookId(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("bookId", "book_id", spec_invoice.attributes.book_id, queryBuilder, value);
+      },
+      creditMemoApplications($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: creditMemoApplicationIdentifier,
+          alias: resource_credit_memo_applicationPgResource.name,
+          localAttributes: registryConfig.pgRelations.invoice.creditMemoApplicationsByTheirInvoiceId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.invoice.creditMemoApplicationsByTheirInvoiceId.remoteAttributes
+        };
+        return $rel;
+      },
+      creditMemoApplicationsExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: creditMemoApplicationIdentifier,
+          alias: resource_credit_memo_applicationPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.invoice.creditMemoApplicationsByTheirInvoiceId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.invoice.creditMemoApplicationsByTheirInvoiceId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
       },
       customer($where, value) {
         return pgConnectionFilterApplySingleRelation(resource_customerPgResource, customerIdentifier, registryConfig.pgRelations.invoice.customerByMyCustomerId.localAttributes, registryConfig.pgRelations.invoice.customerByMyCustomerId.remoteAttributes, $where, value);
@@ -45409,7 +48503,7 @@ export const inputObjects = {
       amountPaid: BillInput_amountPaidApply,
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
-      currency: BillInput_currencyApply,
+      currency: CreditMemoInput_currencyApply,
       customerId: EstimateInput_customerIdApply,
       dueDate: AmortizationEntryInput_dueDateApply,
       issueDate: InvoiceInput_issueDateApply,
@@ -45419,7 +48513,7 @@ export const inputObjects = {
       rowId: JournalLineProjectInput_rowIdApply,
       status: AccountingPeriodInput_statusApply,
       subtotal: EstimateInput_subtotalApply,
-      taxAmount: BillInput_taxAmountApply,
+      taxAmount: CreditMemoInput_taxAmountApply,
       terms: EstimateInput_termsApply,
       total: EstimateInput_totalApply,
       updatedAt: AccountMappingInput_updatedAtApply
@@ -45465,12 +48559,12 @@ export const inputObjects = {
   InvoiceLineInput: {
     baked: createObjectAndApplyChildren,
     plans: {
-      amount: BillLineInput_amountApply,
+      amount: CreditMemoApplicationInput_amountApply,
       description: BillLineInput_descriptionApply,
-      discountPercent: InvoiceLineInput_discountPercentApply,
+      discountPercent: CreditMemoLineInput_discountPercentApply,
       incomeAccountId: EstimateLineInput_incomeAccountIdApply,
       inventoryItemId: InvoiceLineInput_inventoryItemIdApply,
-      invoiceId: InvoicePaymentInput_invoiceIdApply,
+      invoiceId: CreditMemoApplicationInput_invoiceIdApply,
       quantity: InventoryTransactionInput_quantityApply,
       rowId: JournalLineProjectInput_rowIdApply,
       sortOrder: BillLineInput_sortOrderApply,
@@ -45481,12 +48575,12 @@ export const inputObjects = {
   InvoiceLinePatch: {
     baked: createObjectAndApplyChildren,
     plans: {
-      amount: BillLineInput_amountApply,
+      amount: CreditMemoApplicationInput_amountApply,
       description: BillLineInput_descriptionApply,
-      discountPercent: InvoiceLineInput_discountPercentApply,
+      discountPercent: CreditMemoLineInput_discountPercentApply,
       incomeAccountId: EstimateLineInput_incomeAccountIdApply,
       inventoryItemId: InvoiceLineInput_inventoryItemIdApply,
-      invoiceId: InvoicePaymentInput_invoiceIdApply,
+      invoiceId: CreditMemoApplicationInput_invoiceIdApply,
       quantity: InventoryTransactionInput_quantityApply,
       rowId: JournalLineProjectInput_rowIdApply,
       sortOrder: BillLineInput_sortOrderApply,
@@ -45500,7 +48594,7 @@ export const inputObjects = {
       amountPaid: BillInput_amountPaidApply,
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
-      currency: BillInput_currencyApply,
+      currency: CreditMemoInput_currencyApply,
       customerId: EstimateInput_customerIdApply,
       dueDate: AmortizationEntryInput_dueDateApply,
       issueDate: InvoiceInput_issueDateApply,
@@ -45510,7 +48604,7 @@ export const inputObjects = {
       rowId: JournalLineProjectInput_rowIdApply,
       status: AccountingPeriodInput_statusApply,
       subtotal: EstimateInput_subtotalApply,
-      taxAmount: BillInput_taxAmountApply,
+      taxAmount: CreditMemoInput_taxAmountApply,
       terms: EstimateInput_termsApply,
       total: EstimateInput_totalApply,
       updatedAt: AccountMappingInput_updatedAtApply
@@ -45557,12 +48651,12 @@ export const inputObjects = {
   InvoicePaymentInput: {
     baked: createObjectAndApplyChildren,
     plans: {
-      amount: BillLineInput_amountApply,
+      amount: CreditMemoApplicationInput_amountApply,
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
-      date: NetWorthSnapshotInput_dateApply,
+      date: CreditMemoApplicationInput_dateApply,
       depositAccountId: InvoicePaymentInput_depositAccountIdApply,
-      invoiceId: InvoicePaymentInput_invoiceIdApply,
+      invoiceId: CreditMemoApplicationInput_invoiceIdApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       method: BillPaymentInput_methodApply,
       reference: BillPaymentInput_referenceApply,
@@ -45572,16 +48666,23 @@ export const inputObjects = {
   InvoicePaymentPatch: {
     baked: createObjectAndApplyChildren,
     plans: {
-      amount: BillLineInput_amountApply,
+      amount: CreditMemoApplicationInput_amountApply,
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
-      date: NetWorthSnapshotInput_dateApply,
+      date: CreditMemoApplicationInput_dateApply,
       depositAccountId: InvoicePaymentInput_depositAccountIdApply,
-      invoiceId: InvoicePaymentInput_invoiceIdApply,
+      invoiceId: CreditMemoApplicationInput_invoiceIdApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       method: BillPaymentInput_methodApply,
       reference: BillPaymentInput_referenceApply,
       rowId: JournalLineProjectInput_rowIdApply
+    }
+  },
+  InvoiceToManyCreditMemoApplicationFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
     }
   },
   InvoiceToManyInvoiceLineFilter: {
@@ -45695,7 +48796,7 @@ export const inputObjects = {
     plans: {
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
-      date: NetWorthSnapshotInput_dateApply,
+      date: CreditMemoApplicationInput_dateApply,
       isReconciled: JournalEntryInput_isReconciledApply,
       isReviewed: JournalEntryInput_isReviewedApply,
       memo: JournalLineInput_memoApply,
@@ -45711,7 +48812,7 @@ export const inputObjects = {
     plans: {
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
-      date: NetWorthSnapshotInput_dateApply,
+      date: CreditMemoApplicationInput_dateApply,
       isReconciled: JournalEntryInput_isReconciledApply,
       isReviewed: JournalEntryInput_isReviewedApply,
       memo: JournalLineInput_memoApply,
@@ -46109,7 +49210,7 @@ export const inputObjects = {
     plans: {
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
-      date: NetWorthSnapshotInput_dateApply,
+      date: CreditMemoApplicationInput_dateApply,
       description: BillLineInput_descriptionApply,
       destination: MileageLogInput_destinationApply,
       distance: MileageLogInput_distanceApply,
@@ -46127,7 +49228,7 @@ export const inputObjects = {
     plans: {
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
-      date: NetWorthSnapshotInput_dateApply,
+      date: CreditMemoApplicationInput_dateApply,
       description: BillLineInput_descriptionApply,
       destination: MileageLogInput_destinationApply,
       distance: MileageLogInput_distanceApply,
@@ -46172,7 +49273,7 @@ export const inputObjects = {
       bookId: TagGroupInput_bookIdApply,
       breakdown: NetWorthSnapshotInput_breakdownApply,
       createdAt: TagGroupInput_createdAtApply,
-      date: NetWorthSnapshotInput_dateApply,
+      date: CreditMemoApplicationInput_dateApply,
       netWorth: NetWorthSnapshotInput_netWorthApply,
       rowId: JournalLineProjectInput_rowIdApply,
       totalAssets: NetWorthSnapshotInput_totalAssetsApply,
@@ -46185,7 +49286,7 @@ export const inputObjects = {
       bookId: TagGroupInput_bookIdApply,
       breakdown: NetWorthSnapshotInput_breakdownApply,
       createdAt: TagGroupInput_createdAtApply,
-      date: NetWorthSnapshotInput_dateApply,
+      date: CreditMemoApplicationInput_dateApply,
       netWorth: NetWorthSnapshotInput_netWorthApply,
       rowId: JournalLineProjectInput_rowIdApply,
       totalAssets: NetWorthSnapshotInput_totalAssetsApply,
@@ -46407,7 +49508,7 @@ export const inputObjects = {
   RdExpenseInput: {
     baked: createObjectAndApplyChildren,
     plans: {
-      amount: BillLineInput_amountApply,
+      amount: CreditMemoApplicationInput_amountApply,
       bookId: TagGroupInput_bookIdApply,
       category: RdExpenseInput_categoryApply,
       createdAt: TagGroupInput_createdAtApply,
@@ -46423,7 +49524,7 @@ export const inputObjects = {
   RdExpensePatch: {
     baked: createObjectAndApplyChildren,
     plans: {
-      amount: BillLineInput_amountApply,
+      amount: CreditMemoApplicationInput_amountApply,
       bookId: TagGroupInput_bookIdApply,
       category: RdExpenseInput_categoryApply,
       createdAt: TagGroupInput_createdAtApply,
@@ -46609,7 +49710,7 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       accountId: SavingsGoalInput_accountIdApply,
-      amount: BillLineInput_amountApply,
+      amount: CreditMemoApplicationInput_amountApply,
       bookId: TagGroupInput_bookIdApply,
       counterAccountId: RecurringTransactionInput_counterAccountIdApply,
       createdAt: TagGroupInput_createdAtApply,
@@ -46626,7 +49727,7 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       accountId: SavingsGoalInput_accountIdApply,
-      amount: BillLineInput_amountApply,
+      amount: CreditMemoApplicationInput_amountApply,
       bookId: TagGroupInput_bookIdApply,
       counterAccountId: RecurringTransactionInput_counterAccountIdApply,
       createdAt: TagGroupInput_createdAtApply,
@@ -47176,6 +50277,42 @@ export const inputObjects = {
     }
   },
   UpdateConnectedAccountInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateCreditMemoApplicationByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateCreditMemoApplicationInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateCreditMemoByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateCreditMemoInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateCreditMemoLineByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateCreditMemoLineInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
       patch: applyCreateFields
@@ -48405,6 +51542,92 @@ export const enums = {
       },
       ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
       ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply
+    }
+  },
+  CreditMemoApplicationOrderBy: {
+    values: {
+      CREDIT_MEMO_ID_ASC: CreditMemoApplicationOrderBy_CREDIT_MEMO_ID_ASCApply,
+      CREDIT_MEMO_ID_DESC: CreditMemoApplicationOrderBy_CREDIT_MEMO_ID_DESCApply,
+      INVOICE_ID_ASC: InvoiceLineOrderBy_INVOICE_ID_ASCApply,
+      INVOICE_ID_DESC: InvoiceLineOrderBy_INVOICE_ID_DESCApply,
+      PRIMARY_KEY_ASC(queryBuilder) {
+        credit_memo_applicationUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        credit_memo_applicationUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply
+    }
+  },
+  CreditMemoLineOrderBy: {
+    values: {
+      CREDIT_MEMO_ID_ASC: CreditMemoApplicationOrderBy_CREDIT_MEMO_ID_ASCApply,
+      CREDIT_MEMO_ID_DESC: CreditMemoApplicationOrderBy_CREDIT_MEMO_ID_DESCApply,
+      PRIMARY_KEY_ASC(queryBuilder) {
+        credit_memo_lineUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        credit_memo_lineUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply
+    }
+  },
+  CreditMemoOrderBy: {
+    values: {
+      BOOK_ID_ASC: AccountOrderBy_BOOK_ID_ASCApply,
+      BOOK_ID_DESC: AccountOrderBy_BOOK_ID_DESCApply,
+      CUSTOMER_ID_ASC: InvoiceOrderBy_CUSTOMER_ID_ASCApply,
+      CUSTOMER_ID_DESC: InvoiceOrderBy_CUSTOMER_ID_DESCApply,
+      NUMBER_ASC: BillOrderBy_NUMBER_ASCApply,
+      NUMBER_DESC: BillOrderBy_NUMBER_DESCApply,
+      PRIMARY_KEY_ASC(queryBuilder) {
+        credit_memoUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        credit_memoUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply,
+      STATUS_ASC: BillOrderBy_STATUS_ASCApply,
+      STATUS_DESC: BillOrderBy_STATUS_DESCApply
     }
   },
   CryptoAssetOrderBy: {

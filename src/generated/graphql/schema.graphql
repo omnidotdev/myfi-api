@@ -35,6 +35,9 @@ type Query implements Node {
   """Get a single `BookAccess`."""
   bookAccess(rowId: UUID!): BookAccess
 
+  """Get a single `CreditMemoApplication`."""
+  creditMemoApplication(rowId: UUID!): CreditMemoApplication
+
   """Get a single `Tag`."""
   tag(rowId: UUID!): Tag
 
@@ -92,6 +95,9 @@ type Query implements Node {
   """Get a single `Project`."""
   project(rowId: UUID!): Project
 
+  """Get a single `CreditMemoLine`."""
+  creditMemoLine(rowId: UUID!): CreditMemoLine
+
   """Get a single `AmortizationEntry`."""
   amortizationEntry(rowId: UUID!): AmortizationEntry
 
@@ -130,6 +136,9 @@ type Query implements Node {
 
   """Get a single `Vendor`."""
   vendor(rowId: UUID!): Vendor
+
+  """Get a single `CreditMemo`."""
+  creditMemo(rowId: UUID!): CreditMemo
 
   """Get a single `CryptoAsset`."""
   cryptoAsset(rowId: UUID!): CryptoAsset
@@ -203,6 +212,14 @@ type Query implements Node {
     """
     id: ID!
   ): BookAccess
+
+  """Reads a single `CreditMemoApplication` using its globally unique `ID`."""
+  creditMemoApplicationById(
+    """
+    The globally unique `ID` to be used in selecting a single `CreditMemoApplication`.
+    """
+    id: ID!
+  ): CreditMemoApplication
 
   """Reads a single `Tag` using its globally unique `ID`."""
   tagById(
@@ -350,6 +367,14 @@ type Query implements Node {
     id: ID!
   ): Project
 
+  """Reads a single `CreditMemoLine` using its globally unique `ID`."""
+  creditMemoLineById(
+    """
+    The globally unique `ID` to be used in selecting a single `CreditMemoLine`.
+    """
+    id: ID!
+  ): CreditMemoLine
+
   """Reads a single `AmortizationEntry` using its globally unique `ID`."""
   amortizationEntryById(
     """
@@ -441,6 +466,14 @@ type Query implements Node {
     """The globally unique `ID` to be used in selecting a single `Vendor`."""
     id: ID!
   ): Vendor
+
+  """Reads a single `CreditMemo` using its globally unique `ID`."""
+  creditMemoById(
+    """
+    The globally unique `ID` to be used in selecting a single `CreditMemo`.
+    """
+    id: ID!
+  ): CreditMemo
 
   """Reads a single `CryptoAsset` using its globally unique `ID`."""
   cryptoAssetById(
@@ -707,6 +740,40 @@ type Query implements Node {
     """The method to use when ordering `BookAccess`."""
     orderBy: [BookAccessOrderBy!] = [PRIMARY_KEY_ASC]
   ): BookAccessConnection
+
+  """Reads and enables pagination through a set of `CreditMemoApplication`."""
+  creditMemoApplications(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CreditMemoApplicationCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CreditMemoApplicationFilter
+
+    """The method to use when ordering `CreditMemoApplication`."""
+    orderBy: [CreditMemoApplicationOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CreditMemoApplicationConnection
 
   """Reads and enables pagination through a set of `Tag`."""
   tags(
@@ -1358,6 +1425,40 @@ type Query implements Node {
     orderBy: [ProjectOrderBy!] = [PRIMARY_KEY_ASC]
   ): ProjectConnection
 
+  """Reads and enables pagination through a set of `CreditMemoLine`."""
+  creditMemoLines(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CreditMemoLineCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CreditMemoLineFilter
+
+    """The method to use when ordering `CreditMemoLine`."""
+    orderBy: [CreditMemoLineOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CreditMemoLineConnection
+
   """Reads and enables pagination through a set of `AmortizationEntry`."""
   amortizationEntries(
     """Only read the first `n` values of the set."""
@@ -1799,6 +1900,40 @@ type Query implements Node {
     """The method to use when ordering `Vendor`."""
     orderBy: [VendorOrderBy!] = [PRIMARY_KEY_ASC]
   ): VendorConnection
+
+  """Reads and enables pagination through a set of `CreditMemo`."""
+  creditMemos(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CreditMemoCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CreditMemoFilter
+
+    """The method to use when ordering `CreditMemo`."""
+    orderBy: [CreditMemoOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CreditMemoConnection
 
   """Reads and enables pagination through a set of `CryptoAsset`."""
   cryptoAssets(
@@ -3626,6 +3761,40 @@ type Book implements Node {
     """The method to use when ordering `RdExpense`."""
     orderBy: [RdExpenseOrderBy!] = [PRIMARY_KEY_ASC]
   ): RdExpenseConnection!
+
+  """Reads and enables pagination through a set of `CreditMemo`."""
+  creditMemos(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CreditMemoCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CreditMemoFilter
+
+    """The method to use when ordering `CreditMemo`."""
+    orderBy: [CreditMemoOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CreditMemoConnection!
 }
 
 """A connection to a list of `Account` values."""
@@ -4114,6 +4283,12 @@ input BookFilter {
 
   """Some related `rdExpenses` exist."""
   rdExpensesExist: Boolean
+
+  """Filter by the object’s `creditMemos` relation."""
+  creditMemos: BookToManyCreditMemoFilter
+
+  """Some related `creditMemos` exist."""
+  creditMemosExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [BookFilter!]
@@ -6219,6 +6394,12 @@ input CustomerFilter {
   """Some related `estimates` exist."""
   estimatesExist: Boolean
 
+  """Filter by the object’s `creditMemos` relation."""
+  creditMemos: CustomerToManyCreditMemoFilter
+
+  """Some related `creditMemos` exist."""
+  creditMemosExist: Boolean
+
   """Filter by the object’s `book` relation."""
   book: BookFilter
 
@@ -6282,6 +6463,12 @@ input InvoiceFilter {
 
   """Some related `invoicePayments` exist."""
   invoicePaymentsExist: Boolean
+
+  """Filter by the object’s `creditMemoApplications` relation."""
+  creditMemoApplications: InvoiceToManyCreditMemoApplicationFilter
+
+  """Some related `creditMemoApplications` exist."""
+  creditMemoApplicationsExist: Boolean
 
   """Filter by the object’s `book` relation."""
   book: BookFilter
@@ -6515,6 +6702,183 @@ input InvoicePaymentFilter {
 }
 
 """
+A filter to be used against many `CreditMemoApplication` object types. All fields are combined with a logical ‘and.’
+"""
+input InvoiceToManyCreditMemoApplicationFilter {
+  """
+  Every related `CreditMemoApplication` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: CreditMemoApplicationFilter
+
+  """
+  Some related `CreditMemoApplication` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: CreditMemoApplicationFilter
+
+  """
+  No related `CreditMemoApplication` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: CreditMemoApplicationFilter
+}
+
+"""
+A filter to be used against `CreditMemoApplication` object types. All fields are combined with a logical ‘and.’
+"""
+input CreditMemoApplicationFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `creditMemoId` field."""
+  creditMemoId: UUIDFilter
+
+  """Filter by the object’s `invoiceId` field."""
+  invoiceId: UUIDFilter
+
+  """Filter by the object’s `book` relation."""
+  book: BookFilter
+
+  """Filter by the object’s `creditMemo` relation."""
+  creditMemo: CreditMemoFilter
+
+  """Filter by the object’s `invoice` relation."""
+  invoice: InvoiceFilter
+
+  """Checks for all expressions in this list."""
+  and: [CreditMemoApplicationFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [CreditMemoApplicationFilter!]
+
+  """Negates the expression."""
+  not: CreditMemoApplicationFilter
+}
+
+"""
+A filter to be used against `CreditMemo` object types. All fields are combined with a logical ‘and.’
+"""
+input CreditMemoFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `bookId` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s `customerId` field."""
+  customerId: UUIDFilter
+
+  """Filter by the object’s `number` field."""
+  number: StringFilter
+
+  """Filter by the object’s `status` field."""
+  status: StringFilter
+
+  """Filter by the object’s `creditMemoApplications` relation."""
+  creditMemoApplications: CreditMemoToManyCreditMemoApplicationFilter
+
+  """Some related `creditMemoApplications` exist."""
+  creditMemoApplicationsExist: Boolean
+
+  """Filter by the object’s `creditMemoLines` relation."""
+  creditMemoLines: CreditMemoToManyCreditMemoLineFilter
+
+  """Some related `creditMemoLines` exist."""
+  creditMemoLinesExist: Boolean
+
+  """Filter by the object’s `book` relation."""
+  book: BookFilter
+
+  """Filter by the object’s `customer` relation."""
+  customer: CustomerFilter
+
+  """Filter by the object’s `journalEntry` relation."""
+  journalEntry: JournalEntryFilter
+
+  """A related `journalEntry` exists."""
+  journalEntryExists: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [CreditMemoFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [CreditMemoFilter!]
+
+  """Negates the expression."""
+  not: CreditMemoFilter
+}
+
+"""
+A filter to be used against many `CreditMemoApplication` object types. All fields are combined with a logical ‘and.’
+"""
+input CreditMemoToManyCreditMemoApplicationFilter {
+  """
+  Every related `CreditMemoApplication` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: CreditMemoApplicationFilter
+
+  """
+  Some related `CreditMemoApplication` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: CreditMemoApplicationFilter
+
+  """
+  No related `CreditMemoApplication` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: CreditMemoApplicationFilter
+}
+
+"""
+A filter to be used against many `CreditMemoLine` object types. All fields are combined with a logical ‘and.’
+"""
+input CreditMemoToManyCreditMemoLineFilter {
+  """
+  Every related `CreditMemoLine` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: CreditMemoLineFilter
+
+  """
+  Some related `CreditMemoLine` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: CreditMemoLineFilter
+
+  """
+  No related `CreditMemoLine` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: CreditMemoLineFilter
+}
+
+"""
+A filter to be used against `CreditMemoLine` object types. All fields are combined with a logical ‘and.’
+"""
+input CreditMemoLineFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `creditMemoId` field."""
+  creditMemoId: UUIDFilter
+
+  """Filter by the object’s `creditMemo` relation."""
+  creditMemo: CreditMemoFilter
+
+  """Filter by the object’s `incomeAccount` relation."""
+  incomeAccount: AccountFilter
+
+  """Filter by the object’s `taxJurisdiction` relation."""
+  taxJurisdiction: TaxJurisdictionFilter
+
+  """A related `taxJurisdiction` exists."""
+  taxJurisdictionExists: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [CreditMemoLineFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [CreditMemoLineFilter!]
+
+  """Negates the expression."""
+  not: CreditMemoLineFilter
+}
+
+"""
 A filter to be used against many `Estimate` object types. All fields are combined with a logical ‘and.’
 """
 input CustomerToManyEstimateFilter {
@@ -6631,6 +6995,26 @@ input EstimateLineFilter {
 
   """Negates the expression."""
   not: EstimateLineFilter
+}
+
+"""
+A filter to be used against many `CreditMemo` object types. All fields are combined with a logical ‘and.’
+"""
+input CustomerToManyCreditMemoFilter {
+  """
+  Every related `CreditMemo` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: CreditMemoFilter
+
+  """
+  Some related `CreditMemo` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: CreditMemoFilter
+
+  """
+  No related `CreditMemo` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: CreditMemoFilter
 }
 
 """
@@ -6967,6 +7351,26 @@ input BookToManyRdExpenseFilter {
   No related `RdExpense` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
   none: RdExpenseFilter
+}
+
+"""
+A filter to be used against many `CreditMemo` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyCreditMemoFilter {
+  """
+  Every related `CreditMemo` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: CreditMemoFilter
+
+  """
+  Some related `CreditMemo` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: CreditMemoFilter
+
+  """
+  No related `CreditMemo` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: CreditMemoFilter
 }
 
 """
@@ -10140,6 +10544,40 @@ type Customer implements Node {
     """The method to use when ordering `Estimate`."""
     orderBy: [EstimateOrderBy!] = [PRIMARY_KEY_ASC]
   ): EstimateConnection!
+
+  """Reads and enables pagination through a set of `CreditMemo`."""
+  creditMemos(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CreditMemoCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CreditMemoFilter
+
+    """The method to use when ordering `CreditMemo`."""
+    orderBy: [CreditMemoOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CreditMemoConnection!
 }
 
 """A connection to a list of `Invoice` values."""
@@ -10258,6 +10696,40 @@ type Invoice implements Node {
     """The method to use when ordering `InvoicePayment`."""
     orderBy: [InvoicePaymentOrderBy!] = [PRIMARY_KEY_ASC]
   ): InvoicePaymentConnection!
+
+  """Reads and enables pagination through a set of `CreditMemoApplication`."""
+  creditMemoApplications(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CreditMemoApplicationCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CreditMemoApplicationFilter
+
+    """The method to use when ordering `CreditMemoApplication`."""
+    orderBy: [CreditMemoApplicationOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CreditMemoApplicationConnection!
 }
 
 """A connection to a list of `InvoiceLine` values."""
@@ -10579,6 +11051,265 @@ enum InvoicePaymentOrderBy {
   INVOICE_ID_DESC
 }
 
+"""A connection to a list of `CreditMemoApplication` values."""
+type CreditMemoApplicationConnection {
+  """A list of `CreditMemoApplication` objects."""
+  nodes: [CreditMemoApplication]!
+
+  """
+  A list of edges which contains the `CreditMemoApplication` and cursor to aid in pagination.
+  """
+  edges: [CreditMemoApplicationEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `CreditMemoApplication` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+type CreditMemoApplication implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  creditMemoId: UUID!
+  invoiceId: UUID!
+  amount: BigFloat!
+  date: String!
+  createdAt: Datetime
+
+  """Reads a single `Book` that is related to this `CreditMemoApplication`."""
+  book: Book
+
+  """
+  Reads a single `CreditMemo` that is related to this `CreditMemoApplication`.
+  """
+  creditMemo: CreditMemo
+
+  """
+  Reads a single `Invoice` that is related to this `CreditMemoApplication`.
+  """
+  invoice: Invoice
+}
+
+type CreditMemo implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  customerId: UUID!
+  number: String!
+  status: String!
+  date: String!
+  subtotal: BigFloat!
+  taxAmount: BigFloat!
+  total: BigFloat!
+  amountApplied: BigFloat!
+  currency: String!
+  memo: String
+  journalEntryId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """Reads a single `Book` that is related to this `CreditMemo`."""
+  book: Book
+
+  """Reads a single `Customer` that is related to this `CreditMemo`."""
+  customer: Customer
+
+  """Reads a single `JournalEntry` that is related to this `CreditMemo`."""
+  journalEntry: JournalEntry
+
+  """Reads and enables pagination through a set of `CreditMemoApplication`."""
+  creditMemoApplications(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CreditMemoApplicationCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CreditMemoApplicationFilter
+
+    """The method to use when ordering `CreditMemoApplication`."""
+    orderBy: [CreditMemoApplicationOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CreditMemoApplicationConnection!
+
+  """Reads and enables pagination through a set of `CreditMemoLine`."""
+  creditMemoLines(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CreditMemoLineCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CreditMemoLineFilter
+
+    """The method to use when ordering `CreditMemoLine`."""
+    orderBy: [CreditMemoLineOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CreditMemoLineConnection!
+}
+
+"""
+A condition to be used against `CreditMemoApplication` object types. All fields
+are tested for equality and combined with a logical ‘and.’
+"""
+input CreditMemoApplicationCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `creditMemoId` field."""
+  creditMemoId: UUID
+
+  """Checks for equality with the object’s `invoiceId` field."""
+  invoiceId: UUID
+}
+
+"""Methods to use when ordering `CreditMemoApplication`."""
+enum CreditMemoApplicationOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  CREDIT_MEMO_ID_ASC
+  CREDIT_MEMO_ID_DESC
+  INVOICE_ID_ASC
+  INVOICE_ID_DESC
+}
+
+"""A connection to a list of `CreditMemoLine` values."""
+type CreditMemoLineConnection {
+  """A list of `CreditMemoLine` objects."""
+  nodes: [CreditMemoLine]!
+
+  """
+  A list of edges which contains the `CreditMemoLine` and cursor to aid in pagination.
+  """
+  edges: [CreditMemoLineEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `CreditMemoLine` you could get from the connection."""
+  totalCount: Int!
+}
+
+type CreditMemoLine implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  creditMemoId: UUID!
+  description: String!
+  quantity: BigFloat!
+  unitPrice: BigFloat!
+  amount: BigFloat!
+  discountPercent: BigFloat
+  incomeAccountId: UUID!
+  taxJurisdictionId: UUID
+  sortOrder: Int!
+
+  """Reads a single `CreditMemo` that is related to this `CreditMemoLine`."""
+  creditMemo: CreditMemo
+
+  """Reads a single `Account` that is related to this `CreditMemoLine`."""
+  incomeAccount: Account
+
+  """
+  Reads a single `TaxJurisdiction` that is related to this `CreditMemoLine`.
+  """
+  taxJurisdiction: TaxJurisdiction
+}
+
+"""A `CreditMemoLine` edge in the connection."""
+type CreditMemoLineEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `CreditMemoLine` at the end of the edge."""
+  node: CreditMemoLine
+}
+
+"""
+A condition to be used against `CreditMemoLine` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input CreditMemoLineCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `creditMemoId` field."""
+  creditMemoId: UUID
+}
+
+"""Methods to use when ordering `CreditMemoLine`."""
+enum CreditMemoLineOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  CREDIT_MEMO_ID_ASC
+  CREDIT_MEMO_ID_DESC
+}
+
+"""A `CreditMemoApplication` edge in the connection."""
+type CreditMemoApplicationEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `CreditMemoApplication` at the end of the edge."""
+  node: CreditMemoApplication
+}
+
 """A `Invoice` edge in the connection."""
 type InvoiceEdge {
   """A cursor for use in pagination."""
@@ -10814,6 +11545,70 @@ input EstimateCondition {
 
 """Methods to use when ordering `Estimate`."""
 enum EstimateOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+  CUSTOMER_ID_ASC
+  CUSTOMER_ID_DESC
+  NUMBER_ASC
+  NUMBER_DESC
+  STATUS_ASC
+  STATUS_DESC
+}
+
+"""A connection to a list of `CreditMemo` values."""
+type CreditMemoConnection {
+  """A list of `CreditMemo` objects."""
+  nodes: [CreditMemo]!
+
+  """
+  A list of edges which contains the `CreditMemo` and cursor to aid in pagination.
+  """
+  edges: [CreditMemoEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `CreditMemo` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `CreditMemo` edge in the connection."""
+type CreditMemoEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `CreditMemo` at the end of the edge."""
+  node: CreditMemo
+}
+
+"""
+A condition to be used against `CreditMemo` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input CreditMemoCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `bookId` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s `customerId` field."""
+  customerId: UUID
+
+  """Checks for equality with the object’s `number` field."""
+  number: String
+
+  """Checks for equality with the object’s `status` field."""
+  status: String
+}
+
+"""Methods to use when ordering `CreditMemo`."""
+enum CreditMemoOrderBy {
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
@@ -11434,6 +12229,14 @@ type Mutation {
     input: CreateBookAccessInput!
   ): CreateBookAccessPayload
 
+  """Creates a single `CreditMemoApplication`."""
+  createCreditMemoApplication(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateCreditMemoApplicationInput!
+  ): CreateCreditMemoApplicationPayload
+
   """Creates a single `Tag`."""
   createTag(
     """
@@ -11586,6 +12389,14 @@ type Mutation {
     input: CreateProjectInput!
   ): CreateProjectPayload
 
+  """Creates a single `CreditMemoLine`."""
+  createCreditMemoLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateCreditMemoLineInput!
+  ): CreateCreditMemoLinePayload
+
   """Creates a single `AmortizationEntry`."""
   createAmortizationEntry(
     """
@@ -11689,6 +12500,14 @@ type Mutation {
     """
     input: CreateVendorInput!
   ): CreateVendorPayload
+
+  """Creates a single `CreditMemo`."""
+  createCreditMemo(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateCreditMemoInput!
+  ): CreateCreditMemoPayload
 
   """Creates a single `CryptoAsset`."""
   createCryptoAsset(
@@ -11867,6 +12686,26 @@ type Mutation {
     """
     input: UpdateBookAccessInput!
   ): UpdateBookAccessPayload
+
+  """
+  Updates a single `CreditMemoApplication` using its globally unique id and a patch.
+  """
+  updateCreditMemoApplicationById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateCreditMemoApplicationByIdInput!
+  ): UpdateCreditMemoApplicationPayload
+
+  """
+  Updates a single `CreditMemoApplication` using a unique key and a patch.
+  """
+  updateCreditMemoApplication(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateCreditMemoApplicationInput!
+  ): UpdateCreditMemoApplicationPayload
 
   """Updates a single `Tag` using its globally unique id and a patch."""
   updateTagById(
@@ -12207,6 +13046,24 @@ type Mutation {
   ): UpdateProjectPayload
 
   """
+  Updates a single `CreditMemoLine` using its globally unique id and a patch.
+  """
+  updateCreditMemoLineById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateCreditMemoLineByIdInput!
+  ): UpdateCreditMemoLinePayload
+
+  """Updates a single `CreditMemoLine` using a unique key and a patch."""
+  updateCreditMemoLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateCreditMemoLineInput!
+  ): UpdateCreditMemoLinePayload
+
+  """
   Updates a single `AmortizationEntry` using its globally unique id and a patch.
   """
   updateAmortizationEntryById(
@@ -12427,6 +13284,24 @@ type Mutation {
     """
     input: UpdateVendorInput!
   ): UpdateVendorPayload
+
+  """
+  Updates a single `CreditMemo` using its globally unique id and a patch.
+  """
+  updateCreditMemoById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateCreditMemoByIdInput!
+  ): UpdateCreditMemoPayload
+
+  """Updates a single `CreditMemo` using a unique key and a patch."""
+  updateCreditMemo(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateCreditMemoInput!
+  ): UpdateCreditMemoPayload
 
   """
   Updates a single `CryptoAsset` using its globally unique id and a patch.
@@ -12677,6 +13552,22 @@ type Mutation {
     """
     input: DeleteBookAccessInput!
   ): DeleteBookAccessPayload
+
+  """Deletes a single `CreditMemoApplication` using its globally unique id."""
+  deleteCreditMemoApplicationById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCreditMemoApplicationByIdInput!
+  ): DeleteCreditMemoApplicationPayload
+
+  """Deletes a single `CreditMemoApplication` using a unique key."""
+  deleteCreditMemoApplication(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCreditMemoApplicationInput!
+  ): DeleteCreditMemoApplicationPayload
 
   """Deletes a single `Tag` using its globally unique id."""
   deleteTagById(
@@ -12986,6 +13877,22 @@ type Mutation {
     input: DeleteProjectInput!
   ): DeleteProjectPayload
 
+  """Deletes a single `CreditMemoLine` using its globally unique id."""
+  deleteCreditMemoLineById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCreditMemoLineByIdInput!
+  ): DeleteCreditMemoLinePayload
+
+  """Deletes a single `CreditMemoLine` using a unique key."""
+  deleteCreditMemoLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCreditMemoLineInput!
+  ): DeleteCreditMemoLinePayload
+
   """Deletes a single `AmortizationEntry` using its globally unique id."""
   deleteAmortizationEntryById(
     """
@@ -13193,6 +14100,22 @@ type Mutation {
     """
     input: DeleteVendorInput!
   ): DeleteVendorPayload
+
+  """Deletes a single `CreditMemo` using its globally unique id."""
+  deleteCreditMemoById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCreditMemoByIdInput!
+  ): DeleteCreditMemoPayload
+
+  """Deletes a single `CreditMemo` using a unique key."""
+  deleteCreditMemo(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCreditMemoInput!
+  ): DeleteCreditMemoPayload
 
   """Deletes a single `CryptoAsset` using its globally unique id."""
   deleteCryptoAssetById(
@@ -13597,6 +14520,52 @@ input BookAccessInput {
   role: String!
   invitedBy: String
   invitedAt: Datetime
+  createdAt: Datetime
+}
+
+"""The output of our create `CreditMemoApplication` mutation."""
+type CreateCreditMemoApplicationPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `CreditMemoApplication` that was created by this mutation."""
+  creditMemoApplication: CreditMemoApplication
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `CreditMemoApplication`. May be used by Relay 1."""
+  creditMemoApplicationEdge(
+    """The method to use when ordering `CreditMemoApplication`."""
+    orderBy: [CreditMemoApplicationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CreditMemoApplicationEdge
+}
+
+"""All input for the create `CreditMemoApplication` mutation."""
+input CreateCreditMemoApplicationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `CreditMemoApplication` to be created by this mutation."""
+  creditMemoApplication: CreditMemoApplicationInput!
+}
+
+"""An input for mutations affecting `CreditMemoApplication`"""
+input CreditMemoApplicationInput {
+  rowId: UUID
+  bookId: UUID!
+  creditMemoId: UUID!
+  invoiceId: UUID!
+  amount: BigFloat!
+  date: String!
   createdAt: Datetime
 }
 
@@ -14514,6 +15483,55 @@ input ProjectInput {
   updatedAt: Datetime
 }
 
+"""The output of our create `CreditMemoLine` mutation."""
+type CreateCreditMemoLinePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `CreditMemoLine` that was created by this mutation."""
+  creditMemoLine: CreditMemoLine
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `CreditMemoLine`. May be used by Relay 1."""
+  creditMemoLineEdge(
+    """The method to use when ordering `CreditMemoLine`."""
+    orderBy: [CreditMemoLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CreditMemoLineEdge
+}
+
+"""All input for the create `CreditMemoLine` mutation."""
+input CreateCreditMemoLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `CreditMemoLine` to be created by this mutation."""
+  creditMemoLine: CreditMemoLineInput!
+}
+
+"""An input for mutations affecting `CreditMemoLine`"""
+input CreditMemoLineInput {
+  rowId: UUID
+  creditMemoId: UUID!
+  description: String!
+  quantity: BigFloat
+  unitPrice: BigFloat
+  amount: BigFloat
+  discountPercent: BigFloat
+  incomeAccountId: UUID!
+  taxJurisdictionId: UUID
+  sortOrder: Int
+}
+
 """The output of our create `AmortizationEntry` mutation."""
 type CreateAmortizationEntryPayload {
   """
@@ -15178,6 +16196,60 @@ input VendorInput {
   is1099Eligible: Boolean
   threshold: BigFloat
   createdAt: Datetime
+}
+
+"""The output of our create `CreditMemo` mutation."""
+type CreateCreditMemoPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `CreditMemo` that was created by this mutation."""
+  creditMemo: CreditMemo
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `CreditMemo`. May be used by Relay 1."""
+  creditMemoEdge(
+    """The method to use when ordering `CreditMemo`."""
+    orderBy: [CreditMemoOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CreditMemoEdge
+}
+
+"""All input for the create `CreditMemo` mutation."""
+input CreateCreditMemoInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `CreditMemo` to be created by this mutation."""
+  creditMemo: CreditMemoInput!
+}
+
+"""An input for mutations affecting `CreditMemo`"""
+input CreditMemoInput {
+  rowId: UUID
+  bookId: UUID!
+  customerId: UUID!
+  number: String!
+  status: String
+  date: String!
+  subtotal: BigFloat
+  taxAmount: BigFloat
+  total: BigFloat
+  amountApplied: BigFloat
+  currency: String
+  memo: String
+  journalEntryId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
 }
 
 """The output of our create `CryptoAsset` mutation."""
@@ -16067,6 +17139,76 @@ input UpdateBookAccessInput {
   An object where the defined keys will be set on the `BookAccess` being updated.
   """
   patch: BookAccessPatch!
+}
+
+"""The output of our update `CreditMemoApplication` mutation."""
+type UpdateCreditMemoApplicationPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `CreditMemoApplication` that was updated by this mutation."""
+  creditMemoApplication: CreditMemoApplication
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `CreditMemoApplication`. May be used by Relay 1."""
+  creditMemoApplicationEdge(
+    """The method to use when ordering `CreditMemoApplication`."""
+    orderBy: [CreditMemoApplicationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CreditMemoApplicationEdge
+}
+
+"""All input for the `updateCreditMemoApplicationById` mutation."""
+input UpdateCreditMemoApplicationByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `CreditMemoApplication` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `CreditMemoApplication` being updated.
+  """
+  patch: CreditMemoApplicationPatch!
+}
+
+"""
+Represents an update to a `CreditMemoApplication`. Fields that are set will be updated.
+"""
+input CreditMemoApplicationPatch {
+  rowId: UUID
+  bookId: UUID
+  creditMemoId: UUID
+  invoiceId: UUID
+  amount: BigFloat
+  date: String
+  createdAt: Datetime
+}
+
+"""All input for the `updateCreditMemoApplication` mutation."""
+input UpdateCreditMemoApplicationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `CreditMemoApplication` being updated.
+  """
+  patch: CreditMemoApplicationPatch!
 }
 
 """The output of our update `Tag` mutation."""
@@ -17437,6 +18579,79 @@ input UpdateProjectInput {
   patch: ProjectPatch!
 }
 
+"""The output of our update `CreditMemoLine` mutation."""
+type UpdateCreditMemoLinePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `CreditMemoLine` that was updated by this mutation."""
+  creditMemoLine: CreditMemoLine
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `CreditMemoLine`. May be used by Relay 1."""
+  creditMemoLineEdge(
+    """The method to use when ordering `CreditMemoLine`."""
+    orderBy: [CreditMemoLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CreditMemoLineEdge
+}
+
+"""All input for the `updateCreditMemoLineById` mutation."""
+input UpdateCreditMemoLineByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `CreditMemoLine` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `CreditMemoLine` being updated.
+  """
+  patch: CreditMemoLinePatch!
+}
+
+"""
+Represents an update to a `CreditMemoLine`. Fields that are set will be updated.
+"""
+input CreditMemoLinePatch {
+  rowId: UUID
+  creditMemoId: UUID
+  description: String
+  quantity: BigFloat
+  unitPrice: BigFloat
+  amount: BigFloat
+  discountPercent: BigFloat
+  incomeAccountId: UUID
+  taxJurisdictionId: UUID
+  sortOrder: Int
+}
+
+"""All input for the `updateCreditMemoLine` mutation."""
+input UpdateCreditMemoLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `CreditMemoLine` being updated.
+  """
+  patch: CreditMemoLinePatch!
+}
+
 """The output of our update `AmortizationEntry` mutation."""
 type UpdateAmortizationEntryPayload {
   """
@@ -18413,6 +19628,84 @@ input UpdateVendorInput {
   An object where the defined keys will be set on the `Vendor` being updated.
   """
   patch: VendorPatch!
+}
+
+"""The output of our update `CreditMemo` mutation."""
+type UpdateCreditMemoPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `CreditMemo` that was updated by this mutation."""
+  creditMemo: CreditMemo
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `CreditMemo`. May be used by Relay 1."""
+  creditMemoEdge(
+    """The method to use when ordering `CreditMemo`."""
+    orderBy: [CreditMemoOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CreditMemoEdge
+}
+
+"""All input for the `updateCreditMemoById` mutation."""
+input UpdateCreditMemoByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `CreditMemo` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `CreditMemo` being updated.
+  """
+  patch: CreditMemoPatch!
+}
+
+"""
+Represents an update to a `CreditMemo`. Fields that are set will be updated.
+"""
+input CreditMemoPatch {
+  rowId: UUID
+  bookId: UUID
+  customerId: UUID
+  number: String
+  status: String
+  date: String
+  subtotal: BigFloat
+  taxAmount: BigFloat
+  total: BigFloat
+  amountApplied: BigFloat
+  currency: String
+  memo: String
+  journalEntryId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the `updateCreditMemo` mutation."""
+input UpdateCreditMemoInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `CreditMemo` being updated.
+  """
+  patch: CreditMemoPatch!
 }
 
 """The output of our update `CryptoAsset` mutation."""
@@ -19397,6 +20690,54 @@ input DeleteBookAccessInput {
   rowId: UUID!
 }
 
+"""The output of our delete `CreditMemoApplication` mutation."""
+type DeleteCreditMemoApplicationPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `CreditMemoApplication` that was deleted by this mutation."""
+  creditMemoApplication: CreditMemoApplication
+  deletedCreditMemoApplicationId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `CreditMemoApplication`. May be used by Relay 1."""
+  creditMemoApplicationEdge(
+    """The method to use when ordering `CreditMemoApplication`."""
+    orderBy: [CreditMemoApplicationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CreditMemoApplicationEdge
+}
+
+"""All input for the `deleteCreditMemoApplicationById` mutation."""
+input DeleteCreditMemoApplicationByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `CreditMemoApplication` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteCreditMemoApplication` mutation."""
+input DeleteCreditMemoApplicationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete `Tag` mutation."""
 type DeleteTagPayload {
   """
@@ -20309,6 +21650,54 @@ input DeleteProjectInput {
   rowId: UUID!
 }
 
+"""The output of our delete `CreditMemoLine` mutation."""
+type DeleteCreditMemoLinePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `CreditMemoLine` that was deleted by this mutation."""
+  creditMemoLine: CreditMemoLine
+  deletedCreditMemoLineId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `CreditMemoLine`. May be used by Relay 1."""
+  creditMemoLineEdge(
+    """The method to use when ordering `CreditMemoLine`."""
+    orderBy: [CreditMemoLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CreditMemoLineEdge
+}
+
+"""All input for the `deleteCreditMemoLineById` mutation."""
+input DeleteCreditMemoLineByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `CreditMemoLine` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteCreditMemoLine` mutation."""
+input DeleteCreditMemoLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete `AmortizationEntry` mutation."""
 type DeleteAmortizationEntryPayload {
   """
@@ -20925,6 +22314,54 @@ input DeleteVendorByIdInput {
 
 """All input for the `deleteVendor` mutation."""
 input DeleteVendorInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `CreditMemo` mutation."""
+type DeleteCreditMemoPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `CreditMemo` that was deleted by this mutation."""
+  creditMemo: CreditMemo
+  deletedCreditMemoId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `CreditMemo`. May be used by Relay 1."""
+  creditMemoEdge(
+    """The method to use when ordering `CreditMemo`."""
+    orderBy: [CreditMemoOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CreditMemoEdge
+}
+
+"""All input for the `deleteCreditMemoById` mutation."""
+input DeleteCreditMemoByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `CreditMemo` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteCreditMemo` mutation."""
+input DeleteCreditMemoInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.

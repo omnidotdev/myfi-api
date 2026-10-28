@@ -11,6 +11,7 @@ import { schema } from "generated/graphql/schema.executable";
 import { useGrafast } from "grafast/envelop";
 
 import billRoutes from "lib/billing/billRoutes";
+import creditMemoRoutes from "lib/creditMemo/creditMemoRoutes";
 import generateBudgetTracking from "lib/budgets/budgetTracking";
 import { runMonthlyClose } from "lib/close";
 import startScheduledClose from "lib/close/scheduledClose";
@@ -225,6 +226,7 @@ const app = new Elysia()
   .use(importRoutes)
   .use(invoiceRoutes)
   .use(billRoutes)
+  .use(creditMemoRoutes)
   .use(estimateRoutes)
   .use(inventoryRoutes)
   .use(recurringRoutes)
