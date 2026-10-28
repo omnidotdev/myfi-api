@@ -90,11 +90,17 @@ const buildPeriods = (
 
 /**
  * Query credit and debit sums for a tax payable account within a date range.
+ * When the account is shared by more than one jurisdiction, restrict to lines
+ * tagged with this jurisdiction so each jurisdiction sees only its own tax
+ * rather than the account's combined total. When the account is dedicated to a
+ * single jurisdiction, count every line on it (including legacy untagged tax
+ * credits and manual remittances) so there is no regression for the common case
  */
 const queryPeriodTotals = async (
   accountId: string,
   startDate: string,
   endDate: string,
+  attribution: { jurisdictionId: string; shared: boolean },
 ): Promise<{ credits: string; debits: string }> => {
   const [result] = await dbPool
     .select({
@@ -112,6 +118,9 @@ const queryPeriodTotals = async (
         // Cast the timestamptz to a calendar date so an entry with a time-of-day
         // on the last day of the period is not dropped
         sql`${journalEntryTable.date}::date between ${startDate} and ${endDate}`,
+        attribution.shared
+          ? eq(journalLineTable.taxJurisdictionId, attribution.jurisdictionId)
+          : undefined,
       ),
     );
 
@@ -146,11 +155,27 @@ const generateSalesTaxReport = async (params: {
     .from(taxJurisdictionTable)
     .where(conditions);
 
+  // Detect payable accounts shared by more than one jurisdiction, across ALL of
+  // the book's jurisdictions (not just the filtered set), so a single-jurisdiction
+  // report still knows whether its account is shared
+  const accountUsage = new Map<string, number>();
+  const bookJurisdictions = await dbPool
+    .select({ taxPayableAccountId: taxJurisdictionTable.taxPayableAccountId })
+    .from(taxJurisdictionTable)
+    .where(eq(taxJurisdictionTable.bookId, bookId));
+  for (const j of bookJurisdictions) {
+    accountUsage.set(
+      j.taxPayableAccountId,
+      (accountUsage.get(j.taxPayableAccountId) ?? 0) + 1,
+    );
+  }
+
   const result: SalesTaxJurisdiction[] = [];
 
   for (const jur of jurisdictions) {
     const periods = buildPeriods(year, jur.filingFrequency);
     const periodResults: SalesTaxPeriod[] = [];
+    const shared = (accountUsage.get(jur.taxPayableAccountId) ?? 1) > 1;
 
     let totalCollected = 0;
     let totalRemitted = 0;
@@ -161,6 +186,7 @@ const generateSalesTaxReport = async (params: {
         jur.taxPayableAccountId,
         period.startDate,
         period.endDate,
+        { jurisdictionId: jur.id, shared },
       );
 
       // Credits to the tax-payable account are tax collected on sales; debits

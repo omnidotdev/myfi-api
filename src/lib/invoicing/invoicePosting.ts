@@ -30,6 +30,8 @@ export interface PricedLine {
   incomeAccountId: string;
   /** Liability account the line's tax credits, required when taxAmount is non-zero */
   taxPayableAccountId?: string | null;
+  /** Jurisdiction the line's tax belongs to, tagged onto the tax posting */
+  taxJurisdictionId?: string | null;
 }
 
 interface InvoiceTotals {
@@ -58,15 +60,18 @@ interface Posting {
   accountId: string;
   debit: number;
   credit: number;
+  /** Set on tax-payable credits so collected tax is attributable per jurisdiction */
+  taxJurisdictionId?: string | null;
 }
 
 /**
  * Build the balanced double-entry postings for an invoice: debit Accounts
  * Receivable for the full total, credit each income account for its line
  * revenue, and credit each tax jurisdiction's payable account for its tax.
- * Credits are consolidated per account so an invoice with several lines on one
- * income account produces a single credit line. Throws if the result does not
- * balance, which is the invariant every ledger write must hold
+ * Income credits are consolidated per account, and tax credits per account AND
+ * jurisdiction, so two jurisdictions sharing one payable account still post
+ * separate, attributable tax credits. Throws if the result does not balance,
+ * which is the invariant every ledger write must hold
  */
 export const buildInvoicePostings = (opts: {
   arAccountId: string;
@@ -77,15 +82,21 @@ export const buildInvoicePostings = (opts: {
     throw new Error("Invoice has no lines to post");
   }
 
-  const creditUnits = new Map<string, number>();
-  const addCredit = (accountId: string, units: number) => {
-    creditUnits.set(accountId, (creditUnits.get(accountId) ?? 0) + units);
-  };
+  const incomeUnits = new Map<string, number>();
+  // Tax credits keyed by account + jurisdiction so a shared payable account does
+  // not merge two jurisdictions' tax into one untraceable credit
+  const taxUnits = new Map<
+    string,
+    { accountId: string; taxJurisdictionId: string | null; units: number }
+  >();
 
   let debitUnits = 0;
   for (const line of lines) {
     const amount = toUnits(line.amount);
-    addCredit(line.incomeAccountId, amount);
+    incomeUnits.set(
+      line.incomeAccountId,
+      (incomeUnits.get(line.incomeAccountId) ?? 0) + amount,
+    );
     debitUnits += amount;
 
     const tax = toUnits(line.taxAmount);
@@ -93,7 +104,18 @@ export const buildInvoicePostings = (opts: {
       if (!line.taxPayableAccountId) {
         throw new Error("A taxed line has no tax payable account");
       }
-      addCredit(line.taxPayableAccountId, tax);
+      const jurisdictionId = line.taxJurisdictionId ?? null;
+      const key = `${line.taxPayableAccountId}\u0000${jurisdictionId ?? ""}`;
+      const existing = taxUnits.get(key);
+      if (existing) {
+        existing.units += tax;
+      } else {
+        taxUnits.set(key, {
+          accountId: line.taxPayableAccountId,
+          taxJurisdictionId: jurisdictionId,
+          units: tax,
+        });
+      }
       debitUnits += tax;
     }
   }
@@ -102,8 +124,17 @@ export const buildInvoicePostings = (opts: {
     { accountId: arAccountId, debit: fromUnits(debitUnits), credit: 0 },
   ];
   let totalCredit = 0;
-  for (const [accountId, units] of creditUnits) {
+  for (const [accountId, units] of incomeUnits) {
     postings.push({ accountId, debit: 0, credit: fromUnits(units) });
+    totalCredit += units;
+  }
+  for (const { accountId, taxJurisdictionId, units } of taxUnits.values()) {
+    postings.push({
+      accountId,
+      debit: 0,
+      credit: fromUnits(units),
+      taxJurisdictionId,
+    });
     totalCredit += units;
   }
 

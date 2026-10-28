@@ -88,6 +88,7 @@ export const postInvoice = async (
       unitPrice: invoiceLineTable.unitPrice,
       incomeAccountId: invoiceLineTable.incomeAccountId,
       inventoryItemId: invoiceLineTable.inventoryItemId,
+      taxJurisdictionId: invoiceLineTable.taxJurisdictionId,
       taxRate: taxJurisdictionTable.rate,
       taxPayableAccountId: taxJurisdictionTable.taxPayableAccountId,
     })
@@ -135,6 +136,7 @@ export const postInvoice = async (
       taxAmount,
       incomeAccountId: row.incomeAccountId,
       taxPayableAccountId: row.taxPayableAccountId,
+      taxJurisdictionId: row.taxJurisdictionId,
     };
   });
 
@@ -217,6 +219,7 @@ export const postInvoice = async (
         accountId: posting.accountId,
         debit: posting.debit.toFixed(4),
         credit: posting.credit.toFixed(4),
+        taxJurisdictionId: posting.taxJurisdictionId ?? null,
       } satisfies InferInsertModel<typeof journalLineTable>);
     }
 

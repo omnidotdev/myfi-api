@@ -104,7 +104,7 @@ const spec_journalLineProject = {
     }
   },
   extensions: {
-    oid: "17706",
+    oid: "18006",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -154,7 +154,7 @@ const spec_journalLineTag = {
     }
   },
   extensions: {
-    oid: "16984",
+    oid: "17093",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -216,7 +216,7 @@ const spec_tagGroup = {
     }
   },
   extensions: {
-    oid: "17000",
+    oid: "17116",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -361,7 +361,7 @@ const spec_accountMapping = {
     }
   },
   extensions: {
-    oid: "16553",
+    oid: "16561",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -454,7 +454,7 @@ const spec_bookAccess = {
     }
   },
   extensions: {
-    oid: "17102",
+    oid: "17234",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -538,7 +538,7 @@ const spec_tag = {
     }
   },
   extensions: {
-    oid: "16990",
+    oid: "17102",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -642,7 +642,7 @@ const spec_taxJurisdiction = {
     }
   },
   extensions: {
-    oid: "17063",
+    oid: "17186",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -744,7 +744,7 @@ const spec_vehicle = {
     }
   },
   extensions: {
-    oid: "17161",
+    oid: "17312",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -755,102 +755,6 @@ const spec_vehicle = {
   executor: executor
 };
 const vehicleCodec = recordCodec(spec_vehicle);
-const journalLineIdentifier = sql.identifier("public", "journal_line");
-const spec_journalLine = {
-  name: "journalLine",
-  identifier: journalLineIdentifier,
-  attributes: {
-    __proto__: null,
-    id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    journal_entry_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    account_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    debit: {
-      codec: TYPES.numeric,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    credit: {
-      codec: TYPES.numeric,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    memo: {
-      codec: TYPES.text,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    cleared: {
-      codec: TYPES.boolean,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    }
-  },
-  extensions: {
-    oid: "16627",
-    isTableLike: true,
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "journal_line"
-    }
-  },
-  executor: executor
-};
-const journalLineCodec = recordCodec(spec_journalLine);
 const savingsGoalIdentifier = sql.identifier("public", "savings_goal");
 const spec_savingsGoal = {
   name: "savingsGoal",
@@ -945,7 +849,7 @@ const spec_savingsGoal = {
     }
   },
   extensions: {
-    oid: "16668",
+    oid: "16738",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1042,7 +946,7 @@ const spec_importProfile = {
     }
   },
   extensions: {
-    oid: "17191",
+    oid: "17345",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1053,6 +957,111 @@ const spec_importProfile = {
   executor: executor
 };
 const importProfileCodec = recordCodec(spec_importProfile);
+const journalLineIdentifier = sql.identifier("public", "journal_line");
+const spec_journalLine = {
+  name: "journalLine",
+  identifier: journalLineIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    journal_entry_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    account_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    debit: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    credit: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    memo: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    cleared: {
+      codec: TYPES.boolean,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    tax_jurisdiction_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    }
+  },
+  extensions: {
+    oid: "16674",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "journal_line"
+    }
+  },
+  executor: executor
+};
+const journalLineCodec = recordCodec(spec_journalLine);
 const netWorthSnapshotIdentifier = sql.identifier("public", "net_worth_snapshot");
 const spec_netWorthSnapshot = {
   name: "netWorthSnapshot",
@@ -1146,7 +1155,7 @@ const spec_netWorthSnapshot = {
     }
   },
   extensions: {
-    oid: "16637",
+    oid: "16689",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1268,7 +1277,7 @@ const spec_accountingPeriod = {
     }
   },
   extensions: {
-    oid: "16892",
+    oid: "16973",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1394,7 +1403,7 @@ const spec_attachment = {
     }
   },
   extensions: {
-    oid: "17687",
+    oid: "17974",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1520,7 +1529,7 @@ const spec_inventoryTransaction = {
     }
   },
   extensions: {
-    oid: "17621",
+    oid: "17890",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1643,7 +1652,7 @@ const spec_payrollConnection = {
     }
   },
   extensions: {
-    oid: "17084",
+    oid: "17212",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1763,7 +1772,7 @@ const spec_billLine = {
     }
   },
   extensions: {
-    oid: "17464",
+    oid: "17693",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -1883,7 +1892,7 @@ const spec_estimateLine = {
     }
   },
   extensions: {
-    oid: "17558",
+    oid: "17809",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2007,7 +2016,7 @@ const spec_billPayment = {
     }
   },
   extensions: {
-    oid: "17476",
+    oid: "17713",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2131,7 +2140,7 @@ const spec_categorizationRuleSplit = {
     }
   },
   extensions: {
-    oid: "17697",
+    oid: "17992",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2255,7 +2264,7 @@ const spec_invoicePayment = {
     }
   },
   extensions: {
-    oid: "17372",
+    oid: "17583",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2381,7 +2390,7 @@ const spec_reconciliationStatement = {
     }
   },
   extensions: {
-    oid: "17126",
+    oid: "17263",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2518,7 +2527,7 @@ const spec_rdExpense = {
     }
   },
   extensions: {
-    oid: "17858",
+    oid: "18187",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2652,7 +2661,7 @@ const spec_project = {
     }
   },
   extensions: {
-    oid: "17724",
+    oid: "18040",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2782,7 +2791,7 @@ const spec_invoiceLine = {
     }
   },
   extensions: {
-    oid: "17360",
+    oid: "17563",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -2920,7 +2929,7 @@ const spec_amortizationEntry = {
     }
   },
   extensions: {
-    oid: "17677",
+    oid: "17954",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -3045,7 +3054,7 @@ const spec_cryptoLot = {
     }
   },
   extensions: {
-    oid: "16607",
+    oid: "16642",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -3188,7 +3197,7 @@ const spec_connectedAccount = {
     }
   },
   extensions: {
-    oid: "16585",
+    oid: "16610",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -3324,7 +3333,7 @@ const spec_journalEntry = {
     }
   },
   extensions: {
-    oid: "16614",
+    oid: "16655",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -3479,7 +3488,7 @@ const spec_mileageLog = {
     }
   },
   extensions: {
-    oid: "17150",
+    oid: "17295",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -3497,7 +3506,7 @@ const budgetPeriodCodec = enumCodec({
   values: ["monthly", "quarterly", "yearly"],
   description: undefined,
   extensions: {
-    oid: "16468",
+    oid: "16470",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -3600,7 +3609,7 @@ const spec_budget = {
     }
   },
   extensions: {
-    oid: "16575",
+    oid: "16594",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -3757,7 +3766,7 @@ const spec_document = {
     }
   },
   extensions: {
-    oid: "17834",
+    oid: "18154",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -3925,7 +3934,7 @@ const spec_estimate = {
     }
   },
   extensions: {
-    oid: "17545",
+    oid: "17788",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -4090,7 +4099,7 @@ const spec_reconciliationQueue = {
     }
   },
   extensions: {
-    oid: "16646",
+    oid: "16704",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -4255,7 +4264,7 @@ const spec_customer = {
     }
   },
   extensions: {
-    oid: "17333",
+    oid: "17520",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -4429,7 +4438,7 @@ const spec_inventoryItem = {
     }
   },
   extensions: {
-    oid: "17607",
+    oid: "17866",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -4593,7 +4602,7 @@ const spec_vendor = {
     }
   },
   extensions: {
-    oid: "17041",
+    oid: "17160",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -4611,7 +4620,7 @@ const costBasisMethodCodec = enumCodec({
   values: ["fifo", "lifo", "hifo", "acb"],
   description: undefined,
   extensions: {
-    oid: "16496",
+    oid: "16498",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -4744,7 +4753,7 @@ const spec_cryptoAsset = {
     }
   },
   extensions: {
-    oid: "16595",
+    oid: "16624",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -4939,7 +4948,7 @@ const spec_bill = {
     }
   },
   extensions: {
-    oid: "17448",
+    oid: "17665",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -5129,7 +5138,7 @@ const spec_fixedAsset = {
     }
   },
   extensions: {
-    oid: "16951",
+    oid: "17049",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -5334,7 +5343,7 @@ const spec_invoice = {
     }
   },
   extensions: {
-    oid: "17344",
+    oid: "17535",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -5352,7 +5361,7 @@ const recurringFrequencyCodec = enumCodec({
   values: ["weekly", "biweekly", "monthly", "quarterly", "yearly"],
   description: undefined,
   extensions: {
-    oid: "16528",
+    oid: "16530",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -5498,7 +5507,7 @@ const spec_recurringTransaction = {
     }
   },
   extensions: {
-    oid: "16656",
+    oid: "16718",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -5688,7 +5697,7 @@ const spec_book = {
     }
   },
   extensions: {
-    oid: "16563",
+    oid: "16576",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -5890,7 +5899,7 @@ const spec_categorizationRule = {
     }
   },
   extensions: {
-    oid: "16902",
+    oid: "16988",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -6094,7 +6103,7 @@ const spec_loan = {
     }
   },
   extensions: {
-    oid: "17712",
+    oid: "18015",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -6112,7 +6121,7 @@ const accountTypeCodec = enumCodec({
   values: ["asset", "liability", "equity", "revenue", "expense"],
   description: undefined,
   extensions: {
-    oid: "16450",
+    oid: "16452",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -6123,10 +6132,10 @@ const accountTypeCodec = enumCodec({
 const accountSubTypeCodec = enumCodec({
   name: "accountSubType",
   identifier: sql.identifier("public", "account_sub_type"),
-  values: ["cash", "bank", "accounts_receivable", "inventory", "crypto_wallet", "investment", "fixed_asset", "other_asset", "credit_card", "accounts_payable", "loan", "mortgage", "other_liability", "owners_equity", "retained_earnings", "other_equity", "sales", "service_revenue", "interest_income", "crypto_gains", "other_revenue", "cost_of_goods", "operating_expense", "payroll", "tax_expense", "crypto_losses", "other_expense"],
+  values: ["cash", "bank", "accounts_receivable", "inventory", "crypto_wallet", "investment", "fixed_asset", "other_asset", "credit_card", "accounts_payable", "loan", "mortgage", "customer_credit", "other_liability", "owners_equity", "retained_earnings", "other_equity", "sales", "service_revenue", "interest_income", "crypto_gains", "other_revenue", "cost_of_goods", "operating_expense", "payroll", "tax_expense", "crypto_losses", "other_expense"],
   description: undefined,
   extensions: {
-    oid: "16395",
+    oid: "16397",
     pg: {
       serviceName: "main",
       schemaName: "public",
@@ -6258,7 +6267,7 @@ const spec_account = {
     }
   },
   extensions: {
-    oid: "16541",
+    oid: "16543",
     isTableLike: true,
     pg: {
       serviceName: "main",
@@ -6457,29 +6466,6 @@ const vehicle_resourceOptionsConfig = {
   },
   uniques: vehicleUniques
 };
-const journal_lineUniques = [{
-  attributes: ["id"],
-  isPrimary: true
-}];
-const journal_line_resourceOptionsConfig = {
-  executor: executor,
-  name: "journal_line",
-  identifier: "main.public.journal_line",
-  from: journalLineIdentifier,
-  codec: journalLineCodec,
-  extensions: {
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "journal_line"
-    },
-    canSelect: true,
-    canInsert: true,
-    canUpdate: true,
-    canDelete: true
-  },
-  uniques: journal_lineUniques
-};
 const savings_goalUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -6525,6 +6511,29 @@ const import_profile_resourceOptionsConfig = {
     canDelete: true
   },
   uniques: import_profileUniques
+};
+const journal_lineUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const journal_line_resourceOptionsConfig = {
+  executor: executor,
+  name: "journal_line",
+  identifier: "main.public.journal_line",
+  from: journalLineIdentifier,
+  codec: journalLineCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "journal_line"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: journal_lineUniques
 };
 const net_worth_snapshotUniques = [{
   attributes: ["id"],
@@ -7354,10 +7363,10 @@ const registryConfig = {
     taxJurisdiction: taxJurisdictionCodec,
     numeric: TYPES.numeric,
     vehicle: vehicleCodec,
-    journalLine: journalLineCodec,
     savingsGoal: savingsGoalCodec,
     importProfile: importProfileCodec,
     jsonb: TYPES.jsonb,
+    journalLine: journalLineCodec,
     netWorthSnapshot: netWorthSnapshotCodec,
     accountingPeriod: accountingPeriodCodec,
     attachment: attachmentCodec,
@@ -7428,9 +7437,9 @@ const registryConfig = {
     tag: tag_resourceOptionsConfig,
     tax_jurisdiction: tax_jurisdiction_resourceOptionsConfig,
     vehicle: vehicle_resourceOptionsConfig,
-    journal_line: journal_line_resourceOptionsConfig,
     savings_goal: savings_goal_resourceOptionsConfig,
     import_profile: import_profile_resourceOptionsConfig,
+    journal_line: journal_line_resourceOptionsConfig,
     net_worth_snapshot: net_worth_snapshot_resourceOptionsConfig,
     accounting_period: accounting_period_resourceOptionsConfig,
     attachment: attachment_resourceOptionsConfig,
@@ -8823,6 +8832,13 @@ const registryConfig = {
         remoteAttributes: ["id"],
         isUnique: true
       },
+      taxJurisdictionByMyTaxJurisdictionId: {
+        localCodec: journalLineCodec,
+        remoteResourceOptions: tax_jurisdiction_resourceOptionsConfig,
+        localAttributes: ["tax_jurisdiction_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
       journalLineTagsByTheirJournalLineId: {
         localCodec: journalLineCodec,
         remoteResourceOptions: journal_line_tag_resourceOptionsConfig,
@@ -9171,6 +9187,13 @@ const registryConfig = {
         remoteAttributes: ["id"],
         isUnique: true
       },
+      journalLinesByTheirTaxJurisdictionId: {
+        localCodec: taxJurisdictionCodec,
+        remoteResourceOptions: journal_line_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["tax_jurisdiction_id"],
+        isReferencee: true
+      },
       invoiceLinesByTheirTaxJurisdictionId: {
         localCodec: taxJurisdictionCodec,
         remoteResourceOptions: invoice_line_resourceOptionsConfig,
@@ -9269,9 +9292,9 @@ const resource_book_accessPgResource = registry.pgResources["book_access"];
 const resource_tagPgResource = registry.pgResources["tag"];
 const resource_tax_jurisdictionPgResource = registry.pgResources["tax_jurisdiction"];
 const resource_vehiclePgResource = registry.pgResources["vehicle"];
-const resource_journal_linePgResource = registry.pgResources["journal_line"];
 const resource_savings_goalPgResource = registry.pgResources["savings_goal"];
 const resource_import_profilePgResource = registry.pgResources["import_profile"];
+const resource_journal_linePgResource = registry.pgResources["journal_line"];
 const resource_net_worth_snapshotPgResource = registry.pgResources["net_worth_snapshot"];
 const resource_accounting_periodPgResource = registry.pgResources["accounting_period"];
 const resource_attachmentPgResource = registry.pgResources["attachment"];
@@ -9450,17 +9473,6 @@ const nodeFetcher_Vehicle = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Vehicle));
   return nodeIdHandler_Vehicle.get(nodeIdHandler_Vehicle.getSpec($decoded));
 };
-const nodeIdHandler_JournalLine = makeTableNodeIdHandler({
-  typeName: "JournalLine",
-  identifier: "JournalLine",
-  nodeIdCodec: base64JSONNodeIdCodec,
-  resource: resource_journal_linePgResource,
-  pk: journal_lineUniques[0].attributes
-});
-const nodeFetcher_JournalLine = $nodeId => {
-  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_JournalLine));
-  return nodeIdHandler_JournalLine.get(nodeIdHandler_JournalLine.getSpec($decoded));
-};
 const nodeIdHandler_SavingsGoal = makeTableNodeIdHandler({
   typeName: "SavingsGoal",
   identifier: "SavingsGoal",
@@ -9482,6 +9494,17 @@ const nodeIdHandler_ImportProfile = makeTableNodeIdHandler({
 const nodeFetcher_ImportProfile = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_ImportProfile));
   return nodeIdHandler_ImportProfile.get(nodeIdHandler_ImportProfile.getSpec($decoded));
+};
+const nodeIdHandler_JournalLine = makeTableNodeIdHandler({
+  typeName: "JournalLine",
+  identifier: "JournalLine",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_journal_linePgResource,
+  pk: journal_lineUniques[0].attributes
+});
+const nodeFetcher_JournalLine = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_JournalLine));
+  return nodeIdHandler_JournalLine.get(nodeIdHandler_JournalLine.getSpec($decoded));
 };
 const nodeIdHandler_NetWorthSnapshot = makeTableNodeIdHandler({
   typeName: "NetWorthSnapshot",
@@ -9929,9 +9952,9 @@ const nodeIdHandlerByTypeName = {
   Tag: nodeIdHandler_Tag,
   TaxJurisdiction: nodeIdHandler_TaxJurisdiction,
   Vehicle: nodeIdHandler_Vehicle,
-  JournalLine: nodeIdHandler_JournalLine,
   SavingsGoal: nodeIdHandler_SavingsGoal,
   ImportProfile: nodeIdHandler_ImportProfile,
+  JournalLine: nodeIdHandler_JournalLine,
   NetWorthSnapshot: nodeIdHandler_NetWorthSnapshot,
   AccountingPeriod: nodeIdHandler_AccountingPeriod,
   Attachment: nodeIdHandler_Attachment,
@@ -10006,11 +10029,17 @@ const JournalLine_journalEntryIdPlan = $record => {
 const JournalLine_accountIdPlan = $record => {
   return $record.get("account_id");
 };
+const JournalLine_taxJurisdictionIdPlan = $record => {
+  return $record.get("tax_jurisdiction_id");
+};
 const JournalLine_accountPlan = $record => resource_accountPgResource.get({
   id: $record.get("account_id")
 });
 const JournalLine_journalEntryPlan = $record => resource_journal_entryPgResource.get({
   id: $record.get("journal_entry_id")
+});
+const JournalLine_taxJurisdictionPlan = $record => resource_tax_jurisdictionPgResource.get({
+  id: $record.get("tax_jurisdiction_id")
 });
 const Account_bookIdPlan = $record => {
   return $record.get("book_id");
@@ -10399,18 +10428,25 @@ const BillLine_billIdPlan = $record => {
 const BillLine_unitPricePlan = $record => {
   return $record.get("unit_price");
 };
-const BillLine_taxJurisdictionIdPlan = $record => {
-  return $record.get("tax_jurisdiction_id");
-};
 const BillLine_sortOrderPlan = $record => {
   return $record.get("sort_order");
 };
 const BillLine_billPlan = $record => resource_billPgResource.get({
   id: $record.get("bill_id")
 });
-const BillLine_taxJurisdictionPlan = $record => resource_tax_jurisdictionPgResource.get({
-  id: $record.get("tax_jurisdiction_id")
-});
+const JournalLineCondition_journalEntryIdApply = ($condition, val) => applyAttributeCondition("journal_entry_id", TYPES.uuid, $condition, val);
+const JournalLineOrderBy_JOURNAL_ENTRY_ID_ASCApply = queryBuilder => {
+  queryBuilder.orderBy({
+    attribute: "journal_entry_id",
+    direction: "ASC"
+  });
+};
+const JournalLineOrderBy_JOURNAL_ENTRY_ID_DESCApply = queryBuilder => {
+  queryBuilder.orderBy({
+    attribute: "journal_entry_id",
+    direction: "DESC"
+  });
+};
 const BillLineCondition_billIdApply = ($condition, val) => applyAttributeCondition("bill_id", TYPES.uuid, $condition, val);
 const BillLineOrderBy_BILL_ID_ASCApply = queryBuilder => {
   queryBuilder.orderBy({
@@ -10480,19 +10516,6 @@ const Document_storageKeyPlan = $record => {
 };
 const Document_createdByPlan = $record => {
   return $record.get("created_by");
-};
-const JournalLineCondition_journalEntryIdApply = ($condition, val) => applyAttributeCondition("journal_entry_id", TYPES.uuid, $condition, val);
-const JournalLineOrderBy_JOURNAL_ENTRY_ID_ASCApply = queryBuilder => {
-  queryBuilder.orderBy({
-    attribute: "journal_entry_id",
-    direction: "ASC"
-  });
-};
-const JournalLineOrderBy_JOURNAL_ENTRY_ID_DESCApply = queryBuilder => {
-  queryBuilder.orderBy({
-    attribute: "journal_entry_id",
-    direction: "DESC"
-  });
 };
 const JournalEntryCondition_dateApply = ($condition, val) => applyAttributeCondition("date", TYPES.timestamptz, $condition, val);
 const JournalEntryOrderBy_DATE_ASCApply = queryBuilder => {
@@ -10654,10 +10677,6 @@ const specFromArgs_Vehicle = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Vehicle, $nodeId);
 };
-const specFromArgs_JournalLine = args => {
-  const $nodeId = args.getRaw(["input", "id"]);
-  return specFromNodeId(nodeIdHandler_JournalLine, $nodeId);
-};
 const specFromArgs_SavingsGoal = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_SavingsGoal, $nodeId);
@@ -10665,6 +10684,10 @@ const specFromArgs_SavingsGoal = args => {
 const specFromArgs_ImportProfile = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_ImportProfile, $nodeId);
+};
+const specFromArgs_JournalLine = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_JournalLine, $nodeId);
 };
 const specFromArgs_NetWorthSnapshot = args => {
   const $nodeId = args.getRaw(["input", "id"]);
@@ -10926,12 +10949,26 @@ function VehicleInput_modelApply(obj, val, info) {
 function VehicleInput_dateInServiceApply(obj, val, info) {
   obj.set("date_in_service", bakedInputRuntime(info.schema, info.field.type, val));
 }
+const CreateSavingsGoalPayload_savingsGoalEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_savings_goalPgResource, savings_goalUniques[0].attributes, $mutation, fieldArgs);
+function SavingsGoalInput_accountIdApply(obj, val, info) {
+  obj.set("account_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function SavingsGoalInput_targetAmountApply(obj, val, info) {
+  obj.set("target_amount", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function SavingsGoalInput_targetDateApply(obj, val, info) {
+  obj.set("target_date", bakedInputRuntime(info.schema, info.field.type, val));
+}
+const CreateImportProfilePayload_importProfileEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_import_profilePgResource, import_profileUniques[0].attributes, $mutation, fieldArgs);
+function ImportProfileInput_columnMapApply(obj, val, info) {
+  obj.set("column_map", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function ImportProfileInput_headerRowsApply(obj, val, info) {
+  obj.set("header_rows", bakedInputRuntime(info.schema, info.field.type, val));
+}
 const CreateJournalLinePayload_journalLineEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_journal_linePgResource, journal_lineUniques[0].attributes, $mutation, fieldArgs);
 function JournalLineInput_journalEntryIdApply(obj, val, info) {
   obj.set("journal_entry_id", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function JournalLineInput_accountIdApply(obj, val, info) {
-  obj.set("account_id", bakedInputRuntime(info.schema, info.field.type, val));
 }
 function JournalLineInput_debitApply(obj, val, info) {
   obj.set("debit", bakedInputRuntime(info.schema, info.field.type, val));
@@ -10945,19 +10982,8 @@ function JournalLineInput_memoApply(obj, val, info) {
 function JournalLineInput_clearedApply(obj, val, info) {
   obj.set("cleared", bakedInputRuntime(info.schema, info.field.type, val));
 }
-const CreateSavingsGoalPayload_savingsGoalEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_savings_goalPgResource, savings_goalUniques[0].attributes, $mutation, fieldArgs);
-function SavingsGoalInput_targetAmountApply(obj, val, info) {
-  obj.set("target_amount", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function SavingsGoalInput_targetDateApply(obj, val, info) {
-  obj.set("target_date", bakedInputRuntime(info.schema, info.field.type, val));
-}
-const CreateImportProfilePayload_importProfileEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_import_profilePgResource, import_profileUniques[0].attributes, $mutation, fieldArgs);
-function ImportProfileInput_columnMapApply(obj, val, info) {
-  obj.set("column_map", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function ImportProfileInput_headerRowsApply(obj, val, info) {
-  obj.set("header_rows", bakedInputRuntime(info.schema, info.field.type, val));
+function JournalLineInput_taxJurisdictionIdApply(obj, val, info) {
+  obj.set("tax_jurisdiction_id", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateNetWorthSnapshotPayload_netWorthSnapshotEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_net_worth_snapshotPgResource, net_worth_snapshotUniques[0].attributes, $mutation, fieldArgs);
 function NetWorthSnapshotInput_dateApply(obj, val, info) {
@@ -11063,9 +11089,6 @@ function BillLineInput_amountApply(obj, val, info) {
 }
 function BillLineInput_expenseAccountIdApply(obj, val, info) {
   obj.set("expense_account_id", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function BillLineInput_taxJurisdictionIdApply(obj, val, info) {
-  obj.set("tax_jurisdiction_id", bakedInputRuntime(info.schema, info.field.type, val));
 }
 function BillLineInput_sortOrderApply(obj, val, info) {
   obj.set("sort_order", bakedInputRuntime(info.schema, info.field.type, val));
@@ -11541,14 +11564,14 @@ type Query implements Node {
   """Get a single \`Vehicle\`."""
   vehicle(rowId: UUID!): Vehicle
 
-  """Get a single \`JournalLine\`."""
-  journalLine(rowId: UUID!): JournalLine
-
   """Get a single \`SavingsGoal\`."""
   savingsGoal(rowId: UUID!): SavingsGoal
 
   """Get a single \`ImportProfile\`."""
   importProfile(rowId: UUID!): ImportProfile
+
+  """Get a single \`JournalLine\`."""
+  journalLine(rowId: UUID!): JournalLine
 
   """Get a single \`NetWorthSnapshot\`."""
   netWorthSnapshot(rowId: UUID!): NetWorthSnapshot
@@ -11721,14 +11744,6 @@ type Query implements Node {
     id: ID!
   ): Vehicle
 
-  """Reads a single \`JournalLine\` using its globally unique \`ID\`."""
-  journalLineById(
-    """
-    The globally unique \`ID\` to be used in selecting a single \`JournalLine\`.
-    """
-    id: ID!
-  ): JournalLine
-
   """Reads a single \`SavingsGoal\` using its globally unique \`ID\`."""
   savingsGoalById(
     """
@@ -11744,6 +11759,14 @@ type Query implements Node {
     """
     id: ID!
   ): ImportProfile
+
+  """Reads a single \`JournalLine\` using its globally unique \`ID\`."""
+  journalLineById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`JournalLine\`.
+    """
+    id: ID!
+  ): JournalLine
 
   """Reads a single \`NetWorthSnapshot\` using its globally unique \`ID\`."""
   netWorthSnapshotById(
@@ -12307,40 +12330,6 @@ type Query implements Node {
     orderBy: [VehicleOrderBy!] = [PRIMARY_KEY_ASC]
   ): VehicleConnection
 
-  """Reads and enables pagination through a set of \`JournalLine\`."""
-  journalLines(
-    """Only read the first \`n\` values of the set."""
-    first: Int
-
-    """Only read the last \`n\` values of the set."""
-    last: Int
-
-    """
-    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
-    based pagination. May not be used with \`last\`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: JournalLineCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: JournalLineFilter
-
-    """The method to use when ordering \`JournalLine\`."""
-    orderBy: [JournalLineOrderBy!] = [PRIMARY_KEY_ASC]
-  ): JournalLineConnection
-
   """Reads and enables pagination through a set of \`SavingsGoal\`."""
   savingsGoals(
     """Only read the first \`n\` values of the set."""
@@ -12408,6 +12397,40 @@ type Query implements Node {
     """The method to use when ordering \`ImportProfile\`."""
     orderBy: [ImportProfileOrderBy!] = [PRIMARY_KEY_ASC]
   ): ImportProfileConnection
+
+  """Reads and enables pagination through a set of \`JournalLine\`."""
+  journalLines(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: JournalLineCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: JournalLineFilter
+
+    """The method to use when ordering \`JournalLine\`."""
+    orderBy: [JournalLineOrderBy!] = [PRIMARY_KEY_ASC]
+  ): JournalLineConnection
 
   """Reads and enables pagination through a set of \`NetWorthSnapshot\`."""
   netWorthSnapshots(
@@ -13647,12 +13670,18 @@ type JournalLine implements Node {
   credit: BigFloat!
   memo: String
   cleared: Boolean!
+  taxJurisdictionId: UUID
 
   """Reads a single \`Account\` that is related to this \`JournalLine\`."""
   account: Account
 
   """Reads a single \`JournalEntry\` that is related to this \`JournalLine\`."""
   journalEntry: JournalEntry
+
+  """
+  Reads a single \`TaxJurisdiction\` that is related to this \`JournalLine\`.
+  """
+  taxJurisdiction: TaxJurisdiction
 
   """Reads and enables pagination through a set of \`JournalLineTag\`."""
   journalLineTags(
@@ -13911,6 +13940,7 @@ enum AccountSubType {
   accounts_payable
   loan
   mortgage
+  customer_credit
   other_liability
   owners_equity
   retained_earnings
@@ -16117,6 +16147,9 @@ input JournalLineFilter {
   """Filter by the object’s \`accountId\` field."""
   accountId: UUIDFilter
 
+  """Filter by the object’s \`taxJurisdictionId\` field."""
+  taxJurisdictionId: UUIDFilter
+
   """Filter by the object’s \`journalLineTags\` relation."""
   journalLineTags: JournalLineToManyJournalLineTagFilter
 
@@ -16134,6 +16167,12 @@ input JournalLineFilter {
 
   """Filter by the object’s \`journalEntry\` relation."""
   journalEntry: JournalEntryFilter
+
+  """Filter by the object’s \`taxJurisdiction\` relation."""
+  taxJurisdiction: TaxJurisdictionFilter
+
+  """A related \`taxJurisdiction\` exists."""
+  taxJurisdictionExists: Boolean
 
   """Checks for all expressions in this list."""
   and: [JournalLineFilter!]
@@ -16497,6 +16536,58 @@ input IntFilter {
 }
 
 """
+A filter to be used against \`TaxJurisdiction\` object types. All fields are combined with a logical ‘and.’
+"""
+input TaxJurisdictionFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`bookId\` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s \`journalLines\` relation."""
+  journalLines: TaxJurisdictionToManyJournalLineFilter
+
+  """Some related \`journalLines\` exist."""
+  journalLinesExist: Boolean
+
+  """Filter by the object’s \`book\` relation."""
+  book: BookFilter
+
+  """Filter by the object’s \`taxPayableAccount\` relation."""
+  taxPayableAccount: AccountFilter
+
+  """Checks for all expressions in this list."""
+  and: [TaxJurisdictionFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [TaxJurisdictionFilter!]
+
+  """Negates the expression."""
+  not: TaxJurisdictionFilter
+}
+
+"""
+A filter to be used against many \`JournalLine\` object types. All fields are combined with a logical ‘and.’
+"""
+input TaxJurisdictionToManyJournalLineFilter {
+  """
+  Every related \`JournalLine\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: JournalLineFilter
+
+  """
+  Some related \`JournalLine\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: JournalLineFilter
+
+  """
+  No related \`JournalLine\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: JournalLineFilter
+}
+
+"""
 A filter to be used against many \`Attachment\` object types. All fields are combined with a logical ‘and.’
 """
 input JournalEntryToManyAttachmentFilter {
@@ -16709,32 +16800,6 @@ input BillLineFilter {
 
   """Negates the expression."""
   not: BillLineFilter
-}
-
-"""
-A filter to be used against \`TaxJurisdiction\` object types. All fields are combined with a logical ‘and.’
-"""
-input TaxJurisdictionFilter {
-  """Filter by the object’s \`rowId\` field."""
-  rowId: UUIDFilter
-
-  """Filter by the object’s \`bookId\` field."""
-  bookId: UUIDFilter
-
-  """Filter by the object’s \`book\` relation."""
-  book: BookFilter
-
-  """Filter by the object’s \`taxPayableAccount\` relation."""
-  taxPayableAccount: AccountFilter
-
-  """Checks for all expressions in this list."""
-  and: [TaxJurisdictionFilter!]
-
-  """Checks for any expressions in this list."""
-  or: [TaxJurisdictionFilter!]
-
-  """Negates the expression."""
-  not: TaxJurisdictionFilter
 }
 
 """
@@ -19196,6 +19261,99 @@ type TaxJurisdiction implements Node {
 
   """Reads a single \`Account\` that is related to this \`TaxJurisdiction\`."""
   taxPayableAccount: Account
+
+  """Reads and enables pagination through a set of \`JournalLine\`."""
+  journalLines(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: JournalLineCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: JournalLineFilter
+
+    """The method to use when ordering \`JournalLine\`."""
+    orderBy: [JournalLineOrderBy!] = [PRIMARY_KEY_ASC]
+  ): JournalLineConnection!
+}
+
+"""A connection to a list of \`JournalLine\` values."""
+type JournalLineConnection {
+  """A list of \`JournalLine\` objects."""
+  nodes: [JournalLine]!
+
+  """
+  A list of edges which contains the \`JournalLine\` and cursor to aid in pagination.
+  """
+  edges: [JournalLineEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* \`JournalLine\` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A \`JournalLine\` edge in the connection."""
+type JournalLineEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`JournalLine\` at the end of the edge."""
+  node: JournalLine
+}
+
+"""
+A condition to be used against \`JournalLine\` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input JournalLineCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`journalEntryId\` field."""
+  journalEntryId: UUID
+
+  """Checks for equality with the object’s \`accountId\` field."""
+  accountId: UUID
+
+  """Checks for equality with the object’s \`taxJurisdictionId\` field."""
+  taxJurisdictionId: UUID
+}
+
+"""Methods to use when ordering \`JournalLine\`."""
+enum JournalLineOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  JOURNAL_ENTRY_ID_ASC
+  JOURNAL_ENTRY_ID_DESC
+  ACCOUNT_ID_ASC
+  ACCOUNT_ID_DESC
+  TAX_JURISDICTION_ID_ASC
+  TAX_JURISDICTION_ID_DESC
 }
 
 """A \`BillLine\` edge in the connection."""
@@ -19442,60 +19600,6 @@ enum DocumentOrderBy {
   CATEGORY_DESC
   VENDOR_ID_ASC
   VENDOR_ID_DESC
-}
-
-"""A connection to a list of \`JournalLine\` values."""
-type JournalLineConnection {
-  """A list of \`JournalLine\` objects."""
-  nodes: [JournalLine]!
-
-  """
-  A list of edges which contains the \`JournalLine\` and cursor to aid in pagination.
-  """
-  edges: [JournalLineEdge]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* \`JournalLine\` you could get from the connection."""
-  totalCount: Int!
-}
-
-"""A \`JournalLine\` edge in the connection."""
-type JournalLineEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The \`JournalLine\` at the end of the edge."""
-  node: JournalLine
-}
-
-"""
-A condition to be used against \`JournalLine\` object types. All fields are tested
-for equality and combined with a logical ‘and.’
-"""
-input JournalLineCondition {
-  """Checks for equality with the object’s \`rowId\` field."""
-  rowId: UUID
-
-  """Checks for equality with the object’s \`journalEntryId\` field."""
-  journalEntryId: UUID
-
-  """Checks for equality with the object’s \`accountId\` field."""
-  accountId: UUID
-}
-
-"""Methods to use when ordering \`JournalLine\`."""
-enum JournalLineOrderBy {
-  NATURAL
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-  ROW_ID_ASC
-  ROW_ID_DESC
-  JOURNAL_ENTRY_ID_ASC
-  JOURNAL_ENTRY_ID_DESC
-  ACCOUNT_ID_ASC
-  ACCOUNT_ID_DESC
 }
 
 """A connection to a list of \`Attachment\` values."""
@@ -22873,14 +22977,6 @@ type Mutation {
     input: CreateVehicleInput!
   ): CreateVehiclePayload
 
-  """Creates a single \`JournalLine\`."""
-  createJournalLine(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateJournalLineInput!
-  ): CreateJournalLinePayload
-
   """Creates a single \`SavingsGoal\`."""
   createSavingsGoal(
     """
@@ -22896,6 +22992,14 @@ type Mutation {
     """
     input: CreateImportProfileInput!
   ): CreateImportProfilePayload
+
+  """Creates a single \`JournalLine\`."""
+  createJournalLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateJournalLineInput!
+  ): CreateJournalLinePayload
 
   """Creates a single \`NetWorthSnapshot\`."""
   createNetWorthSnapshot(
@@ -23334,24 +23438,6 @@ type Mutation {
   ): UpdateVehiclePayload
 
   """
-  Updates a single \`JournalLine\` using its globally unique id and a patch.
-  """
-  updateJournalLineById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateJournalLineByIdInput!
-  ): UpdateJournalLinePayload
-
-  """Updates a single \`JournalLine\` using a unique key and a patch."""
-  updateJournalLine(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateJournalLineInput!
-  ): UpdateJournalLinePayload
-
-  """
   Updates a single \`SavingsGoal\` using its globally unique id and a patch.
   """
   updateSavingsGoalById(
@@ -23386,6 +23472,24 @@ type Mutation {
     """
     input: UpdateImportProfileInput!
   ): UpdateImportProfilePayload
+
+  """
+  Updates a single \`JournalLine\` using its globally unique id and a patch.
+  """
+  updateJournalLineById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateJournalLineByIdInput!
+  ): UpdateJournalLinePayload
+
+  """Updates a single \`JournalLine\` using a unique key and a patch."""
+  updateJournalLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateJournalLineInput!
+  ): UpdateJournalLinePayload
 
   """
   Updates a single \`NetWorthSnapshot\` using its globally unique id and a patch.
@@ -24141,22 +24245,6 @@ type Mutation {
     input: DeleteVehicleInput!
   ): DeleteVehiclePayload
 
-  """Deletes a single \`JournalLine\` using its globally unique id."""
-  deleteJournalLineById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteJournalLineByIdInput!
-  ): DeleteJournalLinePayload
-
-  """Deletes a single \`JournalLine\` using a unique key."""
-  deleteJournalLine(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteJournalLineInput!
-  ): DeleteJournalLinePayload
-
   """Deletes a single \`SavingsGoal\` using its globally unique id."""
   deleteSavingsGoalById(
     """
@@ -24188,6 +24276,22 @@ type Mutation {
     """
     input: DeleteImportProfileInput!
   ): DeleteImportProfilePayload
+
+  """Deletes a single \`JournalLine\` using its globally unique id."""
+  deleteJournalLineById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteJournalLineByIdInput!
+  ): DeleteJournalLinePayload
+
+  """Deletes a single \`JournalLine\` using a unique key."""
+  deleteJournalLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteJournalLineInput!
+  ): DeleteJournalLinePayload
 
   """Deletes a single \`NetWorthSnapshot\` using its globally unique id."""
   deleteNetWorthSnapshotById(
@@ -25154,52 +25258,6 @@ input VehicleInput {
   createdAt: Datetime
 }
 
-"""The output of our create \`JournalLine\` mutation."""
-type CreateJournalLinePayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`JournalLine\` that was created by this mutation."""
-  journalLine: JournalLine
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`JournalLine\`. May be used by Relay 1."""
-  journalLineEdge(
-    """The method to use when ordering \`JournalLine\`."""
-    orderBy: [JournalLineOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): JournalLineEdge
-}
-
-"""All input for the create \`JournalLine\` mutation."""
-input CreateJournalLineInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The \`JournalLine\` to be created by this mutation."""
-  journalLine: JournalLineInput!
-}
-
-"""An input for mutations affecting \`JournalLine\`"""
-input JournalLineInput {
-  rowId: UUID
-  journalEntryId: UUID!
-  accountId: UUID!
-  debit: BigFloat
-  credit: BigFloat
-  memo: String
-  cleared: Boolean
-}
-
 """The output of our create \`SavingsGoal\` mutation."""
 type CreateSavingsGoalPayload {
   """
@@ -25291,6 +25349,53 @@ input ImportProfileInput {
   headerRows: String
   createdAt: Datetime
   updatedAt: Datetime
+}
+
+"""The output of our create \`JournalLine\` mutation."""
+type CreateJournalLinePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`JournalLine\` that was created by this mutation."""
+  journalLine: JournalLine
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`JournalLine\`. May be used by Relay 1."""
+  journalLineEdge(
+    """The method to use when ordering \`JournalLine\`."""
+    orderBy: [JournalLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): JournalLineEdge
+}
+
+"""All input for the create \`JournalLine\` mutation."""
+input CreateJournalLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`JournalLine\` to be created by this mutation."""
+  journalLine: JournalLineInput!
+}
+
+"""An input for mutations affecting \`JournalLine\`"""
+input JournalLineInput {
+  rowId: UUID
+  journalEntryId: UUID!
+  accountId: UUID!
+  debit: BigFloat
+  credit: BigFloat
+  memo: String
+  cleared: Boolean
+  taxJurisdictionId: UUID
 }
 
 """The output of our create \`NetWorthSnapshot\` mutation."""
@@ -27691,76 +27796,6 @@ input UpdateVehicleInput {
   patch: VehiclePatch!
 }
 
-"""The output of our update \`JournalLine\` mutation."""
-type UpdateJournalLinePayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`JournalLine\` that was updated by this mutation."""
-  journalLine: JournalLine
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`JournalLine\`. May be used by Relay 1."""
-  journalLineEdge(
-    """The method to use when ordering \`JournalLine\`."""
-    orderBy: [JournalLineOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): JournalLineEdge
-}
-
-"""All input for the \`updateJournalLineById\` mutation."""
-input UpdateJournalLineByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`JournalLine\` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the \`JournalLine\` being updated.
-  """
-  patch: JournalLinePatch!
-}
-
-"""
-Represents an update to a \`JournalLine\`. Fields that are set will be updated.
-"""
-input JournalLinePatch {
-  rowId: UUID
-  journalEntryId: UUID
-  accountId: UUID
-  debit: BigFloat
-  credit: BigFloat
-  memo: String
-  cleared: Boolean
-}
-
-"""All input for the \`updateJournalLine\` mutation."""
-input UpdateJournalLineInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the \`JournalLine\` being updated.
-  """
-  patch: JournalLinePatch!
-}
-
 """The output of our update \`SavingsGoal\` mutation."""
 type UpdateSavingsGoalPayload {
   """
@@ -27900,6 +27935,77 @@ input UpdateImportProfileInput {
   An object where the defined keys will be set on the \`ImportProfile\` being updated.
   """
   patch: ImportProfilePatch!
+}
+
+"""The output of our update \`JournalLine\` mutation."""
+type UpdateJournalLinePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`JournalLine\` that was updated by this mutation."""
+  journalLine: JournalLine
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`JournalLine\`. May be used by Relay 1."""
+  journalLineEdge(
+    """The method to use when ordering \`JournalLine\`."""
+    orderBy: [JournalLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): JournalLineEdge
+}
+
+"""All input for the \`updateJournalLineById\` mutation."""
+input UpdateJournalLineByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`JournalLine\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`JournalLine\` being updated.
+  """
+  patch: JournalLinePatch!
+}
+
+"""
+Represents an update to a \`JournalLine\`. Fields that are set will be updated.
+"""
+input JournalLinePatch {
+  rowId: UUID
+  journalEntryId: UUID
+  accountId: UUID
+  debit: BigFloat
+  credit: BigFloat
+  memo: String
+  cleared: Boolean
+  taxJurisdictionId: UUID
+}
+
+"""All input for the \`updateJournalLine\` mutation."""
+input UpdateJournalLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`JournalLine\` being updated.
+  """
+  patch: JournalLinePatch!
 }
 
 """The output of our update \`NetWorthSnapshot\` mutation."""
@@ -30952,54 +31058,6 @@ input DeleteVehicleInput {
   rowId: UUID!
 }
 
-"""The output of our delete \`JournalLine\` mutation."""
-type DeleteJournalLinePayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`JournalLine\` that was deleted by this mutation."""
-  journalLine: JournalLine
-  deletedJournalLineId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`JournalLine\`. May be used by Relay 1."""
-  journalLineEdge(
-    """The method to use when ordering \`JournalLine\`."""
-    orderBy: [JournalLineOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): JournalLineEdge
-}
-
-"""All input for the \`deleteJournalLineById\` mutation."""
-input DeleteJournalLineByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`JournalLine\` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the \`deleteJournalLine\` mutation."""
-input DeleteJournalLineInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete \`SavingsGoal\` mutation."""
 type DeleteSavingsGoalPayload {
   """
@@ -31088,6 +31146,54 @@ input DeleteImportProfileByIdInput {
 
 """All input for the \`deleteImportProfile\` mutation."""
 input DeleteImportProfileInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`JournalLine\` mutation."""
+type DeleteJournalLinePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`JournalLine\` that was deleted by this mutation."""
+  journalLine: JournalLine
+  deletedJournalLineId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`JournalLine\`. May be used by Relay 1."""
+  journalLineEdge(
+    """The method to use when ordering \`JournalLine\`."""
+    orderBy: [JournalLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): JournalLineEdge
+}
+
+"""All input for the \`deleteJournalLineById\` mutation."""
+input DeleteJournalLineByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`JournalLine\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteJournalLine\` mutation."""
+input DeleteJournalLineInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -37396,8 +37502,8 @@ export const objects = {
       },
       rowId: JournalLineProject_rowIdPlan,
       sortOrder: BillLine_sortOrderPlan,
-      taxJurisdiction: BillLine_taxJurisdictionPlan,
-      taxJurisdictionId: BillLine_taxJurisdictionIdPlan,
+      taxJurisdiction: JournalLine_taxJurisdictionPlan,
+      taxJurisdictionId: JournalLine_taxJurisdictionIdPlan,
       unitPrice: BillLine_unitPricePlan
     },
     planType($specifier) {
@@ -39641,8 +39747,8 @@ export const objects = {
       incomeAccountId: InvoiceLine_incomeAccountIdPlan,
       rowId: JournalLineProject_rowIdPlan,
       sortOrder: BillLine_sortOrderPlan,
-      taxJurisdiction: BillLine_taxJurisdictionPlan,
-      taxJurisdictionId: BillLine_taxJurisdictionIdPlan,
+      taxJurisdiction: JournalLine_taxJurisdictionPlan,
+      taxJurisdictionId: JournalLine_taxJurisdictionIdPlan,
       unitPrice: BillLine_unitPricePlan
     },
     planType($specifier) {
@@ -39946,8 +40052,8 @@ export const objects = {
       invoiceId: InvoiceLine_invoiceIdPlan,
       rowId: JournalLineProject_rowIdPlan,
       sortOrder: BillLine_sortOrderPlan,
-      taxJurisdiction: BillLine_taxJurisdictionPlan,
-      taxJurisdictionId: BillLine_taxJurisdictionIdPlan,
+      taxJurisdiction: JournalLine_taxJurisdictionPlan,
+      taxJurisdictionId: JournalLine_taxJurisdictionIdPlan,
       unitPrice: BillLine_unitPricePlan
     },
     planType($specifier) {
@@ -40117,7 +40223,9 @@ export const objects = {
           orderBy: applyOrderByArgToConnection
         }
       },
-      rowId: JournalLineProject_rowIdPlan
+      rowId: JournalLineProject_rowIdPlan,
+      taxJurisdiction: JournalLine_taxJurisdictionPlan,
+      taxJurisdictionId: JournalLine_taxJurisdictionIdPlan
     },
     planType($specifier) {
       const spec = Object.create(null);
@@ -40736,6 +40844,24 @@ export const objects = {
       id($parent) {
         const specifier = nodeIdHandler_TaxJurisdiction.plan($parent);
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_TaxJurisdiction.codec.name].encode);
+      },
+      journalLines: {
+        plan($record) {
+          const $records = resource_journal_linePgResource.find({
+            tax_jurisdiction_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
       },
       rowId: JournalLineProject_rowIdPlan,
       taxPayableAccount($record) {
@@ -41974,7 +42100,7 @@ export const inputObjects = {
       quantity: InventoryTransactionInput_quantityApply,
       rowId: JournalLineProjectInput_rowIdApply,
       sortOrder: BillLineInput_sortOrderApply,
-      taxJurisdictionId: BillLineInput_taxJurisdictionIdApply,
+      taxJurisdictionId: JournalLineInput_taxJurisdictionIdApply,
       unitPrice: BillLineInput_unitPriceApply
     }
   },
@@ -41988,7 +42114,7 @@ export const inputObjects = {
       quantity: InventoryTransactionInput_quantityApply,
       rowId: JournalLineProjectInput_rowIdApply,
       sortOrder: BillLineInput_sortOrderApply,
-      taxJurisdictionId: BillLineInput_taxJurisdictionIdApply,
+      taxJurisdictionId: JournalLineInput_taxJurisdictionIdApply,
       unitPrice: BillLineInput_unitPriceApply
     }
   },
@@ -43296,7 +43422,7 @@ export const inputObjects = {
   BudgetInput: {
     baked: createObjectAndApplyChildren,
     plans: {
-      accountId: JournalLineInput_accountIdApply,
+      accountId: SavingsGoalInput_accountIdApply,
       amount: BillLineInput_amountApply,
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
@@ -43309,7 +43435,7 @@ export const inputObjects = {
   BudgetPatch: {
     baked: createObjectAndApplyChildren,
     plans: {
-      accountId: JournalLineInput_accountIdApply,
+      accountId: SavingsGoalInput_accountIdApply,
       amount: BillLineInput_amountApply,
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
@@ -43475,7 +43601,7 @@ export const inputObjects = {
   CategorizationRuleSplitInput: {
     baked: createObjectAndApplyChildren,
     plans: {
-      accountId: JournalLineInput_accountIdApply,
+      accountId: SavingsGoalInput_accountIdApply,
       fixedAmount: CategorizationRuleSplitInput_fixedAmountApply,
       memo: JournalLineInput_memoApply,
       percentage: CategorizationRuleSplitInput_percentageApply,
@@ -43490,7 +43616,7 @@ export const inputObjects = {
   CategorizationRuleSplitPatch: {
     baked: createObjectAndApplyChildren,
     plans: {
-      accountId: JournalLineInput_accountIdApply,
+      accountId: SavingsGoalInput_accountIdApply,
       fixedAmount: CategorizationRuleSplitInput_fixedAmountApply,
       memo: JournalLineInput_memoApply,
       percentage: CategorizationRuleSplitInput_percentageApply,
@@ -43547,7 +43673,7 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       accessToken: PayrollConnectionInput_accessTokenApply,
-      accountId: JournalLineInput_accountIdApply,
+      accountId: SavingsGoalInput_accountIdApply,
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
       institutionName: ConnectedAccountInput_institutionNameApply,
@@ -43564,7 +43690,7 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       accessToken: PayrollConnectionInput_accessTokenApply,
-      accountId: JournalLineInput_accountIdApply,
+      accountId: SavingsGoalInput_accountIdApply,
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
       institutionName: ConnectedAccountInput_institutionNameApply,
@@ -44820,7 +44946,7 @@ export const inputObjects = {
       quantity: InventoryTransactionInput_quantityApply,
       rowId: JournalLineProjectInput_rowIdApply,
       sortOrder: BillLineInput_sortOrderApply,
-      taxJurisdictionId: BillLineInput_taxJurisdictionIdApply,
+      taxJurisdictionId: JournalLineInput_taxJurisdictionIdApply,
       unitPrice: BillLineInput_unitPriceApply
     }
   },
@@ -44834,7 +44960,7 @@ export const inputObjects = {
       quantity: InventoryTransactionInput_quantityApply,
       rowId: JournalLineProjectInput_rowIdApply,
       sortOrder: BillLineInput_sortOrderApply,
-      taxJurisdictionId: BillLineInput_taxJurisdictionIdApply,
+      taxJurisdictionId: JournalLineInput_taxJurisdictionIdApply,
       unitPrice: BillLineInput_unitPriceApply
     }
   },
@@ -45328,7 +45454,7 @@ export const inputObjects = {
       quantity: InventoryTransactionInput_quantityApply,
       rowId: JournalLineProjectInput_rowIdApply,
       sortOrder: BillLineInput_sortOrderApply,
-      taxJurisdictionId: BillLineInput_taxJurisdictionIdApply,
+      taxJurisdictionId: JournalLineInput_taxJurisdictionIdApply,
       unitPrice: BillLineInput_unitPriceApply
     }
   },
@@ -45343,7 +45469,7 @@ export const inputObjects = {
       quantity: InventoryTransactionInput_quantityApply,
       rowId: JournalLineProjectInput_rowIdApply,
       sortOrder: BillLineInput_sortOrderApply,
-      taxJurisdictionId: BillLineInput_taxJurisdictionIdApply,
+      taxJurisdictionId: JournalLineInput_taxJurisdictionIdApply,
       unitPrice: BillLineInput_unitPriceApply
     }
   },
@@ -45593,7 +45719,10 @@ export const inputObjects = {
     plans: {
       accountId: BudgetCondition_accountIdApply,
       journalEntryId: JournalLineCondition_journalEntryIdApply,
-      rowId: AccountCondition_rowIdApply
+      rowId: AccountCondition_rowIdApply,
+      taxJurisdictionId($condition, val) {
+        return applyAttributeCondition("tax_jurisdiction_id", TYPES.uuid, $condition, val);
+      }
     }
   },
   JournalLineFilter: {
@@ -45663,31 +45792,42 @@ export const inputObjects = {
       or: AccountFilter_orApply,
       rowId(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("rowId", "id", spec_journalLine.attributes.id, queryBuilder, value);
+      },
+      taxJurisdiction($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_tax_jurisdictionPgResource, taxJurisdictionIdentifier, registryConfig.pgRelations.journalLine.taxJurisdictionByMyTaxJurisdictionId.localAttributes, registryConfig.pgRelations.journalLine.taxJurisdictionByMyTaxJurisdictionId.remoteAttributes, $where, value);
+      },
+      taxJurisdictionExists($where, value) {
+        return pgConnectionFilterApplyForwardRelationExists(resource_tax_jurisdictionPgResource, taxJurisdictionIdentifier, registryConfig.pgRelations.journalLine.taxJurisdictionByMyTaxJurisdictionId.localAttributes, registryConfig.pgRelations.journalLine.taxJurisdictionByMyTaxJurisdictionId.remoteAttributes, $where, value);
+      },
+      taxJurisdictionId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("taxJurisdictionId", "tax_jurisdiction_id", spec_journalLine.attributes.tax_jurisdiction_id, queryBuilder, value);
       }
     }
   },
   JournalLineInput: {
     baked: createObjectAndApplyChildren,
     plans: {
-      accountId: JournalLineInput_accountIdApply,
+      accountId: SavingsGoalInput_accountIdApply,
       cleared: JournalLineInput_clearedApply,
       credit: JournalLineInput_creditApply,
       debit: JournalLineInput_debitApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       memo: JournalLineInput_memoApply,
-      rowId: JournalLineProjectInput_rowIdApply
+      rowId: JournalLineProjectInput_rowIdApply,
+      taxJurisdictionId: JournalLineInput_taxJurisdictionIdApply
     }
   },
   JournalLinePatch: {
     baked: createObjectAndApplyChildren,
     plans: {
-      accountId: JournalLineInput_accountIdApply,
+      accountId: SavingsGoalInput_accountIdApply,
       cleared: JournalLineInput_clearedApply,
       credit: JournalLineInput_creditApply,
       debit: JournalLineInput_debitApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       memo: JournalLineInput_memoApply,
-      rowId: JournalLineProjectInput_rowIdApply
+      rowId: JournalLineProjectInput_rowIdApply,
+      taxJurisdictionId: JournalLineInput_taxJurisdictionIdApply
     }
   },
   JournalLineProjectCondition: {
@@ -46386,7 +46526,7 @@ export const inputObjects = {
   ReconciliationStatementInput: {
     baked: createObjectAndApplyChildren,
     plans: {
-      accountId: JournalLineInput_accountIdApply,
+      accountId: SavingsGoalInput_accountIdApply,
       beginningBalance: ReconciliationStatementInput_beginningBalanceApply,
       bookId: TagGroupInput_bookIdApply,
       completedAt: ReconciliationStatementInput_completedAtApply,
@@ -46401,7 +46541,7 @@ export const inputObjects = {
   ReconciliationStatementPatch: {
     baked: createObjectAndApplyChildren,
     plans: {
-      accountId: JournalLineInput_accountIdApply,
+      accountId: SavingsGoalInput_accountIdApply,
       beginningBalance: ReconciliationStatementInput_beginningBalanceApply,
       bookId: TagGroupInput_bookIdApply,
       completedAt: ReconciliationStatementInput_completedAtApply,
@@ -46447,7 +46587,7 @@ export const inputObjects = {
   RecurringTransactionInput: {
     baked: createObjectAndApplyChildren,
     plans: {
-      accountId: JournalLineInput_accountIdApply,
+      accountId: SavingsGoalInput_accountIdApply,
       amount: BillLineInput_amountApply,
       bookId: TagGroupInput_bookIdApply,
       counterAccountId: RecurringTransactionInput_counterAccountIdApply,
@@ -46464,7 +46604,7 @@ export const inputObjects = {
   RecurringTransactionPatch: {
     baked: createObjectAndApplyChildren,
     plans: {
-      accountId: JournalLineInput_accountIdApply,
+      accountId: SavingsGoalInput_accountIdApply,
       amount: BillLineInput_amountApply,
       bookId: TagGroupInput_bookIdApply,
       counterAccountId: RecurringTransactionInput_counterAccountIdApply,
@@ -46506,7 +46646,7 @@ export const inputObjects = {
   SavingsGoalInput: {
     baked: createObjectAndApplyChildren,
     plans: {
-      accountId: JournalLineInput_accountIdApply,
+      accountId: SavingsGoalInput_accountIdApply,
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
       name: TagGroupInput_nameApply,
@@ -46519,7 +46659,7 @@ export const inputObjects = {
   SavingsGoalPatch: {
     baked: createObjectAndApplyChildren,
     plans: {
-      accountId: JournalLineInput_accountIdApply,
+      accountId: SavingsGoalInput_accountIdApply,
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
       name: TagGroupInput_nameApply,
@@ -46785,6 +46925,30 @@ export const inputObjects = {
       bookId(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("bookId", "book_id", spec_taxJurisdiction.attributes.book_id, queryBuilder, value);
       },
+      journalLines($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: journalLineIdentifier,
+          alias: resource_journal_linePgResource.name,
+          localAttributes: registryConfig.pgRelations.taxJurisdiction.journalLinesByTheirTaxJurisdictionId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.taxJurisdiction.journalLinesByTheirTaxJurisdictionId.remoteAttributes
+        };
+        return $rel;
+      },
+      journalLinesExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: journalLineIdentifier,
+          alias: resource_journal_linePgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.taxJurisdiction.journalLinesByTheirTaxJurisdictionId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.taxJurisdiction.journalLinesByTheirTaxJurisdictionId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
       not: AccountFilter_notApply,
       or: AccountFilter_orApply,
       rowId(queryBuilder, value) {
@@ -46819,6 +46983,13 @@ export const inputObjects = {
       rate: TaxJurisdictionInput_rateApply,
       rowId: JournalLineProjectInput_rowIdApply,
       taxPayableAccountId: TaxJurisdictionInput_taxPayableAccountIdApply
+    }
+  },
+  TaxJurisdictionToManyJournalLineFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
     }
   },
   UpdateAccountByIdInput: {
@@ -48712,7 +48883,19 @@ export const enums = {
         queryBuilder.setOrderIsUnique();
       },
       ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
-      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply,
+      TAX_JURISDICTION_ID_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "tax_jurisdiction_id",
+          direction: "ASC"
+        });
+      },
+      TAX_JURISDICTION_ID_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "tax_jurisdiction_id",
+          direction: "DESC"
+        });
+      }
     }
   },
   JournalLineProjectOrderBy: {

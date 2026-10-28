@@ -25,6 +25,8 @@ describe("generateSalesTaxReport", () => {
   test("calculates collected, remitted, and owed", async () => {
     setSelectResults([
       [makeJurisdiction({ filingFrequency: "annually" })],
+      // Shared-account detection: this jurisdiction owns its account alone
+      [{ taxPayableAccountId: "acct-tax-1" }],
       // Single annual period query
       [{ credits: "1000.0000", debits: "400.0000" }],
     ]);
@@ -46,6 +48,8 @@ describe("generateSalesTaxReport", () => {
   test("breaks down quarterly periods", async () => {
     setSelectResults([
       [makeJurisdiction({ filingFrequency: "quarterly" })],
+      // Shared-account detection: this jurisdiction owns its account alone
+      [{ taxPayableAccountId: "acct-tax-1" }],
       // Q1-Q4 period queries
       [{ credits: "250.0000", debits: "100.0000" }],
       [{ credits: "300.0000", debits: "150.0000" }],
@@ -69,6 +73,8 @@ describe("generateSalesTaxReport", () => {
   test("returns zero for no transactions", async () => {
     setSelectResults([
       [makeJurisdiction({ filingFrequency: "annually" })],
+      // Shared-account detection: this jurisdiction owns its account alone
+      [{ taxPayableAccountId: "acct-tax-1" }],
       [{ credits: null, debits: null }],
     ]);
 
@@ -94,6 +100,11 @@ describe("generateSalesTaxReport", () => {
           filingFrequency: "annually",
           taxPayableAccountId: "acct-tax-2",
         }),
+      ],
+      // Shared-account detection: the two jurisdictions own separate accounts
+      [
+        { taxPayableAccountId: "acct-tax-1" },
+        { taxPayableAccountId: "acct-tax-2" },
       ],
       // jur-1 quarterly (4 periods)
       [{ credits: "100.0000", debits: "50.0000" }],

@@ -1,0 +1,3 @@
+ALTER TABLE "journal_line" ADD COLUMN "tax_jurisdiction_id" uuid;--> statement-breakpoint
+ALTER TABLE "journal_line" ADD CONSTRAINT "journal_line_tax_jurisdiction_id_tax_jurisdiction_id_fk" FOREIGN KEY ("tax_jurisdiction_id") REFERENCES "public"."tax_jurisdiction"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+CREATE INDEX "journal_line_tax_jurisdiction_id_idx" ON "journal_line" USING btree ("tax_jurisdiction_id");

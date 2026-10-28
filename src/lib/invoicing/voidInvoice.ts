@@ -81,6 +81,7 @@ export const voidInvoice = async (
       accountId: journalLineTable.accountId,
       debit: journalLineTable.debit,
       credit: journalLineTable.credit,
+      taxJurisdictionId: journalLineTable.taxJurisdictionId,
     })
     .from(journalLineTable)
     .where(eq(journalLineTable.journalEntryId, invoice.journalEntryId));
@@ -143,6 +144,8 @@ export const voidInvoice = async (
         // Swap sides to reverse the original posting
         debit: line.credit,
         credit: line.debit,
+        // Keep the jurisdiction so the void nets out per jurisdiction too
+        taxJurisdictionId: line.taxJurisdictionId,
       })),
     );
 

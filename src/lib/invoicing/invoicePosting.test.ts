@@ -63,7 +63,8 @@ describe("buildInvoicePostings", () => {
     expect(postings).toEqual([
       { accountId: "ar", debit: 108.25, credit: 0 },
       { accountId: "sales", debit: 0, credit: 100 },
-      { accountId: "tax", debit: 0, credit: 8.25 },
+      // Tax credits carry the jurisdiction (null here, none supplied)
+      { accountId: "tax", debit: 0, credit: 8.25, taxJurisdictionId: null },
     ]);
   });
 
