@@ -80,6 +80,7 @@ import {
 import accountRoutes from "lib/routes/accountRoutes";
 import attachmentRoutes from "lib/routes/attachmentRoutes";
 import bookAccessRoutes from "lib/routes/bookAccessRoutes";
+import bookExportRoutes from "lib/routes/bookExportRoutes";
 import bookRoutes from "lib/routes/bookRoutes";
 import budgetRoutes from "lib/routes/budgetRoutes";
 import categorizationRuleRoutes from "lib/routes/categorizationRuleRoutes";
@@ -202,6 +203,7 @@ const app = new Elysia()
   .use(cryptoRoutes)
   .use(lotRoutes)
   .use(bookRoutes)
+  .use(bookExportRoutes)
   .use(bookAccessRoutes)
   .use(accountRoutes)
   .use(journalRoutes)
