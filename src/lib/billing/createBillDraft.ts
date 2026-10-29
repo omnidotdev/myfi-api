@@ -26,6 +26,10 @@ interface CreateBillDraftOptions {
   billDate: string;
   dueDate: string;
   memo?: string | null;
+  /** Bill currency; defaults to the book's home currency (USD) */
+  currency?: string | null;
+  /** Home-currency units per one unit of `currency` at the bill date; 1 for home */
+  exchangeRate?: number | null;
   lines: DraftBillLineInput[];
 }
 
@@ -44,7 +48,17 @@ interface CreateBillDraftResult {
 export const createBillDraft = async (
   opts: CreateBillDraftOptions,
 ): Promise<CreateBillDraftResult> => {
-  const { bookId, vendorId, number, billDate, dueDate, memo, lines } = opts;
+  const {
+    bookId,
+    vendorId,
+    number,
+    billDate,
+    dueDate,
+    memo,
+    currency,
+    exchangeRate,
+    lines,
+  } = opts;
 
   if (lines.length === 0) {
     throw new Error("A bill needs at least one line");
@@ -77,6 +91,10 @@ export const createBillDraft = async (
         taxAmount: "0.0000",
         total: subtotal.toFixed(4),
         memo: memo ?? null,
+        ...(currency ? { currency } : {}),
+        ...(exchangeRate != null
+          ? { exchangeRate: exchangeRate.toFixed(8) }
+          : {}),
       } satisfies InferInsertModel<typeof billTable>)
       .returning();
     if (!billRow) {

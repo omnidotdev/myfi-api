@@ -15,6 +15,8 @@ import {
   computeInvoiceTotals,
   computeLineAmount,
   computeLineTax,
+  fromUnits,
+  toUnits,
 } from "lib/invoicing/invoicePosting";
 import { buildBillPostings } from "./billPosting";
 
@@ -155,12 +157,30 @@ export const postBill = async (
       throw new Error("Failed to write the bill journal entry");
     }
 
+    // Convert the expense/AP postings from the bill currency to the book's home
+    // currency at the bill rate. Each expense debit is rounded to home currency
+    // and the single AP credit is set to their sum, so the entry balances
+    // exactly. Rate 1 (a home-currency bill) leaves every amount unchanged
+    const rate = Number(bill.exchangeRate) || 1;
+    let apHomeUnits = 0;
     for (const posting of postings) {
+      if (posting.debit <= 0) continue;
+      const homeUnits = Math.round(toUnits(posting.debit) * rate);
+      apHomeUnits += homeUnits;
       await tx.insert(journalLineTable).values({
         journalEntryId: entryRow.id,
         accountId: posting.accountId,
-        debit: posting.debit.toFixed(4),
-        credit: posting.credit.toFixed(4),
+        debit: fromUnits(homeUnits).toFixed(4),
+        credit: "0.0000",
+      } satisfies InferInsertModel<typeof journalLineTable>);
+    }
+    const apPosting = postings.find((p) => p.credit > 0);
+    if (apPosting) {
+      await tx.insert(journalLineTable).values({
+        journalEntryId: entryRow.id,
+        accountId: apPosting.accountId,
+        debit: "0.0000",
+        credit: fromUnits(apHomeUnits).toFixed(4),
       } satisfies InferInsertModel<typeof journalLineTable>);
     }
 

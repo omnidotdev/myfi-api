@@ -8,7 +8,8 @@ import {
   journalEntryTable,
   journalLineTable,
 } from "lib/db/schema";
-import { MONEY_SCALE, toUnits } from "lib/invoicing/invoicePosting";
+import { resolveFxAccount } from "lib/accounting/fxAccount";
+import { fromUnits, MONEY_SCALE, toUnits } from "lib/invoicing/invoicePosting";
 
 import type { InferInsertModel } from "drizzle-orm";
 
@@ -18,10 +19,17 @@ const BILL_PAYMENT_SOURCE = "bill_payment";
 interface RecordBillPaymentOptions {
   billId: string;
   bookId: string;
+  /** Payment amount in the bill's currency */
   amount: number;
-  /** Cash or bank account the funds are paid from */
+  /** Cash or bank account the funds are paid from (in home currency) */
   paymentAccountId: string;
   date: string;
+  /**
+   * Home-currency units per one unit of the bill currency at the payment date.
+   * Defaults to the bill's own rate (so a home-currency payment, or a foreign
+   * payment at an unchanged rate, books no FX gain/loss)
+   */
+  exchangeRate?: number | null;
   method?: string | null;
   reference?: string | null;
 }
@@ -41,8 +49,16 @@ interface RecordBillPaymentResult {
 export const recordBillPayment = async (
   opts: RecordBillPaymentOptions,
 ): Promise<RecordBillPaymentResult> => {
-  const { billId, bookId, amount, paymentAccountId, date, method, reference } =
-    opts;
+  const {
+    billId,
+    bookId,
+    amount,
+    paymentAccountId,
+    date,
+    exchangeRate,
+    method,
+    reference,
+  } = opts;
 
   if (toUnits(amount) <= 0) {
     throw new Error("Payment amount must be positive");
@@ -125,6 +141,15 @@ export const recordBillPayment = async (
     const billStatus: "partial" | "paid" =
       newPaidUnits >= toUnits(Number(locked.total)) ? "paid" : "partial";
 
+    // Cash leaves at the payment-date rate; AP was booked at the bill rate.
+    // Their difference in home currency is the realized FX gain/loss
+    const billRate = Number(locked.exchangeRate) || 1;
+    const paymentRate = exchangeRate != null ? exchangeRate : billRate;
+    const amountUnits = toUnits(amount);
+    const apHomeUnits = Math.round(amountUnits * billRate);
+    const cashHomeUnits = Math.round(amountUnits * paymentRate);
+    const fxUnits = cashHomeUnits - apHomeUnits;
+
     const [paymentRow] = await tx
       .insert(billPaymentTable)
       .values({
@@ -132,6 +157,7 @@ export const recordBillPayment = async (
         billId,
         date,
         amount: amount.toFixed(4),
+        exchangeRate: paymentRate.toFixed(8),
         paymentAccountId,
         method: method ?? null,
         reference: reference ?? null,
@@ -159,15 +185,26 @@ export const recordBillPayment = async (
     await tx.insert(journalLineTable).values({
       journalEntryId: entryRow.id,
       accountId: apAccount.id,
-      debit: amount.toFixed(4),
+      debit: fromUnits(apHomeUnits).toFixed(4),
       credit: "0.0000",
     } satisfies InferInsertModel<typeof journalLineTable>);
     await tx.insert(journalLineTable).values({
       journalEntryId: entryRow.id,
       accountId: paymentAccountId,
       debit: "0.0000",
-      credit: amount.toFixed(4),
+      credit: fromUnits(cashHomeUnits).toFixed(4),
     } satisfies InferInsertModel<typeof journalLineTable>);
+    // A rate change between billing and payment is a realized FX gain/loss: more
+    // cash paid than the AP booked is a loss (debit), the reverse a gain
+    if (fxUnits !== 0) {
+      const fxAccountId = await resolveFxAccount(tx, bookId);
+      await tx.insert(journalLineTable).values({
+        journalEntryId: entryRow.id,
+        accountId: fxAccountId,
+        debit: fxUnits > 0 ? fromUnits(fxUnits).toFixed(4) : "0.0000",
+        credit: fxUnits < 0 ? fromUnits(-fxUnits).toFixed(4) : "0.0000",
+      } satisfies InferInsertModel<typeof journalLineTable>);
+    }
 
     await tx
       .update(billPaymentTable)

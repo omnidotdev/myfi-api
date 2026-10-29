@@ -26,8 +26,14 @@ export const billPaymentTable = pgTable(
       .notNull()
       .references(() => billTable.id, { onDelete: "cascade" }),
     date: text().notNull(),
+    // payment amount in the bill's currency
     amount: numeric({ precision: 19, scale: 4 }).notNull(),
-    // account the funds are paid from (a cash/bank account)
+    // home-currency units per one unit of the bill currency at the payment date;
+    // the difference from the bill's rate is the realized FX gain/loss
+    exchangeRate: numeric("exchange_rate", { precision: 19, scale: 8 })
+      .notNull()
+      .default("1"),
+    // account the funds are paid from (a cash/bank account, in home currency)
     paymentAccountId: uuid("payment_account_id")
       .notNull()
       .references(() => accountTable.id),

@@ -106,6 +106,8 @@ const billRoutes = new Elysia({ prefix: "/api/bills" })
         billDate: t.String(),
         dueDate: t.String(),
         memo: t.Optional(t.String()),
+        currency: t.Optional(t.String()),
+        exchangeRate: t.Optional(t.Number({ exclusiveMinimum: 0 })),
         lines: t.Array(
           t.Object({
             description: t.String(),
@@ -154,6 +156,7 @@ const billRoutes = new Elysia({ prefix: "/api/bills" })
           amount: body.amount,
           paymentAccountId: body.paymentAccountId,
           date: body.date,
+          exchangeRate: body.exchangeRate,
           method: body.method,
           reference: body.reference,
         });
@@ -175,6 +178,7 @@ const billRoutes = new Elysia({ prefix: "/api/bills" })
         amount: t.Number(),
         paymentAccountId: t.String(),
         date: t.String(),
+        exchangeRate: t.Optional(t.Number({ exclusiveMinimum: 0 })),
         method: t.Optional(t.String()),
         reference: t.Optional(t.String()),
       }),

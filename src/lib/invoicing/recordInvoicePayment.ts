@@ -8,47 +8,13 @@ import {
   journalEntryTable,
   journalLineTable,
 } from "lib/db/schema";
+import { resolveFxAccount } from "lib/accounting/fxAccount";
 import { fromUnits, MONEY_SCALE, toUnits } from "./invoicePosting";
 
 import type { InferInsertModel } from "drizzle-orm";
 
 /** Journal-entry source marking a customer invoice payment (receipt) */
 const INVOICE_PAYMENT_SOURCE = "invoice_payment";
-
-type Tx = Parameters<Parameters<typeof dbPool.transaction>[0]>[0];
-
-/**
- * Resolve the book's foreign-exchange gain/loss account, creating it the first
- * time a realized FX difference needs to post. One account carries both gains
- * (credits) and losses (debits), matching how accounting software nets FX
- */
-const resolveFxAccount = async (tx: Tx, bookId: string): Promise<string> => {
-  const [existing] = await tx
-    .select({ id: accountTable.id })
-    .from(accountTable)
-    .where(
-      and(
-        eq(accountTable.bookId, bookId),
-        eq(accountTable.subType, "fx_gain_loss"),
-      ),
-    )
-    .limit(1);
-  if (existing) return existing.id;
-
-  const [created] = await tx
-    .insert(accountTable)
-    .values({
-      bookId,
-      name: "Foreign Exchange Gain/Loss",
-      type: "expense",
-      subType: "fx_gain_loss",
-    })
-    .returning({ id: accountTable.id });
-  if (!created) {
-    throw new Error("Failed to create the FX gain/loss account");
-  }
-  return created.id;
-};
 
 interface RecordInvoicePaymentOptions {
   invoiceId: string;
