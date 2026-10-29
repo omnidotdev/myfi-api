@@ -184,12 +184,17 @@ const invoiceRoutes = new Elysia({ prefix: "/api/invoices" })
         set.status = 400;
         return { error: "date must be a YYYY-MM-DD date" };
       }
+      if (!body.toUndepositedFunds && !body.depositAccountId) {
+        set.status = 400;
+        return { error: "A deposit account is required" };
+      }
       try {
         const result = await recordInvoicePayment({
           invoiceId: params.id,
           bookId: body.bookId,
           amount: body.amount,
           depositAccountId: body.depositAccountId,
+          toUndepositedFunds: body.toUndepositedFunds,
           date: body.date,
           exchangeRate: body.exchangeRate,
           method: body.method,
@@ -218,7 +223,9 @@ const invoiceRoutes = new Elysia({ prefix: "/api/invoices" })
       body: t.Object({
         bookId: t.String(),
         amount: t.Number(),
-        depositAccountId: t.String(),
+        // required unless the receipt is held in Undeposited Funds
+        depositAccountId: t.Optional(t.String()),
+        toUndepositedFunds: t.Optional(t.Boolean()),
         date: t.String(),
         exchangeRate: t.Optional(t.Number({ exclusiveMinimum: 0 })),
         method: t.Optional(t.String()),
