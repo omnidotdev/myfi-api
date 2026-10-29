@@ -13,6 +13,7 @@ import { useGrafast } from "grafast/envelop";
 import bankDepositRoutes from "lib/banking/bankDepositRoutes";
 import billRoutes from "lib/billing/billRoutes";
 import generateBudgetTracking from "lib/budgets/budgetTracking";
+import bundleRoutes from "lib/bundles/bundleRoutes";
 import { runMonthlyClose } from "lib/close";
 import startScheduledClose from "lib/close/scheduledClose";
 import runYearEndClose from "lib/close/yearEndClose";
@@ -161,7 +162,8 @@ const connectionAndOrgRoutes = new Elysia()
   .use(trackingCategoryRoutes)
   .use(customFieldRoutes)
   .use(priceLevelRoutes)
-  .use(timeEntryRoutes);
+  .use(timeEntryRoutes)
+  .use(bundleRoutes);
 
 const app = new Elysia()
   .onAfterHandle(({ set }) => {

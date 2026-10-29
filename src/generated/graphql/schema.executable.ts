@@ -277,6 +277,69 @@ const spec_tagGroup = {
   executor: executor
 };
 const tagGroupCodec = recordCodec(spec_tagGroup);
+const bundleComponentIdentifier = sql.identifier("public", "bundle_component");
+const spec_bundleComponent = {
+  name: "bundleComponent",
+  identifier: bundleComponentIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    bundle_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    inventory_item_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    quantity: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "18868",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "bundle_component"
+    }
+  },
+  executor: executor
+};
+const bundleComponentCodec = recordCodec(spec_bundleComponent);
 const __drizzleMigrationsIdentifier = sql.identifier("public", "__drizzle_migrations");
 const spec___drizzleMigrations = {
   name: "__drizzleMigrations",
@@ -1183,6 +1246,101 @@ const spec_importProfile = {
   executor: executor
 };
 const importProfileCodec = recordCodec(spec_importProfile);
+const itemBundleIdentifier = sql.identifier("public", "item_bundle");
+const spec_itemBundle = {
+  name: "itemBundle",
+  identifier: itemBundleIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    name: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    description: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    is_active: {
+      codec: TYPES.boolean,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "18853",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "item_bundle"
+    }
+  },
+  executor: executor
+};
+const itemBundleCodec = recordCodec(spec_itemBundle);
 const trackingCategoryIdentifier = sql.identifier("public", "tracking_category");
 const spec_trackingCategory = {
   name: "trackingCategory",
@@ -8638,6 +8796,29 @@ const tag_group_resourceOptionsConfig = {
   },
   uniques: tag_groupUniques
 };
+const bundle_componentUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const bundle_component_resourceOptionsConfig = {
+  executor: executor,
+  name: "bundle_component",
+  identifier: "main.public.bundle_component",
+  from: bundleComponentIdentifier,
+  codec: bundleComponentCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "bundle_component"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: bundle_componentUniques
+};
 const __drizzle_migrationsUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -8848,6 +9029,29 @@ const import_profile_resourceOptionsConfig = {
     canDelete: true
   },
   uniques: import_profileUniques
+};
+const item_bundleUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const item_bundle_resourceOptionsConfig = {
+  executor: executor,
+  name: "item_bundle",
+  identifier: "main.public.item_bundle",
+  from: itemBundleIdentifier,
+  codec: itemBundleCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "item_bundle"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: item_bundleUniques
 };
 const tracking_categoryUniques = [{
   attributes: ["id"],
@@ -10013,6 +10217,8 @@ const registryConfig = {
     tagGroup: tagGroupCodec,
     text: TYPES.text,
     timestamptz: TYPES.timestamptz,
+    bundleComponent: bundleComponentCodec,
+    numeric: TYPES.numeric,
     "__drizzleMigrations": __drizzleMigrationsCodec,
     int4: TYPES.int,
     int8: TYPES.bigint,
@@ -10020,7 +10226,6 @@ const registryConfig = {
     accountMapping: accountMappingCodec,
     bookAccess: bookAccessCodec,
     creditMemoApplication: creditMemoApplicationCodec,
-    numeric: TYPES.numeric,
     vendorCreditApplication: vendorCreditApplicationCodec,
     tag: tagCodec,
     bool: TYPES.boolean,
@@ -10028,6 +10233,7 @@ const registryConfig = {
     savingsGoal: savingsGoalCodec,
     importProfile: importProfileCodec,
     jsonb: TYPES.jsonb,
+    itemBundle: itemBundleCodec,
     trackingCategory: trackingCategoryCodec,
     priceLevel: priceLevelCodec,
     customFieldDefinition: customFieldDefinitionCodec,
@@ -10090,6 +10296,7 @@ const registryConfig = {
     journal_line_tag: journal_line_tag_resourceOptionsConfig,
     journal_line_tracking_category: journal_line_tracking_category_resourceOptionsConfig,
     tag_group: tag_group_resourceOptionsConfig,
+    bundle_component: bundle_component_resourceOptionsConfig,
     "__drizzle_migrations": {
       executor: executor,
       name: "__drizzle_migrations",
@@ -10118,6 +10325,7 @@ const registryConfig = {
     vehicle: vehicle_resourceOptionsConfig,
     savings_goal: savings_goal_resourceOptionsConfig,
     import_profile: import_profile_resourceOptionsConfig,
+    item_bundle: item_bundle_resourceOptionsConfig,
     tracking_category: tracking_category_resourceOptionsConfig,
     price_level: price_level_resourceOptionsConfig,
     custom_field_definition: custom_field_definition_resourceOptionsConfig,
@@ -11113,6 +11321,13 @@ const registryConfig = {
         localAttributes: ["id"],
         remoteAttributes: ["book_id"],
         isReferencee: true
+      },
+      itemBundlesByTheirBookId: {
+        localCodec: bookCodec,
+        remoteResourceOptions: item_bundle_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["book_id"],
+        isReferencee: true
       }
     },
     bookAccess: {
@@ -11138,6 +11353,23 @@ const registryConfig = {
         localCodec: budgetCodec,
         remoteResourceOptions: book_resourceOptionsConfig,
         localAttributes: ["book_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      }
+    },
+    bundleComponent: {
+      __proto__: null,
+      itemBundleByMyBundleId: {
+        localCodec: bundleComponentCodec,
+        remoteResourceOptions: item_bundle_resourceOptionsConfig,
+        localAttributes: ["bundle_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      inventoryItemByMyInventoryItemId: {
+        localCodec: bundleComponentCodec,
+        remoteResourceOptions: inventory_item_resourceOptionsConfig,
+        localAttributes: ["inventory_item_id"],
         remoteAttributes: ["id"],
         isUnique: true
       }
@@ -11630,6 +11862,17 @@ const registryConfig = {
           __proto__: null,
           isIndexed: false
         }
+      },
+      bundleComponentsByTheirInventoryItemId: {
+        localCodec: inventoryItemCodec,
+        remoteResourceOptions: bundle_component_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["inventory_item_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
       }
     },
     inventoryTransaction: {
@@ -11797,6 +12040,23 @@ const registryConfig = {
         localAttributes: ["journal_entry_id"],
         remoteAttributes: ["id"],
         isUnique: true
+      }
+    },
+    itemBundle: {
+      __proto__: null,
+      bookByMyBookId: {
+        localCodec: itemBundleCodec,
+        remoteResourceOptions: book_resourceOptionsConfig,
+        localAttributes: ["book_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      bundleComponentsByTheirBundleId: {
+        localCodec: itemBundleCodec,
+        remoteResourceOptions: bundle_component_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["bundle_id"],
+        isReferencee: true
       }
     },
     journalEntry: {
@@ -12773,6 +13033,7 @@ const resource_journal_line_projectPgResource = registry.pgResources["journal_li
 const resource_journal_line_tagPgResource = registry.pgResources["journal_line_tag"];
 const resource_journal_line_tracking_categoryPgResource = registry.pgResources["journal_line_tracking_category"];
 const resource_tag_groupPgResource = registry.pgResources["tag_group"];
+const resource_bundle_componentPgResource = registry.pgResources["bundle_component"];
 const resource___drizzle_migrationsPgResource = registry.pgResources["__drizzle_migrations"];
 const resource_custom_field_valuePgResource = registry.pgResources["custom_field_value"];
 const resource_account_mappingPgResource = registry.pgResources["account_mapping"];
@@ -12783,6 +13044,7 @@ const resource_tagPgResource = registry.pgResources["tag"];
 const resource_vehiclePgResource = registry.pgResources["vehicle"];
 const resource_savings_goalPgResource = registry.pgResources["savings_goal"];
 const resource_import_profilePgResource = registry.pgResources["import_profile"];
+const resource_item_bundlePgResource = registry.pgResources["item_bundle"];
 const resource_tracking_categoryPgResource = registry.pgResources["tracking_category"];
 const resource_price_levelPgResource = registry.pgResources["price_level"];
 const resource_custom_field_definitionPgResource = registry.pgResources["custom_field_definition"];
@@ -12921,6 +13183,17 @@ const nodeFetcher_TagGroup = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_TagGroup));
   return nodeIdHandler_TagGroup.get(nodeIdHandler_TagGroup.getSpec($decoded));
 };
+const nodeIdHandler_BundleComponent = makeTableNodeIdHandler({
+  typeName: "BundleComponent",
+  identifier: "BundleComponent",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_bundle_componentPgResource,
+  pk: bundle_componentUniques[0].attributes
+});
+const nodeFetcher_BundleComponent = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_BundleComponent));
+  return nodeIdHandler_BundleComponent.get(nodeIdHandler_BundleComponent.getSpec($decoded));
+};
 const nodeIdHandler__DrizzleMigration = makeTableNodeIdHandler({
   typeName: "_DrizzleMigration",
   identifier: "_DrizzleMigration",
@@ -13030,6 +13303,17 @@ const nodeIdHandler_ImportProfile = makeTableNodeIdHandler({
 const nodeFetcher_ImportProfile = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_ImportProfile));
   return nodeIdHandler_ImportProfile.get(nodeIdHandler_ImportProfile.getSpec($decoded));
+};
+const nodeIdHandler_ItemBundle = makeTableNodeIdHandler({
+  typeName: "ItemBundle",
+  identifier: "ItemBundle",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_item_bundlePgResource,
+  pk: item_bundleUniques[0].attributes
+});
+const nodeFetcher_ItemBundle = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_ItemBundle));
+  return nodeIdHandler_ItemBundle.get(nodeIdHandler_ItemBundle.getSpec($decoded));
 };
 const nodeIdHandler_TrackingCategory = makeTableNodeIdHandler({
   typeName: "TrackingCategory",
@@ -13637,6 +13921,7 @@ const nodeIdHandlerByTypeName = {
   JournalLineTag: nodeIdHandler_JournalLineTag,
   JournalLineTrackingCategory: nodeIdHandler_JournalLineTrackingCategory,
   TagGroup: nodeIdHandler_TagGroup,
+  BundleComponent: nodeIdHandler_BundleComponent,
   _DrizzleMigration: nodeIdHandler__DrizzleMigration,
   CustomFieldValue: nodeIdHandler_CustomFieldValue,
   AccountMapping: nodeIdHandler_AccountMapping,
@@ -13647,6 +13932,7 @@ const nodeIdHandlerByTypeName = {
   Vehicle: nodeIdHandler_Vehicle,
   SavingsGoal: nodeIdHandler_SavingsGoal,
   ImportProfile: nodeIdHandler_ImportProfile,
+  ItemBundle: nodeIdHandler_ItemBundle,
   TrackingCategory: nodeIdHandler_TrackingCategory,
   PriceLevel: nodeIdHandler_PriceLevel,
   CustomFieldDefinition: nodeIdHandler_CustomFieldDefinition,
@@ -14423,6 +14709,10 @@ const specFromArgs_TagGroup = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_TagGroup, $nodeId);
 };
+const specFromArgs_BundleComponent = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_BundleComponent, $nodeId);
+};
 const specFromArgs__DrizzleMigration = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler__DrizzleMigration, $nodeId);
@@ -14462,6 +14752,10 @@ const specFromArgs_SavingsGoal = args => {
 const specFromArgs_ImportProfile = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_ImportProfile, $nodeId);
+};
+const specFromArgs_ItemBundle = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_ItemBundle, $nodeId);
 };
 const specFromArgs_TrackingCategory = args => {
   const $nodeId = args.getRaw(["input", "id"]);
@@ -14724,6 +15018,16 @@ function TagGroupInput_nameApply(obj, val, info) {
 function TagGroupInput_createdAtApply(obj, val, info) {
   obj.set("created_at", bakedInputRuntime(info.schema, info.field.type, val));
 }
+const CreateBundleComponentPayload_bundleComponentEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_bundle_componentPgResource, bundle_componentUniques[0].attributes, $mutation, fieldArgs);
+function BundleComponentInput_bundleIdApply(obj, val, info) {
+  obj.set("bundle_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function BundleComponentInput_inventoryItemIdApply(obj, val, info) {
+  obj.set("inventory_item_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function BundleComponentInput_quantityApply(obj, val, info) {
+  obj.set("quantity", bakedInputRuntime(info.schema, info.field.type, val));
+}
 const CreateDrizzleMigrationPayload__drizzleMigrationEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource___drizzle_migrationsPgResource, __drizzle_migrationsUniques[0].attributes, $mutation, fieldArgs);
 function _DrizzleMigrationInput_hashApply(obj, val, info) {
   obj.set("hash", bakedInputRuntime(info.schema, info.field.type, val));
@@ -14823,6 +15127,10 @@ function ImportProfileInput_columnMapApply(obj, val, info) {
 }
 function ImportProfileInput_headerRowsApply(obj, val, info) {
   obj.set("header_rows", bakedInputRuntime(info.schema, info.field.type, val));
+}
+const CreateItemBundlePayload_itemBundleEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_item_bundlePgResource, item_bundleUniques[0].attributes, $mutation, fieldArgs);
+function ItemBundleInput_descriptionApply(obj, val, info) {
+  obj.set("description", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateTrackingCategoryPayload_trackingCategoryEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_tracking_categoryPgResource, tracking_categoryUniques[0].attributes, $mutation, fieldArgs);
 function TrackingCategoryInput_kindApply(obj, val, info) {
@@ -14935,9 +15243,6 @@ function InventoryTransactionInput_itemIdApply(obj, val, info) {
 function InventoryTransactionInput_typeApply(obj, val, info) {
   obj.set("type", bakedInputRuntime(info.schema, info.field.type, val));
 }
-function InventoryTransactionInput_quantityApply(obj, val, info) {
-  obj.set("quantity", bakedInputRuntime(info.schema, info.field.type, val));
-}
 function InventoryTransactionInput_unitCostApply(obj, val, info) {
   obj.set("unit_cost", bakedInputRuntime(info.schema, info.field.type, val));
 }
@@ -14973,9 +15278,6 @@ function PayrollConnectionInput_syncCursorApply(obj, val, info) {
 const CreatePurchaseOrderLinePayload_purchaseOrderLineEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_purchase_order_linePgResource, purchase_order_lineUniques[0].attributes, $mutation, fieldArgs);
 function PurchaseOrderLineInput_purchaseOrderIdApply(obj, val, info) {
   obj.set("purchase_order_id", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function PurchaseOrderLineInput_descriptionApply(obj, val, info) {
-  obj.set("description", bakedInputRuntime(info.schema, info.field.type, val));
 }
 function PurchaseOrderLineInput_unitPriceApply(obj, val, info) {
   obj.set("unit_price", bakedInputRuntime(info.schema, info.field.type, val));
@@ -15164,9 +15466,6 @@ function ConnectedAccountInput_maskApply(obj, val, info) {
   obj.set("mask", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateCreditMemoLinePayload_creditMemoLineEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_credit_memo_linePgResource, credit_memo_lineUniques[0].attributes, $mutation, fieldArgs);
-function CreditMemoLineInput_inventoryItemIdApply(obj, val, info) {
-  obj.set("inventory_item_id", bakedInputRuntime(info.schema, info.field.type, val));
-}
 const CreateInvoicePaymentPayload_invoicePaymentEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_invoice_paymentPgResource, invoice_paymentUniques[0].attributes, $mutation, fieldArgs);
 function InvoicePaymentInput_depositAccountIdApply(obj, val, info) {
   obj.set("deposit_account_id", bakedInputRuntime(info.schema, info.field.type, val));
@@ -15496,6 +15795,9 @@ type Query implements Node {
   """Get a single \`TagGroup\`."""
   tagGroup(rowId: UUID!): TagGroup
 
+  """Get a single \`BundleComponent\`."""
+  bundleComponent(rowId: UUID!): BundleComponent
+
   """Get a single \`_DrizzleMigration\`."""
   _drizzleMigration(rowId: Int!): _DrizzleMigration
 
@@ -15525,6 +15827,9 @@ type Query implements Node {
 
   """Get a single \`ImportProfile\`."""
   importProfile(rowId: UUID!): ImportProfile
+
+  """Get a single \`ItemBundle\`."""
+  itemBundle(rowId: UUID!): ItemBundle
 
   """Get a single \`TrackingCategory\`."""
   trackingCategory(rowId: UUID!): TrackingCategory
@@ -15708,6 +16013,14 @@ type Query implements Node {
     id: ID!
   ): TagGroup
 
+  """Reads a single \`BundleComponent\` using its globally unique \`ID\`."""
+  bundleComponentById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`BundleComponent\`.
+    """
+    id: ID!
+  ): BundleComponent
+
   """Reads a single \`_DrizzleMigration\` using its globally unique \`ID\`."""
   _drizzleMigrationById(
     """
@@ -15785,6 +16098,14 @@ type Query implements Node {
     """
     id: ID!
   ): ImportProfile
+
+  """Reads a single \`ItemBundle\` using its globally unique \`ID\`."""
+  itemBundleById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`ItemBundle\`.
+    """
+    id: ID!
+  ): ItemBundle
 
   """Reads a single \`TrackingCategory\` using its globally unique \`ID\`."""
   trackingCategoryById(
@@ -16298,6 +16619,40 @@ type Query implements Node {
     orderBy: [TagGroupOrderBy!] = [PRIMARY_KEY_ASC]
   ): TagGroupConnection
 
+  """Reads and enables pagination through a set of \`BundleComponent\`."""
+  bundleComponents(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: BundleComponentCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: BundleComponentFilter
+
+    """The method to use when ordering \`BundleComponent\`."""
+    orderBy: [BundleComponentOrderBy!] = [PRIMARY_KEY_ASC]
+  ): BundleComponentConnection
+
   """Reads and enables pagination through a set of \`_DrizzleMigration\`."""
   _drizzleMigrations(
     """Only read the first \`n\` values of the set."""
@@ -16639,6 +16994,40 @@ type Query implements Node {
     """The method to use when ordering \`ImportProfile\`."""
     orderBy: [ImportProfileOrderBy!] = [PRIMARY_KEY_ASC]
   ): ImportProfileConnection
+
+  """Reads and enables pagination through a set of \`ItemBundle\`."""
+  itemBundles(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ItemBundleCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ItemBundleFilter
+
+    """The method to use when ordering \`ItemBundle\`."""
+    orderBy: [ItemBundleOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ItemBundleConnection
 
   """Reads and enables pagination through a set of \`TrackingCategory\`."""
   trackingCategories(
@@ -20242,6 +20631,40 @@ type Book implements Node {
     """The method to use when ordering \`TimeEntry\`."""
     orderBy: [TimeEntryOrderBy!] = [PRIMARY_KEY_ASC]
   ): TimeEntryConnection!
+
+  """Reads and enables pagination through a set of \`ItemBundle\`."""
+  itemBundles(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ItemBundleCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: ItemBundleFilter
+
+    """The method to use when ordering \`ItemBundle\`."""
+    orderBy: [ItemBundleOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ItemBundleConnection!
 }
 
 """A connection to a list of \`Account\` values."""
@@ -20790,6 +21213,12 @@ input BookFilter {
 
   """Some related \`timeEntries\` exist."""
   timeEntriesExist: Boolean
+
+  """Filter by the object’s \`itemBundles\` relation."""
+  itemBundles: BookToManyItemBundleFilter
+
+  """Some related \`itemBundles\` exist."""
+  itemBundlesExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [BookFilter!]
@@ -24845,6 +25274,101 @@ input BookToManyTimeEntryFilter {
   No related \`TimeEntry\` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
   none: TimeEntryFilter
+}
+
+"""
+A filter to be used against many \`ItemBundle\` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyItemBundleFilter {
+  """
+  Every related \`ItemBundle\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: ItemBundleFilter
+
+  """
+  Some related \`ItemBundle\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: ItemBundleFilter
+
+  """
+  No related \`ItemBundle\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: ItemBundleFilter
+}
+
+"""
+A filter to be used against \`ItemBundle\` object types. All fields are combined with a logical ‘and.’
+"""
+input ItemBundleFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`bookId\` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s \`bundleComponentsByBundleId\` relation."""
+  bundleComponentsByBundleId: ItemBundleToManyBundleComponentFilter
+
+  """Some related \`bundleComponentsByBundleId\` exist."""
+  bundleComponentsByBundleIdExist: Boolean
+
+  """Filter by the object’s \`book\` relation."""
+  book: BookFilter
+
+  """Checks for all expressions in this list."""
+  and: [ItemBundleFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [ItemBundleFilter!]
+
+  """Negates the expression."""
+  not: ItemBundleFilter
+}
+
+"""
+A filter to be used against many \`BundleComponent\` object types. All fields are combined with a logical ‘and.’
+"""
+input ItemBundleToManyBundleComponentFilter {
+  """
+  Every related \`BundleComponent\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: BundleComponentFilter
+
+  """
+  Some related \`BundleComponent\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: BundleComponentFilter
+
+  """
+  No related \`BundleComponent\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: BundleComponentFilter
+}
+
+"""
+A filter to be used against \`BundleComponent\` object types. All fields are combined with a logical ‘and.’
+"""
+input BundleComponentFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`bundleId\` field."""
+  bundleId: UUIDFilter
+
+  """Filter by the object’s \`bundle\` relation."""
+  bundle: ItemBundleFilter
+
+  """Filter by the object’s \`inventoryItem\` relation."""
+  inventoryItem: InventoryItemFilter
+
+  """Checks for all expressions in this list."""
+  and: [BundleComponentFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [BundleComponentFilter!]
+
+  """Negates the expression."""
+  not: BundleComponentFilter
 }
 
 """
@@ -30983,6 +31507,176 @@ enum PriceLevelOrderBy {
   BOOK_ID_DESC
 }
 
+"""A connection to a list of \`ItemBundle\` values."""
+type ItemBundleConnection {
+  """A list of \`ItemBundle\` objects."""
+  nodes: [ItemBundle]!
+
+  """
+  A list of edges which contains the \`ItemBundle\` and cursor to aid in pagination.
+  """
+  edges: [ItemBundleEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* \`ItemBundle\` you could get from the connection."""
+  totalCount: Int!
+}
+
+type ItemBundle implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  name: String!
+  description: String
+  isActive: Boolean!
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """Reads a single \`Book\` that is related to this \`ItemBundle\`."""
+  book: Book
+
+  """Reads and enables pagination through a set of \`BundleComponent\`."""
+  bundleComponentsByBundleId(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: BundleComponentCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: BundleComponentFilter
+
+    """The method to use when ordering \`BundleComponent\`."""
+    orderBy: [BundleComponentOrderBy!] = [PRIMARY_KEY_ASC]
+  ): BundleComponentConnection!
+}
+
+"""A connection to a list of \`BundleComponent\` values."""
+type BundleComponentConnection {
+  """A list of \`BundleComponent\` objects."""
+  nodes: [BundleComponent]!
+
+  """
+  A list of edges which contains the \`BundleComponent\` and cursor to aid in pagination.
+  """
+  edges: [BundleComponentEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* \`BundleComponent\` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+type BundleComponent implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bundleId: UUID!
+  inventoryItemId: UUID!
+  quantity: BigFloat!
+
+  """Reads a single \`ItemBundle\` that is related to this \`BundleComponent\`."""
+  bundle: ItemBundle
+
+  """
+  Reads a single \`InventoryItem\` that is related to this \`BundleComponent\`.
+  """
+  inventoryItem: InventoryItem
+}
+
+"""A \`BundleComponent\` edge in the connection."""
+type BundleComponentEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`BundleComponent\` at the end of the edge."""
+  node: BundleComponent
+}
+
+"""
+A condition to be used against \`BundleComponent\` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input BundleComponentCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`bundleId\` field."""
+  bundleId: UUID
+}
+
+"""Methods to use when ordering \`BundleComponent\`."""
+enum BundleComponentOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BUNDLE_ID_ASC
+  BUNDLE_ID_DESC
+}
+
+"""A \`ItemBundle\` edge in the connection."""
+type ItemBundleEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`ItemBundle\` at the end of the edge."""
+  node: ItemBundle
+}
+
+"""
+A condition to be used against \`ItemBundle\` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input ItemBundleCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`bookId\` field."""
+  bookId: UUID
+}
+
+"""Methods to use when ordering \`ItemBundle\`."""
+enum ItemBundleOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+}
+
 type _DrizzleMigration implements Node {
   """
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
@@ -31228,6 +31922,14 @@ type Mutation {
     input: CreateTagGroupInput!
   ): CreateTagGroupPayload
 
+  """Creates a single \`BundleComponent\`."""
+  createBundleComponent(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateBundleComponentInput!
+  ): CreateBundleComponentPayload
+
   """Creates a single \`_DrizzleMigration\`."""
   createDrizzleMigration(
     """
@@ -31307,6 +32009,14 @@ type Mutation {
     """
     input: CreateImportProfileInput!
   ): CreateImportProfilePayload
+
+  """Creates a single \`ItemBundle\`."""
+  createItemBundle(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateItemBundleInput!
+  ): CreateItemBundlePayload
 
   """Creates a single \`TrackingCategory\`."""
   createTrackingCategory(
@@ -31781,6 +32491,24 @@ type Mutation {
   ): UpdateTagGroupPayload
 
   """
+  Updates a single \`BundleComponent\` using its globally unique id and a patch.
+  """
+  updateBundleComponentById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateBundleComponentByIdInput!
+  ): UpdateBundleComponentPayload
+
+  """Updates a single \`BundleComponent\` using a unique key and a patch."""
+  updateBundleComponent(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateBundleComponentInput!
+  ): UpdateBundleComponentPayload
+
+  """
   Updates a single \`_DrizzleMigration\` using its globally unique id and a patch.
   """
   updateDrizzleMigrationById(
@@ -31959,6 +32687,24 @@ type Mutation {
     """
     input: UpdateImportProfileInput!
   ): UpdateImportProfilePayload
+
+  """
+  Updates a single \`ItemBundle\` using its globally unique id and a patch.
+  """
+  updateItemBundleById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateItemBundleByIdInput!
+  ): UpdateItemBundlePayload
+
+  """Updates a single \`ItemBundle\` using a unique key and a patch."""
+  updateItemBundle(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateItemBundleInput!
+  ): UpdateItemBundlePayload
 
   """
   Updates a single \`TrackingCategory\` using its globally unique id and a patch.
@@ -32908,6 +33654,22 @@ type Mutation {
     input: DeleteTagGroupInput!
   ): DeleteTagGroupPayload
 
+  """Deletes a single \`BundleComponent\` using its globally unique id."""
+  deleteBundleComponentById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteBundleComponentByIdInput!
+  ): DeleteBundleComponentPayload
+
+  """Deletes a single \`BundleComponent\` using a unique key."""
+  deleteBundleComponent(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteBundleComponentInput!
+  ): DeleteBundleComponentPayload
+
   """Deletes a single \`_DrizzleMigration\` using its globally unique id."""
   deleteDrizzleMigrationById(
     """
@@ -33069,6 +33831,22 @@ type Mutation {
     """
     input: DeleteImportProfileInput!
   ): DeleteImportProfilePayload
+
+  """Deletes a single \`ItemBundle\` using its globally unique id."""
+  deleteItemBundleById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteItemBundleByIdInput!
+  ): DeleteItemBundlePayload
+
+  """Deletes a single \`ItemBundle\` using a unique key."""
+  deleteItemBundle(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteItemBundleInput!
+  ): DeleteItemBundlePayload
 
   """Deletes a single \`TrackingCategory\` using its globally unique id."""
   deleteTrackingCategoryById(
@@ -34044,6 +34822,49 @@ input TagGroupInput {
   createdAt: Datetime
 }
 
+"""The output of our create \`BundleComponent\` mutation."""
+type CreateBundleComponentPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`BundleComponent\` that was created by this mutation."""
+  bundleComponent: BundleComponent
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`BundleComponent\`. May be used by Relay 1."""
+  bundleComponentEdge(
+    """The method to use when ordering \`BundleComponent\`."""
+    orderBy: [BundleComponentOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BundleComponentEdge
+}
+
+"""All input for the create \`BundleComponent\` mutation."""
+input CreateBundleComponentInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`BundleComponent\` to be created by this mutation."""
+  bundleComponent: BundleComponentInput!
+}
+
+"""An input for mutations affecting \`BundleComponent\`"""
+input BundleComponentInput {
+  rowId: UUID
+  bundleId: UUID!
+  inventoryItemId: UUID!
+  quantity: BigFloat
+}
+
 """The output of our create \`_DrizzleMigration\` mutation."""
 type CreateDrizzleMigrationPayload {
   """
@@ -34497,6 +35318,52 @@ input ImportProfileInput {
   name: String!
   columnMap: JSON!
   headerRows: String
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""The output of our create \`ItemBundle\` mutation."""
+type CreateItemBundlePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`ItemBundle\` that was created by this mutation."""
+  itemBundle: ItemBundle
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`ItemBundle\`. May be used by Relay 1."""
+  itemBundleEdge(
+    """The method to use when ordering \`ItemBundle\`."""
+    orderBy: [ItemBundleOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ItemBundleEdge
+}
+
+"""All input for the create \`ItemBundle\` mutation."""
+input CreateItemBundleInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`ItemBundle\` to be created by this mutation."""
+  itemBundle: ItemBundleInput!
+}
+
+"""An input for mutations affecting \`ItemBundle\`"""
+input ItemBundleInput {
+  rowId: UUID
+  bookId: UUID!
+  name: String!
+  description: String
+  isActive: Boolean
   createdAt: Datetime
   updatedAt: Datetime
 }
@@ -37305,6 +38172,73 @@ input UpdateTagGroupInput {
   patch: TagGroupPatch!
 }
 
+"""The output of our update \`BundleComponent\` mutation."""
+type UpdateBundleComponentPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`BundleComponent\` that was updated by this mutation."""
+  bundleComponent: BundleComponent
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`BundleComponent\`. May be used by Relay 1."""
+  bundleComponentEdge(
+    """The method to use when ordering \`BundleComponent\`."""
+    orderBy: [BundleComponentOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BundleComponentEdge
+}
+
+"""All input for the \`updateBundleComponentById\` mutation."""
+input UpdateBundleComponentByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`BundleComponent\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`BundleComponent\` being updated.
+  """
+  patch: BundleComponentPatch!
+}
+
+"""
+Represents an update to a \`BundleComponent\`. Fields that are set will be updated.
+"""
+input BundleComponentPatch {
+  rowId: UUID
+  bundleId: UUID
+  inventoryItemId: UUID
+  quantity: BigFloat
+}
+
+"""All input for the \`updateBundleComponent\` mutation."""
+input UpdateBundleComponentInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`BundleComponent\` being updated.
+  """
+  patch: BundleComponentPatch!
+}
+
 """The output of our update \`_DrizzleMigration\` mutation."""
 type UpdateDrizzleMigrationPayload {
   """
@@ -37998,6 +38932,76 @@ input UpdateImportProfileInput {
   An object where the defined keys will be set on the \`ImportProfile\` being updated.
   """
   patch: ImportProfilePatch!
+}
+
+"""The output of our update \`ItemBundle\` mutation."""
+type UpdateItemBundlePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`ItemBundle\` that was updated by this mutation."""
+  itemBundle: ItemBundle
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`ItemBundle\`. May be used by Relay 1."""
+  itemBundleEdge(
+    """The method to use when ordering \`ItemBundle\`."""
+    orderBy: [ItemBundleOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ItemBundleEdge
+}
+
+"""All input for the \`updateItemBundleById\` mutation."""
+input UpdateItemBundleByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`ItemBundle\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`ItemBundle\` being updated.
+  """
+  patch: ItemBundlePatch!
+}
+
+"""
+Represents an update to a \`ItemBundle\`. Fields that are set will be updated.
+"""
+input ItemBundlePatch {
+  rowId: UUID
+  bookId: UUID
+  name: String
+  description: String
+  isActive: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the \`updateItemBundle\` mutation."""
+input UpdateItemBundleInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`ItemBundle\` being updated.
+  """
+  patch: ItemBundlePatch!
 }
 
 """The output of our update \`TrackingCategory\` mutation."""
@@ -41925,6 +42929,54 @@ input DeleteTagGroupInput {
   rowId: UUID!
 }
 
+"""The output of our delete \`BundleComponent\` mutation."""
+type DeleteBundleComponentPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`BundleComponent\` that was deleted by this mutation."""
+  bundleComponent: BundleComponent
+  deletedBundleComponentId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`BundleComponent\`. May be used by Relay 1."""
+  bundleComponentEdge(
+    """The method to use when ordering \`BundleComponent\`."""
+    orderBy: [BundleComponentOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BundleComponentEdge
+}
+
+"""All input for the \`deleteBundleComponentById\` mutation."""
+input DeleteBundleComponentByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`BundleComponent\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteBundleComponent\` mutation."""
+input DeleteBundleComponentInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete \`_DrizzleMigration\` mutation."""
 type DeleteDrizzleMigrationPayload {
   """
@@ -42397,6 +43449,54 @@ input DeleteImportProfileByIdInput {
 
 """All input for the \`deleteImportProfile\` mutation."""
 input DeleteImportProfileInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`ItemBundle\` mutation."""
+type DeleteItemBundlePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`ItemBundle\` that was deleted by this mutation."""
+  itemBundle: ItemBundle
+  deletedItemBundleId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`ItemBundle\`. May be used by Relay 1."""
+  itemBundleEdge(
+    """The method to use when ordering \`ItemBundle\`."""
+    orderBy: [ItemBundleOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): ItemBundleEdge
+}
+
+"""All input for the \`deleteItemBundleById\` mutation."""
+input DeleteItemBundleByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`ItemBundle\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteItemBundle\` mutation."""
+input DeleteItemBundleInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -45148,6 +46248,32 @@ export const objects = {
           orderBy: applyOrderByArgToConnection
         }
       },
+      bundleComponent(_$root, {
+        $rowId
+      }) {
+        return resource_bundle_componentPgResource.get({
+          id: $rowId
+        });
+      },
+      bundleComponentById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_BundleComponent($nodeId);
+      },
+      bundleComponents: {
+        plan() {
+          return connection(resource_bundle_componentPgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       categorizationRule(_$root, {
         $rowId
       }) {
@@ -45686,6 +46812,32 @@ export const objects = {
       invoices: {
         plan() {
           return connection(resource_invoicePgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      itemBundle(_$root, {
+        $rowId
+      }) {
+        return resource_item_bundlePgResource.get({
+          id: $rowId
+        });
+      },
+      itemBundleById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_ItemBundle($nodeId);
+      },
+      itemBundles: {
+        plan() {
+          return connection(resource_item_bundlePgResource.find());
         },
         args: {
           first: applyFirstArg,
@@ -46633,6 +47785,18 @@ export const objects = {
           input: applyInputToInsert
         }
       },
+      createBundleComponent: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_bundle_componentPgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
       createCategorizationRule: {
         plan(_, args) {
           const $insert = pgInsertSingle(resource_categorization_rulePgResource);
@@ -46888,6 +48052,18 @@ export const objects = {
       createInvoicePayment: {
         plan(_, args) {
           const $insert = pgInsertSingle(resource_invoice_paymentPgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
+      createItemBundle: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_item_bundlePgResource);
           args.apply($insert);
           return object({
             result: $insert
@@ -47569,6 +48745,32 @@ export const objects = {
           input: applyInputToUpdateOrDelete
         }
       },
+      deleteBundleComponent: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_bundle_componentPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteBundleComponentById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_bundle_componentPgResource, specFromArgs_BundleComponent(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
       deleteCategorizationRule: {
         plan(_$root, args) {
           const $delete = pgDeleteSingle(resource_categorization_rulePgResource, {
@@ -48132,6 +49334,32 @@ export const objects = {
       deleteInvoicePaymentById: {
         plan(_$root, args) {
           const $delete = pgDeleteSingle(resource_invoice_paymentPgResource, specFromArgs_InvoicePayment(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteItemBundle: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_item_bundlePgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteItemBundleById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_item_bundlePgResource, specFromArgs_ItemBundle(args));
           args.apply($delete);
           return object({
             result: $delete
@@ -49233,6 +50461,32 @@ export const objects = {
           input: applyInputToUpdateOrDelete
         }
       },
+      updateBundleComponent: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_bundle_componentPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateBundleComponentById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_bundle_componentPgResource, specFromArgs_BundleComponent(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
       updateCategorizationRule: {
         plan(_$root, args) {
           const $update = pgUpdateSingle(resource_categorization_rulePgResource, {
@@ -49796,6 +51050,32 @@ export const objects = {
       updateInvoicePaymentById: {
         plan(_$root, args) {
           const $update = pgUpdateSingle(resource_invoice_paymentPgResource, specFromArgs_InvoicePayment(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateItemBundle: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_item_bundlePgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateItemBundleById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_item_bundlePgResource, specFromArgs_ItemBundle(args));
           args.apply($update);
           return object({
             result: $update
@@ -51479,6 +52759,24 @@ export const objects = {
       invoiceSource($record) {
         return $record.get("invoice_source");
       },
+      itemBundles: {
+        plan($record) {
+          const $records = resource_item_bundlePgResource.find({
+            book_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       journalEntries: {
         plan($record) {
           const $records = resource_journal_entryPgResource.find({
@@ -51938,6 +53236,37 @@ export const objects = {
       totalCount: totalCountConnectionPlan
     }
   },
+  BundleComponent: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      bundle($record) {
+        return resource_item_bundlePgResource.get({
+          id: $record.get("bundle_id")
+        });
+      },
+      bundleId($record) {
+        return $record.get("bundle_id");
+      },
+      id($parent) {
+        const specifier = nodeIdHandler_BundleComponent.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_BundleComponent.codec.name].encode);
+      },
+      inventoryItem: InvoiceLine_inventoryItemPlan,
+      inventoryItemId: InvoiceLine_inventoryItemIdPlan,
+      rowId: JournalLineProject_rowIdPlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of bundle_componentUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_bundle_componentPgResource.get(spec);
+    }
+  },
+  BundleComponentConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
   CategorizationRule: {
     assertStep: assertPgClassSingleStep,
     plans: {
@@ -52191,6 +53520,15 @@ export const objects = {
       query: queryPlan
     }
   },
+  CreateBundleComponentPayload: {
+    assertStep: assertStep,
+    plans: {
+      bundleComponent: planCreatePayloadResult,
+      bundleComponentEdge: CreateBundleComponentPayload_bundleComponentEdgePlan,
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan
+    }
+  },
   CreateCategorizationRulePayload: {
     assertStep: assertStep,
     plans: {
@@ -52386,6 +53724,15 @@ export const objects = {
       clientMutationId: getClientMutationIdForCreatePlan,
       invoicePayment: planCreatePayloadResult,
       invoicePaymentEdge: CreateInvoicePaymentPayload_invoicePaymentEdgePlan,
+      query: queryPlan
+    }
+  },
+  CreateItemBundlePayload: {
+    assertStep: assertStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      itemBundle: planCreatePayloadResult,
+      itemBundleEdge: CreateItemBundlePayload_itemBundleEdgePlan,
       query: queryPlan
     }
   },
@@ -53261,6 +54608,20 @@ export const objects = {
       query: queryPlan
     }
   },
+  DeleteBundleComponentPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      bundleComponent: planCreatePayloadResult,
+      bundleComponentEdge: CreateBundleComponentPayload_bundleComponentEdgePlan,
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedBundleComponentId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_BundleComponent.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      query: queryPlan
+    }
+  },
   DeleteCategorizationRulePayload: {
     assertStep: ObjectStep,
     plans: {
@@ -53566,6 +54927,20 @@ export const objects = {
       },
       invoicePayment: planCreatePayloadResult,
       invoicePaymentEdge: CreateInvoicePaymentPayload_invoicePaymentEdgePlan,
+      query: queryPlan
+    }
+  },
+  DeleteItemBundlePayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedItemBundleId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_ItemBundle.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      itemBundle: planCreatePayloadResult,
+      itemBundleEdge: CreateItemBundlePayload_itemBundleEdgePlan,
       query: queryPlan
     }
   },
@@ -54489,6 +55864,50 @@ export const objects = {
     }
   },
   InvoicePaymentConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
+  ItemBundle: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      book: Account_bookPlan,
+      bookId: Account_bookIdPlan,
+      bundleComponentsByBundleId: {
+        plan($record) {
+          const $records = resource_bundle_componentPgResource.find({
+            bundle_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      createdAt: Account_createdAtPlan,
+      id($parent) {
+        const specifier = nodeIdHandler_ItemBundle.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_ItemBundle.codec.name].encode);
+      },
+      isActive: Account_isActivePlan,
+      rowId: JournalLineProject_rowIdPlan,
+      updatedAt: Account_updatedAtPlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of item_bundleUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_item_bundlePgResource.get(spec);
+    }
+  },
+  ItemBundleConnection: {
     assertStep: ConnectionStep,
     plans: {
       totalCount: totalCountConnectionPlan
@@ -55721,6 +57140,15 @@ export const objects = {
       query: queryPlan
     }
   },
+  UpdateBundleComponentPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      bundleComponent: planCreatePayloadResult,
+      bundleComponentEdge: CreateBundleComponentPayload_bundleComponentEdgePlan,
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan
+    }
+  },
   UpdateCategorizationRulePayload: {
     assertStep: ObjectStep,
     plans: {
@@ -55916,6 +57344,15 @@ export const objects = {
       clientMutationId: getClientMutationIdForCreatePlan,
       invoicePayment: planCreatePayloadResult,
       invoicePaymentEdge: CreateInvoicePaymentPayload_invoicePaymentEdgePlan,
+      query: queryPlan
+    }
+  },
+  UpdateItemBundlePayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      itemBundle: planCreatePayloadResult,
+      itemBundleEdge: CreateItemBundlePayload_itemBundleEdgePlan,
       query: queryPlan
     }
   },
@@ -57224,10 +58661,10 @@ export const inputObjects = {
     plans: {
       amount: CreditMemoApplicationInput_amountApply,
       billId: VendorCreditApplicationInput_billIdApply,
-      description: PurchaseOrderLineInput_descriptionApply,
+      description: ItemBundleInput_descriptionApply,
       discountPercent: RecurringInvoiceLineInput_discountPercentApply,
       expenseAccountId: PurchaseOrderLineInput_expenseAccountIdApply,
-      quantity: InventoryTransactionInput_quantityApply,
+      quantity: BundleComponentInput_quantityApply,
       rowId: JournalLineProjectInput_rowIdApply,
       sortOrder: PurchaseOrderLineInput_sortOrderApply,
       taxJurisdictionId: JournalLineInput_taxJurisdictionIdApply,
@@ -57239,10 +58676,10 @@ export const inputObjects = {
     plans: {
       amount: CreditMemoApplicationInput_amountApply,
       billId: VendorCreditApplicationInput_billIdApply,
-      description: PurchaseOrderLineInput_descriptionApply,
+      description: ItemBundleInput_descriptionApply,
       discountPercent: RecurringInvoiceLineInput_discountPercentApply,
       expenseAccountId: PurchaseOrderLineInput_expenseAccountIdApply,
-      quantity: InventoryTransactionInput_quantityApply,
+      quantity: BundleComponentInput_quantityApply,
       rowId: JournalLineProjectInput_rowIdApply,
       sortOrder: PurchaseOrderLineInput_sortOrderApply,
       taxJurisdictionId: JournalLineInput_taxJurisdictionIdApply,
@@ -57977,6 +59414,30 @@ export const inputObjects = {
           $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
         });
       },
+      itemBundles($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: itemBundleIdentifier,
+          alias: resource_item_bundlePgResource.name,
+          localAttributes: registryConfig.pgRelations.book.itemBundlesByTheirBookId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.book.itemBundlesByTheirBookId.remoteAttributes
+        };
+        return $rel;
+      },
+      itemBundlesExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: itemBundleIdentifier,
+          alias: resource_item_bundlePgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.book.itemBundlesByTheirBookId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.book.itemBundlesByTheirBookId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
       journalEntries($where, value) {
         assertAllowed(value, "object");
         const $rel = $where.andPlan();
@@ -58694,6 +60155,13 @@ export const inputObjects = {
       some: AccountToManyAccountFilter_someApply
     }
   },
+  BookToManyItemBundleFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
   BookToManyJournalEntryFilter: {
     plans: {
       every: AccountToManyAccountFilter_everyApply,
@@ -58894,6 +60362,51 @@ export const inputObjects = {
       rollover: BudgetInput_rolloverApply,
       rowId: JournalLineProjectInput_rowIdApply,
       updatedAt: CustomFieldValueInput_updatedAtApply
+    }
+  },
+  BundleComponentCondition: {
+    plans: {
+      bundleId($condition, val) {
+        return applyAttributeCondition("bundle_id", TYPES.uuid, $condition, val);
+      },
+      rowId: AccountCondition_rowIdApply
+    }
+  },
+  BundleComponentFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      bundle($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_item_bundlePgResource, itemBundleIdentifier, registryConfig.pgRelations.bundleComponent.itemBundleByMyBundleId.localAttributes, registryConfig.pgRelations.bundleComponent.itemBundleByMyBundleId.remoteAttributes, $where, value);
+      },
+      bundleId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("bundleId", "bundle_id", spec_bundleComponent.attributes.bundle_id, queryBuilder, value);
+      },
+      inventoryItem($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_inventory_itemPgResource, inventoryItemIdentifier, registryConfig.pgRelations.bundleComponent.inventoryItemByMyInventoryItemId.localAttributes, registryConfig.pgRelations.bundleComponent.inventoryItemByMyInventoryItemId.remoteAttributes, $where, value);
+      },
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_bundleComponent.attributes.id, queryBuilder, value);
+      }
+    }
+  },
+  BundleComponentInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      bundleId: BundleComponentInput_bundleIdApply,
+      inventoryItemId: BundleComponentInput_inventoryItemIdApply,
+      quantity: BundleComponentInput_quantityApply,
+      rowId: JournalLineProjectInput_rowIdApply
+    }
+  },
+  BundleComponentPatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      bundleId: BundleComponentInput_bundleIdApply,
+      inventoryItemId: BundleComponentInput_inventoryItemIdApply,
+      quantity: BundleComponentInput_quantityApply,
+      rowId: JournalLineProjectInput_rowIdApply
     }
   },
   CategorizationRuleCondition: {
@@ -59226,6 +60739,12 @@ export const inputObjects = {
       clientMutationId: applyClientMutationIdForCreate
     }
   },
+  CreateBundleComponentInput: {
+    plans: {
+      bundleComponent: applyCreateFields,
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
   CreateCategorizationRuleInput: {
     plans: {
       categorizationRule: applyCreateFields,
@@ -59356,6 +60875,12 @@ export const inputObjects = {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
       invoicePayment: applyCreateFields
+    }
+  },
+  CreateItemBundleInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      itemBundle: applyCreateFields
     }
   },
   CreateJournalEntryInput: {
@@ -59748,11 +61273,11 @@ export const inputObjects = {
     plans: {
       amount: CreditMemoApplicationInput_amountApply,
       creditMemoId: CreditMemoApplicationInput_creditMemoIdApply,
-      description: PurchaseOrderLineInput_descriptionApply,
+      description: ItemBundleInput_descriptionApply,
       discountPercent: RecurringInvoiceLineInput_discountPercentApply,
       incomeAccountId: RecurringInvoiceLineInput_incomeAccountIdApply,
-      inventoryItemId: CreditMemoLineInput_inventoryItemIdApply,
-      quantity: InventoryTransactionInput_quantityApply,
+      inventoryItemId: BundleComponentInput_inventoryItemIdApply,
+      quantity: BundleComponentInput_quantityApply,
       rowId: JournalLineProjectInput_rowIdApply,
       sortOrder: PurchaseOrderLineInput_sortOrderApply,
       taxJurisdictionId: JournalLineInput_taxJurisdictionIdApply,
@@ -59764,11 +61289,11 @@ export const inputObjects = {
     plans: {
       amount: CreditMemoApplicationInput_amountApply,
       creditMemoId: CreditMemoApplicationInput_creditMemoIdApply,
-      description: PurchaseOrderLineInput_descriptionApply,
+      description: ItemBundleInput_descriptionApply,
       discountPercent: RecurringInvoiceLineInput_discountPercentApply,
       incomeAccountId: RecurringInvoiceLineInput_incomeAccountIdApply,
-      inventoryItemId: CreditMemoLineInput_inventoryItemIdApply,
-      quantity: InventoryTransactionInput_quantityApply,
+      inventoryItemId: BundleComponentInput_inventoryItemIdApply,
+      quantity: BundleComponentInput_quantityApply,
       rowId: JournalLineProjectInput_rowIdApply,
       sortOrder: PurchaseOrderLineInput_sortOrderApply,
       taxJurisdictionId: JournalLineInput_taxJurisdictionIdApply,
@@ -59941,7 +61466,7 @@ export const inputObjects = {
       disposedAt: CryptoLotInput_disposedAtApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       proceedsPerUnit: CryptoLotInput_proceedsPerUnitApply,
-      quantity: InventoryTransactionInput_quantityApply,
+      quantity: BundleComponentInput_quantityApply,
       remainingQuantity: CryptoLotInput_remainingQuantityApply,
       rowId: JournalLineProjectInput_rowIdApply
     }
@@ -59956,7 +61481,7 @@ export const inputObjects = {
       disposedAt: CryptoLotInput_disposedAtApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       proceedsPerUnit: CryptoLotInput_proceedsPerUnitApply,
-      quantity: InventoryTransactionInput_quantityApply,
+      quantity: BundleComponentInput_quantityApply,
       remainingQuantity: CryptoLotInput_remainingQuantityApply,
       rowId: JournalLineProjectInput_rowIdApply
     }
@@ -60467,6 +61992,16 @@ export const inputObjects = {
       clientMutationId: applyClientMutationIdForCreate
     }
   },
+  DeleteBundleComponentByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteBundleComponentInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
   DeleteCategorizationRuleByIdInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate
@@ -60683,6 +62218,16 @@ export const inputObjects = {
     }
   },
   DeleteInvoicePaymentInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteItemBundleByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteItemBundleInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate
     }
@@ -61185,10 +62730,10 @@ export const inputObjects = {
     plans: {
       amount: CreditMemoApplicationInput_amountApply,
       billedAmount: EstimateLineInput_billedAmountApply,
-      description: PurchaseOrderLineInput_descriptionApply,
+      description: ItemBundleInput_descriptionApply,
       estimateId: EstimateLineInput_estimateIdApply,
       incomeAccountId: RecurringInvoiceLineInput_incomeAccountIdApply,
-      quantity: InventoryTransactionInput_quantityApply,
+      quantity: BundleComponentInput_quantityApply,
       rowId: JournalLineProjectInput_rowIdApply,
       sortOrder: PurchaseOrderLineInput_sortOrderApply,
       taxJurisdictionId: JournalLineInput_taxJurisdictionIdApply,
@@ -61200,10 +62745,10 @@ export const inputObjects = {
     plans: {
       amount: CreditMemoApplicationInput_amountApply,
       billedAmount: EstimateLineInput_billedAmountApply,
-      description: PurchaseOrderLineInput_descriptionApply,
+      description: ItemBundleInput_descriptionApply,
       estimateId: EstimateLineInput_estimateIdApply,
       incomeAccountId: RecurringInvoiceLineInput_incomeAccountIdApply,
-      quantity: InventoryTransactionInput_quantityApply,
+      quantity: BundleComponentInput_quantityApply,
       rowId: JournalLineProjectInput_rowIdApply,
       sortOrder: PurchaseOrderLineInput_sortOrderApply,
       taxJurisdictionId: JournalLineInput_taxJurisdictionIdApply,
@@ -61284,7 +62829,7 @@ export const inputObjects = {
       createdAt: TagGroupInput_createdAtApply,
       depreciationExpenseAccountId: FixedAssetInput_depreciationExpenseAccountIdApply,
       depreciationMethod: FixedAssetInput_depreciationMethodApply,
-      description: PurchaseOrderLineInput_descriptionApply,
+      description: ItemBundleInput_descriptionApply,
       disposalProceeds: FixedAssetInput_disposalProceedsApply,
       disposedAt: CryptoLotInput_disposedAtApply,
       macrsClass: FixedAssetInput_macrsClassApply,
@@ -61305,7 +62850,7 @@ export const inputObjects = {
       createdAt: TagGroupInput_createdAtApply,
       depreciationExpenseAccountId: FixedAssetInput_depreciationExpenseAccountIdApply,
       depreciationMethod: FixedAssetInput_depreciationMethodApply,
-      description: PurchaseOrderLineInput_descriptionApply,
+      description: ItemBundleInput_descriptionApply,
       disposalProceeds: FixedAssetInput_disposalProceedsApply,
       disposedAt: CryptoLotInput_disposedAtApply,
       macrsClass: FixedAssetInput_macrsClassApply,
@@ -61441,7 +62986,7 @@ export const inputObjects = {
       bookId: TagGroupInput_bookIdApply,
       cogsAccountId: InventoryItemInput_cogsAccountIdApply,
       createdAt: TagGroupInput_createdAtApply,
-      description: PurchaseOrderLineInput_descriptionApply,
+      description: ItemBundleInput_descriptionApply,
       incomeAccountId: RecurringInvoiceLineInput_incomeAccountIdApply,
       isActive: TagInput_isActiveApply,
       itemType: InventoryItemInput_itemTypeApply,
@@ -61462,7 +63007,7 @@ export const inputObjects = {
       bookId: TagGroupInput_bookIdApply,
       cogsAccountId: InventoryItemInput_cogsAccountIdApply,
       createdAt: TagGroupInput_createdAtApply,
-      description: PurchaseOrderLineInput_descriptionApply,
+      description: ItemBundleInput_descriptionApply,
       incomeAccountId: RecurringInvoiceLineInput_incomeAccountIdApply,
       isActive: TagInput_isActiveApply,
       itemType: InventoryItemInput_itemTypeApply,
@@ -61528,7 +63073,7 @@ export const inputObjects = {
       itemId: InventoryTransactionInput_itemIdApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       note: InventoryTransactionInput_noteApply,
-      quantity: InventoryTransactionInput_quantityApply,
+      quantity: BundleComponentInput_quantityApply,
       rowId: JournalLineProjectInput_rowIdApply,
       type: InventoryTransactionInput_typeApply,
       unitCost: InventoryTransactionInput_unitCostApply
@@ -61543,7 +63088,7 @@ export const inputObjects = {
       itemId: InventoryTransactionInput_itemIdApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       note: InventoryTransactionInput_noteApply,
-      quantity: InventoryTransactionInput_quantityApply,
+      quantity: BundleComponentInput_quantityApply,
       rowId: JournalLineProjectInput_rowIdApply,
       type: InventoryTransactionInput_typeApply,
       unitCost: InventoryTransactionInput_unitCostApply
@@ -61734,12 +63279,12 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       amount: CreditMemoApplicationInput_amountApply,
-      description: PurchaseOrderLineInput_descriptionApply,
+      description: ItemBundleInput_descriptionApply,
       discountPercent: RecurringInvoiceLineInput_discountPercentApply,
       incomeAccountId: RecurringInvoiceLineInput_incomeAccountIdApply,
-      inventoryItemId: CreditMemoLineInput_inventoryItemIdApply,
+      inventoryItemId: BundleComponentInput_inventoryItemIdApply,
       invoiceId: CreditMemoApplicationInput_invoiceIdApply,
-      quantity: InventoryTransactionInput_quantityApply,
+      quantity: BundleComponentInput_quantityApply,
       rowId: JournalLineProjectInput_rowIdApply,
       secondaryTaxJurisdictionId: InvoiceLineInput_secondaryTaxJurisdictionIdApply,
       sortOrder: PurchaseOrderLineInput_sortOrderApply,
@@ -61751,12 +63296,12 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       amount: CreditMemoApplicationInput_amountApply,
-      description: PurchaseOrderLineInput_descriptionApply,
+      description: ItemBundleInput_descriptionApply,
       discountPercent: RecurringInvoiceLineInput_discountPercentApply,
       incomeAccountId: RecurringInvoiceLineInput_incomeAccountIdApply,
-      inventoryItemId: CreditMemoLineInput_inventoryItemIdApply,
+      inventoryItemId: BundleComponentInput_inventoryItemIdApply,
       invoiceId: CreditMemoApplicationInput_invoiceIdApply,
-      quantity: InventoryTransactionInput_quantityApply,
+      quantity: BundleComponentInput_quantityApply,
       rowId: JournalLineProjectInput_rowIdApply,
       secondaryTaxJurisdictionId: InvoiceLineInput_secondaryTaxJurisdictionIdApply,
       sortOrder: PurchaseOrderLineInput_sortOrderApply,
@@ -61880,6 +63425,83 @@ export const inputObjects = {
     }
   },
   InvoiceToManyInvoicePaymentFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
+  ItemBundleCondition: {
+    plans: {
+      bookId: AccountCondition_bookIdApply,
+      rowId: AccountCondition_rowIdApply
+    }
+  },
+  ItemBundleFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      book($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_bookPgResource, bookIdentifier, registryConfig.pgRelations.itemBundle.bookByMyBookId.localAttributes, registryConfig.pgRelations.itemBundle.bookByMyBookId.remoteAttributes, $where, value);
+      },
+      bookId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("bookId", "book_id", spec_itemBundle.attributes.book_id, queryBuilder, value);
+      },
+      bundleComponentsByBundleId($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: bundleComponentIdentifier,
+          alias: resource_bundle_componentPgResource.name,
+          localAttributes: registryConfig.pgRelations.itemBundle.bundleComponentsByTheirBundleId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.itemBundle.bundleComponentsByTheirBundleId.remoteAttributes
+        };
+        return $rel;
+      },
+      bundleComponentsByBundleIdExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: bundleComponentIdentifier,
+          alias: resource_bundle_componentPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.itemBundle.bundleComponentsByTheirBundleId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.itemBundle.bundleComponentsByTheirBundleId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_itemBundle.attributes.id, queryBuilder, value);
+      }
+    }
+  },
+  ItemBundleInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      bookId: TagGroupInput_bookIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      description: ItemBundleInput_descriptionApply,
+      isActive: TagInput_isActiveApply,
+      name: TagGroupInput_nameApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      updatedAt: CustomFieldValueInput_updatedAtApply
+    }
+  },
+  ItemBundlePatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      bookId: TagGroupInput_bookIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      description: ItemBundleInput_descriptionApply,
+      isActive: TagInput_isActiveApply,
+      name: TagGroupInput_nameApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      updatedAt: CustomFieldValueInput_updatedAtApply
+    }
+  },
+  ItemBundleToManyBundleComponentFilter: {
     plans: {
       every: AccountToManyAccountFilter_everyApply,
       none: AccountToManyAccountFilter_noneApply,
@@ -62476,7 +64098,7 @@ export const inputObjects = {
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
       date: CreditMemoApplicationInput_dateApply,
-      description: PurchaseOrderLineInput_descriptionApply,
+      description: ItemBundleInput_descriptionApply,
       destination: MileageLogInput_destinationApply,
       distance: MileageLogInput_distanceApply,
       isRoundTrip: MileageLogInput_isRoundTripApply,
@@ -62494,7 +64116,7 @@ export const inputObjects = {
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
       date: CreditMemoApplicationInput_dateApply,
-      description: PurchaseOrderLineInput_descriptionApply,
+      description: ItemBundleInput_descriptionApply,
       destination: MileageLogInput_destinationApply,
       distance: MileageLogInput_distanceApply,
       isRoundTrip: MileageLogInput_isRoundTripApply,
@@ -62901,10 +64523,10 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       amount: CreditMemoApplicationInput_amountApply,
-      description: PurchaseOrderLineInput_descriptionApply,
+      description: ItemBundleInput_descriptionApply,
       expenseAccountId: PurchaseOrderLineInput_expenseAccountIdApply,
       purchaseOrderId: PurchaseOrderLineInput_purchaseOrderIdApply,
-      quantity: InventoryTransactionInput_quantityApply,
+      quantity: BundleComponentInput_quantityApply,
       rowId: JournalLineProjectInput_rowIdApply,
       sortOrder: PurchaseOrderLineInput_sortOrderApply,
       taxJurisdictionId: JournalLineInput_taxJurisdictionIdApply,
@@ -62915,10 +64537,10 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       amount: CreditMemoApplicationInput_amountApply,
-      description: PurchaseOrderLineInput_descriptionApply,
+      description: ItemBundleInput_descriptionApply,
       expenseAccountId: PurchaseOrderLineInput_expenseAccountIdApply,
       purchaseOrderId: PurchaseOrderLineInput_purchaseOrderIdApply,
-      quantity: InventoryTransactionInput_quantityApply,
+      quantity: BundleComponentInput_quantityApply,
       rowId: JournalLineProjectInput_rowIdApply,
       sortOrder: PurchaseOrderLineInput_sortOrderApply,
       taxJurisdictionId: JournalLineInput_taxJurisdictionIdApply,
@@ -62992,7 +64614,7 @@ export const inputObjects = {
       bookId: TagGroupInput_bookIdApply,
       category: RdExpenseInput_categoryApply,
       createdAt: TagGroupInput_createdAtApply,
-      description: PurchaseOrderLineInput_descriptionApply,
+      description: ItemBundleInput_descriptionApply,
       isForeign: RdExpenseInput_isForeignApply,
       notes: RdExpenseInput_notesApply,
       projectId: JournalLineProjectInput_projectIdApply,
@@ -63008,7 +64630,7 @@ export const inputObjects = {
       bookId: TagGroupInput_bookIdApply,
       category: RdExpenseInput_categoryApply,
       createdAt: TagGroupInput_createdAtApply,
-      description: PurchaseOrderLineInput_descriptionApply,
+      description: ItemBundleInput_descriptionApply,
       isForeign: RdExpenseInput_isForeignApply,
       notes: RdExpenseInput_notesApply,
       projectId: JournalLineProjectInput_projectIdApply,
@@ -63261,10 +64883,10 @@ export const inputObjects = {
   RecurringInvoiceLineInput: {
     baked: createObjectAndApplyChildren,
     plans: {
-      description: PurchaseOrderLineInput_descriptionApply,
+      description: ItemBundleInput_descriptionApply,
       discountPercent: RecurringInvoiceLineInput_discountPercentApply,
       incomeAccountId: RecurringInvoiceLineInput_incomeAccountIdApply,
-      quantity: InventoryTransactionInput_quantityApply,
+      quantity: BundleComponentInput_quantityApply,
       recurringInvoiceId: RecurringInvoiceLineInput_recurringInvoiceIdApply,
       rowId: JournalLineProjectInput_rowIdApply,
       sortOrder: PurchaseOrderLineInput_sortOrderApply,
@@ -63275,10 +64897,10 @@ export const inputObjects = {
   RecurringInvoiceLinePatch: {
     baked: createObjectAndApplyChildren,
     plans: {
-      description: PurchaseOrderLineInput_descriptionApply,
+      description: ItemBundleInput_descriptionApply,
       discountPercent: RecurringInvoiceLineInput_discountPercentApply,
       incomeAccountId: RecurringInvoiceLineInput_incomeAccountIdApply,
-      quantity: InventoryTransactionInput_quantityApply,
+      quantity: BundleComponentInput_quantityApply,
       recurringInvoiceId: RecurringInvoiceLineInput_recurringInvoiceIdApply,
       rowId: JournalLineProjectInput_rowIdApply,
       sortOrder: PurchaseOrderLineInput_sortOrderApply,
@@ -63803,7 +65425,7 @@ export const inputObjects = {
       createdAt: TagGroupInput_createdAtApply,
       customerId: RecurringInvoiceInput_customerIdApply,
       date: CreditMemoApplicationInput_dateApply,
-      description: PurchaseOrderLineInput_descriptionApply,
+      description: ItemBundleInput_descriptionApply,
       hours: TimeEntryInput_hoursApply,
       invoiceId: CreditMemoApplicationInput_invoiceIdApply,
       rate: TaxJurisdictionInput_rateApply,
@@ -63820,7 +65442,7 @@ export const inputObjects = {
       createdAt: TagGroupInput_createdAtApply,
       customerId: RecurringInvoiceInput_customerIdApply,
       date: CreditMemoApplicationInput_dateApply,
-      description: PurchaseOrderLineInput_descriptionApply,
+      description: ItemBundleInput_descriptionApply,
       hours: TimeEntryInput_hoursApply,
       invoiceId: CreditMemoApplicationInput_invoiceIdApply,
       rate: TaxJurisdictionInput_rateApply,
@@ -64053,6 +65675,18 @@ export const inputObjects = {
     }
   },
   UpdateBudgetInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateBundleComponentByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateBundleComponentInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
       patch: applyCreateFields
@@ -64317,6 +65951,18 @@ export const inputObjects = {
     }
   },
   UpdateInvoicePaymentInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateItemBundleByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateItemBundleInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
       patch: applyCreateFields
@@ -64985,10 +66631,10 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       amount: CreditMemoApplicationInput_amountApply,
-      description: PurchaseOrderLineInput_descriptionApply,
+      description: ItemBundleInput_descriptionApply,
       discountPercent: RecurringInvoiceLineInput_discountPercentApply,
       expenseAccountId: PurchaseOrderLineInput_expenseAccountIdApply,
-      quantity: InventoryTransactionInput_quantityApply,
+      quantity: BundleComponentInput_quantityApply,
       rowId: JournalLineProjectInput_rowIdApply,
       sortOrder: PurchaseOrderLineInput_sortOrderApply,
       taxJurisdictionId: JournalLineInput_taxJurisdictionIdApply,
@@ -65000,10 +66646,10 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       amount: CreditMemoApplicationInput_amountApply,
-      description: PurchaseOrderLineInput_descriptionApply,
+      description: ItemBundleInput_descriptionApply,
       discountPercent: RecurringInvoiceLineInput_discountPercentApply,
       expenseAccountId: PurchaseOrderLineInput_expenseAccountIdApply,
-      quantity: InventoryTransactionInput_quantityApply,
+      quantity: BundleComponentInput_quantityApply,
       rowId: JournalLineProjectInput_rowIdApply,
       sortOrder: PurchaseOrderLineInput_sortOrderApply,
       taxJurisdictionId: JournalLineInput_taxJurisdictionIdApply,
@@ -65752,6 +67398,42 @@ export const enums = {
       ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply
     }
   },
+  BundleComponentOrderBy: {
+    values: {
+      BUNDLE_ID_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "bundle_id",
+          direction: "ASC"
+        });
+      },
+      BUNDLE_ID_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "bundle_id",
+          direction: "DESC"
+        });
+      },
+      PRIMARY_KEY_ASC(queryBuilder) {
+        bundle_componentUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        bundle_componentUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply
+    }
+  },
   CategorizationRuleOrderBy: {
     values: {
       BOOK_ID_ASC: AccountOrderBy_BOOK_ID_ASCApply,
@@ -66447,6 +68129,32 @@ export const enums = {
       },
       PRIMARY_KEY_DESC(queryBuilder) {
         invoice_paymentUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply
+    }
+  },
+  ItemBundleOrderBy: {
+    values: {
+      BOOK_ID_ASC: AccountOrderBy_BOOK_ID_ASCApply,
+      BOOK_ID_DESC: AccountOrderBy_BOOK_ID_DESCApply,
+      PRIMARY_KEY_ASC(queryBuilder) {
+        item_bundleUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        item_bundleUniques[0].attributes.forEach(attributeName => {
           queryBuilder.orderBy({
             attribute: attributeName,
             direction: "DESC"
