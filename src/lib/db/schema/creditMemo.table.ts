@@ -44,6 +44,12 @@ export const creditMemoTable = pgTable(
       .notNull()
       .default("0"),
     currency: text().notNull().default("USD"),
+    // home-currency units per one unit of `currency` at the memo date; the
+    // ledger posts in the book's home currency converted at this rate. 1 for a
+    // home-currency credit memo
+    exchangeRate: numeric("exchange_rate", { precision: 19, scale: 8 })
+      .notNull()
+      .default("1"),
     memo: text(),
     journalEntryId: uuid("journal_entry_id").references(
       () => journalEntryTable.id,

@@ -4913,6 +4913,157 @@ const spec_vendor = {
   executor: executor
 };
 const vendorCodec = recordCodec(spec_vendor);
+const cryptoAssetIdentifier = sql.identifier("public", "crypto_asset");
+const costBasisMethodCodec = enumCodec({
+  name: "costBasisMethod",
+  identifier: sql.identifier("public", "cost_basis_method"),
+  values: ["fifo", "lifo", "hifo", "acb"],
+  description: undefined,
+  extensions: {
+    oid: "16498",
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "cost_basis_method"
+    }
+  }
+});
+const spec_cryptoAsset = {
+  name: "cryptoAsset",
+  identifier: cryptoAssetIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    symbol: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    name: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    wallet_address: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    network: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    balance: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    cost_basis_method: {
+      codec: costBasisMethodCodec,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    last_synced_at: {
+      codec: TYPES.timestamptz,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "16624",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "crypto_asset"
+    }
+  },
+  executor: executor
+};
+const cryptoAssetCodec = recordCodec(spec_cryptoAsset);
 const creditMemoIdentifier = sql.identifier("public", "credit_memo");
 const spec_creditMemo = {
   name: "creditMemo",
@@ -5083,6 +5234,18 @@ const spec_creditMemo = {
         canUpdate: true,
         isIndexed: false
       }
+    },
+    exchange_rate: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
     }
   },
   extensions: {
@@ -5097,157 +5260,6 @@ const spec_creditMemo = {
   executor: executor
 };
 const creditMemoCodec = recordCodec(spec_creditMemo);
-const cryptoAssetIdentifier = sql.identifier("public", "crypto_asset");
-const costBasisMethodCodec = enumCodec({
-  name: "costBasisMethod",
-  identifier: sql.identifier("public", "cost_basis_method"),
-  values: ["fifo", "lifo", "hifo", "acb"],
-  description: undefined,
-  extensions: {
-    oid: "16498",
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "cost_basis_method"
-    }
-  }
-});
-const spec_cryptoAsset = {
-  name: "cryptoAsset",
-  identifier: cryptoAssetIdentifier,
-  attributes: {
-    __proto__: null,
-    id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    book_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    symbol: {
-      codec: TYPES.text,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    name: {
-      codec: TYPES.text,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    wallet_address: {
-      codec: TYPES.text,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    network: {
-      codec: TYPES.text,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    balance: {
-      codec: TYPES.numeric,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    cost_basis_method: {
-      codec: costBasisMethodCodec,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    last_synced_at: {
-      codec: TYPES.timestamptz,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    created_at: {
-      codec: TYPES.timestamptz,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    updated_at: {
-      codec: TYPES.timestamptz,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    }
-  },
-  extensions: {
-    oid: "16624",
-    isTableLike: true,
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "crypto_asset"
-    }
-  },
-  executor: executor
-};
-const cryptoAssetCodec = recordCodec(spec_cryptoAsset);
 const fixedAssetIdentifier = sql.identifier("public", "fixed_asset");
 const spec_fixedAsset = {
   name: "fixedAsset",
@@ -7687,29 +7699,6 @@ const vendor_resourceOptionsConfig = {
   },
   uniques: vendorUniques
 };
-const credit_memoUniques = [{
-  attributes: ["id"],
-  isPrimary: true
-}];
-const credit_memo_resourceOptionsConfig = {
-  executor: executor,
-  name: "credit_memo",
-  identifier: "main.public.credit_memo",
-  from: creditMemoIdentifier,
-  codec: creditMemoCodec,
-  extensions: {
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "credit_memo"
-    },
-    canSelect: true,
-    canInsert: true,
-    canUpdate: true,
-    canDelete: true
-  },
-  uniques: credit_memoUniques
-};
 const crypto_assetUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -7732,6 +7721,29 @@ const crypto_asset_resourceOptionsConfig = {
     canDelete: true
   },
   uniques: crypto_assetUniques
+};
+const credit_memoUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const credit_memo_resourceOptionsConfig = {
+  executor: executor,
+  name: "credit_memo",
+  identifier: "main.public.credit_memo",
+  from: creditMemoIdentifier,
+  codec: creditMemoCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "credit_memo"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: credit_memoUniques
 };
 const fixed_assetUniques = [{
   attributes: ["id"],
@@ -7973,9 +7985,9 @@ const registryConfig = {
     customer: customerCodec,
     inventoryItem: inventoryItemCodec,
     vendor: vendorCodec,
-    creditMemo: creditMemoCodec,
     cryptoAsset: cryptoAssetCodec,
     costBasisMethod: costBasisMethodCodec,
+    creditMemo: creditMemoCodec,
     fixedAsset: fixedAssetCodec,
     bill: billCodec,
     recurringTransaction: recurringTransactionCodec,
@@ -8048,8 +8060,8 @@ const registryConfig = {
     customer: customer_resourceOptionsConfig,
     inventory_item: inventory_item_resourceOptionsConfig,
     vendor: vendor_resourceOptionsConfig,
-    credit_memo: credit_memo_resourceOptionsConfig,
     crypto_asset: crypto_asset_resourceOptionsConfig,
+    credit_memo: credit_memo_resourceOptionsConfig,
     fixed_asset: fixed_asset_resourceOptionsConfig,
     bill: bill_resourceOptionsConfig,
     recurring_transaction: recurring_transaction_resourceOptionsConfig,
@@ -10093,8 +10105,8 @@ const resource_reconciliation_queuePgResource = registry.pgResources["reconcilia
 const resource_customerPgResource = registry.pgResources["customer"];
 const resource_inventory_itemPgResource = registry.pgResources["inventory_item"];
 const resource_vendorPgResource = registry.pgResources["vendor"];
-const resource_credit_memoPgResource = registry.pgResources["credit_memo"];
 const resource_crypto_assetPgResource = registry.pgResources["crypto_asset"];
+const resource_credit_memoPgResource = registry.pgResources["credit_memo"];
 const resource_fixed_assetPgResource = registry.pgResources["fixed_asset"];
 const resource_billPgResource = registry.pgResources["bill"];
 const resource_recurring_transactionPgResource = registry.pgResources["recurring_transaction"];
@@ -10587,17 +10599,6 @@ const nodeFetcher_Vendor = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Vendor));
   return nodeIdHandler_Vendor.get(nodeIdHandler_Vendor.getSpec($decoded));
 };
-const nodeIdHandler_CreditMemo = makeTableNodeIdHandler({
-  typeName: "CreditMemo",
-  identifier: "CreditMemo",
-  nodeIdCodec: base64JSONNodeIdCodec,
-  resource: resource_credit_memoPgResource,
-  pk: credit_memoUniques[0].attributes
-});
-const nodeFetcher_CreditMemo = $nodeId => {
-  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_CreditMemo));
-  return nodeIdHandler_CreditMemo.get(nodeIdHandler_CreditMemo.getSpec($decoded));
-};
 const nodeIdHandler_CryptoAsset = makeTableNodeIdHandler({
   typeName: "CryptoAsset",
   identifier: "CryptoAsset",
@@ -10608,6 +10609,17 @@ const nodeIdHandler_CryptoAsset = makeTableNodeIdHandler({
 const nodeFetcher_CryptoAsset = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_CryptoAsset));
   return nodeIdHandler_CryptoAsset.get(nodeIdHandler_CryptoAsset.getSpec($decoded));
+};
+const nodeIdHandler_CreditMemo = makeTableNodeIdHandler({
+  typeName: "CreditMemo",
+  identifier: "CreditMemo",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_credit_memoPgResource,
+  pk: credit_memoUniques[0].attributes
+});
+const nodeFetcher_CreditMemo = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_CreditMemo));
+  return nodeIdHandler_CreditMemo.get(nodeIdHandler_CreditMemo.getSpec($decoded));
 };
 const nodeIdHandler_FixedAsset = makeTableNodeIdHandler({
   typeName: "FixedAsset",
@@ -10789,8 +10801,8 @@ const nodeIdHandlerByTypeName = {
   Customer: nodeIdHandler_Customer,
   InventoryItem: nodeIdHandler_InventoryItem,
   Vendor: nodeIdHandler_Vendor,
-  CreditMemo: nodeIdHandler_CreditMemo,
   CryptoAsset: nodeIdHandler_CryptoAsset,
+  CreditMemo: nodeIdHandler_CreditMemo,
   FixedAsset: nodeIdHandler_FixedAsset,
   Bill: nodeIdHandler_Bill,
   RecurringTransaction: nodeIdHandler_RecurringTransaction,
@@ -11641,13 +11653,13 @@ const specFromArgs_Vendor = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Vendor, $nodeId);
 };
-const specFromArgs_CreditMemo = args => {
-  const $nodeId = args.getRaw(["input", "id"]);
-  return specFromNodeId(nodeIdHandler_CreditMemo, $nodeId);
-};
 const specFromArgs_CryptoAsset = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_CryptoAsset, $nodeId);
+};
+const specFromArgs_CreditMemo = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_CreditMemo, $nodeId);
 };
 const specFromArgs_FixedAsset = args => {
   const $nodeId = args.getRaw(["input", "id"]);
@@ -12246,16 +12258,6 @@ function VendorInput_is1099EligibleApply(obj, val, info) {
 function VendorInput_thresholdApply(obj, val, info) {
   obj.set("threshold", bakedInputRuntime(info.schema, info.field.type, val));
 }
-const CreateCreditMemoPayload_creditMemoEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_credit_memoPgResource, credit_memoUniques[0].attributes, $mutation, fieldArgs);
-function CreditMemoInput_taxAmountApply(obj, val, info) {
-  obj.set("tax_amount", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function CreditMemoInput_amountAppliedApply(obj, val, info) {
-  obj.set("amount_applied", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function CreditMemoInput_currencyApply(obj, val, info) {
-  obj.set("currency", bakedInputRuntime(info.schema, info.field.type, val));
-}
 const CreateCryptoAssetPayload_cryptoAssetEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_crypto_assetPgResource, crypto_assetUniques[0].attributes, $mutation, fieldArgs);
 function CryptoAssetInput_symbolApply(obj, val, info) {
   obj.set("symbol", bakedInputRuntime(info.schema, info.field.type, val));
@@ -12271,6 +12273,16 @@ function CryptoAssetInput_balanceApply(obj, val, info) {
 }
 function CryptoAssetInput_costBasisMethodApply(obj, val, info) {
   obj.set("cost_basis_method", bakedInputRuntime(info.schema, info.field.type, val));
+}
+const CreateCreditMemoPayload_creditMemoEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_credit_memoPgResource, credit_memoUniques[0].attributes, $mutation, fieldArgs);
+function CreditMemoInput_taxAmountApply(obj, val, info) {
+  obj.set("tax_amount", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function CreditMemoInput_amountAppliedApply(obj, val, info) {
+  obj.set("amount_applied", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function CreditMemoInput_currencyApply(obj, val, info) {
+  obj.set("currency", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateFixedAssetPayload_fixedAssetEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_fixed_assetPgResource, fixed_assetUniques[0].attributes, $mutation, fieldArgs);
 function FixedAssetInput_depreciationExpenseAccountIdApply(obj, val, info) {
@@ -12530,11 +12542,11 @@ type Query implements Node {
   """Get a single \`Vendor\`."""
   vendor(rowId: UUID!): Vendor
 
-  """Get a single \`CreditMemo\`."""
-  creditMemo(rowId: UUID!): CreditMemo
-
   """Get a single \`CryptoAsset\`."""
   cryptoAsset(rowId: UUID!): CryptoAsset
+
+  """Get a single \`CreditMemo\`."""
+  creditMemo(rowId: UUID!): CreditMemo
 
   """Get a single \`FixedAsset\`."""
   fixedAsset(rowId: UUID!): FixedAsset
@@ -12860,14 +12872,6 @@ type Query implements Node {
     id: ID!
   ): Vendor
 
-  """Reads a single \`CreditMemo\` using its globally unique \`ID\`."""
-  creditMemoById(
-    """
-    The globally unique \`ID\` to be used in selecting a single \`CreditMemo\`.
-    """
-    id: ID!
-  ): CreditMemo
-
   """Reads a single \`CryptoAsset\` using its globally unique \`ID\`."""
   cryptoAssetById(
     """
@@ -12875,6 +12879,14 @@ type Query implements Node {
     """
     id: ID!
   ): CryptoAsset
+
+  """Reads a single \`CreditMemo\` using its globally unique \`ID\`."""
+  creditMemoById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`CreditMemo\`.
+    """
+    id: ID!
+  ): CreditMemo
 
   """Reads a single \`FixedAsset\` using its globally unique \`ID\`."""
   fixedAssetById(
@@ -14294,40 +14306,6 @@ type Query implements Node {
     orderBy: [VendorOrderBy!] = [PRIMARY_KEY_ASC]
   ): VendorConnection
 
-  """Reads and enables pagination through a set of \`CreditMemo\`."""
-  creditMemos(
-    """Only read the first \`n\` values of the set."""
-    first: Int
-
-    """Only read the last \`n\` values of the set."""
-    last: Int
-
-    """
-    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
-    based pagination. May not be used with \`last\`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: CreditMemoCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: CreditMemoFilter
-
-    """The method to use when ordering \`CreditMemo\`."""
-    orderBy: [CreditMemoOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CreditMemoConnection
-
   """Reads and enables pagination through a set of \`CryptoAsset\`."""
   cryptoAssets(
     """Only read the first \`n\` values of the set."""
@@ -14361,6 +14339,40 @@ type Query implements Node {
     """The method to use when ordering \`CryptoAsset\`."""
     orderBy: [CryptoAssetOrderBy!] = [PRIMARY_KEY_ASC]
   ): CryptoAssetConnection
+
+  """Reads and enables pagination through a set of \`CreditMemo\`."""
+  creditMemos(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CreditMemoCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CreditMemoFilter
+
+    """The method to use when ordering \`CreditMemo\`."""
+    orderBy: [CreditMemoOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CreditMemoConnection
 
   """Reads and enables pagination through a set of \`FixedAsset\`."""
   fixedAssets(
@@ -23535,6 +23547,7 @@ type CreditMemo implements Node {
   journalEntryId: UUID
   createdAt: Datetime
   updatedAt: Datetime
+  exchangeRate: BigFloat!
 
   """Reads a single \`Book\` that is related to this \`CreditMemo\`."""
   book: Book
@@ -24925,14 +24938,6 @@ type Mutation {
     input: CreateVendorInput!
   ): CreateVendorPayload
 
-  """Creates a single \`CreditMemo\`."""
-  createCreditMemo(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateCreditMemoInput!
-  ): CreateCreditMemoPayload
-
   """Creates a single \`CryptoAsset\`."""
   createCryptoAsset(
     """
@@ -24940,6 +24945,14 @@ type Mutation {
     """
     input: CreateCryptoAssetInput!
   ): CreateCryptoAssetPayload
+
+  """Creates a single \`CreditMemo\`."""
+  createCreditMemo(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateCreditMemoInput!
+  ): CreateCreditMemoPayload
 
   """Creates a single \`FixedAsset\`."""
   createFixedAsset(
@@ -25710,24 +25723,6 @@ type Mutation {
   ): UpdateVendorPayload
 
   """
-  Updates a single \`CreditMemo\` using its globally unique id and a patch.
-  """
-  updateCreditMemoById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateCreditMemoByIdInput!
-  ): UpdateCreditMemoPayload
-
-  """Updates a single \`CreditMemo\` using a unique key and a patch."""
-  updateCreditMemo(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateCreditMemoInput!
-  ): UpdateCreditMemoPayload
-
-  """
   Updates a single \`CryptoAsset\` using its globally unique id and a patch.
   """
   updateCryptoAssetById(
@@ -25744,6 +25739,24 @@ type Mutation {
     """
     input: UpdateCryptoAssetInput!
   ): UpdateCryptoAssetPayload
+
+  """
+  Updates a single \`CreditMemo\` using its globally unique id and a patch.
+  """
+  updateCreditMemoById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateCreditMemoByIdInput!
+  ): UpdateCreditMemoPayload
+
+  """Updates a single \`CreditMemo\` using a unique key and a patch."""
+  updateCreditMemo(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateCreditMemoInput!
+  ): UpdateCreditMemoPayload
 
   """
   Updates a single \`FixedAsset\` using its globally unique id and a patch.
@@ -26525,22 +26538,6 @@ type Mutation {
     input: DeleteVendorInput!
   ): DeleteVendorPayload
 
-  """Deletes a single \`CreditMemo\` using its globally unique id."""
-  deleteCreditMemoById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteCreditMemoByIdInput!
-  ): DeleteCreditMemoPayload
-
-  """Deletes a single \`CreditMemo\` using a unique key."""
-  deleteCreditMemo(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteCreditMemoInput!
-  ): DeleteCreditMemoPayload
-
   """Deletes a single \`CryptoAsset\` using its globally unique id."""
   deleteCryptoAssetById(
     """
@@ -26556,6 +26553,22 @@ type Mutation {
     """
     input: DeleteCryptoAssetInput!
   ): DeleteCryptoAssetPayload
+
+  """Deletes a single \`CreditMemo\` using its globally unique id."""
+  deleteCreditMemoById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCreditMemoByIdInput!
+  ): DeleteCreditMemoPayload
+
+  """Deletes a single \`CreditMemo\` using a unique key."""
+  deleteCreditMemo(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCreditMemoInput!
+  ): DeleteCreditMemoPayload
 
   """Deletes a single \`FixedAsset\` using its globally unique id."""
   deleteFixedAssetById(
@@ -28628,6 +28641,56 @@ input VendorInput {
   createdAt: Datetime
 }
 
+"""The output of our create \`CryptoAsset\` mutation."""
+type CreateCryptoAssetPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`CryptoAsset\` that was created by this mutation."""
+  cryptoAsset: CryptoAsset
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`CryptoAsset\`. May be used by Relay 1."""
+  cryptoAssetEdge(
+    """The method to use when ordering \`CryptoAsset\`."""
+    orderBy: [CryptoAssetOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CryptoAssetEdge
+}
+
+"""All input for the create \`CryptoAsset\` mutation."""
+input CreateCryptoAssetInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`CryptoAsset\` to be created by this mutation."""
+  cryptoAsset: CryptoAssetInput!
+}
+
+"""An input for mutations affecting \`CryptoAsset\`"""
+input CryptoAssetInput {
+  rowId: UUID
+  bookId: UUID!
+  symbol: String!
+  name: String!
+  walletAddress: String
+  network: String
+  balance: BigFloat
+  costBasisMethod: CostBasisMethod
+  lastSyncedAt: Datetime
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
 """The output of our create \`CreditMemo\` mutation."""
 type CreateCreditMemoPayload {
   """
@@ -28680,56 +28743,7 @@ input CreditMemoInput {
   journalEntryId: UUID
   createdAt: Datetime
   updatedAt: Datetime
-}
-
-"""The output of our create \`CryptoAsset\` mutation."""
-type CreateCryptoAssetPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`CryptoAsset\` that was created by this mutation."""
-  cryptoAsset: CryptoAsset
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`CryptoAsset\`. May be used by Relay 1."""
-  cryptoAssetEdge(
-    """The method to use when ordering \`CryptoAsset\`."""
-    orderBy: [CryptoAssetOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): CryptoAssetEdge
-}
-
-"""All input for the create \`CryptoAsset\` mutation."""
-input CreateCryptoAssetInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The \`CryptoAsset\` to be created by this mutation."""
-  cryptoAsset: CryptoAssetInput!
-}
-
-"""An input for mutations affecting \`CryptoAsset\`"""
-input CryptoAssetInput {
-  rowId: UUID
-  bookId: UUID!
-  symbol: String!
-  name: String!
-  walletAddress: String
-  network: String
-  balance: BigFloat
-  costBasisMethod: CostBasisMethod
-  lastSyncedAt: Datetime
-  createdAt: Datetime
-  updatedAt: Datetime
+  exchangeRate: BigFloat
 }
 
 """The output of our create \`FixedAsset\` mutation."""
@@ -32068,84 +32082,6 @@ input UpdateVendorInput {
   patch: VendorPatch!
 }
 
-"""The output of our update \`CreditMemo\` mutation."""
-type UpdateCreditMemoPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`CreditMemo\` that was updated by this mutation."""
-  creditMemo: CreditMemo
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`CreditMemo\`. May be used by Relay 1."""
-  creditMemoEdge(
-    """The method to use when ordering \`CreditMemo\`."""
-    orderBy: [CreditMemoOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): CreditMemoEdge
-}
-
-"""All input for the \`updateCreditMemoById\` mutation."""
-input UpdateCreditMemoByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`CreditMemo\` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the \`CreditMemo\` being updated.
-  """
-  patch: CreditMemoPatch!
-}
-
-"""
-Represents an update to a \`CreditMemo\`. Fields that are set will be updated.
-"""
-input CreditMemoPatch {
-  rowId: UUID
-  bookId: UUID
-  customerId: UUID
-  number: String
-  status: String
-  date: String
-  subtotal: BigFloat
-  taxAmount: BigFloat
-  total: BigFloat
-  amountApplied: BigFloat
-  currency: String
-  memo: String
-  journalEntryId: UUID
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
-"""All input for the \`updateCreditMemo\` mutation."""
-input UpdateCreditMemoInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the \`CreditMemo\` being updated.
-  """
-  patch: CreditMemoPatch!
-}
-
 """The output of our update \`CryptoAsset\` mutation."""
 type UpdateCryptoAssetPayload {
   """
@@ -32218,6 +32154,85 @@ input UpdateCryptoAssetInput {
   An object where the defined keys will be set on the \`CryptoAsset\` being updated.
   """
   patch: CryptoAssetPatch!
+}
+
+"""The output of our update \`CreditMemo\` mutation."""
+type UpdateCreditMemoPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`CreditMemo\` that was updated by this mutation."""
+  creditMemo: CreditMemo
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`CreditMemo\`. May be used by Relay 1."""
+  creditMemoEdge(
+    """The method to use when ordering \`CreditMemo\`."""
+    orderBy: [CreditMemoOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CreditMemoEdge
+}
+
+"""All input for the \`updateCreditMemoById\` mutation."""
+input UpdateCreditMemoByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`CreditMemo\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`CreditMemo\` being updated.
+  """
+  patch: CreditMemoPatch!
+}
+
+"""
+Represents an update to a \`CreditMemo\`. Fields that are set will be updated.
+"""
+input CreditMemoPatch {
+  rowId: UUID
+  bookId: UUID
+  customerId: UUID
+  number: String
+  status: String
+  date: String
+  subtotal: BigFloat
+  taxAmount: BigFloat
+  total: BigFloat
+  amountApplied: BigFloat
+  currency: String
+  memo: String
+  journalEntryId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+  exchangeRate: BigFloat
+}
+
+"""All input for the \`updateCreditMemo\` mutation."""
+input UpdateCreditMemoInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`CreditMemo\` being updated.
+  """
+  patch: CreditMemoPatch!
 }
 
 """The output of our update \`FixedAsset\` mutation."""
@@ -34762,54 +34777,6 @@ input DeleteVendorInput {
   rowId: UUID!
 }
 
-"""The output of our delete \`CreditMemo\` mutation."""
-type DeleteCreditMemoPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`CreditMemo\` that was deleted by this mutation."""
-  creditMemo: CreditMemo
-  deletedCreditMemoId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`CreditMemo\`. May be used by Relay 1."""
-  creditMemoEdge(
-    """The method to use when ordering \`CreditMemo\`."""
-    orderBy: [CreditMemoOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): CreditMemoEdge
-}
-
-"""All input for the \`deleteCreditMemoById\` mutation."""
-input DeleteCreditMemoByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`CreditMemo\` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the \`deleteCreditMemo\` mutation."""
-input DeleteCreditMemoInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete \`CryptoAsset\` mutation."""
 type DeleteCryptoAssetPayload {
   """
@@ -34850,6 +34817,54 @@ input DeleteCryptoAssetByIdInput {
 
 """All input for the \`deleteCryptoAsset\` mutation."""
 input DeleteCryptoAssetInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`CreditMemo\` mutation."""
+type DeleteCreditMemoPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`CreditMemo\` that was deleted by this mutation."""
+  creditMemo: CreditMemo
+  deletedCreditMemoId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`CreditMemo\`. May be used by Relay 1."""
+  creditMemoEdge(
+    """The method to use when ordering \`CreditMemo\`."""
+    orderBy: [CreditMemoOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CreditMemoEdge
+}
+
+"""All input for the \`deleteCreditMemoById\` mutation."""
+input DeleteCreditMemoByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`CreditMemo\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteCreditMemo\` mutation."""
+input DeleteCreditMemoInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -41548,6 +41563,7 @@ export const objects = {
       },
       customer: Invoice_customerPlan,
       customerId: Invoice_customerIdPlan,
+      exchangeRate: Bill_exchangeRatePlan,
       id($parent) {
         const specifier = nodeIdHandler_CreditMemo.plan($parent);
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_CreditMemo.codec.name].encode);
@@ -47113,6 +47129,7 @@ export const inputObjects = {
       currency: CreditMemoInput_currencyApply,
       customerId: EstimateInput_customerIdApply,
       date: CreditMemoApplicationInput_dateApply,
+      exchangeRate: BillPaymentInput_exchangeRateApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       memo: JournalLineInput_memoApply,
       number: EstimateInput_numberApply,
@@ -47202,6 +47219,7 @@ export const inputObjects = {
       currency: CreditMemoInput_currencyApply,
       customerId: EstimateInput_customerIdApply,
       date: CreditMemoApplicationInput_dateApply,
+      exchangeRate: BillPaymentInput_exchangeRateApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       memo: JournalLineInput_memoApply,
       number: EstimateInput_numberApply,

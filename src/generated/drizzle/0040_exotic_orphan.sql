@@ -1,0 +1,1 @@
+ALTER TABLE "credit_memo" ADD COLUMN "exchange_rate" numeric(19, 8) DEFAULT '1' NOT NULL;

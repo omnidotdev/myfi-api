@@ -18,6 +18,8 @@ import {
   computeInvoiceTotals,
   computeLineAmount,
   computeLineTax,
+  fromUnits,
+  toUnits,
 } from "lib/invoicing/invoicePosting";
 import { movementValue } from "lib/inventory/valuation";
 
@@ -206,13 +208,31 @@ export const postCreditMemo = async (
       throw new Error("Failed to write the credit-memo journal entry");
     }
 
+    // Convert the income/tax debits and the AR credit from the memo currency to
+    // the book's home currency at the memo rate. Each income/tax debit is
+    // rounded to home currency and the single AR credit is set to their sum, so
+    // the entry balances exactly. Rate 1 (a home-currency memo) is unchanged
+    const rate = Number(memo.exchangeRate) || 1;
+    let arHomeUnits = 0;
     for (const posting of postings) {
+      if (posting.debit <= 0) continue;
+      const homeUnits = Math.round(toUnits(posting.debit) * rate);
+      arHomeUnits += homeUnits;
       await tx.insert(journalLineTable).values({
         journalEntryId: entryRow.id,
         accountId: posting.accountId,
-        debit: posting.debit.toFixed(4),
-        credit: posting.credit.toFixed(4),
+        debit: fromUnits(homeUnits).toFixed(4),
+        credit: "0.0000",
         taxJurisdictionId: posting.taxJurisdictionId ?? null,
+      } satisfies InferInsertModel<typeof journalLineTable>);
+    }
+    const arPosting = postings.find((p) => p.credit > 0);
+    if (arPosting) {
+      await tx.insert(journalLineTable).values({
+        journalEntryId: entryRow.id,
+        accountId: arPosting.accountId,
+        debit: "0.0000",
+        credit: fromUnits(arHomeUnits).toFixed(4),
       } satisfies InferInsertModel<typeof journalLineTable>);
     }
 

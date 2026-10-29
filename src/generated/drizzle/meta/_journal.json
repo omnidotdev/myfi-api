@@ -281,6 +281,13 @@
       "when": 1793246841715,
       "tag": "0039_misty_juggernaut",
       "breakpoints": true
+    },
+    {
+      "idx": 40,
+      "version": "7",
+      "when": 1793285370792,
+      "tag": "0040_exotic_orphan",
+      "breakpoints": true
     }
   ]
 }

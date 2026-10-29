@@ -27,6 +27,10 @@ interface CreateCreditMemoDraftOptions {
   number: string;
   date: string;
   memo?: string | null;
+  /** Credit-memo currency; defaults to the book's home currency (USD) */
+  currency?: string | null;
+  /** Home-currency units per one unit of `currency` at the memo date; 1 for home */
+  exchangeRate?: number | null;
   lines: DraftLineInput[];
 }
 
@@ -47,7 +51,8 @@ interface CreateCreditMemoDraftResult {
 export const createCreditMemoDraft = async (
   opts: CreateCreditMemoDraftOptions,
 ): Promise<CreateCreditMemoDraftResult> => {
-  const { bookId, customerId, number, date, memo, lines } = opts;
+  const { bookId, customerId, number, date, memo, currency, exchangeRate, lines } =
+    opts;
 
   if (lines.length === 0) {
     throw new Error("A credit memo needs at least one line");
@@ -79,6 +84,10 @@ export const createCreditMemoDraft = async (
         taxAmount: "0.0000",
         total: subtotal.toFixed(4),
         memo: memo ?? null,
+        ...(currency ? { currency } : {}),
+        ...(exchangeRate != null
+          ? { exchangeRate: exchangeRate.toFixed(8) }
+          : {}),
       } satisfies InferInsertModel<typeof creditMemoTable>)
       .returning();
     if (!memoRow) {

@@ -137,11 +137,11 @@ type Query implements Node {
   """Get a single `Vendor`."""
   vendor(rowId: UUID!): Vendor
 
-  """Get a single `CreditMemo`."""
-  creditMemo(rowId: UUID!): CreditMemo
-
   """Get a single `CryptoAsset`."""
   cryptoAsset(rowId: UUID!): CryptoAsset
+
+  """Get a single `CreditMemo`."""
+  creditMemo(rowId: UUID!): CreditMemo
 
   """Get a single `FixedAsset`."""
   fixedAsset(rowId: UUID!): FixedAsset
@@ -467,14 +467,6 @@ type Query implements Node {
     id: ID!
   ): Vendor
 
-  """Reads a single `CreditMemo` using its globally unique `ID`."""
-  creditMemoById(
-    """
-    The globally unique `ID` to be used in selecting a single `CreditMemo`.
-    """
-    id: ID!
-  ): CreditMemo
-
   """Reads a single `CryptoAsset` using its globally unique `ID`."""
   cryptoAssetById(
     """
@@ -482,6 +474,14 @@ type Query implements Node {
     """
     id: ID!
   ): CryptoAsset
+
+  """Reads a single `CreditMemo` using its globally unique `ID`."""
+  creditMemoById(
+    """
+    The globally unique `ID` to be used in selecting a single `CreditMemo`.
+    """
+    id: ID!
+  ): CreditMemo
 
   """Reads a single `FixedAsset` using its globally unique `ID`."""
   fixedAssetById(
@@ -1901,40 +1901,6 @@ type Query implements Node {
     orderBy: [VendorOrderBy!] = [PRIMARY_KEY_ASC]
   ): VendorConnection
 
-  """Reads and enables pagination through a set of `CreditMemo`."""
-  creditMemos(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: CreditMemoCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: CreditMemoFilter
-
-    """The method to use when ordering `CreditMemo`."""
-    orderBy: [CreditMemoOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CreditMemoConnection
-
   """Reads and enables pagination through a set of `CryptoAsset`."""
   cryptoAssets(
     """Only read the first `n` values of the set."""
@@ -1968,6 +1934,40 @@ type Query implements Node {
     """The method to use when ordering `CryptoAsset`."""
     orderBy: [CryptoAssetOrderBy!] = [PRIMARY_KEY_ASC]
   ): CryptoAssetConnection
+
+  """Reads and enables pagination through a set of `CreditMemo`."""
+  creditMemos(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CreditMemoCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CreditMemoFilter
+
+    """The method to use when ordering `CreditMemo`."""
+    orderBy: [CreditMemoOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CreditMemoConnection
 
   """Reads and enables pagination through a set of `FixedAsset`."""
   fixedAssets(
@@ -11142,6 +11142,7 @@ type CreditMemo implements Node {
   journalEntryId: UUID
   createdAt: Datetime
   updatedAt: Datetime
+  exchangeRate: BigFloat!
 
   """Reads a single `Book` that is related to this `CreditMemo`."""
   book: Book
@@ -12532,14 +12533,6 @@ type Mutation {
     input: CreateVendorInput!
   ): CreateVendorPayload
 
-  """Creates a single `CreditMemo`."""
-  createCreditMemo(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateCreditMemoInput!
-  ): CreateCreditMemoPayload
-
   """Creates a single `CryptoAsset`."""
   createCryptoAsset(
     """
@@ -12547,6 +12540,14 @@ type Mutation {
     """
     input: CreateCryptoAssetInput!
   ): CreateCryptoAssetPayload
+
+  """Creates a single `CreditMemo`."""
+  createCreditMemo(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateCreditMemoInput!
+  ): CreateCreditMemoPayload
 
   """Creates a single `FixedAsset`."""
   createFixedAsset(
@@ -13317,24 +13318,6 @@ type Mutation {
   ): UpdateVendorPayload
 
   """
-  Updates a single `CreditMemo` using its globally unique id and a patch.
-  """
-  updateCreditMemoById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateCreditMemoByIdInput!
-  ): UpdateCreditMemoPayload
-
-  """Updates a single `CreditMemo` using a unique key and a patch."""
-  updateCreditMemo(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateCreditMemoInput!
-  ): UpdateCreditMemoPayload
-
-  """
   Updates a single `CryptoAsset` using its globally unique id and a patch.
   """
   updateCryptoAssetById(
@@ -13351,6 +13334,24 @@ type Mutation {
     """
     input: UpdateCryptoAssetInput!
   ): UpdateCryptoAssetPayload
+
+  """
+  Updates a single `CreditMemo` using its globally unique id and a patch.
+  """
+  updateCreditMemoById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateCreditMemoByIdInput!
+  ): UpdateCreditMemoPayload
+
+  """Updates a single `CreditMemo` using a unique key and a patch."""
+  updateCreditMemo(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateCreditMemoInput!
+  ): UpdateCreditMemoPayload
 
   """
   Updates a single `FixedAsset` using its globally unique id and a patch.
@@ -14132,22 +14133,6 @@ type Mutation {
     input: DeleteVendorInput!
   ): DeleteVendorPayload
 
-  """Deletes a single `CreditMemo` using its globally unique id."""
-  deleteCreditMemoById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteCreditMemoByIdInput!
-  ): DeleteCreditMemoPayload
-
-  """Deletes a single `CreditMemo` using a unique key."""
-  deleteCreditMemo(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteCreditMemoInput!
-  ): DeleteCreditMemoPayload
-
   """Deletes a single `CryptoAsset` using its globally unique id."""
   deleteCryptoAssetById(
     """
@@ -14163,6 +14148,22 @@ type Mutation {
     """
     input: DeleteCryptoAssetInput!
   ): DeleteCryptoAssetPayload
+
+  """Deletes a single `CreditMemo` using its globally unique id."""
+  deleteCreditMemoById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCreditMemoByIdInput!
+  ): DeleteCreditMemoPayload
+
+  """Deletes a single `CreditMemo` using a unique key."""
+  deleteCreditMemo(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCreditMemoInput!
+  ): DeleteCreditMemoPayload
 
   """Deletes a single `FixedAsset` using its globally unique id."""
   deleteFixedAssetById(
@@ -16235,6 +16236,56 @@ input VendorInput {
   createdAt: Datetime
 }
 
+"""The output of our create `CryptoAsset` mutation."""
+type CreateCryptoAssetPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `CryptoAsset` that was created by this mutation."""
+  cryptoAsset: CryptoAsset
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `CryptoAsset`. May be used by Relay 1."""
+  cryptoAssetEdge(
+    """The method to use when ordering `CryptoAsset`."""
+    orderBy: [CryptoAssetOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CryptoAssetEdge
+}
+
+"""All input for the create `CryptoAsset` mutation."""
+input CreateCryptoAssetInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `CryptoAsset` to be created by this mutation."""
+  cryptoAsset: CryptoAssetInput!
+}
+
+"""An input for mutations affecting `CryptoAsset`"""
+input CryptoAssetInput {
+  rowId: UUID
+  bookId: UUID!
+  symbol: String!
+  name: String!
+  walletAddress: String
+  network: String
+  balance: BigFloat
+  costBasisMethod: CostBasisMethod
+  lastSyncedAt: Datetime
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
 """The output of our create `CreditMemo` mutation."""
 type CreateCreditMemoPayload {
   """
@@ -16287,56 +16338,7 @@ input CreditMemoInput {
   journalEntryId: UUID
   createdAt: Datetime
   updatedAt: Datetime
-}
-
-"""The output of our create `CryptoAsset` mutation."""
-type CreateCryptoAssetPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `CryptoAsset` that was created by this mutation."""
-  cryptoAsset: CryptoAsset
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `CryptoAsset`. May be used by Relay 1."""
-  cryptoAssetEdge(
-    """The method to use when ordering `CryptoAsset`."""
-    orderBy: [CryptoAssetOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): CryptoAssetEdge
-}
-
-"""All input for the create `CryptoAsset` mutation."""
-input CreateCryptoAssetInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `CryptoAsset` to be created by this mutation."""
-  cryptoAsset: CryptoAssetInput!
-}
-
-"""An input for mutations affecting `CryptoAsset`"""
-input CryptoAssetInput {
-  rowId: UUID
-  bookId: UUID!
-  symbol: String!
-  name: String!
-  walletAddress: String
-  network: String
-  balance: BigFloat
-  costBasisMethod: CostBasisMethod
-  lastSyncedAt: Datetime
-  createdAt: Datetime
-  updatedAt: Datetime
+  exchangeRate: BigFloat
 }
 
 """The output of our create `FixedAsset` mutation."""
@@ -19675,84 +19677,6 @@ input UpdateVendorInput {
   patch: VendorPatch!
 }
 
-"""The output of our update `CreditMemo` mutation."""
-type UpdateCreditMemoPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `CreditMemo` that was updated by this mutation."""
-  creditMemo: CreditMemo
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `CreditMemo`. May be used by Relay 1."""
-  creditMemoEdge(
-    """The method to use when ordering `CreditMemo`."""
-    orderBy: [CreditMemoOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): CreditMemoEdge
-}
-
-"""All input for the `updateCreditMemoById` mutation."""
-input UpdateCreditMemoByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `CreditMemo` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the `CreditMemo` being updated.
-  """
-  patch: CreditMemoPatch!
-}
-
-"""
-Represents an update to a `CreditMemo`. Fields that are set will be updated.
-"""
-input CreditMemoPatch {
-  rowId: UUID
-  bookId: UUID
-  customerId: UUID
-  number: String
-  status: String
-  date: String
-  subtotal: BigFloat
-  taxAmount: BigFloat
-  total: BigFloat
-  amountApplied: BigFloat
-  currency: String
-  memo: String
-  journalEntryId: UUID
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
-"""All input for the `updateCreditMemo` mutation."""
-input UpdateCreditMemoInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the `CreditMemo` being updated.
-  """
-  patch: CreditMemoPatch!
-}
-
 """The output of our update `CryptoAsset` mutation."""
 type UpdateCryptoAssetPayload {
   """
@@ -19825,6 +19749,85 @@ input UpdateCryptoAssetInput {
   An object where the defined keys will be set on the `CryptoAsset` being updated.
   """
   patch: CryptoAssetPatch!
+}
+
+"""The output of our update `CreditMemo` mutation."""
+type UpdateCreditMemoPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `CreditMemo` that was updated by this mutation."""
+  creditMemo: CreditMemo
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `CreditMemo`. May be used by Relay 1."""
+  creditMemoEdge(
+    """The method to use when ordering `CreditMemo`."""
+    orderBy: [CreditMemoOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CreditMemoEdge
+}
+
+"""All input for the `updateCreditMemoById` mutation."""
+input UpdateCreditMemoByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `CreditMemo` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `CreditMemo` being updated.
+  """
+  patch: CreditMemoPatch!
+}
+
+"""
+Represents an update to a `CreditMemo`. Fields that are set will be updated.
+"""
+input CreditMemoPatch {
+  rowId: UUID
+  bookId: UUID
+  customerId: UUID
+  number: String
+  status: String
+  date: String
+  subtotal: BigFloat
+  taxAmount: BigFloat
+  total: BigFloat
+  amountApplied: BigFloat
+  currency: String
+  memo: String
+  journalEntryId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+  exchangeRate: BigFloat
+}
+
+"""All input for the `updateCreditMemo` mutation."""
+input UpdateCreditMemoInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `CreditMemo` being updated.
+  """
+  patch: CreditMemoPatch!
 }
 
 """The output of our update `FixedAsset` mutation."""
@@ -22369,54 +22372,6 @@ input DeleteVendorInput {
   rowId: UUID!
 }
 
-"""The output of our delete `CreditMemo` mutation."""
-type DeleteCreditMemoPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `CreditMemo` that was deleted by this mutation."""
-  creditMemo: CreditMemo
-  deletedCreditMemoId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `CreditMemo`. May be used by Relay 1."""
-  creditMemoEdge(
-    """The method to use when ordering `CreditMemo`."""
-    orderBy: [CreditMemoOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): CreditMemoEdge
-}
-
-"""All input for the `deleteCreditMemoById` mutation."""
-input DeleteCreditMemoByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `CreditMemo` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the `deleteCreditMemo` mutation."""
-input DeleteCreditMemoInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete `CryptoAsset` mutation."""
 type DeleteCryptoAssetPayload {
   """
@@ -22457,6 +22412,54 @@ input DeleteCryptoAssetByIdInput {
 
 """All input for the `deleteCryptoAsset` mutation."""
 input DeleteCryptoAssetInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `CreditMemo` mutation."""
+type DeleteCreditMemoPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `CreditMemo` that was deleted by this mutation."""
+  creditMemo: CreditMemo
+  deletedCreditMemoId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `CreditMemo`. May be used by Relay 1."""
+  creditMemoEdge(
+    """The method to use when ordering `CreditMemo`."""
+    orderBy: [CreditMemoOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CreditMemoEdge
+}
+
+"""All input for the `deleteCreditMemoById` mutation."""
+input DeleteCreditMemoByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `CreditMemo` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteCreditMemo` mutation."""
+input DeleteCreditMemoInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.

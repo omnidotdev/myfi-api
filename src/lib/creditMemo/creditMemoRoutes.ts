@@ -107,6 +107,8 @@ const creditMemoRoutes = new Elysia({ prefix: "/api/credit-memos" })
         number: t.String(),
         date: t.String(),
         memo: t.Optional(t.String()),
+        currency: t.Optional(t.String()),
+        exchangeRate: t.Optional(t.Number({ exclusiveMinimum: 0 })),
         lines: t.Array(
           t.Object({
             description: t.String(),
