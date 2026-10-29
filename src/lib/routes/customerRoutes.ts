@@ -5,6 +5,7 @@ import { emitAudit } from "lib/audit";
 import { dbPool } from "lib/db/db";
 import { customerTable, invoiceTable } from "lib/db/schema";
 import { authorizeBook } from "lib/middleware/bookAccess.middleware";
+import generateCustomerStatement from "lib/reports/customerStatement";
 
 // Customer CRUD routes. Book access is enforced by the global
 // bookAccessMiddleware from the bookId in the query or body
@@ -190,6 +191,33 @@ const customerRoutes = new Elysia({ prefix: "/api/customers" })
       });
 
       return { success: true };
+    },
+    { params: t.Object({ id: t.String() }) },
+  )
+  // Open-item statement: the customer's unpaid invoices and available credit
+  .get(
+    "/:id/statement",
+    async ({ params, query, set }) => {
+      const { bookId, asOfDate } = query;
+      if (!bookId || !asOfDate) {
+        set.status = 400;
+        return { error: "bookId and asOfDate are required" };
+      }
+      try {
+        return await generateCustomerStatement({
+          bookId,
+          customerId: params.id,
+          asOfDate,
+        });
+      } catch (err) {
+        if (err instanceof Error && /not found/i.test(err.message)) {
+          set.status = 404;
+          return { error: err.message };
+        }
+        console.error("[customers] statement failed:", err);
+        set.status = 500;
+        return { error: "Could not generate the statement" };
+      }
     },
     { params: t.Object({ id: t.String() }) },
   );

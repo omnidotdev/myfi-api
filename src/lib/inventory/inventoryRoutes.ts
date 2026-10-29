@@ -7,6 +7,7 @@ import {
   MANTLE_MANAGED_MESSAGE,
   isMantleManaged,
 } from "lib/mantle/invoiceSource";
+import { adjustInventory } from "./adjustInventory";
 import { receiveStock } from "./receiveStock";
 import { recordInventorySale } from "./recordInventorySale";
 
@@ -216,6 +217,47 @@ const inventoryRoutes = new Elysia({ prefix: "/api/inventory-items" })
       body: t.Object({
         bookId: t.String(),
         quantity: t.Number(),
+        date: t.String(),
+        note: t.Optional(t.String()),
+      }),
+    },
+  )
+  // Adjust an item's quantity on hand to a counted value (shrinkage/recount)
+  .post(
+    "/:id/adjust",
+    async ({ params, body, set }) => {
+      if (await isMantleManaged(body.bookId)) {
+        set.status = 409;
+        return { error: MANTLE_MANAGED_MESSAGE };
+      }
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(body.date)) {
+        set.status = 400;
+        return { error: "date must be a YYYY-MM-DD date" };
+      }
+      try {
+        return await adjustInventory({
+          itemId: params.id,
+          bookId: body.bookId,
+          newQuantityOnHand: body.newQuantityOnHand,
+          date: body.date,
+          note: body.note,
+        });
+      } catch (err) {
+        const message = err instanceof Error ? err.message : "Adjustment failed";
+        if (/not found|negative|closed period/i.test(message)) {
+          set.status = /not found/i.test(message) ? 404 : 400;
+          return { error: message };
+        }
+        console.error("[inventory] adjust failed:", err);
+        set.status = 500;
+        return { error: "Could not adjust inventory" };
+      }
+    },
+    {
+      params: t.Object({ id: t.String() }),
+      body: t.Object({
+        bookId: t.String(),
+        newQuantityOnHand: t.Number({ minimum: 0 }),
         date: t.String(),
         note: t.Optional(t.String()),
       }),
