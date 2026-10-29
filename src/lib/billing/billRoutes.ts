@@ -4,6 +4,7 @@ import { Elysia, t } from "elysia";
 import { dbPool } from "lib/db/db";
 import { billLineTable, billTable, vendorTable } from "lib/db/schema";
 import { createBillDraft } from "./createBillDraft";
+import { payBillsBatch } from "./payBillsBatch";
 import { postBill } from "./postBill";
 import { recordBillPayment } from "./recordBillPayment";
 import { voidBill } from "./voidBill";
@@ -203,6 +204,44 @@ const billRoutes = new Elysia({ prefix: "/api/bills" })
     {
       params: t.Object({ id: t.String() }),
       body: t.Object({ bookId: t.String() }),
+    },
+  )
+  // Pay several bills from one account in a single action
+  .post(
+    "/pay-batch",
+    async ({ body, set }) => {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(body.date)) {
+        set.status = 400;
+        return { error: "date must be a YYYY-MM-DD date" };
+      }
+      try {
+        return await payBillsBatch({
+          bookId: body.bookId,
+          paymentAccountId: body.paymentAccountId,
+          date: body.date,
+          payments: body.payments,
+        });
+      } catch (err) {
+        const message = err instanceof Error ? err.message : "Batch pay failed";
+        if (isClientError(message) || /at least one bill|more than once/i.test(message)) {
+          set.status = /not found/i.test(message) ? 404 : 400;
+          return { error: message };
+        }
+        console.error("[bills] batch pay failed:", err);
+        set.status = 500;
+        return { error: "Could not pay the bills" };
+      }
+    },
+    {
+      body: t.Object({
+        bookId: t.String(),
+        paymentAccountId: t.String(),
+        date: t.String(),
+        payments: t.Array(
+          t.Object({ billId: t.String(), amount: t.Number() }),
+          { minItems: 1 },
+        ),
+      }),
     },
   );
 
