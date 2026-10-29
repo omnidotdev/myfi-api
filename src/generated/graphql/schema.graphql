@@ -62,6 +62,9 @@ type Query implements Node {
   """Get a single `TrackingCategory`."""
   trackingCategory(rowId: UUID!): TrackingCategory
 
+  """Get a single `PriceLevel`."""
+  priceLevel(rowId: UUID!): PriceLevel
+
   """Get a single `CustomFieldDefinition`."""
   customFieldDefinition(rowId: UUID!): CustomFieldDefinition
 
@@ -161,14 +164,14 @@ type Query implements Node {
   """Get a single `ReconciliationQueue`."""
   reconciliationQueue(rowId: UUID!): ReconciliationQueue
 
-  """Get a single `Customer`."""
-  customer(rowId: UUID!): Customer
-
   """Get a single `Vendor`."""
   vendor(rowId: UUID!): Vendor
 
   """Get a single `CryptoAsset`."""
   cryptoAsset(rowId: UUID!): CryptoAsset
+
+  """Get a single `Customer`."""
+  customer(rowId: UUID!): Customer
 
   """Get a single `CreditMemo`."""
   creditMemo(rowId: UUID!): CreditMemo
@@ -320,6 +323,14 @@ type Query implements Node {
     """
     id: ID!
   ): TrackingCategory
+
+  """Reads a single `PriceLevel` using its globally unique `ID`."""
+  priceLevelById(
+    """
+    The globally unique `ID` to be used in selecting a single `PriceLevel`.
+    """
+    id: ID!
+  ): PriceLevel
 
   """Reads a single `CustomFieldDefinition` using its globally unique `ID`."""
   customFieldDefinitionById(
@@ -575,12 +586,6 @@ type Query implements Node {
     id: ID!
   ): ReconciliationQueue
 
-  """Reads a single `Customer` using its globally unique `ID`."""
-  customerById(
-    """The globally unique `ID` to be used in selecting a single `Customer`."""
-    id: ID!
-  ): Customer
-
   """Reads a single `Vendor` using its globally unique `ID`."""
   vendorById(
     """The globally unique `ID` to be used in selecting a single `Vendor`."""
@@ -594,6 +599,12 @@ type Query implements Node {
     """
     id: ID!
   ): CryptoAsset
+
+  """Reads a single `Customer` using its globally unique `ID`."""
+  customerById(
+    """The globally unique `ID` to be used in selecting a single `Customer`."""
+    id: ID!
+  ): Customer
 
   """Reads a single `CreditMemo` using its globally unique `ID`."""
   creditMemoById(
@@ -1186,6 +1197,40 @@ type Query implements Node {
     """The method to use when ordering `TrackingCategory`."""
     orderBy: [TrackingCategoryOrderBy!] = [PRIMARY_KEY_ASC]
   ): TrackingCategoryConnection
+
+  """Reads and enables pagination through a set of `PriceLevel`."""
+  priceLevels(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PriceLevelCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: PriceLevelFilter
+
+    """The method to use when ordering `PriceLevel`."""
+    orderBy: [PriceLevelOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PriceLevelConnection
 
   """Reads and enables pagination through a set of `CustomFieldDefinition`."""
   customFieldDefinitions(
@@ -2313,40 +2358,6 @@ type Query implements Node {
     orderBy: [ReconciliationQueueOrderBy!] = [PRIMARY_KEY_ASC]
   ): ReconciliationQueueConnection
 
-  """Reads and enables pagination through a set of `Customer`."""
-  customers(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: CustomerCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: CustomerFilter
-
-    """The method to use when ordering `Customer`."""
-    orderBy: [CustomerOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CustomerConnection
-
   """Reads and enables pagination through a set of `Vendor`."""
   vendors(
     """Only read the first `n` values of the set."""
@@ -2414,6 +2425,40 @@ type Query implements Node {
     """The method to use when ordering `CryptoAsset`."""
     orderBy: [CryptoAssetOrderBy!] = [PRIMARY_KEY_ASC]
   ): CryptoAssetConnection
+
+  """Reads and enables pagination through a set of `Customer`."""
+  customers(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CustomerCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CustomerFilter
+
+    """The method to use when ordering `Customer`."""
+    orderBy: [CustomerOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CustomerConnection
 
   """Reads and enables pagination through a set of `CreditMemo`."""
   creditMemos(
@@ -4619,6 +4664,40 @@ type Book implements Node {
     """The method to use when ordering `CustomFieldDefinition`."""
     orderBy: [CustomFieldDefinitionOrderBy!] = [PRIMARY_KEY_ASC]
   ): CustomFieldDefinitionConnection!
+
+  """Reads and enables pagination through a set of `PriceLevel`."""
+  priceLevels(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PriceLevelCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: PriceLevelFilter
+
+    """The method to use when ordering `PriceLevel`."""
+    orderBy: [PriceLevelOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PriceLevelConnection!
 }
 
 """A connection to a list of `Account` values."""
@@ -5155,6 +5234,12 @@ input BookFilter {
 
   """Some related `customFieldDefinitions` exist."""
   customFieldDefinitionsExist: Boolean
+
+  """Filter by the object’s `priceLevels` relation."""
+  priceLevels: BookToManyPriceLevelFilter
+
+  """Some related `priceLevels` exist."""
+  priceLevelsExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [BookFilter!]
@@ -7716,6 +7801,12 @@ input CustomerFilter {
   """Filter by the object’s `book` relation."""
   book: BookFilter
 
+  """Filter by the object’s `priceLevel` relation."""
+  priceLevel: PriceLevelFilter
+
+  """A related `priceLevel` exists."""
+  priceLevelExists: Boolean
+
   """Checks for all expressions in this list."""
   and: [CustomerFilter!]
 
@@ -8494,6 +8585,29 @@ input RecurringInvoiceLineFilter {
 }
 
 """
+A filter to be used against `PriceLevel` object types. All fields are combined with a logical ‘and.’
+"""
+input PriceLevelFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `bookId` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s `book` relation."""
+  book: BookFilter
+
+  """Checks for all expressions in this list."""
+  and: [PriceLevelFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [PriceLevelFilter!]
+
+  """Negates the expression."""
+  not: PriceLevelFilter
+}
+
+"""
 A filter to be used against many `Invoice` object types. All fields are combined with a logical ‘and.’
 """
 input BookToManyInvoiceFilter {
@@ -9071,6 +9185,26 @@ input BookToManyCustomFieldDefinitionFilter {
   No related `CustomFieldDefinition` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
   none: CustomFieldDefinitionFilter
+}
+
+"""
+A filter to be used against many `PriceLevel` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyPriceLevelFilter {
+  """
+  Every related `PriceLevel` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: PriceLevelFilter
+
+  """
+  Some related `PriceLevel` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: PriceLevelFilter
+
+  """
+  No related `PriceLevel` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: PriceLevelFilter
 }
 
 """
@@ -12819,9 +12953,13 @@ type Customer implements Node {
   isActive: Boolean!
   createdAt: Datetime
   updatedAt: Datetime
+  priceLevelId: UUID
 
   """Reads a single `Book` that is related to this `Customer`."""
   book: Book
+
+  """Reads a single `PriceLevel` that is related to this `Customer`."""
+  priceLevel: PriceLevel
 
   """Reads and enables pagination through a set of `Invoice`."""
   invoices(
@@ -12958,6 +13096,23 @@ type Customer implements Node {
     """The method to use when ordering `RecurringInvoice`."""
     orderBy: [RecurringInvoiceOrderBy!] = [PRIMARY_KEY_ASC]
   ): RecurringInvoiceConnection!
+}
+
+type PriceLevel implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  name: String!
+  adjustmentPercent: BigFloat!
+  isActive: Boolean!
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """Reads a single `Book` that is related to this `PriceLevel`."""
+  book: Book
 }
 
 """A connection to a list of `Invoice` values."""
@@ -15020,6 +15175,55 @@ enum CustomFieldDefinitionOrderBy {
   ENTITY_TYPE_DESC
 }
 
+"""A connection to a list of `PriceLevel` values."""
+type PriceLevelConnection {
+  """A list of `PriceLevel` objects."""
+  nodes: [PriceLevel]!
+
+  """
+  A list of edges which contains the `PriceLevel` and cursor to aid in pagination.
+  """
+  edges: [PriceLevelEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `PriceLevel` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `PriceLevel` edge in the connection."""
+type PriceLevelEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `PriceLevel` at the end of the edge."""
+  node: PriceLevel
+}
+
+"""
+A condition to be used against `PriceLevel` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input PriceLevelCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `bookId` field."""
+  bookId: UUID
+}
+
+"""Methods to use when ordering `PriceLevel`."""
+enum PriceLevelOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+}
+
 type _DrizzleMigration implements Node {
   """
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
@@ -15353,6 +15557,14 @@ type Mutation {
     input: CreateTrackingCategoryInput!
   ): CreateTrackingCategoryPayload
 
+  """Creates a single `PriceLevel`."""
+  createPriceLevel(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreatePriceLevelInput!
+  ): CreatePriceLevelPayload
+
   """Creates a single `CustomFieldDefinition`."""
   createCustomFieldDefinition(
     """
@@ -15617,14 +15829,6 @@ type Mutation {
     input: CreateReconciliationQueueInput!
   ): CreateReconciliationQueuePayload
 
-  """Creates a single `Customer`."""
-  createCustomer(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateCustomerInput!
-  ): CreateCustomerPayload
-
   """Creates a single `Vendor`."""
   createVendor(
     """
@@ -15640,6 +15844,14 @@ type Mutation {
     """
     input: CreateCryptoAssetInput!
   ): CreateCryptoAssetPayload
+
+  """Creates a single `Customer`."""
+  createCustomer(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateCustomerInput!
+  ): CreateCustomerPayload
 
   """Creates a single `CreditMemo`."""
   createCreditMemo(
@@ -15998,6 +16210,24 @@ type Mutation {
     """
     input: UpdateTrackingCategoryInput!
   ): UpdateTrackingCategoryPayload
+
+  """
+  Updates a single `PriceLevel` using its globally unique id and a patch.
+  """
+  updatePriceLevelById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdatePriceLevelByIdInput!
+  ): UpdatePriceLevelPayload
+
+  """Updates a single `PriceLevel` using a unique key and a patch."""
+  updatePriceLevel(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdatePriceLevelInput!
+  ): UpdatePriceLevelPayload
 
   """
   Updates a single `CustomFieldDefinition` using its globally unique id and a patch.
@@ -16589,22 +16819,6 @@ type Mutation {
     input: UpdateReconciliationQueueInput!
   ): UpdateReconciliationQueuePayload
 
-  """Updates a single `Customer` using its globally unique id and a patch."""
-  updateCustomerById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateCustomerByIdInput!
-  ): UpdateCustomerPayload
-
-  """Updates a single `Customer` using a unique key and a patch."""
-  updateCustomer(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateCustomerInput!
-  ): UpdateCustomerPayload
-
   """Updates a single `Vendor` using its globally unique id and a patch."""
   updateVendorById(
     """
@@ -16638,6 +16852,22 @@ type Mutation {
     """
     input: UpdateCryptoAssetInput!
   ): UpdateCryptoAssetPayload
+
+  """Updates a single `Customer` using its globally unique id and a patch."""
+  updateCustomerById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateCustomerByIdInput!
+  ): UpdateCustomerPayload
+
+  """Updates a single `Customer` using a unique key and a patch."""
+  updateCustomer(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateCustomerInput!
+  ): UpdateCustomerPayload
 
   """
   Updates a single `CreditMemo` using its globally unique id and a patch.
@@ -17072,6 +17302,22 @@ type Mutation {
     """
     input: DeleteTrackingCategoryInput!
   ): DeleteTrackingCategoryPayload
+
+  """Deletes a single `PriceLevel` using its globally unique id."""
+  deletePriceLevelById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeletePriceLevelByIdInput!
+  ): DeletePriceLevelPayload
+
+  """Deletes a single `PriceLevel` using a unique key."""
+  deletePriceLevel(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeletePriceLevelInput!
+  ): DeletePriceLevelPayload
 
   """Deletes a single `CustomFieldDefinition` using its globally unique id."""
   deleteCustomFieldDefinitionById(
@@ -17605,22 +17851,6 @@ type Mutation {
     input: DeleteReconciliationQueueInput!
   ): DeleteReconciliationQueuePayload
 
-  """Deletes a single `Customer` using its globally unique id."""
-  deleteCustomerById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteCustomerByIdInput!
-  ): DeleteCustomerPayload
-
-  """Deletes a single `Customer` using a unique key."""
-  deleteCustomer(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteCustomerInput!
-  ): DeleteCustomerPayload
-
   """Deletes a single `Vendor` using its globally unique id."""
   deleteVendorById(
     """
@@ -17652,6 +17882,22 @@ type Mutation {
     """
     input: DeleteCryptoAssetInput!
   ): DeleteCryptoAssetPayload
+
+  """Deletes a single `Customer` using its globally unique id."""
+  deleteCustomerById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCustomerByIdInput!
+  ): DeleteCustomerPayload
+
+  """Deletes a single `Customer` using a unique key."""
+  deleteCustomer(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCustomerInput!
+  ): DeleteCustomerPayload
 
   """Deletes a single `CreditMemo` using its globally unique id."""
   deleteCreditMemoById(
@@ -18498,6 +18744,52 @@ input TrackingCategoryInput {
   kind: String!
   name: String!
   code: String
+  isActive: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""The output of our create `PriceLevel` mutation."""
+type CreatePriceLevelPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `PriceLevel` that was created by this mutation."""
+  priceLevel: PriceLevel
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `PriceLevel`. May be used by Relay 1."""
+  priceLevelEdge(
+    """The method to use when ordering `PriceLevel`."""
+    orderBy: [PriceLevelOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): PriceLevelEdge
+}
+
+"""All input for the create `PriceLevel` mutation."""
+input CreatePriceLevelInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `PriceLevel` to be created by this mutation."""
+  priceLevel: PriceLevelInput!
+}
+
+"""An input for mutations affecting `PriceLevel`"""
+input PriceLevelInput {
+  rowId: UUID
+  bookId: UUID!
+  name: String!
+  adjustmentPercent: BigFloat
   isActive: Boolean
   createdAt: Datetime
   updatedAt: Datetime
@@ -20140,59 +20432,6 @@ input ReconciliationQueueInput {
   periodMonth: Int
 }
 
-"""The output of our create `Customer` mutation."""
-type CreateCustomerPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Customer` that was created by this mutation."""
-  customer: Customer
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `Customer`. May be used by Relay 1."""
-  customerEdge(
-    """The method to use when ordering `Customer`."""
-    orderBy: [CustomerOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): CustomerEdge
-}
-
-"""All input for the create `Customer` mutation."""
-input CreateCustomerInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `Customer` to be created by this mutation."""
-  customer: CustomerInput!
-}
-
-"""An input for mutations affecting `Customer`"""
-input CustomerInput {
-  rowId: UUID
-  bookId: UUID!
-  name: String!
-  businessName: String
-  email: String
-  phone: String
-  address: String
-  city: String
-  state: String
-  zip: String
-  notes: String
-  isActive: Boolean
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
 """The output of our create `Vendor` mutation."""
 type CreateVendorPayload {
   """
@@ -20294,6 +20533,60 @@ input CryptoAssetInput {
   lastSyncedAt: Datetime
   createdAt: Datetime
   updatedAt: Datetime
+}
+
+"""The output of our create `Customer` mutation."""
+type CreateCustomerPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Customer` that was created by this mutation."""
+  customer: Customer
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Customer`. May be used by Relay 1."""
+  customerEdge(
+    """The method to use when ordering `Customer`."""
+    orderBy: [CustomerOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CustomerEdge
+}
+
+"""All input for the create `Customer` mutation."""
+input CreateCustomerInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Customer` to be created by this mutation."""
+  customer: CustomerInput!
+}
+
+"""An input for mutations affecting `Customer`"""
+input CustomerInput {
+  rowId: UUID
+  bookId: UUID!
+  name: String!
+  businessName: String
+  email: String
+  phone: String
+  address: String
+  city: String
+  state: String
+  zip: String
+  notes: String
+  isActive: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
+  priceLevelId: UUID
 }
 
 """The output of our create `CreditMemo` mutation."""
@@ -21926,6 +22219,76 @@ input UpdateTrackingCategoryInput {
   An object where the defined keys will be set on the `TrackingCategory` being updated.
   """
   patch: TrackingCategoryPatch!
+}
+
+"""The output of our update `PriceLevel` mutation."""
+type UpdatePriceLevelPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `PriceLevel` that was updated by this mutation."""
+  priceLevel: PriceLevel
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `PriceLevel`. May be used by Relay 1."""
+  priceLevelEdge(
+    """The method to use when ordering `PriceLevel`."""
+    orderBy: [PriceLevelOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): PriceLevelEdge
+}
+
+"""All input for the `updatePriceLevelById` mutation."""
+input UpdatePriceLevelByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `PriceLevel` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `PriceLevel` being updated.
+  """
+  patch: PriceLevelPatch!
+}
+
+"""
+Represents an update to a `PriceLevel`. Fields that are set will be updated.
+"""
+input PriceLevelPatch {
+  rowId: UUID
+  bookId: UUID
+  name: String
+  adjustmentPercent: BigFloat
+  isActive: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the `updatePriceLevel` mutation."""
+input UpdatePriceLevelInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `PriceLevel` being updated.
+  """
+  patch: PriceLevelPatch!
 }
 
 """The output of our update `CustomFieldDefinition` mutation."""
@@ -24357,83 +24720,6 @@ input UpdateReconciliationQueueInput {
   patch: ReconciliationQueuePatch!
 }
 
-"""The output of our update `Customer` mutation."""
-type UpdateCustomerPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Customer` that was updated by this mutation."""
-  customer: Customer
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `Customer`. May be used by Relay 1."""
-  customerEdge(
-    """The method to use when ordering `Customer`."""
-    orderBy: [CustomerOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): CustomerEdge
-}
-
-"""All input for the `updateCustomerById` mutation."""
-input UpdateCustomerByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Customer` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the `Customer` being updated.
-  """
-  patch: CustomerPatch!
-}
-
-"""
-Represents an update to a `Customer`. Fields that are set will be updated.
-"""
-input CustomerPatch {
-  rowId: UUID
-  bookId: UUID
-  name: String
-  businessName: String
-  email: String
-  phone: String
-  address: String
-  city: String
-  state: String
-  zip: String
-  notes: String
-  isActive: Boolean
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
-"""All input for the `updateCustomer` mutation."""
-input UpdateCustomerInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the `Customer` being updated.
-  """
-  patch: CustomerPatch!
-}
-
 """The output of our update `Vendor` mutation."""
 type UpdateVendorPayload {
   """
@@ -24583,6 +24869,84 @@ input UpdateCryptoAssetInput {
   An object where the defined keys will be set on the `CryptoAsset` being updated.
   """
   patch: CryptoAssetPatch!
+}
+
+"""The output of our update `Customer` mutation."""
+type UpdateCustomerPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Customer` that was updated by this mutation."""
+  customer: Customer
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Customer`. May be used by Relay 1."""
+  customerEdge(
+    """The method to use when ordering `Customer`."""
+    orderBy: [CustomerOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CustomerEdge
+}
+
+"""All input for the `updateCustomerById` mutation."""
+input UpdateCustomerByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Customer` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `Customer` being updated.
+  """
+  patch: CustomerPatch!
+}
+
+"""
+Represents an update to a `Customer`. Fields that are set will be updated.
+"""
+input CustomerPatch {
+  rowId: UUID
+  bookId: UUID
+  name: String
+  businessName: String
+  email: String
+  phone: String
+  address: String
+  city: String
+  state: String
+  zip: String
+  notes: String
+  isActive: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
+  priceLevelId: UUID
+}
+
+"""All input for the `updateCustomer` mutation."""
+input UpdateCustomerInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `Customer` being updated.
+  """
+  patch: CustomerPatch!
 }
 
 """The output of our update `CreditMemo` mutation."""
@@ -26156,6 +26520,54 @@ input DeleteTrackingCategoryByIdInput {
 
 """All input for the `deleteTrackingCategory` mutation."""
 input DeleteTrackingCategoryInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `PriceLevel` mutation."""
+type DeletePriceLevelPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `PriceLevel` that was deleted by this mutation."""
+  priceLevel: PriceLevel
+  deletedPriceLevelId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `PriceLevel`. May be used by Relay 1."""
+  priceLevelEdge(
+    """The method to use when ordering `PriceLevel`."""
+    orderBy: [PriceLevelOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): PriceLevelEdge
+}
+
+"""All input for the `deletePriceLevelById` mutation."""
+input DeletePriceLevelByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `PriceLevel` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deletePriceLevel` mutation."""
+input DeletePriceLevelInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -27748,54 +28160,6 @@ input DeleteReconciliationQueueInput {
   rowId: UUID!
 }
 
-"""The output of our delete `Customer` mutation."""
-type DeleteCustomerPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Customer` that was deleted by this mutation."""
-  customer: Customer
-  deletedCustomerId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `Customer`. May be used by Relay 1."""
-  customerEdge(
-    """The method to use when ordering `Customer`."""
-    orderBy: [CustomerOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): CustomerEdge
-}
-
-"""All input for the `deleteCustomerById` mutation."""
-input DeleteCustomerByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Customer` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the `deleteCustomer` mutation."""
-input DeleteCustomerInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete `Vendor` mutation."""
 type DeleteVendorPayload {
   """
@@ -27884,6 +28248,54 @@ input DeleteCryptoAssetByIdInput {
 
 """All input for the `deleteCryptoAsset` mutation."""
 input DeleteCryptoAssetInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `Customer` mutation."""
+type DeleteCustomerPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Customer` that was deleted by this mutation."""
+  customer: Customer
+  deletedCustomerId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Customer`. May be used by Relay 1."""
+  customerEdge(
+    """The method to use when ordering `Customer`."""
+    orderBy: [CustomerOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CustomerEdge
+}
+
+"""All input for the `deleteCustomerById` mutation."""
+input DeleteCustomerByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Customer` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteCustomer` mutation."""
+input DeleteCustomerInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.

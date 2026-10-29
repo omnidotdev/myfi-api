@@ -59,6 +59,7 @@ import ofxRoutes from "lib/ofx/ofxRoutes";
 import { payrollCallbackRoute, payrollRoutes } from "lib/payroll";
 import plaidRoutes from "lib/plaid/plaidRoutes";
 import startScheduledSync from "lib/plaid/scheduledSync";
+import priceLevelRoutes from "lib/pricing/priceLevelRoutes";
 import purchaseOrderRoutes from "lib/purchasing/purchaseOrderRoutes";
 import recurringRoutes from "lib/recurring/recurringRoutes";
 import startScheduledRecurring from "lib/recurring/scheduledRecurring";
@@ -157,7 +158,8 @@ const connectionAndOrgRoutes = new Elysia()
   .use(recurringInvoiceRoutes)
   .use(bankDepositRoutes)
   .use(trackingCategoryRoutes)
-  .use(customFieldRoutes);
+  .use(customFieldRoutes)
+  .use(priceLevelRoutes);
 
 const app = new Elysia()
   .onAfterHandle(({ set }) => {

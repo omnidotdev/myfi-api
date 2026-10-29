@@ -1288,6 +1288,103 @@ const spec_trackingCategory = {
   executor: executor
 };
 const trackingCategoryCodec = recordCodec(spec_trackingCategory);
+const priceLevelIdentifier = sql.identifier("public", "price_level");
+const spec_priceLevel = {
+  name: "priceLevel",
+  identifier: priceLevelIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    name: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    adjustment_percent: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    is_active: {
+      codec: TYPES.boolean,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "18782",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "price_level"
+    }
+  },
+  executor: executor
+};
+const priceLevelCodec = recordCodec(spec_priceLevel);
 const customFieldDefinitionIdentifier = sql.identifier("public", "custom_field_definition");
 const spec_customFieldDefinition = {
   name: "customFieldDefinition",
@@ -5687,171 +5784,6 @@ const spec_reconciliationQueue = {
   executor: executor
 };
 const reconciliationQueueCodec = recordCodec(spec_reconciliationQueue);
-const customerIdentifier = sql.identifier("public", "customer");
-const spec_customer = {
-  name: "customer",
-  identifier: customerIdentifier,
-  attributes: {
-    __proto__: null,
-    id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    book_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    name: {
-      codec: TYPES.text,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    business_name: {
-      codec: TYPES.text,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    email: {
-      codec: TYPES.text,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    phone: {
-      codec: TYPES.text,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    address: {
-      codec: TYPES.text,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    city: {
-      codec: TYPES.text,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    state: {
-      codec: TYPES.text,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    zip: {
-      codec: TYPES.text,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    notes: {
-      codec: TYPES.text,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    is_active: {
-      codec: TYPES.boolean,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    created_at: {
-      codec: TYPES.timestamptz,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    updated_at: {
-      codec: TYPES.timestamptz,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    }
-  },
-  extensions: {
-    oid: "17520",
-    isTableLike: true,
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "customer"
-    }
-  },
-  executor: executor
-};
-const customerCodec = recordCodec(spec_customer);
 const vendorIdentifier = sql.identifier("public", "vendor");
 const spec_vendor = {
   name: "vendor",
@@ -6167,6 +6099,181 @@ const spec_cryptoAsset = {
   executor: executor
 };
 const cryptoAssetCodec = recordCodec(spec_cryptoAsset);
+const customerIdentifier = sql.identifier("public", "customer");
+const spec_customer = {
+  name: "customer",
+  identifier: customerIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    name: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    business_name: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    email: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    phone: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    address: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    city: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    state: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    zip: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    notes: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    is_active: {
+      codec: TYPES.boolean,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    price_level_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "17520",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "customer"
+    }
+  },
+  executor: executor
+};
+const customerCodec = recordCodec(spec_customer);
 const creditMemoIdentifier = sql.identifier("public", "credit_memo");
 const spec_creditMemo = {
   name: "creditMemo",
@@ -8617,6 +8724,29 @@ const tracking_category_resourceOptionsConfig = {
   },
   uniques: tracking_categoryUniques
 };
+const price_levelUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const price_level_resourceOptionsConfig = {
+  executor: executor,
+  name: "price_level",
+  identifier: "main.public.price_level",
+  from: priceLevelIdentifier,
+  codec: priceLevelCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "price_level"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: price_levelUniques
+};
 const custom_field_definitionUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -9376,29 +9506,6 @@ const reconciliation_queue_resourceOptionsConfig = {
   },
   uniques: reconciliation_queueUniques
 };
-const customerUniques = [{
-  attributes: ["id"],
-  isPrimary: true
-}];
-const customer_resourceOptionsConfig = {
-  executor: executor,
-  name: "customer",
-  identifier: "main.public.customer",
-  from: customerIdentifier,
-  codec: customerCodec,
-  extensions: {
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "customer"
-    },
-    canSelect: true,
-    canInsert: true,
-    canUpdate: true,
-    canDelete: true
-  },
-  uniques: customerUniques
-};
 const vendorUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -9444,6 +9551,29 @@ const crypto_asset_resourceOptionsConfig = {
     canDelete: true
   },
   uniques: crypto_assetUniques
+};
+const customerUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const customer_resourceOptionsConfig = {
+  executor: executor,
+  name: "customer",
+  identifier: "main.public.customer",
+  from: customerIdentifier,
+  codec: customerCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "customer"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: customerUniques
 };
 const credit_memoUniques = [{
   attributes: ["id"],
@@ -9728,6 +9858,7 @@ const registryConfig = {
     importProfile: importProfileCodec,
     jsonb: TYPES.jsonb,
     trackingCategory: trackingCategoryCodec,
+    priceLevel: priceLevelCodec,
     customFieldDefinition: customFieldDefinitionCodec,
     taxJurisdiction: taxJurisdictionCodec,
     journalLine: journalLineCodec,
@@ -9762,10 +9893,10 @@ const registryConfig = {
     invoiceLine: invoiceLineCodec,
     estimate: estimateCodec,
     reconciliationQueue: reconciliationQueueCodec,
-    customer: customerCodec,
     vendor: vendorCodec,
     cryptoAsset: cryptoAssetCodec,
     costBasisMethod: costBasisMethodCodec,
+    customer: customerCodec,
     creditMemo: creditMemoCodec,
     vendorCredit: vendorCreditCodec,
     fixedAsset: fixedAssetCodec,
@@ -9816,6 +9947,7 @@ const registryConfig = {
     savings_goal: savings_goal_resourceOptionsConfig,
     import_profile: import_profile_resourceOptionsConfig,
     tracking_category: tracking_category_resourceOptionsConfig,
+    price_level: price_level_resourceOptionsConfig,
     custom_field_definition: custom_field_definition_resourceOptionsConfig,
     tax_jurisdiction: tax_jurisdiction_resourceOptionsConfig,
     journal_line: journal_line_resourceOptionsConfig,
@@ -9849,9 +9981,9 @@ const registryConfig = {
     invoice_line: invoice_line_resourceOptionsConfig,
     estimate: estimate_resourceOptionsConfig,
     reconciliation_queue: reconciliation_queue_resourceOptionsConfig,
-    customer: customer_resourceOptionsConfig,
     vendor: vendor_resourceOptionsConfig,
     crypto_asset: crypto_asset_resourceOptionsConfig,
+    customer: customer_resourceOptionsConfig,
     credit_memo: credit_memo_resourceOptionsConfig,
     vendor_credit: vendor_credit_resourceOptionsConfig,
     fixed_asset: fixed_asset_resourceOptionsConfig,
@@ -10794,6 +10926,13 @@ const registryConfig = {
         localAttributes: ["id"],
         remoteAttributes: ["book_id"],
         isReferencee: true
+      },
+      priceLevelsByTheirBookId: {
+        localCodec: bookCodec,
+        remoteResourceOptions: price_level_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["book_id"],
+        isReferencee: true
       }
     },
     bookAccess: {
@@ -11083,6 +11222,13 @@ const registryConfig = {
         localCodec: customerCodec,
         remoteResourceOptions: book_resourceOptionsConfig,
         localAttributes: ["book_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      priceLevelByMyPriceLevelId: {
+        localCodec: customerCodec,
+        remoteResourceOptions: price_level_resourceOptionsConfig,
+        localAttributes: ["price_level_id"],
         remoteAttributes: ["id"],
         isUnique: true
       },
@@ -11767,6 +11913,27 @@ const registryConfig = {
         isUnique: true
       }
     },
+    priceLevel: {
+      __proto__: null,
+      bookByMyBookId: {
+        localCodec: priceLevelCodec,
+        remoteResourceOptions: book_resourceOptionsConfig,
+        localAttributes: ["book_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      customersByTheirPriceLevelId: {
+        localCodec: priceLevelCodec,
+        remoteResourceOptions: customer_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["price_level_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
+      }
+    },
     project: {
       __proto__: null,
       bookByMyBookId: {
@@ -12377,6 +12544,7 @@ const resource_vehiclePgResource = registry.pgResources["vehicle"];
 const resource_savings_goalPgResource = registry.pgResources["savings_goal"];
 const resource_import_profilePgResource = registry.pgResources["import_profile"];
 const resource_tracking_categoryPgResource = registry.pgResources["tracking_category"];
+const resource_price_levelPgResource = registry.pgResources["price_level"];
 const resource_custom_field_definitionPgResource = registry.pgResources["custom_field_definition"];
 const resource_tax_jurisdictionPgResource = registry.pgResources["tax_jurisdiction"];
 const resource_journal_linePgResource = registry.pgResources["journal_line"];
@@ -12410,9 +12578,9 @@ const resource_documentPgResource = registry.pgResources["document"];
 const resource_invoice_linePgResource = registry.pgResources["invoice_line"];
 const resource_estimatePgResource = registry.pgResources["estimate"];
 const resource_reconciliation_queuePgResource = registry.pgResources["reconciliation_queue"];
-const resource_customerPgResource = registry.pgResources["customer"];
 const resource_vendorPgResource = registry.pgResources["vendor"];
 const resource_crypto_assetPgResource = registry.pgResources["crypto_asset"];
+const resource_customerPgResource = registry.pgResources["customer"];
 const resource_credit_memoPgResource = registry.pgResources["credit_memo"];
 const resource_vendor_creditPgResource = registry.pgResources["vendor_credit"];
 const resource_fixed_assetPgResource = registry.pgResources["fixed_asset"];
@@ -12632,6 +12800,17 @@ const nodeIdHandler_TrackingCategory = makeTableNodeIdHandler({
 const nodeFetcher_TrackingCategory = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_TrackingCategory));
   return nodeIdHandler_TrackingCategory.get(nodeIdHandler_TrackingCategory.getSpec($decoded));
+};
+const nodeIdHandler_PriceLevel = makeTableNodeIdHandler({
+  typeName: "PriceLevel",
+  identifier: "PriceLevel",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_price_levelPgResource,
+  pk: price_levelUniques[0].attributes
+});
+const nodeFetcher_PriceLevel = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_PriceLevel));
+  return nodeIdHandler_PriceLevel.get(nodeIdHandler_PriceLevel.getSpec($decoded));
 };
 const nodeIdHandler_CustomFieldDefinition = makeTableNodeIdHandler({
   typeName: "CustomFieldDefinition",
@@ -12996,17 +13175,6 @@ const nodeFetcher_ReconciliationQueue = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_ReconciliationQueue));
   return nodeIdHandler_ReconciliationQueue.get(nodeIdHandler_ReconciliationQueue.getSpec($decoded));
 };
-const nodeIdHandler_Customer = makeTableNodeIdHandler({
-  typeName: "Customer",
-  identifier: "Customer",
-  nodeIdCodec: base64JSONNodeIdCodec,
-  resource: resource_customerPgResource,
-  pk: customerUniques[0].attributes
-});
-const nodeFetcher_Customer = $nodeId => {
-  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Customer));
-  return nodeIdHandler_Customer.get(nodeIdHandler_Customer.getSpec($decoded));
-};
 const nodeIdHandler_Vendor = makeTableNodeIdHandler({
   typeName: "Vendor",
   identifier: "Vendor",
@@ -13028,6 +13196,17 @@ const nodeIdHandler_CryptoAsset = makeTableNodeIdHandler({
 const nodeFetcher_CryptoAsset = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_CryptoAsset));
   return nodeIdHandler_CryptoAsset.get(nodeIdHandler_CryptoAsset.getSpec($decoded));
+};
+const nodeIdHandler_Customer = makeTableNodeIdHandler({
+  typeName: "Customer",
+  identifier: "Customer",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_customerPgResource,
+  pk: customerUniques[0].attributes
+});
+const nodeFetcher_Customer = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Customer));
+  return nodeIdHandler_Customer.get(nodeIdHandler_Customer.getSpec($decoded));
 };
 const nodeIdHandler_CreditMemo = makeTableNodeIdHandler({
   typeName: "CreditMemo",
@@ -13217,6 +13396,7 @@ const nodeIdHandlerByTypeName = {
   SavingsGoal: nodeIdHandler_SavingsGoal,
   ImportProfile: nodeIdHandler_ImportProfile,
   TrackingCategory: nodeIdHandler_TrackingCategory,
+  PriceLevel: nodeIdHandler_PriceLevel,
   CustomFieldDefinition: nodeIdHandler_CustomFieldDefinition,
   TaxJurisdiction: nodeIdHandler_TaxJurisdiction,
   JournalLine: nodeIdHandler_JournalLine,
@@ -13250,9 +13430,9 @@ const nodeIdHandlerByTypeName = {
   InvoiceLine: nodeIdHandler_InvoiceLine,
   Estimate: nodeIdHandler_Estimate,
   ReconciliationQueue: nodeIdHandler_ReconciliationQueue,
-  Customer: nodeIdHandler_Customer,
   Vendor: nodeIdHandler_Vendor,
   CryptoAsset: nodeIdHandler_CryptoAsset,
+  Customer: nodeIdHandler_Customer,
   CreditMemo: nodeIdHandler_CreditMemo,
   VendorCredit: nodeIdHandler_VendorCredit,
   FixedAsset: nodeIdHandler_FixedAsset,
@@ -14034,6 +14214,10 @@ const specFromArgs_TrackingCategory = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_TrackingCategory, $nodeId);
 };
+const specFromArgs_PriceLevel = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_PriceLevel, $nodeId);
+};
 const specFromArgs_CustomFieldDefinition = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_CustomFieldDefinition, $nodeId);
@@ -14166,10 +14350,6 @@ const specFromArgs_ReconciliationQueue = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_ReconciliationQueue, $nodeId);
 };
-const specFromArgs_Customer = args => {
-  const $nodeId = args.getRaw(["input", "id"]);
-  return specFromNodeId(nodeIdHandler_Customer, $nodeId);
-};
 const specFromArgs_Vendor = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Vendor, $nodeId);
@@ -14177,6 +14357,10 @@ const specFromArgs_Vendor = args => {
 const specFromArgs_CryptoAsset = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_CryptoAsset, $nodeId);
+};
+const specFromArgs_Customer = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_Customer, $nodeId);
 };
 const specFromArgs_CreditMemo = args => {
   const $nodeId = args.getRaw(["input", "id"]);
@@ -14386,6 +14570,10 @@ function ImportProfileInput_headerRowsApply(obj, val, info) {
 const CreateTrackingCategoryPayload_trackingCategoryEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_tracking_categoryPgResource, tracking_categoryUniques[0].attributes, $mutation, fieldArgs);
 function TrackingCategoryInput_kindApply(obj, val, info) {
   obj.set("kind", bakedInputRuntime(info.schema, info.field.type, val));
+}
+const CreatePriceLevelPayload_priceLevelEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_price_levelPgResource, price_levelUniques[0].attributes, $mutation, fieldArgs);
+function PriceLevelInput_adjustmentPercentApply(obj, val, info) {
+  obj.set("adjustment_percent", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateCustomFieldDefinitionPayload_customFieldDefinitionEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_custom_field_definitionPgResource, custom_field_definitionUniques[0].attributes, $mutation, fieldArgs);
 function CustomFieldDefinitionInput_entityTypeApply(obj, val, info) {
@@ -14807,34 +14995,30 @@ function ReconciliationQueueInput_periodYearApply(obj, val, info) {
 function ReconciliationQueueInput_periodMonthApply(obj, val, info) {
   obj.set("period_month", bakedInputRuntime(info.schema, info.field.type, val));
 }
-const CreateCustomerPayload_customerEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_customerPgResource, customerUniques[0].attributes, $mutation, fieldArgs);
-function CustomerInput_businessNameApply(obj, val, info) {
+const CreateVendorPayload_vendorEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_vendorPgResource, vendorUniques[0].attributes, $mutation, fieldArgs);
+function VendorInput_businessNameApply(obj, val, info) {
   obj.set("business_name", bakedInputRuntime(info.schema, info.field.type, val));
 }
-function CustomerInput_emailApply(obj, val, info) {
-  obj.set("email", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function CustomerInput_phoneApply(obj, val, info) {
-  obj.set("phone", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function CustomerInput_addressApply(obj, val, info) {
-  obj.set("address", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function CustomerInput_cityApply(obj, val, info) {
-  obj.set("city", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function CustomerInput_stateApply(obj, val, info) {
-  obj.set("state", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function CustomerInput_zipApply(obj, val, info) {
-  obj.set("zip", bakedInputRuntime(info.schema, info.field.type, val));
-}
-const CreateVendorPayload_vendorEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_vendorPgResource, vendorUniques[0].attributes, $mutation, fieldArgs);
 function VendorInput_taxIdTypeApply(obj, val, info) {
   obj.set("tax_id_type", bakedInputRuntime(info.schema, info.field.type, val));
 }
 function VendorInput_taxIdApply(obj, val, info) {
   obj.set("tax_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function VendorInput_addressApply(obj, val, info) {
+  obj.set("address", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function VendorInput_cityApply(obj, val, info) {
+  obj.set("city", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function VendorInput_stateApply(obj, val, info) {
+  obj.set("state", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function VendorInput_zipApply(obj, val, info) {
+  obj.set("zip", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function VendorInput_emailApply(obj, val, info) {
+  obj.set("email", bakedInputRuntime(info.schema, info.field.type, val));
 }
 function VendorInput_is1099EligibleApply(obj, val, info) {
   obj.set("is_1099_eligible", bakedInputRuntime(info.schema, info.field.type, val));
@@ -14857,6 +15041,13 @@ function CryptoAssetInput_balanceApply(obj, val, info) {
 }
 function CryptoAssetInput_costBasisMethodApply(obj, val, info) {
   obj.set("cost_basis_method", bakedInputRuntime(info.schema, info.field.type, val));
+}
+const CreateCustomerPayload_customerEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_customerPgResource, customerUniques[0].attributes, $mutation, fieldArgs);
+function CustomerInput_phoneApply(obj, val, info) {
+  obj.set("phone", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function CustomerInput_priceLevelIdApply(obj, val, info) {
+  obj.set("price_level_id", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateCreditMemoPayload_creditMemoEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_credit_memoPgResource, credit_memoUniques[0].attributes, $mutation, fieldArgs);
 function CreditMemoInput_taxAmountApply(obj, val, info) {
@@ -15071,6 +15262,9 @@ type Query implements Node {
   """Get a single \`TrackingCategory\`."""
   trackingCategory(rowId: UUID!): TrackingCategory
 
+  """Get a single \`PriceLevel\`."""
+  priceLevel(rowId: UUID!): PriceLevel
+
   """Get a single \`CustomFieldDefinition\`."""
   customFieldDefinition(rowId: UUID!): CustomFieldDefinition
 
@@ -15170,14 +15364,14 @@ type Query implements Node {
   """Get a single \`ReconciliationQueue\`."""
   reconciliationQueue(rowId: UUID!): ReconciliationQueue
 
-  """Get a single \`Customer\`."""
-  customer(rowId: UUID!): Customer
-
   """Get a single \`Vendor\`."""
   vendor(rowId: UUID!): Vendor
 
   """Get a single \`CryptoAsset\`."""
   cryptoAsset(rowId: UUID!): CryptoAsset
+
+  """Get a single \`Customer\`."""
+  customer(rowId: UUID!): Customer
 
   """Get a single \`CreditMemo\`."""
   creditMemo(rowId: UUID!): CreditMemo
@@ -15329,6 +15523,14 @@ type Query implements Node {
     """
     id: ID!
   ): TrackingCategory
+
+  """Reads a single \`PriceLevel\` using its globally unique \`ID\`."""
+  priceLevelById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`PriceLevel\`.
+    """
+    id: ID!
+  ): PriceLevel
 
   """Reads a single \`CustomFieldDefinition\` using its globally unique \`ID\`."""
   customFieldDefinitionById(
@@ -15584,12 +15786,6 @@ type Query implements Node {
     id: ID!
   ): ReconciliationQueue
 
-  """Reads a single \`Customer\` using its globally unique \`ID\`."""
-  customerById(
-    """The globally unique \`ID\` to be used in selecting a single \`Customer\`."""
-    id: ID!
-  ): Customer
-
   """Reads a single \`Vendor\` using its globally unique \`ID\`."""
   vendorById(
     """The globally unique \`ID\` to be used in selecting a single \`Vendor\`."""
@@ -15603,6 +15799,12 @@ type Query implements Node {
     """
     id: ID!
   ): CryptoAsset
+
+  """Reads a single \`Customer\` using its globally unique \`ID\`."""
+  customerById(
+    """The globally unique \`ID\` to be used in selecting a single \`Customer\`."""
+    id: ID!
+  ): Customer
 
   """Reads a single \`CreditMemo\` using its globally unique \`ID\`."""
   creditMemoById(
@@ -16195,6 +16397,40 @@ type Query implements Node {
     """The method to use when ordering \`TrackingCategory\`."""
     orderBy: [TrackingCategoryOrderBy!] = [PRIMARY_KEY_ASC]
   ): TrackingCategoryConnection
+
+  """Reads and enables pagination through a set of \`PriceLevel\`."""
+  priceLevels(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PriceLevelCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: PriceLevelFilter
+
+    """The method to use when ordering \`PriceLevel\`."""
+    orderBy: [PriceLevelOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PriceLevelConnection
 
   """Reads and enables pagination through a set of \`CustomFieldDefinition\`."""
   customFieldDefinitions(
@@ -17322,40 +17558,6 @@ type Query implements Node {
     orderBy: [ReconciliationQueueOrderBy!] = [PRIMARY_KEY_ASC]
   ): ReconciliationQueueConnection
 
-  """Reads and enables pagination through a set of \`Customer\`."""
-  customers(
-    """Only read the first \`n\` values of the set."""
-    first: Int
-
-    """Only read the last \`n\` values of the set."""
-    last: Int
-
-    """
-    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
-    based pagination. May not be used with \`last\`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: CustomerCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: CustomerFilter
-
-    """The method to use when ordering \`Customer\`."""
-    orderBy: [CustomerOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CustomerConnection
-
   """Reads and enables pagination through a set of \`Vendor\`."""
   vendors(
     """Only read the first \`n\` values of the set."""
@@ -17423,6 +17625,40 @@ type Query implements Node {
     """The method to use when ordering \`CryptoAsset\`."""
     orderBy: [CryptoAssetOrderBy!] = [PRIMARY_KEY_ASC]
   ): CryptoAssetConnection
+
+  """Reads and enables pagination through a set of \`Customer\`."""
+  customers(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CustomerCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CustomerFilter
+
+    """The method to use when ordering \`Customer\`."""
+    orderBy: [CustomerOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CustomerConnection
 
   """Reads and enables pagination through a set of \`CreditMemo\`."""
   creditMemos(
@@ -19628,6 +19864,40 @@ type Book implements Node {
     """The method to use when ordering \`CustomFieldDefinition\`."""
     orderBy: [CustomFieldDefinitionOrderBy!] = [PRIMARY_KEY_ASC]
   ): CustomFieldDefinitionConnection!
+
+  """Reads and enables pagination through a set of \`PriceLevel\`."""
+  priceLevels(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PriceLevelCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: PriceLevelFilter
+
+    """The method to use when ordering \`PriceLevel\`."""
+    orderBy: [PriceLevelOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PriceLevelConnection!
 }
 
 """A connection to a list of \`Account\` values."""
@@ -20164,6 +20434,12 @@ input BookFilter {
 
   """Some related \`customFieldDefinitions\` exist."""
   customFieldDefinitionsExist: Boolean
+
+  """Filter by the object’s \`priceLevels\` relation."""
+  priceLevels: BookToManyPriceLevelFilter
+
+  """Some related \`priceLevels\` exist."""
+  priceLevelsExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [BookFilter!]
@@ -22725,6 +23001,12 @@ input CustomerFilter {
   """Filter by the object’s \`book\` relation."""
   book: BookFilter
 
+  """Filter by the object’s \`priceLevel\` relation."""
+  priceLevel: PriceLevelFilter
+
+  """A related \`priceLevel\` exists."""
+  priceLevelExists: Boolean
+
   """Checks for all expressions in this list."""
   and: [CustomerFilter!]
 
@@ -23503,6 +23785,29 @@ input RecurringInvoiceLineFilter {
 }
 
 """
+A filter to be used against \`PriceLevel\` object types. All fields are combined with a logical ‘and.’
+"""
+input PriceLevelFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`bookId\` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s \`book\` relation."""
+  book: BookFilter
+
+  """Checks for all expressions in this list."""
+  and: [PriceLevelFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [PriceLevelFilter!]
+
+  """Negates the expression."""
+  not: PriceLevelFilter
+}
+
+"""
 A filter to be used against many \`Invoice\` object types. All fields are combined with a logical ‘and.’
 """
 input BookToManyInvoiceFilter {
@@ -24080,6 +24385,26 @@ input BookToManyCustomFieldDefinitionFilter {
   No related \`CustomFieldDefinition\` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
   none: CustomFieldDefinitionFilter
+}
+
+"""
+A filter to be used against many \`PriceLevel\` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyPriceLevelFilter {
+  """
+  Every related \`PriceLevel\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: PriceLevelFilter
+
+  """
+  Some related \`PriceLevel\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: PriceLevelFilter
+
+  """
+  No related \`PriceLevel\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: PriceLevelFilter
 }
 
 """
@@ -27828,9 +28153,13 @@ type Customer implements Node {
   isActive: Boolean!
   createdAt: Datetime
   updatedAt: Datetime
+  priceLevelId: UUID
 
   """Reads a single \`Book\` that is related to this \`Customer\`."""
   book: Book
+
+  """Reads a single \`PriceLevel\` that is related to this \`Customer\`."""
+  priceLevel: PriceLevel
 
   """Reads and enables pagination through a set of \`Invoice\`."""
   invoices(
@@ -27967,6 +28296,23 @@ type Customer implements Node {
     """The method to use when ordering \`RecurringInvoice\`."""
     orderBy: [RecurringInvoiceOrderBy!] = [PRIMARY_KEY_ASC]
   ): RecurringInvoiceConnection!
+}
+
+type PriceLevel implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  name: String!
+  adjustmentPercent: BigFloat!
+  isActive: Boolean!
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """Reads a single \`Book\` that is related to this \`PriceLevel\`."""
+  book: Book
 }
 
 """A connection to a list of \`Invoice\` values."""
@@ -30029,6 +30375,55 @@ enum CustomFieldDefinitionOrderBy {
   ENTITY_TYPE_DESC
 }
 
+"""A connection to a list of \`PriceLevel\` values."""
+type PriceLevelConnection {
+  """A list of \`PriceLevel\` objects."""
+  nodes: [PriceLevel]!
+
+  """
+  A list of edges which contains the \`PriceLevel\` and cursor to aid in pagination.
+  """
+  edges: [PriceLevelEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* \`PriceLevel\` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A \`PriceLevel\` edge in the connection."""
+type PriceLevelEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`PriceLevel\` at the end of the edge."""
+  node: PriceLevel
+}
+
+"""
+A condition to be used against \`PriceLevel\` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input PriceLevelCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`bookId\` field."""
+  bookId: UUID
+}
+
+"""Methods to use when ordering \`PriceLevel\`."""
+enum PriceLevelOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+}
+
 type _DrizzleMigration implements Node {
   """
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
@@ -30362,6 +30757,14 @@ type Mutation {
     input: CreateTrackingCategoryInput!
   ): CreateTrackingCategoryPayload
 
+  """Creates a single \`PriceLevel\`."""
+  createPriceLevel(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreatePriceLevelInput!
+  ): CreatePriceLevelPayload
+
   """Creates a single \`CustomFieldDefinition\`."""
   createCustomFieldDefinition(
     """
@@ -30626,14 +31029,6 @@ type Mutation {
     input: CreateReconciliationQueueInput!
   ): CreateReconciliationQueuePayload
 
-  """Creates a single \`Customer\`."""
-  createCustomer(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateCustomerInput!
-  ): CreateCustomerPayload
-
   """Creates a single \`Vendor\`."""
   createVendor(
     """
@@ -30649,6 +31044,14 @@ type Mutation {
     """
     input: CreateCryptoAssetInput!
   ): CreateCryptoAssetPayload
+
+  """Creates a single \`Customer\`."""
+  createCustomer(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateCustomerInput!
+  ): CreateCustomerPayload
 
   """Creates a single \`CreditMemo\`."""
   createCreditMemo(
@@ -31007,6 +31410,24 @@ type Mutation {
     """
     input: UpdateTrackingCategoryInput!
   ): UpdateTrackingCategoryPayload
+
+  """
+  Updates a single \`PriceLevel\` using its globally unique id and a patch.
+  """
+  updatePriceLevelById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdatePriceLevelByIdInput!
+  ): UpdatePriceLevelPayload
+
+  """Updates a single \`PriceLevel\` using a unique key and a patch."""
+  updatePriceLevel(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdatePriceLevelInput!
+  ): UpdatePriceLevelPayload
 
   """
   Updates a single \`CustomFieldDefinition\` using its globally unique id and a patch.
@@ -31598,22 +32019,6 @@ type Mutation {
     input: UpdateReconciliationQueueInput!
   ): UpdateReconciliationQueuePayload
 
-  """Updates a single \`Customer\` using its globally unique id and a patch."""
-  updateCustomerById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateCustomerByIdInput!
-  ): UpdateCustomerPayload
-
-  """Updates a single \`Customer\` using a unique key and a patch."""
-  updateCustomer(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateCustomerInput!
-  ): UpdateCustomerPayload
-
   """Updates a single \`Vendor\` using its globally unique id and a patch."""
   updateVendorById(
     """
@@ -31647,6 +32052,22 @@ type Mutation {
     """
     input: UpdateCryptoAssetInput!
   ): UpdateCryptoAssetPayload
+
+  """Updates a single \`Customer\` using its globally unique id and a patch."""
+  updateCustomerById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateCustomerByIdInput!
+  ): UpdateCustomerPayload
+
+  """Updates a single \`Customer\` using a unique key and a patch."""
+  updateCustomer(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateCustomerInput!
+  ): UpdateCustomerPayload
 
   """
   Updates a single \`CreditMemo\` using its globally unique id and a patch.
@@ -32081,6 +32502,22 @@ type Mutation {
     """
     input: DeleteTrackingCategoryInput!
   ): DeleteTrackingCategoryPayload
+
+  """Deletes a single \`PriceLevel\` using its globally unique id."""
+  deletePriceLevelById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeletePriceLevelByIdInput!
+  ): DeletePriceLevelPayload
+
+  """Deletes a single \`PriceLevel\` using a unique key."""
+  deletePriceLevel(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeletePriceLevelInput!
+  ): DeletePriceLevelPayload
 
   """Deletes a single \`CustomFieldDefinition\` using its globally unique id."""
   deleteCustomFieldDefinitionById(
@@ -32614,22 +33051,6 @@ type Mutation {
     input: DeleteReconciliationQueueInput!
   ): DeleteReconciliationQueuePayload
 
-  """Deletes a single \`Customer\` using its globally unique id."""
-  deleteCustomerById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteCustomerByIdInput!
-  ): DeleteCustomerPayload
-
-  """Deletes a single \`Customer\` using a unique key."""
-  deleteCustomer(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteCustomerInput!
-  ): DeleteCustomerPayload
-
   """Deletes a single \`Vendor\` using its globally unique id."""
   deleteVendorById(
     """
@@ -32661,6 +33082,22 @@ type Mutation {
     """
     input: DeleteCryptoAssetInput!
   ): DeleteCryptoAssetPayload
+
+  """Deletes a single \`Customer\` using its globally unique id."""
+  deleteCustomerById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCustomerByIdInput!
+  ): DeleteCustomerPayload
+
+  """Deletes a single \`Customer\` using a unique key."""
+  deleteCustomer(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCustomerInput!
+  ): DeleteCustomerPayload
 
   """Deletes a single \`CreditMemo\` using its globally unique id."""
   deleteCreditMemoById(
@@ -33507,6 +33944,52 @@ input TrackingCategoryInput {
   kind: String!
   name: String!
   code: String
+  isActive: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""The output of our create \`PriceLevel\` mutation."""
+type CreatePriceLevelPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`PriceLevel\` that was created by this mutation."""
+  priceLevel: PriceLevel
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`PriceLevel\`. May be used by Relay 1."""
+  priceLevelEdge(
+    """The method to use when ordering \`PriceLevel\`."""
+    orderBy: [PriceLevelOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): PriceLevelEdge
+}
+
+"""All input for the create \`PriceLevel\` mutation."""
+input CreatePriceLevelInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`PriceLevel\` to be created by this mutation."""
+  priceLevel: PriceLevelInput!
+}
+
+"""An input for mutations affecting \`PriceLevel\`"""
+input PriceLevelInput {
+  rowId: UUID
+  bookId: UUID!
+  name: String!
+  adjustmentPercent: BigFloat
   isActive: Boolean
   createdAt: Datetime
   updatedAt: Datetime
@@ -35149,59 +35632,6 @@ input ReconciliationQueueInput {
   periodMonth: Int
 }
 
-"""The output of our create \`Customer\` mutation."""
-type CreateCustomerPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`Customer\` that was created by this mutation."""
-  customer: Customer
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`Customer\`. May be used by Relay 1."""
-  customerEdge(
-    """The method to use when ordering \`Customer\`."""
-    orderBy: [CustomerOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): CustomerEdge
-}
-
-"""All input for the create \`Customer\` mutation."""
-input CreateCustomerInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The \`Customer\` to be created by this mutation."""
-  customer: CustomerInput!
-}
-
-"""An input for mutations affecting \`Customer\`"""
-input CustomerInput {
-  rowId: UUID
-  bookId: UUID!
-  name: String!
-  businessName: String
-  email: String
-  phone: String
-  address: String
-  city: String
-  state: String
-  zip: String
-  notes: String
-  isActive: Boolean
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
 """The output of our create \`Vendor\` mutation."""
 type CreateVendorPayload {
   """
@@ -35303,6 +35733,60 @@ input CryptoAssetInput {
   lastSyncedAt: Datetime
   createdAt: Datetime
   updatedAt: Datetime
+}
+
+"""The output of our create \`Customer\` mutation."""
+type CreateCustomerPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Customer\` that was created by this mutation."""
+  customer: Customer
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Customer\`. May be used by Relay 1."""
+  customerEdge(
+    """The method to use when ordering \`Customer\`."""
+    orderBy: [CustomerOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CustomerEdge
+}
+
+"""All input for the create \`Customer\` mutation."""
+input CreateCustomerInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`Customer\` to be created by this mutation."""
+  customer: CustomerInput!
+}
+
+"""An input for mutations affecting \`Customer\`"""
+input CustomerInput {
+  rowId: UUID
+  bookId: UUID!
+  name: String!
+  businessName: String
+  email: String
+  phone: String
+  address: String
+  city: String
+  state: String
+  zip: String
+  notes: String
+  isActive: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
+  priceLevelId: UUID
 }
 
 """The output of our create \`CreditMemo\` mutation."""
@@ -36935,6 +37419,76 @@ input UpdateTrackingCategoryInput {
   An object where the defined keys will be set on the \`TrackingCategory\` being updated.
   """
   patch: TrackingCategoryPatch!
+}
+
+"""The output of our update \`PriceLevel\` mutation."""
+type UpdatePriceLevelPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`PriceLevel\` that was updated by this mutation."""
+  priceLevel: PriceLevel
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`PriceLevel\`. May be used by Relay 1."""
+  priceLevelEdge(
+    """The method to use when ordering \`PriceLevel\`."""
+    orderBy: [PriceLevelOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): PriceLevelEdge
+}
+
+"""All input for the \`updatePriceLevelById\` mutation."""
+input UpdatePriceLevelByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`PriceLevel\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`PriceLevel\` being updated.
+  """
+  patch: PriceLevelPatch!
+}
+
+"""
+Represents an update to a \`PriceLevel\`. Fields that are set will be updated.
+"""
+input PriceLevelPatch {
+  rowId: UUID
+  bookId: UUID
+  name: String
+  adjustmentPercent: BigFloat
+  isActive: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the \`updatePriceLevel\` mutation."""
+input UpdatePriceLevelInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`PriceLevel\` being updated.
+  """
+  patch: PriceLevelPatch!
 }
 
 """The output of our update \`CustomFieldDefinition\` mutation."""
@@ -39366,83 +39920,6 @@ input UpdateReconciliationQueueInput {
   patch: ReconciliationQueuePatch!
 }
 
-"""The output of our update \`Customer\` mutation."""
-type UpdateCustomerPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`Customer\` that was updated by this mutation."""
-  customer: Customer
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`Customer\`. May be used by Relay 1."""
-  customerEdge(
-    """The method to use when ordering \`Customer\`."""
-    orderBy: [CustomerOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): CustomerEdge
-}
-
-"""All input for the \`updateCustomerById\` mutation."""
-input UpdateCustomerByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`Customer\` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the \`Customer\` being updated.
-  """
-  patch: CustomerPatch!
-}
-
-"""
-Represents an update to a \`Customer\`. Fields that are set will be updated.
-"""
-input CustomerPatch {
-  rowId: UUID
-  bookId: UUID
-  name: String
-  businessName: String
-  email: String
-  phone: String
-  address: String
-  city: String
-  state: String
-  zip: String
-  notes: String
-  isActive: Boolean
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
-"""All input for the \`updateCustomer\` mutation."""
-input UpdateCustomerInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the \`Customer\` being updated.
-  """
-  patch: CustomerPatch!
-}
-
 """The output of our update \`Vendor\` mutation."""
 type UpdateVendorPayload {
   """
@@ -39592,6 +40069,84 @@ input UpdateCryptoAssetInput {
   An object where the defined keys will be set on the \`CryptoAsset\` being updated.
   """
   patch: CryptoAssetPatch!
+}
+
+"""The output of our update \`Customer\` mutation."""
+type UpdateCustomerPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Customer\` that was updated by this mutation."""
+  customer: Customer
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Customer\`. May be used by Relay 1."""
+  customerEdge(
+    """The method to use when ordering \`Customer\`."""
+    orderBy: [CustomerOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CustomerEdge
+}
+
+"""All input for the \`updateCustomerById\` mutation."""
+input UpdateCustomerByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`Customer\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`Customer\` being updated.
+  """
+  patch: CustomerPatch!
+}
+
+"""
+Represents an update to a \`Customer\`. Fields that are set will be updated.
+"""
+input CustomerPatch {
+  rowId: UUID
+  bookId: UUID
+  name: String
+  businessName: String
+  email: String
+  phone: String
+  address: String
+  city: String
+  state: String
+  zip: String
+  notes: String
+  isActive: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
+  priceLevelId: UUID
+}
+
+"""All input for the \`updateCustomer\` mutation."""
+input UpdateCustomerInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`Customer\` being updated.
+  """
+  patch: CustomerPatch!
 }
 
 """The output of our update \`CreditMemo\` mutation."""
@@ -41165,6 +41720,54 @@ input DeleteTrackingCategoryByIdInput {
 
 """All input for the \`deleteTrackingCategory\` mutation."""
 input DeleteTrackingCategoryInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`PriceLevel\` mutation."""
+type DeletePriceLevelPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`PriceLevel\` that was deleted by this mutation."""
+  priceLevel: PriceLevel
+  deletedPriceLevelId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`PriceLevel\`. May be used by Relay 1."""
+  priceLevelEdge(
+    """The method to use when ordering \`PriceLevel\`."""
+    orderBy: [PriceLevelOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): PriceLevelEdge
+}
+
+"""All input for the \`deletePriceLevelById\` mutation."""
+input DeletePriceLevelByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`PriceLevel\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deletePriceLevel\` mutation."""
+input DeletePriceLevelInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -42757,54 +43360,6 @@ input DeleteReconciliationQueueInput {
   rowId: UUID!
 }
 
-"""The output of our delete \`Customer\` mutation."""
-type DeleteCustomerPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`Customer\` that was deleted by this mutation."""
-  customer: Customer
-  deletedCustomerId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`Customer\`. May be used by Relay 1."""
-  customerEdge(
-    """The method to use when ordering \`Customer\`."""
-    orderBy: [CustomerOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): CustomerEdge
-}
-
-"""All input for the \`deleteCustomerById\` mutation."""
-input DeleteCustomerByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`Customer\` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the \`deleteCustomer\` mutation."""
-input DeleteCustomerInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete \`Vendor\` mutation."""
 type DeleteVendorPayload {
   """
@@ -42893,6 +43448,54 @@ input DeleteCryptoAssetByIdInput {
 
 """All input for the \`deleteCryptoAsset\` mutation."""
 input DeleteCryptoAssetInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`Customer\` mutation."""
+type DeleteCustomerPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`Customer\` that was deleted by this mutation."""
+  customer: Customer
+  deletedCustomerId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`Customer\`. May be used by Relay 1."""
+  customerEdge(
+    """The method to use when ordering \`Customer\`."""
+    orderBy: [CustomerOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CustomerEdge
+}
+
+"""All input for the \`deleteCustomerById\` mutation."""
+input DeleteCustomerByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`Customer\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteCustomer\` mutation."""
+input DeleteCustomerInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -44559,6 +45162,32 @@ export const objects = {
           orderBy: applyOrderByArgToConnection
         }
       },
+      priceLevel(_$root, {
+        $rowId
+      }) {
+        return resource_price_levelPgResource.get({
+          id: $rowId
+        });
+      },
+      priceLevelById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_PriceLevel($nodeId);
+      },
+      priceLevels: {
+        plan() {
+          return connection(resource_price_levelPgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       project(_$root, {
         $rowId
       }) {
@@ -45568,6 +46197,18 @@ export const objects = {
       createPayrollConnection: {
         plan(_, args) {
           const $insert = pgInsertSingle(resource_payroll_connectionPgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
+      createPriceLevel: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_price_levelPgResource);
           args.apply($insert);
           return object({
             result: $insert
@@ -46914,6 +47555,32 @@ export const objects = {
       deletePayrollConnectionById: {
         plan(_$root, args) {
           const $delete = pgDeleteSingle(resource_payroll_connectionPgResource, specFromArgs_PayrollConnection(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deletePriceLevel: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_price_levelPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deletePriceLevelById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_price_levelPgResource, specFromArgs_PriceLevel(args));
           args.apply($delete);
           return object({
             result: $delete
@@ -48535,6 +49202,32 @@ export const objects = {
           input: applyInputToUpdateOrDelete
         }
       },
+      updatePriceLevel: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_price_levelPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updatePriceLevelById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_price_levelPgResource, specFromArgs_PriceLevel(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
       updateProject: {
         plan(_$root, args) {
           const $update = pgUpdateSingle(resource_projectPgResource, {
@@ -50019,6 +50712,24 @@ export const objects = {
           orderBy: applyOrderByArgToConnection
         }
       },
+      priceLevels: {
+        plan($record) {
+          const $records = resource_price_levelPgResource.find({
+            book_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       projects: {
         plan($record) {
           const $records = resource_projectPgResource.find({
@@ -50878,6 +51589,15 @@ export const objects = {
       query: queryPlan
     }
   },
+  CreatePriceLevelPayload: {
+    assertStep: assertStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      priceLevel: planCreatePayloadResult,
+      priceLevelEdge: CreatePriceLevelPayload_priceLevelEdgePlan,
+      query: queryPlan
+    }
+  },
   CreateProjectPayload: {
     assertStep: assertStep,
     plans: {
@@ -51338,6 +52058,14 @@ export const objects = {
         }
       },
       isActive: Account_isActivePlan,
+      priceLevel($record) {
+        return resource_price_levelPgResource.get({
+          id: $record.get("price_level_id")
+        });
+      },
+      priceLevelId($record) {
+        return $record.get("price_level_id");
+      },
       recurringInvoices: {
         plan($record) {
           const $records = resource_recurring_invoicePgResource.find({
@@ -52056,6 +52784,20 @@ export const objects = {
       },
       payrollConnection: planCreatePayloadResult,
       payrollConnectionEdge: CreatePayrollConnectionPayload_payrollConnectionEdgePlan,
+      query: queryPlan
+    }
+  },
+  DeletePriceLevelPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedPriceLevelId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_PriceLevel.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      priceLevel: planCreatePayloadResult,
+      priceLevelEdge: CreatePriceLevelPayload_priceLevelEdgePlan,
       query: queryPlan
     }
   },
@@ -53248,6 +53990,35 @@ export const objects = {
       totalCount: totalCountConnectionPlan
     }
   },
+  PriceLevel: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      adjustmentPercent($record) {
+        return $record.get("adjustment_percent");
+      },
+      book: Account_bookPlan,
+      bookId: Account_bookIdPlan,
+      createdAt: Account_createdAtPlan,
+      id($parent) {
+        const specifier = nodeIdHandler_PriceLevel.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_PriceLevel.codec.name].encode);
+      },
+      isActive: Account_isActivePlan,
+      rowId: JournalLineProject_rowIdPlan,
+      updatedAt: Account_updatedAtPlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of price_levelUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_price_levelPgResource.get(spec);
+    }
+  },
+  PriceLevelConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
   Project: {
     assertStep: assertPgClassSingleStep,
     plans: {
@@ -54267,6 +55038,15 @@ export const objects = {
       clientMutationId: getClientMutationIdForCreatePlan,
       payrollConnection: planCreatePayloadResult,
       payrollConnectionEdge: CreatePayrollConnectionPayload_payrollConnectionEdgePlan,
+      query: queryPlan
+    }
+  },
+  UpdatePriceLevelPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      priceLevel: planCreatePayloadResult,
+      priceLevelEdge: CreatePriceLevelPayload_priceLevelEdgePlan,
       query: queryPlan
     }
   },
@@ -56354,6 +57134,30 @@ export const inputObjects = {
           $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
         });
       },
+      priceLevels($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: priceLevelIdentifier,
+          alias: resource_price_levelPgResource.name,
+          localAttributes: registryConfig.pgRelations.book.priceLevelsByTheirBookId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.book.priceLevelsByTheirBookId.remoteAttributes
+        };
+        return $rel;
+      },
+      priceLevelsExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: priceLevelIdentifier,
+          alias: resource_price_levelPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.book.priceLevelsByTheirBookId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.book.priceLevelsByTheirBookId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
       projects($where, value) {
         assertAllowed(value, "object");
         const $rel = $where.andPlan();
@@ -56698,8 +57502,8 @@ export const inputObjects = {
   BookInput: {
     baked: createObjectAndApplyChildren,
     plans: {
-      address: CustomerInput_addressApply,
-      city: CustomerInput_cityApply,
+      address: VendorInput_addressApply,
+      city: VendorInput_cityApply,
       createdAt: TagGroupInput_createdAtApply,
       currency: RecurringInvoiceInput_currencyApply,
       ein: BookInput_einApply,
@@ -56710,17 +57514,17 @@ export const inputObjects = {
       organizationId: BookInput_organizationIdApply,
       phone: CustomerInput_phoneApply,
       rowId: JournalLineProjectInput_rowIdApply,
-      state: CustomerInput_stateApply,
+      state: VendorInput_stateApply,
       type: InventoryTransactionInput_typeApply,
       updatedAt: CustomFieldValueInput_updatedAtApply,
-      zip: CustomerInput_zipApply
+      zip: VendorInput_zipApply
     }
   },
   BookPatch: {
     baked: createObjectAndApplyChildren,
     plans: {
-      address: CustomerInput_addressApply,
-      city: CustomerInput_cityApply,
+      address: VendorInput_addressApply,
+      city: VendorInput_cityApply,
       createdAt: TagGroupInput_createdAtApply,
       currency: RecurringInvoiceInput_currencyApply,
       ein: BookInput_einApply,
@@ -56731,10 +57535,10 @@ export const inputObjects = {
       organizationId: BookInput_organizationIdApply,
       phone: CustomerInput_phoneApply,
       rowId: JournalLineProjectInput_rowIdApply,
-      state: CustomerInput_stateApply,
+      state: VendorInput_stateApply,
       type: InventoryTransactionInput_typeApply,
       updatedAt: CustomFieldValueInput_updatedAtApply,
-      zip: CustomerInput_zipApply
+      zip: VendorInput_zipApply
     }
   },
   BookToManyAccountFilter: {
@@ -56927,6 +57731,13 @@ export const inputObjects = {
     }
   },
   BookToManyPayrollConnectionFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
+  BookToManyPriceLevelFilter: {
     plans: {
       every: AccountToManyAccountFilter_everyApply,
       none: AccountToManyAccountFilter_noneApply,
@@ -57602,6 +58413,12 @@ export const inputObjects = {
       payrollConnection: applyCreateFields
     }
   },
+  CreatePriceLevelInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      priceLevel: applyCreateFields
+    }
+  },
   CreateProjectInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
@@ -58228,6 +59045,12 @@ export const inputObjects = {
       },
       not: AccountFilter_notApply,
       or: AccountFilter_orApply,
+      priceLevel($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_price_levelPgResource, priceLevelIdentifier, registryConfig.pgRelations.customer.priceLevelByMyPriceLevelId.localAttributes, registryConfig.pgRelations.customer.priceLevelByMyPriceLevelId.remoteAttributes, $where, value);
+      },
+      priceLevelExists($where, value) {
+        return pgConnectionFilterApplyForwardRelationExists(resource_price_levelPgResource, priceLevelIdentifier, registryConfig.pgRelations.customer.priceLevelByMyPriceLevelId.localAttributes, registryConfig.pgRelations.customer.priceLevelByMyPriceLevelId.remoteAttributes, $where, value);
+      },
       recurringInvoices($where, value) {
         assertAllowed(value, "object");
         const $rel = $where.andPlan();
@@ -58260,39 +59083,41 @@ export const inputObjects = {
   CustomerInput: {
     baked: createObjectAndApplyChildren,
     plans: {
-      address: CustomerInput_addressApply,
+      address: VendorInput_addressApply,
       bookId: TagGroupInput_bookIdApply,
-      businessName: CustomerInput_businessNameApply,
-      city: CustomerInput_cityApply,
+      businessName: VendorInput_businessNameApply,
+      city: VendorInput_cityApply,
       createdAt: TagGroupInput_createdAtApply,
-      email: CustomerInput_emailApply,
+      email: VendorInput_emailApply,
       isActive: TagInput_isActiveApply,
       name: TagGroupInput_nameApply,
       notes: RdExpenseInput_notesApply,
       phone: CustomerInput_phoneApply,
+      priceLevelId: CustomerInput_priceLevelIdApply,
       rowId: JournalLineProjectInput_rowIdApply,
-      state: CustomerInput_stateApply,
+      state: VendorInput_stateApply,
       updatedAt: CustomFieldValueInput_updatedAtApply,
-      zip: CustomerInput_zipApply
+      zip: VendorInput_zipApply
     }
   },
   CustomerPatch: {
     baked: createObjectAndApplyChildren,
     plans: {
-      address: CustomerInput_addressApply,
+      address: VendorInput_addressApply,
       bookId: TagGroupInput_bookIdApply,
-      businessName: CustomerInput_businessNameApply,
-      city: CustomerInput_cityApply,
+      businessName: VendorInput_businessNameApply,
+      city: VendorInput_cityApply,
       createdAt: TagGroupInput_createdAtApply,
-      email: CustomerInput_emailApply,
+      email: VendorInput_emailApply,
       isActive: TagInput_isActiveApply,
       name: TagGroupInput_nameApply,
       notes: RdExpenseInput_notesApply,
       phone: CustomerInput_phoneApply,
+      priceLevelId: CustomerInput_priceLevelIdApply,
       rowId: JournalLineProjectInput_rowIdApply,
-      state: CustomerInput_stateApply,
+      state: VendorInput_stateApply,
       updatedAt: CustomFieldValueInput_updatedAtApply,
-      zip: CustomerInput_zipApply
+      zip: VendorInput_zipApply
     }
   },
   CustomerToManyCreditMemoFilter: {
@@ -58912,6 +59737,16 @@ export const inputObjects = {
     }
   },
   DeletePayrollConnectionInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeletePriceLevelByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeletePriceLevelInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate
     }
@@ -60733,6 +61568,52 @@ export const inputObjects = {
       syncCursor: PayrollConnectionInput_syncCursorApply
     }
   },
+  PriceLevelCondition: {
+    plans: {
+      bookId: AccountCondition_bookIdApply,
+      rowId: AccountCondition_rowIdApply
+    }
+  },
+  PriceLevelFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      book($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_bookPgResource, bookIdentifier, registryConfig.pgRelations.priceLevel.bookByMyBookId.localAttributes, registryConfig.pgRelations.priceLevel.bookByMyBookId.remoteAttributes, $where, value);
+      },
+      bookId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("bookId", "book_id", spec_priceLevel.attributes.book_id, queryBuilder, value);
+      },
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_priceLevel.attributes.id, queryBuilder, value);
+      }
+    }
+  },
+  PriceLevelInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      adjustmentPercent: PriceLevelInput_adjustmentPercentApply,
+      bookId: TagGroupInput_bookIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      isActive: TagInput_isActiveApply,
+      name: TagGroupInput_nameApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      updatedAt: CustomFieldValueInput_updatedAtApply
+    }
+  },
+  PriceLevelPatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      adjustmentPercent: PriceLevelInput_adjustmentPercentApply,
+      bookId: TagGroupInput_bookIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      isActive: TagInput_isActiveApply,
+      name: TagGroupInput_nameApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      updatedAt: CustomFieldValueInput_updatedAtApply
+    }
+  },
   ProjectCondition: {
     plans: {
       bookId: AccountCondition_bookIdApply,
@@ -62425,6 +63306,18 @@ export const inputObjects = {
       patch: applyCreateFields
     }
   },
+  UpdatePriceLevelByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdatePriceLevelInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
   UpdateProjectByIdInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
@@ -63132,39 +64025,39 @@ export const inputObjects = {
   VendorInput: {
     baked: createObjectAndApplyChildren,
     plans: {
-      address: CustomerInput_addressApply,
+      address: VendorInput_addressApply,
       bookId: TagGroupInput_bookIdApply,
-      businessName: CustomerInput_businessNameApply,
-      city: CustomerInput_cityApply,
+      businessName: VendorInput_businessNameApply,
+      city: VendorInput_cityApply,
       createdAt: TagGroupInput_createdAtApply,
-      email: CustomerInput_emailApply,
+      email: VendorInput_emailApply,
       is1099Eligible: VendorInput_is1099EligibleApply,
       name: TagGroupInput_nameApply,
       rowId: JournalLineProjectInput_rowIdApply,
-      state: CustomerInput_stateApply,
+      state: VendorInput_stateApply,
       taxId: VendorInput_taxIdApply,
       taxIdType: VendorInput_taxIdTypeApply,
       threshold: VendorInput_thresholdApply,
-      zip: CustomerInput_zipApply
+      zip: VendorInput_zipApply
     }
   },
   VendorPatch: {
     baked: createObjectAndApplyChildren,
     plans: {
-      address: CustomerInput_addressApply,
+      address: VendorInput_addressApply,
       bookId: TagGroupInput_bookIdApply,
-      businessName: CustomerInput_businessNameApply,
-      city: CustomerInput_cityApply,
+      businessName: VendorInput_businessNameApply,
+      city: VendorInput_cityApply,
       createdAt: TagGroupInput_createdAtApply,
-      email: CustomerInput_emailApply,
+      email: VendorInput_emailApply,
       is1099Eligible: VendorInput_is1099EligibleApply,
       name: TagGroupInput_nameApply,
       rowId: JournalLineProjectInput_rowIdApply,
-      state: CustomerInput_stateApply,
+      state: VendorInput_stateApply,
       taxId: VendorInput_taxIdApply,
       taxIdType: VendorInput_taxIdTypeApply,
       threshold: VendorInput_thresholdApply,
-      zip: CustomerInput_zipApply
+      zip: VendorInput_zipApply
     }
   },
   VendorToManyBillFilter: {
@@ -64747,6 +65640,32 @@ export const enums = {
       ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply,
       STATUS_ASC: BillOrderBy_STATUS_ASCApply,
       STATUS_DESC: BillOrderBy_STATUS_DESCApply
+    }
+  },
+  PriceLevelOrderBy: {
+    values: {
+      BOOK_ID_ASC: AccountOrderBy_BOOK_ID_ASCApply,
+      BOOK_ID_DESC: AccountOrderBy_BOOK_ID_DESCApply,
+      PRIMARY_KEY_ASC(queryBuilder) {
+        price_levelUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        price_levelUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply
     }
   },
   ProjectOrderBy: {

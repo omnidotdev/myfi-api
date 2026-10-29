@@ -344,6 +344,13 @@
       "when": 1793316177734,
       "tag": "0048_custom_fields",
       "breakpoints": true
+    },
+    {
+      "idx": 49,
+      "version": "7",
+      "when": 1793316771413,
+      "tag": "0049_price_levels",
+      "breakpoints": true
     }
   ]
 }

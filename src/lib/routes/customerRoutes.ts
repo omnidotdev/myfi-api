@@ -65,6 +65,7 @@ const customerRoutes = new Elysia({ prefix: "/api/customers" })
           state: body.state ?? null,
           zip: body.zip ?? null,
           notes: body.notes ?? null,
+          priceLevelId: body.priceLevelId ?? null,
         })
         .returning();
 
@@ -91,6 +92,7 @@ const customerRoutes = new Elysia({ prefix: "/api/customers" })
         state: t.Optional(t.String()),
         zip: t.Optional(t.String()),
         notes: t.Optional(t.String()),
+        priceLevelId: t.Optional(t.String()),
       }),
     },
   )
@@ -125,6 +127,7 @@ const customerRoutes = new Elysia({ prefix: "/api/customers" })
         "state",
         "zip",
         "notes",
+        "priceLevelId",
         "isActive",
       ] as const) {
         if (body[key] !== undefined) updates[key] = body[key];
@@ -150,6 +153,7 @@ const customerRoutes = new Elysia({ prefix: "/api/customers" })
         state: t.Optional(t.String()),
         zip: t.Optional(t.String()),
         notes: t.Optional(t.String()),
+        priceLevelId: t.Optional(t.Union([t.String(), t.Null()])),
         isActive: t.Optional(t.Boolean()),
       }),
     },

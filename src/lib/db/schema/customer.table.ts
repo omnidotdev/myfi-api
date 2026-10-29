@@ -9,6 +9,7 @@ import {
 
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 import { bookTable } from "./book.table";
+import { priceLevelTable } from "./priceLevel.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
@@ -28,6 +29,11 @@ export const customerTable = pgTable(
     state: text(),
     zip: text(),
     notes: text(),
+    // optional price level, defaulting this customer's invoice prices to an
+    // adjusted rate
+    priceLevelId: uuid("price_level_id").references(() => priceLevelTable.id, {
+      onDelete: "set null",
+    }),
     isActive: boolean("is_active").notNull().default(true),
     createdAt: generateDefaultDate(),
     updatedAt: generateDefaultDate(),

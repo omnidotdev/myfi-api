@@ -40,6 +40,7 @@ export * from "./loan.table";
 export * from "./mileageLog.table";
 export * from "./netWorthSnapshot.table";
 export * from "./payrollConnection.table";
+export * from "./priceLevel.table";
 export * from "./project.table";
 export * from "./purchaseOrder.table";
 export * from "./purchaseOrderLine.table";
