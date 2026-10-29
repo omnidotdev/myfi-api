@@ -17,6 +17,8 @@ interface DraftLineInput {
   taxJurisdictionId?: string | null;
   /** optional line discount as a fraction (0.1 = 10% off), applied before tax */
   discountPercent?: number | null;
+  /** optional inventory item this line returns to stock when the memo is posted */
+  inventoryItemId?: string | null;
 }
 
 interface CreateCreditMemoDraftOptions {
@@ -94,6 +96,7 @@ export const createCreditMemoDraft = async (
           line.discountPercent != null ? line.discountPercent.toFixed(6) : null,
         incomeAccountId: line.incomeAccountId,
         taxJurisdictionId: line.taxJurisdictionId ?? null,
+        inventoryItemId: line.inventoryItemId ?? null,
         sortOrder: line.sortOrder,
       } satisfies InferInsertModel<typeof creditMemoLineTable>);
     }

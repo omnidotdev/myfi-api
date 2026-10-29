@@ -1,4 +1,4 @@
-import { and, asc, eq } from "drizzle-orm";
+import { and, asc, eq, inArray } from "drizzle-orm";
 
 import { isPeriodLocked } from "lib/accounting/periodLock";
 import { dbPool } from "lib/db/db";
@@ -6,6 +6,8 @@ import {
   accountTable,
   creditMemoLineTable,
   creditMemoTable,
+  inventoryItemTable,
+  inventoryTransactionTable,
   journalEntryTable,
   journalLineTable,
   taxJurisdictionTable,
@@ -17,6 +19,7 @@ import {
   computeLineAmount,
   computeLineTax,
 } from "lib/invoicing/invoicePosting";
+import { movementValue } from "lib/inventory/valuation";
 
 import type { InferInsertModel } from "drizzle-orm";
 import type { PricedLine } from "lib/invoicing/invoicePosting";
@@ -80,6 +83,7 @@ export const postCreditMemo = async (
       incomeAccountId: creditMemoLineTable.incomeAccountId,
       taxJurisdictionId: creditMemoLineTable.taxJurisdictionId,
       discountPercent: creditMemoLineTable.discountPercent,
+      inventoryItemId: creditMemoLineTable.inventoryItemId,
       taxRate: taxJurisdictionTable.rate,
       taxPayableAccountId: taxJurisdictionTable.taxPayableAccountId,
     })
@@ -129,6 +133,51 @@ export const postCreditMemo = async (
     };
   });
 
+  // Restock plan: sum the returned quantity per inventory item across lines, so
+  // an item on several lines restocks once. Returned goods go back at the item's
+  // current weighted-average cost, which leaves the average unchanged
+  const returnedByItem = new Map<string, number>();
+  for (const row of lineRows) {
+    if (row.inventoryItemId) {
+      returnedByItem.set(
+        row.inventoryItemId,
+        (returnedByItem.get(row.inventoryItemId) ?? 0) + Number(row.quantity),
+      );
+    }
+  }
+  const restockPlan: {
+    itemId: string;
+    quantity: number;
+    unitCost: number;
+    value: number;
+    cogsAccountId: string;
+    assetAccountId: string;
+    newQuantityOnHand: number;
+  }[] = [];
+  if (returnedByItem.size > 0) {
+    const items = await dbPool
+      .select()
+      .from(inventoryItemTable)
+      .where(inArray(inventoryItemTable.id, [...returnedByItem.keys()]));
+    const itemById = new Map(items.map((it) => [it.id, it]));
+    for (const [itemId, quantity] of returnedByItem) {
+      const item = itemById.get(itemId);
+      if (!item || item.bookId !== memo.bookId) {
+        throw new Error("Credit memo references an inventory item not in this book");
+      }
+      const unitCost = Number(item.averageCost);
+      restockPlan.push({
+        itemId,
+        quantity,
+        unitCost,
+        value: movementValue(quantity, unitCost),
+        cogsAccountId: item.cogsAccountId,
+        assetAccountId: item.assetAccountId,
+        newQuantityOnHand: Number(item.quantityOnHand) + quantity,
+      });
+    }
+  }
+
   const totals = computeInvoiceTotals(priced);
   // Build invoice postings (DR AR, CR income, CR tax) then flip every side, so a
   // credit memo debits income and tax and credits AR while staying balanced
@@ -165,6 +214,43 @@ export const postCreditMemo = async (
         credit: posting.credit.toFixed(4),
         taxJurisdictionId: posting.taxJurisdictionId ?? null,
       } satisfies InferInsertModel<typeof journalLineTable>);
+    }
+
+    // Restock returned goods: the reverse of a sale's COGS. Debit the inventory
+    // asset and credit COGS at the returned value (a self-balancing pair), record
+    // the stock movement, and add the quantity back on hand
+    for (const plan of restockPlan) {
+      if (plan.value !== 0) {
+        await tx.insert(journalLineTable).values({
+          journalEntryId: entryRow.id,
+          accountId: plan.assetAccountId,
+          debit: plan.value.toFixed(4),
+          credit: "0.0000",
+        } satisfies InferInsertModel<typeof journalLineTable>);
+        await tx.insert(journalLineTable).values({
+          journalEntryId: entryRow.id,
+          accountId: plan.cogsAccountId,
+          debit: "0.0000",
+          credit: plan.value.toFixed(4),
+        } satisfies InferInsertModel<typeof journalLineTable>);
+      }
+      await tx.insert(inventoryTransactionTable).values({
+        bookId: memo.bookId,
+        itemId: plan.itemId,
+        date: memo.date,
+        type: "adjustment",
+        quantity: plan.quantity.toFixed(4),
+        unitCost: plan.unitCost.toFixed(4),
+        note: `Credit memo ${memo.number}`,
+        journalEntryId: entryRow.id,
+      } satisfies InferInsertModel<typeof inventoryTransactionTable>);
+      await tx
+        .update(inventoryItemTable)
+        .set({
+          quantityOnHand: plan.newQuantityOnHand.toFixed(4),
+          updatedAt: new Date().toISOString(),
+        })
+        .where(eq(inventoryItemTable.id, plan.itemId));
     }
 
     await tx

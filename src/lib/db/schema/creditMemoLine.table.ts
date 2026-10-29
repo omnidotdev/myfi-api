@@ -11,6 +11,7 @@ import {
 import { generateDefaultId } from "lib/db/util";
 import { accountTable } from "./account.table";
 import { creditMemoTable } from "./creditMemo.table";
+import { inventoryItemTable } from "./inventoryItem.table";
 import { taxJurisdictionTable } from "./taxJurisdiction.table";
 
 import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
@@ -36,6 +37,12 @@ export const creditMemoLineTable = pgTable(
       .references(() => accountTable.id),
     taxJurisdictionId: uuid("tax_jurisdiction_id").references(
       () => taxJurisdictionTable.id,
+    ),
+    // when set, posting the credit memo restocks this item (goods returned):
+    // the line quantity is added back to stock at the item's weighted-average
+    // cost, debiting the inventory asset and crediting COGS
+    inventoryItemId: uuid("inventory_item_id").references(
+      () => inventoryItemTable.id,
     ),
     sortOrder: integer("sort_order").notNull().default(0),
   },

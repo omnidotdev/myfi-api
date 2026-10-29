@@ -115,6 +115,7 @@ const creditMemoRoutes = new Elysia({ prefix: "/api/credit-memos" })
             incomeAccountId: t.String(),
             taxJurisdictionId: t.Optional(t.String()),
             discountPercent: t.Optional(t.Number({ minimum: 0, maximum: 1 })),
+            inventoryItemId: t.Optional(t.String()),
           }),
         ),
       }),

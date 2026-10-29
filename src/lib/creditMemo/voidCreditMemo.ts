@@ -1,9 +1,11 @@
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 
 import { isPeriodLocked } from "lib/accounting/periodLock";
 import { dbPool } from "lib/db/db";
 import {
   creditMemoTable,
+  inventoryItemTable,
+  inventoryTransactionTable,
   journalEntryTable,
   journalLineTable,
 } from "lib/db/schema";
@@ -72,6 +74,43 @@ export const voidCreditMemo = async (
     .from(journalLineTable)
     .where(eq(journalLineTable.journalEntryId, memo.journalEntryId));
 
+  // Original restock movements: reverse each (negate quantity) and pull the
+  // restocked quantity back off hand, mirroring how a void invoice undoes its
+  // stock movements
+  const movements = await dbPool
+    .select({
+      itemId: inventoryTransactionTable.itemId,
+      quantity: inventoryTransactionTable.quantity,
+      unitCost: inventoryTransactionTable.unitCost,
+    })
+    .from(inventoryTransactionTable)
+    .where(eq(inventoryTransactionTable.journalEntryId, memo.journalEntryId));
+
+  const unstock: { itemId: string; newQuantityOnHand: number }[] = [];
+  if (movements.length > 0) {
+    const removeByItem = new Map<string, number>();
+    for (const m of movements) {
+      removeByItem.set(
+        m.itemId,
+        (removeByItem.get(m.itemId) ?? 0) - Number(m.quantity),
+      );
+    }
+    const items = await dbPool
+      .select({
+        id: inventoryItemTable.id,
+        quantityOnHand: inventoryItemTable.quantityOnHand,
+      })
+      .from(inventoryItemTable)
+      .where(inArray(inventoryItemTable.id, [...removeByItem.keys()]));
+    for (const item of items) {
+      unstock.push({
+        itemId: item.id,
+        newQuantityOnHand:
+          Number(item.quantityOnHand) + (removeByItem.get(item.id) ?? 0),
+      });
+    }
+  }
+
   return dbPool.transaction(async (tx) => {
     const [reversal] = await tx
       .insert(journalEntryTable)
@@ -98,6 +137,32 @@ export const voidCreditMemo = async (
         taxJurisdictionId: line.taxJurisdictionId,
       })),
     );
+
+    // Offsetting stock movements (negated quantity) and pull the restocked
+    // quantity back off hand
+    if (movements.length > 0) {
+      await tx.insert(inventoryTransactionTable).values(
+        movements.map((m) => ({
+          bookId,
+          itemId: m.itemId,
+          date: voidDate,
+          type: "adjustment",
+          quantity: (-Number(m.quantity)).toFixed(4),
+          unitCost: m.unitCost,
+          note: `Void credit memo ${memo.number}`,
+          journalEntryId: reversal.id,
+        })),
+      );
+    }
+    for (const u of unstock) {
+      await tx
+        .update(inventoryItemTable)
+        .set({
+          quantityOnHand: u.newQuantityOnHand.toFixed(4),
+          updatedAt: new Date().toISOString(),
+        })
+        .where(eq(inventoryItemTable.id, u.itemId));
+    }
 
     await tx
       .update(creditMemoTable)
