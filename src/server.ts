@@ -10,6 +10,7 @@ import { Elysia, t } from "elysia";
 import { schema } from "generated/graphql/schema.executable";
 import { useGrafast } from "grafast/envelop";
 
+import bankDepositRoutes from "lib/banking/bankDepositRoutes";
 import billRoutes from "lib/billing/billRoutes";
 import generateBudgetTracking from "lib/budgets/budgetTracking";
 import { runMonthlyClose } from "lib/close";
@@ -151,7 +152,8 @@ const connectionAndOrgRoutes = new Elysia()
   .use(orgDataRoutes)
   .use(vendorCreditRoutes)
   .use(purchaseOrderRoutes)
-  .use(recurringInvoiceRoutes);
+  .use(recurringInvoiceRoutes)
+  .use(bankDepositRoutes);
 
 const app = new Elysia()
   .onAfterHandle(({ set }) => {

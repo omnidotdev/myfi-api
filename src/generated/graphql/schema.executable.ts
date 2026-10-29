@@ -1740,6 +1740,133 @@ const spec_inventoryTransaction = {
   executor: executor
 };
 const inventoryTransactionCodec = recordCodec(spec_inventoryTransaction);
+const bankDepositIdentifier = sql.identifier("public", "bank_deposit");
+const spec_bankDeposit = {
+  name: "bankDeposit",
+  identifier: bankDepositIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    date: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    status: {
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    bank_account_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    memo: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    total: {
+      codec: TYPES.numeric,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    journal_entry_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "18642",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "bank_deposit"
+    }
+  },
+  executor: executor
+};
+const bankDepositCodec = recordCodec(spec_bankDeposit);
 const payrollConnectionIdentifier = sql.identifier("public", "payroll_connection");
 const spec_payrollConnection = {
   name: "payrollConnection",
@@ -3288,142 +3415,6 @@ const spec_billPayment = {
   executor: executor
 };
 const billPaymentCodec = recordCodec(spec_billPayment);
-const invoicePaymentIdentifier = sql.identifier("public", "invoice_payment");
-const spec_invoicePayment = {
-  name: "invoicePayment",
-  identifier: invoicePaymentIdentifier,
-  attributes: {
-    __proto__: null,
-    id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    book_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    invoice_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    date: {
-      codec: TYPES.text,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    amount: {
-      codec: TYPES.numeric,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    deposit_account_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    method: {
-      codec: TYPES.text,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    reference: {
-      codec: TYPES.text,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    journal_entry_id: {
-      codec: TYPES.uuid,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    created_at: {
-      codec: TYPES.timestamptz,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    exchange_rate: {
-      codec: TYPES.numeric,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    }
-  },
-  extensions: {
-    oid: "17583",
-    isTableLike: true,
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "invoice_payment"
-    }
-  },
-  executor: executor
-};
-const invoicePaymentCodec = recordCodec(spec_invoicePayment);
 const cryptoLotIdentifier = sql.identifier("public", "crypto_lot");
 const spec_cryptoLot = {
   name: "cryptoLot",
@@ -4132,6 +4123,152 @@ const spec_creditMemoLine = {
   executor: executor
 };
 const creditMemoLineCodec = recordCodec(spec_creditMemoLine);
+const invoicePaymentIdentifier = sql.identifier("public", "invoice_payment");
+const spec_invoicePayment = {
+  name: "invoicePayment",
+  identifier: invoicePaymentIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    invoice_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    date: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    amount: {
+      codec: TYPES.numeric,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    deposit_account_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    method: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    reference: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    journal_entry_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    exchange_rate: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    bank_deposit_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "17583",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "invoice_payment"
+    }
+  },
+  executor: executor
+};
+const invoicePaymentCodec = recordCodec(spec_invoicePayment);
 const journalEntryIdentifier = sql.identifier("public", "journal_entry");
 const spec_journalEntry = {
   name: "journalEntry",
@@ -7425,7 +7562,7 @@ const accountTypeCodec = enumCodec({
 const accountSubTypeCodec = enumCodec({
   name: "accountSubType",
   identifier: sql.identifier("public", "account_sub_type"),
-  values: ["cash", "bank", "accounts_receivable", "inventory", "crypto_wallet", "investment", "fixed_asset", "other_asset", "credit_card", "accounts_payable", "loan", "mortgage", "customer_credit", "other_liability", "owners_equity", "retained_earnings", "other_equity", "sales", "service_revenue", "interest_income", "crypto_gains", "other_revenue", "cost_of_goods", "operating_expense", "payroll", "tax_expense", "crypto_losses", "fx_gain_loss", "other_expense"],
+  values: ["cash", "bank", "undeposited_funds", "accounts_receivable", "inventory", "crypto_wallet", "investment", "fixed_asset", "other_asset", "credit_card", "accounts_payable", "loan", "mortgage", "customer_credit", "other_liability", "owners_equity", "retained_earnings", "other_equity", "sales", "service_revenue", "interest_income", "crypto_gains", "other_revenue", "cost_of_goods", "operating_expense", "payroll", "tax_expense", "crypto_losses", "fx_gain_loss", "other_expense"],
   description: undefined,
   extensions: {
     oid: "16397",
@@ -8183,6 +8320,29 @@ const inventory_transaction_resourceOptionsConfig = {
   },
   uniques: inventory_transactionUniques
 };
+const bank_depositUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const bank_deposit_resourceOptionsConfig = {
+  executor: executor,
+  name: "bank_deposit",
+  identifier: "main.public.bank_deposit",
+  from: bankDepositIdentifier,
+  codec: bankDepositCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "bank_deposit"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: bank_depositUniques
+};
 const payroll_connectionUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -8459,29 +8619,6 @@ const bill_payment_resourceOptionsConfig = {
   },
   uniques: bill_paymentUniques
 };
-const invoice_paymentUniques = [{
-  attributes: ["id"],
-  isPrimary: true
-}];
-const invoice_payment_resourceOptionsConfig = {
-  executor: executor,
-  name: "invoice_payment",
-  identifier: "main.public.invoice_payment",
-  from: invoicePaymentIdentifier,
-  codec: invoicePaymentCodec,
-  extensions: {
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "invoice_payment"
-    },
-    canSelect: true,
-    canInsert: true,
-    canUpdate: true,
-    canDelete: true
-  },
-  uniques: invoice_paymentUniques
-};
 const crypto_lotUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -8596,6 +8733,29 @@ const credit_memo_line_resourceOptionsConfig = {
     canDelete: true
   },
   uniques: credit_memo_lineUniques
+};
+const invoice_paymentUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const invoice_payment_resourceOptionsConfig = {
+  executor: executor,
+  name: "invoice_payment",
+  identifier: "main.public.invoice_payment",
+  from: invoicePaymentIdentifier,
+  codec: invoicePaymentCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "invoice_payment"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: invoice_paymentUniques
 };
 const journal_entryUniques = [{
   attributes: ["id"],
@@ -9113,6 +9273,7 @@ const registryConfig = {
     accountingPeriod: accountingPeriodCodec,
     attachment: attachmentCodec,
     inventoryTransaction: inventoryTransactionCodec,
+    bankDeposit: bankDepositCodec,
     payrollConnection: payrollConnectionCodec,
     purchaseOrderLine: purchaseOrderLineCodec,
     recurringInvoiceLine: recurringInvoiceLineCodec,
@@ -9125,12 +9286,12 @@ const registryConfig = {
     vendorCreditLine: vendorCreditLineCodec,
     amortizationEntry: amortizationEntryCodec,
     billPayment: billPaymentCodec,
-    invoicePayment: invoicePaymentCodec,
     cryptoLot: cryptoLotCodec,
     purchaseOrder: purchaseOrderCodec,
     recurringInvoice: recurringInvoiceCodec,
     connectedAccount: connectedAccountCodec,
     creditMemoLine: creditMemoLineCodec,
+    invoicePayment: invoicePaymentCodec,
     journalEntry: journalEntryCodec,
     mileageLog: mileageLogCodec,
     budget: budgetCodec,
@@ -9196,6 +9357,7 @@ const registryConfig = {
     accounting_period: accounting_period_resourceOptionsConfig,
     attachment: attachment_resourceOptionsConfig,
     inventory_transaction: inventory_transaction_resourceOptionsConfig,
+    bank_deposit: bank_deposit_resourceOptionsConfig,
     payroll_connection: payroll_connection_resourceOptionsConfig,
     purchase_order_line: purchase_order_line_resourceOptionsConfig,
     recurring_invoice_line: recurring_invoice_line_resourceOptionsConfig,
@@ -9208,12 +9370,12 @@ const registryConfig = {
     vendor_credit_line: vendor_credit_line_resourceOptionsConfig,
     amortization_entry: amortization_entry_resourceOptionsConfig,
     bill_payment: bill_payment_resourceOptionsConfig,
-    invoice_payment: invoice_payment_resourceOptionsConfig,
     crypto_lot: crypto_lot_resourceOptionsConfig,
     purchase_order: purchase_order_resourceOptionsConfig,
     recurring_invoice: recurring_invoice_resourceOptionsConfig,
     connected_account: connected_account_resourceOptionsConfig,
     credit_memo_line: credit_memo_line_resourceOptionsConfig,
+    invoice_payment: invoice_payment_resourceOptionsConfig,
     journal_entry: journal_entry_resourceOptionsConfig,
     mileage_log: mileage_log_resourceOptionsConfig,
     budget: budget_resourceOptionsConfig,
@@ -9611,6 +9773,17 @@ const registryConfig = {
           __proto__: null,
           isIndexed: false
         }
+      },
+      bankDepositsByTheirBankAccountId: {
+        localCodec: accountCodec,
+        remoteResourceOptions: bank_deposit_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["bank_account_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
       }
     },
     accountMapping: {
@@ -9679,6 +9852,41 @@ const registryConfig = {
         localAttributes: ["journal_entry_id"],
         remoteAttributes: ["id"],
         isUnique: true
+      }
+    },
+    bankDeposit: {
+      __proto__: null,
+      accountByMyBankAccountId: {
+        localCodec: bankDepositCodec,
+        remoteResourceOptions: account_resourceOptionsConfig,
+        localAttributes: ["bank_account_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      bookByMyBookId: {
+        localCodec: bankDepositCodec,
+        remoteResourceOptions: book_resourceOptionsConfig,
+        localAttributes: ["book_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      journalEntryByMyJournalEntryId: {
+        localCodec: bankDepositCodec,
+        remoteResourceOptions: journal_entry_resourceOptionsConfig,
+        localAttributes: ["journal_entry_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      invoicePaymentsByTheirBankDepositId: {
+        localCodec: bankDepositCodec,
+        remoteResourceOptions: invoice_payment_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["bank_deposit_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
       }
     },
     bill: {
@@ -10089,6 +10297,13 @@ const registryConfig = {
       recurringInvoicesByTheirBookId: {
         localCodec: bookCodec,
         remoteResourceOptions: recurring_invoice_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["book_id"],
+        isReferencee: true
+      },
+      bankDepositsByTheirBookId: {
+        localCodec: bookCodec,
+        remoteResourceOptions: bank_deposit_resourceOptionsConfig,
         localAttributes: ["id"],
         remoteAttributes: ["book_id"],
         isReferencee: true
@@ -10672,6 +10887,13 @@ const registryConfig = {
     },
     invoicePayment: {
       __proto__: null,
+      bankDepositByMyBankDepositId: {
+        localCodec: invoicePaymentCodec,
+        remoteResourceOptions: bank_deposit_resourceOptionsConfig,
+        localAttributes: ["bank_deposit_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
       bookByMyBookId: {
         localCodec: invoicePaymentCodec,
         remoteResourceOptions: book_resourceOptionsConfig,
@@ -10833,6 +11055,17 @@ const registryConfig = {
       vendorCreditsByTheirJournalEntryId: {
         localCodec: journalEntryCodec,
         remoteResourceOptions: vendor_credit_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["journal_entry_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
+      },
+      bankDepositsByTheirJournalEntryId: {
+        localCodec: journalEntryCodec,
+        remoteResourceOptions: bank_deposit_resourceOptionsConfig,
         localAttributes: ["id"],
         remoteAttributes: ["journal_entry_id"],
         isReferencee: true,
@@ -11585,6 +11818,7 @@ const resource_net_worth_snapshotPgResource = registry.pgResources["net_worth_sn
 const resource_accounting_periodPgResource = registry.pgResources["accounting_period"];
 const resource_attachmentPgResource = registry.pgResources["attachment"];
 const resource_inventory_transactionPgResource = registry.pgResources["inventory_transaction"];
+const resource_bank_depositPgResource = registry.pgResources["bank_deposit"];
 const resource_payroll_connectionPgResource = registry.pgResources["payroll_connection"];
 const resource_purchase_order_linePgResource = registry.pgResources["purchase_order_line"];
 const resource_recurring_invoice_linePgResource = registry.pgResources["recurring_invoice_line"];
@@ -11597,12 +11831,12 @@ const resource_estimate_linePgResource = registry.pgResources["estimate_line"];
 const resource_vendor_credit_linePgResource = registry.pgResources["vendor_credit_line"];
 const resource_amortization_entryPgResource = registry.pgResources["amortization_entry"];
 const resource_bill_paymentPgResource = registry.pgResources["bill_payment"];
-const resource_invoice_paymentPgResource = registry.pgResources["invoice_payment"];
 const resource_crypto_lotPgResource = registry.pgResources["crypto_lot"];
 const resource_purchase_orderPgResource = registry.pgResources["purchase_order"];
 const resource_recurring_invoicePgResource = registry.pgResources["recurring_invoice"];
 const resource_connected_accountPgResource = registry.pgResources["connected_account"];
 const resource_credit_memo_linePgResource = registry.pgResources["credit_memo_line"];
+const resource_invoice_paymentPgResource = registry.pgResources["invoice_payment"];
 const resource_journal_entryPgResource = registry.pgResources["journal_entry"];
 const resource_mileage_logPgResource = registry.pgResources["mileage_log"];
 const resource_budgetPgResource = registry.pgResources["budget"];
@@ -11866,6 +12100,17 @@ const nodeFetcher_InventoryTransaction = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_InventoryTransaction));
   return nodeIdHandler_InventoryTransaction.get(nodeIdHandler_InventoryTransaction.getSpec($decoded));
 };
+const nodeIdHandler_BankDeposit = makeTableNodeIdHandler({
+  typeName: "BankDeposit",
+  identifier: "BankDeposit",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_bank_depositPgResource,
+  pk: bank_depositUniques[0].attributes
+});
+const nodeFetcher_BankDeposit = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_BankDeposit));
+  return nodeIdHandler_BankDeposit.get(nodeIdHandler_BankDeposit.getSpec($decoded));
+};
 const nodeIdHandler_PayrollConnection = makeTableNodeIdHandler({
   typeName: "PayrollConnection",
   identifier: "PayrollConnection",
@@ -11998,17 +12243,6 @@ const nodeFetcher_BillPayment = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_BillPayment));
   return nodeIdHandler_BillPayment.get(nodeIdHandler_BillPayment.getSpec($decoded));
 };
-const nodeIdHandler_InvoicePayment = makeTableNodeIdHandler({
-  typeName: "InvoicePayment",
-  identifier: "InvoicePayment",
-  nodeIdCodec: base64JSONNodeIdCodec,
-  resource: resource_invoice_paymentPgResource,
-  pk: invoice_paymentUniques[0].attributes
-});
-const nodeFetcher_InvoicePayment = $nodeId => {
-  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_InvoicePayment));
-  return nodeIdHandler_InvoicePayment.get(nodeIdHandler_InvoicePayment.getSpec($decoded));
-};
 const nodeIdHandler_CryptoLot = makeTableNodeIdHandler({
   typeName: "CryptoLot",
   identifier: "CryptoLot",
@@ -12063,6 +12297,17 @@ const nodeIdHandler_CreditMemoLine = makeTableNodeIdHandler({
 const nodeFetcher_CreditMemoLine = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_CreditMemoLine));
   return nodeIdHandler_CreditMemoLine.get(nodeIdHandler_CreditMemoLine.getSpec($decoded));
+};
+const nodeIdHandler_InvoicePayment = makeTableNodeIdHandler({
+  typeName: "InvoicePayment",
+  identifier: "InvoicePayment",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_invoice_paymentPgResource,
+  pk: invoice_paymentUniques[0].attributes
+});
+const nodeFetcher_InvoicePayment = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_InvoicePayment));
+  return nodeIdHandler_InvoicePayment.get(nodeIdHandler_InvoicePayment.getSpec($decoded));
 };
 const nodeIdHandler_JournalEntry = makeTableNodeIdHandler({
   typeName: "JournalEntry",
@@ -12365,6 +12610,7 @@ const nodeIdHandlerByTypeName = {
   AccountingPeriod: nodeIdHandler_AccountingPeriod,
   Attachment: nodeIdHandler_Attachment,
   InventoryTransaction: nodeIdHandler_InventoryTransaction,
+  BankDeposit: nodeIdHandler_BankDeposit,
   PayrollConnection: nodeIdHandler_PayrollConnection,
   PurchaseOrderLine: nodeIdHandler_PurchaseOrderLine,
   RecurringInvoiceLine: nodeIdHandler_RecurringInvoiceLine,
@@ -12377,12 +12623,12 @@ const nodeIdHandlerByTypeName = {
   VendorCreditLine: nodeIdHandler_VendorCreditLine,
   AmortizationEntry: nodeIdHandler_AmortizationEntry,
   BillPayment: nodeIdHandler_BillPayment,
-  InvoicePayment: nodeIdHandler_InvoicePayment,
   CryptoLot: nodeIdHandler_CryptoLot,
   PurchaseOrder: nodeIdHandler_PurchaseOrder,
   RecurringInvoice: nodeIdHandler_RecurringInvoice,
   ConnectedAccount: nodeIdHandler_ConnectedAccount,
   CreditMemoLine: nodeIdHandler_CreditMemoLine,
+  InvoicePayment: nodeIdHandler_InvoicePayment,
   JournalEntry: nodeIdHandler_JournalEntry,
   MileageLog: nodeIdHandler_MileageLog,
   Budget: nodeIdHandler_Budget,
@@ -13186,6 +13432,10 @@ const specFromArgs_InventoryTransaction = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_InventoryTransaction, $nodeId);
 };
+const specFromArgs_BankDeposit = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_BankDeposit, $nodeId);
+};
 const specFromArgs_PayrollConnection = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_PayrollConnection, $nodeId);
@@ -13234,10 +13484,6 @@ const specFromArgs_BillPayment = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_BillPayment, $nodeId);
 };
-const specFromArgs_InvoicePayment = args => {
-  const $nodeId = args.getRaw(["input", "id"]);
-  return specFromNodeId(nodeIdHandler_InvoicePayment, $nodeId);
-};
 const specFromArgs_CryptoLot = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_CryptoLot, $nodeId);
@@ -13257,6 +13503,10 @@ const specFromArgs_ConnectedAccount = args => {
 const specFromArgs_CreditMemoLine = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_CreditMemoLine, $nodeId);
+};
+const specFromArgs_InvoicePayment = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_InvoicePayment, $nodeId);
 };
 const specFromArgs_JournalEntry = args => {
   const $nodeId = args.getRaw(["input", "id"]);
@@ -13588,6 +13838,13 @@ function InventoryTransactionInput_unitCostApply(obj, val, info) {
 function InventoryTransactionInput_noteApply(obj, val, info) {
   obj.set("note", bakedInputRuntime(info.schema, info.field.type, val));
 }
+const CreateBankDepositPayload_bankDepositEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_bank_depositPgResource, bank_depositUniques[0].attributes, $mutation, fieldArgs);
+function BankDepositInput_bankAccountIdApply(obj, val, info) {
+  obj.set("bank_account_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function BankDepositInput_totalApply(obj, val, info) {
+  obj.set("total", bakedInputRuntime(info.schema, info.field.type, val));
+}
 const CreatePayrollConnectionPayload_payrollConnectionEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_payroll_connectionPgResource, payroll_connectionUniques[0].attributes, $mutation, fieldArgs);
 function PayrollConnectionInput_providerApply(obj, val, info) {
   obj.set("provider", bakedInputRuntime(info.schema, info.field.type, val));
@@ -13729,10 +13986,6 @@ function BillPaymentInput_referenceApply(obj, val, info) {
 function BillPaymentInput_exchangeRateApply(obj, val, info) {
   obj.set("exchange_rate", bakedInputRuntime(info.schema, info.field.type, val));
 }
-const CreateInvoicePaymentPayload_invoicePaymentEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_invoice_paymentPgResource, invoice_paymentUniques[0].attributes, $mutation, fieldArgs);
-function InvoicePaymentInput_depositAccountIdApply(obj, val, info) {
-  obj.set("deposit_account_id", bakedInputRuntime(info.schema, info.field.type, val));
-}
 const CreateCryptoLotPayload_cryptoLotEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_crypto_lotPgResource, crypto_lotUniques[0].attributes, $mutation, fieldArgs);
 function CryptoLotInput_cryptoAssetIdApply(obj, val, info) {
   obj.set("crypto_asset_id", bakedInputRuntime(info.schema, info.field.type, val));
@@ -13761,9 +14014,6 @@ function PurchaseOrderInput_numberApply(obj, val, info) {
 }
 function PurchaseOrderInput_subtotalApply(obj, val, info) {
   obj.set("subtotal", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function PurchaseOrderInput_totalApply(obj, val, info) {
-  obj.set("total", bakedInputRuntime(info.schema, info.field.type, val));
 }
 function PurchaseOrderInput_convertedBillIdApply(obj, val, info) {
   obj.set("converted_bill_id", bakedInputRuntime(info.schema, info.field.type, val));
@@ -13800,6 +14050,13 @@ function ConnectedAccountInput_maskApply(obj, val, info) {
 const CreateCreditMemoLinePayload_creditMemoLineEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_credit_memo_linePgResource, credit_memo_lineUniques[0].attributes, $mutation, fieldArgs);
 function CreditMemoLineInput_inventoryItemIdApply(obj, val, info) {
   obj.set("inventory_item_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+const CreateInvoicePaymentPayload_invoicePaymentEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_invoice_paymentPgResource, invoice_paymentUniques[0].attributes, $mutation, fieldArgs);
+function InvoicePaymentInput_depositAccountIdApply(obj, val, info) {
+  obj.set("deposit_account_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function InvoicePaymentInput_bankDepositIdApply(obj, val, info) {
+  obj.set("bank_deposit_id", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateJournalEntryPayload_journalEntryEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_journal_entryPgResource, journal_entryUniques[0].attributes, $mutation, fieldArgs);
 function JournalEntryInput_sourceApply(obj, val, info) {
@@ -14162,6 +14419,9 @@ type Query implements Node {
   """Get a single \`InventoryTransaction\`."""
   inventoryTransaction(rowId: UUID!): InventoryTransaction
 
+  """Get a single \`BankDeposit\`."""
+  bankDeposit(rowId: UUID!): BankDeposit
+
   """Get a single \`PayrollConnection\`."""
   payrollConnection(rowId: UUID!): PayrollConnection
 
@@ -14198,9 +14458,6 @@ type Query implements Node {
   """Get a single \`BillPayment\`."""
   billPayment(rowId: UUID!): BillPayment
 
-  """Get a single \`InvoicePayment\`."""
-  invoicePayment(rowId: UUID!): InvoicePayment
-
   """Get a single \`CryptoLot\`."""
   cryptoLot(rowId: UUID!): CryptoLot
 
@@ -14215,6 +14472,9 @@ type Query implements Node {
 
   """Get a single \`CreditMemoLine\`."""
   creditMemoLine(rowId: UUID!): CreditMemoLine
+
+  """Get a single \`InvoicePayment\`."""
+  invoicePayment(rowId: UUID!): InvoicePayment
 
   """Get a single \`JournalEntry\`."""
   journalEntry(rowId: UUID!): JournalEntry
@@ -14419,6 +14679,14 @@ type Query implements Node {
     id: ID!
   ): InventoryTransaction
 
+  """Reads a single \`BankDeposit\` using its globally unique \`ID\`."""
+  bankDepositById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`BankDeposit\`.
+    """
+    id: ID!
+  ): BankDeposit
+
   """Reads a single \`PayrollConnection\` using its globally unique \`ID\`."""
   payrollConnectionById(
     """
@@ -14513,14 +14781,6 @@ type Query implements Node {
     id: ID!
   ): BillPayment
 
-  """Reads a single \`InvoicePayment\` using its globally unique \`ID\`."""
-  invoicePaymentById(
-    """
-    The globally unique \`ID\` to be used in selecting a single \`InvoicePayment\`.
-    """
-    id: ID!
-  ): InvoicePayment
-
   """Reads a single \`CryptoLot\` using its globally unique \`ID\`."""
   cryptoLotById(
     """The globally unique \`ID\` to be used in selecting a single \`CryptoLot\`."""
@@ -14558,6 +14818,14 @@ type Query implements Node {
     """
     id: ID!
   ): CreditMemoLine
+
+  """Reads a single \`InvoicePayment\` using its globally unique \`ID\`."""
+  invoicePaymentById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`InvoicePayment\`.
+    """
+    id: ID!
+  ): InvoicePayment
 
   """Reads a single \`JournalEntry\` using its globally unique \`ID\`."""
   journalEntryById(
@@ -15321,6 +15589,40 @@ type Query implements Node {
     orderBy: [InventoryTransactionOrderBy!] = [PRIMARY_KEY_ASC]
   ): InventoryTransactionConnection
 
+  """Reads and enables pagination through a set of \`BankDeposit\`."""
+  bankDeposits(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: BankDepositCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: BankDepositFilter
+
+    """The method to use when ordering \`BankDeposit\`."""
+    orderBy: [BankDepositOrderBy!] = [PRIMARY_KEY_ASC]
+  ): BankDepositConnection
+
   """Reads and enables pagination through a set of \`PayrollConnection\`."""
   payrollConnections(
     """Only read the first \`n\` values of the set."""
@@ -15733,40 +16035,6 @@ type Query implements Node {
     orderBy: [BillPaymentOrderBy!] = [PRIMARY_KEY_ASC]
   ): BillPaymentConnection
 
-  """Reads and enables pagination through a set of \`InvoicePayment\`."""
-  invoicePayments(
-    """Only read the first \`n\` values of the set."""
-    first: Int
-
-    """Only read the last \`n\` values of the set."""
-    last: Int
-
-    """
-    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
-    based pagination. May not be used with \`last\`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: InvoicePaymentCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: InvoicePaymentFilter
-
-    """The method to use when ordering \`InvoicePayment\`."""
-    orderBy: [InvoicePaymentOrderBy!] = [PRIMARY_KEY_ASC]
-  ): InvoicePaymentConnection
-
   """Reads and enables pagination through a set of \`CryptoLot\`."""
   cryptoLots(
     """Only read the first \`n\` values of the set."""
@@ -15936,6 +16204,40 @@ type Query implements Node {
     """The method to use when ordering \`CreditMemoLine\`."""
     orderBy: [CreditMemoLineOrderBy!] = [PRIMARY_KEY_ASC]
   ): CreditMemoLineConnection
+
+  """Reads and enables pagination through a set of \`InvoicePayment\`."""
+  invoicePayments(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: InvoicePaymentCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: InvoicePaymentFilter
+
+    """The method to use when ordering \`InvoicePayment\`."""
+    orderBy: [InvoicePaymentOrderBy!] = [PRIMARY_KEY_ASC]
+  ): InvoicePaymentConnection
 
   """Reads and enables pagination through a set of \`JournalEntry\`."""
   journalEntries(
@@ -16955,6 +17257,7 @@ enum AccountType {
 enum AccountSubType {
   cash
   bank
+  undeposited_funds
   accounts_receivable
   inventory
   crypto_wallet
@@ -18308,6 +18611,40 @@ type Book implements Node {
     """The method to use when ordering \`RecurringInvoice\`."""
     orderBy: [RecurringInvoiceOrderBy!] = [PRIMARY_KEY_ASC]
   ): RecurringInvoiceConnection!
+
+  """Reads and enables pagination through a set of \`BankDeposit\`."""
+  bankDeposits(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: BankDepositCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: BankDepositFilter
+
+    """The method to use when ordering \`BankDeposit\`."""
+    orderBy: [BankDepositOrderBy!] = [PRIMARY_KEY_ASC]
+  ): BankDepositConnection!
 }
 
 """A connection to a list of \`Account\` values."""
@@ -18820,6 +19157,12 @@ input BookFilter {
 
   """Some related \`recurringInvoices\` exist."""
   recurringInvoicesExist: Boolean
+
+  """Filter by the object’s \`bankDeposits\` relation."""
+  bankDeposits: BookToManyBankDepositFilter
+
+  """Some related \`bankDeposits\` exist."""
+  bankDepositsExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [BookFilter!]
@@ -21559,6 +21902,12 @@ input InvoicePaymentFilter {
   """Filter by the object’s \`invoiceId\` field."""
   invoiceId: UUIDFilter
 
+  """Filter by the object’s \`bankDeposit\` relation."""
+  bankDeposit: BankDepositFilter
+
+  """A related \`bankDeposit\` exists."""
+  bankDepositExists: Boolean
+
   """Filter by the object’s \`book\` relation."""
   book: BookFilter
 
@@ -21582,6 +21931,38 @@ input InvoicePaymentFilter {
 
   """Negates the expression."""
   not: InvoicePaymentFilter
+}
+
+"""
+A filter to be used against \`BankDeposit\` object types. All fields are combined with a logical ‘and.’
+"""
+input BankDepositFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`bookId\` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s \`bankAccount\` relation."""
+  bankAccount: AccountFilter
+
+  """Filter by the object’s \`book\` relation."""
+  book: BookFilter
+
+  """Filter by the object’s \`journalEntry\` relation."""
+  journalEntry: JournalEntryFilter
+
+  """A related \`journalEntry\` exists."""
+  journalEntryExists: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [BankDepositFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [BankDepositFilter!]
+
+  """Negates the expression."""
+  not: BankDepositFilter
 }
 
 """
@@ -22427,6 +22808,26 @@ input BookToManyRecurringInvoiceFilter {
   No related \`RecurringInvoice\` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
   none: RecurringInvoiceFilter
+}
+
+"""
+A filter to be used against many \`BankDeposit\` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyBankDepositFilter {
+  """
+  Every related \`BankDeposit\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: BankDepositFilter
+
+  """
+  Some related \`BankDeposit\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: BankDepositFilter
+
+  """
+  No related \`BankDeposit\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: BankDepositFilter
 }
 
 """
@@ -26744,6 +27145,10 @@ type InvoicePayment implements Node {
   journalEntryId: UUID
   createdAt: Datetime
   exchangeRate: BigFloat!
+  bankDepositId: UUID
+
+  """Reads a single \`BankDeposit\` that is related to this \`InvoicePayment\`."""
+  bankDeposit: BankDeposit
 
   """Reads a single \`Book\` that is related to this \`InvoicePayment\`."""
   book: Book
@@ -26757,6 +27162,32 @@ type InvoicePayment implements Node {
   """
   Reads a single \`JournalEntry\` that is related to this \`InvoicePayment\`.
   """
+  journalEntry: JournalEntry
+}
+
+type BankDeposit implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  date: String!
+  status: String!
+  bankAccountId: UUID!
+  memo: String
+  total: BigFloat!
+  journalEntryId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """Reads a single \`Account\` that is related to this \`BankDeposit\`."""
+  bankAccount: Account
+
+  """Reads a single \`Book\` that is related to this \`BankDeposit\`."""
+  book: Book
+
+  """Reads a single \`JournalEntry\` that is related to this \`BankDeposit\`."""
   journalEntry: JournalEntry
 }
 
@@ -27919,6 +28350,55 @@ enum ProjectOrderBy {
   STATUS_DESC
 }
 
+"""A connection to a list of \`BankDeposit\` values."""
+type BankDepositConnection {
+  """A list of \`BankDeposit\` objects."""
+  nodes: [BankDeposit]!
+
+  """
+  A list of edges which contains the \`BankDeposit\` and cursor to aid in pagination.
+  """
+  edges: [BankDepositEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* \`BankDeposit\` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A \`BankDeposit\` edge in the connection."""
+type BankDepositEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`BankDeposit\` at the end of the edge."""
+  node: BankDeposit
+}
+
+"""
+A condition to be used against \`BankDeposit\` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input BankDepositCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`bookId\` field."""
+  bookId: UUID
+}
+
+"""Methods to use when ordering \`BankDeposit\`."""
+enum BankDepositOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+}
+
 type _DrizzleMigration implements Node {
   """
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
@@ -28276,6 +28756,14 @@ type Mutation {
     input: CreateInventoryTransactionInput!
   ): CreateInventoryTransactionPayload
 
+  """Creates a single \`BankDeposit\`."""
+  createBankDeposit(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateBankDepositInput!
+  ): CreateBankDepositPayload
+
   """Creates a single \`PayrollConnection\`."""
   createPayrollConnection(
     """
@@ -28372,14 +28860,6 @@ type Mutation {
     input: CreateBillPaymentInput!
   ): CreateBillPaymentPayload
 
-  """Creates a single \`InvoicePayment\`."""
-  createInvoicePayment(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateInvoicePaymentInput!
-  ): CreateInvoicePaymentPayload
-
   """Creates a single \`CryptoLot\`."""
   createCryptoLot(
     """
@@ -28419,6 +28899,14 @@ type Mutation {
     """
     input: CreateCreditMemoLineInput!
   ): CreateCreditMemoLinePayload
+
+  """Creates a single \`InvoicePayment\`."""
+  createInvoicePayment(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateInvoicePaymentInput!
+  ): CreateInvoicePaymentPayload
 
   """Creates a single \`JournalEntry\`."""
   createJournalEntry(
@@ -28913,6 +29401,24 @@ type Mutation {
   ): UpdateInventoryTransactionPayload
 
   """
+  Updates a single \`BankDeposit\` using its globally unique id and a patch.
+  """
+  updateBankDepositById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateBankDepositByIdInput!
+  ): UpdateBankDepositPayload
+
+  """Updates a single \`BankDeposit\` using a unique key and a patch."""
+  updateBankDeposit(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateBankDepositInput!
+  ): UpdateBankDepositPayload
+
+  """
   Updates a single \`PayrollConnection\` using its globally unique id and a patch.
   """
   updatePayrollConnectionById(
@@ -29128,24 +29634,6 @@ type Mutation {
     input: UpdateBillPaymentInput!
   ): UpdateBillPaymentPayload
 
-  """
-  Updates a single \`InvoicePayment\` using its globally unique id and a patch.
-  """
-  updateInvoicePaymentById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateInvoicePaymentByIdInput!
-  ): UpdateInvoicePaymentPayload
-
-  """Updates a single \`InvoicePayment\` using a unique key and a patch."""
-  updateInvoicePayment(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateInvoicePaymentInput!
-  ): UpdateInvoicePaymentPayload
-
   """Updates a single \`CryptoLot\` using its globally unique id and a patch."""
   updateCryptoLotById(
     """
@@ -29233,6 +29721,24 @@ type Mutation {
     """
     input: UpdateCreditMemoLineInput!
   ): UpdateCreditMemoLinePayload
+
+  """
+  Updates a single \`InvoicePayment\` using its globally unique id and a patch.
+  """
+  updateInvoicePaymentById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateInvoicePaymentByIdInput!
+  ): UpdateInvoicePaymentPayload
+
+  """Updates a single \`InvoicePayment\` using a unique key and a patch."""
+  updateInvoicePayment(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateInvoicePaymentInput!
+  ): UpdateInvoicePaymentPayload
 
   """
   Updates a single \`JournalEntry\` using its globally unique id and a patch.
@@ -29884,6 +30390,22 @@ type Mutation {
     input: DeleteInventoryTransactionInput!
   ): DeleteInventoryTransactionPayload
 
+  """Deletes a single \`BankDeposit\` using its globally unique id."""
+  deleteBankDepositById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteBankDepositByIdInput!
+  ): DeleteBankDepositPayload
+
+  """Deletes a single \`BankDeposit\` using a unique key."""
+  deleteBankDeposit(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteBankDepositInput!
+  ): DeleteBankDepositPayload
+
   """Deletes a single \`PayrollConnection\` using its globally unique id."""
   deletePayrollConnectionById(
     """
@@ -30080,22 +30602,6 @@ type Mutation {
     input: DeleteBillPaymentInput!
   ): DeleteBillPaymentPayload
 
-  """Deletes a single \`InvoicePayment\` using its globally unique id."""
-  deleteInvoicePaymentById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteInvoicePaymentByIdInput!
-  ): DeleteInvoicePaymentPayload
-
-  """Deletes a single \`InvoicePayment\` using a unique key."""
-  deleteInvoicePayment(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteInvoicePaymentInput!
-  ): DeleteInvoicePaymentPayload
-
   """Deletes a single \`CryptoLot\` using its globally unique id."""
   deleteCryptoLotById(
     """
@@ -30175,6 +30681,22 @@ type Mutation {
     """
     input: DeleteCreditMemoLineInput!
   ): DeleteCreditMemoLinePayload
+
+  """Deletes a single \`InvoicePayment\` using its globally unique id."""
+  deleteInvoicePaymentById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteInvoicePaymentByIdInput!
+  ): DeleteInvoicePaymentPayload
+
+  """Deletes a single \`InvoicePayment\` using a unique key."""
+  deleteInvoicePayment(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteInvoicePaymentInput!
+  ): DeleteInvoicePaymentPayload
 
   """Deletes a single \`JournalEntry\` using its globally unique id."""
   deleteJournalEntryById(
@@ -31340,6 +31862,55 @@ input InventoryTransactionInput {
   createdAt: Datetime
 }
 
+"""The output of our create \`BankDeposit\` mutation."""
+type CreateBankDepositPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`BankDeposit\` that was created by this mutation."""
+  bankDeposit: BankDeposit
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`BankDeposit\`. May be used by Relay 1."""
+  bankDepositEdge(
+    """The method to use when ordering \`BankDeposit\`."""
+    orderBy: [BankDepositOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BankDepositEdge
+}
+
+"""All input for the create \`BankDeposit\` mutation."""
+input CreateBankDepositInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`BankDeposit\` to be created by this mutation."""
+  bankDeposit: BankDepositInput!
+}
+
+"""An input for mutations affecting \`BankDeposit\`"""
+input BankDepositInput {
+  rowId: UUID
+  bookId: UUID!
+  date: String!
+  status: String
+  bankAccountId: UUID!
+  memo: String
+  total: BigFloat!
+  journalEntryId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
 """The output of our create \`PayrollConnection\` mutation."""
 type CreatePayrollConnectionPayload {
   """
@@ -31930,56 +32501,6 @@ input BillPaymentInput {
   exchangeRate: BigFloat
 }
 
-"""The output of our create \`InvoicePayment\` mutation."""
-type CreateInvoicePaymentPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`InvoicePayment\` that was created by this mutation."""
-  invoicePayment: InvoicePayment
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`InvoicePayment\`. May be used by Relay 1."""
-  invoicePaymentEdge(
-    """The method to use when ordering \`InvoicePayment\`."""
-    orderBy: [InvoicePaymentOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): InvoicePaymentEdge
-}
-
-"""All input for the create \`InvoicePayment\` mutation."""
-input CreateInvoicePaymentInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The \`InvoicePayment\` to be created by this mutation."""
-  invoicePayment: InvoicePaymentInput!
-}
-
-"""An input for mutations affecting \`InvoicePayment\`"""
-input InvoicePaymentInput {
-  rowId: UUID
-  bookId: UUID!
-  invoiceId: UUID!
-  date: String!
-  amount: BigFloat!
-  depositAccountId: UUID!
-  method: String
-  reference: String
-  journalEntryId: UUID
-  createdAt: Datetime
-  exchangeRate: BigFloat
-}
-
 """The output of our create \`CryptoLot\` mutation."""
 type CreateCryptoLotPayload {
   """
@@ -32230,6 +32751,57 @@ input CreditMemoLineInput {
   taxJurisdictionId: UUID
   sortOrder: Int
   inventoryItemId: UUID
+}
+
+"""The output of our create \`InvoicePayment\` mutation."""
+type CreateInvoicePaymentPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`InvoicePayment\` that was created by this mutation."""
+  invoicePayment: InvoicePayment
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`InvoicePayment\`. May be used by Relay 1."""
+  invoicePaymentEdge(
+    """The method to use when ordering \`InvoicePayment\`."""
+    orderBy: [InvoicePaymentOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): InvoicePaymentEdge
+}
+
+"""All input for the create \`InvoicePayment\` mutation."""
+input CreateInvoicePaymentInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`InvoicePayment\` to be created by this mutation."""
+  invoicePayment: InvoicePaymentInput!
+}
+
+"""An input for mutations affecting \`InvoicePayment\`"""
+input InvoicePaymentInput {
+  rowId: UUID
+  bookId: UUID!
+  invoiceId: UUID!
+  date: String!
+  amount: BigFloat!
+  depositAccountId: UUID!
+  method: String
+  reference: String
+  journalEntryId: UUID
+  createdAt: Datetime
+  exchangeRate: BigFloat
+  bankDepositId: UUID
 }
 
 """The output of our create \`JournalEntry\` mutation."""
@@ -34604,6 +35176,79 @@ input UpdateInventoryTransactionInput {
   patch: InventoryTransactionPatch!
 }
 
+"""The output of our update \`BankDeposit\` mutation."""
+type UpdateBankDepositPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`BankDeposit\` that was updated by this mutation."""
+  bankDeposit: BankDeposit
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`BankDeposit\`. May be used by Relay 1."""
+  bankDepositEdge(
+    """The method to use when ordering \`BankDeposit\`."""
+    orderBy: [BankDepositOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BankDepositEdge
+}
+
+"""All input for the \`updateBankDepositById\` mutation."""
+input UpdateBankDepositByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`BankDeposit\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`BankDeposit\` being updated.
+  """
+  patch: BankDepositPatch!
+}
+
+"""
+Represents an update to a \`BankDeposit\`. Fields that are set will be updated.
+"""
+input BankDepositPatch {
+  rowId: UUID
+  bookId: UUID
+  date: String
+  status: String
+  bankAccountId: UUID
+  memo: String
+  total: BigFloat
+  journalEntryId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the \`updateBankDeposit\` mutation."""
+input UpdateBankDepositInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`BankDeposit\` being updated.
+  """
+  patch: BankDepositPatch!
+}
+
 """The output of our update \`PayrollConnection\` mutation."""
 type UpdatePayrollConnectionPayload {
   """
@@ -35482,80 +36127,6 @@ input UpdateBillPaymentInput {
   patch: BillPaymentPatch!
 }
 
-"""The output of our update \`InvoicePayment\` mutation."""
-type UpdateInvoicePaymentPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`InvoicePayment\` that was updated by this mutation."""
-  invoicePayment: InvoicePayment
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`InvoicePayment\`. May be used by Relay 1."""
-  invoicePaymentEdge(
-    """The method to use when ordering \`InvoicePayment\`."""
-    orderBy: [InvoicePaymentOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): InvoicePaymentEdge
-}
-
-"""All input for the \`updateInvoicePaymentById\` mutation."""
-input UpdateInvoicePaymentByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`InvoicePayment\` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the \`InvoicePayment\` being updated.
-  """
-  patch: InvoicePaymentPatch!
-}
-
-"""
-Represents an update to a \`InvoicePayment\`. Fields that are set will be updated.
-"""
-input InvoicePaymentPatch {
-  rowId: UUID
-  bookId: UUID
-  invoiceId: UUID
-  date: String
-  amount: BigFloat
-  depositAccountId: UUID
-  method: String
-  reference: String
-  journalEntryId: UUID
-  createdAt: Datetime
-  exchangeRate: BigFloat
-}
-
-"""All input for the \`updateInvoicePayment\` mutation."""
-input UpdateInvoicePaymentInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the \`InvoicePayment\` being updated.
-  """
-  patch: InvoicePaymentPatch!
-}
-
 """The output of our update \`CryptoLot\` mutation."""
 type UpdateCryptoLotPayload {
   """
@@ -35926,6 +36497,81 @@ input UpdateCreditMemoLineInput {
   An object where the defined keys will be set on the \`CreditMemoLine\` being updated.
   """
   patch: CreditMemoLinePatch!
+}
+
+"""The output of our update \`InvoicePayment\` mutation."""
+type UpdateInvoicePaymentPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`InvoicePayment\` that was updated by this mutation."""
+  invoicePayment: InvoicePayment
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`InvoicePayment\`. May be used by Relay 1."""
+  invoicePaymentEdge(
+    """The method to use when ordering \`InvoicePayment\`."""
+    orderBy: [InvoicePaymentOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): InvoicePaymentEdge
+}
+
+"""All input for the \`updateInvoicePaymentById\` mutation."""
+input UpdateInvoicePaymentByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`InvoicePayment\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`InvoicePayment\` being updated.
+  """
+  patch: InvoicePaymentPatch!
+}
+
+"""
+Represents an update to a \`InvoicePayment\`. Fields that are set will be updated.
+"""
+input InvoicePaymentPatch {
+  rowId: UUID
+  bookId: UUID
+  invoiceId: UUID
+  date: String
+  amount: BigFloat
+  depositAccountId: UUID
+  method: String
+  reference: String
+  journalEntryId: UUID
+  createdAt: Datetime
+  exchangeRate: BigFloat
+  bankDepositId: UUID
+}
+
+"""All input for the \`updateInvoicePayment\` mutation."""
+input UpdateInvoicePaymentInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`InvoicePayment\` being updated.
+  """
+  patch: InvoicePaymentPatch!
 }
 
 """The output of our update \`JournalEntry\` mutation."""
@@ -38405,6 +39051,54 @@ input DeleteInventoryTransactionInput {
   rowId: UUID!
 }
 
+"""The output of our delete \`BankDeposit\` mutation."""
+type DeleteBankDepositPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`BankDeposit\` that was deleted by this mutation."""
+  bankDeposit: BankDeposit
+  deletedBankDepositId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`BankDeposit\`. May be used by Relay 1."""
+  bankDepositEdge(
+    """The method to use when ordering \`BankDeposit\`."""
+    orderBy: [BankDepositOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BankDepositEdge
+}
+
+"""All input for the \`deleteBankDepositById\` mutation."""
+input DeleteBankDepositByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`BankDeposit\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteBankDeposit\` mutation."""
+input DeleteBankDepositInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete \`PayrollConnection\` mutation."""
 type DeletePayrollConnectionPayload {
   """
@@ -38981,54 +39675,6 @@ input DeleteBillPaymentInput {
   rowId: UUID!
 }
 
-"""The output of our delete \`InvoicePayment\` mutation."""
-type DeleteInvoicePaymentPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`InvoicePayment\` that was deleted by this mutation."""
-  invoicePayment: InvoicePayment
-  deletedInvoicePaymentId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`InvoicePayment\`. May be used by Relay 1."""
-  invoicePaymentEdge(
-    """The method to use when ordering \`InvoicePayment\`."""
-    orderBy: [InvoicePaymentOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): InvoicePaymentEdge
-}
-
-"""All input for the \`deleteInvoicePaymentById\` mutation."""
-input DeleteInvoicePaymentByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`InvoicePayment\` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the \`deleteInvoicePayment\` mutation."""
-input DeleteInvoicePaymentInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete \`CryptoLot\` mutation."""
 type DeleteCryptoLotPayload {
   """
@@ -39261,6 +39907,54 @@ input DeleteCreditMemoLineByIdInput {
 
 """All input for the \`deleteCreditMemoLine\` mutation."""
 input DeleteCreditMemoLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`InvoicePayment\` mutation."""
+type DeleteInvoicePaymentPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`InvoicePayment\` that was deleted by this mutation."""
+  invoicePayment: InvoicePayment
+  deletedInvoicePaymentId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`InvoicePayment\`. May be used by Relay 1."""
+  invoicePaymentEdge(
+    """The method to use when ordering \`InvoicePayment\`."""
+    orderBy: [InvoicePaymentOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): InvoicePaymentEdge
+}
+
+"""All input for the \`deleteInvoicePaymentById\` mutation."""
+input DeleteInvoicePaymentByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`InvoicePayment\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteInvoicePayment\` mutation."""
+input DeleteInvoicePaymentInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -40426,6 +41120,32 @@ export const objects = {
       attachments: {
         plan() {
           return connection(resource_attachmentPgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      bankDeposit(_$root, {
+        $rowId
+      }) {
+        return resource_bank_depositPgResource.get({
+          id: $rowId
+        });
+      },
+      bankDepositById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_BankDeposit($nodeId);
+      },
+      bankDeposits: {
+        plan() {
+          return connection(resource_bank_depositPgResource.find());
         },
         args: {
           first: applyFirstArg,
@@ -41839,6 +42559,18 @@ export const objects = {
           input: applyInputToInsert
         }
       },
+      createBankDeposit: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_bank_depositPgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
       createBill: {
         plan(_, args) {
           const $insert = pgInsertSingle(resource_billPgResource);
@@ -42584,6 +43316,32 @@ export const objects = {
       deleteAttachmentById: {
         plan(_$root, args) {
           const $delete = pgDeleteSingle(resource_attachmentPgResource, specFromArgs_Attachment(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteBankDeposit: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_bank_depositPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteBankDepositById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_bank_depositPgResource, specFromArgs_BankDeposit(args));
           args.apply($delete);
           return object({
             result: $delete
@@ -44066,6 +44824,32 @@ export const objects = {
       updateAttachmentById: {
         plan(_$root, args) {
           const $update = pgUpdateSingle(resource_attachmentPgResource, specFromArgs_Attachment(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateBankDeposit: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_bank_depositPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateBankDepositById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_bank_depositPgResource, specFromArgs_BankDeposit(args));
           args.apply($update);
           return object({
             result: $update
@@ -45707,6 +46491,41 @@ export const objects = {
       totalCount: totalCountConnectionPlan
     }
   },
+  BankDeposit: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      bankAccount($record) {
+        return resource_accountPgResource.get({
+          id: $record.get("bank_account_id")
+        });
+      },
+      bankAccountId($record) {
+        return $record.get("bank_account_id");
+      },
+      book: Account_bookPlan,
+      bookId: Account_bookIdPlan,
+      createdAt: Account_createdAtPlan,
+      id($parent) {
+        const specifier = nodeIdHandler_BankDeposit.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_BankDeposit.codec.name].encode);
+      },
+      journalEntry: JournalLine_journalEntryPlan,
+      journalEntryId: JournalLine_journalEntryIdPlan,
+      rowId: JournalLineProject_rowIdPlan,
+      updatedAt: Account_updatedAtPlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of bank_depositUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_bank_depositPgResource.get(spec);
+    }
+  },
+  BankDepositConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
   Bill: {
     assertStep: assertPgClassSingleStep,
     plans: {
@@ -45918,6 +46737,24 @@ export const objects = {
       attachments: {
         plan($record) {
           const $records = resource_attachmentPgResource.find({
+            book_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      bankDeposits: {
+        plan($record) {
+          const $records = resource_bank_depositPgResource.find({
             book_id: $record.get("id")
           });
           return connection($records);
@@ -46827,6 +47664,15 @@ export const objects = {
       query: queryPlan
     }
   },
+  CreateBankDepositPayload: {
+    assertStep: assertStep,
+    plans: {
+      bankDeposit: planCreatePayloadResult,
+      bankDepositEdge: CreateBankDepositPayload_bankDepositEdgePlan,
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan
+    }
+  },
   CreateBillLinePayload: {
     assertStep: assertStep,
     plans: {
@@ -47682,6 +48528,20 @@ export const objects = {
       deletedAttachmentId($object) {
         const $record = $object.getStepForKey("result"),
           specifier = nodeIdHandler_Attachment.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      query: queryPlan
+    }
+  },
+  DeleteBankDepositPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      bankDeposit: planCreatePayloadResult,
+      bankDepositEdge: CreateBankDepositPayload_bankDepositEdgePlan,
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedBankDepositId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_BankDeposit.plan($record);
         return lambda(specifier, base64JSONNodeIdCodec.encode);
       },
       query: queryPlan
@@ -48878,6 +49738,14 @@ export const objects = {
   InvoicePayment: {
     assertStep: assertPgClassSingleStep,
     plans: {
+      bankDeposit($record) {
+        return resource_bank_depositPgResource.get({
+          id: $record.get("bank_deposit_id")
+        });
+      },
+      bankDepositId($record) {
+        return $record.get("bank_deposit_id");
+      },
       book: Account_bookPlan,
       bookId: Account_bookIdPlan,
       createdAt: Account_createdAtPlan,
@@ -49913,6 +50781,15 @@ export const objects = {
     plans: {
       attachment: planCreatePayloadResult,
       attachmentEdge: CreateAttachmentPayload_attachmentEdgePlan,
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan
+    }
+  },
+  UpdateBankDepositPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      bankDeposit: planCreatePayloadResult,
+      bankDepositEdge: CreateBankDepositPayload_bankDepositEdgePlan,
       clientMutationId: getClientMutationIdForCreatePlan,
       query: queryPlan
     }
@@ -51186,6 +52063,67 @@ export const inputObjects = {
       uploadStatus: AttachmentInput_uploadStatusApply
     }
   },
+  BankDepositCondition: {
+    plans: {
+      bookId: AccountCondition_bookIdApply,
+      rowId: AccountCondition_rowIdApply
+    }
+  },
+  BankDepositFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      bankAccount($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_accountPgResource, accountIdentifier, registryConfig.pgRelations.bankDeposit.accountByMyBankAccountId.localAttributes, registryConfig.pgRelations.bankDeposit.accountByMyBankAccountId.remoteAttributes, $where, value);
+      },
+      book($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_bookPgResource, bookIdentifier, registryConfig.pgRelations.bankDeposit.bookByMyBookId.localAttributes, registryConfig.pgRelations.bankDeposit.bookByMyBookId.remoteAttributes, $where, value);
+      },
+      bookId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("bookId", "book_id", spec_bankDeposit.attributes.book_id, queryBuilder, value);
+      },
+      journalEntry($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_journal_entryPgResource, journalEntryIdentifier, registryConfig.pgRelations.bankDeposit.journalEntryByMyJournalEntryId.localAttributes, registryConfig.pgRelations.bankDeposit.journalEntryByMyJournalEntryId.remoteAttributes, $where, value);
+      },
+      journalEntryExists($where, value) {
+        return pgConnectionFilterApplyForwardRelationExists(resource_journal_entryPgResource, journalEntryIdentifier, registryConfig.pgRelations.bankDeposit.journalEntryByMyJournalEntryId.localAttributes, registryConfig.pgRelations.bankDeposit.journalEntryByMyJournalEntryId.remoteAttributes, $where, value);
+      },
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_bankDeposit.attributes.id, queryBuilder, value);
+      }
+    }
+  },
+  BankDepositInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      bankAccountId: BankDepositInput_bankAccountIdApply,
+      bookId: TagGroupInput_bookIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      date: CreditMemoApplicationInput_dateApply,
+      journalEntryId: JournalLineInput_journalEntryIdApply,
+      memo: JournalLineInput_memoApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      status: AccountingPeriodInput_statusApply,
+      total: BankDepositInput_totalApply,
+      updatedAt: AccountMappingInput_updatedAtApply
+    }
+  },
+  BankDepositPatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      bankAccountId: BankDepositInput_bankAccountIdApply,
+      bookId: TagGroupInput_bookIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      date: CreditMemoApplicationInput_dateApply,
+      journalEntryId: JournalLineInput_journalEntryIdApply,
+      memo: JournalLineInput_memoApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      status: AccountingPeriodInput_statusApply,
+      total: BankDepositInput_totalApply,
+      updatedAt: AccountMappingInput_updatedAtApply
+    }
+  },
   BillCondition: {
     plans: {
       bookId: AccountCondition_bookIdApply,
@@ -51318,7 +52256,7 @@ export const inputObjects = {
       status: AccountingPeriodInput_statusApply,
       subtotal: PurchaseOrderInput_subtotalApply,
       taxAmount: CreditMemoInput_taxAmountApply,
-      total: PurchaseOrderInput_totalApply,
+      total: BankDepositInput_totalApply,
       updatedAt: AccountMappingInput_updatedAtApply,
       vendorId: PurchaseOrderInput_vendorIdApply
     }
@@ -51401,7 +52339,7 @@ export const inputObjects = {
       status: AccountingPeriodInput_statusApply,
       subtotal: PurchaseOrderInput_subtotalApply,
       taxAmount: CreditMemoInput_taxAmountApply,
-      total: PurchaseOrderInput_totalApply,
+      total: BankDepositInput_totalApply,
       updatedAt: AccountMappingInput_updatedAtApply,
       vendorId: PurchaseOrderInput_vendorIdApply
     }
@@ -51653,6 +52591,30 @@ export const inputObjects = {
         });
         registryConfig.pgRelations.book.attachmentsByTheirBookId.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = registryConfig.pgRelations.book.attachmentsByTheirBookId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
+      bankDeposits($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: bankDepositIdentifier,
+          alias: resource_bank_depositPgResource.name,
+          localAttributes: registryConfig.pgRelations.book.bankDepositsByTheirBookId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.book.bankDepositsByTheirBookId.remoteAttributes
+        };
+        return $rel;
+      },
+      bankDepositsExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: bankDepositIdentifier,
+          alias: resource_bank_depositPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.book.bankDepositsByTheirBookId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.book.bankDepositsByTheirBookId.remoteAttributes[i];
           $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
         });
       },
@@ -52552,6 +53514,13 @@ export const inputObjects = {
       some: AccountToManyAccountFilter_someApply
     }
   },
+  BookToManyBankDepositFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
   BookToManyBillFilter: {
     plans: {
       every: AccountToManyAccountFilter_everyApply,
@@ -53133,6 +54102,12 @@ export const inputObjects = {
       clientMutationId: applyClientMutationIdForCreate
     }
   },
+  CreateBankDepositInput: {
+    plans: {
+      bankDeposit: applyCreateFields,
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
   CreateBillInput: {
     plans: {
       bill: applyCreateFields,
@@ -53609,7 +54584,7 @@ export const inputObjects = {
       status: AccountingPeriodInput_statusApply,
       subtotal: PurchaseOrderInput_subtotalApply,
       taxAmount: CreditMemoInput_taxAmountApply,
-      total: PurchaseOrderInput_totalApply,
+      total: BankDepositInput_totalApply,
       updatedAt: AccountMappingInput_updatedAtApply
     }
   },
@@ -53699,7 +54674,7 @@ export const inputObjects = {
       status: AccountingPeriodInput_statusApply,
       subtotal: PurchaseOrderInput_subtotalApply,
       taxAmount: CreditMemoInput_taxAmountApply,
-      total: PurchaseOrderInput_totalApply,
+      total: BankDepositInput_totalApply,
       updatedAt: AccountMappingInput_updatedAtApply
     }
   },
@@ -54113,6 +55088,16 @@ export const inputObjects = {
     }
   },
   DeleteAttachmentInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteBankDepositByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteBankDepositInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate
     }
@@ -54793,7 +55778,7 @@ export const inputObjects = {
       status: AccountingPeriodInput_statusApply,
       subtotal: PurchaseOrderInput_subtotalApply,
       terms: EstimateInput_termsApply,
-      total: PurchaseOrderInput_totalApply,
+      total: BankDepositInput_totalApply,
       updatedAt: AccountMappingInput_updatedAtApply
     }
   },
@@ -54875,7 +55860,7 @@ export const inputObjects = {
       status: AccountingPeriodInput_statusApply,
       subtotal: PurchaseOrderInput_subtotalApply,
       terms: EstimateInput_termsApply,
-      total: PurchaseOrderInput_totalApply,
+      total: BankDepositInput_totalApply,
       updatedAt: AccountMappingInput_updatedAtApply
     }
   },
@@ -55333,7 +56318,7 @@ export const inputObjects = {
       subtotal: PurchaseOrderInput_subtotalApply,
       taxAmount: CreditMemoInput_taxAmountApply,
       terms: EstimateInput_termsApply,
-      total: PurchaseOrderInput_totalApply,
+      total: BankDepositInput_totalApply,
       updatedAt: AccountMappingInput_updatedAtApply
     }
   },
@@ -55433,7 +56418,7 @@ export const inputObjects = {
       subtotal: PurchaseOrderInput_subtotalApply,
       taxAmount: CreditMemoInput_taxAmountApply,
       terms: EstimateInput_termsApply,
-      total: PurchaseOrderInput_totalApply,
+      total: BankDepositInput_totalApply,
       updatedAt: AccountMappingInput_updatedAtApply
     }
   },
@@ -55447,6 +56432,12 @@ export const inputObjects = {
   InvoicePaymentFilter: {
     plans: {
       and: AccountFilter_andApply,
+      bankDeposit($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_bank_depositPgResource, bankDepositIdentifier, registryConfig.pgRelations.invoicePayment.bankDepositByMyBankDepositId.localAttributes, registryConfig.pgRelations.invoicePayment.bankDepositByMyBankDepositId.remoteAttributes, $where, value);
+      },
+      bankDepositExists($where, value) {
+        return pgConnectionFilterApplyForwardRelationExists(resource_bank_depositPgResource, bankDepositIdentifier, registryConfig.pgRelations.invoicePayment.bankDepositByMyBankDepositId.localAttributes, registryConfig.pgRelations.invoicePayment.bankDepositByMyBankDepositId.remoteAttributes, $where, value);
+      },
       book($where, value) {
         return pgConnectionFilterApplySingleRelation(resource_bookPgResource, bookIdentifier, registryConfig.pgRelations.invoicePayment.bookByMyBookId.localAttributes, registryConfig.pgRelations.invoicePayment.bookByMyBookId.remoteAttributes, $where, value);
       },
@@ -55479,6 +56470,7 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       amount: CreditMemoApplicationInput_amountApply,
+      bankDepositId: InvoicePaymentInput_bankDepositIdApply,
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
       date: CreditMemoApplicationInput_dateApply,
@@ -55495,6 +56487,7 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       amount: CreditMemoApplicationInput_amountApply,
+      bankDepositId: InvoicePaymentInput_bankDepositIdApply,
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
       date: CreditMemoApplicationInput_dateApply,
@@ -56377,7 +57370,7 @@ export const inputObjects = {
       rowId: JournalLineProjectInput_rowIdApply,
       status: AccountingPeriodInput_statusApply,
       subtotal: PurchaseOrderInput_subtotalApply,
-      total: PurchaseOrderInput_totalApply,
+      total: BankDepositInput_totalApply,
       updatedAt: AccountMappingInput_updatedAtApply,
       vendorId: PurchaseOrderInput_vendorIdApply
     }
@@ -56455,7 +57448,7 @@ export const inputObjects = {
       rowId: JournalLineProjectInput_rowIdApply,
       status: AccountingPeriodInput_statusApply,
       subtotal: PurchaseOrderInput_subtotalApply,
-      total: PurchaseOrderInput_totalApply,
+      total: BankDepositInput_totalApply,
       updatedAt: AccountMappingInput_updatedAtApply,
       vendorId: PurchaseOrderInput_vendorIdApply
     }
@@ -57324,6 +58317,18 @@ export const inputObjects = {
     }
   },
   UpdateAttachmentInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateBankDepositByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateBankDepositInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
       patch: applyCreateFields
@@ -58216,7 +59221,7 @@ export const inputObjects = {
       status: AccountingPeriodInput_statusApply,
       subtotal: PurchaseOrderInput_subtotalApply,
       taxAmount: CreditMemoInput_taxAmountApply,
-      total: PurchaseOrderInput_totalApply,
+      total: BankDepositInput_totalApply,
       updatedAt: AccountMappingInput_updatedAtApply,
       vendorId: PurchaseOrderInput_vendorIdApply
     }
@@ -58298,7 +59303,7 @@ export const inputObjects = {
       status: AccountingPeriodInput_statusApply,
       subtotal: PurchaseOrderInput_subtotalApply,
       taxAmount: CreditMemoInput_taxAmountApply,
-      total: PurchaseOrderInput_totalApply,
+      total: BankDepositInput_totalApply,
       updatedAt: AccountMappingInput_updatedAtApply,
       vendorId: PurchaseOrderInput_vendorIdApply
     }
@@ -58807,6 +59812,32 @@ export const enums = {
           direction: "DESC"
         });
       }
+    }
+  },
+  BankDepositOrderBy: {
+    values: {
+      BOOK_ID_ASC: AccountOrderBy_BOOK_ID_ASCApply,
+      BOOK_ID_DESC: AccountOrderBy_BOOK_ID_DESCApply,
+      PRIMARY_KEY_ASC(queryBuilder) {
+        bank_depositUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        bank_depositUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply
     }
   },
   BillLineOrderBy: {

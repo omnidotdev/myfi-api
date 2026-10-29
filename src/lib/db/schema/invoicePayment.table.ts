@@ -9,6 +9,7 @@ import {
 
 import { generateDefaultDate, generateDefaultId } from "lib/db/util";
 import { accountTable } from "./account.table";
+import { bankDepositTable } from "./bankDeposit.table";
 import { bookTable } from "./book.table";
 import { invoiceTable } from "./invoice.table";
 import { journalEntryTable } from "./journalEntry.table";
@@ -39,6 +40,12 @@ export const invoicePaymentTable = pgTable(
       .references(() => accountTable.id),
     method: text(),
     reference: text(),
+    // set once this payment is grouped into a bank deposit; null while the
+    // payment is still sitting in Undeposited Funds, waiting to be deposited
+    bankDepositId: uuid("bank_deposit_id").references(
+      () => bankDepositTable.id,
+      { onDelete: "set null" },
+    ),
     journalEntryId: uuid("journal_entry_id").references(
       () => journalEntryTable.id,
       { onDelete: "set null" },

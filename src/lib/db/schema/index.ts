@@ -3,6 +3,7 @@ export * from "./accountingPeriod.table";
 export * from "./accountMapping.table";
 export * from "./amortizationEntry.table";
 export * from "./attachment.table";
+export * from "./bankDeposit.table";
 export * from "./bill.table";
 export * from "./billLine.table";
 export * from "./billPayment.table";

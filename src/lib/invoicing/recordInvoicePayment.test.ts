@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, mock, test } from "bun:test";
 
-import { asc, eq } from "drizzle-orm";
+import { and, asc, eq } from "drizzle-orm";
 
 import {
   accountTable,
@@ -243,6 +243,63 @@ describe("recordInvoicePayment", () => {
       .from(invoiceTable)
       .where(eq(invoiceTable.id, invoiceId));
     expect(invoice).toMatchObject({ amountPaid: "70.0000", status: "partial" });
+  });
+
+  test("holds the receipt in Undeposited Funds when toUndepositedFunds is set", async () => {
+    const { bookId, invoiceId, ar } = await seedPostedInvoice(
+      "org_pay_undeposited",
+      100,
+      "1008",
+    );
+
+    const result = await recordInvoicePayment({
+      invoiceId,
+      bookId,
+      toUndepositedFunds: true,
+      date: "2026-09-10",
+      amount: 100,
+    });
+
+    // the undeposited-funds account was resolved/created for the book
+    const [uf] = await harness.db
+      .select()
+      .from(accountTable)
+      .where(
+        and(
+          eq(accountTable.bookId, bookId),
+          eq(accountTable.subType, "undeposited_funds"),
+        ),
+      );
+    expect(uf).toBeDefined();
+    expect(uf?.type).toBe("asset");
+
+    // the payment debits the undeposited-funds account, not a bank account, and
+    // is not yet grouped into a deposit
+    const [payment] = await harness.db
+      .select()
+      .from(invoicePaymentTable)
+      .where(eq(invoicePaymentTable.id, result.paymentId));
+    expect(payment?.depositAccountId).toBe(uf!.id);
+    expect(payment?.bankDepositId).toBeNull();
+
+    const lines = await harness.db
+      .select({
+        accountId: journalLineTable.accountId,
+        debit: journalLineTable.debit,
+        credit: journalLineTable.credit,
+      })
+      .from(journalLineTable)
+      .where(eq(journalLineTable.journalEntryId, result.journalEntryId));
+    const byAccount = (id: string) => lines.find((l) => l.accountId === id);
+    expect(byAccount(uf!.id)).toMatchObject({
+      debit: "100.0000",
+      credit: "0.0000",
+    });
+    expect(byAccount(ar.id)).toMatchObject({
+      debit: "0.0000",
+      credit: "100.0000",
+    });
+    expect(result.invoiceStatus).toBe("paid");
   });
 
   test("rejects a non-positive amount", async () => {

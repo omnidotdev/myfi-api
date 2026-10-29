@@ -1,5 +1,7 @@
 import { and, asc, eq } from "drizzle-orm";
 
+import { resolveFxAccount } from "lib/accounting/fxAccount";
+import { resolveUndepositedFundsAccount } from "lib/accounting/undepositedFundsAccount";
 import { dbPool } from "lib/db/db";
 import {
   accountTable,
@@ -8,8 +10,7 @@ import {
   journalEntryTable,
   journalLineTable,
 } from "lib/db/schema";
-import { resolveFxAccount } from "lib/accounting/fxAccount";
-import { fromUnits, MONEY_SCALE, toUnits } from "./invoicePosting";
+import { MONEY_SCALE, fromUnits, toUnits } from "./invoicePosting";
 
 import type { InferInsertModel } from "drizzle-orm";
 
@@ -22,8 +23,17 @@ interface RecordInvoicePaymentOptions {
   bookId: string;
   /** Payment amount in the invoice's currency */
   amount: number;
-  /** Cash or bank account the received funds debit */
-  depositAccountId: string;
+  /**
+   * Cash or bank account the received funds debit. Required unless
+   * toUndepositedFunds is set, in which case it is ignored
+   */
+  depositAccountId?: string;
+  /**
+   * Hold the receipt in the book's Undeposited Funds account instead of
+   * depositing it straight to a bank account, so a later bank deposit can group
+   * it with other receipts. The account is resolved (created on first use)
+   */
+  toUndepositedFunds?: boolean;
   date: string;
   /**
    * Home-currency units per one unit of the invoice currency at the payment
@@ -57,6 +67,7 @@ export const recordInvoicePayment = async (
     bookId,
     amount,
     depositAccountId,
+    toUndepositedFunds,
     date,
     exchangeRate,
     method,
@@ -65,6 +76,9 @@ export const recordInvoicePayment = async (
 
   if (toUnits(amount) <= 0) {
     throw new Error("Payment amount must be positive");
+  }
+  if (!toUndepositedFunds && !depositAccountId) {
+    throw new Error("A deposit account is required");
   }
 
   const [invoice] = await dbPool
@@ -89,18 +103,22 @@ export const recordInvoicePayment = async (
     throw new Error("Payment exceeds the balance due");
   }
 
-  const [depositAccount] = await dbPool
-    .select({ id: accountTable.id })
-    .from(accountTable)
-    .where(
-      and(
-        eq(accountTable.id, depositAccountId),
-        eq(accountTable.bookId, bookId),
-      ),
-    )
-    .limit(1);
-  if (!depositAccount) {
-    throw new Error("Deposit account not found for this book");
+  // When depositing straight to a bank/cash account, verify it belongs to the
+  // book. For undeposited funds the account is resolved inside the transaction
+  if (!toUndepositedFunds) {
+    const [depositAccount] = await dbPool
+      .select({ id: accountTable.id })
+      .from(accountTable)
+      .where(
+        and(
+          eq(accountTable.id, depositAccountId as string),
+          eq(accountTable.bookId, bookId),
+        ),
+      )
+      .limit(1);
+    if (!depositAccount) {
+      throw new Error("Deposit account not found for this book");
+    }
   }
 
   const [arAccount] = await dbPool
@@ -161,6 +179,12 @@ export const recordInvoicePayment = async (
     const arHomeUnits = Math.round(amountUnits * invoiceRate);
     const fxUnits = arHomeUnits - cashHomeUnits;
 
+    // The received funds debit either a chosen bank/cash account or the book's
+    // Undeposited Funds account (resolved here, created on first use)
+    const debitAccountId = toUndepositedFunds
+      ? await resolveUndepositedFundsAccount(tx, bookId)
+      : (depositAccountId as string);
+
     const [paymentRow] = await tx
       .insert(invoicePaymentTable)
       .values({
@@ -169,7 +193,7 @@ export const recordInvoicePayment = async (
         date,
         amount: amount.toFixed(4),
         exchangeRate: paymentRate.toFixed(8),
-        depositAccountId,
+        depositAccountId: debitAccountId,
         method: method ?? null,
         reference: reference ?? null,
       } satisfies InferInsertModel<typeof invoicePaymentTable>)
@@ -194,7 +218,7 @@ export const recordInvoicePayment = async (
 
     await tx.insert(journalLineTable).values({
       journalEntryId: entryRow.id,
-      accountId: depositAccountId,
+      accountId: debitAccountId,
       debit: fromUnits(cashHomeUnits).toFixed(4),
       credit: "0.0000",
     } satisfies InferInsertModel<typeof journalLineTable>);

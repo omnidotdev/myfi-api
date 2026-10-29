@@ -71,6 +71,9 @@ type Query implements Node {
   """Get a single `InventoryTransaction`."""
   inventoryTransaction(rowId: UUID!): InventoryTransaction
 
+  """Get a single `BankDeposit`."""
+  bankDeposit(rowId: UUID!): BankDeposit
+
   """Get a single `PayrollConnection`."""
   payrollConnection(rowId: UUID!): PayrollConnection
 
@@ -107,9 +110,6 @@ type Query implements Node {
   """Get a single `BillPayment`."""
   billPayment(rowId: UUID!): BillPayment
 
-  """Get a single `InvoicePayment`."""
-  invoicePayment(rowId: UUID!): InvoicePayment
-
   """Get a single `CryptoLot`."""
   cryptoLot(rowId: UUID!): CryptoLot
 
@@ -124,6 +124,9 @@ type Query implements Node {
 
   """Get a single `CreditMemoLine`."""
   creditMemoLine(rowId: UUID!): CreditMemoLine
+
+  """Get a single `InvoicePayment`."""
+  invoicePayment(rowId: UUID!): InvoicePayment
 
   """Get a single `JournalEntry`."""
   journalEntry(rowId: UUID!): JournalEntry
@@ -328,6 +331,14 @@ type Query implements Node {
     id: ID!
   ): InventoryTransaction
 
+  """Reads a single `BankDeposit` using its globally unique `ID`."""
+  bankDepositById(
+    """
+    The globally unique `ID` to be used in selecting a single `BankDeposit`.
+    """
+    id: ID!
+  ): BankDeposit
+
   """Reads a single `PayrollConnection` using its globally unique `ID`."""
   payrollConnectionById(
     """
@@ -422,14 +433,6 @@ type Query implements Node {
     id: ID!
   ): BillPayment
 
-  """Reads a single `InvoicePayment` using its globally unique `ID`."""
-  invoicePaymentById(
-    """
-    The globally unique `ID` to be used in selecting a single `InvoicePayment`.
-    """
-    id: ID!
-  ): InvoicePayment
-
   """Reads a single `CryptoLot` using its globally unique `ID`."""
   cryptoLotById(
     """The globally unique `ID` to be used in selecting a single `CryptoLot`."""
@@ -467,6 +470,14 @@ type Query implements Node {
     """
     id: ID!
   ): CreditMemoLine
+
+  """Reads a single `InvoicePayment` using its globally unique `ID`."""
+  invoicePaymentById(
+    """
+    The globally unique `ID` to be used in selecting a single `InvoicePayment`.
+    """
+    id: ID!
+  ): InvoicePayment
 
   """Reads a single `JournalEntry` using its globally unique `ID`."""
   journalEntryById(
@@ -1230,6 +1241,40 @@ type Query implements Node {
     orderBy: [InventoryTransactionOrderBy!] = [PRIMARY_KEY_ASC]
   ): InventoryTransactionConnection
 
+  """Reads and enables pagination through a set of `BankDeposit`."""
+  bankDeposits(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: BankDepositCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: BankDepositFilter
+
+    """The method to use when ordering `BankDeposit`."""
+    orderBy: [BankDepositOrderBy!] = [PRIMARY_KEY_ASC]
+  ): BankDepositConnection
+
   """Reads and enables pagination through a set of `PayrollConnection`."""
   payrollConnections(
     """Only read the first `n` values of the set."""
@@ -1642,40 +1687,6 @@ type Query implements Node {
     orderBy: [BillPaymentOrderBy!] = [PRIMARY_KEY_ASC]
   ): BillPaymentConnection
 
-  """Reads and enables pagination through a set of `InvoicePayment`."""
-  invoicePayments(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: InvoicePaymentCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: InvoicePaymentFilter
-
-    """The method to use when ordering `InvoicePayment`."""
-    orderBy: [InvoicePaymentOrderBy!] = [PRIMARY_KEY_ASC]
-  ): InvoicePaymentConnection
-
   """Reads and enables pagination through a set of `CryptoLot`."""
   cryptoLots(
     """Only read the first `n` values of the set."""
@@ -1845,6 +1856,40 @@ type Query implements Node {
     """The method to use when ordering `CreditMemoLine`."""
     orderBy: [CreditMemoLineOrderBy!] = [PRIMARY_KEY_ASC]
   ): CreditMemoLineConnection
+
+  """Reads and enables pagination through a set of `InvoicePayment`."""
+  invoicePayments(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: InvoicePaymentCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: InvoicePaymentFilter
+
+    """The method to use when ordering `InvoicePayment`."""
+    orderBy: [InvoicePaymentOrderBy!] = [PRIMARY_KEY_ASC]
+  ): InvoicePaymentConnection
 
   """Reads and enables pagination through a set of `JournalEntry`."""
   journalEntries(
@@ -2864,6 +2909,7 @@ enum AccountType {
 enum AccountSubType {
   cash
   bank
+  undeposited_funds
   accounts_receivable
   inventory
   crypto_wallet
@@ -4217,6 +4263,40 @@ type Book implements Node {
     """The method to use when ordering `RecurringInvoice`."""
     orderBy: [RecurringInvoiceOrderBy!] = [PRIMARY_KEY_ASC]
   ): RecurringInvoiceConnection!
+
+  """Reads and enables pagination through a set of `BankDeposit`."""
+  bankDeposits(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: BankDepositCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: BankDepositFilter
+
+    """The method to use when ordering `BankDeposit`."""
+    orderBy: [BankDepositOrderBy!] = [PRIMARY_KEY_ASC]
+  ): BankDepositConnection!
 }
 
 """A connection to a list of `Account` values."""
@@ -4729,6 +4809,12 @@ input BookFilter {
 
   """Some related `recurringInvoices` exist."""
   recurringInvoicesExist: Boolean
+
+  """Filter by the object’s `bankDeposits` relation."""
+  bankDeposits: BookToManyBankDepositFilter
+
+  """Some related `bankDeposits` exist."""
+  bankDepositsExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [BookFilter!]
@@ -7468,6 +7554,12 @@ input InvoicePaymentFilter {
   """Filter by the object’s `invoiceId` field."""
   invoiceId: UUIDFilter
 
+  """Filter by the object’s `bankDeposit` relation."""
+  bankDeposit: BankDepositFilter
+
+  """A related `bankDeposit` exists."""
+  bankDepositExists: Boolean
+
   """Filter by the object’s `book` relation."""
   book: BookFilter
 
@@ -7491,6 +7583,38 @@ input InvoicePaymentFilter {
 
   """Negates the expression."""
   not: InvoicePaymentFilter
+}
+
+"""
+A filter to be used against `BankDeposit` object types. All fields are combined with a logical ‘and.’
+"""
+input BankDepositFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `bookId` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s `bankAccount` relation."""
+  bankAccount: AccountFilter
+
+  """Filter by the object’s `book` relation."""
+  book: BookFilter
+
+  """Filter by the object’s `journalEntry` relation."""
+  journalEntry: JournalEntryFilter
+
+  """A related `journalEntry` exists."""
+  journalEntryExists: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [BankDepositFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [BankDepositFilter!]
+
+  """Negates the expression."""
+  not: BankDepositFilter
 }
 
 """
@@ -8336,6 +8460,26 @@ input BookToManyRecurringInvoiceFilter {
   No related `RecurringInvoice` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
   none: RecurringInvoiceFilter
+}
+
+"""
+A filter to be used against many `BankDeposit` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyBankDepositFilter {
+  """
+  Every related `BankDeposit` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: BankDepositFilter
+
+  """
+  Some related `BankDeposit` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: BankDepositFilter
+
+  """
+  No related `BankDeposit` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: BankDepositFilter
 }
 
 """
@@ -12653,6 +12797,10 @@ type InvoicePayment implements Node {
   journalEntryId: UUID
   createdAt: Datetime
   exchangeRate: BigFloat!
+  bankDepositId: UUID
+
+  """Reads a single `BankDeposit` that is related to this `InvoicePayment`."""
+  bankDeposit: BankDeposit
 
   """Reads a single `Book` that is related to this `InvoicePayment`."""
   book: Book
@@ -12666,6 +12814,32 @@ type InvoicePayment implements Node {
   """
   Reads a single `JournalEntry` that is related to this `InvoicePayment`.
   """
+  journalEntry: JournalEntry
+}
+
+type BankDeposit implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  date: String!
+  status: String!
+  bankAccountId: UUID!
+  memo: String
+  total: BigFloat!
+  journalEntryId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """Reads a single `Account` that is related to this `BankDeposit`."""
+  bankAccount: Account
+
+  """Reads a single `Book` that is related to this `BankDeposit`."""
+  book: Book
+
+  """Reads a single `JournalEntry` that is related to this `BankDeposit`."""
   journalEntry: JournalEntry
 }
 
@@ -13828,6 +14002,55 @@ enum ProjectOrderBy {
   STATUS_DESC
 }
 
+"""A connection to a list of `BankDeposit` values."""
+type BankDepositConnection {
+  """A list of `BankDeposit` objects."""
+  nodes: [BankDeposit]!
+
+  """
+  A list of edges which contains the `BankDeposit` and cursor to aid in pagination.
+  """
+  edges: [BankDepositEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `BankDeposit` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `BankDeposit` edge in the connection."""
+type BankDepositEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `BankDeposit` at the end of the edge."""
+  node: BankDeposit
+}
+
+"""
+A condition to be used against `BankDeposit` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input BankDepositCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `bookId` field."""
+  bookId: UUID
+}
+
+"""Methods to use when ordering `BankDeposit`."""
+enum BankDepositOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+}
+
 type _DrizzleMigration implements Node {
   """
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
@@ -14185,6 +14408,14 @@ type Mutation {
     input: CreateInventoryTransactionInput!
   ): CreateInventoryTransactionPayload
 
+  """Creates a single `BankDeposit`."""
+  createBankDeposit(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateBankDepositInput!
+  ): CreateBankDepositPayload
+
   """Creates a single `PayrollConnection`."""
   createPayrollConnection(
     """
@@ -14281,14 +14512,6 @@ type Mutation {
     input: CreateBillPaymentInput!
   ): CreateBillPaymentPayload
 
-  """Creates a single `InvoicePayment`."""
-  createInvoicePayment(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateInvoicePaymentInput!
-  ): CreateInvoicePaymentPayload
-
   """Creates a single `CryptoLot`."""
   createCryptoLot(
     """
@@ -14328,6 +14551,14 @@ type Mutation {
     """
     input: CreateCreditMemoLineInput!
   ): CreateCreditMemoLinePayload
+
+  """Creates a single `InvoicePayment`."""
+  createInvoicePayment(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateInvoicePaymentInput!
+  ): CreateInvoicePaymentPayload
 
   """Creates a single `JournalEntry`."""
   createJournalEntry(
@@ -14822,6 +15053,24 @@ type Mutation {
   ): UpdateInventoryTransactionPayload
 
   """
+  Updates a single `BankDeposit` using its globally unique id and a patch.
+  """
+  updateBankDepositById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateBankDepositByIdInput!
+  ): UpdateBankDepositPayload
+
+  """Updates a single `BankDeposit` using a unique key and a patch."""
+  updateBankDeposit(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateBankDepositInput!
+  ): UpdateBankDepositPayload
+
+  """
   Updates a single `PayrollConnection` using its globally unique id and a patch.
   """
   updatePayrollConnectionById(
@@ -15037,24 +15286,6 @@ type Mutation {
     input: UpdateBillPaymentInput!
   ): UpdateBillPaymentPayload
 
-  """
-  Updates a single `InvoicePayment` using its globally unique id and a patch.
-  """
-  updateInvoicePaymentById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateInvoicePaymentByIdInput!
-  ): UpdateInvoicePaymentPayload
-
-  """Updates a single `InvoicePayment` using a unique key and a patch."""
-  updateInvoicePayment(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateInvoicePaymentInput!
-  ): UpdateInvoicePaymentPayload
-
   """Updates a single `CryptoLot` using its globally unique id and a patch."""
   updateCryptoLotById(
     """
@@ -15142,6 +15373,24 @@ type Mutation {
     """
     input: UpdateCreditMemoLineInput!
   ): UpdateCreditMemoLinePayload
+
+  """
+  Updates a single `InvoicePayment` using its globally unique id and a patch.
+  """
+  updateInvoicePaymentById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateInvoicePaymentByIdInput!
+  ): UpdateInvoicePaymentPayload
+
+  """Updates a single `InvoicePayment` using a unique key and a patch."""
+  updateInvoicePayment(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateInvoicePaymentInput!
+  ): UpdateInvoicePaymentPayload
 
   """
   Updates a single `JournalEntry` using its globally unique id and a patch.
@@ -15793,6 +16042,22 @@ type Mutation {
     input: DeleteInventoryTransactionInput!
   ): DeleteInventoryTransactionPayload
 
+  """Deletes a single `BankDeposit` using its globally unique id."""
+  deleteBankDepositById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteBankDepositByIdInput!
+  ): DeleteBankDepositPayload
+
+  """Deletes a single `BankDeposit` using a unique key."""
+  deleteBankDeposit(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteBankDepositInput!
+  ): DeleteBankDepositPayload
+
   """Deletes a single `PayrollConnection` using its globally unique id."""
   deletePayrollConnectionById(
     """
@@ -15989,22 +16254,6 @@ type Mutation {
     input: DeleteBillPaymentInput!
   ): DeleteBillPaymentPayload
 
-  """Deletes a single `InvoicePayment` using its globally unique id."""
-  deleteInvoicePaymentById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteInvoicePaymentByIdInput!
-  ): DeleteInvoicePaymentPayload
-
-  """Deletes a single `InvoicePayment` using a unique key."""
-  deleteInvoicePayment(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteInvoicePaymentInput!
-  ): DeleteInvoicePaymentPayload
-
   """Deletes a single `CryptoLot` using its globally unique id."""
   deleteCryptoLotById(
     """
@@ -16084,6 +16333,22 @@ type Mutation {
     """
     input: DeleteCreditMemoLineInput!
   ): DeleteCreditMemoLinePayload
+
+  """Deletes a single `InvoicePayment` using its globally unique id."""
+  deleteInvoicePaymentById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteInvoicePaymentByIdInput!
+  ): DeleteInvoicePaymentPayload
+
+  """Deletes a single `InvoicePayment` using a unique key."""
+  deleteInvoicePayment(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteInvoicePaymentInput!
+  ): DeleteInvoicePaymentPayload
 
   """Deletes a single `JournalEntry` using its globally unique id."""
   deleteJournalEntryById(
@@ -17249,6 +17514,55 @@ input InventoryTransactionInput {
   createdAt: Datetime
 }
 
+"""The output of our create `BankDeposit` mutation."""
+type CreateBankDepositPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `BankDeposit` that was created by this mutation."""
+  bankDeposit: BankDeposit
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `BankDeposit`. May be used by Relay 1."""
+  bankDepositEdge(
+    """The method to use when ordering `BankDeposit`."""
+    orderBy: [BankDepositOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BankDepositEdge
+}
+
+"""All input for the create `BankDeposit` mutation."""
+input CreateBankDepositInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `BankDeposit` to be created by this mutation."""
+  bankDeposit: BankDepositInput!
+}
+
+"""An input for mutations affecting `BankDeposit`"""
+input BankDepositInput {
+  rowId: UUID
+  bookId: UUID!
+  date: String!
+  status: String
+  bankAccountId: UUID!
+  memo: String
+  total: BigFloat!
+  journalEntryId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
 """The output of our create `PayrollConnection` mutation."""
 type CreatePayrollConnectionPayload {
   """
@@ -17839,56 +18153,6 @@ input BillPaymentInput {
   exchangeRate: BigFloat
 }
 
-"""The output of our create `InvoicePayment` mutation."""
-type CreateInvoicePaymentPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `InvoicePayment` that was created by this mutation."""
-  invoicePayment: InvoicePayment
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `InvoicePayment`. May be used by Relay 1."""
-  invoicePaymentEdge(
-    """The method to use when ordering `InvoicePayment`."""
-    orderBy: [InvoicePaymentOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): InvoicePaymentEdge
-}
-
-"""All input for the create `InvoicePayment` mutation."""
-input CreateInvoicePaymentInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `InvoicePayment` to be created by this mutation."""
-  invoicePayment: InvoicePaymentInput!
-}
-
-"""An input for mutations affecting `InvoicePayment`"""
-input InvoicePaymentInput {
-  rowId: UUID
-  bookId: UUID!
-  invoiceId: UUID!
-  date: String!
-  amount: BigFloat!
-  depositAccountId: UUID!
-  method: String
-  reference: String
-  journalEntryId: UUID
-  createdAt: Datetime
-  exchangeRate: BigFloat
-}
-
 """The output of our create `CryptoLot` mutation."""
 type CreateCryptoLotPayload {
   """
@@ -18139,6 +18403,57 @@ input CreditMemoLineInput {
   taxJurisdictionId: UUID
   sortOrder: Int
   inventoryItemId: UUID
+}
+
+"""The output of our create `InvoicePayment` mutation."""
+type CreateInvoicePaymentPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `InvoicePayment` that was created by this mutation."""
+  invoicePayment: InvoicePayment
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `InvoicePayment`. May be used by Relay 1."""
+  invoicePaymentEdge(
+    """The method to use when ordering `InvoicePayment`."""
+    orderBy: [InvoicePaymentOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): InvoicePaymentEdge
+}
+
+"""All input for the create `InvoicePayment` mutation."""
+input CreateInvoicePaymentInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `InvoicePayment` to be created by this mutation."""
+  invoicePayment: InvoicePaymentInput!
+}
+
+"""An input for mutations affecting `InvoicePayment`"""
+input InvoicePaymentInput {
+  rowId: UUID
+  bookId: UUID!
+  invoiceId: UUID!
+  date: String!
+  amount: BigFloat!
+  depositAccountId: UUID!
+  method: String
+  reference: String
+  journalEntryId: UUID
+  createdAt: Datetime
+  exchangeRate: BigFloat
+  bankDepositId: UUID
 }
 
 """The output of our create `JournalEntry` mutation."""
@@ -20513,6 +20828,79 @@ input UpdateInventoryTransactionInput {
   patch: InventoryTransactionPatch!
 }
 
+"""The output of our update `BankDeposit` mutation."""
+type UpdateBankDepositPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `BankDeposit` that was updated by this mutation."""
+  bankDeposit: BankDeposit
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `BankDeposit`. May be used by Relay 1."""
+  bankDepositEdge(
+    """The method to use when ordering `BankDeposit`."""
+    orderBy: [BankDepositOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BankDepositEdge
+}
+
+"""All input for the `updateBankDepositById` mutation."""
+input UpdateBankDepositByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `BankDeposit` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `BankDeposit` being updated.
+  """
+  patch: BankDepositPatch!
+}
+
+"""
+Represents an update to a `BankDeposit`. Fields that are set will be updated.
+"""
+input BankDepositPatch {
+  rowId: UUID
+  bookId: UUID
+  date: String
+  status: String
+  bankAccountId: UUID
+  memo: String
+  total: BigFloat
+  journalEntryId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the `updateBankDeposit` mutation."""
+input UpdateBankDepositInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `BankDeposit` being updated.
+  """
+  patch: BankDepositPatch!
+}
+
 """The output of our update `PayrollConnection` mutation."""
 type UpdatePayrollConnectionPayload {
   """
@@ -21391,80 +21779,6 @@ input UpdateBillPaymentInput {
   patch: BillPaymentPatch!
 }
 
-"""The output of our update `InvoicePayment` mutation."""
-type UpdateInvoicePaymentPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `InvoicePayment` that was updated by this mutation."""
-  invoicePayment: InvoicePayment
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `InvoicePayment`. May be used by Relay 1."""
-  invoicePaymentEdge(
-    """The method to use when ordering `InvoicePayment`."""
-    orderBy: [InvoicePaymentOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): InvoicePaymentEdge
-}
-
-"""All input for the `updateInvoicePaymentById` mutation."""
-input UpdateInvoicePaymentByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `InvoicePayment` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the `InvoicePayment` being updated.
-  """
-  patch: InvoicePaymentPatch!
-}
-
-"""
-Represents an update to a `InvoicePayment`. Fields that are set will be updated.
-"""
-input InvoicePaymentPatch {
-  rowId: UUID
-  bookId: UUID
-  invoiceId: UUID
-  date: String
-  amount: BigFloat
-  depositAccountId: UUID
-  method: String
-  reference: String
-  journalEntryId: UUID
-  createdAt: Datetime
-  exchangeRate: BigFloat
-}
-
-"""All input for the `updateInvoicePayment` mutation."""
-input UpdateInvoicePaymentInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the `InvoicePayment` being updated.
-  """
-  patch: InvoicePaymentPatch!
-}
-
 """The output of our update `CryptoLot` mutation."""
 type UpdateCryptoLotPayload {
   """
@@ -21835,6 +22149,81 @@ input UpdateCreditMemoLineInput {
   An object where the defined keys will be set on the `CreditMemoLine` being updated.
   """
   patch: CreditMemoLinePatch!
+}
+
+"""The output of our update `InvoicePayment` mutation."""
+type UpdateInvoicePaymentPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `InvoicePayment` that was updated by this mutation."""
+  invoicePayment: InvoicePayment
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `InvoicePayment`. May be used by Relay 1."""
+  invoicePaymentEdge(
+    """The method to use when ordering `InvoicePayment`."""
+    orderBy: [InvoicePaymentOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): InvoicePaymentEdge
+}
+
+"""All input for the `updateInvoicePaymentById` mutation."""
+input UpdateInvoicePaymentByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `InvoicePayment` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `InvoicePayment` being updated.
+  """
+  patch: InvoicePaymentPatch!
+}
+
+"""
+Represents an update to a `InvoicePayment`. Fields that are set will be updated.
+"""
+input InvoicePaymentPatch {
+  rowId: UUID
+  bookId: UUID
+  invoiceId: UUID
+  date: String
+  amount: BigFloat
+  depositAccountId: UUID
+  method: String
+  reference: String
+  journalEntryId: UUID
+  createdAt: Datetime
+  exchangeRate: BigFloat
+  bankDepositId: UUID
+}
+
+"""All input for the `updateInvoicePayment` mutation."""
+input UpdateInvoicePaymentInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `InvoicePayment` being updated.
+  """
+  patch: InvoicePaymentPatch!
 }
 
 """The output of our update `JournalEntry` mutation."""
@@ -24314,6 +24703,54 @@ input DeleteInventoryTransactionInput {
   rowId: UUID!
 }
 
+"""The output of our delete `BankDeposit` mutation."""
+type DeleteBankDepositPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `BankDeposit` that was deleted by this mutation."""
+  bankDeposit: BankDeposit
+  deletedBankDepositId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `BankDeposit`. May be used by Relay 1."""
+  bankDepositEdge(
+    """The method to use when ordering `BankDeposit`."""
+    orderBy: [BankDepositOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BankDepositEdge
+}
+
+"""All input for the `deleteBankDepositById` mutation."""
+input DeleteBankDepositByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `BankDeposit` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteBankDeposit` mutation."""
+input DeleteBankDepositInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete `PayrollConnection` mutation."""
 type DeletePayrollConnectionPayload {
   """
@@ -24890,54 +25327,6 @@ input DeleteBillPaymentInput {
   rowId: UUID!
 }
 
-"""The output of our delete `InvoicePayment` mutation."""
-type DeleteInvoicePaymentPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `InvoicePayment` that was deleted by this mutation."""
-  invoicePayment: InvoicePayment
-  deletedInvoicePaymentId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `InvoicePayment`. May be used by Relay 1."""
-  invoicePaymentEdge(
-    """The method to use when ordering `InvoicePayment`."""
-    orderBy: [InvoicePaymentOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): InvoicePaymentEdge
-}
-
-"""All input for the `deleteInvoicePaymentById` mutation."""
-input DeleteInvoicePaymentByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `InvoicePayment` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the `deleteInvoicePayment` mutation."""
-input DeleteInvoicePaymentInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete `CryptoLot` mutation."""
 type DeleteCryptoLotPayload {
   """
@@ -25170,6 +25559,54 @@ input DeleteCreditMemoLineByIdInput {
 
 """All input for the `deleteCreditMemoLine` mutation."""
 input DeleteCreditMemoLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `InvoicePayment` mutation."""
+type DeleteInvoicePaymentPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `InvoicePayment` that was deleted by this mutation."""
+  invoicePayment: InvoicePayment
+  deletedInvoicePaymentId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `InvoicePayment`. May be used by Relay 1."""
+  invoicePaymentEdge(
+    """The method to use when ordering `InvoicePayment`."""
+    orderBy: [InvoicePaymentOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): InvoicePaymentEdge
+}
+
+"""All input for the `deleteInvoicePaymentById` mutation."""
+input DeleteInvoicePaymentByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `InvoicePayment` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteInvoicePayment` mutation."""
+input DeleteInvoicePaymentInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.

@@ -25,6 +25,7 @@ export const accountTypeEnum = pgEnum("account_type", [
 export const accountSubTypeEnum = pgEnum("account_sub_type", [
   "cash",
   "bank",
+  "undeposited_funds",
   "accounts_receivable",
   "inventory",
   "crypto_wallet",
