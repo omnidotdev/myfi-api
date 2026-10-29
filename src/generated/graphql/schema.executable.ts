@@ -1983,6 +1983,126 @@ const spec_estimateLine = {
   executor: executor
 };
 const estimateLineCodec = recordCodec(spec_estimateLine);
+const purchaseOrderLineIdentifier = sql.identifier("public", "purchase_order_line");
+const spec_purchaseOrderLine = {
+  name: "purchaseOrderLine",
+  identifier: purchaseOrderLineIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    purchase_order_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    description: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    quantity: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    unit_price: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    amount: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    expense_account_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    tax_jurisdiction_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    sort_order: {
+      codec: TYPES.int,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "18509",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "purchase_order_line"
+    }
+  },
+  executor: executor
+};
+const purchaseOrderLineCodec = recordCodec(spec_purchaseOrderLine);
 const categorizationRuleSplitIdentifier = sql.identifier("public", "categorization_rule_split");
 const spec_categorizationRuleSplit = {
   name: "categorizationRuleSplit",
@@ -3299,6 +3419,154 @@ const spec_cryptoLot = {
   executor: executor
 };
 const cryptoLotCodec = recordCodec(spec_cryptoLot);
+const purchaseOrderIdentifier = sql.identifier("public", "purchase_order");
+const spec_purchaseOrder = {
+  name: "purchaseOrder",
+  identifier: purchaseOrderIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    vendor_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    number: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    status: {
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    date: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    subtotal: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    total: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    memo: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    converted_bill_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "18488",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "purchase_order"
+    }
+  },
+  executor: executor
+};
+const purchaseOrderCodec = recordCodec(spec_purchaseOrder);
 const connectedAccountIdentifier = sql.identifier("public", "connected_account");
 const spec_connectedAccount = {
   name: "connectedAccount",
@@ -7659,6 +7927,29 @@ const estimate_line_resourceOptionsConfig = {
   },
   uniques: estimate_lineUniques
 };
+const purchase_order_lineUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const purchase_order_line_resourceOptionsConfig = {
+  executor: executor,
+  name: "purchase_order_line",
+  identifier: "main.public.purchase_order_line",
+  from: purchaseOrderLineIdentifier,
+  codec: purchaseOrderLineCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "purchase_order_line"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: purchase_order_lineUniques
+};
 const categorization_rule_splitUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -7888,6 +8179,29 @@ const crypto_lot_resourceOptionsConfig = {
     canDelete: true
   },
   uniques: crypto_lotUniques
+};
+const purchase_orderUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const purchase_order_resourceOptionsConfig = {
+  executor: executor,
+  name: "purchase_order",
+  identifier: "main.public.purchase_order",
+  from: purchaseOrderIdentifier,
+  codec: purchaseOrderCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "purchase_order"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: purchase_orderUniques
 };
 const connected_accountUniques = [{
   attributes: ["id"],
@@ -8453,6 +8767,7 @@ const registryConfig = {
     inventoryTransaction: inventoryTransactionCodec,
     payrollConnection: payrollConnectionCodec,
     estimateLine: estimateLineCodec,
+    purchaseOrderLine: purchaseOrderLineCodec,
     categorizationRuleSplit: categorizationRuleSplitCodec,
     reconciliationStatement: reconciliationStatementCodec,
     rdExpense: rdExpenseCodec,
@@ -8463,6 +8778,7 @@ const registryConfig = {
     billPayment: billPaymentCodec,
     invoicePayment: invoicePaymentCodec,
     cryptoLot: cryptoLotCodec,
+    purchaseOrder: purchaseOrderCodec,
     connectedAccount: connectedAccountCodec,
     creditMemoLine: creditMemoLineCodec,
     journalEntry: journalEntryCodec,
@@ -8532,6 +8848,7 @@ const registryConfig = {
     inventory_transaction: inventory_transaction_resourceOptionsConfig,
     payroll_connection: payroll_connection_resourceOptionsConfig,
     estimate_line: estimate_line_resourceOptionsConfig,
+    purchase_order_line: purchase_order_line_resourceOptionsConfig,
     categorization_rule_split: categorization_rule_split_resourceOptionsConfig,
     reconciliation_statement: reconciliation_statement_resourceOptionsConfig,
     rd_expense: rd_expense_resourceOptionsConfig,
@@ -8542,6 +8859,7 @@ const registryConfig = {
     bill_payment: bill_payment_resourceOptionsConfig,
     invoice_payment: invoice_payment_resourceOptionsConfig,
     crypto_lot: crypto_lot_resourceOptionsConfig,
+    purchase_order: purchase_order_resourceOptionsConfig,
     connected_account: connected_account_resourceOptionsConfig,
     credit_memo_line: credit_memo_line_resourceOptionsConfig,
     journal_entry: journal_entry_resourceOptionsConfig,
@@ -8919,6 +9237,17 @@ const registryConfig = {
           __proto__: null,
           isIndexed: false
         }
+      },
+      purchaseOrderLinesByTheirExpenseAccountId: {
+        localCodec: accountCodec,
+        remoteResourceOptions: purchase_order_line_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["expense_account_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
       }
     },
     accountMapping: {
@@ -9032,6 +9361,17 @@ const registryConfig = {
         localAttributes: ["id"],
         remoteAttributes: ["bill_id"],
         isReferencee: true
+      },
+      purchaseOrdersByTheirConvertedBillId: {
+        localCodec: billCodec,
+        remoteResourceOptions: purchase_order_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["converted_bill_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
       }
     },
     billLine: {
@@ -9372,6 +9712,13 @@ const registryConfig = {
       vendorCreditsByTheirBookId: {
         localCodec: bookCodec,
         remoteResourceOptions: vendor_credit_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["book_id"],
+        isReferencee: true
+      },
+      purchaseOrdersByTheirBookId: {
+        localCodec: bookCodec,
+        remoteResourceOptions: purchase_order_resourceOptionsConfig,
         localAttributes: ["id"],
         remoteAttributes: ["book_id"],
         isReferencee: true
@@ -10311,6 +10658,61 @@ const registryConfig = {
         isReferencee: true
       }
     },
+    purchaseOrder: {
+      __proto__: null,
+      bookByMyBookId: {
+        localCodec: purchaseOrderCodec,
+        remoteResourceOptions: book_resourceOptionsConfig,
+        localAttributes: ["book_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      billByMyConvertedBillId: {
+        localCodec: purchaseOrderCodec,
+        remoteResourceOptions: bill_resourceOptionsConfig,
+        localAttributes: ["converted_bill_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      vendorByMyVendorId: {
+        localCodec: purchaseOrderCodec,
+        remoteResourceOptions: vendor_resourceOptionsConfig,
+        localAttributes: ["vendor_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      purchaseOrderLinesByTheirPurchaseOrderId: {
+        localCodec: purchaseOrderCodec,
+        remoteResourceOptions: purchase_order_line_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["purchase_order_id"],
+        isReferencee: true
+      }
+    },
+    purchaseOrderLine: {
+      __proto__: null,
+      accountByMyExpenseAccountId: {
+        localCodec: purchaseOrderLineCodec,
+        remoteResourceOptions: account_resourceOptionsConfig,
+        localAttributes: ["expense_account_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      purchaseOrderByMyPurchaseOrderId: {
+        localCodec: purchaseOrderLineCodec,
+        remoteResourceOptions: purchase_order_resourceOptionsConfig,
+        localAttributes: ["purchase_order_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      taxJurisdictionByMyTaxJurisdictionId: {
+        localCodec: purchaseOrderLineCodec,
+        remoteResourceOptions: tax_jurisdiction_resourceOptionsConfig,
+        localAttributes: ["tax_jurisdiction_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      }
+    },
     rdExpense: {
       __proto__: null,
       bookByMyBookId: {
@@ -10561,6 +10963,17 @@ const registryConfig = {
           __proto__: null,
           isIndexed: false
         }
+      },
+      purchaseOrderLinesByTheirTaxJurisdictionId: {
+        localCodec: taxJurisdictionCodec,
+        remoteResourceOptions: purchase_order_line_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["tax_jurisdiction_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
       }
     },
     vehicle: {
@@ -10617,6 +11030,13 @@ const registryConfig = {
       vendorCreditsByTheirVendorId: {
         localCodec: vendorCodec,
         remoteResourceOptions: vendor_credit_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["vendor_id"],
+        isReferencee: true
+      },
+      purchaseOrdersByTheirVendorId: {
+        localCodec: vendorCodec,
+        remoteResourceOptions: purchase_order_resourceOptionsConfig,
         localAttributes: ["id"],
         remoteAttributes: ["vendor_id"],
         isReferencee: true
@@ -10731,6 +11151,7 @@ const resource_attachmentPgResource = registry.pgResources["attachment"];
 const resource_inventory_transactionPgResource = registry.pgResources["inventory_transaction"];
 const resource_payroll_connectionPgResource = registry.pgResources["payroll_connection"];
 const resource_estimate_linePgResource = registry.pgResources["estimate_line"];
+const resource_purchase_order_linePgResource = registry.pgResources["purchase_order_line"];
 const resource_categorization_rule_splitPgResource = registry.pgResources["categorization_rule_split"];
 const resource_reconciliation_statementPgResource = registry.pgResources["reconciliation_statement"];
 const resource_rd_expensePgResource = registry.pgResources["rd_expense"];
@@ -10741,6 +11162,7 @@ const resource_amortization_entryPgResource = registry.pgResources["amortization
 const resource_bill_paymentPgResource = registry.pgResources["bill_payment"];
 const resource_invoice_paymentPgResource = registry.pgResources["invoice_payment"];
 const resource_crypto_lotPgResource = registry.pgResources["crypto_lot"];
+const resource_purchase_orderPgResource = registry.pgResources["purchase_order"];
 const resource_connected_accountPgResource = registry.pgResources["connected_account"];
 const resource_credit_memo_linePgResource = registry.pgResources["credit_memo_line"];
 const resource_journal_entryPgResource = registry.pgResources["journal_entry"];
@@ -11028,6 +11450,17 @@ const nodeFetcher_EstimateLine = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_EstimateLine));
   return nodeIdHandler_EstimateLine.get(nodeIdHandler_EstimateLine.getSpec($decoded));
 };
+const nodeIdHandler_PurchaseOrderLine = makeTableNodeIdHandler({
+  typeName: "PurchaseOrderLine",
+  identifier: "PurchaseOrderLine",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_purchase_order_linePgResource,
+  pk: purchase_order_lineUniques[0].attributes
+});
+const nodeFetcher_PurchaseOrderLine = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_PurchaseOrderLine));
+  return nodeIdHandler_PurchaseOrderLine.get(nodeIdHandler_PurchaseOrderLine.getSpec($decoded));
+};
 const nodeIdHandler_CategorizationRuleSplit = makeTableNodeIdHandler({
   typeName: "CategorizationRuleSplit",
   identifier: "CategorizationRuleSplit",
@@ -11137,6 +11570,17 @@ const nodeIdHandler_CryptoLot = makeTableNodeIdHandler({
 const nodeFetcher_CryptoLot = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_CryptoLot));
   return nodeIdHandler_CryptoLot.get(nodeIdHandler_CryptoLot.getSpec($decoded));
+};
+const nodeIdHandler_PurchaseOrder = makeTableNodeIdHandler({
+  typeName: "PurchaseOrder",
+  identifier: "PurchaseOrder",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_purchase_orderPgResource,
+  pk: purchase_orderUniques[0].attributes
+});
+const nodeFetcher_PurchaseOrder = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_PurchaseOrder));
+  return nodeIdHandler_PurchaseOrder.get(nodeIdHandler_PurchaseOrder.getSpec($decoded));
 };
 const nodeIdHandler_ConnectedAccount = makeTableNodeIdHandler({
   typeName: "ConnectedAccount",
@@ -11463,6 +11907,7 @@ const nodeIdHandlerByTypeName = {
   InventoryTransaction: nodeIdHandler_InventoryTransaction,
   PayrollConnection: nodeIdHandler_PayrollConnection,
   EstimateLine: nodeIdHandler_EstimateLine,
+  PurchaseOrderLine: nodeIdHandler_PurchaseOrderLine,
   CategorizationRuleSplit: nodeIdHandler_CategorizationRuleSplit,
   ReconciliationStatement: nodeIdHandler_ReconciliationStatement,
   RdExpense: nodeIdHandler_RdExpense,
@@ -11473,6 +11918,7 @@ const nodeIdHandlerByTypeName = {
   BillPayment: nodeIdHandler_BillPayment,
   InvoicePayment: nodeIdHandler_InvoicePayment,
   CryptoLot: nodeIdHandler_CryptoLot,
+  PurchaseOrder: nodeIdHandler_PurchaseOrder,
   ConnectedAccount: nodeIdHandler_ConnectedAccount,
   CreditMemoLine: nodeIdHandler_CreditMemoLine,
   JournalEntry: nodeIdHandler_JournalEntry,
@@ -12286,6 +12732,10 @@ const specFromArgs_EstimateLine = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_EstimateLine, $nodeId);
 };
+const specFromArgs_PurchaseOrderLine = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_PurchaseOrderLine, $nodeId);
+};
 const specFromArgs_CategorizationRuleSplit = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_CategorizationRuleSplit, $nodeId);
@@ -12325,6 +12775,10 @@ const specFromArgs_InvoicePayment = args => {
 const specFromArgs_CryptoLot = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_CryptoLot, $nodeId);
+};
+const specFromArgs_PurchaseOrder = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_PurchaseOrder, $nodeId);
 };
 const specFromArgs_ConnectedAccount = args => {
   const $nodeId = args.getRaw(["input", "id"]);
@@ -12699,6 +13153,13 @@ function EstimateLineInput_incomeAccountIdApply(obj, val, info) {
 function EstimateLineInput_sortOrderApply(obj, val, info) {
   obj.set("sort_order", bakedInputRuntime(info.schema, info.field.type, val));
 }
+const CreatePurchaseOrderLinePayload_purchaseOrderLineEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_purchase_order_linePgResource, purchase_order_lineUniques[0].attributes, $mutation, fieldArgs);
+function PurchaseOrderLineInput_purchaseOrderIdApply(obj, val, info) {
+  obj.set("purchase_order_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function PurchaseOrderLineInput_expenseAccountIdApply(obj, val, info) {
+  obj.set("expense_account_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
 const CreateCategorizationRuleSplitPayload_categorizationRuleSplitEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_categorization_rule_splitPgResource, categorization_rule_splitUniques[0].attributes, $mutation, fieldArgs);
 function CategorizationRuleSplitInput_ruleIdApply(obj, val, info) {
   obj.set("rule_id", bakedInputRuntime(info.schema, info.field.type, val));
@@ -12749,9 +13210,6 @@ function ProjectInput_endDateApply(obj, val, info) {
   obj.set("end_date", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateBillLinePayload_billLineEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_bill_linePgResource, bill_lineUniques[0].attributes, $mutation, fieldArgs);
-function BillLineInput_expenseAccountIdApply(obj, val, info) {
-  obj.set("expense_account_id", bakedInputRuntime(info.schema, info.field.type, val));
-}
 function BillLineInput_discountPercentApply(obj, val, info) {
   obj.set("discount_percent", bakedInputRuntime(info.schema, info.field.type, val));
 }
@@ -12817,6 +13275,22 @@ function CryptoLotInput_disposedAtApply(obj, val, info) {
 function CryptoLotInput_proceedsPerUnitApply(obj, val, info) {
   obj.set("proceeds_per_unit", bakedInputRuntime(info.schema, info.field.type, val));
 }
+const CreatePurchaseOrderPayload_purchaseOrderEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_purchase_orderPgResource, purchase_orderUniques[0].attributes, $mutation, fieldArgs);
+function PurchaseOrderInput_vendorIdApply(obj, val, info) {
+  obj.set("vendor_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function PurchaseOrderInput_numberApply(obj, val, info) {
+  obj.set("number", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function PurchaseOrderInput_subtotalApply(obj, val, info) {
+  obj.set("subtotal", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function PurchaseOrderInput_totalApply(obj, val, info) {
+  obj.set("total", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function PurchaseOrderInput_convertedBillIdApply(obj, val, info) {
+  obj.set("converted_bill_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
 const CreateConnectedAccountPayload_connectedAccountEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_connected_accountPgResource, connected_accountUniques[0].attributes, $mutation, fieldArgs);
 function ConnectedAccountInput_providerAccountIdApply(obj, val, info) {
   obj.set("provider_account_id", bakedInputRuntime(info.schema, info.field.type, val));
@@ -12843,9 +13317,6 @@ function JournalEntryInput_isReviewedApply(obj, val, info) {
 }
 function JournalEntryInput_isReconciledApply(obj, val, info) {
   obj.set("is_reconciled", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function JournalEntryInput_vendorIdApply(obj, val, info) {
-  obj.set("vendor_id", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateMileageLogPayload_mileageLogEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_mileage_logPgResource, mileage_logUniques[0].attributes, $mutation, fieldArgs);
 function MileageLogInput_vehicleIdApply(obj, val, info) {
@@ -12885,20 +13356,11 @@ const CreateEstimatePayload_estimateEdgePlan = ($mutation, fieldArgs) => pgMutat
 function EstimateInput_customerIdApply(obj, val, info) {
   obj.set("customer_id", bakedInputRuntime(info.schema, info.field.type, val));
 }
-function EstimateInput_numberApply(obj, val, info) {
-  obj.set("number", bakedInputRuntime(info.schema, info.field.type, val));
-}
 function EstimateInput_estimateDateApply(obj, val, info) {
   obj.set("estimate_date", bakedInputRuntime(info.schema, info.field.type, val));
 }
 function EstimateInput_expiryDateApply(obj, val, info) {
   obj.set("expiry_date", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function EstimateInput_subtotalApply(obj, val, info) {
-  obj.set("subtotal", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function EstimateInput_totalApply(obj, val, info) {
-  obj.set("total", bakedInputRuntime(info.schema, info.field.type, val));
 }
 function EstimateInput_termsApply(obj, val, info) {
   obj.set("terms", bakedInputRuntime(info.schema, info.field.type, val));
@@ -13213,6 +13675,9 @@ type Query implements Node {
   """Get a single \`EstimateLine\`."""
   estimateLine(rowId: UUID!): EstimateLine
 
+  """Get a single \`PurchaseOrderLine\`."""
+  purchaseOrderLine(rowId: UUID!): PurchaseOrderLine
+
   """Get a single \`CategorizationRuleSplit\`."""
   categorizationRuleSplit(rowId: UUID!): CategorizationRuleSplit
 
@@ -13242,6 +13707,9 @@ type Query implements Node {
 
   """Get a single \`CryptoLot\`."""
   cryptoLot(rowId: UUID!): CryptoLot
+
+  """Get a single \`PurchaseOrder\`."""
+  purchaseOrder(rowId: UUID!): PurchaseOrder
 
   """Get a single \`ConnectedAccount\`."""
   connectedAccount(rowId: UUID!): ConnectedAccount
@@ -13468,6 +13936,14 @@ type Query implements Node {
     id: ID!
   ): EstimateLine
 
+  """Reads a single \`PurchaseOrderLine\` using its globally unique \`ID\`."""
+  purchaseOrderLineById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`PurchaseOrderLine\`.
+    """
+    id: ID!
+  ): PurchaseOrderLine
+
   """
   Reads a single \`CategorizationRuleSplit\` using its globally unique \`ID\`.
   """
@@ -13543,6 +14019,14 @@ type Query implements Node {
     """The globally unique \`ID\` to be used in selecting a single \`CryptoLot\`."""
     id: ID!
   ): CryptoLot
+
+  """Reads a single \`PurchaseOrder\` using its globally unique \`ID\`."""
+  purchaseOrderById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`PurchaseOrder\`.
+    """
+    id: ID!
+  ): PurchaseOrder
 
   """Reads a single \`ConnectedAccount\` using its globally unique \`ID\`."""
   connectedAccountById(
@@ -14390,6 +14874,40 @@ type Query implements Node {
     orderBy: [EstimateLineOrderBy!] = [PRIMARY_KEY_ASC]
   ): EstimateLineConnection
 
+  """Reads and enables pagination through a set of \`PurchaseOrderLine\`."""
+  purchaseOrderLines(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PurchaseOrderLineCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: PurchaseOrderLineFilter
+
+    """The method to use when ordering \`PurchaseOrderLine\`."""
+    orderBy: [PurchaseOrderLineOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PurchaseOrderLineConnection
+
   """
   Reads and enables pagination through a set of \`CategorizationRuleSplit\`.
   """
@@ -14733,6 +15251,40 @@ type Query implements Node {
     """The method to use when ordering \`CryptoLot\`."""
     orderBy: [CryptoLotOrderBy!] = [PRIMARY_KEY_ASC]
   ): CryptoLotConnection
+
+  """Reads and enables pagination through a set of \`PurchaseOrder\`."""
+  purchaseOrders(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PurchaseOrderCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: PurchaseOrderFilter
+
+    """The method to use when ordering \`PurchaseOrder\`."""
+    orderBy: [PurchaseOrderOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PurchaseOrderConnection
 
   """Reads and enables pagination through a set of \`ConnectedAccount\`."""
   connectedAccounts(
@@ -17105,6 +17657,40 @@ type Book implements Node {
     """The method to use when ordering \`VendorCredit\`."""
     orderBy: [VendorCreditOrderBy!] = [PRIMARY_KEY_ASC]
   ): VendorCreditConnection!
+
+  """Reads and enables pagination through a set of \`PurchaseOrder\`."""
+  purchaseOrders(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PurchaseOrderCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: PurchaseOrderFilter
+
+    """The method to use when ordering \`PurchaseOrder\`."""
+    orderBy: [PurchaseOrderOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PurchaseOrderConnection!
 }
 
 """A connection to a list of \`Account\` values."""
@@ -17605,6 +18191,12 @@ input BookFilter {
 
   """Some related \`vendorCredits\` exist."""
   vendorCreditsExist: Boolean
+
+  """Filter by the object’s \`purchaseOrders\` relation."""
+  purchaseOrders: BookToManyPurchaseOrderFilter
+
+  """Some related \`purchaseOrders\` exist."""
+  purchaseOrdersExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [BookFilter!]
@@ -18641,6 +19233,12 @@ input VendorFilter {
   """Some related \`vendorCredits\` exist."""
   vendorCreditsExist: Boolean
 
+  """Filter by the object’s \`purchaseOrders\` relation."""
+  purchaseOrders: VendorToManyPurchaseOrderFilter
+
+  """Some related \`purchaseOrders\` exist."""
+  purchaseOrdersExist: Boolean
+
   """Filter by the object’s \`book\` relation."""
   book: BookFilter
 
@@ -19093,6 +19691,125 @@ input VendorToManyVendorCreditFilter {
   No related \`VendorCredit\` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
   none: VendorCreditFilter
+}
+
+"""
+A filter to be used against many \`PurchaseOrder\` object types. All fields are combined with a logical ‘and.’
+"""
+input VendorToManyPurchaseOrderFilter {
+  """
+  Every related \`PurchaseOrder\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: PurchaseOrderFilter
+
+  """
+  Some related \`PurchaseOrder\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: PurchaseOrderFilter
+
+  """
+  No related \`PurchaseOrder\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: PurchaseOrderFilter
+}
+
+"""
+A filter to be used against \`PurchaseOrder\` object types. All fields are combined with a logical ‘and.’
+"""
+input PurchaseOrderFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`bookId\` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s \`vendorId\` field."""
+  vendorId: UUIDFilter
+
+  """Filter by the object’s \`number\` field."""
+  number: StringFilter
+
+  """Filter by the object’s \`status\` field."""
+  status: StringFilter
+
+  """Filter by the object’s \`purchaseOrderLines\` relation."""
+  purchaseOrderLines: PurchaseOrderToManyPurchaseOrderLineFilter
+
+  """Some related \`purchaseOrderLines\` exist."""
+  purchaseOrderLinesExist: Boolean
+
+  """Filter by the object’s \`book\` relation."""
+  book: BookFilter
+
+  """Filter by the object’s \`convertedBill\` relation."""
+  convertedBill: BillFilter
+
+  """A related \`convertedBill\` exists."""
+  convertedBillExists: Boolean
+
+  """Filter by the object’s \`vendor\` relation."""
+  vendor: VendorFilter
+
+  """Checks for all expressions in this list."""
+  and: [PurchaseOrderFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [PurchaseOrderFilter!]
+
+  """Negates the expression."""
+  not: PurchaseOrderFilter
+}
+
+"""
+A filter to be used against many \`PurchaseOrderLine\` object types. All fields are combined with a logical ‘and.’
+"""
+input PurchaseOrderToManyPurchaseOrderLineFilter {
+  """
+  Every related \`PurchaseOrderLine\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: PurchaseOrderLineFilter
+
+  """
+  Some related \`PurchaseOrderLine\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: PurchaseOrderLineFilter
+
+  """
+  No related \`PurchaseOrderLine\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: PurchaseOrderLineFilter
+}
+
+"""
+A filter to be used against \`PurchaseOrderLine\` object types. All fields are combined with a logical ‘and.’
+"""
+input PurchaseOrderLineFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`purchaseOrderId\` field."""
+  purchaseOrderId: UUIDFilter
+
+  """Filter by the object’s \`expenseAccount\` relation."""
+  expenseAccount: AccountFilter
+
+  """Filter by the object’s \`purchaseOrder\` relation."""
+  purchaseOrder: PurchaseOrderFilter
+
+  """Filter by the object’s \`taxJurisdiction\` relation."""
+  taxJurisdiction: TaxJurisdictionFilter
+
+  """A related \`taxJurisdiction\` exists."""
+  taxJurisdictionExists: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [PurchaseOrderLineFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [PurchaseOrderLineFilter!]
+
+  """Negates the expression."""
+  not: PurchaseOrderLineFilter
 }
 
 """
@@ -20931,6 +21648,26 @@ input BookToManyVendorCreditFilter {
 }
 
 """
+A filter to be used against many \`PurchaseOrder\` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyPurchaseOrderFilter {
+  """
+  Every related \`PurchaseOrder\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: PurchaseOrderFilter
+
+  """
+  Some related \`PurchaseOrder\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: PurchaseOrderFilter
+
+  """
+  No related \`PurchaseOrder\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: PurchaseOrderFilter
+}
+
+"""
 A filter to be used against many \`JournalLine\` object types. All fields are combined with a logical ‘and.’
 """
 input AccountToManyJournalLineFilter {
@@ -21556,6 +22293,40 @@ type Vendor implements Node {
     """The method to use when ordering \`VendorCredit\`."""
     orderBy: [VendorCreditOrderBy!] = [PRIMARY_KEY_ASC]
   ): VendorCreditConnection!
+
+  """Reads and enables pagination through a set of \`PurchaseOrder\`."""
+  purchaseOrders(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PurchaseOrderCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: PurchaseOrderFilter
+
+    """The method to use when ordering \`PurchaseOrder\`."""
+    orderBy: [PurchaseOrderOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PurchaseOrderConnection!
 }
 
 """A connection to a list of \`Bill\` values."""
@@ -22434,6 +23205,212 @@ input VendorCreditCondition {
 
 """Methods to use when ordering \`VendorCredit\`."""
 enum VendorCreditOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+  VENDOR_ID_ASC
+  VENDOR_ID_DESC
+  NUMBER_ASC
+  NUMBER_DESC
+  STATUS_ASC
+  STATUS_DESC
+}
+
+"""A connection to a list of \`PurchaseOrder\` values."""
+type PurchaseOrderConnection {
+  """A list of \`PurchaseOrder\` objects."""
+  nodes: [PurchaseOrder]!
+
+  """
+  A list of edges which contains the \`PurchaseOrder\` and cursor to aid in pagination.
+  """
+  edges: [PurchaseOrderEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* \`PurchaseOrder\` you could get from the connection."""
+  totalCount: Int!
+}
+
+type PurchaseOrder implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  vendorId: UUID!
+  number: String!
+  status: String!
+  date: String!
+  subtotal: BigFloat!
+  total: BigFloat!
+  memo: String
+  convertedBillId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """Reads a single \`Book\` that is related to this \`PurchaseOrder\`."""
+  book: Book
+
+  """Reads a single \`Bill\` that is related to this \`PurchaseOrder\`."""
+  convertedBill: Bill
+
+  """Reads a single \`Vendor\` that is related to this \`PurchaseOrder\`."""
+  vendor: Vendor
+
+  """Reads and enables pagination through a set of \`PurchaseOrderLine\`."""
+  purchaseOrderLines(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PurchaseOrderLineCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: PurchaseOrderLineFilter
+
+    """The method to use when ordering \`PurchaseOrderLine\`."""
+    orderBy: [PurchaseOrderLineOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PurchaseOrderLineConnection!
+}
+
+"""A connection to a list of \`PurchaseOrderLine\` values."""
+type PurchaseOrderLineConnection {
+  """A list of \`PurchaseOrderLine\` objects."""
+  nodes: [PurchaseOrderLine]!
+
+  """
+  A list of edges which contains the \`PurchaseOrderLine\` and cursor to aid in pagination.
+  """
+  edges: [PurchaseOrderLineEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* \`PurchaseOrderLine\` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+type PurchaseOrderLine implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  purchaseOrderId: UUID!
+  description: String!
+  quantity: BigFloat!
+  unitPrice: BigFloat!
+  amount: BigFloat!
+  expenseAccountId: UUID!
+  taxJurisdictionId: UUID
+  sortOrder: Int!
+
+  """Reads a single \`Account\` that is related to this \`PurchaseOrderLine\`."""
+  expenseAccount: Account
+
+  """
+  Reads a single \`PurchaseOrder\` that is related to this \`PurchaseOrderLine\`.
+  """
+  purchaseOrder: PurchaseOrder
+
+  """
+  Reads a single \`TaxJurisdiction\` that is related to this \`PurchaseOrderLine\`.
+  """
+  taxJurisdiction: TaxJurisdiction
+}
+
+"""A \`PurchaseOrderLine\` edge in the connection."""
+type PurchaseOrderLineEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`PurchaseOrderLine\` at the end of the edge."""
+  node: PurchaseOrderLine
+}
+
+"""
+A condition to be used against \`PurchaseOrderLine\` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input PurchaseOrderLineCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`purchaseOrderId\` field."""
+  purchaseOrderId: UUID
+}
+
+"""Methods to use when ordering \`PurchaseOrderLine\`."""
+enum PurchaseOrderLineOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  PURCHASE_ORDER_ID_ASC
+  PURCHASE_ORDER_ID_DESC
+}
+
+"""A \`PurchaseOrder\` edge in the connection."""
+type PurchaseOrderEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`PurchaseOrder\` at the end of the edge."""
+  node: PurchaseOrder
+}
+
+"""
+A condition to be used against \`PurchaseOrder\` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input PurchaseOrderCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`bookId\` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s \`vendorId\` field."""
+  vendorId: UUID
+
+  """Checks for equality with the object’s \`number\` field."""
+  number: String
+
+  """Checks for equality with the object’s \`status\` field."""
+  status: String
+}
+
+"""Methods to use when ordering \`PurchaseOrder\`."""
+enum PurchaseOrderOrderBy {
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
@@ -26319,6 +27296,14 @@ type Mutation {
     input: CreateEstimateLineInput!
   ): CreateEstimateLinePayload
 
+  """Creates a single \`PurchaseOrderLine\`."""
+  createPurchaseOrderLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreatePurchaseOrderLineInput!
+  ): CreatePurchaseOrderLinePayload
+
   """Creates a single \`CategorizationRuleSplit\`."""
   createCategorizationRuleSplit(
     """
@@ -26398,6 +27383,14 @@ type Mutation {
     """
     input: CreateCryptoLotInput!
   ): CreateCryptoLotPayload
+
+  """Creates a single \`PurchaseOrder\`."""
+  createPurchaseOrder(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreatePurchaseOrderInput!
+  ): CreatePurchaseOrderPayload
 
   """Creates a single \`ConnectedAccount\`."""
   createConnectedAccount(
@@ -26944,6 +27937,24 @@ type Mutation {
   ): UpdateEstimateLinePayload
 
   """
+  Updates a single \`PurchaseOrderLine\` using its globally unique id and a patch.
+  """
+  updatePurchaseOrderLineById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdatePurchaseOrderLineByIdInput!
+  ): UpdatePurchaseOrderLinePayload
+
+  """Updates a single \`PurchaseOrderLine\` using a unique key and a patch."""
+  updatePurchaseOrderLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdatePurchaseOrderLineInput!
+  ): UpdatePurchaseOrderLinePayload
+
+  """
   Updates a single \`CategorizationRuleSplit\` using its globally unique id and a patch.
   """
   updateCategorizationRuleSplitById(
@@ -27118,6 +28129,24 @@ type Mutation {
     """
     input: UpdateCryptoLotInput!
   ): UpdateCryptoLotPayload
+
+  """
+  Updates a single \`PurchaseOrder\` using its globally unique id and a patch.
+  """
+  updatePurchaseOrderById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdatePurchaseOrderByIdInput!
+  ): UpdatePurchaseOrderPayload
+
+  """Updates a single \`PurchaseOrder\` using a unique key and a patch."""
+  updatePurchaseOrder(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdatePurchaseOrderInput!
+  ): UpdatePurchaseOrderPayload
 
   """
   Updates a single \`ConnectedAccount\` using its globally unique id and a patch.
@@ -27837,6 +28866,22 @@ type Mutation {
     input: DeleteEstimateLineInput!
   ): DeleteEstimateLinePayload
 
+  """Deletes a single \`PurchaseOrderLine\` using its globally unique id."""
+  deletePurchaseOrderLineById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeletePurchaseOrderLineByIdInput!
+  ): DeletePurchaseOrderLinePayload
+
+  """Deletes a single \`PurchaseOrderLine\` using a unique key."""
+  deletePurchaseOrderLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeletePurchaseOrderLineInput!
+  ): DeletePurchaseOrderLinePayload
+
   """
   Deletes a single \`CategorizationRuleSplit\` using its globally unique id.
   """
@@ -28000,6 +29045,22 @@ type Mutation {
     """
     input: DeleteCryptoLotInput!
   ): DeleteCryptoLotPayload
+
+  """Deletes a single \`PurchaseOrder\` using its globally unique id."""
+  deletePurchaseOrderById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeletePurchaseOrderByIdInput!
+  ): DeletePurchaseOrderPayload
+
+  """Deletes a single \`PurchaseOrder\` using a unique key."""
+  deletePurchaseOrder(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeletePurchaseOrderInput!
+  ): DeletePurchaseOrderPayload
 
   """Deletes a single \`ConnectedAccount\` using its globally unique id."""
   deleteConnectedAccountById(
@@ -29294,6 +30355,54 @@ input EstimateLineInput {
   sortOrder: Int
 }
 
+"""The output of our create \`PurchaseOrderLine\` mutation."""
+type CreatePurchaseOrderLinePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`PurchaseOrderLine\` that was created by this mutation."""
+  purchaseOrderLine: PurchaseOrderLine
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`PurchaseOrderLine\`. May be used by Relay 1."""
+  purchaseOrderLineEdge(
+    """The method to use when ordering \`PurchaseOrderLine\`."""
+    orderBy: [PurchaseOrderLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): PurchaseOrderLineEdge
+}
+
+"""All input for the create \`PurchaseOrderLine\` mutation."""
+input CreatePurchaseOrderLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`PurchaseOrderLine\` to be created by this mutation."""
+  purchaseOrderLine: PurchaseOrderLineInput!
+}
+
+"""An input for mutations affecting \`PurchaseOrderLine\`"""
+input PurchaseOrderLineInput {
+  rowId: UUID
+  purchaseOrderId: UUID!
+  description: String!
+  quantity: BigFloat
+  unitPrice: BigFloat
+  amount: BigFloat
+  expenseAccountId: UUID!
+  taxJurisdictionId: UUID
+  sortOrder: Int
+}
+
 """The output of our create \`CategorizationRuleSplit\` mutation."""
 type CreateCategorizationRuleSplitPayload {
   """
@@ -29787,6 +30896,57 @@ input CryptoLotInput {
   proceedsPerUnit: BigFloat
   journalEntryId: UUID
   createdAt: Datetime
+}
+
+"""The output of our create \`PurchaseOrder\` mutation."""
+type CreatePurchaseOrderPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`PurchaseOrder\` that was created by this mutation."""
+  purchaseOrder: PurchaseOrder
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`PurchaseOrder\`. May be used by Relay 1."""
+  purchaseOrderEdge(
+    """The method to use when ordering \`PurchaseOrder\`."""
+    orderBy: [PurchaseOrderOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): PurchaseOrderEdge
+}
+
+"""All input for the create \`PurchaseOrder\` mutation."""
+input CreatePurchaseOrderInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`PurchaseOrder\` to be created by this mutation."""
+  purchaseOrder: PurchaseOrderInput!
+}
+
+"""An input for mutations affecting \`PurchaseOrder\`"""
+input PurchaseOrderInput {
+  rowId: UUID
+  bookId: UUID!
+  vendorId: UUID!
+  number: String!
+  status: String
+  date: String!
+  subtotal: BigFloat
+  total: BigFloat
+  memo: String
+  convertedBillId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
 }
 
 """The output of our create \`ConnectedAccount\` mutation."""
@@ -32405,6 +33565,78 @@ input UpdateEstimateLineInput {
   patch: EstimateLinePatch!
 }
 
+"""The output of our update \`PurchaseOrderLine\` mutation."""
+type UpdatePurchaseOrderLinePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`PurchaseOrderLine\` that was updated by this mutation."""
+  purchaseOrderLine: PurchaseOrderLine
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`PurchaseOrderLine\`. May be used by Relay 1."""
+  purchaseOrderLineEdge(
+    """The method to use when ordering \`PurchaseOrderLine\`."""
+    orderBy: [PurchaseOrderLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): PurchaseOrderLineEdge
+}
+
+"""All input for the \`updatePurchaseOrderLineById\` mutation."""
+input UpdatePurchaseOrderLineByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`PurchaseOrderLine\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`PurchaseOrderLine\` being updated.
+  """
+  patch: PurchaseOrderLinePatch!
+}
+
+"""
+Represents an update to a \`PurchaseOrderLine\`. Fields that are set will be updated.
+"""
+input PurchaseOrderLinePatch {
+  rowId: UUID
+  purchaseOrderId: UUID
+  description: String
+  quantity: BigFloat
+  unitPrice: BigFloat
+  amount: BigFloat
+  expenseAccountId: UUID
+  taxJurisdictionId: UUID
+  sortOrder: Int
+}
+
+"""All input for the \`updatePurchaseOrderLine\` mutation."""
+input UpdatePurchaseOrderLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`PurchaseOrderLine\` being updated.
+  """
+  patch: PurchaseOrderLinePatch!
+}
+
 """The output of our update \`CategorizationRuleSplit\` mutation."""
 type UpdateCategorizationRuleSplitPayload {
   """
@@ -33138,6 +34370,81 @@ input UpdateCryptoLotInput {
   An object where the defined keys will be set on the \`CryptoLot\` being updated.
   """
   patch: CryptoLotPatch!
+}
+
+"""The output of our update \`PurchaseOrder\` mutation."""
+type UpdatePurchaseOrderPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`PurchaseOrder\` that was updated by this mutation."""
+  purchaseOrder: PurchaseOrder
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`PurchaseOrder\`. May be used by Relay 1."""
+  purchaseOrderEdge(
+    """The method to use when ordering \`PurchaseOrder\`."""
+    orderBy: [PurchaseOrderOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): PurchaseOrderEdge
+}
+
+"""All input for the \`updatePurchaseOrderById\` mutation."""
+input UpdatePurchaseOrderByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`PurchaseOrder\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`PurchaseOrder\` being updated.
+  """
+  patch: PurchaseOrderPatch!
+}
+
+"""
+Represents an update to a \`PurchaseOrder\`. Fields that are set will be updated.
+"""
+input PurchaseOrderPatch {
+  rowId: UUID
+  bookId: UUID
+  vendorId: UUID
+  number: String
+  status: String
+  date: String
+  subtotal: BigFloat
+  total: BigFloat
+  memo: String
+  convertedBillId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the \`updatePurchaseOrder\` mutation."""
+input UpdatePurchaseOrderInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`PurchaseOrder\` being updated.
+  """
+  patch: PurchaseOrderPatch!
 }
 
 """The output of our update \`ConnectedAccount\` mutation."""
@@ -35860,6 +37167,54 @@ input DeleteEstimateLineInput {
   rowId: UUID!
 }
 
+"""The output of our delete \`PurchaseOrderLine\` mutation."""
+type DeletePurchaseOrderLinePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`PurchaseOrderLine\` that was deleted by this mutation."""
+  purchaseOrderLine: PurchaseOrderLine
+  deletedPurchaseOrderLineId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`PurchaseOrderLine\`. May be used by Relay 1."""
+  purchaseOrderLineEdge(
+    """The method to use when ordering \`PurchaseOrderLine\`."""
+    orderBy: [PurchaseOrderLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): PurchaseOrderLineEdge
+}
+
+"""All input for the \`deletePurchaseOrderLineById\` mutation."""
+input DeletePurchaseOrderLineByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`PurchaseOrderLine\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deletePurchaseOrderLine\` mutation."""
+input DeletePurchaseOrderLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete \`CategorizationRuleSplit\` mutation."""
 type DeleteCategorizationRuleSplitPayload {
   """
@@ -36332,6 +37687,54 @@ input DeleteCryptoLotByIdInput {
 
 """All input for the \`deleteCryptoLot\` mutation."""
 input DeleteCryptoLotInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`PurchaseOrder\` mutation."""
+type DeletePurchaseOrderPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`PurchaseOrder\` that was deleted by this mutation."""
+  purchaseOrder: PurchaseOrder
+  deletedPurchaseOrderId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`PurchaseOrder\`. May be used by Relay 1."""
+  purchaseOrderEdge(
+    """The method to use when ordering \`PurchaseOrder\`."""
+    orderBy: [PurchaseOrderOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): PurchaseOrderEdge
+}
+
+"""All input for the \`deletePurchaseOrderById\` mutation."""
+input DeletePurchaseOrderByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`PurchaseOrder\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deletePurchaseOrder\` mutation."""
+input DeletePurchaseOrderInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -38496,6 +39899,58 @@ export const objects = {
           orderBy: applyOrderByArgToConnection
         }
       },
+      purchaseOrder(_$root, {
+        $rowId
+      }) {
+        return resource_purchase_orderPgResource.get({
+          id: $rowId
+        });
+      },
+      purchaseOrderById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_PurchaseOrder($nodeId);
+      },
+      purchaseOrderLine(_$root, {
+        $rowId
+      }) {
+        return resource_purchase_order_linePgResource.get({
+          id: $rowId
+        });
+      },
+      purchaseOrderLineById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_PurchaseOrderLine($nodeId);
+      },
+      purchaseOrderLines: {
+        plan() {
+          return connection(resource_purchase_order_linePgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      purchaseOrders: {
+        plan() {
+          return connection(resource_purchase_orderPgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       query() {
         return rootValue();
       },
@@ -39313,6 +40768,30 @@ export const objects = {
       createProject: {
         plan(_, args) {
           const $insert = pgInsertSingle(resource_projectPgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
+      createPurchaseOrder: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_purchase_orderPgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
+      createPurchaseOrderLine: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_purchase_order_linePgResource);
           args.apply($insert);
           return object({
             result: $insert
@@ -40509,6 +41988,58 @@ export const objects = {
       deleteProjectById: {
         plan(_$root, args) {
           const $delete = pgDeleteSingle(resource_projectPgResource, specFromArgs_Project(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deletePurchaseOrder: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_purchase_orderPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deletePurchaseOrderById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_purchase_orderPgResource, specFromArgs_PurchaseOrder(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deletePurchaseOrderLine: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_purchase_order_linePgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deletePurchaseOrderLineById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_purchase_order_linePgResource, specFromArgs_PurchaseOrderLine(args));
           args.apply($delete);
           return object({
             result: $delete
@@ -41896,6 +43427,58 @@ export const objects = {
           input: applyInputToUpdateOrDelete
         }
       },
+      updatePurchaseOrder: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_purchase_orderPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updatePurchaseOrderById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_purchase_orderPgResource, specFromArgs_PurchaseOrder(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updatePurchaseOrderLine: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_purchase_order_linePgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updatePurchaseOrderLineById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_purchase_order_linePgResource, specFromArgs_PurchaseOrderLine(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
       updateRdExpense: {
         plan(_$root, args) {
           const $update = pgUpdateSingle(resource_rd_expensePgResource, {
@@ -43153,6 +44736,24 @@ export const objects = {
           orderBy: applyOrderByArgToConnection
         }
       },
+      purchaseOrders: {
+        plan($record) {
+          const $records = resource_purchase_orderPgResource.find({
+            book_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       rdExpenses: {
         plan($record) {
           const $records = resource_rd_expensePgResource.find({
@@ -43910,6 +45511,24 @@ export const objects = {
       clientMutationId: getClientMutationIdForCreatePlan,
       project: planCreatePayloadResult,
       projectEdge: CreateProjectPayload_projectEdgePlan,
+      query: queryPlan
+    }
+  },
+  CreatePurchaseOrderLinePayload: {
+    assertStep: assertStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      purchaseOrderLine: planCreatePayloadResult,
+      purchaseOrderLineEdge: CreatePurchaseOrderLinePayload_purchaseOrderLineEdgePlan,
+      query: queryPlan
+    }
+  },
+  CreatePurchaseOrderPayload: {
+    assertStep: assertStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      purchaseOrder: planCreatePayloadResult,
+      purchaseOrderEdge: CreatePurchaseOrderPayload_purchaseOrderEdgePlan,
       query: queryPlan
     }
   },
@@ -44891,6 +46510,34 @@ export const objects = {
       },
       project: planCreatePayloadResult,
       projectEdge: CreateProjectPayload_projectEdgePlan,
+      query: queryPlan
+    }
+  },
+  DeletePurchaseOrderLinePayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedPurchaseOrderLineId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_PurchaseOrderLine.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      purchaseOrderLine: planCreatePayloadResult,
+      purchaseOrderLineEdge: CreatePurchaseOrderLinePayload_purchaseOrderLineEdgePlan,
+      query: queryPlan
+    }
+  },
+  DeletePurchaseOrderPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedPurchaseOrderId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_PurchaseOrder.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      purchaseOrder: planCreatePayloadResult,
+      purchaseOrderEdge: CreatePurchaseOrderPayload_purchaseOrderEdgePlan,
       query: queryPlan
     }
   },
@@ -46001,6 +47648,94 @@ export const objects = {
       totalCount: totalCountConnectionPlan
     }
   },
+  PurchaseOrder: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      book: Account_bookPlan,
+      bookId: Account_bookIdPlan,
+      convertedBill($record) {
+        return resource_billPgResource.get({
+          id: $record.get("converted_bill_id")
+        });
+      },
+      convertedBillId($record) {
+        return $record.get("converted_bill_id");
+      },
+      createdAt: Account_createdAtPlan,
+      id($parent) {
+        const specifier = nodeIdHandler_PurchaseOrder.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_PurchaseOrder.codec.name].encode);
+      },
+      purchaseOrderLines: {
+        plan($record) {
+          const $records = resource_purchase_order_linePgResource.find({
+            purchase_order_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      rowId: JournalLineProject_rowIdPlan,
+      updatedAt: Account_updatedAtPlan,
+      vendor: JournalEntry_vendorPlan,
+      vendorId: JournalEntry_vendorIdPlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of purchase_orderUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_purchase_orderPgResource.get(spec);
+    }
+  },
+  PurchaseOrderConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
+  PurchaseOrderLine: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      expenseAccount: BillLine_expenseAccountPlan,
+      expenseAccountId: BillLine_expenseAccountIdPlan,
+      id($parent) {
+        const specifier = nodeIdHandler_PurchaseOrderLine.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_PurchaseOrderLine.codec.name].encode);
+      },
+      purchaseOrder($record) {
+        return resource_purchase_orderPgResource.get({
+          id: $record.get("purchase_order_id")
+        });
+      },
+      purchaseOrderId($record) {
+        return $record.get("purchase_order_id");
+      },
+      rowId: JournalLineProject_rowIdPlan,
+      sortOrder: BillLine_sortOrderPlan,
+      taxJurisdiction: JournalLine_taxJurisdictionPlan,
+      taxJurisdictionId: JournalLine_taxJurisdictionIdPlan,
+      unitPrice: BillLine_unitPricePlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of purchase_order_lineUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_purchase_order_linePgResource.get(spec);
+    }
+  },
+  PurchaseOrderLineConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
   RdExpense: {
     assertStep: assertPgClassSingleStep,
     plans: {
@@ -46705,6 +48440,24 @@ export const objects = {
       query: queryPlan
     }
   },
+  UpdatePurchaseOrderLinePayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      purchaseOrderLine: planCreatePayloadResult,
+      purchaseOrderLineEdge: CreatePurchaseOrderLinePayload_purchaseOrderLineEdgePlan,
+      query: queryPlan
+    }
+  },
+  UpdatePurchaseOrderPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      purchaseOrder: planCreatePayloadResult,
+      purchaseOrderEdge: CreatePurchaseOrderPayload_purchaseOrderEdgePlan,
+      query: queryPlan
+    }
+  },
   UpdateRdExpensePayload: {
     assertStep: ObjectStep,
     plans: {
@@ -46916,6 +48669,24 @@ export const objects = {
       },
       is1099Eligible($record) {
         return $record.get("is_1099_eligible");
+      },
+      purchaseOrders: {
+        plan($record) {
+          const $records = resource_purchase_orderPgResource.find({
+            vendor_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
       },
       rowId: JournalLineProject_rowIdPlan,
       taxId($record) {
@@ -47732,14 +49503,14 @@ export const inputObjects = {
       exchangeRate: BillPaymentInput_exchangeRateApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       memo: JournalLineInput_memoApply,
-      number: EstimateInput_numberApply,
+      number: PurchaseOrderInput_numberApply,
       rowId: JournalLineProjectInput_rowIdApply,
       status: AccountingPeriodInput_statusApply,
-      subtotal: EstimateInput_subtotalApply,
+      subtotal: PurchaseOrderInput_subtotalApply,
       taxAmount: CreditMemoInput_taxAmountApply,
-      total: EstimateInput_totalApply,
+      total: PurchaseOrderInput_totalApply,
       updatedAt: AccountMappingInput_updatedAtApply,
-      vendorId: JournalEntryInput_vendorIdApply
+      vendorId: PurchaseOrderInput_vendorIdApply
     }
   },
   BillLineCondition: {
@@ -47780,7 +49551,7 @@ export const inputObjects = {
       billId: VendorCreditApplicationInput_billIdApply,
       description: EstimateLineInput_descriptionApply,
       discountPercent: BillLineInput_discountPercentApply,
-      expenseAccountId: BillLineInput_expenseAccountIdApply,
+      expenseAccountId: PurchaseOrderLineInput_expenseAccountIdApply,
       quantity: InventoryTransactionInput_quantityApply,
       rowId: JournalLineProjectInput_rowIdApply,
       sortOrder: EstimateLineInput_sortOrderApply,
@@ -47795,7 +49566,7 @@ export const inputObjects = {
       billId: VendorCreditApplicationInput_billIdApply,
       description: EstimateLineInput_descriptionApply,
       discountPercent: BillLineInput_discountPercentApply,
-      expenseAccountId: BillLineInput_expenseAccountIdApply,
+      expenseAccountId: PurchaseOrderLineInput_expenseAccountIdApply,
       quantity: InventoryTransactionInput_quantityApply,
       rowId: JournalLineProjectInput_rowIdApply,
       sortOrder: EstimateLineInput_sortOrderApply,
@@ -47815,14 +49586,14 @@ export const inputObjects = {
       exchangeRate: BillPaymentInput_exchangeRateApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       memo: JournalLineInput_memoApply,
-      number: EstimateInput_numberApply,
+      number: PurchaseOrderInput_numberApply,
       rowId: JournalLineProjectInput_rowIdApply,
       status: AccountingPeriodInput_statusApply,
-      subtotal: EstimateInput_subtotalApply,
+      subtotal: PurchaseOrderInput_subtotalApply,
       taxAmount: CreditMemoInput_taxAmountApply,
-      total: EstimateInput_totalApply,
+      total: PurchaseOrderInput_totalApply,
       updatedAt: AccountMappingInput_updatedAtApply,
-      vendorId: JournalEntryInput_vendorIdApply
+      vendorId: PurchaseOrderInput_vendorIdApply
     }
   },
   BillPaymentCondition: {
@@ -48608,6 +50379,30 @@ export const inputObjects = {
           $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
         });
       },
+      purchaseOrders($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: purchaseOrderIdentifier,
+          alias: resource_purchase_orderPgResource.name,
+          localAttributes: registryConfig.pgRelations.book.purchaseOrdersByTheirBookId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.book.purchaseOrdersByTheirBookId.remoteAttributes
+        };
+        return $rel;
+      },
+      purchaseOrdersExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: purchaseOrderIdentifier,
+          alias: resource_purchase_orderPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.book.purchaseOrdersByTheirBookId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.book.purchaseOrdersByTheirBookId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
       rdExpenses($where, value) {
         assertAllowed(value, "object");
         const $rel = $where.andPlan();
@@ -49071,6 +50866,13 @@ export const inputObjects = {
     }
   },
   BookToManyProjectFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
+  BookToManyPurchaseOrderFilter: {
     plans: {
       every: AccountToManyAccountFilter_everyApply,
       none: AccountToManyAccountFilter_noneApply,
@@ -49700,6 +51502,18 @@ export const inputObjects = {
       project: applyCreateFields
     }
   },
+  CreatePurchaseOrderInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      purchaseOrder: applyCreateFields
+    }
+  },
+  CreatePurchaseOrderLineInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      purchaseOrderLine: applyCreateFields
+    }
+  },
   CreateRdExpenseInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
@@ -49937,12 +51751,12 @@ export const inputObjects = {
       exchangeRate: BillPaymentInput_exchangeRateApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       memo: JournalLineInput_memoApply,
-      number: EstimateInput_numberApply,
+      number: PurchaseOrderInput_numberApply,
       rowId: JournalLineProjectInput_rowIdApply,
       status: AccountingPeriodInput_statusApply,
-      subtotal: EstimateInput_subtotalApply,
+      subtotal: PurchaseOrderInput_subtotalApply,
       taxAmount: CreditMemoInput_taxAmountApply,
-      total: EstimateInput_totalApply,
+      total: PurchaseOrderInput_totalApply,
       updatedAt: AccountMappingInput_updatedAtApply
     }
   },
@@ -50027,12 +51841,12 @@ export const inputObjects = {
       exchangeRate: BillPaymentInput_exchangeRateApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       memo: JournalLineInput_memoApply,
-      number: EstimateInput_numberApply,
+      number: PurchaseOrderInput_numberApply,
       rowId: JournalLineProjectInput_rowIdApply,
       status: AccountingPeriodInput_statusApply,
-      subtotal: EstimateInput_subtotalApply,
+      subtotal: PurchaseOrderInput_subtotalApply,
       taxAmount: CreditMemoInput_taxAmountApply,
-      total: EstimateInput_totalApply,
+      total: PurchaseOrderInput_totalApply,
       updatedAt: AccountMappingInput_updatedAtApply
     }
   },
@@ -50769,6 +52583,26 @@ export const inputObjects = {
       clientMutationId: applyClientMutationIdForCreate
     }
   },
+  DeletePurchaseOrderByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeletePurchaseOrderInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeletePurchaseOrderLineByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeletePurchaseOrderLineInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
   DeleteRdExpenseByIdInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate
@@ -50951,7 +52785,7 @@ export const inputObjects = {
       rowId: JournalLineProjectInput_rowIdApply,
       sizeBytes: AttachmentInput_sizeBytesApply,
       storageKey: AttachmentInput_storageKeyApply,
-      vendorId: JournalEntryInput_vendorIdApply,
+      vendorId: PurchaseOrderInput_vendorIdApply,
       year: VehicleInput_yearApply
     }
   },
@@ -50969,7 +52803,7 @@ export const inputObjects = {
       rowId: JournalLineProjectInput_rowIdApply,
       sizeBytes: AttachmentInput_sizeBytesApply,
       storageKey: AttachmentInput_storageKeyApply,
-      vendorId: JournalEntryInput_vendorIdApply,
+      vendorId: PurchaseOrderInput_vendorIdApply,
       year: VehicleInput_yearApply
     }
   },
@@ -51050,12 +52884,12 @@ export const inputObjects = {
       estimateDate: EstimateInput_estimateDateApply,
       expiryDate: EstimateInput_expiryDateApply,
       memo: JournalLineInput_memoApply,
-      number: EstimateInput_numberApply,
+      number: PurchaseOrderInput_numberApply,
       rowId: JournalLineProjectInput_rowIdApply,
       status: AccountingPeriodInput_statusApply,
-      subtotal: EstimateInput_subtotalApply,
+      subtotal: PurchaseOrderInput_subtotalApply,
       terms: EstimateInput_termsApply,
-      total: EstimateInput_totalApply,
+      total: PurchaseOrderInput_totalApply,
       updatedAt: AccountMappingInput_updatedAtApply
     }
   },
@@ -51130,12 +52964,12 @@ export const inputObjects = {
       estimateDate: EstimateInput_estimateDateApply,
       expiryDate: EstimateInput_expiryDateApply,
       memo: JournalLineInput_memoApply,
-      number: EstimateInput_numberApply,
+      number: PurchaseOrderInput_numberApply,
       rowId: JournalLineProjectInput_rowIdApply,
       status: AccountingPeriodInput_statusApply,
-      subtotal: EstimateInput_subtotalApply,
+      subtotal: PurchaseOrderInput_subtotalApply,
       terms: EstimateInput_termsApply,
-      total: EstimateInput_totalApply,
+      total: PurchaseOrderInput_totalApply,
       updatedAt: AccountMappingInput_updatedAtApply
     }
   },
@@ -51577,13 +53411,13 @@ export const inputObjects = {
       issueDate: InvoiceInput_issueDateApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       memo: JournalLineInput_memoApply,
-      number: EstimateInput_numberApply,
+      number: PurchaseOrderInput_numberApply,
       rowId: JournalLineProjectInput_rowIdApply,
       status: AccountingPeriodInput_statusApply,
-      subtotal: EstimateInput_subtotalApply,
+      subtotal: PurchaseOrderInput_subtotalApply,
       taxAmount: CreditMemoInput_taxAmountApply,
       terms: EstimateInput_termsApply,
-      total: EstimateInput_totalApply,
+      total: PurchaseOrderInput_totalApply,
       updatedAt: AccountMappingInput_updatedAtApply
     }
   },
@@ -51677,13 +53511,13 @@ export const inputObjects = {
       issueDate: InvoiceInput_issueDateApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       memo: JournalLineInput_memoApply,
-      number: EstimateInput_numberApply,
+      number: PurchaseOrderInput_numberApply,
       rowId: JournalLineProjectInput_rowIdApply,
       status: AccountingPeriodInput_statusApply,
-      subtotal: EstimateInput_subtotalApply,
+      subtotal: PurchaseOrderInput_subtotalApply,
       taxAmount: CreditMemoInput_taxAmountApply,
       terms: EstimateInput_termsApply,
-      total: EstimateInput_totalApply,
+      total: PurchaseOrderInput_totalApply,
       updatedAt: AccountMappingInput_updatedAtApply
     }
   },
@@ -51883,7 +53717,7 @@ export const inputObjects = {
       source: JournalEntryInput_sourceApply,
       sourceReferenceId: JournalEntryInput_sourceReferenceIdApply,
       updatedAt: AccountMappingInput_updatedAtApply,
-      vendorId: JournalEntryInput_vendorIdApply
+      vendorId: PurchaseOrderInput_vendorIdApply
     }
   },
   JournalEntryPatch: {
@@ -51899,7 +53733,7 @@ export const inputObjects = {
       source: JournalEntryInput_sourceApply,
       sourceReferenceId: JournalEntryInput_sourceReferenceIdApply,
       updatedAt: AccountMappingInput_updatedAtApply,
-      vendorId: JournalEntryInput_vendorIdApply
+      vendorId: PurchaseOrderInput_vendorIdApply
     }
   },
   JournalEntryToManyAttachmentFilter: {
@@ -52542,6 +54376,175 @@ export const inputObjects = {
     }
   },
   ProjectToManyRdExpenseFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
+  PurchaseOrderCondition: {
+    plans: {
+      bookId: AccountCondition_bookIdApply,
+      number: BillCondition_numberApply,
+      rowId: AccountCondition_rowIdApply,
+      status: BillCondition_statusApply,
+      vendorId: BillCondition_vendorIdApply
+    }
+  },
+  PurchaseOrderFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      book($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_bookPgResource, bookIdentifier, registryConfig.pgRelations.purchaseOrder.bookByMyBookId.localAttributes, registryConfig.pgRelations.purchaseOrder.bookByMyBookId.remoteAttributes, $where, value);
+      },
+      bookId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("bookId", "book_id", spec_purchaseOrder.attributes.book_id, queryBuilder, value);
+      },
+      convertedBill($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_billPgResource, billIdentifier, registryConfig.pgRelations.purchaseOrder.billByMyConvertedBillId.localAttributes, registryConfig.pgRelations.purchaseOrder.billByMyConvertedBillId.remoteAttributes, $where, value);
+      },
+      convertedBillExists($where, value) {
+        return pgConnectionFilterApplyForwardRelationExists(resource_billPgResource, billIdentifier, registryConfig.pgRelations.purchaseOrder.billByMyConvertedBillId.localAttributes, registryConfig.pgRelations.purchaseOrder.billByMyConvertedBillId.remoteAttributes, $where, value);
+      },
+      not: AccountFilter_notApply,
+      number(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("number", "number", spec_purchaseOrder.attributes.number, queryBuilder, value);
+      },
+      or: AccountFilter_orApply,
+      purchaseOrderLines($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: purchaseOrderLineIdentifier,
+          alias: resource_purchase_order_linePgResource.name,
+          localAttributes: registryConfig.pgRelations.purchaseOrder.purchaseOrderLinesByTheirPurchaseOrderId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.purchaseOrder.purchaseOrderLinesByTheirPurchaseOrderId.remoteAttributes
+        };
+        return $rel;
+      },
+      purchaseOrderLinesExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: purchaseOrderLineIdentifier,
+          alias: resource_purchase_order_linePgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.purchaseOrder.purchaseOrderLinesByTheirPurchaseOrderId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.purchaseOrder.purchaseOrderLinesByTheirPurchaseOrderId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_purchaseOrder.attributes.id, queryBuilder, value);
+      },
+      status(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("status", "status", spec_purchaseOrder.attributes.status, queryBuilder, value);
+      },
+      vendor($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_vendorPgResource, vendorIdentifier, registryConfig.pgRelations.purchaseOrder.vendorByMyVendorId.localAttributes, registryConfig.pgRelations.purchaseOrder.vendorByMyVendorId.remoteAttributes, $where, value);
+      },
+      vendorId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("vendorId", "vendor_id", spec_purchaseOrder.attributes.vendor_id, queryBuilder, value);
+      }
+    }
+  },
+  PurchaseOrderInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      bookId: TagGroupInput_bookIdApply,
+      convertedBillId: PurchaseOrderInput_convertedBillIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      date: CreditMemoApplicationInput_dateApply,
+      memo: JournalLineInput_memoApply,
+      number: PurchaseOrderInput_numberApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      status: AccountingPeriodInput_statusApply,
+      subtotal: PurchaseOrderInput_subtotalApply,
+      total: PurchaseOrderInput_totalApply,
+      updatedAt: AccountMappingInput_updatedAtApply,
+      vendorId: PurchaseOrderInput_vendorIdApply
+    }
+  },
+  PurchaseOrderLineCondition: {
+    plans: {
+      purchaseOrderId($condition, val) {
+        return applyAttributeCondition("purchase_order_id", TYPES.uuid, $condition, val);
+      },
+      rowId: AccountCondition_rowIdApply
+    }
+  },
+  PurchaseOrderLineFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      expenseAccount($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_accountPgResource, accountIdentifier, registryConfig.pgRelations.purchaseOrderLine.accountByMyExpenseAccountId.localAttributes, registryConfig.pgRelations.purchaseOrderLine.accountByMyExpenseAccountId.remoteAttributes, $where, value);
+      },
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      purchaseOrder($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_purchase_orderPgResource, purchaseOrderIdentifier, registryConfig.pgRelations.purchaseOrderLine.purchaseOrderByMyPurchaseOrderId.localAttributes, registryConfig.pgRelations.purchaseOrderLine.purchaseOrderByMyPurchaseOrderId.remoteAttributes, $where, value);
+      },
+      purchaseOrderId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("purchaseOrderId", "purchase_order_id", spec_purchaseOrderLine.attributes.purchase_order_id, queryBuilder, value);
+      },
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_purchaseOrderLine.attributes.id, queryBuilder, value);
+      },
+      taxJurisdiction($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_tax_jurisdictionPgResource, taxJurisdictionIdentifier, registryConfig.pgRelations.purchaseOrderLine.taxJurisdictionByMyTaxJurisdictionId.localAttributes, registryConfig.pgRelations.purchaseOrderLine.taxJurisdictionByMyTaxJurisdictionId.remoteAttributes, $where, value);
+      },
+      taxJurisdictionExists($where, value) {
+        return pgConnectionFilterApplyForwardRelationExists(resource_tax_jurisdictionPgResource, taxJurisdictionIdentifier, registryConfig.pgRelations.purchaseOrderLine.taxJurisdictionByMyTaxJurisdictionId.localAttributes, registryConfig.pgRelations.purchaseOrderLine.taxJurisdictionByMyTaxJurisdictionId.remoteAttributes, $where, value);
+      }
+    }
+  },
+  PurchaseOrderLineInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      amount: CreditMemoApplicationInput_amountApply,
+      description: EstimateLineInput_descriptionApply,
+      expenseAccountId: PurchaseOrderLineInput_expenseAccountIdApply,
+      purchaseOrderId: PurchaseOrderLineInput_purchaseOrderIdApply,
+      quantity: InventoryTransactionInput_quantityApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      sortOrder: EstimateLineInput_sortOrderApply,
+      taxJurisdictionId: JournalLineInput_taxJurisdictionIdApply,
+      unitPrice: EstimateLineInput_unitPriceApply
+    }
+  },
+  PurchaseOrderLinePatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      amount: CreditMemoApplicationInput_amountApply,
+      description: EstimateLineInput_descriptionApply,
+      expenseAccountId: PurchaseOrderLineInput_expenseAccountIdApply,
+      purchaseOrderId: PurchaseOrderLineInput_purchaseOrderIdApply,
+      quantity: InventoryTransactionInput_quantityApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      sortOrder: EstimateLineInput_sortOrderApply,
+      taxJurisdictionId: JournalLineInput_taxJurisdictionIdApply,
+      unitPrice: EstimateLineInput_unitPriceApply
+    }
+  },
+  PurchaseOrderPatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      bookId: TagGroupInput_bookIdApply,
+      convertedBillId: PurchaseOrderInput_convertedBillIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      date: CreditMemoApplicationInput_dateApply,
+      memo: JournalLineInput_memoApply,
+      number: PurchaseOrderInput_numberApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      status: AccountingPeriodInput_statusApply,
+      subtotal: PurchaseOrderInput_subtotalApply,
+      total: PurchaseOrderInput_totalApply,
+      updatedAt: AccountMappingInput_updatedAtApply,
+      vendorId: PurchaseOrderInput_vendorIdApply
+    }
+  },
+  PurchaseOrderToManyPurchaseOrderLineFilter: {
     plans: {
       every: AccountToManyAccountFilter_everyApply,
       none: AccountToManyAccountFilter_noneApply,
@@ -53675,6 +55678,30 @@ export const inputObjects = {
       patch: applyCreateFields
     }
   },
+  UpdatePurchaseOrderByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdatePurchaseOrderInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdatePurchaseOrderLineByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdatePurchaseOrderLineInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
   UpdateRdExpenseByIdInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
@@ -54089,14 +56116,14 @@ export const inputObjects = {
       exchangeRate: BillPaymentInput_exchangeRateApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       memo: JournalLineInput_memoApply,
-      number: EstimateInput_numberApply,
+      number: PurchaseOrderInput_numberApply,
       rowId: JournalLineProjectInput_rowIdApply,
       status: AccountingPeriodInput_statusApply,
-      subtotal: EstimateInput_subtotalApply,
+      subtotal: PurchaseOrderInput_subtotalApply,
       taxAmount: CreditMemoInput_taxAmountApply,
-      total: EstimateInput_totalApply,
+      total: PurchaseOrderInput_totalApply,
       updatedAt: AccountMappingInput_updatedAtApply,
-      vendorId: JournalEntryInput_vendorIdApply
+      vendorId: PurchaseOrderInput_vendorIdApply
     }
   },
   VendorCreditLineCondition: {
@@ -54136,7 +56163,7 @@ export const inputObjects = {
       amount: CreditMemoApplicationInput_amountApply,
       description: EstimateLineInput_descriptionApply,
       discountPercent: BillLineInput_discountPercentApply,
-      expenseAccountId: BillLineInput_expenseAccountIdApply,
+      expenseAccountId: PurchaseOrderLineInput_expenseAccountIdApply,
       quantity: InventoryTransactionInput_quantityApply,
       rowId: JournalLineProjectInput_rowIdApply,
       sortOrder: EstimateLineInput_sortOrderApply,
@@ -54151,7 +56178,7 @@ export const inputObjects = {
       amount: CreditMemoApplicationInput_amountApply,
       description: EstimateLineInput_descriptionApply,
       discountPercent: BillLineInput_discountPercentApply,
-      expenseAccountId: BillLineInput_expenseAccountIdApply,
+      expenseAccountId: PurchaseOrderLineInput_expenseAccountIdApply,
       quantity: InventoryTransactionInput_quantityApply,
       rowId: JournalLineProjectInput_rowIdApply,
       sortOrder: EstimateLineInput_sortOrderApply,
@@ -54171,14 +56198,14 @@ export const inputObjects = {
       exchangeRate: BillPaymentInput_exchangeRateApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
       memo: JournalLineInput_memoApply,
-      number: EstimateInput_numberApply,
+      number: PurchaseOrderInput_numberApply,
       rowId: JournalLineProjectInput_rowIdApply,
       status: AccountingPeriodInput_statusApply,
-      subtotal: EstimateInput_subtotalApply,
+      subtotal: PurchaseOrderInput_subtotalApply,
       taxAmount: CreditMemoInput_taxAmountApply,
-      total: EstimateInput_totalApply,
+      total: PurchaseOrderInput_totalApply,
       updatedAt: AccountMappingInput_updatedAtApply,
-      vendorId: JournalEntryInput_vendorIdApply
+      vendorId: PurchaseOrderInput_vendorIdApply
     }
   },
   VendorCreditToManyVendorCreditApplicationFilter: {
@@ -54254,6 +56281,30 @@ export const inputObjects = {
       },
       not: AccountFilter_notApply,
       or: AccountFilter_orApply,
+      purchaseOrders($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: purchaseOrderIdentifier,
+          alias: resource_purchase_orderPgResource.name,
+          localAttributes: registryConfig.pgRelations.vendor.purchaseOrdersByTheirVendorId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.vendor.purchaseOrdersByTheirVendorId.remoteAttributes
+        };
+        return $rel;
+      },
+      purchaseOrdersExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: purchaseOrderIdentifier,
+          alias: resource_purchase_orderPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.vendor.purchaseOrdersByTheirVendorId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.vendor.purchaseOrdersByTheirVendorId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
       rowId(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("rowId", "id", spec_vendor.attributes.id, queryBuilder, value);
       },
@@ -54329,6 +56380,13 @@ export const inputObjects = {
     }
   },
   VendorToManyDocumentFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
+  VendorToManyPurchaseOrderFilter: {
     plans: {
       every: AccountToManyAccountFilter_everyApply,
       none: AccountToManyAccountFilter_noneApply,
@@ -55770,6 +57828,74 @@ export const enums = {
       ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply,
       STATUS_ASC: BillOrderBy_STATUS_ASCApply,
       STATUS_DESC: BillOrderBy_STATUS_DESCApply
+    }
+  },
+  PurchaseOrderLineOrderBy: {
+    values: {
+      PRIMARY_KEY_ASC(queryBuilder) {
+        purchase_order_lineUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        purchase_order_lineUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PURCHASE_ORDER_ID_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "purchase_order_id",
+          direction: "ASC"
+        });
+      },
+      PURCHASE_ORDER_ID_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "purchase_order_id",
+          direction: "DESC"
+        });
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply
+    }
+  },
+  PurchaseOrderOrderBy: {
+    values: {
+      BOOK_ID_ASC: AccountOrderBy_BOOK_ID_ASCApply,
+      BOOK_ID_DESC: AccountOrderBy_BOOK_ID_DESCApply,
+      NUMBER_ASC: BillOrderBy_NUMBER_ASCApply,
+      NUMBER_DESC: BillOrderBy_NUMBER_DESCApply,
+      PRIMARY_KEY_ASC(queryBuilder) {
+        purchase_orderUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        purchase_orderUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply,
+      STATUS_ASC: BillOrderBy_STATUS_ASCApply,
+      STATUS_DESC: BillOrderBy_STATUS_DESCApply,
+      VENDOR_ID_ASC: BillOrderBy_VENDOR_ID_ASCApply,
+      VENDOR_ID_DESC: BillOrderBy_VENDOR_ID_DESCApply
     }
   },
   RdExpenseOrderBy: {

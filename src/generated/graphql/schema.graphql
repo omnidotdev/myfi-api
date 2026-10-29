@@ -77,6 +77,9 @@ type Query implements Node {
   """Get a single `EstimateLine`."""
   estimateLine(rowId: UUID!): EstimateLine
 
+  """Get a single `PurchaseOrderLine`."""
+  purchaseOrderLine(rowId: UUID!): PurchaseOrderLine
+
   """Get a single `CategorizationRuleSplit`."""
   categorizationRuleSplit(rowId: UUID!): CategorizationRuleSplit
 
@@ -106,6 +109,9 @@ type Query implements Node {
 
   """Get a single `CryptoLot`."""
   cryptoLot(rowId: UUID!): CryptoLot
+
+  """Get a single `PurchaseOrder`."""
+  purchaseOrder(rowId: UUID!): PurchaseOrder
 
   """Get a single `ConnectedAccount`."""
   connectedAccount(rowId: UUID!): ConnectedAccount
@@ -332,6 +338,14 @@ type Query implements Node {
     id: ID!
   ): EstimateLine
 
+  """Reads a single `PurchaseOrderLine` using its globally unique `ID`."""
+  purchaseOrderLineById(
+    """
+    The globally unique `ID` to be used in selecting a single `PurchaseOrderLine`.
+    """
+    id: ID!
+  ): PurchaseOrderLine
+
   """
   Reads a single `CategorizationRuleSplit` using its globally unique `ID`.
   """
@@ -407,6 +421,14 @@ type Query implements Node {
     """The globally unique `ID` to be used in selecting a single `CryptoLot`."""
     id: ID!
   ): CryptoLot
+
+  """Reads a single `PurchaseOrder` using its globally unique `ID`."""
+  purchaseOrderById(
+    """
+    The globally unique `ID` to be used in selecting a single `PurchaseOrder`.
+    """
+    id: ID!
+  ): PurchaseOrder
 
   """Reads a single `ConnectedAccount` using its globally unique `ID`."""
   connectedAccountById(
@@ -1254,6 +1276,40 @@ type Query implements Node {
     orderBy: [EstimateLineOrderBy!] = [PRIMARY_KEY_ASC]
   ): EstimateLineConnection
 
+  """Reads and enables pagination through a set of `PurchaseOrderLine`."""
+  purchaseOrderLines(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PurchaseOrderLineCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: PurchaseOrderLineFilter
+
+    """The method to use when ordering `PurchaseOrderLine`."""
+    orderBy: [PurchaseOrderLineOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PurchaseOrderLineConnection
+
   """
   Reads and enables pagination through a set of `CategorizationRuleSplit`.
   """
@@ -1597,6 +1653,40 @@ type Query implements Node {
     """The method to use when ordering `CryptoLot`."""
     orderBy: [CryptoLotOrderBy!] = [PRIMARY_KEY_ASC]
   ): CryptoLotConnection
+
+  """Reads and enables pagination through a set of `PurchaseOrder`."""
+  purchaseOrders(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PurchaseOrderCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: PurchaseOrderFilter
+
+    """The method to use when ordering `PurchaseOrder`."""
+    orderBy: [PurchaseOrderOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PurchaseOrderConnection
 
   """Reads and enables pagination through a set of `ConnectedAccount`."""
   connectedAccounts(
@@ -3969,6 +4059,40 @@ type Book implements Node {
     """The method to use when ordering `VendorCredit`."""
     orderBy: [VendorCreditOrderBy!] = [PRIMARY_KEY_ASC]
   ): VendorCreditConnection!
+
+  """Reads and enables pagination through a set of `PurchaseOrder`."""
+  purchaseOrders(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PurchaseOrderCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: PurchaseOrderFilter
+
+    """The method to use when ordering `PurchaseOrder`."""
+    orderBy: [PurchaseOrderOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PurchaseOrderConnection!
 }
 
 """A connection to a list of `Account` values."""
@@ -4469,6 +4593,12 @@ input BookFilter {
 
   """Some related `vendorCredits` exist."""
   vendorCreditsExist: Boolean
+
+  """Filter by the object’s `purchaseOrders` relation."""
+  purchaseOrders: BookToManyPurchaseOrderFilter
+
+  """Some related `purchaseOrders` exist."""
+  purchaseOrdersExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [BookFilter!]
@@ -5505,6 +5635,12 @@ input VendorFilter {
   """Some related `vendorCredits` exist."""
   vendorCreditsExist: Boolean
 
+  """Filter by the object’s `purchaseOrders` relation."""
+  purchaseOrders: VendorToManyPurchaseOrderFilter
+
+  """Some related `purchaseOrders` exist."""
+  purchaseOrdersExist: Boolean
+
   """Filter by the object’s `book` relation."""
   book: BookFilter
 
@@ -5957,6 +6093,125 @@ input VendorToManyVendorCreditFilter {
   No related `VendorCredit` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
   none: VendorCreditFilter
+}
+
+"""
+A filter to be used against many `PurchaseOrder` object types. All fields are combined with a logical ‘and.’
+"""
+input VendorToManyPurchaseOrderFilter {
+  """
+  Every related `PurchaseOrder` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: PurchaseOrderFilter
+
+  """
+  Some related `PurchaseOrder` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: PurchaseOrderFilter
+
+  """
+  No related `PurchaseOrder` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: PurchaseOrderFilter
+}
+
+"""
+A filter to be used against `PurchaseOrder` object types. All fields are combined with a logical ‘and.’
+"""
+input PurchaseOrderFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `bookId` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s `vendorId` field."""
+  vendorId: UUIDFilter
+
+  """Filter by the object’s `number` field."""
+  number: StringFilter
+
+  """Filter by the object’s `status` field."""
+  status: StringFilter
+
+  """Filter by the object’s `purchaseOrderLines` relation."""
+  purchaseOrderLines: PurchaseOrderToManyPurchaseOrderLineFilter
+
+  """Some related `purchaseOrderLines` exist."""
+  purchaseOrderLinesExist: Boolean
+
+  """Filter by the object’s `book` relation."""
+  book: BookFilter
+
+  """Filter by the object’s `convertedBill` relation."""
+  convertedBill: BillFilter
+
+  """A related `convertedBill` exists."""
+  convertedBillExists: Boolean
+
+  """Filter by the object’s `vendor` relation."""
+  vendor: VendorFilter
+
+  """Checks for all expressions in this list."""
+  and: [PurchaseOrderFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [PurchaseOrderFilter!]
+
+  """Negates the expression."""
+  not: PurchaseOrderFilter
+}
+
+"""
+A filter to be used against many `PurchaseOrderLine` object types. All fields are combined with a logical ‘and.’
+"""
+input PurchaseOrderToManyPurchaseOrderLineFilter {
+  """
+  Every related `PurchaseOrderLine` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: PurchaseOrderLineFilter
+
+  """
+  Some related `PurchaseOrderLine` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: PurchaseOrderLineFilter
+
+  """
+  No related `PurchaseOrderLine` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: PurchaseOrderLineFilter
+}
+
+"""
+A filter to be used against `PurchaseOrderLine` object types. All fields are combined with a logical ‘and.’
+"""
+input PurchaseOrderLineFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `purchaseOrderId` field."""
+  purchaseOrderId: UUIDFilter
+
+  """Filter by the object’s `expenseAccount` relation."""
+  expenseAccount: AccountFilter
+
+  """Filter by the object’s `purchaseOrder` relation."""
+  purchaseOrder: PurchaseOrderFilter
+
+  """Filter by the object’s `taxJurisdiction` relation."""
+  taxJurisdiction: TaxJurisdictionFilter
+
+  """A related `taxJurisdiction` exists."""
+  taxJurisdictionExists: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [PurchaseOrderLineFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [PurchaseOrderLineFilter!]
+
+  """Negates the expression."""
+  not: PurchaseOrderLineFilter
 }
 
 """
@@ -7795,6 +8050,26 @@ input BookToManyVendorCreditFilter {
 }
 
 """
+A filter to be used against many `PurchaseOrder` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyPurchaseOrderFilter {
+  """
+  Every related `PurchaseOrder` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: PurchaseOrderFilter
+
+  """
+  Some related `PurchaseOrder` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: PurchaseOrderFilter
+
+  """
+  No related `PurchaseOrder` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: PurchaseOrderFilter
+}
+
+"""
 A filter to be used against many `JournalLine` object types. All fields are combined with a logical ‘and.’
 """
 input AccountToManyJournalLineFilter {
@@ -8420,6 +8695,40 @@ type Vendor implements Node {
     """The method to use when ordering `VendorCredit`."""
     orderBy: [VendorCreditOrderBy!] = [PRIMARY_KEY_ASC]
   ): VendorCreditConnection!
+
+  """Reads and enables pagination through a set of `PurchaseOrder`."""
+  purchaseOrders(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PurchaseOrderCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: PurchaseOrderFilter
+
+    """The method to use when ordering `PurchaseOrder`."""
+    orderBy: [PurchaseOrderOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PurchaseOrderConnection!
 }
 
 """A connection to a list of `Bill` values."""
@@ -9298,6 +9607,212 @@ input VendorCreditCondition {
 
 """Methods to use when ordering `VendorCredit`."""
 enum VendorCreditOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+  VENDOR_ID_ASC
+  VENDOR_ID_DESC
+  NUMBER_ASC
+  NUMBER_DESC
+  STATUS_ASC
+  STATUS_DESC
+}
+
+"""A connection to a list of `PurchaseOrder` values."""
+type PurchaseOrderConnection {
+  """A list of `PurchaseOrder` objects."""
+  nodes: [PurchaseOrder]!
+
+  """
+  A list of edges which contains the `PurchaseOrder` and cursor to aid in pagination.
+  """
+  edges: [PurchaseOrderEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `PurchaseOrder` you could get from the connection."""
+  totalCount: Int!
+}
+
+type PurchaseOrder implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  vendorId: UUID!
+  number: String!
+  status: String!
+  date: String!
+  subtotal: BigFloat!
+  total: BigFloat!
+  memo: String
+  convertedBillId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """Reads a single `Book` that is related to this `PurchaseOrder`."""
+  book: Book
+
+  """Reads a single `Bill` that is related to this `PurchaseOrder`."""
+  convertedBill: Bill
+
+  """Reads a single `Vendor` that is related to this `PurchaseOrder`."""
+  vendor: Vendor
+
+  """Reads and enables pagination through a set of `PurchaseOrderLine`."""
+  purchaseOrderLines(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PurchaseOrderLineCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: PurchaseOrderLineFilter
+
+    """The method to use when ordering `PurchaseOrderLine`."""
+    orderBy: [PurchaseOrderLineOrderBy!] = [PRIMARY_KEY_ASC]
+  ): PurchaseOrderLineConnection!
+}
+
+"""A connection to a list of `PurchaseOrderLine` values."""
+type PurchaseOrderLineConnection {
+  """A list of `PurchaseOrderLine` objects."""
+  nodes: [PurchaseOrderLine]!
+
+  """
+  A list of edges which contains the `PurchaseOrderLine` and cursor to aid in pagination.
+  """
+  edges: [PurchaseOrderLineEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `PurchaseOrderLine` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+type PurchaseOrderLine implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  purchaseOrderId: UUID!
+  description: String!
+  quantity: BigFloat!
+  unitPrice: BigFloat!
+  amount: BigFloat!
+  expenseAccountId: UUID!
+  taxJurisdictionId: UUID
+  sortOrder: Int!
+
+  """Reads a single `Account` that is related to this `PurchaseOrderLine`."""
+  expenseAccount: Account
+
+  """
+  Reads a single `PurchaseOrder` that is related to this `PurchaseOrderLine`.
+  """
+  purchaseOrder: PurchaseOrder
+
+  """
+  Reads a single `TaxJurisdiction` that is related to this `PurchaseOrderLine`.
+  """
+  taxJurisdiction: TaxJurisdiction
+}
+
+"""A `PurchaseOrderLine` edge in the connection."""
+type PurchaseOrderLineEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `PurchaseOrderLine` at the end of the edge."""
+  node: PurchaseOrderLine
+}
+
+"""
+A condition to be used against `PurchaseOrderLine` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input PurchaseOrderLineCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `purchaseOrderId` field."""
+  purchaseOrderId: UUID
+}
+
+"""Methods to use when ordering `PurchaseOrderLine`."""
+enum PurchaseOrderLineOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  PURCHASE_ORDER_ID_ASC
+  PURCHASE_ORDER_ID_DESC
+}
+
+"""A `PurchaseOrder` edge in the connection."""
+type PurchaseOrderEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `PurchaseOrder` at the end of the edge."""
+  node: PurchaseOrder
+}
+
+"""
+A condition to be used against `PurchaseOrder` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input PurchaseOrderCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `bookId` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s `vendorId` field."""
+  vendorId: UUID
+
+  """Checks for equality with the object’s `number` field."""
+  number: String
+
+  """Checks for equality with the object’s `status` field."""
+  status: String
+}
+
+"""Methods to use when ordering `PurchaseOrder`."""
+enum PurchaseOrderOrderBy {
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
@@ -13183,6 +13698,14 @@ type Mutation {
     input: CreateEstimateLineInput!
   ): CreateEstimateLinePayload
 
+  """Creates a single `PurchaseOrderLine`."""
+  createPurchaseOrderLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreatePurchaseOrderLineInput!
+  ): CreatePurchaseOrderLinePayload
+
   """Creates a single `CategorizationRuleSplit`."""
   createCategorizationRuleSplit(
     """
@@ -13262,6 +13785,14 @@ type Mutation {
     """
     input: CreateCryptoLotInput!
   ): CreateCryptoLotPayload
+
+  """Creates a single `PurchaseOrder`."""
+  createPurchaseOrder(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreatePurchaseOrderInput!
+  ): CreatePurchaseOrderPayload
 
   """Creates a single `ConnectedAccount`."""
   createConnectedAccount(
@@ -13808,6 +14339,24 @@ type Mutation {
   ): UpdateEstimateLinePayload
 
   """
+  Updates a single `PurchaseOrderLine` using its globally unique id and a patch.
+  """
+  updatePurchaseOrderLineById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdatePurchaseOrderLineByIdInput!
+  ): UpdatePurchaseOrderLinePayload
+
+  """Updates a single `PurchaseOrderLine` using a unique key and a patch."""
+  updatePurchaseOrderLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdatePurchaseOrderLineInput!
+  ): UpdatePurchaseOrderLinePayload
+
+  """
   Updates a single `CategorizationRuleSplit` using its globally unique id and a patch.
   """
   updateCategorizationRuleSplitById(
@@ -13982,6 +14531,24 @@ type Mutation {
     """
     input: UpdateCryptoLotInput!
   ): UpdateCryptoLotPayload
+
+  """
+  Updates a single `PurchaseOrder` using its globally unique id and a patch.
+  """
+  updatePurchaseOrderById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdatePurchaseOrderByIdInput!
+  ): UpdatePurchaseOrderPayload
+
+  """Updates a single `PurchaseOrder` using a unique key and a patch."""
+  updatePurchaseOrder(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdatePurchaseOrderInput!
+  ): UpdatePurchaseOrderPayload
 
   """
   Updates a single `ConnectedAccount` using its globally unique id and a patch.
@@ -14701,6 +15268,22 @@ type Mutation {
     input: DeleteEstimateLineInput!
   ): DeleteEstimateLinePayload
 
+  """Deletes a single `PurchaseOrderLine` using its globally unique id."""
+  deletePurchaseOrderLineById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeletePurchaseOrderLineByIdInput!
+  ): DeletePurchaseOrderLinePayload
+
+  """Deletes a single `PurchaseOrderLine` using a unique key."""
+  deletePurchaseOrderLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeletePurchaseOrderLineInput!
+  ): DeletePurchaseOrderLinePayload
+
   """
   Deletes a single `CategorizationRuleSplit` using its globally unique id.
   """
@@ -14864,6 +15447,22 @@ type Mutation {
     """
     input: DeleteCryptoLotInput!
   ): DeleteCryptoLotPayload
+
+  """Deletes a single `PurchaseOrder` using its globally unique id."""
+  deletePurchaseOrderById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeletePurchaseOrderByIdInput!
+  ): DeletePurchaseOrderPayload
+
+  """Deletes a single `PurchaseOrder` using a unique key."""
+  deletePurchaseOrder(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeletePurchaseOrderInput!
+  ): DeletePurchaseOrderPayload
 
   """Deletes a single `ConnectedAccount` using its globally unique id."""
   deleteConnectedAccountById(
@@ -16158,6 +16757,54 @@ input EstimateLineInput {
   sortOrder: Int
 }
 
+"""The output of our create `PurchaseOrderLine` mutation."""
+type CreatePurchaseOrderLinePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `PurchaseOrderLine` that was created by this mutation."""
+  purchaseOrderLine: PurchaseOrderLine
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `PurchaseOrderLine`. May be used by Relay 1."""
+  purchaseOrderLineEdge(
+    """The method to use when ordering `PurchaseOrderLine`."""
+    orderBy: [PurchaseOrderLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): PurchaseOrderLineEdge
+}
+
+"""All input for the create `PurchaseOrderLine` mutation."""
+input CreatePurchaseOrderLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `PurchaseOrderLine` to be created by this mutation."""
+  purchaseOrderLine: PurchaseOrderLineInput!
+}
+
+"""An input for mutations affecting `PurchaseOrderLine`"""
+input PurchaseOrderLineInput {
+  rowId: UUID
+  purchaseOrderId: UUID!
+  description: String!
+  quantity: BigFloat
+  unitPrice: BigFloat
+  amount: BigFloat
+  expenseAccountId: UUID!
+  taxJurisdictionId: UUID
+  sortOrder: Int
+}
+
 """The output of our create `CategorizationRuleSplit` mutation."""
 type CreateCategorizationRuleSplitPayload {
   """
@@ -16651,6 +17298,57 @@ input CryptoLotInput {
   proceedsPerUnit: BigFloat
   journalEntryId: UUID
   createdAt: Datetime
+}
+
+"""The output of our create `PurchaseOrder` mutation."""
+type CreatePurchaseOrderPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `PurchaseOrder` that was created by this mutation."""
+  purchaseOrder: PurchaseOrder
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `PurchaseOrder`. May be used by Relay 1."""
+  purchaseOrderEdge(
+    """The method to use when ordering `PurchaseOrder`."""
+    orderBy: [PurchaseOrderOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): PurchaseOrderEdge
+}
+
+"""All input for the create `PurchaseOrder` mutation."""
+input CreatePurchaseOrderInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `PurchaseOrder` to be created by this mutation."""
+  purchaseOrder: PurchaseOrderInput!
+}
+
+"""An input for mutations affecting `PurchaseOrder`"""
+input PurchaseOrderInput {
+  rowId: UUID
+  bookId: UUID!
+  vendorId: UUID!
+  number: String!
+  status: String
+  date: String!
+  subtotal: BigFloat
+  total: BigFloat
+  memo: String
+  convertedBillId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
 }
 
 """The output of our create `ConnectedAccount` mutation."""
@@ -19269,6 +19967,78 @@ input UpdateEstimateLineInput {
   patch: EstimateLinePatch!
 }
 
+"""The output of our update `PurchaseOrderLine` mutation."""
+type UpdatePurchaseOrderLinePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `PurchaseOrderLine` that was updated by this mutation."""
+  purchaseOrderLine: PurchaseOrderLine
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `PurchaseOrderLine`. May be used by Relay 1."""
+  purchaseOrderLineEdge(
+    """The method to use when ordering `PurchaseOrderLine`."""
+    orderBy: [PurchaseOrderLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): PurchaseOrderLineEdge
+}
+
+"""All input for the `updatePurchaseOrderLineById` mutation."""
+input UpdatePurchaseOrderLineByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `PurchaseOrderLine` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `PurchaseOrderLine` being updated.
+  """
+  patch: PurchaseOrderLinePatch!
+}
+
+"""
+Represents an update to a `PurchaseOrderLine`. Fields that are set will be updated.
+"""
+input PurchaseOrderLinePatch {
+  rowId: UUID
+  purchaseOrderId: UUID
+  description: String
+  quantity: BigFloat
+  unitPrice: BigFloat
+  amount: BigFloat
+  expenseAccountId: UUID
+  taxJurisdictionId: UUID
+  sortOrder: Int
+}
+
+"""All input for the `updatePurchaseOrderLine` mutation."""
+input UpdatePurchaseOrderLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `PurchaseOrderLine` being updated.
+  """
+  patch: PurchaseOrderLinePatch!
+}
+
 """The output of our update `CategorizationRuleSplit` mutation."""
 type UpdateCategorizationRuleSplitPayload {
   """
@@ -20002,6 +20772,81 @@ input UpdateCryptoLotInput {
   An object where the defined keys will be set on the `CryptoLot` being updated.
   """
   patch: CryptoLotPatch!
+}
+
+"""The output of our update `PurchaseOrder` mutation."""
+type UpdatePurchaseOrderPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `PurchaseOrder` that was updated by this mutation."""
+  purchaseOrder: PurchaseOrder
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `PurchaseOrder`. May be used by Relay 1."""
+  purchaseOrderEdge(
+    """The method to use when ordering `PurchaseOrder`."""
+    orderBy: [PurchaseOrderOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): PurchaseOrderEdge
+}
+
+"""All input for the `updatePurchaseOrderById` mutation."""
+input UpdatePurchaseOrderByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `PurchaseOrder` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `PurchaseOrder` being updated.
+  """
+  patch: PurchaseOrderPatch!
+}
+
+"""
+Represents an update to a `PurchaseOrder`. Fields that are set will be updated.
+"""
+input PurchaseOrderPatch {
+  rowId: UUID
+  bookId: UUID
+  vendorId: UUID
+  number: String
+  status: String
+  date: String
+  subtotal: BigFloat
+  total: BigFloat
+  memo: String
+  convertedBillId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the `updatePurchaseOrder` mutation."""
+input UpdatePurchaseOrderInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `PurchaseOrder` being updated.
+  """
+  patch: PurchaseOrderPatch!
 }
 
 """The output of our update `ConnectedAccount` mutation."""
@@ -22724,6 +23569,54 @@ input DeleteEstimateLineInput {
   rowId: UUID!
 }
 
+"""The output of our delete `PurchaseOrderLine` mutation."""
+type DeletePurchaseOrderLinePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `PurchaseOrderLine` that was deleted by this mutation."""
+  purchaseOrderLine: PurchaseOrderLine
+  deletedPurchaseOrderLineId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `PurchaseOrderLine`. May be used by Relay 1."""
+  purchaseOrderLineEdge(
+    """The method to use when ordering `PurchaseOrderLine`."""
+    orderBy: [PurchaseOrderLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): PurchaseOrderLineEdge
+}
+
+"""All input for the `deletePurchaseOrderLineById` mutation."""
+input DeletePurchaseOrderLineByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `PurchaseOrderLine` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deletePurchaseOrderLine` mutation."""
+input DeletePurchaseOrderLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete `CategorizationRuleSplit` mutation."""
 type DeleteCategorizationRuleSplitPayload {
   """
@@ -23196,6 +24089,54 @@ input DeleteCryptoLotByIdInput {
 
 """All input for the `deleteCryptoLot` mutation."""
 input DeleteCryptoLotInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `PurchaseOrder` mutation."""
+type DeletePurchaseOrderPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `PurchaseOrder` that was deleted by this mutation."""
+  purchaseOrder: PurchaseOrder
+  deletedPurchaseOrderId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `PurchaseOrder`. May be used by Relay 1."""
+  purchaseOrderEdge(
+    """The method to use when ordering `PurchaseOrder`."""
+    orderBy: [PurchaseOrderOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): PurchaseOrderEdge
+}
+
+"""All input for the `deletePurchaseOrderById` mutation."""
+input DeletePurchaseOrderByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `PurchaseOrder` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deletePurchaseOrder` mutation."""
+input DeletePurchaseOrderInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.

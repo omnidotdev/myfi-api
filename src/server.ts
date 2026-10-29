@@ -57,6 +57,7 @@ import ofxRoutes from "lib/ofx/ofxRoutes";
 import { payrollCallbackRoute, payrollRoutes } from "lib/payroll";
 import plaidRoutes from "lib/plaid/plaidRoutes";
 import startScheduledSync from "lib/plaid/scheduledSync";
+import purchaseOrderRoutes from "lib/purchasing/purchaseOrderRoutes";
 import recurringRoutes from "lib/recurring/recurringRoutes";
 import startScheduledRecurring from "lib/recurring/scheduledRecurring";
 import {
@@ -146,7 +147,8 @@ const commit = (() => {
 const connectionAndOrgRoutes = new Elysia()
   .use(connectionRoutes)
   .use(orgDataRoutes)
-  .use(vendorCreditRoutes);
+  .use(vendorCreditRoutes)
+  .use(purchaseOrderRoutes);
 
 const app = new Elysia()
   .onAfterHandle(({ set }) => {
