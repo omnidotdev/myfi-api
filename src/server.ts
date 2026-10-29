@@ -131,6 +131,7 @@ import {
   generateTaxLossHarvesting,
   maskForm1099NecReport,
 } from "lib/tax";
+import timeEntryRoutes from "lib/timeTracking/timeEntryRoutes";
 import vendorCreditRoutes from "lib/vendorCredit/vendorCreditRoutes";
 
 import type { ExportFormat } from "lib/reports";
@@ -159,7 +160,8 @@ const connectionAndOrgRoutes = new Elysia()
   .use(bankDepositRoutes)
   .use(trackingCategoryRoutes)
   .use(customFieldRoutes)
-  .use(priceLevelRoutes);
+  .use(priceLevelRoutes)
+  .use(timeEntryRoutes);
 
 const app = new Elysia()
   .onAfterHandle(({ set }) => {

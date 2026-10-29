@@ -4303,6 +4303,154 @@ const spec_recurringInvoice = {
   executor: executor
 };
 const recurringInvoiceCodec = recordCodec(spec_recurringInvoice);
+const timeEntryIdentifier = sql.identifier("public", "time_entry");
+const spec_timeEntry = {
+  name: "timeEntry",
+  identifier: timeEntryIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    customer_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    service_item_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    date: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    hours: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    rate: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    description: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    billable: {
+      codec: TYPES.boolean,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    invoice_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "18811",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "time_entry"
+    }
+  },
+  executor: executor
+};
+const timeEntryCodec = recordCodec(spec_timeEntry);
 const connectedAccountIdentifier = sql.identifier("public", "connected_account");
 const spec_connectedAccount = {
   name: "connectedAccount",
@@ -9276,6 +9424,29 @@ const recurring_invoice_resourceOptionsConfig = {
   },
   uniques: recurring_invoiceUniques
 };
+const time_entryUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const time_entry_resourceOptionsConfig = {
+  executor: executor,
+  name: "time_entry",
+  identifier: "main.public.time_entry",
+  from: timeEntryIdentifier,
+  codec: timeEntryCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "time_entry"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: time_entryUniques
+};
 const connected_accountUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -9882,6 +10053,7 @@ const registryConfig = {
     cryptoLot: cryptoLotCodec,
     purchaseOrder: purchaseOrderCodec,
     recurringInvoice: recurringInvoiceCodec,
+    timeEntry: timeEntryCodec,
     connectedAccount: connectedAccountCodec,
     creditMemoLine: creditMemoLineCodec,
     invoicePayment: invoicePaymentCodec,
@@ -9971,6 +10143,7 @@ const registryConfig = {
     crypto_lot: crypto_lot_resourceOptionsConfig,
     purchase_order: purchase_order_resourceOptionsConfig,
     recurring_invoice: recurring_invoice_resourceOptionsConfig,
+    time_entry: time_entry_resourceOptionsConfig,
     connected_account: connected_account_resourceOptionsConfig,
     credit_memo_line: credit_memo_line_resourceOptionsConfig,
     invoice_payment: invoice_payment_resourceOptionsConfig,
@@ -10933,6 +11106,13 @@ const registryConfig = {
         localAttributes: ["id"],
         remoteAttributes: ["book_id"],
         isReferencee: true
+      },
+      timeEntriesByTheirBookId: {
+        localCodec: bookCodec,
+        remoteResourceOptions: time_entry_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["book_id"],
+        isReferencee: true
       }
     },
     bookAccess: {
@@ -11259,6 +11439,13 @@ const registryConfig = {
         localAttributes: ["id"],
         remoteAttributes: ["customer_id"],
         isReferencee: true
+      },
+      timeEntriesByTheirCustomerId: {
+        localCodec: customerCodec,
+        remoteResourceOptions: time_entry_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["customer_id"],
+        isReferencee: true
       }
     },
     document: {
@@ -11432,6 +11619,17 @@ const registryConfig = {
           __proto__: null,
           isIndexed: false
         }
+      },
+      timeEntriesByTheirServiceItemId: {
+        localCodec: inventoryItemCodec,
+        remoteResourceOptions: time_entry_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["service_item_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
       }
     },
     inventoryTransaction: {
@@ -11512,6 +11710,17 @@ const registryConfig = {
         localAttributes: ["id"],
         remoteAttributes: ["invoice_id"],
         isReferencee: true
+      },
+      timeEntriesByTheirInvoiceId: {
+        localCodec: invoiceCodec,
+        remoteResourceOptions: time_entry_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["invoice_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
       }
     },
     invoiceLine: {
@@ -12357,6 +12566,37 @@ const registryConfig = {
         }
       }
     },
+    timeEntry: {
+      __proto__: null,
+      bookByMyBookId: {
+        localCodec: timeEntryCodec,
+        remoteResourceOptions: book_resourceOptionsConfig,
+        localAttributes: ["book_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      customerByMyCustomerId: {
+        localCodec: timeEntryCodec,
+        remoteResourceOptions: customer_resourceOptionsConfig,
+        localAttributes: ["customer_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      invoiceByMyInvoiceId: {
+        localCodec: timeEntryCodec,
+        remoteResourceOptions: invoice_resourceOptionsConfig,
+        localAttributes: ["invoice_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      inventoryItemByMyServiceItemId: {
+        localCodec: timeEntryCodec,
+        remoteResourceOptions: inventory_item_resourceOptionsConfig,
+        localAttributes: ["service_item_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      }
+    },
     trackingCategory: {
       __proto__: null,
       bookByMyBookId: {
@@ -12568,6 +12808,7 @@ const resource_bill_paymentPgResource = registry.pgResources["bill_payment"];
 const resource_crypto_lotPgResource = registry.pgResources["crypto_lot"];
 const resource_purchase_orderPgResource = registry.pgResources["purchase_order"];
 const resource_recurring_invoicePgResource = registry.pgResources["recurring_invoice"];
+const resource_time_entryPgResource = registry.pgResources["time_entry"];
 const resource_connected_accountPgResource = registry.pgResources["connected_account"];
 const resource_credit_memo_linePgResource = registry.pgResources["credit_memo_line"];
 const resource_invoice_paymentPgResource = registry.pgResources["invoice_payment"];
@@ -13065,6 +13306,17 @@ const nodeFetcher_RecurringInvoice = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_RecurringInvoice));
   return nodeIdHandler_RecurringInvoice.get(nodeIdHandler_RecurringInvoice.getSpec($decoded));
 };
+const nodeIdHandler_TimeEntry = makeTableNodeIdHandler({
+  typeName: "TimeEntry",
+  identifier: "TimeEntry",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_time_entryPgResource,
+  pk: time_entryUniques[0].attributes
+});
+const nodeFetcher_TimeEntry = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_TimeEntry));
+  return nodeIdHandler_TimeEntry.get(nodeIdHandler_TimeEntry.getSpec($decoded));
+};
 const nodeIdHandler_ConnectedAccount = makeTableNodeIdHandler({
   typeName: "ConnectedAccount",
   identifier: "ConnectedAccount",
@@ -13420,6 +13672,7 @@ const nodeIdHandlerByTypeName = {
   CryptoLot: nodeIdHandler_CryptoLot,
   PurchaseOrder: nodeIdHandler_PurchaseOrder,
   RecurringInvoice: nodeIdHandler_RecurringInvoice,
+  TimeEntry: nodeIdHandler_TimeEntry,
   ConnectedAccount: nodeIdHandler_ConnectedAccount,
   CreditMemoLine: nodeIdHandler_CreditMemoLine,
   InvoicePayment: nodeIdHandler_InvoicePayment,
@@ -14310,6 +14563,10 @@ const specFromArgs_RecurringInvoice = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_RecurringInvoice, $nodeId);
 };
+const specFromArgs_TimeEntry = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_TimeEntry, $nodeId);
+};
 const specFromArgs_ConnectedAccount = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_ConnectedAccount, $nodeId);
@@ -14886,6 +15143,16 @@ function RecurringInvoiceInput_dueInDaysApply(obj, val, info) {
 function RecurringInvoiceInput_currencyApply(obj, val, info) {
   obj.set("currency", bakedInputRuntime(info.schema, info.field.type, val));
 }
+const CreateTimeEntryPayload_timeEntryEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_time_entryPgResource, time_entryUniques[0].attributes, $mutation, fieldArgs);
+function TimeEntryInput_serviceItemIdApply(obj, val, info) {
+  obj.set("service_item_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function TimeEntryInput_hoursApply(obj, val, info) {
+  obj.set("hours", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function TimeEntryInput_billableApply(obj, val, info) {
+  obj.set("billable", bakedInputRuntime(info.schema, info.field.type, val));
+}
 const CreateConnectedAccountPayload_connectedAccountEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_connected_accountPgResource, connected_accountUniques[0].attributes, $mutation, fieldArgs);
 function ConnectedAccountInput_providerAccountIdApply(obj, val, info) {
   obj.set("provider_account_id", bakedInputRuntime(info.schema, info.field.type, val));
@@ -15334,6 +15601,9 @@ type Query implements Node {
   """Get a single \`RecurringInvoice\`."""
   recurringInvoice(rowId: UUID!): RecurringInvoice
 
+  """Get a single \`TimeEntry\`."""
+  timeEntry(rowId: UUID!): TimeEntry
+
   """Get a single \`ConnectedAccount\`."""
   connectedAccount(rowId: UUID!): ConnectedAccount
 
@@ -15711,6 +15981,12 @@ type Query implements Node {
     """
     id: ID!
   ): RecurringInvoice
+
+  """Reads a single \`TimeEntry\` using its globally unique \`ID\`."""
+  timeEntryById(
+    """The globally unique \`ID\` to be used in selecting a single \`TimeEntry\`."""
+    id: ID!
+  ): TimeEntry
 
   """Reads a single \`ConnectedAccount\` using its globally unique \`ID\`."""
   connectedAccountById(
@@ -17217,6 +17493,40 @@ type Query implements Node {
     """The method to use when ordering \`RecurringInvoice\`."""
     orderBy: [RecurringInvoiceOrderBy!] = [PRIMARY_KEY_ASC]
   ): RecurringInvoiceConnection
+
+  """Reads and enables pagination through a set of \`TimeEntry\`."""
+  timeEntries(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TimeEntryCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: TimeEntryFilter
+
+    """The method to use when ordering \`TimeEntry\`."""
+    orderBy: [TimeEntryOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TimeEntryConnection
 
   """Reads and enables pagination through a set of \`ConnectedAccount\`."""
   connectedAccounts(
@@ -19898,6 +20208,40 @@ type Book implements Node {
     """The method to use when ordering \`PriceLevel\`."""
     orderBy: [PriceLevelOrderBy!] = [PRIMARY_KEY_ASC]
   ): PriceLevelConnection!
+
+  """Reads and enables pagination through a set of \`TimeEntry\`."""
+  timeEntries(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TimeEntryCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: TimeEntryFilter
+
+    """The method to use when ordering \`TimeEntry\`."""
+    orderBy: [TimeEntryOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TimeEntryConnection!
 }
 
 """A connection to a list of \`Account\` values."""
@@ -20440,6 +20784,12 @@ input BookFilter {
 
   """Some related \`priceLevels\` exist."""
   priceLevelsExist: Boolean
+
+  """Filter by the object’s \`timeEntries\` relation."""
+  timeEntries: BookToManyTimeEntryFilter
+
+  """Some related \`timeEntries\` exist."""
+  timeEntriesExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [BookFilter!]
@@ -22998,6 +23348,12 @@ input CustomerFilter {
   """Some related \`recurringInvoices\` exist."""
   recurringInvoicesExist: Boolean
 
+  """Filter by the object’s \`timeEntries\` relation."""
+  timeEntries: CustomerToManyTimeEntryFilter
+
+  """Some related \`timeEntries\` exist."""
+  timeEntriesExist: Boolean
+
   """Filter by the object’s \`book\` relation."""
   book: BookFilter
 
@@ -23785,6 +24141,70 @@ input RecurringInvoiceLineFilter {
 }
 
 """
+A filter to be used against many \`TimeEntry\` object types. All fields are combined with a logical ‘and.’
+"""
+input CustomerToManyTimeEntryFilter {
+  """
+  Every related \`TimeEntry\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: TimeEntryFilter
+
+  """
+  Some related \`TimeEntry\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: TimeEntryFilter
+
+  """
+  No related \`TimeEntry\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: TimeEntryFilter
+}
+
+"""
+A filter to be used against \`TimeEntry\` object types. All fields are combined with a logical ‘and.’
+"""
+input TimeEntryFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`bookId\` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s \`customerId\` field."""
+  customerId: UUIDFilter
+
+  """Filter by the object’s \`book\` relation."""
+  book: BookFilter
+
+  """Filter by the object’s \`customer\` relation."""
+  customer: CustomerFilter
+
+  """A related \`customer\` exists."""
+  customerExists: Boolean
+
+  """Filter by the object’s \`invoice\` relation."""
+  invoice: InvoiceFilter
+
+  """A related \`invoice\` exists."""
+  invoiceExists: Boolean
+
+  """Filter by the object’s \`serviceItem\` relation."""
+  serviceItem: InventoryItemFilter
+
+  """A related \`serviceItem\` exists."""
+  serviceItemExists: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [TimeEntryFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [TimeEntryFilter!]
+
+  """Negates the expression."""
+  not: TimeEntryFilter
+}
+
+"""
 A filter to be used against \`PriceLevel\` object types. All fields are combined with a logical ‘and.’
 """
 input PriceLevelFilter {
@@ -24405,6 +24825,26 @@ input BookToManyPriceLevelFilter {
   No related \`PriceLevel\` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
   none: PriceLevelFilter
+}
+
+"""
+A filter to be used against many \`TimeEntry\` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyTimeEntryFilter {
+  """
+  Every related \`TimeEntry\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: TimeEntryFilter
+
+  """
+  Some related \`TimeEntry\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: TimeEntryFilter
+
+  """
+  No related \`TimeEntry\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: TimeEntryFilter
 }
 
 """
@@ -28296,6 +28736,40 @@ type Customer implements Node {
     """The method to use when ordering \`RecurringInvoice\`."""
     orderBy: [RecurringInvoiceOrderBy!] = [PRIMARY_KEY_ASC]
   ): RecurringInvoiceConnection!
+
+  """Reads and enables pagination through a set of \`TimeEntry\`."""
+  timeEntries(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TimeEntryCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: TimeEntryFilter
+
+    """The method to use when ordering \`TimeEntry\`."""
+    orderBy: [TimeEntryOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TimeEntryConnection!
 }
 
 type PriceLevel implements Node {
@@ -29593,6 +30067,91 @@ input RecurringInvoiceCondition {
 
 """Methods to use when ordering \`RecurringInvoice\`."""
 enum RecurringInvoiceOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+  CUSTOMER_ID_ASC
+  CUSTOMER_ID_DESC
+}
+
+"""A connection to a list of \`TimeEntry\` values."""
+type TimeEntryConnection {
+  """A list of \`TimeEntry\` objects."""
+  nodes: [TimeEntry]!
+
+  """
+  A list of edges which contains the \`TimeEntry\` and cursor to aid in pagination.
+  """
+  edges: [TimeEntryEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* \`TimeEntry\` you could get from the connection."""
+  totalCount: Int!
+}
+
+type TimeEntry implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  customerId: UUID
+  serviceItemId: UUID
+  date: String!
+  hours: BigFloat!
+  rate: BigFloat!
+  description: String
+  billable: Boolean!
+  invoiceId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """Reads a single \`Book\` that is related to this \`TimeEntry\`."""
+  book: Book
+
+  """Reads a single \`Customer\` that is related to this \`TimeEntry\`."""
+  customer: Customer
+
+  """Reads a single \`Invoice\` that is related to this \`TimeEntry\`."""
+  invoice: Invoice
+
+  """Reads a single \`InventoryItem\` that is related to this \`TimeEntry\`."""
+  serviceItem: InventoryItem
+}
+
+"""A \`TimeEntry\` edge in the connection."""
+type TimeEntryEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`TimeEntry\` at the end of the edge."""
+  node: TimeEntry
+}
+
+"""
+A condition to be used against \`TimeEntry\` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input TimeEntryCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`bookId\` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s \`customerId\` field."""
+  customerId: UUID
+}
+
+"""Methods to use when ordering \`TimeEntry\`."""
+enum TimeEntryOrderBy {
   NATURAL
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
@@ -30949,6 +31508,14 @@ type Mutation {
     input: CreateRecurringInvoiceInput!
   ): CreateRecurringInvoicePayload
 
+  """Creates a single \`TimeEntry\`."""
+  createTimeEntry(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateTimeEntryInput!
+  ): CreateTimeEntryPayload
+
   """Creates a single \`ConnectedAccount\`."""
   createConnectedAccount(
     """
@@ -31844,6 +32411,22 @@ type Mutation {
     """
     input: UpdateRecurringInvoiceInput!
   ): UpdateRecurringInvoicePayload
+
+  """Updates a single \`TimeEntry\` using its globally unique id and a patch."""
+  updateTimeEntryById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateTimeEntryByIdInput!
+  ): UpdateTimeEntryPayload
+
+  """Updates a single \`TimeEntry\` using a unique key and a patch."""
+  updateTimeEntry(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateTimeEntryInput!
+  ): UpdateTimeEntryPayload
 
   """
   Updates a single \`ConnectedAccount\` using its globally unique id and a patch.
@@ -32890,6 +33473,22 @@ type Mutation {
     """
     input: DeleteRecurringInvoiceInput!
   ): DeleteRecurringInvoicePayload
+
+  """Deletes a single \`TimeEntry\` using its globally unique id."""
+  deleteTimeEntryById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteTimeEntryByIdInput!
+  ): DeleteTimeEntryPayload
+
+  """Deletes a single \`TimeEntry\` using a unique key."""
+  deleteTimeEntry(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteTimeEntryInput!
+  ): DeleteTimeEntryPayload
 
   """Deletes a single \`ConnectedAccount\` using its globally unique id."""
   deleteConnectedAccountById(
@@ -35118,6 +35717,57 @@ input RecurringInvoiceInput {
   currency: String
   memo: String
   isActive: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""The output of our create \`TimeEntry\` mutation."""
+type CreateTimeEntryPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`TimeEntry\` that was created by this mutation."""
+  timeEntry: TimeEntry
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`TimeEntry\`. May be used by Relay 1."""
+  timeEntryEdge(
+    """The method to use when ordering \`TimeEntry\`."""
+    orderBy: [TimeEntryOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): TimeEntryEdge
+}
+
+"""All input for the create \`TimeEntry\` mutation."""
+input CreateTimeEntryInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`TimeEntry\` to be created by this mutation."""
+  timeEntry: TimeEntryInput!
+}
+
+"""An input for mutations affecting \`TimeEntry\`"""
+input TimeEntryInput {
+  rowId: UUID
+  bookId: UUID!
+  customerId: UUID
+  serviceItemId: UUID
+  date: String!
+  hours: BigFloat
+  rate: BigFloat
+  description: String
+  billable: Boolean
+  invoiceId: UUID
   createdAt: Datetime
   updatedAt: Datetime
 }
@@ -39170,6 +39820,81 @@ input UpdateRecurringInvoiceInput {
   patch: RecurringInvoicePatch!
 }
 
+"""The output of our update \`TimeEntry\` mutation."""
+type UpdateTimeEntryPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`TimeEntry\` that was updated by this mutation."""
+  timeEntry: TimeEntry
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`TimeEntry\`. May be used by Relay 1."""
+  timeEntryEdge(
+    """The method to use when ordering \`TimeEntry\`."""
+    orderBy: [TimeEntryOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): TimeEntryEdge
+}
+
+"""All input for the \`updateTimeEntryById\` mutation."""
+input UpdateTimeEntryByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`TimeEntry\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`TimeEntry\` being updated.
+  """
+  patch: TimeEntryPatch!
+}
+
+"""
+Represents an update to a \`TimeEntry\`. Fields that are set will be updated.
+"""
+input TimeEntryPatch {
+  rowId: UUID
+  bookId: UUID
+  customerId: UUID
+  serviceItemId: UUID
+  date: String
+  hours: BigFloat
+  rate: BigFloat
+  description: String
+  billable: Boolean
+  invoiceId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the \`updateTimeEntry\` mutation."""
+input UpdateTimeEntryInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`TimeEntry\` being updated.
+  """
+  patch: TimeEntryPatch!
+}
+
 """The output of our update \`ConnectedAccount\` mutation."""
 type UpdateConnectedAccountPayload {
   """
@@ -42880,6 +43605,54 @@ input DeleteRecurringInvoiceInput {
   rowId: UUID!
 }
 
+"""The output of our delete \`TimeEntry\` mutation."""
+type DeleteTimeEntryPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`TimeEntry\` that was deleted by this mutation."""
+  timeEntry: TimeEntry
+  deletedTimeEntryId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`TimeEntry\`. May be used by Relay 1."""
+  timeEntryEdge(
+    """The method to use when ordering \`TimeEntry\`."""
+    orderBy: [TimeEntryOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): TimeEntryEdge
+}
+
+"""All input for the \`deleteTimeEntryById\` mutation."""
+input DeleteTimeEntryByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`TimeEntry\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteTimeEntry\` mutation."""
+input DeleteTimeEntryInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete \`ConnectedAccount\` mutation."""
 type DeleteConnectedAccountPayload {
   """
@@ -45529,6 +46302,32 @@ export const objects = {
           orderBy: applyOrderByArgToConnection
         }
       },
+      timeEntries: {
+        plan() {
+          return connection(resource_time_entryPgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      timeEntry(_$root, {
+        $rowId
+      }) {
+        return resource_time_entryPgResource.get({
+          id: $rowId
+        });
+      },
+      timeEntryById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_TimeEntry($nodeId);
+      },
       trackingCategories: {
         plan() {
           return connection(resource_tracking_categoryPgResource.find());
@@ -46365,6 +47164,18 @@ export const objects = {
       createTaxJurisdiction: {
         plan(_, args) {
           const $insert = pgInsertSingle(resource_tax_jurisdictionPgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
+      createTimeEntry: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_time_entryPgResource);
           args.apply($insert);
           return object({
             result: $insert
@@ -47919,6 +48730,32 @@ export const objects = {
       deleteTaxJurisdictionById: {
         plan(_$root, args) {
           const $delete = pgDeleteSingle(resource_tax_jurisdictionPgResource, specFromArgs_TaxJurisdiction(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteTimeEntry: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_time_entryPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteTimeEntryById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_time_entryPgResource, specFromArgs_TimeEntry(args));
           args.apply($delete);
           return object({
             result: $delete
@@ -49566,6 +50403,32 @@ export const objects = {
           input: applyInputToUpdateOrDelete
         }
       },
+      updateTimeEntry: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_time_entryPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateTimeEntryById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_time_entryPgResource, specFromArgs_TimeEntry(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
       updateTrackingCategory: {
         plan(_$root, args) {
           const $update = pgUpdateSingle(resource_tracking_categoryPgResource, {
@@ -50911,6 +51774,24 @@ export const objects = {
           orderBy: applyOrderByArgToConnection
         }
       },
+      timeEntries: {
+        plan($record) {
+          const $records = resource_time_entryPgResource.find({
+            book_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       trackingCategories: {
         plan($record) {
           const $records = resource_tracking_categoryPgResource.find({
@@ -51715,6 +52596,15 @@ export const objects = {
       taxJurisdictionEdge: CreateTaxJurisdictionPayload_taxJurisdictionEdgePlan
     }
   },
+  CreateTimeEntryPayload: {
+    assertStep: assertStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan,
+      timeEntry: planCreatePayloadResult,
+      timeEntryEdge: CreateTimeEntryPayload_timeEntryEdgePlan
+    }
+  },
   CreateTrackingCategoryPayload: {
     assertStep: assertStep,
     plans: {
@@ -52085,6 +52975,24 @@ export const objects = {
         }
       },
       rowId: JournalLineProject_rowIdPlan,
+      timeEntries: {
+        plan($record) {
+          const $records = resource_time_entryPgResource.find({
+            customer_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       updatedAt: Account_updatedAtPlan
     },
     planType($specifier) {
@@ -52981,6 +53889,20 @@ export const objects = {
       query: queryPlan,
       taxJurisdiction: planCreatePayloadResult,
       taxJurisdictionEdge: CreateTaxJurisdictionPayload_taxJurisdictionEdgePlan
+    }
+  },
+  DeleteTimeEntryPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedTimeEntryId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_TimeEntry.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      query: queryPlan,
+      timeEntry: planCreatePayloadResult,
+      timeEntryEdge: CreateTimeEntryPayload_timeEntryEdgePlan
     }
   },
   DeleteTrackingCategoryPayload: {
@@ -54610,6 +55532,43 @@ export const objects = {
       totalCount: totalCountConnectionPlan
     }
   },
+  TimeEntry: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      book: Account_bookPlan,
+      bookId: Account_bookIdPlan,
+      createdAt: Account_createdAtPlan,
+      customer: Invoice_customerPlan,
+      customerId: Invoice_customerIdPlan,
+      id($parent) {
+        const specifier = nodeIdHandler_TimeEntry.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_TimeEntry.codec.name].encode);
+      },
+      invoice: InvoiceLine_invoicePlan,
+      invoiceId: InvoiceLine_invoiceIdPlan,
+      rowId: JournalLineProject_rowIdPlan,
+      serviceItem($record) {
+        return resource_inventory_itemPgResource.get({
+          id: $record.get("service_item_id")
+        });
+      },
+      serviceItemId($record) {
+        return $record.get("service_item_id");
+      },
+      updatedAt: Account_updatedAtPlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of time_entryUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_time_entryPgResource.get(spec);
+    }
+  },
+  TimeEntryConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
   TrackingCategory: {
     assertStep: assertPgClassSingleStep,
     plans: {
@@ -55165,6 +56124,15 @@ export const objects = {
       query: queryPlan,
       taxJurisdiction: planCreatePayloadResult,
       taxJurisdictionEdge: CreateTaxJurisdictionPayload_taxJurisdictionEdgePlan
+    }
+  },
+  UpdateTimeEntryPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan,
+      timeEntry: planCreatePayloadResult,
+      timeEntryEdge: CreateTimeEntryPayload_timeEntryEdgePlan
     }
   },
   UpdateTrackingCategoryPayload: {
@@ -57401,6 +58369,30 @@ export const inputObjects = {
           $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
         });
       },
+      timeEntries($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: timeEntryIdentifier,
+          alias: resource_time_entryPgResource.name,
+          localAttributes: registryConfig.pgRelations.book.timeEntriesByTheirBookId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.book.timeEntriesByTheirBookId.remoteAttributes
+        };
+        return $rel;
+      },
+      timeEntriesExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: timeEntryIdentifier,
+          alias: resource_time_entryPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.book.timeEntriesByTheirBookId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.book.timeEntriesByTheirBookId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
       trackingCategories($where, value) {
         assertAllowed(value, "object");
         const $rel = $where.andPlan();
@@ -57808,6 +58800,13 @@ export const inputObjects = {
     }
   },
   BookToManyTaxJurisdictionFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
+  BookToManyTimeEntryFilter: {
     plans: {
       every: AccountToManyAccountFilter_everyApply,
       none: AccountToManyAccountFilter_noneApply,
@@ -58497,6 +59496,12 @@ export const inputObjects = {
       taxJurisdiction: applyCreateFields
     }
   },
+  CreateTimeEntryInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      timeEntry: applyCreateFields
+    }
+  },
   CreateTrackingCategoryInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
@@ -59077,6 +60082,30 @@ export const inputObjects = {
       },
       rowId(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("rowId", "id", spec_customer.attributes.id, queryBuilder, value);
+      },
+      timeEntries($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: timeEntryIdentifier,
+          alias: resource_time_entryPgResource.name,
+          localAttributes: registryConfig.pgRelations.customer.timeEntriesByTheirCustomerId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.customer.timeEntriesByTheirCustomerId.remoteAttributes
+        };
+        return $rel;
+      },
+      timeEntriesExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: timeEntryIdentifier,
+          alias: resource_time_entryPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.customer.timeEntriesByTheirCustomerId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.customer.timeEntriesByTheirCustomerId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
       }
     }
   },
@@ -59142,6 +60171,13 @@ export const inputObjects = {
     }
   },
   CustomerToManyRecurringInvoiceFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
+  CustomerToManyTimeEntryFilter: {
     plans: {
       every: AccountToManyAccountFilter_everyApply,
       none: AccountToManyAccountFilter_noneApply,
@@ -59877,6 +60913,16 @@ export const inputObjects = {
     }
   },
   DeleteTaxJurisdictionInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteTimeEntryByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteTimeEntryInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate
     }
@@ -62705,6 +63751,84 @@ export const inputObjects = {
       some: AccountToManyAccountFilter_someApply
     }
   },
+  TimeEntryCondition: {
+    plans: {
+      bookId: AccountCondition_bookIdApply,
+      customerId: InvoiceCondition_customerIdApply,
+      rowId: AccountCondition_rowIdApply
+    }
+  },
+  TimeEntryFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      book($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_bookPgResource, bookIdentifier, registryConfig.pgRelations.timeEntry.bookByMyBookId.localAttributes, registryConfig.pgRelations.timeEntry.bookByMyBookId.remoteAttributes, $where, value);
+      },
+      bookId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("bookId", "book_id", spec_timeEntry.attributes.book_id, queryBuilder, value);
+      },
+      customer($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_customerPgResource, customerIdentifier, registryConfig.pgRelations.timeEntry.customerByMyCustomerId.localAttributes, registryConfig.pgRelations.timeEntry.customerByMyCustomerId.remoteAttributes, $where, value);
+      },
+      customerExists($where, value) {
+        return pgConnectionFilterApplyForwardRelationExists(resource_customerPgResource, customerIdentifier, registryConfig.pgRelations.timeEntry.customerByMyCustomerId.localAttributes, registryConfig.pgRelations.timeEntry.customerByMyCustomerId.remoteAttributes, $where, value);
+      },
+      customerId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("customerId", "customer_id", spec_timeEntry.attributes.customer_id, queryBuilder, value);
+      },
+      invoice($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_invoicePgResource, invoiceIdentifier, registryConfig.pgRelations.timeEntry.invoiceByMyInvoiceId.localAttributes, registryConfig.pgRelations.timeEntry.invoiceByMyInvoiceId.remoteAttributes, $where, value);
+      },
+      invoiceExists($where, value) {
+        return pgConnectionFilterApplyForwardRelationExists(resource_invoicePgResource, invoiceIdentifier, registryConfig.pgRelations.timeEntry.invoiceByMyInvoiceId.localAttributes, registryConfig.pgRelations.timeEntry.invoiceByMyInvoiceId.remoteAttributes, $where, value);
+      },
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_timeEntry.attributes.id, queryBuilder, value);
+      },
+      serviceItem($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_inventory_itemPgResource, inventoryItemIdentifier, registryConfig.pgRelations.timeEntry.inventoryItemByMyServiceItemId.localAttributes, registryConfig.pgRelations.timeEntry.inventoryItemByMyServiceItemId.remoteAttributes, $where, value);
+      },
+      serviceItemExists($where, value) {
+        return pgConnectionFilterApplyForwardRelationExists(resource_inventory_itemPgResource, inventoryItemIdentifier, registryConfig.pgRelations.timeEntry.inventoryItemByMyServiceItemId.localAttributes, registryConfig.pgRelations.timeEntry.inventoryItemByMyServiceItemId.remoteAttributes, $where, value);
+      }
+    }
+  },
+  TimeEntryInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      billable: TimeEntryInput_billableApply,
+      bookId: TagGroupInput_bookIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      customerId: RecurringInvoiceInput_customerIdApply,
+      date: CreditMemoApplicationInput_dateApply,
+      description: PurchaseOrderLineInput_descriptionApply,
+      hours: TimeEntryInput_hoursApply,
+      invoiceId: CreditMemoApplicationInput_invoiceIdApply,
+      rate: TaxJurisdictionInput_rateApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      serviceItemId: TimeEntryInput_serviceItemIdApply,
+      updatedAt: CustomFieldValueInput_updatedAtApply
+    }
+  },
+  TimeEntryPatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      billable: TimeEntryInput_billableApply,
+      bookId: TagGroupInput_bookIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      customerId: RecurringInvoiceInput_customerIdApply,
+      date: CreditMemoApplicationInput_dateApply,
+      description: PurchaseOrderLineInput_descriptionApply,
+      hours: TimeEntryInput_hoursApply,
+      invoiceId: CreditMemoApplicationInput_invoiceIdApply,
+      rate: TaxJurisdictionInput_rateApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      serviceItemId: TimeEntryInput_serviceItemIdApply,
+      updatedAt: CustomFieldValueInput_updatedAtApply
+    }
+  },
   TrackingCategoryCondition: {
     plans: {
       bookId: AccountCondition_bookIdApply,
@@ -63469,6 +64593,18 @@ export const inputObjects = {
     }
   },
   UpdateTaxJurisdictionInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateTimeEntryByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateTimeEntryInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
       patch: applyCreateFields
@@ -66043,6 +67179,34 @@ export const enums = {
       },
       PRIMARY_KEY_DESC(queryBuilder) {
         tax_jurisdictionUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply
+    }
+  },
+  TimeEntryOrderBy: {
+    values: {
+      BOOK_ID_ASC: AccountOrderBy_BOOK_ID_ASCApply,
+      BOOK_ID_DESC: AccountOrderBy_BOOK_ID_DESCApply,
+      CUSTOMER_ID_ASC: InvoiceOrderBy_CUSTOMER_ID_ASCApply,
+      CUSTOMER_ID_DESC: InvoiceOrderBy_CUSTOMER_ID_DESCApply,
+      PRIMARY_KEY_ASC(queryBuilder) {
+        time_entryUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        time_entryUniques[0].attributes.forEach(attributeName => {
           queryBuilder.orderBy({
             attribute: attributeName,
             direction: "DESC"

@@ -54,6 +54,7 @@ export * from "./savingsGoal.table";
 export * from "./tag.table";
 export * from "./tagGroup.table";
 export * from "./taxJurisdiction.table";
+export * from "./timeEntry.table";
 export * from "./trackingCategory.table";
 export * from "./vehicle.table";
 export * from "./vendor.table";

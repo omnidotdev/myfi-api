@@ -351,6 +351,13 @@
       "when": 1793316771413,
       "tag": "0049_price_levels",
       "breakpoints": true
+    },
+    {
+      "idx": 50,
+      "version": "7",
+      "when": 1793317470905,
+      "tag": "0050_time_tracking",
+      "breakpoints": true
     }
   ]
 }
