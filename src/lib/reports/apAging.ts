@@ -48,6 +48,7 @@ const generateApAging = async (params: {
     .select({
       total: billTable.total,
       amountPaid: billTable.amountPaid,
+      exchangeRate: billTable.exchangeRate,
       dueDate: billTable.dueDate,
       vendorId: billTable.vendorId,
       vendorName: vendorTable.name,
@@ -76,9 +77,14 @@ const generateApAging = async (params: {
   >();
 
   for (const row of rows) {
+    // Convert each bill's outstanding balance to the book's home currency at its
+    // booked rate, so a mixed-currency aging sums a single currency (1 for
+    // home-currency bills)
+    const rate = Number.parseFloat(row.exchangeRate as string) || 1;
     const outstanding =
-      (Number.parseFloat(row.total as string) || 0) -
-      (Number.parseFloat(row.amountPaid as string) || 0);
+      ((Number.parseFloat(row.total as string) || 0) -
+        (Number.parseFloat(row.amountPaid as string) || 0)) *
+      rate;
     if (outstanding <= 0.00005) continue;
 
     const dueMs = new Date(row.dueDate).getTime();
