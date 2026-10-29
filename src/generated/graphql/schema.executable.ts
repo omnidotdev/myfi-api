@@ -1983,6 +1983,124 @@ const spec_purchaseOrderLine = {
   executor: executor
 };
 const purchaseOrderLineCodec = recordCodec(spec_purchaseOrderLine);
+const recurringInvoiceLineIdentifier = sql.identifier("public", "recurring_invoice_line");
+const spec_recurringInvoiceLine = {
+  name: "recurringInvoiceLine",
+  identifier: recurringInvoiceLineIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    recurring_invoice_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    description: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    quantity: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    unit_price: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    income_account_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    tax_jurisdiction_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    discount_percent: {
+      codec: TYPES.numeric,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    sort_order: {
+      codec: TYPES.int,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "18568",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "recurring_invoice_line"
+    }
+  },
+  executor: executor
+};
+const recurringInvoiceLineCodec = recordCodec(spec_recurringInvoiceLine);
 const categorizationRuleSplitIdentifier = sql.identifier("public", "categorization_rule_split");
 const spec_categorizationRuleSplit = {
   name: "categorizationRuleSplit",
@@ -3579,6 +3697,158 @@ const spec_purchaseOrder = {
   executor: executor
 };
 const purchaseOrderCodec = recordCodec(spec_purchaseOrder);
+const recurringInvoiceIdentifier = sql.identifier("public", "recurring_invoice");
+const spec_recurringInvoice = {
+  name: "recurringInvoice",
+  identifier: recurringInvoiceIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    customer_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    number_prefix: {
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    frequency: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    next_run_date: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    due_in_days: {
+      codec: TYPES.int,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    currency: {
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    memo: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    is_active: {
+      codec: TYPES.boolean,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "18586",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "recurring_invoice"
+    }
+  },
+  executor: executor
+};
+const recurringInvoiceCodec = recordCodec(spec_recurringInvoice);
 const connectedAccountIdentifier = sql.identifier("public", "connected_account");
 const spec_connectedAccount = {
   name: "connectedAccount",
@@ -7939,6 +8209,29 @@ const purchase_order_line_resourceOptionsConfig = {
   },
   uniques: purchase_order_lineUniques
 };
+const recurring_invoice_lineUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const recurring_invoice_line_resourceOptionsConfig = {
+  executor: executor,
+  name: "recurring_invoice_line",
+  identifier: "main.public.recurring_invoice_line",
+  from: recurringInvoiceLineIdentifier,
+  codec: recurringInvoiceLineCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "recurring_invoice_line"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: recurring_invoice_lineUniques
+};
 const categorization_rule_splitUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -8214,6 +8507,29 @@ const purchase_order_resourceOptionsConfig = {
     canDelete: true
   },
   uniques: purchase_orderUniques
+};
+const recurring_invoiceUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const recurring_invoice_resourceOptionsConfig = {
+  executor: executor,
+  name: "recurring_invoice",
+  identifier: "main.public.recurring_invoice",
+  from: recurringInvoiceIdentifier,
+  codec: recurringInvoiceCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "recurring_invoice"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: recurring_invoiceUniques
 };
 const connected_accountUniques = [{
   attributes: ["id"],
@@ -8779,6 +9095,7 @@ const registryConfig = {
     inventoryTransaction: inventoryTransactionCodec,
     payrollConnection: payrollConnectionCodec,
     purchaseOrderLine: purchaseOrderLineCodec,
+    recurringInvoiceLine: recurringInvoiceLineCodec,
     categorizationRuleSplit: categorizationRuleSplitCodec,
     reconciliationStatement: reconciliationStatementCodec,
     rdExpense: rdExpenseCodec,
@@ -8791,6 +9108,7 @@ const registryConfig = {
     invoicePayment: invoicePaymentCodec,
     cryptoLot: cryptoLotCodec,
     purchaseOrder: purchaseOrderCodec,
+    recurringInvoice: recurringInvoiceCodec,
     connectedAccount: connectedAccountCodec,
     creditMemoLine: creditMemoLineCodec,
     journalEntry: journalEntryCodec,
@@ -8860,6 +9178,7 @@ const registryConfig = {
     inventory_transaction: inventory_transaction_resourceOptionsConfig,
     payroll_connection: payroll_connection_resourceOptionsConfig,
     purchase_order_line: purchase_order_line_resourceOptionsConfig,
+    recurring_invoice_line: recurring_invoice_line_resourceOptionsConfig,
     categorization_rule_split: categorization_rule_split_resourceOptionsConfig,
     reconciliation_statement: reconciliation_statement_resourceOptionsConfig,
     rd_expense: rd_expense_resourceOptionsConfig,
@@ -8872,6 +9191,7 @@ const registryConfig = {
     invoice_payment: invoice_payment_resourceOptionsConfig,
     crypto_lot: crypto_lot_resourceOptionsConfig,
     purchase_order: purchase_order_resourceOptionsConfig,
+    recurring_invoice: recurring_invoice_resourceOptionsConfig,
     connected_account: connected_account_resourceOptionsConfig,
     credit_memo_line: credit_memo_line_resourceOptionsConfig,
     journal_entry: journal_entry_resourceOptionsConfig,
@@ -9255,6 +9575,17 @@ const registryConfig = {
         remoteResourceOptions: purchase_order_line_resourceOptionsConfig,
         localAttributes: ["id"],
         remoteAttributes: ["expense_account_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
+      },
+      recurringInvoiceLinesByTheirIncomeAccountId: {
+        localCodec: accountCodec,
+        remoteResourceOptions: recurring_invoice_line_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["income_account_id"],
         isReferencee: true,
         extensions: {
           __proto__: null,
@@ -9734,6 +10065,13 @@ const registryConfig = {
         localAttributes: ["id"],
         remoteAttributes: ["book_id"],
         isReferencee: true
+      },
+      recurringInvoicesByTheirBookId: {
+        localCodec: bookCodec,
+        remoteResourceOptions: recurring_invoice_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["book_id"],
+        isReferencee: true
       }
     },
     bookAccess: {
@@ -10009,6 +10347,13 @@ const registryConfig = {
       creditMemosByTheirCustomerId: {
         localCodec: customerCodec,
         remoteResourceOptions: credit_memo_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["customer_id"],
+        isReferencee: true
+      },
+      recurringInvoicesByTheirCustomerId: {
+        localCodec: customerCodec,
+        remoteResourceOptions: recurring_invoice_resourceOptionsConfig,
         localAttributes: ["id"],
         remoteAttributes: ["customer_id"],
         isReferencee: true
@@ -10790,6 +11135,54 @@ const registryConfig = {
         isUnique: true
       }
     },
+    recurringInvoice: {
+      __proto__: null,
+      bookByMyBookId: {
+        localCodec: recurringInvoiceCodec,
+        remoteResourceOptions: book_resourceOptionsConfig,
+        localAttributes: ["book_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      customerByMyCustomerId: {
+        localCodec: recurringInvoiceCodec,
+        remoteResourceOptions: customer_resourceOptionsConfig,
+        localAttributes: ["customer_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      recurringInvoiceLinesByTheirRecurringInvoiceId: {
+        localCodec: recurringInvoiceCodec,
+        remoteResourceOptions: recurring_invoice_line_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["recurring_invoice_id"],
+        isReferencee: true
+      }
+    },
+    recurringInvoiceLine: {
+      __proto__: null,
+      accountByMyIncomeAccountId: {
+        localCodec: recurringInvoiceLineCodec,
+        remoteResourceOptions: account_resourceOptionsConfig,
+        localAttributes: ["income_account_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      recurringInvoiceByMyRecurringInvoiceId: {
+        localCodec: recurringInvoiceLineCodec,
+        remoteResourceOptions: recurring_invoice_resourceOptionsConfig,
+        localAttributes: ["recurring_invoice_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      taxJurisdictionByMyTaxJurisdictionId: {
+        localCodec: recurringInvoiceLineCodec,
+        remoteResourceOptions: tax_jurisdiction_resourceOptionsConfig,
+        localAttributes: ["tax_jurisdiction_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      }
+    },
     recurringTransaction: {
       __proto__: null,
       accountByMyAccountId: {
@@ -10986,6 +11379,17 @@ const registryConfig = {
           __proto__: null,
           isIndexed: false
         }
+      },
+      recurringInvoiceLinesByTheirTaxJurisdictionId: {
+        localCodec: taxJurisdictionCodec,
+        remoteResourceOptions: recurring_invoice_line_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["tax_jurisdiction_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
       }
     },
     vehicle: {
@@ -11163,6 +11567,7 @@ const resource_attachmentPgResource = registry.pgResources["attachment"];
 const resource_inventory_transactionPgResource = registry.pgResources["inventory_transaction"];
 const resource_payroll_connectionPgResource = registry.pgResources["payroll_connection"];
 const resource_purchase_order_linePgResource = registry.pgResources["purchase_order_line"];
+const resource_recurring_invoice_linePgResource = registry.pgResources["recurring_invoice_line"];
 const resource_categorization_rule_splitPgResource = registry.pgResources["categorization_rule_split"];
 const resource_reconciliation_statementPgResource = registry.pgResources["reconciliation_statement"];
 const resource_rd_expensePgResource = registry.pgResources["rd_expense"];
@@ -11175,6 +11580,7 @@ const resource_bill_paymentPgResource = registry.pgResources["bill_payment"];
 const resource_invoice_paymentPgResource = registry.pgResources["invoice_payment"];
 const resource_crypto_lotPgResource = registry.pgResources["crypto_lot"];
 const resource_purchase_orderPgResource = registry.pgResources["purchase_order"];
+const resource_recurring_invoicePgResource = registry.pgResources["recurring_invoice"];
 const resource_connected_accountPgResource = registry.pgResources["connected_account"];
 const resource_credit_memo_linePgResource = registry.pgResources["credit_memo_line"];
 const resource_journal_entryPgResource = registry.pgResources["journal_entry"];
@@ -11462,6 +11868,17 @@ const nodeFetcher_PurchaseOrderLine = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_PurchaseOrderLine));
   return nodeIdHandler_PurchaseOrderLine.get(nodeIdHandler_PurchaseOrderLine.getSpec($decoded));
 };
+const nodeIdHandler_RecurringInvoiceLine = makeTableNodeIdHandler({
+  typeName: "RecurringInvoiceLine",
+  identifier: "RecurringInvoiceLine",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_recurring_invoice_linePgResource,
+  pk: recurring_invoice_lineUniques[0].attributes
+});
+const nodeFetcher_RecurringInvoiceLine = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_RecurringInvoiceLine));
+  return nodeIdHandler_RecurringInvoiceLine.get(nodeIdHandler_RecurringInvoiceLine.getSpec($decoded));
+};
 const nodeIdHandler_CategorizationRuleSplit = makeTableNodeIdHandler({
   typeName: "CategorizationRuleSplit",
   identifier: "CategorizationRuleSplit",
@@ -11593,6 +12010,17 @@ const nodeIdHandler_PurchaseOrder = makeTableNodeIdHandler({
 const nodeFetcher_PurchaseOrder = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_PurchaseOrder));
   return nodeIdHandler_PurchaseOrder.get(nodeIdHandler_PurchaseOrder.getSpec($decoded));
+};
+const nodeIdHandler_RecurringInvoice = makeTableNodeIdHandler({
+  typeName: "RecurringInvoice",
+  identifier: "RecurringInvoice",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_recurring_invoicePgResource,
+  pk: recurring_invoiceUniques[0].attributes
+});
+const nodeFetcher_RecurringInvoice = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_RecurringInvoice));
+  return nodeIdHandler_RecurringInvoice.get(nodeIdHandler_RecurringInvoice.getSpec($decoded));
 };
 const nodeIdHandler_ConnectedAccount = makeTableNodeIdHandler({
   typeName: "ConnectedAccount",
@@ -11919,6 +12347,7 @@ const nodeIdHandlerByTypeName = {
   InventoryTransaction: nodeIdHandler_InventoryTransaction,
   PayrollConnection: nodeIdHandler_PayrollConnection,
   PurchaseOrderLine: nodeIdHandler_PurchaseOrderLine,
+  RecurringInvoiceLine: nodeIdHandler_RecurringInvoiceLine,
   CategorizationRuleSplit: nodeIdHandler_CategorizationRuleSplit,
   ReconciliationStatement: nodeIdHandler_ReconciliationStatement,
   RdExpense: nodeIdHandler_RdExpense,
@@ -11931,6 +12360,7 @@ const nodeIdHandlerByTypeName = {
   InvoicePayment: nodeIdHandler_InvoicePayment,
   CryptoLot: nodeIdHandler_CryptoLot,
   PurchaseOrder: nodeIdHandler_PurchaseOrder,
+  RecurringInvoice: nodeIdHandler_RecurringInvoice,
   ConnectedAccount: nodeIdHandler_ConnectedAccount,
   CreditMemoLine: nodeIdHandler_CreditMemoLine,
   JournalEntry: nodeIdHandler_JournalEntry,
@@ -12744,6 +13174,10 @@ const specFromArgs_PurchaseOrderLine = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_PurchaseOrderLine, $nodeId);
 };
+const specFromArgs_RecurringInvoiceLine = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_RecurringInvoiceLine, $nodeId);
+};
 const specFromArgs_CategorizationRuleSplit = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_CategorizationRuleSplit, $nodeId);
@@ -12791,6 +13225,10 @@ const specFromArgs_CryptoLot = args => {
 const specFromArgs_PurchaseOrder = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_PurchaseOrder, $nodeId);
+};
+const specFromArgs_RecurringInvoice = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_RecurringInvoice, $nodeId);
 };
 const specFromArgs_ConnectedAccount = args => {
   const $nodeId = args.getRaw(["input", "id"]);
@@ -13165,6 +13603,16 @@ function PurchaseOrderLineInput_expenseAccountIdApply(obj, val, info) {
 function PurchaseOrderLineInput_sortOrderApply(obj, val, info) {
   obj.set("sort_order", bakedInputRuntime(info.schema, info.field.type, val));
 }
+const CreateRecurringInvoiceLinePayload_recurringInvoiceLineEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_recurring_invoice_linePgResource, recurring_invoice_lineUniques[0].attributes, $mutation, fieldArgs);
+function RecurringInvoiceLineInput_recurringInvoiceIdApply(obj, val, info) {
+  obj.set("recurring_invoice_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function RecurringInvoiceLineInput_incomeAccountIdApply(obj, val, info) {
+  obj.set("income_account_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function RecurringInvoiceLineInput_discountPercentApply(obj, val, info) {
+  obj.set("discount_percent", bakedInputRuntime(info.schema, info.field.type, val));
+}
 const CreateCategorizationRuleSplitPayload_categorizationRuleSplitEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_categorization_rule_splitPgResource, categorization_rule_splitUniques[0].attributes, $mutation, fieldArgs);
 function CategorizationRuleSplitInput_ruleIdApply(obj, val, info) {
   obj.set("rule_id", bakedInputRuntime(info.schema, info.field.type, val));
@@ -13215,15 +13663,9 @@ function ProjectInput_endDateApply(obj, val, info) {
   obj.set("end_date", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateBillLinePayload_billLineEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_bill_linePgResource, bill_lineUniques[0].attributes, $mutation, fieldArgs);
-function BillLineInput_discountPercentApply(obj, val, info) {
-  obj.set("discount_percent", bakedInputRuntime(info.schema, info.field.type, val));
-}
 const CreateEstimateLinePayload_estimateLineEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_estimate_linePgResource, estimate_lineUniques[0].attributes, $mutation, fieldArgs);
 function EstimateLineInput_estimateIdApply(obj, val, info) {
   obj.set("estimate_id", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function EstimateLineInput_incomeAccountIdApply(obj, val, info) {
-  obj.set("income_account_id", bakedInputRuntime(info.schema, info.field.type, val));
 }
 function EstimateLineInput_billedAmountApply(obj, val, info) {
   obj.set("billed_amount", bakedInputRuntime(info.schema, info.field.type, val));
@@ -13306,6 +13748,25 @@ function PurchaseOrderInput_totalApply(obj, val, info) {
 function PurchaseOrderInput_convertedBillIdApply(obj, val, info) {
   obj.set("converted_bill_id", bakedInputRuntime(info.schema, info.field.type, val));
 }
+const CreateRecurringInvoicePayload_recurringInvoiceEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_recurring_invoicePgResource, recurring_invoiceUniques[0].attributes, $mutation, fieldArgs);
+function RecurringInvoiceInput_customerIdApply(obj, val, info) {
+  obj.set("customer_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function RecurringInvoiceInput_numberPrefixApply(obj, val, info) {
+  obj.set("number_prefix", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function RecurringInvoiceInput_frequencyApply(obj, val, info) {
+  obj.set("frequency", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function RecurringInvoiceInput_nextRunDateApply(obj, val, info) {
+  obj.set("next_run_date", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function RecurringInvoiceInput_dueInDaysApply(obj, val, info) {
+  obj.set("due_in_days", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function RecurringInvoiceInput_currencyApply(obj, val, info) {
+  obj.set("currency", bakedInputRuntime(info.schema, info.field.type, val));
+}
 const CreateConnectedAccountPayload_connectedAccountEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_connected_accountPgResource, connected_accountUniques[0].attributes, $mutation, fieldArgs);
 function ConnectedAccountInput_providerAccountIdApply(obj, val, info) {
   obj.set("provider_account_id", bakedInputRuntime(info.schema, info.field.type, val));
@@ -13368,9 +13829,6 @@ function InvoiceLineInput_secondaryTaxJurisdictionIdApply(obj, val, info) {
   obj.set("secondary_tax_jurisdiction_id", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateEstimatePayload_estimateEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_estimatePgResource, estimateUniques[0].attributes, $mutation, fieldArgs);
-function EstimateInput_customerIdApply(obj, val, info) {
-  obj.set("customer_id", bakedInputRuntime(info.schema, info.field.type, val));
-}
 function EstimateInput_estimateDateApply(obj, val, info) {
   obj.set("estimate_date", bakedInputRuntime(info.schema, info.field.type, val));
 }
@@ -13488,9 +13946,6 @@ function CreditMemoInput_taxAmountApply(obj, val, info) {
 function CreditMemoInput_amountAppliedApply(obj, val, info) {
   obj.set("amount_applied", bakedInputRuntime(info.schema, info.field.type, val));
 }
-function CreditMemoInput_currencyApply(obj, val, info) {
-  obj.set("currency", bakedInputRuntime(info.schema, info.field.type, val));
-}
 const CreateVendorCreditPayload_vendorCreditEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_vendor_creditPgResource, vendor_creditUniques[0].attributes, $mutation, fieldArgs);
 const CreateFixedAssetPayload_fixedAssetEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_fixed_assetPgResource, fixed_assetUniques[0].attributes, $mutation, fieldArgs);
 function FixedAssetInput_depreciationExpenseAccountIdApply(obj, val, info) {
@@ -13528,9 +13983,6 @@ function BillInput_amountPaidApply(obj, val, info) {
   obj.set("amount_paid", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateRecurringTransactionPayload_recurringTransactionEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_recurring_transactionPgResource, recurring_transactionUniques[0].attributes, $mutation, fieldArgs);
-function RecurringTransactionInput_frequencyApply(obj, val, info) {
-  obj.set("frequency", bakedInputRuntime(info.schema, info.field.type, val));
-}
 function RecurringTransactionInput_counterAccountIdApply(obj, val, info) {
   obj.set("counter_account_id", bakedInputRuntime(info.schema, info.field.type, val));
 }
@@ -13690,6 +14142,9 @@ type Query implements Node {
   """Get a single \`PurchaseOrderLine\`."""
   purchaseOrderLine(rowId: UUID!): PurchaseOrderLine
 
+  """Get a single \`RecurringInvoiceLine\`."""
+  recurringInvoiceLine(rowId: UUID!): RecurringInvoiceLine
+
   """Get a single \`CategorizationRuleSplit\`."""
   categorizationRuleSplit(rowId: UUID!): CategorizationRuleSplit
 
@@ -13725,6 +14180,9 @@ type Query implements Node {
 
   """Get a single \`PurchaseOrder\`."""
   purchaseOrder(rowId: UUID!): PurchaseOrder
+
+  """Get a single \`RecurringInvoice\`."""
+  recurringInvoice(rowId: UUID!): RecurringInvoice
 
   """Get a single \`ConnectedAccount\`."""
   connectedAccount(rowId: UUID!): ConnectedAccount
@@ -13951,6 +14409,14 @@ type Query implements Node {
     id: ID!
   ): PurchaseOrderLine
 
+  """Reads a single \`RecurringInvoiceLine\` using its globally unique \`ID\`."""
+  recurringInvoiceLineById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`RecurringInvoiceLine\`.
+    """
+    id: ID!
+  ): RecurringInvoiceLine
+
   """
   Reads a single \`CategorizationRuleSplit\` using its globally unique \`ID\`.
   """
@@ -14042,6 +14508,14 @@ type Query implements Node {
     """
     id: ID!
   ): PurchaseOrder
+
+  """Reads a single \`RecurringInvoice\` using its globally unique \`ID\`."""
+  recurringInvoiceById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`RecurringInvoice\`.
+    """
+    id: ID!
+  ): RecurringInvoice
 
   """Reads a single \`ConnectedAccount\` using its globally unique \`ID\`."""
   connectedAccountById(
@@ -14889,6 +15363,40 @@ type Query implements Node {
     orderBy: [PurchaseOrderLineOrderBy!] = [PRIMARY_KEY_ASC]
   ): PurchaseOrderLineConnection
 
+  """Reads and enables pagination through a set of \`RecurringInvoiceLine\`."""
+  recurringInvoiceLines(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: RecurringInvoiceLineCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: RecurringInvoiceLineFilter
+
+    """The method to use when ordering \`RecurringInvoiceLine\`."""
+    orderBy: [RecurringInvoiceLineOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RecurringInvoiceLineConnection
+
   """
   Reads and enables pagination through a set of \`CategorizationRuleSplit\`.
   """
@@ -15300,6 +15808,40 @@ type Query implements Node {
     """The method to use when ordering \`PurchaseOrder\`."""
     orderBy: [PurchaseOrderOrderBy!] = [PRIMARY_KEY_ASC]
   ): PurchaseOrderConnection
+
+  """Reads and enables pagination through a set of \`RecurringInvoice\`."""
+  recurringInvoices(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: RecurringInvoiceCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: RecurringInvoiceFilter
+
+    """The method to use when ordering \`RecurringInvoice\`."""
+    orderBy: [RecurringInvoiceOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RecurringInvoiceConnection
 
   """Reads and enables pagination through a set of \`ConnectedAccount\`."""
   connectedAccounts(
@@ -17706,6 +18248,40 @@ type Book implements Node {
     """The method to use when ordering \`PurchaseOrder\`."""
     orderBy: [PurchaseOrderOrderBy!] = [PRIMARY_KEY_ASC]
   ): PurchaseOrderConnection!
+
+  """Reads and enables pagination through a set of \`RecurringInvoice\`."""
+  recurringInvoices(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: RecurringInvoiceCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: RecurringInvoiceFilter
+
+    """The method to use when ordering \`RecurringInvoice\`."""
+    orderBy: [RecurringInvoiceOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RecurringInvoiceConnection!
 }
 
 """A connection to a list of \`Account\` values."""
@@ -18212,6 +18788,12 @@ input BookFilter {
 
   """Some related \`purchaseOrders\` exist."""
   purchaseOrdersExist: Boolean
+
+  """Filter by the object’s \`recurringInvoices\` relation."""
+  recurringInvoices: BookToManyRecurringInvoiceFilter
+
+  """Some related \`recurringInvoices\` exist."""
+  recurringInvoicesExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [BookFilter!]
@@ -20657,6 +21239,12 @@ input CustomerFilter {
   """Some related \`creditMemos\` exist."""
   creditMemosExist: Boolean
 
+  """Filter by the object’s \`recurringInvoices\` relation."""
+  recurringInvoices: CustomerToManyRecurringInvoiceFilter
+
+  """Some related \`recurringInvoices\` exist."""
+  recurringInvoicesExist: Boolean
+
   """Filter by the object’s \`book\` relation."""
   book: BookFilter
 
@@ -21287,6 +21875,113 @@ input CustomerToManyCreditMemoFilter {
 }
 
 """
+A filter to be used against many \`RecurringInvoice\` object types. All fields are combined with a logical ‘and.’
+"""
+input CustomerToManyRecurringInvoiceFilter {
+  """
+  Every related \`RecurringInvoice\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: RecurringInvoiceFilter
+
+  """
+  Some related \`RecurringInvoice\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: RecurringInvoiceFilter
+
+  """
+  No related \`RecurringInvoice\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: RecurringInvoiceFilter
+}
+
+"""
+A filter to be used against \`RecurringInvoice\` object types. All fields are combined with a logical ‘and.’
+"""
+input RecurringInvoiceFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`bookId\` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s \`customerId\` field."""
+  customerId: UUIDFilter
+
+  """Filter by the object’s \`recurringInvoiceLines\` relation."""
+  recurringInvoiceLines: RecurringInvoiceToManyRecurringInvoiceLineFilter
+
+  """Some related \`recurringInvoiceLines\` exist."""
+  recurringInvoiceLinesExist: Boolean
+
+  """Filter by the object’s \`book\` relation."""
+  book: BookFilter
+
+  """Filter by the object’s \`customer\` relation."""
+  customer: CustomerFilter
+
+  """Checks for all expressions in this list."""
+  and: [RecurringInvoiceFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [RecurringInvoiceFilter!]
+
+  """Negates the expression."""
+  not: RecurringInvoiceFilter
+}
+
+"""
+A filter to be used against many \`RecurringInvoiceLine\` object types. All fields are combined with a logical ‘and.’
+"""
+input RecurringInvoiceToManyRecurringInvoiceLineFilter {
+  """
+  Every related \`RecurringInvoiceLine\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: RecurringInvoiceLineFilter
+
+  """
+  Some related \`RecurringInvoiceLine\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: RecurringInvoiceLineFilter
+
+  """
+  No related \`RecurringInvoiceLine\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: RecurringInvoiceLineFilter
+}
+
+"""
+A filter to be used against \`RecurringInvoiceLine\` object types. All fields are combined with a logical ‘and.’
+"""
+input RecurringInvoiceLineFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`recurringInvoiceId\` field."""
+  recurringInvoiceId: UUIDFilter
+
+  """Filter by the object’s \`incomeAccount\` relation."""
+  incomeAccount: AccountFilter
+
+  """Filter by the object’s \`recurringInvoice\` relation."""
+  recurringInvoice: RecurringInvoiceFilter
+
+  """Filter by the object’s \`taxJurisdiction\` relation."""
+  taxJurisdiction: TaxJurisdictionFilter
+
+  """A related \`taxJurisdiction\` exists."""
+  taxJurisdictionExists: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [RecurringInvoiceLineFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [RecurringInvoiceLineFilter!]
+
+  """Negates the expression."""
+  not: RecurringInvoiceLineFilter
+}
+
+"""
 A filter to be used against many \`Invoice\` object types. All fields are combined with a logical ‘and.’
 """
 input BookToManyInvoiceFilter {
@@ -21680,6 +22375,26 @@ input BookToManyPurchaseOrderFilter {
   No related \`PurchaseOrder\` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
   none: PurchaseOrderFilter
+}
+
+"""
+A filter to be used against many \`RecurringInvoice\` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyRecurringInvoiceFilter {
+  """
+  Every related \`RecurringInvoice\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: RecurringInvoiceFilter
+
+  """
+  Some related \`RecurringInvoice\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: RecurringInvoiceFilter
+
+  """
+  No related \`RecurringInvoice\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: RecurringInvoiceFilter
 }
 
 """
@@ -25533,6 +26248,40 @@ type Customer implements Node {
     """The method to use when ordering \`CreditMemo\`."""
     orderBy: [CreditMemoOrderBy!] = [PRIMARY_KEY_ASC]
   ): CreditMemoConnection!
+
+  """Reads and enables pagination through a set of \`RecurringInvoice\`."""
+  recurringInvoices(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: RecurringInvoiceCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: RecurringInvoiceFilter
+
+    """The method to use when ordering \`RecurringInvoice\`."""
+    orderBy: [RecurringInvoiceOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RecurringInvoiceConnection!
 }
 
 """A connection to a list of \`Invoice\` values."""
@@ -26595,6 +27344,203 @@ enum CreditMemoOrderBy {
   STATUS_DESC
 }
 
+"""A connection to a list of \`RecurringInvoice\` values."""
+type RecurringInvoiceConnection {
+  """A list of \`RecurringInvoice\` objects."""
+  nodes: [RecurringInvoice]!
+
+  """
+  A list of edges which contains the \`RecurringInvoice\` and cursor to aid in pagination.
+  """
+  edges: [RecurringInvoiceEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* \`RecurringInvoice\` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+type RecurringInvoice implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  customerId: UUID!
+  numberPrefix: String!
+  frequency: String!
+  nextRunDate: String!
+  dueInDays: Int!
+  currency: String!
+  memo: String
+  isActive: Boolean!
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """Reads a single \`Book\` that is related to this \`RecurringInvoice\`."""
+  book: Book
+
+  """Reads a single \`Customer\` that is related to this \`RecurringInvoice\`."""
+  customer: Customer
+
+  """Reads and enables pagination through a set of \`RecurringInvoiceLine\`."""
+  recurringInvoiceLines(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: RecurringInvoiceLineCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: RecurringInvoiceLineFilter
+
+    """The method to use when ordering \`RecurringInvoiceLine\`."""
+    orderBy: [RecurringInvoiceLineOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RecurringInvoiceLineConnection!
+}
+
+"""A connection to a list of \`RecurringInvoiceLine\` values."""
+type RecurringInvoiceLineConnection {
+  """A list of \`RecurringInvoiceLine\` objects."""
+  nodes: [RecurringInvoiceLine]!
+
+  """
+  A list of edges which contains the \`RecurringInvoiceLine\` and cursor to aid in pagination.
+  """
+  edges: [RecurringInvoiceLineEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* \`RecurringInvoiceLine\` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+type RecurringInvoiceLine implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  recurringInvoiceId: UUID!
+  description: String!
+  quantity: BigFloat!
+  unitPrice: BigFloat!
+  incomeAccountId: UUID!
+  taxJurisdictionId: UUID
+  discountPercent: BigFloat
+  sortOrder: Int!
+
+  """
+  Reads a single \`Account\` that is related to this \`RecurringInvoiceLine\`.
+  """
+  incomeAccount: Account
+
+  """
+  Reads a single \`RecurringInvoice\` that is related to this \`RecurringInvoiceLine\`.
+  """
+  recurringInvoice: RecurringInvoice
+
+  """
+  Reads a single \`TaxJurisdiction\` that is related to this \`RecurringInvoiceLine\`.
+  """
+  taxJurisdiction: TaxJurisdiction
+}
+
+"""A \`RecurringInvoiceLine\` edge in the connection."""
+type RecurringInvoiceLineEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`RecurringInvoiceLine\` at the end of the edge."""
+  node: RecurringInvoiceLine
+}
+
+"""
+A condition to be used against \`RecurringInvoiceLine\` object types. All fields
+are tested for equality and combined with a logical ‘and.’
+"""
+input RecurringInvoiceLineCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`recurringInvoiceId\` field."""
+  recurringInvoiceId: UUID
+}
+
+"""Methods to use when ordering \`RecurringInvoiceLine\`."""
+enum RecurringInvoiceLineOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  RECURRING_INVOICE_ID_ASC
+  RECURRING_INVOICE_ID_DESC
+}
+
+"""A \`RecurringInvoice\` edge in the connection."""
+type RecurringInvoiceEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`RecurringInvoice\` at the end of the edge."""
+  node: RecurringInvoice
+}
+
+"""
+A condition to be used against \`RecurringInvoice\` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input RecurringInvoiceCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`bookId\` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s \`customerId\` field."""
+  customerId: UUID
+}
+
+"""Methods to use when ordering \`RecurringInvoice\`."""
+enum RecurringInvoiceOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+  CUSTOMER_ID_ASC
+  CUSTOMER_ID_DESC
+}
+
 """A \`Customer\` edge in the connection."""
 type CustomerEdge {
   """A cursor for use in pagination."""
@@ -27312,6 +28258,14 @@ type Mutation {
     input: CreatePurchaseOrderLineInput!
   ): CreatePurchaseOrderLinePayload
 
+  """Creates a single \`RecurringInvoiceLine\`."""
+  createRecurringInvoiceLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateRecurringInvoiceLineInput!
+  ): CreateRecurringInvoiceLinePayload
+
   """Creates a single \`CategorizationRuleSplit\`."""
   createCategorizationRuleSplit(
     """
@@ -27407,6 +28361,14 @@ type Mutation {
     """
     input: CreatePurchaseOrderInput!
   ): CreatePurchaseOrderPayload
+
+  """Creates a single \`RecurringInvoice\`."""
+  createRecurringInvoice(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateRecurringInvoiceInput!
+  ): CreateRecurringInvoicePayload
 
   """Creates a single \`ConnectedAccount\`."""
   createConnectedAccount(
@@ -27953,6 +28915,26 @@ type Mutation {
   ): UpdatePurchaseOrderLinePayload
 
   """
+  Updates a single \`RecurringInvoiceLine\` using its globally unique id and a patch.
+  """
+  updateRecurringInvoiceLineById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateRecurringInvoiceLineByIdInput!
+  ): UpdateRecurringInvoiceLinePayload
+
+  """
+  Updates a single \`RecurringInvoiceLine\` using a unique key and a patch.
+  """
+  updateRecurringInvoiceLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateRecurringInvoiceLineInput!
+  ): UpdateRecurringInvoiceLinePayload
+
+  """
   Updates a single \`CategorizationRuleSplit\` using its globally unique id and a patch.
   """
   updateCategorizationRuleSplitById(
@@ -28163,6 +29145,24 @@ type Mutation {
     """
     input: UpdatePurchaseOrderInput!
   ): UpdatePurchaseOrderPayload
+
+  """
+  Updates a single \`RecurringInvoice\` using its globally unique id and a patch.
+  """
+  updateRecurringInvoiceById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateRecurringInvoiceByIdInput!
+  ): UpdateRecurringInvoicePayload
+
+  """Updates a single \`RecurringInvoice\` using a unique key and a patch."""
+  updateRecurringInvoice(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateRecurringInvoiceInput!
+  ): UpdateRecurringInvoicePayload
 
   """
   Updates a single \`ConnectedAccount\` using its globally unique id and a patch.
@@ -28882,6 +29882,22 @@ type Mutation {
     input: DeletePurchaseOrderLineInput!
   ): DeletePurchaseOrderLinePayload
 
+  """Deletes a single \`RecurringInvoiceLine\` using its globally unique id."""
+  deleteRecurringInvoiceLineById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteRecurringInvoiceLineByIdInput!
+  ): DeleteRecurringInvoiceLinePayload
+
+  """Deletes a single \`RecurringInvoiceLine\` using a unique key."""
+  deleteRecurringInvoiceLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteRecurringInvoiceLineInput!
+  ): DeleteRecurringInvoiceLinePayload
+
   """
   Deletes a single \`CategorizationRuleSplit\` using its globally unique id.
   """
@@ -29077,6 +30093,22 @@ type Mutation {
     """
     input: DeletePurchaseOrderInput!
   ): DeletePurchaseOrderPayload
+
+  """Deletes a single \`RecurringInvoice\` using its globally unique id."""
+  deleteRecurringInvoiceById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteRecurringInvoiceByIdInput!
+  ): DeleteRecurringInvoicePayload
+
+  """Deletes a single \`RecurringInvoice\` using a unique key."""
+  deleteRecurringInvoice(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteRecurringInvoiceInput!
+  ): DeleteRecurringInvoicePayload
 
   """Deletes a single \`ConnectedAccount\` using its globally unique id."""
   deleteConnectedAccountById(
@@ -30371,6 +31403,54 @@ input PurchaseOrderLineInput {
   sortOrder: Int
 }
 
+"""The output of our create \`RecurringInvoiceLine\` mutation."""
+type CreateRecurringInvoiceLinePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`RecurringInvoiceLine\` that was created by this mutation."""
+  recurringInvoiceLine: RecurringInvoiceLine
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`RecurringInvoiceLine\`. May be used by Relay 1."""
+  recurringInvoiceLineEdge(
+    """The method to use when ordering \`RecurringInvoiceLine\`."""
+    orderBy: [RecurringInvoiceLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): RecurringInvoiceLineEdge
+}
+
+"""All input for the create \`RecurringInvoiceLine\` mutation."""
+input CreateRecurringInvoiceLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`RecurringInvoiceLine\` to be created by this mutation."""
+  recurringInvoiceLine: RecurringInvoiceLineInput!
+}
+
+"""An input for mutations affecting \`RecurringInvoiceLine\`"""
+input RecurringInvoiceLineInput {
+  rowId: UUID
+  recurringInvoiceId: UUID!
+  description: String!
+  quantity: BigFloat
+  unitPrice: BigFloat
+  incomeAccountId: UUID!
+  taxJurisdictionId: UUID
+  discountPercent: BigFloat
+  sortOrder: Int
+}
+
 """The output of our create \`CategorizationRuleSplit\` mutation."""
 type CreateCategorizationRuleSplitPayload {
   """
@@ -30962,6 +32042,57 @@ input PurchaseOrderInput {
   total: BigFloat
   memo: String
   convertedBillId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""The output of our create \`RecurringInvoice\` mutation."""
+type CreateRecurringInvoicePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`RecurringInvoice\` that was created by this mutation."""
+  recurringInvoice: RecurringInvoice
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`RecurringInvoice\`. May be used by Relay 1."""
+  recurringInvoiceEdge(
+    """The method to use when ordering \`RecurringInvoice\`."""
+    orderBy: [RecurringInvoiceOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): RecurringInvoiceEdge
+}
+
+"""All input for the create \`RecurringInvoice\` mutation."""
+input CreateRecurringInvoiceInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`RecurringInvoice\` to be created by this mutation."""
+  recurringInvoice: RecurringInvoiceInput!
+}
+
+"""An input for mutations affecting \`RecurringInvoice\`"""
+input RecurringInvoiceInput {
+  rowId: UUID
+  bookId: UUID!
+  customerId: UUID!
+  numberPrefix: String
+  frequency: String!
+  nextRunDate: String!
+  dueInDays: Int
+  currency: String
+  memo: String
+  isActive: Boolean
   createdAt: Datetime
   updatedAt: Datetime
 }
@@ -33582,6 +34713,78 @@ input UpdatePurchaseOrderLineInput {
   patch: PurchaseOrderLinePatch!
 }
 
+"""The output of our update \`RecurringInvoiceLine\` mutation."""
+type UpdateRecurringInvoiceLinePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`RecurringInvoiceLine\` that was updated by this mutation."""
+  recurringInvoiceLine: RecurringInvoiceLine
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`RecurringInvoiceLine\`. May be used by Relay 1."""
+  recurringInvoiceLineEdge(
+    """The method to use when ordering \`RecurringInvoiceLine\`."""
+    orderBy: [RecurringInvoiceLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): RecurringInvoiceLineEdge
+}
+
+"""All input for the \`updateRecurringInvoiceLineById\` mutation."""
+input UpdateRecurringInvoiceLineByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`RecurringInvoiceLine\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`RecurringInvoiceLine\` being updated.
+  """
+  patch: RecurringInvoiceLinePatch!
+}
+
+"""
+Represents an update to a \`RecurringInvoiceLine\`. Fields that are set will be updated.
+"""
+input RecurringInvoiceLinePatch {
+  rowId: UUID
+  recurringInvoiceId: UUID
+  description: String
+  quantity: BigFloat
+  unitPrice: BigFloat
+  incomeAccountId: UUID
+  taxJurisdictionId: UUID
+  discountPercent: BigFloat
+  sortOrder: Int
+}
+
+"""All input for the \`updateRecurringInvoiceLine\` mutation."""
+input UpdateRecurringInvoiceLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`RecurringInvoiceLine\` being updated.
+  """
+  patch: RecurringInvoiceLinePatch!
+}
+
 """The output of our update \`CategorizationRuleSplit\` mutation."""
 type UpdateCategorizationRuleSplitPayload {
   """
@@ -34463,6 +35666,81 @@ input UpdatePurchaseOrderInput {
   An object where the defined keys will be set on the \`PurchaseOrder\` being updated.
   """
   patch: PurchaseOrderPatch!
+}
+
+"""The output of our update \`RecurringInvoice\` mutation."""
+type UpdateRecurringInvoicePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`RecurringInvoice\` that was updated by this mutation."""
+  recurringInvoice: RecurringInvoice
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`RecurringInvoice\`. May be used by Relay 1."""
+  recurringInvoiceEdge(
+    """The method to use when ordering \`RecurringInvoice\`."""
+    orderBy: [RecurringInvoiceOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): RecurringInvoiceEdge
+}
+
+"""All input for the \`updateRecurringInvoiceById\` mutation."""
+input UpdateRecurringInvoiceByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`RecurringInvoice\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`RecurringInvoice\` being updated.
+  """
+  patch: RecurringInvoicePatch!
+}
+
+"""
+Represents an update to a \`RecurringInvoice\`. Fields that are set will be updated.
+"""
+input RecurringInvoicePatch {
+  rowId: UUID
+  bookId: UUID
+  customerId: UUID
+  numberPrefix: String
+  frequency: String
+  nextRunDate: String
+  dueInDays: Int
+  currency: String
+  memo: String
+  isActive: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the \`updateRecurringInvoice\` mutation."""
+input UpdateRecurringInvoiceInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`RecurringInvoice\` being updated.
+  """
+  patch: RecurringInvoicePatch!
 }
 
 """The output of our update \`ConnectedAccount\` mutation."""
@@ -37185,6 +38463,54 @@ input DeletePurchaseOrderLineInput {
   rowId: UUID!
 }
 
+"""The output of our delete \`RecurringInvoiceLine\` mutation."""
+type DeleteRecurringInvoiceLinePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`RecurringInvoiceLine\` that was deleted by this mutation."""
+  recurringInvoiceLine: RecurringInvoiceLine
+  deletedRecurringInvoiceLineId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`RecurringInvoiceLine\`. May be used by Relay 1."""
+  recurringInvoiceLineEdge(
+    """The method to use when ordering \`RecurringInvoiceLine\`."""
+    orderBy: [RecurringInvoiceLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): RecurringInvoiceLineEdge
+}
+
+"""All input for the \`deleteRecurringInvoiceLineById\` mutation."""
+input DeleteRecurringInvoiceLineByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`RecurringInvoiceLine\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteRecurringInvoiceLine\` mutation."""
+input DeleteRecurringInvoiceLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete \`CategorizationRuleSplit\` mutation."""
 type DeleteCategorizationRuleSplitPayload {
   """
@@ -37753,6 +39079,54 @@ input DeletePurchaseOrderByIdInput {
 
 """All input for the \`deletePurchaseOrder\` mutation."""
 input DeletePurchaseOrderInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`RecurringInvoice\` mutation."""
+type DeleteRecurringInvoicePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`RecurringInvoice\` that was deleted by this mutation."""
+  recurringInvoice: RecurringInvoice
+  deletedRecurringInvoiceId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`RecurringInvoice\`. May be used by Relay 1."""
+  recurringInvoiceEdge(
+    """The method to use when ordering \`RecurringInvoice\`."""
+    orderBy: [RecurringInvoiceOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): RecurringInvoiceEdge
+}
+
+"""All input for the \`deleteRecurringInvoiceById\` mutation."""
+input DeleteRecurringInvoiceByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`RecurringInvoice\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteRecurringInvoice\` mutation."""
+input DeleteRecurringInvoiceInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -40050,6 +41424,58 @@ export const objects = {
           orderBy: applyOrderByArgToConnection
         }
       },
+      recurringInvoice(_$root, {
+        $rowId
+      }) {
+        return resource_recurring_invoicePgResource.get({
+          id: $rowId
+        });
+      },
+      recurringInvoiceById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_RecurringInvoice($nodeId);
+      },
+      recurringInvoiceLine(_$root, {
+        $rowId
+      }) {
+        return resource_recurring_invoice_linePgResource.get({
+          id: $rowId
+        });
+      },
+      recurringInvoiceLineById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_RecurringInvoiceLine($nodeId);
+      },
+      recurringInvoiceLines: {
+        plan() {
+          return connection(resource_recurring_invoice_linePgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      recurringInvoices: {
+        plan() {
+          return connection(resource_recurring_invoicePgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       recurringTransaction(_$root, {
         $rowId
       }) {
@@ -40846,6 +42272,30 @@ export const objects = {
       createReconciliationStatement: {
         plan(_, args) {
           const $insert = pgInsertSingle(resource_reconciliation_statementPgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
+      createRecurringInvoice: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_recurring_invoicePgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
+      createRecurringInvoiceLine: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_recurring_invoice_linePgResource);
           args.apply($insert);
           return object({
             result: $insert
@@ -42136,6 +43586,58 @@ export const objects = {
       deleteReconciliationStatementById: {
         plan(_$root, args) {
           const $delete = pgDeleteSingle(resource_reconciliation_statementPgResource, specFromArgs_ReconciliationStatement(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteRecurringInvoice: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_recurring_invoicePgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteRecurringInvoiceById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_recurring_invoicePgResource, specFromArgs_RecurringInvoice(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteRecurringInvoiceLine: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_recurring_invoice_linePgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteRecurringInvoiceLineById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_recurring_invoice_linePgResource, specFromArgs_RecurringInvoiceLine(args));
           args.apply($delete);
           return object({
             result: $delete
@@ -43575,6 +45077,58 @@ export const objects = {
           input: applyInputToUpdateOrDelete
         }
       },
+      updateRecurringInvoice: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_recurring_invoicePgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateRecurringInvoiceById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_recurring_invoicePgResource, specFromArgs_RecurringInvoice(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateRecurringInvoiceLine: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_recurring_invoice_linePgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateRecurringInvoiceLineById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_recurring_invoice_linePgResource, specFromArgs_RecurringInvoiceLine(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
       updateRecurringTransaction: {
         plan(_$root, args) {
           const $update = pgUpdateSingle(resource_recurring_transactionPgResource, {
@@ -44826,6 +46380,24 @@ export const objects = {
           orderBy: applyOrderByArgToConnection
         }
       },
+      recurringInvoices: {
+        plan($record) {
+          const $records = resource_recurring_invoicePgResource.find({
+            book_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       recurringTransactions: {
         plan($record) {
           const $records = resource_recurring_transactionPgResource.find({
@@ -45577,6 +47149,24 @@ export const objects = {
       reconciliationStatementEdge: CreateReconciliationStatementPayload_reconciliationStatementEdgePlan
     }
   },
+  CreateRecurringInvoiceLinePayload: {
+    assertStep: assertStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan,
+      recurringInvoiceLine: planCreatePayloadResult,
+      recurringInvoiceLineEdge: CreateRecurringInvoiceLinePayload_recurringInvoiceLineEdgePlan
+    }
+  },
+  CreateRecurringInvoicePayload: {
+    assertStep: assertStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan,
+      recurringInvoice: planCreatePayloadResult,
+      recurringInvoiceEdge: CreateRecurringInvoicePayload_recurringInvoiceEdgePlan
+    }
+  },
   CreateRecurringTransactionPayload: {
     assertStep: assertStep,
     plans: {
@@ -45956,6 +47546,24 @@ export const objects = {
         }
       },
       isActive: Account_isActivePlan,
+      recurringInvoices: {
+        plan($record) {
+          const $records = resource_recurring_invoicePgResource.find({
+            customer_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       rowId: JournalLineProject_rowIdPlan,
       updatedAt: Account_updatedAtPlan
     },
@@ -46599,6 +48207,34 @@ export const objects = {
       query: queryPlan,
       reconciliationStatement: planCreatePayloadResult,
       reconciliationStatementEdge: CreateReconciliationStatementPayload_reconciliationStatementEdgePlan
+    }
+  },
+  DeleteRecurringInvoiceLinePayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedRecurringInvoiceLineId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_RecurringInvoiceLine.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      query: queryPlan,
+      recurringInvoiceLine: planCreatePayloadResult,
+      recurringInvoiceLineEdge: CreateRecurringInvoiceLinePayload_recurringInvoiceLineEdgePlan
+    }
+  },
+  DeleteRecurringInvoicePayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedRecurringInvoiceId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_RecurringInvoice.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      query: queryPlan,
+      recurringInvoice: planCreatePayloadResult,
+      recurringInvoiceEdge: CreateRecurringInvoicePayload_recurringInvoiceEdgePlan
     }
   },
   DeleteRecurringTransactionPayload: {
@@ -47882,6 +49518,97 @@ export const objects = {
       totalCount: totalCountConnectionPlan
     }
   },
+  RecurringInvoice: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      book: Account_bookPlan,
+      bookId: Account_bookIdPlan,
+      createdAt: Account_createdAtPlan,
+      customer: Invoice_customerPlan,
+      customerId: Invoice_customerIdPlan,
+      dueInDays($record) {
+        return $record.get("due_in_days");
+      },
+      id($parent) {
+        const specifier = nodeIdHandler_RecurringInvoice.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_RecurringInvoice.codec.name].encode);
+      },
+      isActive: Account_isActivePlan,
+      nextRunDate($record) {
+        return $record.get("next_run_date");
+      },
+      numberPrefix($record) {
+        return $record.get("number_prefix");
+      },
+      recurringInvoiceLines: {
+        plan($record) {
+          const $records = resource_recurring_invoice_linePgResource.find({
+            recurring_invoice_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      rowId: JournalLineProject_rowIdPlan,
+      updatedAt: Account_updatedAtPlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of recurring_invoiceUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_recurring_invoicePgResource.get(spec);
+    }
+  },
+  RecurringInvoiceConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
+  RecurringInvoiceLine: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      discountPercent: BillLine_discountPercentPlan,
+      id($parent) {
+        const specifier = nodeIdHandler_RecurringInvoiceLine.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_RecurringInvoiceLine.codec.name].encode);
+      },
+      incomeAccount: InvoiceLine_incomeAccountPlan,
+      incomeAccountId: InvoiceLine_incomeAccountIdPlan,
+      recurringInvoice($record) {
+        return resource_recurring_invoicePgResource.get({
+          id: $record.get("recurring_invoice_id")
+        });
+      },
+      recurringInvoiceId($record) {
+        return $record.get("recurring_invoice_id");
+      },
+      rowId: JournalLineProject_rowIdPlan,
+      sortOrder: BillLine_sortOrderPlan,
+      taxJurisdiction: JournalLine_taxJurisdictionPlan,
+      taxJurisdictionId: JournalLine_taxJurisdictionIdPlan,
+      unitPrice: BillLine_unitPricePlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of recurring_invoice_lineUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_recurring_invoice_linePgResource.get(spec);
+    }
+  },
+  RecurringInvoiceLineConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
   RecurringTransaction: {
     assertStep: assertPgClassSingleStep,
     plans: {
@@ -48504,6 +50231,24 @@ export const objects = {
       query: queryPlan,
       reconciliationStatement: planCreatePayloadResult,
       reconciliationStatementEdge: CreateReconciliationStatementPayload_reconciliationStatementEdgePlan
+    }
+  },
+  UpdateRecurringInvoiceLinePayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan,
+      recurringInvoiceLine: planCreatePayloadResult,
+      recurringInvoiceLineEdge: CreateRecurringInvoiceLinePayload_recurringInvoiceLineEdgePlan
+    }
+  },
+  UpdateRecurringInvoicePayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan,
+      recurringInvoice: planCreatePayloadResult,
+      recurringInvoiceEdge: CreateRecurringInvoicePayload_recurringInvoiceEdgePlan
     }
   },
   UpdateRecurringTransactionPayload: {
@@ -49519,7 +51264,7 @@ export const inputObjects = {
       billDate: BillInput_billDateApply,
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
-      currency: CreditMemoInput_currencyApply,
+      currency: RecurringInvoiceInput_currencyApply,
       dueDate: AmortizationEntryInput_dueDateApply,
       exchangeRate: BillPaymentInput_exchangeRateApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
@@ -49571,7 +51316,7 @@ export const inputObjects = {
       amount: CreditMemoApplicationInput_amountApply,
       billId: VendorCreditApplicationInput_billIdApply,
       description: PurchaseOrderLineInput_descriptionApply,
-      discountPercent: BillLineInput_discountPercentApply,
+      discountPercent: RecurringInvoiceLineInput_discountPercentApply,
       expenseAccountId: PurchaseOrderLineInput_expenseAccountIdApply,
       quantity: InventoryTransactionInput_quantityApply,
       rowId: JournalLineProjectInput_rowIdApply,
@@ -49586,7 +51331,7 @@ export const inputObjects = {
       amount: CreditMemoApplicationInput_amountApply,
       billId: VendorCreditApplicationInput_billIdApply,
       description: PurchaseOrderLineInput_descriptionApply,
-      discountPercent: BillLineInput_discountPercentApply,
+      discountPercent: RecurringInvoiceLineInput_discountPercentApply,
       expenseAccountId: PurchaseOrderLineInput_expenseAccountIdApply,
       quantity: InventoryTransactionInput_quantityApply,
       rowId: JournalLineProjectInput_rowIdApply,
@@ -49602,7 +51347,7 @@ export const inputObjects = {
       billDate: BillInput_billDateApply,
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
-      currency: CreditMemoInput_currencyApply,
+      currency: RecurringInvoiceInput_currencyApply,
       dueDate: AmortizationEntryInput_dueDateApply,
       exchangeRate: BillPaymentInput_exchangeRateApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
@@ -50496,6 +52241,30 @@ export const inputObjects = {
           $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
         });
       },
+      recurringInvoices($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: recurringInvoiceIdentifier,
+          alias: resource_recurring_invoicePgResource.name,
+          localAttributes: registryConfig.pgRelations.book.recurringInvoicesByTheirBookId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.book.recurringInvoicesByTheirBookId.remoteAttributes
+        };
+        return $rel;
+      },
+      recurringInvoicesExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: recurringInvoiceIdentifier,
+          alias: resource_recurring_invoicePgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.book.recurringInvoicesByTheirBookId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.book.recurringInvoicesByTheirBookId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
       recurringTransactions($where, value) {
         assertAllowed(value, "object");
         const $rel = $where.andPlan();
@@ -50675,7 +52444,7 @@ export const inputObjects = {
       address: CustomerInput_addressApply,
       city: CustomerInput_cityApply,
       createdAt: TagGroupInput_createdAtApply,
-      currency: CreditMemoInput_currencyApply,
+      currency: RecurringInvoiceInput_currencyApply,
       ein: BookInput_einApply,
       fiscalYearStartMonth: BookInput_fiscalYearStartMonthApply,
       invoiceSource: BookInput_invoiceSourceApply,
@@ -50696,7 +52465,7 @@ export const inputObjects = {
       address: CustomerInput_addressApply,
       city: CustomerInput_cityApply,
       createdAt: TagGroupInput_createdAtApply,
-      currency: CreditMemoInput_currencyApply,
+      currency: RecurringInvoiceInput_currencyApply,
       ein: BookInput_einApply,
       fiscalYearStartMonth: BookInput_fiscalYearStartMonthApply,
       invoiceSource: BookInput_invoiceSourceApply,
@@ -50915,6 +52684,13 @@ export const inputObjects = {
     }
   },
   BookToManyReconciliationStatementFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
+  BookToManyRecurringInvoiceFilter: {
     plans: {
       every: AccountToManyAccountFilter_everyApply,
       none: AccountToManyAccountFilter_noneApply,
@@ -51553,6 +53329,18 @@ export const inputObjects = {
       reconciliationStatement: applyCreateFields
     }
   },
+  CreateRecurringInvoiceInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      recurringInvoice: applyCreateFields
+    }
+  },
+  CreateRecurringInvoiceLineInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      recurringInvoiceLine: applyCreateFields
+    }
+  },
   CreateRecurringTransactionInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
@@ -51766,8 +53554,8 @@ export const inputObjects = {
       amountApplied: CreditMemoInput_amountAppliedApply,
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
-      currency: CreditMemoInput_currencyApply,
-      customerId: EstimateInput_customerIdApply,
+      currency: RecurringInvoiceInput_currencyApply,
+      customerId: RecurringInvoiceInput_customerIdApply,
       date: CreditMemoApplicationInput_dateApply,
       exchangeRate: BillPaymentInput_exchangeRateApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
@@ -51824,8 +53612,8 @@ export const inputObjects = {
       amount: CreditMemoApplicationInput_amountApply,
       creditMemoId: CreditMemoApplicationInput_creditMemoIdApply,
       description: PurchaseOrderLineInput_descriptionApply,
-      discountPercent: BillLineInput_discountPercentApply,
-      incomeAccountId: EstimateLineInput_incomeAccountIdApply,
+      discountPercent: RecurringInvoiceLineInput_discountPercentApply,
+      incomeAccountId: RecurringInvoiceLineInput_incomeAccountIdApply,
       inventoryItemId: CreditMemoLineInput_inventoryItemIdApply,
       quantity: InventoryTransactionInput_quantityApply,
       rowId: JournalLineProjectInput_rowIdApply,
@@ -51840,8 +53628,8 @@ export const inputObjects = {
       amount: CreditMemoApplicationInput_amountApply,
       creditMemoId: CreditMemoApplicationInput_creditMemoIdApply,
       description: PurchaseOrderLineInput_descriptionApply,
-      discountPercent: BillLineInput_discountPercentApply,
-      incomeAccountId: EstimateLineInput_incomeAccountIdApply,
+      discountPercent: RecurringInvoiceLineInput_discountPercentApply,
+      incomeAccountId: RecurringInvoiceLineInput_incomeAccountIdApply,
       inventoryItemId: CreditMemoLineInput_inventoryItemIdApply,
       quantity: InventoryTransactionInput_quantityApply,
       rowId: JournalLineProjectInput_rowIdApply,
@@ -51856,8 +53644,8 @@ export const inputObjects = {
       amountApplied: CreditMemoInput_amountAppliedApply,
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
-      currency: CreditMemoInput_currencyApply,
-      customerId: EstimateInput_customerIdApply,
+      currency: RecurringInvoiceInput_currencyApply,
+      customerId: RecurringInvoiceInput_customerIdApply,
       date: CreditMemoApplicationInput_dateApply,
       exchangeRate: BillPaymentInput_exchangeRateApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
@@ -52125,6 +53913,30 @@ export const inputObjects = {
       },
       not: AccountFilter_notApply,
       or: AccountFilter_orApply,
+      recurringInvoices($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: recurringInvoiceIdentifier,
+          alias: resource_recurring_invoicePgResource.name,
+          localAttributes: registryConfig.pgRelations.customer.recurringInvoicesByTheirCustomerId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.customer.recurringInvoicesByTheirCustomerId.remoteAttributes
+        };
+        return $rel;
+      },
+      recurringInvoicesExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: recurringInvoiceIdentifier,
+          alias: resource_recurring_invoicePgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.customer.recurringInvoicesByTheirCustomerId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.customer.recurringInvoicesByTheirCustomerId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
       rowId(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("rowId", "id", spec_customer.attributes.id, queryBuilder, value);
       }
@@ -52183,6 +53995,13 @@ export const inputObjects = {
     }
   },
   CustomerToManyInvoiceFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
+  CustomerToManyRecurringInvoiceFilter: {
     plans: {
       every: AccountToManyAccountFilter_everyApply,
       none: AccountToManyAccountFilter_noneApply,
@@ -52654,6 +54473,26 @@ export const inputObjects = {
       clientMutationId: applyClientMutationIdForCreate
     }
   },
+  DeleteRecurringInvoiceByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteRecurringInvoiceInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteRecurringInvoiceLineByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteRecurringInvoiceLineInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
   DeleteRecurringTransactionByIdInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate
@@ -52901,7 +54740,7 @@ export const inputObjects = {
       bookId: TagGroupInput_bookIdApply,
       convertedInvoiceId: EstimateInput_convertedInvoiceIdApply,
       createdAt: TagGroupInput_createdAtApply,
-      customerId: EstimateInput_customerIdApply,
+      customerId: RecurringInvoiceInput_customerIdApply,
       estimateDate: EstimateInput_estimateDateApply,
       expiryDate: EstimateInput_expiryDateApply,
       memo: JournalLineInput_memoApply,
@@ -52954,7 +54793,7 @@ export const inputObjects = {
       billedAmount: EstimateLineInput_billedAmountApply,
       description: PurchaseOrderLineInput_descriptionApply,
       estimateId: EstimateLineInput_estimateIdApply,
-      incomeAccountId: EstimateLineInput_incomeAccountIdApply,
+      incomeAccountId: RecurringInvoiceLineInput_incomeAccountIdApply,
       quantity: InventoryTransactionInput_quantityApply,
       rowId: JournalLineProjectInput_rowIdApply,
       sortOrder: PurchaseOrderLineInput_sortOrderApply,
@@ -52969,7 +54808,7 @@ export const inputObjects = {
       billedAmount: EstimateLineInput_billedAmountApply,
       description: PurchaseOrderLineInput_descriptionApply,
       estimateId: EstimateLineInput_estimateIdApply,
-      incomeAccountId: EstimateLineInput_incomeAccountIdApply,
+      incomeAccountId: RecurringInvoiceLineInput_incomeAccountIdApply,
       quantity: InventoryTransactionInput_quantityApply,
       rowId: JournalLineProjectInput_rowIdApply,
       sortOrder: PurchaseOrderLineInput_sortOrderApply,
@@ -52983,7 +54822,7 @@ export const inputObjects = {
       bookId: TagGroupInput_bookIdApply,
       convertedInvoiceId: EstimateInput_convertedInvoiceIdApply,
       createdAt: TagGroupInput_createdAtApply,
-      customerId: EstimateInput_customerIdApply,
+      customerId: RecurringInvoiceInput_customerIdApply,
       estimateDate: EstimateInput_estimateDateApply,
       expiryDate: EstimateInput_expiryDateApply,
       memo: JournalLineInput_memoApply,
@@ -53203,7 +55042,7 @@ export const inputObjects = {
       cogsAccountId: InventoryItemInput_cogsAccountIdApply,
       createdAt: TagGroupInput_createdAtApply,
       description: PurchaseOrderLineInput_descriptionApply,
-      incomeAccountId: EstimateLineInput_incomeAccountIdApply,
+      incomeAccountId: RecurringInvoiceLineInput_incomeAccountIdApply,
       isActive: TagInput_isActiveApply,
       name: TagGroupInput_nameApply,
       quantityOnHand: InventoryItemInput_quantityOnHandApply,
@@ -53222,7 +55061,7 @@ export const inputObjects = {
       cogsAccountId: InventoryItemInput_cogsAccountIdApply,
       createdAt: TagGroupInput_createdAtApply,
       description: PurchaseOrderLineInput_descriptionApply,
-      incomeAccountId: EstimateLineInput_incomeAccountIdApply,
+      incomeAccountId: RecurringInvoiceLineInput_incomeAccountIdApply,
       isActive: TagInput_isActiveApply,
       name: TagGroupInput_nameApply,
       quantityOnHand: InventoryItemInput_quantityOnHandApply,
@@ -53427,8 +55266,8 @@ export const inputObjects = {
       amountPaid: BillInput_amountPaidApply,
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
-      currency: CreditMemoInput_currencyApply,
-      customerId: EstimateInput_customerIdApply,
+      currency: RecurringInvoiceInput_currencyApply,
+      customerId: RecurringInvoiceInput_customerIdApply,
       dueDate: AmortizationEntryInput_dueDateApply,
       exchangeRate: BillPaymentInput_exchangeRateApply,
       issueDate: InvoiceInput_issueDateApply,
@@ -53492,8 +55331,8 @@ export const inputObjects = {
     plans: {
       amount: CreditMemoApplicationInput_amountApply,
       description: PurchaseOrderLineInput_descriptionApply,
-      discountPercent: BillLineInput_discountPercentApply,
-      incomeAccountId: EstimateLineInput_incomeAccountIdApply,
+      discountPercent: RecurringInvoiceLineInput_discountPercentApply,
+      incomeAccountId: RecurringInvoiceLineInput_incomeAccountIdApply,
       inventoryItemId: CreditMemoLineInput_inventoryItemIdApply,
       invoiceId: CreditMemoApplicationInput_invoiceIdApply,
       quantity: InventoryTransactionInput_quantityApply,
@@ -53509,8 +55348,8 @@ export const inputObjects = {
     plans: {
       amount: CreditMemoApplicationInput_amountApply,
       description: PurchaseOrderLineInput_descriptionApply,
-      discountPercent: BillLineInput_discountPercentApply,
-      incomeAccountId: EstimateLineInput_incomeAccountIdApply,
+      discountPercent: RecurringInvoiceLineInput_discountPercentApply,
+      incomeAccountId: RecurringInvoiceLineInput_incomeAccountIdApply,
       inventoryItemId: CreditMemoLineInput_inventoryItemIdApply,
       invoiceId: CreditMemoApplicationInput_invoiceIdApply,
       quantity: InventoryTransactionInput_quantityApply,
@@ -53527,8 +55366,8 @@ export const inputObjects = {
       amountPaid: BillInput_amountPaidApply,
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
-      currency: CreditMemoInput_currencyApply,
-      customerId: EstimateInput_customerIdApply,
+      currency: RecurringInvoiceInput_currencyApply,
+      customerId: RecurringInvoiceInput_customerIdApply,
       dueDate: AmortizationEntryInput_dueDateApply,
       exchangeRate: BillPaymentInput_exchangeRateApply,
       issueDate: InvoiceInput_issueDateApply,
@@ -54780,6 +56619,161 @@ export const inputObjects = {
       status: AccountingPeriodInput_statusApply
     }
   },
+  RecurringInvoiceCondition: {
+    plans: {
+      bookId: AccountCondition_bookIdApply,
+      customerId: InvoiceCondition_customerIdApply,
+      rowId: AccountCondition_rowIdApply
+    }
+  },
+  RecurringInvoiceFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      book($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_bookPgResource, bookIdentifier, registryConfig.pgRelations.recurringInvoice.bookByMyBookId.localAttributes, registryConfig.pgRelations.recurringInvoice.bookByMyBookId.remoteAttributes, $where, value);
+      },
+      bookId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("bookId", "book_id", spec_recurringInvoice.attributes.book_id, queryBuilder, value);
+      },
+      customer($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_customerPgResource, customerIdentifier, registryConfig.pgRelations.recurringInvoice.customerByMyCustomerId.localAttributes, registryConfig.pgRelations.recurringInvoice.customerByMyCustomerId.remoteAttributes, $where, value);
+      },
+      customerId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("customerId", "customer_id", spec_recurringInvoice.attributes.customer_id, queryBuilder, value);
+      },
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      recurringInvoiceLines($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: recurringInvoiceLineIdentifier,
+          alias: resource_recurring_invoice_linePgResource.name,
+          localAttributes: registryConfig.pgRelations.recurringInvoice.recurringInvoiceLinesByTheirRecurringInvoiceId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.recurringInvoice.recurringInvoiceLinesByTheirRecurringInvoiceId.remoteAttributes
+        };
+        return $rel;
+      },
+      recurringInvoiceLinesExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: recurringInvoiceLineIdentifier,
+          alias: resource_recurring_invoice_linePgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.recurringInvoice.recurringInvoiceLinesByTheirRecurringInvoiceId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.recurringInvoice.recurringInvoiceLinesByTheirRecurringInvoiceId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_recurringInvoice.attributes.id, queryBuilder, value);
+      }
+    }
+  },
+  RecurringInvoiceInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      bookId: TagGroupInput_bookIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      currency: RecurringInvoiceInput_currencyApply,
+      customerId: RecurringInvoiceInput_customerIdApply,
+      dueInDays: RecurringInvoiceInput_dueInDaysApply,
+      frequency: RecurringInvoiceInput_frequencyApply,
+      isActive: TagInput_isActiveApply,
+      memo: JournalLineInput_memoApply,
+      nextRunDate: RecurringInvoiceInput_nextRunDateApply,
+      numberPrefix: RecurringInvoiceInput_numberPrefixApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      updatedAt: AccountMappingInput_updatedAtApply
+    }
+  },
+  RecurringInvoiceLineCondition: {
+    plans: {
+      recurringInvoiceId($condition, val) {
+        return applyAttributeCondition("recurring_invoice_id", TYPES.uuid, $condition, val);
+      },
+      rowId: AccountCondition_rowIdApply
+    }
+  },
+  RecurringInvoiceLineFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      incomeAccount($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_accountPgResource, accountIdentifier, registryConfig.pgRelations.recurringInvoiceLine.accountByMyIncomeAccountId.localAttributes, registryConfig.pgRelations.recurringInvoiceLine.accountByMyIncomeAccountId.remoteAttributes, $where, value);
+      },
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      recurringInvoice($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_recurring_invoicePgResource, recurringInvoiceIdentifier, registryConfig.pgRelations.recurringInvoiceLine.recurringInvoiceByMyRecurringInvoiceId.localAttributes, registryConfig.pgRelations.recurringInvoiceLine.recurringInvoiceByMyRecurringInvoiceId.remoteAttributes, $where, value);
+      },
+      recurringInvoiceId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("recurringInvoiceId", "recurring_invoice_id", spec_recurringInvoiceLine.attributes.recurring_invoice_id, queryBuilder, value);
+      },
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_recurringInvoiceLine.attributes.id, queryBuilder, value);
+      },
+      taxJurisdiction($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_tax_jurisdictionPgResource, taxJurisdictionIdentifier, registryConfig.pgRelations.recurringInvoiceLine.taxJurisdictionByMyTaxJurisdictionId.localAttributes, registryConfig.pgRelations.recurringInvoiceLine.taxJurisdictionByMyTaxJurisdictionId.remoteAttributes, $where, value);
+      },
+      taxJurisdictionExists($where, value) {
+        return pgConnectionFilterApplyForwardRelationExists(resource_tax_jurisdictionPgResource, taxJurisdictionIdentifier, registryConfig.pgRelations.recurringInvoiceLine.taxJurisdictionByMyTaxJurisdictionId.localAttributes, registryConfig.pgRelations.recurringInvoiceLine.taxJurisdictionByMyTaxJurisdictionId.remoteAttributes, $where, value);
+      }
+    }
+  },
+  RecurringInvoiceLineInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      description: PurchaseOrderLineInput_descriptionApply,
+      discountPercent: RecurringInvoiceLineInput_discountPercentApply,
+      incomeAccountId: RecurringInvoiceLineInput_incomeAccountIdApply,
+      quantity: InventoryTransactionInput_quantityApply,
+      recurringInvoiceId: RecurringInvoiceLineInput_recurringInvoiceIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      sortOrder: PurchaseOrderLineInput_sortOrderApply,
+      taxJurisdictionId: JournalLineInput_taxJurisdictionIdApply,
+      unitPrice: PurchaseOrderLineInput_unitPriceApply
+    }
+  },
+  RecurringInvoiceLinePatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      description: PurchaseOrderLineInput_descriptionApply,
+      discountPercent: RecurringInvoiceLineInput_discountPercentApply,
+      incomeAccountId: RecurringInvoiceLineInput_incomeAccountIdApply,
+      quantity: InventoryTransactionInput_quantityApply,
+      recurringInvoiceId: RecurringInvoiceLineInput_recurringInvoiceIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      sortOrder: PurchaseOrderLineInput_sortOrderApply,
+      taxJurisdictionId: JournalLineInput_taxJurisdictionIdApply,
+      unitPrice: PurchaseOrderLineInput_unitPriceApply
+    }
+  },
+  RecurringInvoicePatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      bookId: TagGroupInput_bookIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      currency: RecurringInvoiceInput_currencyApply,
+      customerId: RecurringInvoiceInput_customerIdApply,
+      dueInDays: RecurringInvoiceInput_dueInDaysApply,
+      frequency: RecurringInvoiceInput_frequencyApply,
+      isActive: TagInput_isActiveApply,
+      memo: JournalLineInput_memoApply,
+      nextRunDate: RecurringInvoiceInput_nextRunDateApply,
+      numberPrefix: RecurringInvoiceInput_numberPrefixApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      updatedAt: AccountMappingInput_updatedAtApply
+    }
+  },
+  RecurringInvoiceToManyRecurringInvoiceLineFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
   RecurringTransactionCondition: {
     plans: {
       bookId: AccountCondition_bookIdApply,
@@ -54819,7 +56813,7 @@ export const inputObjects = {
       bookId: TagGroupInput_bookIdApply,
       counterAccountId: RecurringTransactionInput_counterAccountIdApply,
       createdAt: TagGroupInput_createdAtApply,
-      frequency: RecurringTransactionInput_frequencyApply,
+      frequency: RecurringInvoiceInput_frequencyApply,
       isActive: TagInput_isActiveApply,
       isAutoDetected: RecurringTransactionInput_isAutoDetectedApply,
       name: TagGroupInput_nameApply,
@@ -54836,7 +56830,7 @@ export const inputObjects = {
       bookId: TagGroupInput_bookIdApply,
       counterAccountId: RecurringTransactionInput_counterAccountIdApply,
       createdAt: TagGroupInput_createdAtApply,
-      frequency: RecurringTransactionInput_frequencyApply,
+      frequency: RecurringInvoiceInput_frequencyApply,
       isActive: TagInput_isActiveApply,
       isAutoDetected: RecurringTransactionInput_isAutoDetectedApply,
       name: TagGroupInput_nameApply,
@@ -55761,6 +57755,30 @@ export const inputObjects = {
       patch: applyCreateFields
     }
   },
+  UpdateRecurringInvoiceByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateRecurringInvoiceInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateRecurringInvoiceLineByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateRecurringInvoiceLineInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
   UpdateRecurringTransactionByIdInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
@@ -56134,7 +58152,7 @@ export const inputObjects = {
       amountApplied: CreditMemoInput_amountAppliedApply,
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
-      currency: CreditMemoInput_currencyApply,
+      currency: RecurringInvoiceInput_currencyApply,
       date: CreditMemoApplicationInput_dateApply,
       exchangeRate: BillPaymentInput_exchangeRateApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
@@ -56185,7 +58203,7 @@ export const inputObjects = {
     plans: {
       amount: CreditMemoApplicationInput_amountApply,
       description: PurchaseOrderLineInput_descriptionApply,
-      discountPercent: BillLineInput_discountPercentApply,
+      discountPercent: RecurringInvoiceLineInput_discountPercentApply,
       expenseAccountId: PurchaseOrderLineInput_expenseAccountIdApply,
       quantity: InventoryTransactionInput_quantityApply,
       rowId: JournalLineProjectInput_rowIdApply,
@@ -56200,7 +58218,7 @@ export const inputObjects = {
     plans: {
       amount: CreditMemoApplicationInput_amountApply,
       description: PurchaseOrderLineInput_descriptionApply,
-      discountPercent: BillLineInput_discountPercentApply,
+      discountPercent: RecurringInvoiceLineInput_discountPercentApply,
       expenseAccountId: PurchaseOrderLineInput_expenseAccountIdApply,
       quantity: InventoryTransactionInput_quantityApply,
       rowId: JournalLineProjectInput_rowIdApply,
@@ -56216,7 +58234,7 @@ export const inputObjects = {
       amountApplied: CreditMemoInput_amountAppliedApply,
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
-      currency: CreditMemoInput_currencyApply,
+      currency: RecurringInvoiceInput_currencyApply,
       date: CreditMemoApplicationInput_dateApply,
       exchangeRate: BillPaymentInput_exchangeRateApply,
       journalEntryId: JournalLineInput_journalEntryIdApply,
@@ -57996,6 +60014,70 @@ export const enums = {
       },
       PRIMARY_KEY_DESC(queryBuilder) {
         reconciliation_statementUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply
+    }
+  },
+  RecurringInvoiceLineOrderBy: {
+    values: {
+      PRIMARY_KEY_ASC(queryBuilder) {
+        recurring_invoice_lineUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        recurring_invoice_lineUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      RECURRING_INVOICE_ID_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "recurring_invoice_id",
+          direction: "ASC"
+        });
+      },
+      RECURRING_INVOICE_ID_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "recurring_invoice_id",
+          direction: "DESC"
+        });
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply
+    }
+  },
+  RecurringInvoiceOrderBy: {
+    values: {
+      BOOK_ID_ASC: AccountOrderBy_BOOK_ID_ASCApply,
+      BOOK_ID_DESC: AccountOrderBy_BOOK_ID_DESCApply,
+      CUSTOMER_ID_ASC: InvoiceOrderBy_CUSTOMER_ID_ASCApply,
+      CUSTOMER_ID_DESC: InvoiceOrderBy_CUSTOMER_ID_DESCApply,
+      PRIMARY_KEY_ASC(queryBuilder) {
+        recurring_invoiceUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        recurring_invoiceUniques[0].attributes.forEach(attributeName => {
           queryBuilder.orderBy({
             attribute: attributeName,
             direction: "DESC"

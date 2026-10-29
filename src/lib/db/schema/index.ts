@@ -42,6 +42,8 @@ export * from "./purchaseOrderLine.table";
 export * from "./rdExpense.table";
 export * from "./reconciliationQueue.table";
 export * from "./reconciliationStatement.table";
+export * from "./recurringInvoice.table";
+export * from "./recurringInvoiceLine.table";
 export * from "./recurringTransaction.table";
 export * from "./savingsGoal.table";
 export * from "./tag.table";

@@ -60,6 +60,8 @@ import startScheduledSync from "lib/plaid/scheduledSync";
 import purchaseOrderRoutes from "lib/purchasing/purchaseOrderRoutes";
 import recurringRoutes from "lib/recurring/recurringRoutes";
 import startScheduledRecurring from "lib/recurring/scheduledRecurring";
+import recurringInvoiceRoutes from "lib/recurringInvoice/recurringInvoiceRoutes";
+import startScheduledRecurringInvoices from "lib/recurringInvoice/scheduledRecurringInvoices";
 import {
   EXPORT_FORMATS,
   exportReport,
@@ -148,7 +150,8 @@ const connectionAndOrgRoutes = new Elysia()
   .use(connectionRoutes)
   .use(orgDataRoutes)
   .use(vendorCreditRoutes)
-  .use(purchaseOrderRoutes);
+  .use(purchaseOrderRoutes)
+  .use(recurringInvoiceRoutes);
 
 const app = new Elysia()
   .onAfterHandle(({ set }) => {
@@ -952,6 +955,7 @@ console.info(
 const stopSync = startScheduledSync();
 const stopClose = startScheduledClose();
 const stopRecurring = startScheduledRecurring();
+const stopRecurringInvoices = startScheduledRecurringInvoices();
 
 /**
  * Graceful shutdown handler.
@@ -961,6 +965,7 @@ const shutdown = async (signal: string) => {
   stopSync();
   stopClose();
   stopRecurring();
+  stopRecurringInvoices();
   app.stop();
   await pgPool.end();
   console.info("[Server] Shutdown complete");

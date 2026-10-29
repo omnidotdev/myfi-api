@@ -77,6 +77,9 @@ type Query implements Node {
   """Get a single `PurchaseOrderLine`."""
   purchaseOrderLine(rowId: UUID!): PurchaseOrderLine
 
+  """Get a single `RecurringInvoiceLine`."""
+  recurringInvoiceLine(rowId: UUID!): RecurringInvoiceLine
+
   """Get a single `CategorizationRuleSplit`."""
   categorizationRuleSplit(rowId: UUID!): CategorizationRuleSplit
 
@@ -112,6 +115,9 @@ type Query implements Node {
 
   """Get a single `PurchaseOrder`."""
   purchaseOrder(rowId: UUID!): PurchaseOrder
+
+  """Get a single `RecurringInvoice`."""
+  recurringInvoice(rowId: UUID!): RecurringInvoice
 
   """Get a single `ConnectedAccount`."""
   connectedAccount(rowId: UUID!): ConnectedAccount
@@ -338,6 +344,14 @@ type Query implements Node {
     id: ID!
   ): PurchaseOrderLine
 
+  """Reads a single `RecurringInvoiceLine` using its globally unique `ID`."""
+  recurringInvoiceLineById(
+    """
+    The globally unique `ID` to be used in selecting a single `RecurringInvoiceLine`.
+    """
+    id: ID!
+  ): RecurringInvoiceLine
+
   """
   Reads a single `CategorizationRuleSplit` using its globally unique `ID`.
   """
@@ -429,6 +443,14 @@ type Query implements Node {
     """
     id: ID!
   ): PurchaseOrder
+
+  """Reads a single `RecurringInvoice` using its globally unique `ID`."""
+  recurringInvoiceById(
+    """
+    The globally unique `ID` to be used in selecting a single `RecurringInvoice`.
+    """
+    id: ID!
+  ): RecurringInvoice
 
   """Reads a single `ConnectedAccount` using its globally unique `ID`."""
   connectedAccountById(
@@ -1276,6 +1298,40 @@ type Query implements Node {
     orderBy: [PurchaseOrderLineOrderBy!] = [PRIMARY_KEY_ASC]
   ): PurchaseOrderLineConnection
 
+  """Reads and enables pagination through a set of `RecurringInvoiceLine`."""
+  recurringInvoiceLines(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: RecurringInvoiceLineCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: RecurringInvoiceLineFilter
+
+    """The method to use when ordering `RecurringInvoiceLine`."""
+    orderBy: [RecurringInvoiceLineOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RecurringInvoiceLineConnection
+
   """
   Reads and enables pagination through a set of `CategorizationRuleSplit`.
   """
@@ -1687,6 +1743,40 @@ type Query implements Node {
     """The method to use when ordering `PurchaseOrder`."""
     orderBy: [PurchaseOrderOrderBy!] = [PRIMARY_KEY_ASC]
   ): PurchaseOrderConnection
+
+  """Reads and enables pagination through a set of `RecurringInvoice`."""
+  recurringInvoices(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: RecurringInvoiceCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: RecurringInvoiceFilter
+
+    """The method to use when ordering `RecurringInvoice`."""
+    orderBy: [RecurringInvoiceOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RecurringInvoiceConnection
 
   """Reads and enables pagination through a set of `ConnectedAccount`."""
   connectedAccounts(
@@ -4093,6 +4183,40 @@ type Book implements Node {
     """The method to use when ordering `PurchaseOrder`."""
     orderBy: [PurchaseOrderOrderBy!] = [PRIMARY_KEY_ASC]
   ): PurchaseOrderConnection!
+
+  """Reads and enables pagination through a set of `RecurringInvoice`."""
+  recurringInvoices(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: RecurringInvoiceCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: RecurringInvoiceFilter
+
+    """The method to use when ordering `RecurringInvoice`."""
+    orderBy: [RecurringInvoiceOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RecurringInvoiceConnection!
 }
 
 """A connection to a list of `Account` values."""
@@ -4599,6 +4723,12 @@ input BookFilter {
 
   """Some related `purchaseOrders` exist."""
   purchaseOrdersExist: Boolean
+
+  """Filter by the object’s `recurringInvoices` relation."""
+  recurringInvoices: BookToManyRecurringInvoiceFilter
+
+  """Some related `recurringInvoices` exist."""
+  recurringInvoicesExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [BookFilter!]
@@ -7044,6 +7174,12 @@ input CustomerFilter {
   """Some related `creditMemos` exist."""
   creditMemosExist: Boolean
 
+  """Filter by the object’s `recurringInvoices` relation."""
+  recurringInvoices: CustomerToManyRecurringInvoiceFilter
+
+  """Some related `recurringInvoices` exist."""
+  recurringInvoicesExist: Boolean
+
   """Filter by the object’s `book` relation."""
   book: BookFilter
 
@@ -7674,6 +7810,113 @@ input CustomerToManyCreditMemoFilter {
 }
 
 """
+A filter to be used against many `RecurringInvoice` object types. All fields are combined with a logical ‘and.’
+"""
+input CustomerToManyRecurringInvoiceFilter {
+  """
+  Every related `RecurringInvoice` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: RecurringInvoiceFilter
+
+  """
+  Some related `RecurringInvoice` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: RecurringInvoiceFilter
+
+  """
+  No related `RecurringInvoice` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: RecurringInvoiceFilter
+}
+
+"""
+A filter to be used against `RecurringInvoice` object types. All fields are combined with a logical ‘and.’
+"""
+input RecurringInvoiceFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `bookId` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s `customerId` field."""
+  customerId: UUIDFilter
+
+  """Filter by the object’s `recurringInvoiceLines` relation."""
+  recurringInvoiceLines: RecurringInvoiceToManyRecurringInvoiceLineFilter
+
+  """Some related `recurringInvoiceLines` exist."""
+  recurringInvoiceLinesExist: Boolean
+
+  """Filter by the object’s `book` relation."""
+  book: BookFilter
+
+  """Filter by the object’s `customer` relation."""
+  customer: CustomerFilter
+
+  """Checks for all expressions in this list."""
+  and: [RecurringInvoiceFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [RecurringInvoiceFilter!]
+
+  """Negates the expression."""
+  not: RecurringInvoiceFilter
+}
+
+"""
+A filter to be used against many `RecurringInvoiceLine` object types. All fields are combined with a logical ‘and.’
+"""
+input RecurringInvoiceToManyRecurringInvoiceLineFilter {
+  """
+  Every related `RecurringInvoiceLine` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: RecurringInvoiceLineFilter
+
+  """
+  Some related `RecurringInvoiceLine` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: RecurringInvoiceLineFilter
+
+  """
+  No related `RecurringInvoiceLine` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: RecurringInvoiceLineFilter
+}
+
+"""
+A filter to be used against `RecurringInvoiceLine` object types. All fields are combined with a logical ‘and.’
+"""
+input RecurringInvoiceLineFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `recurringInvoiceId` field."""
+  recurringInvoiceId: UUIDFilter
+
+  """Filter by the object’s `incomeAccount` relation."""
+  incomeAccount: AccountFilter
+
+  """Filter by the object’s `recurringInvoice` relation."""
+  recurringInvoice: RecurringInvoiceFilter
+
+  """Filter by the object’s `taxJurisdiction` relation."""
+  taxJurisdiction: TaxJurisdictionFilter
+
+  """A related `taxJurisdiction` exists."""
+  taxJurisdictionExists: Boolean
+
+  """Checks for all expressions in this list."""
+  and: [RecurringInvoiceLineFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [RecurringInvoiceLineFilter!]
+
+  """Negates the expression."""
+  not: RecurringInvoiceLineFilter
+}
+
+"""
 A filter to be used against many `Invoice` object types. All fields are combined with a logical ‘and.’
 """
 input BookToManyInvoiceFilter {
@@ -8067,6 +8310,26 @@ input BookToManyPurchaseOrderFilter {
   No related `PurchaseOrder` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
   none: PurchaseOrderFilter
+}
+
+"""
+A filter to be used against many `RecurringInvoice` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyRecurringInvoiceFilter {
+  """
+  Every related `RecurringInvoice` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: RecurringInvoiceFilter
+
+  """
+  Some related `RecurringInvoice` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: RecurringInvoiceFilter
+
+  """
+  No related `RecurringInvoice` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: RecurringInvoiceFilter
 }
 
 """
@@ -11920,6 +12183,40 @@ type Customer implements Node {
     """The method to use when ordering `CreditMemo`."""
     orderBy: [CreditMemoOrderBy!] = [PRIMARY_KEY_ASC]
   ): CreditMemoConnection!
+
+  """Reads and enables pagination through a set of `RecurringInvoice`."""
+  recurringInvoices(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: RecurringInvoiceCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: RecurringInvoiceFilter
+
+    """The method to use when ordering `RecurringInvoice`."""
+    orderBy: [RecurringInvoiceOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RecurringInvoiceConnection!
 }
 
 """A connection to a list of `Invoice` values."""
@@ -12982,6 +13279,203 @@ enum CreditMemoOrderBy {
   STATUS_DESC
 }
 
+"""A connection to a list of `RecurringInvoice` values."""
+type RecurringInvoiceConnection {
+  """A list of `RecurringInvoice` objects."""
+  nodes: [RecurringInvoice]!
+
+  """
+  A list of edges which contains the `RecurringInvoice` and cursor to aid in pagination.
+  """
+  edges: [RecurringInvoiceEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `RecurringInvoice` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+type RecurringInvoice implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  customerId: UUID!
+  numberPrefix: String!
+  frequency: String!
+  nextRunDate: String!
+  dueInDays: Int!
+  currency: String!
+  memo: String
+  isActive: Boolean!
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """Reads a single `Book` that is related to this `RecurringInvoice`."""
+  book: Book
+
+  """Reads a single `Customer` that is related to this `RecurringInvoice`."""
+  customer: Customer
+
+  """Reads and enables pagination through a set of `RecurringInvoiceLine`."""
+  recurringInvoiceLines(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: RecurringInvoiceLineCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: RecurringInvoiceLineFilter
+
+    """The method to use when ordering `RecurringInvoiceLine`."""
+    orderBy: [RecurringInvoiceLineOrderBy!] = [PRIMARY_KEY_ASC]
+  ): RecurringInvoiceLineConnection!
+}
+
+"""A connection to a list of `RecurringInvoiceLine` values."""
+type RecurringInvoiceLineConnection {
+  """A list of `RecurringInvoiceLine` objects."""
+  nodes: [RecurringInvoiceLine]!
+
+  """
+  A list of edges which contains the `RecurringInvoiceLine` and cursor to aid in pagination.
+  """
+  edges: [RecurringInvoiceLineEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `RecurringInvoiceLine` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+type RecurringInvoiceLine implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  recurringInvoiceId: UUID!
+  description: String!
+  quantity: BigFloat!
+  unitPrice: BigFloat!
+  incomeAccountId: UUID!
+  taxJurisdictionId: UUID
+  discountPercent: BigFloat
+  sortOrder: Int!
+
+  """
+  Reads a single `Account` that is related to this `RecurringInvoiceLine`.
+  """
+  incomeAccount: Account
+
+  """
+  Reads a single `RecurringInvoice` that is related to this `RecurringInvoiceLine`.
+  """
+  recurringInvoice: RecurringInvoice
+
+  """
+  Reads a single `TaxJurisdiction` that is related to this `RecurringInvoiceLine`.
+  """
+  taxJurisdiction: TaxJurisdiction
+}
+
+"""A `RecurringInvoiceLine` edge in the connection."""
+type RecurringInvoiceLineEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `RecurringInvoiceLine` at the end of the edge."""
+  node: RecurringInvoiceLine
+}
+
+"""
+A condition to be used against `RecurringInvoiceLine` object types. All fields
+are tested for equality and combined with a logical ‘and.’
+"""
+input RecurringInvoiceLineCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `recurringInvoiceId` field."""
+  recurringInvoiceId: UUID
+}
+
+"""Methods to use when ordering `RecurringInvoiceLine`."""
+enum RecurringInvoiceLineOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  RECURRING_INVOICE_ID_ASC
+  RECURRING_INVOICE_ID_DESC
+}
+
+"""A `RecurringInvoice` edge in the connection."""
+type RecurringInvoiceEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `RecurringInvoice` at the end of the edge."""
+  node: RecurringInvoice
+}
+
+"""
+A condition to be used against `RecurringInvoice` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input RecurringInvoiceCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `bookId` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s `customerId` field."""
+  customerId: UUID
+}
+
+"""Methods to use when ordering `RecurringInvoice`."""
+enum RecurringInvoiceOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+  CUSTOMER_ID_ASC
+  CUSTOMER_ID_DESC
+}
+
 """A `Customer` edge in the connection."""
 type CustomerEdge {
   """A cursor for use in pagination."""
@@ -13699,6 +14193,14 @@ type Mutation {
     input: CreatePurchaseOrderLineInput!
   ): CreatePurchaseOrderLinePayload
 
+  """Creates a single `RecurringInvoiceLine`."""
+  createRecurringInvoiceLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateRecurringInvoiceLineInput!
+  ): CreateRecurringInvoiceLinePayload
+
   """Creates a single `CategorizationRuleSplit`."""
   createCategorizationRuleSplit(
     """
@@ -13794,6 +14296,14 @@ type Mutation {
     """
     input: CreatePurchaseOrderInput!
   ): CreatePurchaseOrderPayload
+
+  """Creates a single `RecurringInvoice`."""
+  createRecurringInvoice(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateRecurringInvoiceInput!
+  ): CreateRecurringInvoicePayload
 
   """Creates a single `ConnectedAccount`."""
   createConnectedAccount(
@@ -14340,6 +14850,26 @@ type Mutation {
   ): UpdatePurchaseOrderLinePayload
 
   """
+  Updates a single `RecurringInvoiceLine` using its globally unique id and a patch.
+  """
+  updateRecurringInvoiceLineById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateRecurringInvoiceLineByIdInput!
+  ): UpdateRecurringInvoiceLinePayload
+
+  """
+  Updates a single `RecurringInvoiceLine` using a unique key and a patch.
+  """
+  updateRecurringInvoiceLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateRecurringInvoiceLineInput!
+  ): UpdateRecurringInvoiceLinePayload
+
+  """
   Updates a single `CategorizationRuleSplit` using its globally unique id and a patch.
   """
   updateCategorizationRuleSplitById(
@@ -14550,6 +15080,24 @@ type Mutation {
     """
     input: UpdatePurchaseOrderInput!
   ): UpdatePurchaseOrderPayload
+
+  """
+  Updates a single `RecurringInvoice` using its globally unique id and a patch.
+  """
+  updateRecurringInvoiceById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateRecurringInvoiceByIdInput!
+  ): UpdateRecurringInvoicePayload
+
+  """Updates a single `RecurringInvoice` using a unique key and a patch."""
+  updateRecurringInvoice(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateRecurringInvoiceInput!
+  ): UpdateRecurringInvoicePayload
 
   """
   Updates a single `ConnectedAccount` using its globally unique id and a patch.
@@ -15269,6 +15817,22 @@ type Mutation {
     input: DeletePurchaseOrderLineInput!
   ): DeletePurchaseOrderLinePayload
 
+  """Deletes a single `RecurringInvoiceLine` using its globally unique id."""
+  deleteRecurringInvoiceLineById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteRecurringInvoiceLineByIdInput!
+  ): DeleteRecurringInvoiceLinePayload
+
+  """Deletes a single `RecurringInvoiceLine` using a unique key."""
+  deleteRecurringInvoiceLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteRecurringInvoiceLineInput!
+  ): DeleteRecurringInvoiceLinePayload
+
   """
   Deletes a single `CategorizationRuleSplit` using its globally unique id.
   """
@@ -15464,6 +16028,22 @@ type Mutation {
     """
     input: DeletePurchaseOrderInput!
   ): DeletePurchaseOrderPayload
+
+  """Deletes a single `RecurringInvoice` using its globally unique id."""
+  deleteRecurringInvoiceById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteRecurringInvoiceByIdInput!
+  ): DeleteRecurringInvoicePayload
+
+  """Deletes a single `RecurringInvoice` using a unique key."""
+  deleteRecurringInvoice(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteRecurringInvoiceInput!
+  ): DeleteRecurringInvoicePayload
 
   """Deletes a single `ConnectedAccount` using its globally unique id."""
   deleteConnectedAccountById(
@@ -16758,6 +17338,54 @@ input PurchaseOrderLineInput {
   sortOrder: Int
 }
 
+"""The output of our create `RecurringInvoiceLine` mutation."""
+type CreateRecurringInvoiceLinePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `RecurringInvoiceLine` that was created by this mutation."""
+  recurringInvoiceLine: RecurringInvoiceLine
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `RecurringInvoiceLine`. May be used by Relay 1."""
+  recurringInvoiceLineEdge(
+    """The method to use when ordering `RecurringInvoiceLine`."""
+    orderBy: [RecurringInvoiceLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): RecurringInvoiceLineEdge
+}
+
+"""All input for the create `RecurringInvoiceLine` mutation."""
+input CreateRecurringInvoiceLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `RecurringInvoiceLine` to be created by this mutation."""
+  recurringInvoiceLine: RecurringInvoiceLineInput!
+}
+
+"""An input for mutations affecting `RecurringInvoiceLine`"""
+input RecurringInvoiceLineInput {
+  rowId: UUID
+  recurringInvoiceId: UUID!
+  description: String!
+  quantity: BigFloat
+  unitPrice: BigFloat
+  incomeAccountId: UUID!
+  taxJurisdictionId: UUID
+  discountPercent: BigFloat
+  sortOrder: Int
+}
+
 """The output of our create `CategorizationRuleSplit` mutation."""
 type CreateCategorizationRuleSplitPayload {
   """
@@ -17349,6 +17977,57 @@ input PurchaseOrderInput {
   total: BigFloat
   memo: String
   convertedBillId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""The output of our create `RecurringInvoice` mutation."""
+type CreateRecurringInvoicePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `RecurringInvoice` that was created by this mutation."""
+  recurringInvoice: RecurringInvoice
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `RecurringInvoice`. May be used by Relay 1."""
+  recurringInvoiceEdge(
+    """The method to use when ordering `RecurringInvoice`."""
+    orderBy: [RecurringInvoiceOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): RecurringInvoiceEdge
+}
+
+"""All input for the create `RecurringInvoice` mutation."""
+input CreateRecurringInvoiceInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `RecurringInvoice` to be created by this mutation."""
+  recurringInvoice: RecurringInvoiceInput!
+}
+
+"""An input for mutations affecting `RecurringInvoice`"""
+input RecurringInvoiceInput {
+  rowId: UUID
+  bookId: UUID!
+  customerId: UUID!
+  numberPrefix: String
+  frequency: String!
+  nextRunDate: String!
+  dueInDays: Int
+  currency: String
+  memo: String
+  isActive: Boolean
   createdAt: Datetime
   updatedAt: Datetime
 }
@@ -19969,6 +20648,78 @@ input UpdatePurchaseOrderLineInput {
   patch: PurchaseOrderLinePatch!
 }
 
+"""The output of our update `RecurringInvoiceLine` mutation."""
+type UpdateRecurringInvoiceLinePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `RecurringInvoiceLine` that was updated by this mutation."""
+  recurringInvoiceLine: RecurringInvoiceLine
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `RecurringInvoiceLine`. May be used by Relay 1."""
+  recurringInvoiceLineEdge(
+    """The method to use when ordering `RecurringInvoiceLine`."""
+    orderBy: [RecurringInvoiceLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): RecurringInvoiceLineEdge
+}
+
+"""All input for the `updateRecurringInvoiceLineById` mutation."""
+input UpdateRecurringInvoiceLineByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `RecurringInvoiceLine` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `RecurringInvoiceLine` being updated.
+  """
+  patch: RecurringInvoiceLinePatch!
+}
+
+"""
+Represents an update to a `RecurringInvoiceLine`. Fields that are set will be updated.
+"""
+input RecurringInvoiceLinePatch {
+  rowId: UUID
+  recurringInvoiceId: UUID
+  description: String
+  quantity: BigFloat
+  unitPrice: BigFloat
+  incomeAccountId: UUID
+  taxJurisdictionId: UUID
+  discountPercent: BigFloat
+  sortOrder: Int
+}
+
+"""All input for the `updateRecurringInvoiceLine` mutation."""
+input UpdateRecurringInvoiceLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `RecurringInvoiceLine` being updated.
+  """
+  patch: RecurringInvoiceLinePatch!
+}
+
 """The output of our update `CategorizationRuleSplit` mutation."""
 type UpdateCategorizationRuleSplitPayload {
   """
@@ -20850,6 +21601,81 @@ input UpdatePurchaseOrderInput {
   An object where the defined keys will be set on the `PurchaseOrder` being updated.
   """
   patch: PurchaseOrderPatch!
+}
+
+"""The output of our update `RecurringInvoice` mutation."""
+type UpdateRecurringInvoicePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `RecurringInvoice` that was updated by this mutation."""
+  recurringInvoice: RecurringInvoice
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `RecurringInvoice`. May be used by Relay 1."""
+  recurringInvoiceEdge(
+    """The method to use when ordering `RecurringInvoice`."""
+    orderBy: [RecurringInvoiceOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): RecurringInvoiceEdge
+}
+
+"""All input for the `updateRecurringInvoiceById` mutation."""
+input UpdateRecurringInvoiceByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `RecurringInvoice` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `RecurringInvoice` being updated.
+  """
+  patch: RecurringInvoicePatch!
+}
+
+"""
+Represents an update to a `RecurringInvoice`. Fields that are set will be updated.
+"""
+input RecurringInvoicePatch {
+  rowId: UUID
+  bookId: UUID
+  customerId: UUID
+  numberPrefix: String
+  frequency: String
+  nextRunDate: String
+  dueInDays: Int
+  currency: String
+  memo: String
+  isActive: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the `updateRecurringInvoice` mutation."""
+input UpdateRecurringInvoiceInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `RecurringInvoice` being updated.
+  """
+  patch: RecurringInvoicePatch!
 }
 
 """The output of our update `ConnectedAccount` mutation."""
@@ -23572,6 +24398,54 @@ input DeletePurchaseOrderLineInput {
   rowId: UUID!
 }
 
+"""The output of our delete `RecurringInvoiceLine` mutation."""
+type DeleteRecurringInvoiceLinePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `RecurringInvoiceLine` that was deleted by this mutation."""
+  recurringInvoiceLine: RecurringInvoiceLine
+  deletedRecurringInvoiceLineId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `RecurringInvoiceLine`. May be used by Relay 1."""
+  recurringInvoiceLineEdge(
+    """The method to use when ordering `RecurringInvoiceLine`."""
+    orderBy: [RecurringInvoiceLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): RecurringInvoiceLineEdge
+}
+
+"""All input for the `deleteRecurringInvoiceLineById` mutation."""
+input DeleteRecurringInvoiceLineByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `RecurringInvoiceLine` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteRecurringInvoiceLine` mutation."""
+input DeleteRecurringInvoiceLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete `CategorizationRuleSplit` mutation."""
 type DeleteCategorizationRuleSplitPayload {
   """
@@ -24140,6 +25014,54 @@ input DeletePurchaseOrderByIdInput {
 
 """All input for the `deletePurchaseOrder` mutation."""
 input DeletePurchaseOrderInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `RecurringInvoice` mutation."""
+type DeleteRecurringInvoicePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `RecurringInvoice` that was deleted by this mutation."""
+  recurringInvoice: RecurringInvoice
+  deletedRecurringInvoiceId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `RecurringInvoice`. May be used by Relay 1."""
+  recurringInvoiceEdge(
+    """The method to use when ordering `RecurringInvoice`."""
+    orderBy: [RecurringInvoiceOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): RecurringInvoiceEdge
+}
+
+"""All input for the `deleteRecurringInvoiceById` mutation."""
+input DeleteRecurringInvoiceByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `RecurringInvoice` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteRecurringInvoice` mutation."""
+input DeleteRecurringInvoiceInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
