@@ -1,139 +1,234 @@
-import { beforeEach, describe, expect, mock, test } from "bun:test";
+import { afterAll, beforeAll, describe, expect, mock, test } from "bun:test";
 
-import { mockDbPool, resetDbMock, setSelectResults } from "lib/test/mockDb";
+import { eq } from "drizzle-orm";
 
-let insertedEntry: Record<string, unknown> | null = null;
-let insertedLines: Array<Record<string, unknown>> = [];
-let invoiceUpdate: Record<string, unknown> | null = null;
+import {
+  accountTable,
+  accountingPeriodTable,
+  bookTable,
+  customerTable,
+  invoiceTable,
+  journalEntryTable,
+  journalLineTable,
+} from "lib/db/schema";
+import { createTestDb } from "lib/test/realDb";
 
-const txInsertValues = mock((values: unknown) => {
-  if (Array.isArray(values)) {
-    insertedLines = values as Array<Record<string, unknown>>;
-    return {};
-  }
-  const v = values as Record<string, unknown>;
-  if (v.source !== undefined) {
-    insertedEntry = v;
-    return { returning: mock(() => [{ id: "reversal-1" }]) };
-  }
-  return {};
-});
+import type { InsertAccount } from "lib/db/schema";
+import type { TestDb } from "lib/test/realDb";
 
-const txUpdateWhere = mock(() => ({}));
-const txUpdateSet = mock((values: Record<string, unknown>) => {
-  if (values.status !== undefined) invoiceUpdate = values;
-  return { where: txUpdateWhere };
-});
+// Voiding posts a dated reversing entry rather than deleting the original, so
+// exercise it against real Postgres: the swapped debit/credit lines, the
+// closed-period refusal, and the payment guard are all money-critical
+let createInvoiceDraft: typeof import("./createInvoiceDraft").createInvoiceDraft;
+let postInvoice: typeof import("./postInvoice").postInvoice;
+let recordInvoicePayment: typeof import("./recordInvoicePayment").recordInvoicePayment;
+let voidInvoice: typeof import("./voidInvoice").voidInvoice;
+let harness: TestDb;
 
-const mockTransaction = mock(async (fn: (tx: unknown) => Promise<unknown>) => {
-  const tx = {
-    insert: mock(() => ({ values: txInsertValues })),
-    update: mock(() => ({ set: txUpdateSet })),
-  };
-  return await fn(tx);
-});
-
-mock.module("lib/db/db", () => ({
-  dbPool: { ...mockDbPool, transaction: mockTransaction },
-}));
-
-const { voidInvoice } = await import("./voidInvoice");
-
-const postedInvoice = {
-  id: "inv-1",
-  bookId: "book-1",
-  number: "1001",
-  status: "open",
-  journalEntryId: "entry-1",
-};
-
-beforeEach(() => {
-  resetDbMock();
-  insertedEntry = null;
-  insertedLines = [];
-  invoiceUpdate = null;
-  txInsertValues.mockClear();
-  txUpdateSet.mockClear();
-  mockTransaction.mockClear();
-});
+const seedAccount = (
+  bookId: string,
+  name: string,
+  type: NonNullable<InsertAccount["type"]>,
+  subType: NonNullable<InsertAccount["subType"]>,
+) =>
+  harness.db
+    .insert(accountTable)
+    .values({ bookId, name, type, subType })
+    .returning()
+    .then((r) => r[0]!);
 
 describe("voidInvoice", () => {
-  test("posts a reversing entry (not a delete) and marks a posted invoice void", async () => {
-    setSelectResults([
-      [postedInvoice], // invoice
-      [], // payments (none)
-      [], // isPeriodLocked: no closed period
-      [
-        { accountId: "ar", debit: "100.0000", credit: "0.0000" },
-        { accountId: "revenue", debit: "0.0000", credit: "100.0000" },
-      ], // original journal lines
-      [], // inventory movements (none)
-    ]);
+  beforeAll(async () => {
+    harness = await createTestDb();
+    mock.module("lib/db/db", () => ({
+      dbPool: harness.db,
+      pgPool: harness.client,
+    }));
+    ({ createInvoiceDraft } = await import("./createInvoiceDraft"));
+    ({ postInvoice } = await import("./postInvoice"));
+    ({ recordInvoicePayment } = await import("./recordInvoicePayment"));
+    ({ voidInvoice } = await import("./voidInvoice"));
+  });
 
-    const result = await voidInvoice("inv-1", "book-1");
+  afterAll(async () => {
+    await harness.client.close();
+  });
 
-    expect(insertedEntry).toMatchObject({
-      source: "invoice_void",
-      sourceReferenceId: "inv-1",
+  const seedBook = async (organizationId: string) => {
+    const [book] = await harness.db
+      .insert(bookTable)
+      .values({ organizationId, name: "Void Co", type: "llc" })
+      .returning();
+    const bookId = book!.id;
+    const ar = await seedAccount(bookId, "AR", "asset", "accounts_receivable");
+    const sales = await seedAccount(bookId, "Sales", "revenue", "sales");
+    const cash = await seedAccount(bookId, "Cash", "asset", "cash");
+    const [customer] = await harness.db
+      .insert(customerTable)
+      .values({ bookId, name: "Buyer" })
+      .returning();
+    return { bookId, ar, sales, cash, customerId: customer!.id };
+  };
+
+  const draftFor = (
+    bookId: string,
+    customerId: string,
+    salesId: string,
+    number: string,
+    issueDate = "2026-09-01",
+  ) =>
+    createInvoiceDraft({
+      bookId,
+      customerId,
+      number,
+      issueDate,
+      dueDate: "2026-10-01",
+      lines: [
+        {
+          description: "Work",
+          quantity: 1,
+          unitPrice: 100,
+          incomeAccountId: salesId,
+        },
+      ],
     });
-    // Each line's debit and credit are swapped to reverse the original posting
-    expect(insertedLines).toEqual([
-      {
-        journalEntryId: "reversal-1",
-        accountId: "ar",
-        debit: "0.0000",
-        credit: "100.0000",
-      },
-      {
-        journalEntryId: "reversal-1",
-        accountId: "revenue",
-        debit: "100.0000",
-        credit: "0.0000",
-      },
-    ]);
-    expect(invoiceUpdate).toMatchObject({ status: "void" });
-    expect(result).toEqual({ invoiceId: "inv-1", alreadyVoid: false });
+
+  test("posts a reversing entry (not a delete) and marks a posted invoice void", async () => {
+    const { bookId, ar, sales, customerId } = await seedBook("org_void");
+    const draft = await draftFor(bookId, customerId, sales.id, "1001");
+    await postInvoice(draft.invoiceId, bookId);
+
+    const result = await voidInvoice(draft.invoiceId, bookId);
+
+    const [reversal] = await harness.db
+      .select()
+      .from(journalEntryTable)
+      .where(eq(journalEntryTable.source, "invoice_void"));
+    expect(reversal).toMatchObject({ sourceReferenceId: draft.invoiceId });
+
+    const lines = await harness.db
+      .select({
+        accountId: journalLineTable.accountId,
+        debit: journalLineTable.debit,
+        credit: journalLineTable.credit,
+      })
+      .from(journalLineTable)
+      .where(eq(journalLineTable.journalEntryId, reversal!.id));
+    const byAccount = (id: string) => lines.find((l) => l.accountId === id);
+    // Each side swapped: the original AR debit becomes a credit, the sales
+    // credit becomes a debit
+    expect(byAccount(ar.id)).toMatchObject({
+      debit: "0.0000",
+      credit: "100.0000",
+    });
+    expect(byAccount(sales.id)).toMatchObject({
+      debit: "100.0000",
+      credit: "0.0000",
+    });
+
+    const [invoice] = await harness.db
+      .select()
+      .from(invoiceTable)
+      .where(eq(invoiceTable.id, draft.invoiceId));
+    expect(invoice?.status).toBe("void");
+    expect(result).toEqual({ invoiceId: draft.invoiceId, alreadyVoid: false });
   });
 
   test("refuses to reverse into a closed period", async () => {
-    setSelectResults([
-      [postedInvoice],
-      [],
-      [{ status: "closed" }], // isPeriodLocked: today's period is closed
-    ]);
-    await expect(voidInvoice("inv-1", "book-1")).rejects.toThrow(
+    const { bookId, sales, customerId } = await seedBook("org_void_closed");
+    // The reversal posts in today's period; close that period so the void is
+    // refused. Post the invoice in an earlier, open period so posting succeeds
+    const today = new Date();
+    await harness.db.insert(accountingPeriodTable).values({
+      bookId,
+      year: today.getUTCFullYear(),
+      month: today.getUTCMonth() + 1,
+      status: "closed",
+    });
+    const past = new Date(today.getTime() - 70 * 24 * 60 * 60 * 1000);
+    const issueDate = `${past.getUTCFullYear()}-${String(
+      past.getUTCMonth() + 1,
+    ).padStart(2, "0")}-01`;
+    const draft = await draftFor(
+      bookId,
+      customerId,
+      sales.id,
+      "1002",
+      issueDate,
+    );
+    await postInvoice(draft.invoiceId, bookId);
+
+    await expect(voidInvoice(draft.invoiceId, bookId)).rejects.toThrow(
       /closed period/,
     );
-    expect(mockTransaction).not.toHaveBeenCalled();
+    const [invoice] = await harness.db
+      .select()
+      .from(invoiceTable)
+      .where(eq(invoiceTable.id, draft.invoiceId));
+    expect(invoice?.status).toBe("open");
   });
 
   test("voids a draft invoice with no ledger change", async () => {
-    setSelectResults([
-      [{ ...postedInvoice, status: "draft", journalEntryId: null }],
-      [],
-    ]);
+    const { bookId, sales, customerId } = await seedBook("org_void_draft");
+    const draft = await draftFor(bookId, customerId, sales.id, "1003");
 
-    await voidInvoice("inv-1", "book-1");
+    const result = await voidInvoice(draft.invoiceId, bookId);
 
-    expect(mockTransaction).not.toHaveBeenCalled();
-    expect(insertedEntry).toBeNull();
+    expect(result).toEqual({ invoiceId: draft.invoiceId, alreadyVoid: false });
+    const [invoice] = await harness.db
+      .select()
+      .from(invoiceTable)
+      .where(eq(invoiceTable.id, draft.invoiceId));
+    expect(invoice?.status).toBe("void");
+    // A never-posted invoice produces no reversing journal entry
+    const reversals = await harness.db
+      .select()
+      .from(journalEntryTable)
+      .where(eq(journalEntryTable.sourceReferenceId, draft.invoiceId));
+    expect(reversals).toHaveLength(0);
   });
 
   test("refuses to void an invoice with payments", async () => {
-    setSelectResults([[postedInvoice], [{ id: "pay-1" }]]);
-    await expect(voidInvoice("inv-1", "book-1")).rejects.toThrow(/payments/);
-    expect(mockTransaction).not.toHaveBeenCalled();
+    const { bookId, sales, cash, customerId } = await seedBook("org_void_paid");
+    const draft = await draftFor(bookId, customerId, sales.id, "1004");
+    await postInvoice(draft.invoiceId, bookId);
+    await recordInvoicePayment({
+      invoiceId: draft.invoiceId,
+      bookId,
+      depositAccountId: cash.id,
+      date: "2026-09-10",
+      amount: 40,
+    });
+
+    await expect(voidInvoice(draft.invoiceId, bookId)).rejects.toThrow(
+      /payments/,
+    );
   });
 
   test("is a no-op on an already-void invoice", async () => {
-    setSelectResults([[{ ...postedInvoice, status: "void" }]]);
-    const result = await voidInvoice("inv-1", "book-1");
-    expect(result).toEqual({ invoiceId: "inv-1", alreadyVoid: true });
-    expect(mockTransaction).not.toHaveBeenCalled();
+    const { bookId, sales, customerId } = await seedBook("org_void_again");
+    const draft = await draftFor(bookId, customerId, sales.id, "1005");
+    await postInvoice(draft.invoiceId, bookId);
+    await voidInvoice(draft.invoiceId, bookId);
+
+    const result = await voidInvoice(draft.invoiceId, bookId);
+    expect(result).toEqual({ invoiceId: draft.invoiceId, alreadyVoid: true });
   });
 
   test("rejects a cross-book invoice (IDOR)", async () => {
-    setSelectResults([[{ ...postedInvoice, bookId: "other" }]]);
-    await expect(voidInvoice("inv-1", "book-1")).rejects.toThrow(/not found/);
+    const { bookId, sales, customerId } = await seedBook("org_void_idor");
+    const [other] = await harness.db
+      .insert(bookTable)
+      .values({
+        organizationId: "org_void_idor_other",
+        name: "Other",
+        type: "llc",
+      })
+      .returning();
+    const draft = await draftFor(bookId, customerId, sales.id, "1006");
+    await postInvoice(draft.invoiceId, bookId);
+    await expect(voidInvoice(draft.invoiceId, other!.id)).rejects.toThrow(
+      /not found/,
+    );
   });
 });

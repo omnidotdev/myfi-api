@@ -1,142 +1,254 @@
-import { beforeEach, describe, expect, mock, test } from "bun:test";
+import { afterAll, beforeAll, describe, expect, mock, test } from "bun:test";
 
-import { mockDbPool, resetDbMock, setSelectResults } from "lib/test/mockDb";
+import { eq } from "drizzle-orm";
 
-let insertedEntry: Record<string, unknown> | null = null;
-const insertedLines: Array<Record<string, unknown>> = [];
-let billUpdate: Record<string, unknown> | null = null;
+import {
+  accountTable,
+  billTable,
+  bookTable,
+  journalEntryTable,
+  journalLineTable,
+  taxJurisdictionTable,
+  vendorTable,
+} from "lib/db/schema";
+import { createTestDb } from "lib/test/realDb";
 
-const txInsertValues = mock((values: Record<string, unknown>) => {
-  if (values.source !== undefined) {
-    insertedEntry = values;
-    return { returning: mock(() => [{ id: "entry-1" }]) };
-  }
-  insertedLines.push(values);
-  return {};
-});
+import type { InsertAccount } from "lib/db/schema";
+import type { TestDb } from "lib/test/realDb";
 
-const txUpdateWhere = mock(() => ({}));
-const txUpdateSet = mock((values: Record<string, unknown>) => {
-  billUpdate = values;
-  return { where: txUpdateWhere };
-});
+// Posting a bill writes the authoritative AP/expense entry, so exercise it
+// against real Postgres: the expense debit (with US tax folded in), the AP
+// credit, and the balanced journal lines are what the books read
+let createBillDraft: typeof import("./createBillDraft").createBillDraft;
+let postBill: typeof import("./postBill").postBill;
+let harness: TestDb;
 
-const mockTransaction = mock(async (fn: (tx: unknown) => Promise<unknown>) => {
-  const tx = {
-    insert: mock(() => ({ values: txInsertValues })),
-    update: mock(() => ({ set: txUpdateSet })),
-  };
-  return await fn(tx);
-});
+const seedAccount = (
+  bookId: string,
+  name: string,
+  type: NonNullable<InsertAccount["type"]>,
+  subType: NonNullable<InsertAccount["subType"]>,
+) =>
+  harness.db
+    .insert(accountTable)
+    .values({ bookId, name, type, subType })
+    .returning()
+    .then((r) => r[0]!);
 
-mock.module("lib/db/db", () => ({
-  dbPool: { ...mockDbPool, transaction: mockTransaction },
-}));
-
-const { postBill } = await import("./postBill");
-
-const draftBill = {
-  id: "bill-1",
-  bookId: "book-1",
-  vendorId: "vendor-1",
-  number: "B-1",
-  status: "draft",
-  billDate: "2026-09-01",
-  total: "0",
-  journalEntryId: null,
-};
-
-beforeEach(() => {
-  resetDbMock();
-  insertedEntry = null;
-  insertedLines.length = 0;
-  billUpdate = null;
-  txInsertValues.mockClear();
-  txUpdateSet.mockClear();
-  mockTransaction.mockClear();
-});
+const linesForEntry = (journalEntryId: string) =>
+  harness.db
+    .select({
+      accountId: journalLineTable.accountId,
+      debit: journalLineTable.debit,
+      credit: journalLineTable.credit,
+    })
+    .from(journalLineTable)
+    .where(eq(journalLineTable.journalEntryId, journalEntryId));
 
 describe("postBill", () => {
+  beforeAll(async () => {
+    harness = await createTestDb();
+    mock.module("lib/db/db", () => ({
+      dbPool: harness.db,
+      pgPool: harness.client,
+    }));
+    ({ createBillDraft } = await import("./createBillDraft"));
+    ({ postBill } = await import("./postBill"));
+  });
+
+  afterAll(async () => {
+    await harness.client.close();
+  });
+
+  const seedBook = async (
+    organizationId: string,
+    opts: { withAp?: boolean } = {},
+  ) => {
+    const [book] = await harness.db
+      .insert(bookTable)
+      .values({ organizationId, name: "Bill Co", type: "llc" })
+      .returning();
+    const bookId = book!.id;
+    const ap = opts.withAp
+      ? await seedAccount(bookId, "AP", "liability", "accounts_payable")
+      : null;
+    const supplies = await seedAccount(
+      bookId,
+      "Supplies",
+      "expense",
+      "operating_expense",
+    );
+    const payable = await seedAccount(
+      bookId,
+      "Tax Payable",
+      "liability",
+      "other_liability",
+    );
+    const [jur] = await harness.db
+      .insert(taxJurisdictionTable)
+      .values({
+        bookId,
+        name: "State",
+        rate: "0.082500",
+        filingFrequency: "annually",
+        taxPayableAccountId: payable.id,
+      })
+      .returning();
+    const [vendor] = await harness.db
+      .insert(vendorTable)
+      .values({ bookId, name: "Supplier" })
+      .returning();
+    return {
+      bookId,
+      ap,
+      supplies,
+      payable,
+      jurId: jur!.id,
+      vendorId: vendor!.id,
+    };
+  };
+
   test("posts a draft bill: expense and tax debits, AP credit, bill opened", async () => {
-    setSelectResults([
-      [draftBill],
-      [], // isPeriodLocked: open period
-      [
+    const { bookId, ap, supplies, payable, jurId, vendorId } = await seedBook(
+      "org_bill_post",
+      { withAp: true },
+    );
+    const draft = await createBillDraft({
+      bookId,
+      vendorId,
+      number: "B-1",
+      billDate: "2026-09-01",
+      dueDate: "2026-10-01",
+      lines: [
         {
-          quantity: "1",
-          unitPrice: "100",
-          expenseAccountId: "supplies",
-          taxRate: "0.0825",
-          taxPayableAccountId: "tax",
+          description: "Supplies",
+          quantity: 1,
+          unitPrice: 100,
+          expenseAccountId: supplies.id,
+          taxJurisdictionId: jurId,
         },
       ],
-      [{ id: "ap" }],
-    ]);
+    });
 
-    const result = await postBill("bill-1", "book-1");
+    const result = await postBill(draft.billId, bookId);
 
-    expect(insertedEntry).toMatchObject({
-      bookId: "book-1",
+    const [entry] = await harness.db
+      .select()
+      .from(journalEntryTable)
+      .where(eq(journalEntryTable.id, result.journalEntryId));
+    expect(entry).toMatchObject({
+      bookId,
       source: "bill",
-      sourceReferenceId: "bill-1",
-      vendorId: "vendor-1",
+      sourceReferenceId: draft.billId,
+      vendorId,
       memo: "Bill B-1",
     });
-    // US treatment: tax paid folds into the expense debit, so there are only
-    // two lines (expense incl. tax, and the AP credit), no tax-payable debit
-    expect(insertedLines).toHaveLength(2);
-    expect(insertedLines.find((l) => l.accountId === "ap")).toMatchObject({
+
+    const lines = await linesForEntry(result.journalEntryId);
+    // US treatment: tax paid folds into the expense debit, so there are only two
+    // lines (expense incl. tax, and the AP credit), no tax-payable debit
+    expect(lines).toHaveLength(2);
+    expect(lines.find((l) => l.accountId === ap!.id)).toMatchObject({
       credit: "108.2500",
       debit: "0.0000",
     });
-    expect(insertedLines.find((l) => l.accountId === "supplies")).toMatchObject(
-      {
-        debit: "108.2500",
-      },
-    );
-    expect(insertedLines.some((l) => l.accountId === "tax")).toBe(false);
-    expect(billUpdate).toMatchObject({ status: "open", total: "108.2500" });
+    expect(lines.find((l) => l.accountId === supplies.id)).toMatchObject({
+      debit: "108.2500",
+    });
+    expect(lines.some((l) => l.accountId === payable.id)).toBe(false);
+
+    const [bill] = await harness.db
+      .select()
+      .from(billTable)
+      .where(eq(billTable.id, draft.billId));
+    expect(bill).toMatchObject({ status: "open", total: "108.2500" });
     expect(result).toMatchObject({ total: 108.25, alreadyPosted: false });
   });
 
   test("is idempotent for an already-posted bill", async () => {
-    setSelectResults([
-      [{ ...draftBill, status: "open", journalEntryId: "e9", total: "100" }],
-    ]);
-    const result = await postBill("bill-1", "book-1");
-    expect(result).toEqual({
-      billId: "bill-1",
-      journalEntryId: "e9",
+    const { bookId, supplies, vendorId } = await seedBook("org_bill_idem", {
+      withAp: true,
+    });
+    const draft = await createBillDraft({
+      bookId,
+      vendorId,
+      number: "B-2",
+      billDate: "2026-09-01",
+      dueDate: "2026-10-01",
+      lines: [
+        {
+          description: "Supplies",
+          quantity: 1,
+          unitPrice: 100,
+          expenseAccountId: supplies.id,
+        },
+      ],
+    });
+    const first = await postBill(draft.billId, bookId);
+
+    const again = await postBill(draft.billId, bookId);
+    expect(again).toEqual({
+      billId: draft.billId,
+      journalEntryId: first.journalEntryId,
       total: 100,
       alreadyPosted: true,
     });
-    expect(mockTransaction).not.toHaveBeenCalled();
+    const entries = await harness.db
+      .select()
+      .from(journalEntryTable)
+      .where(eq(journalEntryTable.sourceReferenceId, draft.billId));
+    expect(entries).toHaveLength(1);
   });
 
   test("throws when the book has no Accounts Payable account", async () => {
-    setSelectResults([
-      [draftBill],
-      [], // isPeriodLocked: open period
-      [
+    const { bookId, supplies, vendorId } = await seedBook("org_bill_noap");
+    const draft = await createBillDraft({
+      bookId,
+      vendorId,
+      number: "B-3",
+      billDate: "2026-09-01",
+      dueDate: "2026-10-01",
+      lines: [
         {
-          quantity: "1",
-          unitPrice: "10",
-          expenseAccountId: "supplies",
-          taxRate: null,
-          taxPayableAccountId: null,
+          description: "Supplies",
+          quantity: 1,
+          unitPrice: 10,
+          expenseAccountId: supplies.id,
         },
       ],
-      [],
-    ]);
-    await expect(postBill("bill-1", "book-1")).rejects.toThrow(
+    });
+    await expect(postBill(draft.billId, bookId)).rejects.toThrow(
       /Accounts Payable/,
     );
-    expect(mockTransaction).not.toHaveBeenCalled();
+    const [bill] = await harness.db
+      .select()
+      .from(billTable)
+      .where(eq(billTable.id, draft.billId));
+    expect(bill?.status).toBe("draft");
   });
 
   test("throws on a cross-book bill (IDOR)", async () => {
-    setSelectResults([[{ ...draftBill, bookId: "other" }]]);
-    await expect(postBill("bill-1", "book-1")).rejects.toThrow(/not found/);
-    expect(mockTransaction).not.toHaveBeenCalled();
+    const { bookId, supplies, vendorId } = await seedBook("org_bill_idor", {
+      withAp: true,
+    });
+    const other = await seedBook("org_bill_idor_other", { withAp: true });
+    const draft = await createBillDraft({
+      bookId,
+      vendorId,
+      number: "B-4",
+      billDate: "2026-09-01",
+      dueDate: "2026-10-01",
+      lines: [
+        {
+          description: "Supplies",
+          quantity: 1,
+          unitPrice: 10,
+          expenseAccountId: supplies.id,
+        },
+      ],
+    });
+    await expect(postBill(draft.billId, other.bookId)).rejects.toThrow(
+      /not found/,
+    );
   });
 });

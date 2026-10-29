@@ -1,180 +1,327 @@
-import { beforeEach, describe, expect, mock, test } from "bun:test";
+import { afterAll, beforeAll, describe, expect, mock, test } from "bun:test";
 
-import { mockDbPool, resetDbMock, setSelectResults } from "lib/test/mockDb";
+import { asc, eq } from "drizzle-orm";
 
-let insertedPayment: Record<string, unknown> | null = null;
-let insertedEntry: Record<string, unknown> | null = null;
-const insertedLines: Array<Record<string, unknown>> = [];
-let invoiceUpdate: Record<string, unknown> | null = null;
+import {
+  accountTable,
+  bookTable,
+  customerTable,
+  invoicePaymentTable,
+  invoiceTable,
+  journalEntryTable,
+  journalLineTable,
+} from "lib/db/schema";
+import { createTestDb } from "lib/test/realDb";
 
-const txInsertValues = mock((values: Record<string, unknown>) => {
-  if (values.source !== undefined) {
-    insertedEntry = values;
-    return { returning: mock(() => [{ id: "entry-1" }]) };
-  }
-  if (values.invoiceId !== undefined && values.depositAccountId !== undefined) {
-    insertedPayment = values;
-    return { returning: mock(() => [{ id: "pay-1" }]) };
-  }
-  insertedLines.push(values);
-  return {};
-});
+import type { InsertAccount } from "lib/db/schema";
+import type { TestDb } from "lib/test/realDb";
 
-const txUpdateWhere = mock(() => ({}));
-const txUpdateSet = mock((values: Record<string, unknown>) => {
-  if (values.status !== undefined) invoiceUpdate = values;
-  return { where: txUpdateWhere };
-});
+// Recording a payment credits AR and debits the deposit account, then advances
+// the invoice balance, so exercise it against real Postgres: the receipt
+// posting and the overpayment guard are money-critical
+let createInvoiceDraft: typeof import("./createInvoiceDraft").createInvoiceDraft;
+let postInvoice: typeof import("./postInvoice").postInvoice;
+let recordInvoicePayment: typeof import("./recordInvoicePayment").recordInvoicePayment;
+let harness: TestDb;
 
-// The invoice returned by the in-transaction FOR UPDATE re-read
-let lockedInvoice: Record<string, unknown> | null = null;
-const txSelect = mock(() => ({
-  from: mock(() => ({
-    where: mock(() => ({
-      for: mock(() => (lockedInvoice ? [lockedInvoice] : [])),
-    })),
-  })),
-}));
-
-const mockTransaction = mock(async (fn: (tx: unknown) => Promise<unknown>) => {
-  const tx = {
-    select: txSelect,
-    insert: mock(() => ({ values: txInsertValues })),
-    update: mock(() => ({ set: txUpdateSet })),
-  };
-  return await fn(tx);
-});
-
-mock.module("lib/db/db", () => ({
-  dbPool: { ...mockDbPool, transaction: mockTransaction },
-}));
-
-const { recordInvoicePayment } = await import("./recordInvoicePayment");
-
-const openInvoice = {
-  id: "inv-1",
-  bookId: "book-1",
-  number: "1001",
-  status: "open",
-  total: "100",
-  amountPaid: "0",
-};
-
-const base = {
-  invoiceId: "inv-1",
-  bookId: "book-1",
-  depositAccountId: "cash",
-  date: "2026-09-10",
-};
-
-beforeEach(() => {
-  resetDbMock();
-  insertedPayment = null;
-  insertedEntry = null;
-  insertedLines.length = 0;
-  invoiceUpdate = null;
-  lockedInvoice = null;
-  txInsertValues.mockClear();
-  txUpdateSet.mockClear();
-  txSelect.mockClear();
-  mockTransaction.mockClear();
-});
+const seedAccount = (
+  bookId: string,
+  name: string,
+  type: NonNullable<InsertAccount["type"]>,
+  subType: NonNullable<InsertAccount["subType"]>,
+) =>
+  harness.db
+    .insert(accountTable)
+    .values({ bookId, name, type, subType })
+    .returning()
+    .then((r) => r[0]!);
 
 describe("recordInvoicePayment", () => {
+  beforeAll(async () => {
+    harness = await createTestDb();
+    mock.module("lib/db/db", () => ({
+      dbPool: harness.db,
+      pgPool: harness.client,
+    }));
+    ({ createInvoiceDraft } = await import("./createInvoiceDraft"));
+    ({ postInvoice } = await import("./postInvoice"));
+    ({ recordInvoicePayment } = await import("./recordInvoicePayment"));
+  });
+
+  afterAll(async () => {
+    await harness.client.close();
+  });
+
+  // Seed a book with a posted, unpaid invoice of the given total (one untaxed
+  // line) plus a cash deposit account, returning the identifiers a payment needs
+  const seedPostedInvoice = async (
+    organizationId: string,
+    total: number,
+    number: string,
+  ) => {
+    const [book] = await harness.db
+      .insert(bookTable)
+      .values({ organizationId, name: "Pay Co", type: "llc" })
+      .returning();
+    const bookId = book!.id;
+    const ar = await seedAccount(bookId, "AR", "asset", "accounts_receivable");
+    const sales = await seedAccount(bookId, "Sales", "revenue", "sales");
+    const cash = await seedAccount(bookId, "Cash", "asset", "cash");
+    const [customer] = await harness.db
+      .insert(customerTable)
+      .values({ bookId, name: "Buyer" })
+      .returning();
+    const draft = await createInvoiceDraft({
+      bookId,
+      customerId: customer!.id,
+      number,
+      issueDate: "2026-09-01",
+      dueDate: "2026-10-01",
+      lines: [
+        {
+          description: "Work",
+          quantity: 1,
+          unitPrice: total,
+          incomeAccountId: sales.id,
+        },
+      ],
+    });
+    await postInvoice(draft.invoiceId, bookId);
+    return { bookId, invoiceId: draft.invoiceId, ar, cash };
+  };
+
   test("posts DR deposit / CR AR and marks the invoice partial", async () => {
-    setSelectResults([[openInvoice], [{ id: "cash" }], [{ id: "ar" }]]);
-    lockedInvoice = openInvoice;
+    const { bookId, invoiceId, ar, cash } = await seedPostedInvoice(
+      "org_pay_partial",
+      100,
+      "1001",
+    );
 
-    const result = await recordInvoicePayment({ ...base, amount: 40 });
+    const result = await recordInvoicePayment({
+      invoiceId,
+      bookId,
+      depositAccountId: cash.id,
+      date: "2026-09-10",
+      amount: 40,
+    });
 
-    expect(insertedPayment).toMatchObject({
-      bookId: "book-1",
-      invoiceId: "inv-1",
+    const [payment] = await harness.db
+      .select()
+      .from(invoicePaymentTable)
+      .where(eq(invoicePaymentTable.id, result.paymentId));
+    expect(payment).toMatchObject({
+      bookId,
+      invoiceId,
       amount: "40.0000",
-      depositAccountId: "cash",
+      depositAccountId: cash.id,
+      journalEntryId: result.journalEntryId,
     });
-    expect(insertedEntry).toMatchObject({
+
+    const [entry] = await harness.db
+      .select()
+      .from(journalEntryTable)
+      .where(eq(journalEntryTable.id, result.journalEntryId));
+    expect(entry).toMatchObject({
       source: "invoice_payment",
-      sourceReferenceId: "pay-1",
+      sourceReferenceId: result.paymentId,
     });
-    expect(insertedLines).toEqual([
-      {
-        journalEntryId: "entry-1",
-        accountId: "cash",
-        debit: "40.0000",
-        credit: "0.0000",
-      },
-      {
-        journalEntryId: "entry-1",
-        accountId: "ar",
-        debit: "0.0000",
-        credit: "40.0000",
-      },
-    ]);
-    expect(invoiceUpdate).toMatchObject({
-      amountPaid: "40.0000",
-      status: "partial",
+
+    const lines = await harness.db
+      .select({
+        accountId: journalLineTable.accountId,
+        debit: journalLineTable.debit,
+        credit: journalLineTable.credit,
+      })
+      .from(journalLineTable)
+      .where(eq(journalLineTable.journalEntryId, result.journalEntryId))
+      .orderBy(asc(journalLineTable.debit));
+    const byAccount = (id: string) => lines.find((l) => l.accountId === id);
+    expect(byAccount(cash.id)).toMatchObject({
+      debit: "40.0000",
+      credit: "0.0000",
     });
-    expect(result).toMatchObject({
-      paymentId: "pay-1",
-      invoiceStatus: "partial",
-      amountPaid: 40,
+    expect(byAccount(ar.id)).toMatchObject({
+      debit: "0.0000",
+      credit: "40.0000",
     });
+
+    const [invoice] = await harness.db
+      .select()
+      .from(invoiceTable)
+      .where(eq(invoiceTable.id, invoiceId));
+    expect(invoice).toMatchObject({ amountPaid: "40.0000", status: "partial" });
+    expect(result).toMatchObject({ invoiceStatus: "partial", amountPaid: 40 });
   });
 
   test("marks the invoice paid when the balance is cleared", async () => {
-    const partial = { ...openInvoice, status: "partial", amountPaid: "60" };
-    setSelectResults([[partial], [{ id: "cash" }], [{ id: "ar" }]]);
-    lockedInvoice = partial;
-
-    const result = await recordInvoicePayment({ ...base, amount: 40 });
+    const { bookId, invoiceId, cash } = await seedPostedInvoice(
+      "org_pay_paid",
+      100,
+      "1002",
+    );
+    await recordInvoicePayment({
+      invoiceId,
+      bookId,
+      depositAccountId: cash.id,
+      date: "2026-09-10",
+      amount: 60,
+    });
+    const result = await recordInvoicePayment({
+      invoiceId,
+      bookId,
+      depositAccountId: cash.id,
+      date: "2026-09-11",
+      amount: 40,
+    });
 
     expect(result.invoiceStatus).toBe("paid");
-    expect(invoiceUpdate).toMatchObject({
-      amountPaid: "100.0000",
-      status: "paid",
-    });
+    const [invoice] = await harness.db
+      .select()
+      .from(invoiceTable)
+      .where(eq(invoiceTable.id, invoiceId));
+    expect(invoice).toMatchObject({ amountPaid: "100.0000", status: "paid" });
   });
 
   test("rejects overpayment", async () => {
-    setSelectResults([[openInvoice], [{ id: "cash" }], [{ id: "ar" }]]);
+    const { bookId, invoiceId, cash } = await seedPostedInvoice(
+      "org_pay_over",
+      100,
+      "1003",
+    );
     await expect(
-      recordInvoicePayment({ ...base, amount: 150 }),
+      recordInvoicePayment({
+        invoiceId,
+        bookId,
+        depositAccountId: cash.id,
+        date: "2026-09-10",
+        amount: 150,
+      }),
     ).rejects.toThrow(/exceeds the balance/);
-    expect(mockTransaction).not.toHaveBeenCalled();
+    const payments = await harness.db
+      .select()
+      .from(invoicePaymentTable)
+      .where(eq(invoicePaymentTable.invoiceId, invoiceId));
+    expect(payments).toHaveLength(0);
   });
 
-  test("rejects a concurrent payment via the in-transaction locked re-read", async () => {
-    // Outer read is stale (nothing paid yet) so the fast-fail check passes, but
-    // a racing payment already cleared the invoice: the FOR UPDATE re-read sees
-    // amountPaid = total and the payment is rejected instead of double-crediting AR
-    setSelectResults([[openInvoice], [{ id: "cash" }], [{ id: "ar" }]]);
-    lockedInvoice = { ...openInvoice, status: "partial", amountPaid: "100" };
-
-    await expect(recordInvoicePayment({ ...base, amount: 40 })).rejects.toThrow(
-      /exceeds the balance/,
+  test("rejects a payment exceeding the balance left by a prior committed payment", async () => {
+    // The mock suite simulated a stale outer read racing a concurrent payment so
+    // the FOR UPDATE re-read catches the overpayment. A single in-process PGlite
+    // connection cannot run two transactions concurrently, so this asserts the
+    // same invariant sequentially: after a committed partial payment the balance
+    // guard refuses a payment over the remaining balance and writes nothing, so
+    // AR is never double-credited
+    const { bookId, invoiceId, cash } = await seedPostedInvoice(
+      "org_pay_race",
+      100,
+      "1004",
     );
-    expect(invoiceUpdate).toBeNull();
+    await recordInvoicePayment({
+      invoiceId,
+      bookId,
+      depositAccountId: cash.id,
+      date: "2026-09-10",
+      amount: 70,
+    });
+    await expect(
+      recordInvoicePayment({
+        invoiceId,
+        bookId,
+        depositAccountId: cash.id,
+        date: "2026-09-11",
+        amount: 50,
+      }),
+    ).rejects.toThrow(/exceeds the balance/);
+
+    const payments = await harness.db
+      .select()
+      .from(invoicePaymentTable)
+      .where(eq(invoicePaymentTable.invoiceId, invoiceId));
+    expect(payments).toHaveLength(1);
+    const [invoice] = await harness.db
+      .select()
+      .from(invoiceTable)
+      .where(eq(invoiceTable.id, invoiceId));
+    expect(invoice).toMatchObject({ amountPaid: "70.0000", status: "partial" });
   });
 
   test("rejects a non-positive amount", async () => {
-    await expect(recordInvoicePayment({ ...base, amount: 0 })).rejects.toThrow(
-      /must be positive/,
+    const { bookId, invoiceId, cash } = await seedPostedInvoice(
+      "org_pay_zero",
+      100,
+      "1005",
     );
+    await expect(
+      recordInvoicePayment({
+        invoiceId,
+        bookId,
+        depositAccountId: cash.id,
+        date: "2026-09-10",
+        amount: 0,
+      }),
+    ).rejects.toThrow(/must be positive/);
   });
 
   test("rejects a payment on a draft invoice", async () => {
-    setSelectResults([[{ ...openInvoice, status: "draft" }]]);
-    await expect(recordInvoicePayment({ ...base, amount: 10 })).rejects.toThrow(
-      /posted, unpaid/,
-    );
+    const [book] = await harness.db
+      .insert(bookTable)
+      .values({ organizationId: "org_pay_draft", name: "Pay Co", type: "llc" })
+      .returning();
+    const bookId = book!.id;
+    const sales = await seedAccount(bookId, "Sales", "revenue", "sales");
+    const cash = await seedAccount(bookId, "Cash", "asset", "cash");
+    const [customer] = await harness.db
+      .insert(customerTable)
+      .values({ bookId, name: "Buyer" })
+      .returning();
+    const draft = await createInvoiceDraft({
+      bookId,
+      customerId: customer!.id,
+      number: "1006",
+      issueDate: "2026-09-01",
+      dueDate: "2026-10-01",
+      lines: [
+        {
+          description: "Work",
+          quantity: 1,
+          unitPrice: 100,
+          incomeAccountId: sales.id,
+        },
+      ],
+    });
+    await expect(
+      recordInvoicePayment({
+        invoiceId: draft.invoiceId,
+        bookId,
+        depositAccountId: cash.id,
+        date: "2026-09-10",
+        amount: 10,
+      }),
+    ).rejects.toThrow(/posted, unpaid/);
   });
 
   test("rejects a cross-book invoice (IDOR)", async () => {
-    setSelectResults([[{ ...openInvoice, bookId: "other-book" }]]);
-    await expect(recordInvoicePayment({ ...base, amount: 10 })).rejects.toThrow(
-      /not found/,
+    const { invoiceId, cash } = await seedPostedInvoice(
+      "org_pay_idor",
+      100,
+      "1007",
     );
-    expect(mockTransaction).not.toHaveBeenCalled();
+    const [other] = await harness.db
+      .insert(bookTable)
+      .values({
+        organizationId: "org_pay_idor_other",
+        name: "Other",
+        type: "llc",
+      })
+      .returning();
+    await expect(
+      recordInvoicePayment({
+        invoiceId,
+        bookId: other!.id,
+        depositAccountId: cash.id,
+        date: "2026-09-10",
+        amount: 10,
+      }),
+    ).rejects.toThrow(/not found/);
   });
 });

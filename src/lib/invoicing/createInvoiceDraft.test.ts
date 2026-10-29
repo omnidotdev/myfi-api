@@ -1,82 +1,124 @@
-import { beforeEach, describe, expect, mock, test } from "bun:test";
+import { afterAll, beforeAll, describe, expect, mock, test } from "bun:test";
 
-import { mockDbPool } from "lib/test/mockDb";
+import { asc, eq } from "drizzle-orm";
 
-let insertedInvoice: Record<string, unknown> | null = null;
-const insertedLines: Array<Record<string, unknown>> = [];
+import {
+  accountTable,
+  bookTable,
+  customerTable,
+  invoiceLineTable,
+  invoiceTable,
+} from "lib/db/schema";
+import { createTestDb } from "lib/test/realDb";
 
-const txInsertValues = mock((values: Record<string, unknown>) => {
-  if (values.customerId !== undefined) {
-    insertedInvoice = values;
-    return { returning: mock(() => [{ id: "inv-1" }]) };
-  }
-  insertedLines.push(values);
-  return {};
-});
+import type { InsertAccount } from "lib/db/schema";
+import type { TestDb } from "lib/test/realDb";
 
-const mockTransaction = mock(async (fn: (tx: unknown) => Promise<unknown>) => {
-  const tx = { insert: mock(() => ({ values: txInsertValues })) };
-  return await fn(tx);
-});
+// Draft creation stores the pre-tax subtotal and the per-line net amount, so
+// exercise it against real Postgres: the invoice and line rows it writes are
+// what posting later reads, and the FK and NOT NULL constraints are enforced
+let createInvoiceDraft: typeof import("./createInvoiceDraft").createInvoiceDraft;
+let harness: TestDb;
 
-mock.module("lib/db/db", () => ({
-  dbPool: { ...mockDbPool, transaction: mockTransaction },
-}));
-
-const { createInvoiceDraft } = await import("./createInvoiceDraft");
-
-const base = {
-  bookId: "book-1",
-  customerId: "cust-1",
-  number: "1001",
-  issueDate: "2026-09-01",
-  dueDate: "2026-10-01",
-};
-
-beforeEach(() => {
-  insertedInvoice = null;
-  insertedLines.length = 0;
-  txInsertValues.mockClear();
-  mockTransaction.mockClear();
-});
+const seedAccount = (
+  bookId: string,
+  name: string,
+  type: NonNullable<InsertAccount["type"]>,
+  subType: NonNullable<InsertAccount["subType"]>,
+) =>
+  harness.db
+    .insert(accountTable)
+    .values({ bookId, name, type, subType })
+    .returning()
+    .then((r) => r[0]!);
 
 describe("createInvoiceDraft", () => {
+  beforeAll(async () => {
+    harness = await createTestDb();
+    mock.module("lib/db/db", () => ({
+      dbPool: harness.db,
+      pgPool: harness.client,
+    }));
+    ({ createInvoiceDraft } = await import("./createInvoiceDraft"));
+  });
+
+  afterAll(async () => {
+    await harness.client.close();
+  });
+
+  const seedBook = async (organizationId: string) => {
+    const [book] = await harness.db
+      .insert(bookTable)
+      .values({ organizationId, name: "Draft Co", type: "llc" })
+      .returning();
+    const bookId = book!.id;
+    const sales = await seedAccount(bookId, "Sales", "revenue", "sales");
+    const service = await seedAccount(
+      bookId,
+      "Service",
+      "revenue",
+      "service_revenue",
+    );
+    const [customer] = await harness.db
+      .insert(customerTable)
+      .values({ bookId, name: "Buyer" })
+      .returning();
+    return { bookId, customerId: customer!.id, sales, service };
+  };
+
   test("creates a draft invoice with computed line amounts and subtotal", async () => {
+    const { bookId, customerId, sales, service } = await seedBook("org_draft");
+
     const result = await createInvoiceDraft({
-      ...base,
+      bookId,
+      customerId,
+      number: "1001",
+      issueDate: "2026-09-01",
+      dueDate: "2026-10-01",
       lines: [
         {
           description: "Design",
           quantity: 2,
           unitPrice: 50,
-          incomeAccountId: "sales",
+          incomeAccountId: sales.id,
         },
         {
           description: "Hosting",
           quantity: 1,
           unitPrice: 30,
-          incomeAccountId: "service",
+          incomeAccountId: service.id,
         },
       ],
     });
 
-    expect(insertedInvoice).toMatchObject({
-      bookId: "book-1",
-      customerId: "cust-1",
+    const [invoice] = await harness.db
+      .select()
+      .from(invoiceTable)
+      .where(eq(invoiceTable.id, result.invoiceId));
+    expect(invoice).toMatchObject({
+      bookId,
+      customerId,
       number: "1001",
       status: "draft",
       subtotal: "130.0000",
       taxAmount: "0.0000",
       total: "130.0000",
     });
-    expect(insertedLines).toHaveLength(2);
-    expect(insertedLines[0]).toMatchObject({
+
+    const lines = await harness.db
+      .select()
+      .from(invoiceLineTable)
+      .where(eq(invoiceLineTable.invoiceId, result.invoiceId))
+      .orderBy(asc(invoiceLineTable.sortOrder));
+    expect(lines).toHaveLength(2);
+    expect(lines[0]).toMatchObject({
       description: "Design",
       amount: "100.0000",
       sortOrder: 0,
     });
+
     expect(result).toEqual({
-      invoiceId: "inv-1",
+      invoiceId: result.invoiceId,
       number: "1001",
       subtotal: 130,
       lineCount: 2,
@@ -84,9 +126,22 @@ describe("createInvoiceDraft", () => {
   });
 
   test("throws when there are no lines", async () => {
-    await expect(createInvoiceDraft({ ...base, lines: [] })).rejects.toThrow(
-      /at least one line/,
-    );
-    expect(mockTransaction).not.toHaveBeenCalled();
+    const { bookId, customerId } = await seedBook("org_draft_empty");
+    await expect(
+      createInvoiceDraft({
+        bookId,
+        customerId,
+        number: "1002",
+        issueDate: "2026-09-01",
+        dueDate: "2026-10-01",
+        lines: [],
+      }),
+    ).rejects.toThrow(/at least one line/);
+    // No invoice row is written when the input is rejected before the transaction
+    const invoices = await harness.db
+      .select()
+      .from(invoiceTable)
+      .where(eq(invoiceTable.bookId, bookId));
+    expect(invoices).toHaveLength(0);
   });
 });
