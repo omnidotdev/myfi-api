@@ -28,6 +28,9 @@ export const billLineTable = pgTable(
       .notNull()
       .default("0"),
     amount: numeric({ precision: 19, scale: 4 }).notNull().default("0"),
+    // optional line discount as a fraction (0.1 = 10% off), applied to the
+    // extended amount before tax; amount stores the post-discount net
+    discountPercent: numeric("discount_percent", { precision: 9, scale: 6 }),
     // expense (or asset) account the line's cost debits when posted
     expenseAccountId: uuid("expense_account_id")
       .notNull()

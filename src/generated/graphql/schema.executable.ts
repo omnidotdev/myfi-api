@@ -1757,126 +1757,6 @@ const spec_payrollConnection = {
   executor: executor
 };
 const payrollConnectionCodec = recordCodec(spec_payrollConnection);
-const billLineIdentifier = sql.identifier("public", "bill_line");
-const spec_billLine = {
-  name: "billLine",
-  identifier: billLineIdentifier,
-  attributes: {
-    __proto__: null,
-    id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    bill_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    description: {
-      codec: TYPES.text,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    quantity: {
-      codec: TYPES.numeric,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    unit_price: {
-      codec: TYPES.numeric,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    amount: {
-      codec: TYPES.numeric,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    expense_account_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    tax_jurisdiction_id: {
-      codec: TYPES.uuid,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    sort_order: {
-      codec: TYPES.int,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    }
-  },
-  extensions: {
-    oid: "17693",
-    isTableLike: true,
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "bill_line"
-    }
-  },
-  executor: executor
-};
-const billLineCodec = recordCodec(spec_billLine);
 const estimateLineIdentifier = sql.identifier("public", "estimate_line");
 const spec_estimateLine = {
   name: "estimateLine",
@@ -2766,6 +2646,136 @@ const spec_project = {
   executor: executor
 };
 const projectCodec = recordCodec(spec_project);
+const billLineIdentifier = sql.identifier("public", "bill_line");
+const spec_billLine = {
+  name: "billLine",
+  identifier: billLineIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    bill_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    description: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    quantity: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    unit_price: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    amount: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    expense_account_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    tax_jurisdiction_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    sort_order: {
+      codec: TYPES.int,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    discount_percent: {
+      codec: TYPES.numeric,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "17693",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "bill_line"
+    }
+  },
+  executor: executor
+};
+const billLineCodec = recordCodec(spec_billLine);
 const creditMemoLineIdentifier = sql.identifier("public", "credit_memo_line");
 const spec_creditMemoLine = {
   name: "creditMemoLine",
@@ -7091,29 +7101,6 @@ const payroll_connection_resourceOptionsConfig = {
   },
   uniques: payroll_connectionUniques
 };
-const bill_lineUniques = [{
-  attributes: ["id"],
-  isPrimary: true
-}];
-const bill_line_resourceOptionsConfig = {
-  executor: executor,
-  name: "bill_line",
-  identifier: "main.public.bill_line",
-  from: billLineIdentifier,
-  codec: billLineCodec,
-  extensions: {
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "bill_line"
-    },
-    canSelect: true,
-    canInsert: true,
-    canUpdate: true,
-    canDelete: true
-  },
-  uniques: bill_lineUniques
-};
 const estimate_lineUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -7274,6 +7261,29 @@ const project_resourceOptionsConfig = {
     canDelete: true
   },
   uniques: projectUniques
+};
+const bill_lineUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const bill_line_resourceOptionsConfig = {
+  executor: executor,
+  name: "bill_line",
+  identifier: "main.public.bill_line",
+  from: billLineIdentifier,
+  codec: billLineCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "bill_line"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: bill_lineUniques
 };
 const credit_memo_lineUniques = [{
   attributes: ["id"],
@@ -7860,7 +7870,6 @@ const registryConfig = {
     attachment: attachmentCodec,
     inventoryTransaction: inventoryTransactionCodec,
     payrollConnection: payrollConnectionCodec,
-    billLine: billLineCodec,
     estimateLine: estimateLineCodec,
     billPayment: billPaymentCodec,
     categorizationRuleSplit: categorizationRuleSplitCodec,
@@ -7868,6 +7877,7 @@ const registryConfig = {
     reconciliationStatement: reconciliationStatementCodec,
     rdExpense: rdExpenseCodec,
     project: projectCodec,
+    billLine: billLineCodec,
     creditMemoLine: creditMemoLineCodec,
     amortizationEntry: amortizationEntryCodec,
     cryptoLot: cryptoLotCodec,
@@ -7936,7 +7946,6 @@ const registryConfig = {
     attachment: attachment_resourceOptionsConfig,
     inventory_transaction: inventory_transaction_resourceOptionsConfig,
     payroll_connection: payroll_connection_resourceOptionsConfig,
-    bill_line: bill_line_resourceOptionsConfig,
     estimate_line: estimate_line_resourceOptionsConfig,
     bill_payment: bill_payment_resourceOptionsConfig,
     categorization_rule_split: categorization_rule_split_resourceOptionsConfig,
@@ -7944,6 +7953,7 @@ const registryConfig = {
     reconciliation_statement: reconciliation_statement_resourceOptionsConfig,
     rd_expense: rd_expense_resourceOptionsConfig,
     project: project_resourceOptionsConfig,
+    bill_line: bill_line_resourceOptionsConfig,
     credit_memo_line: credit_memo_line_resourceOptionsConfig,
     amortization_entry: amortization_entry_resourceOptionsConfig,
     crypto_lot: crypto_lot_resourceOptionsConfig,
@@ -9945,7 +9955,6 @@ const resource_accounting_periodPgResource = registry.pgResources["accounting_pe
 const resource_attachmentPgResource = registry.pgResources["attachment"];
 const resource_inventory_transactionPgResource = registry.pgResources["inventory_transaction"];
 const resource_payroll_connectionPgResource = registry.pgResources["payroll_connection"];
-const resource_bill_linePgResource = registry.pgResources["bill_line"];
 const resource_estimate_linePgResource = registry.pgResources["estimate_line"];
 const resource_bill_paymentPgResource = registry.pgResources["bill_payment"];
 const resource_categorization_rule_splitPgResource = registry.pgResources["categorization_rule_split"];
@@ -9953,6 +9962,7 @@ const resource_invoice_paymentPgResource = registry.pgResources["invoice_payment
 const resource_reconciliation_statementPgResource = registry.pgResources["reconciliation_statement"];
 const resource_rd_expensePgResource = registry.pgResources["rd_expense"];
 const resource_projectPgResource = registry.pgResources["project"];
+const resource_bill_linePgResource = registry.pgResources["bill_line"];
 const resource_credit_memo_linePgResource = registry.pgResources["credit_memo_line"];
 const resource_amortization_entryPgResource = registry.pgResources["amortization_entry"];
 const resource_crypto_lotPgResource = registry.pgResources["crypto_lot"];
@@ -10219,17 +10229,6 @@ const nodeFetcher_PayrollConnection = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_PayrollConnection));
   return nodeIdHandler_PayrollConnection.get(nodeIdHandler_PayrollConnection.getSpec($decoded));
 };
-const nodeIdHandler_BillLine = makeTableNodeIdHandler({
-  typeName: "BillLine",
-  identifier: "BillLine",
-  nodeIdCodec: base64JSONNodeIdCodec,
-  resource: resource_bill_linePgResource,
-  pk: bill_lineUniques[0].attributes
-});
-const nodeFetcher_BillLine = $nodeId => {
-  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_BillLine));
-  return nodeIdHandler_BillLine.get(nodeIdHandler_BillLine.getSpec($decoded));
-};
 const nodeIdHandler_EstimateLine = makeTableNodeIdHandler({
   typeName: "EstimateLine",
   identifier: "EstimateLine",
@@ -10306,6 +10305,17 @@ const nodeIdHandler_Project = makeTableNodeIdHandler({
 const nodeFetcher_Project = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Project));
   return nodeIdHandler_Project.get(nodeIdHandler_Project.getSpec($decoded));
+};
+const nodeIdHandler_BillLine = makeTableNodeIdHandler({
+  typeName: "BillLine",
+  identifier: "BillLine",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_bill_linePgResource,
+  pk: bill_lineUniques[0].attributes
+});
+const nodeFetcher_BillLine = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_BillLine));
+  return nodeIdHandler_BillLine.get(nodeIdHandler_BillLine.getSpec($decoded));
 };
 const nodeIdHandler_CreditMemoLine = makeTableNodeIdHandler({
   typeName: "CreditMemoLine",
@@ -10641,7 +10651,6 @@ const nodeIdHandlerByTypeName = {
   Attachment: nodeIdHandler_Attachment,
   InventoryTransaction: nodeIdHandler_InventoryTransaction,
   PayrollConnection: nodeIdHandler_PayrollConnection,
-  BillLine: nodeIdHandler_BillLine,
   EstimateLine: nodeIdHandler_EstimateLine,
   BillPayment: nodeIdHandler_BillPayment,
   CategorizationRuleSplit: nodeIdHandler_CategorizationRuleSplit,
@@ -10649,6 +10658,7 @@ const nodeIdHandlerByTypeName = {
   ReconciliationStatement: nodeIdHandler_ReconciliationStatement,
   RdExpense: nodeIdHandler_RdExpense,
   Project: nodeIdHandler_Project,
+  BillLine: nodeIdHandler_BillLine,
   CreditMemoLine: nodeIdHandler_CreditMemoLine,
   AmortizationEntry: nodeIdHandler_AmortizationEntry,
   CryptoLot: nodeIdHandler_CryptoLot,
@@ -11114,6 +11124,9 @@ const BillLine_unitPricePlan = $record => {
 const BillLine_sortOrderPlan = $record => {
   return $record.get("sort_order");
 };
+const BillLine_discountPercentPlan = $record => {
+  return $record.get("discount_percent");
+};
 const BillLine_billPlan = $record => resource_billPgResource.get({
   id: $record.get("bill_id")
 });
@@ -11280,9 +11293,6 @@ const InvoiceLine_invoiceIdPlan = $record => {
 const InvoiceLine_incomeAccountIdPlan = $record => {
   return $record.get("income_account_id");
 };
-const InvoiceLine_discountPercentPlan = $record => {
-  return $record.get("discount_percent");
-};
 const InvoiceLine_incomeAccountPlan = $record => resource_accountPgResource.get({
   id: $record.get("income_account_id")
 });
@@ -11418,10 +11428,6 @@ const specFromArgs_PayrollConnection = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_PayrollConnection, $nodeId);
 };
-const specFromArgs_BillLine = args => {
-  const $nodeId = args.getRaw(["input", "id"]);
-  return specFromNodeId(nodeIdHandler_BillLine, $nodeId);
-};
 const specFromArgs_EstimateLine = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_EstimateLine, $nodeId);
@@ -11449,6 +11455,10 @@ const specFromArgs_RdExpense = args => {
 const specFromArgs_Project = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Project, $nodeId);
+};
+const specFromArgs_BillLine = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_BillLine, $nodeId);
 };
 const specFromArgs_CreditMemoLine = args => {
   const $nodeId = args.getRaw(["input", "id"]);
@@ -11801,30 +11811,26 @@ function PayrollConnectionInput_lastSyncedAtApply(obj, val, info) {
 function PayrollConnectionInput_syncCursorApply(obj, val, info) {
   obj.set("sync_cursor", bakedInputRuntime(info.schema, info.field.type, val));
 }
-const CreateBillLinePayload_billLineEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_bill_linePgResource, bill_lineUniques[0].attributes, $mutation, fieldArgs);
-function BillLineInput_billIdApply(obj, val, info) {
-  obj.set("bill_id", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function BillLineInput_descriptionApply(obj, val, info) {
-  obj.set("description", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function BillLineInput_unitPriceApply(obj, val, info) {
-  obj.set("unit_price", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function BillLineInput_expenseAccountIdApply(obj, val, info) {
-  obj.set("expense_account_id", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function BillLineInput_sortOrderApply(obj, val, info) {
-  obj.set("sort_order", bakedInputRuntime(info.schema, info.field.type, val));
-}
 const CreateEstimateLinePayload_estimateLineEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_estimate_linePgResource, estimate_lineUniques[0].attributes, $mutation, fieldArgs);
 function EstimateLineInput_estimateIdApply(obj, val, info) {
   obj.set("estimate_id", bakedInputRuntime(info.schema, info.field.type, val));
 }
+function EstimateLineInput_descriptionApply(obj, val, info) {
+  obj.set("description", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function EstimateLineInput_unitPriceApply(obj, val, info) {
+  obj.set("unit_price", bakedInputRuntime(info.schema, info.field.type, val));
+}
 function EstimateLineInput_incomeAccountIdApply(obj, val, info) {
   obj.set("income_account_id", bakedInputRuntime(info.schema, info.field.type, val));
 }
+function EstimateLineInput_sortOrderApply(obj, val, info) {
+  obj.set("sort_order", bakedInputRuntime(info.schema, info.field.type, val));
+}
 const CreateBillPaymentPayload_billPaymentEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_bill_paymentPgResource, bill_paymentUniques[0].attributes, $mutation, fieldArgs);
+function BillPaymentInput_billIdApply(obj, val, info) {
+  obj.set("bill_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
 function BillPaymentInput_paymentAccountIdApply(obj, val, info) {
   obj.set("payment_account_id", bakedInputRuntime(info.schema, info.field.type, val));
 }
@@ -11887,10 +11893,14 @@ function ProjectInput_startDateApply(obj, val, info) {
 function ProjectInput_endDateApply(obj, val, info) {
   obj.set("end_date", bakedInputRuntime(info.schema, info.field.type, val));
 }
-const CreateCreditMemoLinePayload_creditMemoLineEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_credit_memo_linePgResource, credit_memo_lineUniques[0].attributes, $mutation, fieldArgs);
-function CreditMemoLineInput_discountPercentApply(obj, val, info) {
+const CreateBillLinePayload_billLineEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_bill_linePgResource, bill_lineUniques[0].attributes, $mutation, fieldArgs);
+function BillLineInput_expenseAccountIdApply(obj, val, info) {
+  obj.set("expense_account_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function BillLineInput_discountPercentApply(obj, val, info) {
   obj.set("discount_percent", bakedInputRuntime(info.schema, info.field.type, val));
 }
+const CreateCreditMemoLinePayload_creditMemoLineEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_credit_memo_linePgResource, credit_memo_lineUniques[0].attributes, $mutation, fieldArgs);
 const CreateAmortizationEntryPayload_amortizationEntryEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_amortization_entryPgResource, amortization_entryUniques[0].attributes, $mutation, fieldArgs);
 function AmortizationEntryInput_loanIdApply(obj, val, info) {
   obj.set("loan_id", bakedInputRuntime(info.schema, info.field.type, val));
@@ -12320,9 +12330,6 @@ type Query implements Node {
   """Get a single \`PayrollConnection\`."""
   payrollConnection(rowId: UUID!): PayrollConnection
 
-  """Get a single \`BillLine\`."""
-  billLine(rowId: UUID!): BillLine
-
   """Get a single \`EstimateLine\`."""
   estimateLine(rowId: UUID!): EstimateLine
 
@@ -12343,6 +12350,9 @@ type Query implements Node {
 
   """Get a single \`Project\`."""
   project(rowId: UUID!): Project
+
+  """Get a single \`BillLine\`."""
+  billLine(rowId: UUID!): BillLine
 
   """Get a single \`CreditMemoLine\`."""
   creditMemoLine(rowId: UUID!): CreditMemoLine
@@ -12554,12 +12564,6 @@ type Query implements Node {
     id: ID!
   ): PayrollConnection
 
-  """Reads a single \`BillLine\` using its globally unique \`ID\`."""
-  billLineById(
-    """The globally unique \`ID\` to be used in selecting a single \`BillLine\`."""
-    id: ID!
-  ): BillLine
-
   """Reads a single \`EstimateLine\` using its globally unique \`ID\`."""
   estimateLineById(
     """
@@ -12615,6 +12619,12 @@ type Query implements Node {
     """The globally unique \`ID\` to be used in selecting a single \`Project\`."""
     id: ID!
   ): Project
+
+  """Reads a single \`BillLine\` using its globally unique \`ID\`."""
+  billLineById(
+    """The globally unique \`ID\` to be used in selecting a single \`BillLine\`."""
+    id: ID!
+  ): BillLine
 
   """Reads a single \`CreditMemoLine\` using its globally unique \`ID\`."""
   creditMemoLineById(
@@ -13398,40 +13408,6 @@ type Query implements Node {
     orderBy: [PayrollConnectionOrderBy!] = [PRIMARY_KEY_ASC]
   ): PayrollConnectionConnection
 
-  """Reads and enables pagination through a set of \`BillLine\`."""
-  billLines(
-    """Only read the first \`n\` values of the set."""
-    first: Int
-
-    """Only read the last \`n\` values of the set."""
-    last: Int
-
-    """
-    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
-    based pagination. May not be used with \`last\`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: BillLineCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: BillLineFilter
-
-    """The method to use when ordering \`BillLine\`."""
-    orderBy: [BillLineOrderBy!] = [PRIMARY_KEY_ASC]
-  ): BillLineConnection
-
   """Reads and enables pagination through a set of \`EstimateLine\`."""
   estimateLines(
     """Only read the first \`n\` values of the set."""
@@ -13673,6 +13649,40 @@ type Query implements Node {
     """The method to use when ordering \`Project\`."""
     orderBy: [ProjectOrderBy!] = [PRIMARY_KEY_ASC]
   ): ProjectConnection
+
+  """Reads and enables pagination through a set of \`BillLine\`."""
+  billLines(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: BillLineCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: BillLineFilter
+
+    """The method to use when ordering \`BillLine\`."""
+    orderBy: [BillLineOrderBy!] = [PRIMARY_KEY_ASC]
+  ): BillLineConnection
 
   """Reads and enables pagination through a set of \`CreditMemoLine\`."""
   creditMemoLines(
@@ -20364,6 +20374,7 @@ type BillLine implements Node {
   expenseAccountId: UUID!
   taxJurisdictionId: UUID
   sortOrder: Int!
+  discountPercent: BigFloat
 
   """Reads a single \`Bill\` that is related to this \`BillLine\`."""
   bill: Bill
@@ -24574,14 +24585,6 @@ type Mutation {
     input: CreatePayrollConnectionInput!
   ): CreatePayrollConnectionPayload
 
-  """Creates a single \`BillLine\`."""
-  createBillLine(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateBillLineInput!
-  ): CreateBillLinePayload
-
   """Creates a single \`EstimateLine\`."""
   createEstimateLine(
     """
@@ -24637,6 +24640,14 @@ type Mutation {
     """
     input: CreateProjectInput!
   ): CreateProjectPayload
+
+  """Creates a single \`BillLine\`."""
+  createBillLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateBillLineInput!
+  ): CreateBillLinePayload
 
   """Creates a single \`CreditMemoLine\`."""
   createCreditMemoLine(
@@ -25152,22 +25163,6 @@ type Mutation {
     input: UpdatePayrollConnectionInput!
   ): UpdatePayrollConnectionPayload
 
-  """Updates a single \`BillLine\` using its globally unique id and a patch."""
-  updateBillLineById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateBillLineByIdInput!
-  ): UpdateBillLinePayload
-
-  """Updates a single \`BillLine\` using a unique key and a patch."""
-  updateBillLine(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateBillLineInput!
-  ): UpdateBillLinePayload
-
   """
   Updates a single \`EstimateLine\` using its globally unique id and a patch.
   """
@@ -25293,6 +25288,22 @@ type Mutation {
     """
     input: UpdateProjectInput!
   ): UpdateProjectPayload
+
+  """Updates a single \`BillLine\` using its globally unique id and a patch."""
+  updateBillLineById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateBillLineByIdInput!
+  ): UpdateBillLinePayload
+
+  """Updates a single \`BillLine\` using a unique key and a patch."""
+  updateBillLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateBillLineInput!
+  ): UpdateBillLinePayload
 
   """
   Updates a single \`CreditMemoLine\` using its globally unique id and a patch.
@@ -25994,22 +26005,6 @@ type Mutation {
     input: DeletePayrollConnectionInput!
   ): DeletePayrollConnectionPayload
 
-  """Deletes a single \`BillLine\` using its globally unique id."""
-  deleteBillLineById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteBillLineByIdInput!
-  ): DeleteBillLinePayload
-
-  """Deletes a single \`BillLine\` using a unique key."""
-  deleteBillLine(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteBillLineInput!
-  ): DeleteBillLinePayload
-
   """Deletes a single \`EstimateLine\` using its globally unique id."""
   deleteEstimateLineById(
     """
@@ -26125,6 +26120,22 @@ type Mutation {
     """
     input: DeleteProjectInput!
   ): DeleteProjectPayload
+
+  """Deletes a single \`BillLine\` using its globally unique id."""
+  deleteBillLineById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteBillLineByIdInput!
+  ): DeleteBillLinePayload
+
+  """Deletes a single \`BillLine\` using a unique key."""
+  deleteBillLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteBillLineInput!
+  ): DeleteBillLinePayload
 
   """Deletes a single \`CreditMemoLine\` using its globally unique id."""
   deleteCreditMemoLineById(
@@ -27340,54 +27351,6 @@ input PayrollConnectionInput {
   createdAt: Datetime
 }
 
-"""The output of our create \`BillLine\` mutation."""
-type CreateBillLinePayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`BillLine\` that was created by this mutation."""
-  billLine: BillLine
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`BillLine\`. May be used by Relay 1."""
-  billLineEdge(
-    """The method to use when ordering \`BillLine\`."""
-    orderBy: [BillLineOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): BillLineEdge
-}
-
-"""All input for the create \`BillLine\` mutation."""
-input CreateBillLineInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The \`BillLine\` to be created by this mutation."""
-  billLine: BillLineInput!
-}
-
-"""An input for mutations affecting \`BillLine\`"""
-input BillLineInput {
-  rowId: UUID
-  billId: UUID!
-  description: String!
-  quantity: BigFloat
-  unitPrice: BigFloat
-  amount: BigFloat
-  expenseAccountId: UUID!
-  taxJurisdictionId: UUID
-  sortOrder: Int
-}
-
 """The output of our create \`EstimateLine\` mutation."""
 type CreateEstimateLinePayload {
   """
@@ -27730,6 +27693,55 @@ input ProjectInput {
   notes: String
   createdAt: Datetime
   updatedAt: Datetime
+}
+
+"""The output of our create \`BillLine\` mutation."""
+type CreateBillLinePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`BillLine\` that was created by this mutation."""
+  billLine: BillLine
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`BillLine\`. May be used by Relay 1."""
+  billLineEdge(
+    """The method to use when ordering \`BillLine\`."""
+    orderBy: [BillLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BillLineEdge
+}
+
+"""All input for the create \`BillLine\` mutation."""
+input CreateBillLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`BillLine\` to be created by this mutation."""
+  billLine: BillLineInput!
+}
+
+"""An input for mutations affecting \`BillLine\`"""
+input BillLineInput {
+  rowId: UUID
+  billId: UUID!
+  description: String!
+  quantity: BigFloat
+  unitPrice: BigFloat
+  amount: BigFloat
+  expenseAccountId: UUID!
+  taxJurisdictionId: UUID
+  sortOrder: Int
+  discountPercent: BigFloat
 }
 
 """The output of our create \`CreditMemoLine\` mutation."""
@@ -30244,78 +30256,6 @@ input UpdatePayrollConnectionInput {
   patch: PayrollConnectionPatch!
 }
 
-"""The output of our update \`BillLine\` mutation."""
-type UpdateBillLinePayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`BillLine\` that was updated by this mutation."""
-  billLine: BillLine
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`BillLine\`. May be used by Relay 1."""
-  billLineEdge(
-    """The method to use when ordering \`BillLine\`."""
-    orderBy: [BillLineOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): BillLineEdge
-}
-
-"""All input for the \`updateBillLineById\` mutation."""
-input UpdateBillLineByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`BillLine\` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the \`BillLine\` being updated.
-  """
-  patch: BillLinePatch!
-}
-
-"""
-Represents an update to a \`BillLine\`. Fields that are set will be updated.
-"""
-input BillLinePatch {
-  rowId: UUID
-  billId: UUID
-  description: String
-  quantity: BigFloat
-  unitPrice: BigFloat
-  amount: BigFloat
-  expenseAccountId: UUID
-  taxJurisdictionId: UUID
-  sortOrder: Int
-}
-
-"""All input for the \`updateBillLine\` mutation."""
-input UpdateBillLineInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the \`BillLine\` being updated.
-  """
-  patch: BillLinePatch!
-}
-
 """The output of our update \`EstimateLine\` mutation."""
 type UpdateEstimateLinePayload {
   """
@@ -30826,6 +30766,79 @@ input UpdateProjectInput {
   An object where the defined keys will be set on the \`Project\` being updated.
   """
   patch: ProjectPatch!
+}
+
+"""The output of our update \`BillLine\` mutation."""
+type UpdateBillLinePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`BillLine\` that was updated by this mutation."""
+  billLine: BillLine
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`BillLine\`. May be used by Relay 1."""
+  billLineEdge(
+    """The method to use when ordering \`BillLine\`."""
+    orderBy: [BillLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BillLineEdge
+}
+
+"""All input for the \`updateBillLineById\` mutation."""
+input UpdateBillLineByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`BillLine\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`BillLine\` being updated.
+  """
+  patch: BillLinePatch!
+}
+
+"""
+Represents an update to a \`BillLine\`. Fields that are set will be updated.
+"""
+input BillLinePatch {
+  rowId: UUID
+  billId: UUID
+  description: String
+  quantity: BigFloat
+  unitPrice: BigFloat
+  amount: BigFloat
+  expenseAccountId: UUID
+  taxJurisdictionId: UUID
+  sortOrder: Int
+  discountPercent: BigFloat
+}
+
+"""All input for the \`updateBillLine\` mutation."""
+input UpdateBillLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`BillLine\` being updated.
+  """
+  patch: BillLinePatch!
 }
 
 """The output of our update \`CreditMemoLine\` mutation."""
@@ -33515,54 +33528,6 @@ input DeletePayrollConnectionInput {
   rowId: UUID!
 }
 
-"""The output of our delete \`BillLine\` mutation."""
-type DeleteBillLinePayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`BillLine\` that was deleted by this mutation."""
-  billLine: BillLine
-  deletedBillLineId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`BillLine\`. May be used by Relay 1."""
-  billLineEdge(
-    """The method to use when ordering \`BillLine\`."""
-    orderBy: [BillLineOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): BillLineEdge
-}
-
-"""All input for the \`deleteBillLineById\` mutation."""
-input DeleteBillLineByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`BillLine\` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the \`deleteBillLine\` mutation."""
-input DeleteBillLineInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete \`EstimateLine\` mutation."""
 type DeleteEstimateLinePayload {
   """
@@ -33891,6 +33856,54 @@ input DeleteProjectByIdInput {
 
 """All input for the \`deleteProject\` mutation."""
 input DeleteProjectInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`BillLine\` mutation."""
+type DeleteBillLinePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`BillLine\` that was deleted by this mutation."""
+  billLine: BillLine
+  deletedBillLineId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`BillLine\`. May be used by Relay 1."""
+  billLineEdge(
+    """The method to use when ordering \`BillLine\`."""
+    orderBy: [BillLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BillLineEdge
+}
+
+"""All input for the \`deleteBillLineById\` mutation."""
+input DeleteBillLineByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`BillLine\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteBillLine\` mutation."""
+input DeleteBillLineInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -39927,6 +39940,7 @@ export const objects = {
     plans: {
       bill: BillLine_billPlan,
       billId: BillLine_billIdPlan,
+      discountPercent: BillLine_discountPercentPlan,
       expenseAccount($record) {
         return resource_accountPgResource.get({
           id: $record.get("expense_account_id")
@@ -41409,7 +41423,7 @@ export const objects = {
     plans: {
       creditMemo: CreditMemoApplication_creditMemoPlan,
       creditMemoId: CreditMemoApplication_creditMemoIdPlan,
-      discountPercent: InvoiceLine_discountPercentPlan,
+      discountPercent: BillLine_discountPercentPlan,
       id($parent) {
         const specifier = nodeIdHandler_CreditMemoLine.plan($parent);
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_CreditMemoLine.codec.name].encode);
@@ -42723,7 +42737,7 @@ export const objects = {
   InvoiceLine: {
     assertStep: assertPgClassSingleStep,
     plans: {
-      discountPercent: InvoiceLine_discountPercentPlan,
+      discountPercent: BillLine_discountPercentPlan,
       id($parent) {
         const specifier = nodeIdHandler_InvoiceLine.plan($parent);
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_InvoiceLine.codec.name].encode);
@@ -44811,28 +44825,30 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       amount: CreditMemoApplicationInput_amountApply,
-      billId: BillLineInput_billIdApply,
-      description: BillLineInput_descriptionApply,
+      billId: BillPaymentInput_billIdApply,
+      description: EstimateLineInput_descriptionApply,
+      discountPercent: BillLineInput_discountPercentApply,
       expenseAccountId: BillLineInput_expenseAccountIdApply,
       quantity: InventoryTransactionInput_quantityApply,
       rowId: JournalLineProjectInput_rowIdApply,
-      sortOrder: BillLineInput_sortOrderApply,
+      sortOrder: EstimateLineInput_sortOrderApply,
       taxJurisdictionId: JournalLineInput_taxJurisdictionIdApply,
-      unitPrice: BillLineInput_unitPriceApply
+      unitPrice: EstimateLineInput_unitPriceApply
     }
   },
   BillLinePatch: {
     baked: createObjectAndApplyChildren,
     plans: {
       amount: CreditMemoApplicationInput_amountApply,
-      billId: BillLineInput_billIdApply,
-      description: BillLineInput_descriptionApply,
+      billId: BillPaymentInput_billIdApply,
+      description: EstimateLineInput_descriptionApply,
+      discountPercent: BillLineInput_discountPercentApply,
       expenseAccountId: BillLineInput_expenseAccountIdApply,
       quantity: InventoryTransactionInput_quantityApply,
       rowId: JournalLineProjectInput_rowIdApply,
-      sortOrder: BillLineInput_sortOrderApply,
+      sortOrder: EstimateLineInput_sortOrderApply,
       taxJurisdictionId: JournalLineInput_taxJurisdictionIdApply,
-      unitPrice: BillLineInput_unitPriceApply
+      unitPrice: EstimateLineInput_unitPriceApply
     }
   },
   BillPatch: {
@@ -44898,7 +44914,7 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       amount: CreditMemoApplicationInput_amountApply,
-      billId: BillLineInput_billIdApply,
+      billId: BillPaymentInput_billIdApply,
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
       date: CreditMemoApplicationInput_dateApply,
@@ -44913,7 +44929,7 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       amount: CreditMemoApplicationInput_amountApply,
-      billId: BillLineInput_billIdApply,
+      billId: BillPaymentInput_billIdApply,
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
       date: CreditMemoApplicationInput_dateApply,
@@ -46357,7 +46373,7 @@ export const inputObjects = {
       rowId: JournalLineProjectInput_rowIdApply,
       ruleId: CategorizationRuleSplitInput_ruleIdApply,
       side: CategorizationRuleSplitInput_sideApply,
-      sortOrder: BillLineInput_sortOrderApply,
+      sortOrder: EstimateLineInput_sortOrderApply,
       tagId: JournalLineTagInput_tagIdApply
     }
   },
@@ -46372,7 +46388,7 @@ export const inputObjects = {
       rowId: JournalLineProjectInput_rowIdApply,
       ruleId: CategorizationRuleSplitInput_ruleIdApply,
       side: CategorizationRuleSplitInput_sideApply,
-      sortOrder: BillLineInput_sortOrderApply,
+      sortOrder: EstimateLineInput_sortOrderApply,
       tagId: JournalLineTagInput_tagIdApply
     }
   },
@@ -46954,14 +46970,14 @@ export const inputObjects = {
     plans: {
       amount: CreditMemoApplicationInput_amountApply,
       creditMemoId: CreditMemoApplicationInput_creditMemoIdApply,
-      description: BillLineInput_descriptionApply,
-      discountPercent: CreditMemoLineInput_discountPercentApply,
+      description: EstimateLineInput_descriptionApply,
+      discountPercent: BillLineInput_discountPercentApply,
       incomeAccountId: EstimateLineInput_incomeAccountIdApply,
       quantity: InventoryTransactionInput_quantityApply,
       rowId: JournalLineProjectInput_rowIdApply,
-      sortOrder: BillLineInput_sortOrderApply,
+      sortOrder: EstimateLineInput_sortOrderApply,
       taxJurisdictionId: JournalLineInput_taxJurisdictionIdApply,
-      unitPrice: BillLineInput_unitPriceApply
+      unitPrice: EstimateLineInput_unitPriceApply
     }
   },
   CreditMemoLinePatch: {
@@ -46969,14 +46985,14 @@ export const inputObjects = {
     plans: {
       amount: CreditMemoApplicationInput_amountApply,
       creditMemoId: CreditMemoApplicationInput_creditMemoIdApply,
-      description: BillLineInput_descriptionApply,
-      discountPercent: CreditMemoLineInput_discountPercentApply,
+      description: EstimateLineInput_descriptionApply,
+      discountPercent: BillLineInput_discountPercentApply,
       incomeAccountId: EstimateLineInput_incomeAccountIdApply,
       quantity: InventoryTransactionInput_quantityApply,
       rowId: JournalLineProjectInput_rowIdApply,
-      sortOrder: BillLineInput_sortOrderApply,
+      sortOrder: EstimateLineInput_sortOrderApply,
       taxJurisdictionId: JournalLineInput_taxJurisdictionIdApply,
-      unitPrice: BillLineInput_unitPriceApply
+      unitPrice: EstimateLineInput_unitPriceApply
     }
   },
   CreditMemoPatch: {
@@ -48029,28 +48045,28 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       amount: CreditMemoApplicationInput_amountApply,
-      description: BillLineInput_descriptionApply,
+      description: EstimateLineInput_descriptionApply,
       estimateId: EstimateLineInput_estimateIdApply,
       incomeAccountId: EstimateLineInput_incomeAccountIdApply,
       quantity: InventoryTransactionInput_quantityApply,
       rowId: JournalLineProjectInput_rowIdApply,
-      sortOrder: BillLineInput_sortOrderApply,
+      sortOrder: EstimateLineInput_sortOrderApply,
       taxJurisdictionId: JournalLineInput_taxJurisdictionIdApply,
-      unitPrice: BillLineInput_unitPriceApply
+      unitPrice: EstimateLineInput_unitPriceApply
     }
   },
   EstimateLinePatch: {
     baked: createObjectAndApplyChildren,
     plans: {
       amount: CreditMemoApplicationInput_amountApply,
-      description: BillLineInput_descriptionApply,
+      description: EstimateLineInput_descriptionApply,
       estimateId: EstimateLineInput_estimateIdApply,
       incomeAccountId: EstimateLineInput_incomeAccountIdApply,
       quantity: InventoryTransactionInput_quantityApply,
       rowId: JournalLineProjectInput_rowIdApply,
-      sortOrder: BillLineInput_sortOrderApply,
+      sortOrder: EstimateLineInput_sortOrderApply,
       taxJurisdictionId: JournalLineInput_taxJurisdictionIdApply,
-      unitPrice: BillLineInput_unitPriceApply
+      unitPrice: EstimateLineInput_unitPriceApply
     }
   },
   EstimatePatch: {
@@ -48127,7 +48143,7 @@ export const inputObjects = {
       createdAt: TagGroupInput_createdAtApply,
       depreciationExpenseAccountId: FixedAssetInput_depreciationExpenseAccountIdApply,
       depreciationMethod: FixedAssetInput_depreciationMethodApply,
-      description: BillLineInput_descriptionApply,
+      description: EstimateLineInput_descriptionApply,
       disposalProceeds: FixedAssetInput_disposalProceedsApply,
       disposedAt: CryptoLotInput_disposedAtApply,
       macrsClass: FixedAssetInput_macrsClassApply,
@@ -48148,7 +48164,7 @@ export const inputObjects = {
       createdAt: TagGroupInput_createdAtApply,
       depreciationExpenseAccountId: FixedAssetInput_depreciationExpenseAccountIdApply,
       depreciationMethod: FixedAssetInput_depreciationMethodApply,
-      description: BillLineInput_descriptionApply,
+      description: EstimateLineInput_descriptionApply,
       disposalProceeds: FixedAssetInput_disposalProceedsApply,
       disposedAt: CryptoLotInput_disposedAtApply,
       macrsClass: FixedAssetInput_macrsClassApply,
@@ -48278,7 +48294,7 @@ export const inputObjects = {
       bookId: TagGroupInput_bookIdApply,
       cogsAccountId: InventoryItemInput_cogsAccountIdApply,
       createdAt: TagGroupInput_createdAtApply,
-      description: BillLineInput_descriptionApply,
+      description: EstimateLineInput_descriptionApply,
       incomeAccountId: EstimateLineInput_incomeAccountIdApply,
       isActive: TagInput_isActiveApply,
       name: TagGroupInput_nameApply,
@@ -48297,7 +48313,7 @@ export const inputObjects = {
       bookId: TagGroupInput_bookIdApply,
       cogsAccountId: InventoryItemInput_cogsAccountIdApply,
       createdAt: TagGroupInput_createdAtApply,
-      description: BillLineInput_descriptionApply,
+      description: EstimateLineInput_descriptionApply,
       incomeAccountId: EstimateLineInput_incomeAccountIdApply,
       isActive: TagInput_isActiveApply,
       name: TagGroupInput_nameApply,
@@ -48560,32 +48576,32 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       amount: CreditMemoApplicationInput_amountApply,
-      description: BillLineInput_descriptionApply,
-      discountPercent: CreditMemoLineInput_discountPercentApply,
+      description: EstimateLineInput_descriptionApply,
+      discountPercent: BillLineInput_discountPercentApply,
       incomeAccountId: EstimateLineInput_incomeAccountIdApply,
       inventoryItemId: InvoiceLineInput_inventoryItemIdApply,
       invoiceId: CreditMemoApplicationInput_invoiceIdApply,
       quantity: InventoryTransactionInput_quantityApply,
       rowId: JournalLineProjectInput_rowIdApply,
-      sortOrder: BillLineInput_sortOrderApply,
+      sortOrder: EstimateLineInput_sortOrderApply,
       taxJurisdictionId: JournalLineInput_taxJurisdictionIdApply,
-      unitPrice: BillLineInput_unitPriceApply
+      unitPrice: EstimateLineInput_unitPriceApply
     }
   },
   InvoiceLinePatch: {
     baked: createObjectAndApplyChildren,
     plans: {
       amount: CreditMemoApplicationInput_amountApply,
-      description: BillLineInput_descriptionApply,
-      discountPercent: CreditMemoLineInput_discountPercentApply,
+      description: EstimateLineInput_descriptionApply,
+      discountPercent: BillLineInput_discountPercentApply,
       incomeAccountId: EstimateLineInput_incomeAccountIdApply,
       inventoryItemId: InvoiceLineInput_inventoryItemIdApply,
       invoiceId: CreditMemoApplicationInput_invoiceIdApply,
       quantity: InventoryTransactionInput_quantityApply,
       rowId: JournalLineProjectInput_rowIdApply,
-      sortOrder: BillLineInput_sortOrderApply,
+      sortOrder: EstimateLineInput_sortOrderApply,
       taxJurisdictionId: JournalLineInput_taxJurisdictionIdApply,
-      unitPrice: BillLineInput_unitPriceApply
+      unitPrice: EstimateLineInput_unitPriceApply
     }
   },
   InvoicePatch: {
@@ -49211,7 +49227,7 @@ export const inputObjects = {
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
       date: CreditMemoApplicationInput_dateApply,
-      description: BillLineInput_descriptionApply,
+      description: EstimateLineInput_descriptionApply,
       destination: MileageLogInput_destinationApply,
       distance: MileageLogInput_distanceApply,
       isRoundTrip: MileageLogInput_isRoundTripApply,
@@ -49229,7 +49245,7 @@ export const inputObjects = {
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
       date: CreditMemoApplicationInput_dateApply,
-      description: BillLineInput_descriptionApply,
+      description: EstimateLineInput_descriptionApply,
       destination: MileageLogInput_destinationApply,
       distance: MileageLogInput_distanceApply,
       isRoundTrip: MileageLogInput_isRoundTripApply,
@@ -49512,7 +49528,7 @@ export const inputObjects = {
       bookId: TagGroupInput_bookIdApply,
       category: RdExpenseInput_categoryApply,
       createdAt: TagGroupInput_createdAtApply,
-      description: BillLineInput_descriptionApply,
+      description: EstimateLineInput_descriptionApply,
       isForeign: RdExpenseInput_isForeignApply,
       notes: RdExpenseInput_notesApply,
       projectId: JournalLineProjectInput_projectIdApply,
@@ -49528,7 +49544,7 @@ export const inputObjects = {
       bookId: TagGroupInput_bookIdApply,
       category: RdExpenseInput_categoryApply,
       createdAt: TagGroupInput_createdAtApply,
-      description: BillLineInput_descriptionApply,
+      description: EstimateLineInput_descriptionApply,
       isForeign: RdExpenseInput_isForeignApply,
       notes: RdExpenseInput_notesApply,
       projectId: JournalLineProjectInput_projectIdApply,

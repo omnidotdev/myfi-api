@@ -1,0 +1,1 @@
+ALTER TABLE "bill_line" ADD COLUMN "discount_percent" numeric(9, 6);

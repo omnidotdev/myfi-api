@@ -1,6 +1,7 @@
 import { dbPool } from "lib/db/db";
 import { billLineTable, billTable } from "lib/db/schema";
 import {
+  applyLineDiscount,
   computeLineAmount,
   fromUnits,
   toUnits,
@@ -14,6 +15,8 @@ interface DraftBillLineInput {
   unitPrice: number;
   expenseAccountId: string;
   taxJurisdictionId?: string | null;
+  /** optional line discount as a fraction (0.1 = 10% off), applied before tax */
+  discountPercent?: number | null;
 }
 
 interface CreateBillDraftOptions {
@@ -49,7 +52,10 @@ export const createBillDraft = async (
 
   const priced = lines.map((line, index) => ({
     ...line,
-    amount: computeLineAmount(line.quantity, line.unitPrice),
+    amount: applyLineDiscount(
+      computeLineAmount(line.quantity, line.unitPrice),
+      line.discountPercent,
+    ),
     sortOrder: index,
   }));
 
@@ -84,6 +90,8 @@ export const createBillDraft = async (
         quantity: line.quantity.toFixed(4),
         unitPrice: line.unitPrice.toFixed(4),
         amount: line.amount.toFixed(4),
+        discountPercent:
+          line.discountPercent != null ? line.discountPercent.toFixed(6) : null,
         expenseAccountId: line.expenseAccountId,
         taxJurisdictionId: line.taxJurisdictionId ?? null,
         sortOrder: line.sortOrder,

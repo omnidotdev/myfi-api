@@ -71,9 +71,6 @@ type Query implements Node {
   """Get a single `PayrollConnection`."""
   payrollConnection(rowId: UUID!): PayrollConnection
 
-  """Get a single `BillLine`."""
-  billLine(rowId: UUID!): BillLine
-
   """Get a single `EstimateLine`."""
   estimateLine(rowId: UUID!): EstimateLine
 
@@ -94,6 +91,9 @@ type Query implements Node {
 
   """Get a single `Project`."""
   project(rowId: UUID!): Project
+
+  """Get a single `BillLine`."""
+  billLine(rowId: UUID!): BillLine
 
   """Get a single `CreditMemoLine`."""
   creditMemoLine(rowId: UUID!): CreditMemoLine
@@ -305,12 +305,6 @@ type Query implements Node {
     id: ID!
   ): PayrollConnection
 
-  """Reads a single `BillLine` using its globally unique `ID`."""
-  billLineById(
-    """The globally unique `ID` to be used in selecting a single `BillLine`."""
-    id: ID!
-  ): BillLine
-
   """Reads a single `EstimateLine` using its globally unique `ID`."""
   estimateLineById(
     """
@@ -366,6 +360,12 @@ type Query implements Node {
     """The globally unique `ID` to be used in selecting a single `Project`."""
     id: ID!
   ): Project
+
+  """Reads a single `BillLine` using its globally unique `ID`."""
+  billLineById(
+    """The globally unique `ID` to be used in selecting a single `BillLine`."""
+    id: ID!
+  ): BillLine
 
   """Reads a single `CreditMemoLine` using its globally unique `ID`."""
   creditMemoLineById(
@@ -1149,40 +1149,6 @@ type Query implements Node {
     orderBy: [PayrollConnectionOrderBy!] = [PRIMARY_KEY_ASC]
   ): PayrollConnectionConnection
 
-  """Reads and enables pagination through a set of `BillLine`."""
-  billLines(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: BillLineCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: BillLineFilter
-
-    """The method to use when ordering `BillLine`."""
-    orderBy: [BillLineOrderBy!] = [PRIMARY_KEY_ASC]
-  ): BillLineConnection
-
   """Reads and enables pagination through a set of `EstimateLine`."""
   estimateLines(
     """Only read the first `n` values of the set."""
@@ -1424,6 +1390,40 @@ type Query implements Node {
     """The method to use when ordering `Project`."""
     orderBy: [ProjectOrderBy!] = [PRIMARY_KEY_ASC]
   ): ProjectConnection
+
+  """Reads and enables pagination through a set of `BillLine`."""
+  billLines(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: BillLineCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: BillLineFilter
+
+    """The method to use when ordering `BillLine`."""
+    orderBy: [BillLineOrderBy!] = [PRIMARY_KEY_ASC]
+  ): BillLineConnection
 
   """Reads and enables pagination through a set of `CreditMemoLine`."""
   creditMemoLines(
@@ -8115,6 +8115,7 @@ type BillLine implements Node {
   expenseAccountId: UUID!
   taxJurisdictionId: UUID
   sortOrder: Int!
+  discountPercent: BigFloat
 
   """Reads a single `Bill` that is related to this `BillLine`."""
   bill: Bill
@@ -12325,14 +12326,6 @@ type Mutation {
     input: CreatePayrollConnectionInput!
   ): CreatePayrollConnectionPayload
 
-  """Creates a single `BillLine`."""
-  createBillLine(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateBillLineInput!
-  ): CreateBillLinePayload
-
   """Creates a single `EstimateLine`."""
   createEstimateLine(
     """
@@ -12388,6 +12381,14 @@ type Mutation {
     """
     input: CreateProjectInput!
   ): CreateProjectPayload
+
+  """Creates a single `BillLine`."""
+  createBillLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateBillLineInput!
+  ): CreateBillLinePayload
 
   """Creates a single `CreditMemoLine`."""
   createCreditMemoLine(
@@ -12903,22 +12904,6 @@ type Mutation {
     input: UpdatePayrollConnectionInput!
   ): UpdatePayrollConnectionPayload
 
-  """Updates a single `BillLine` using its globally unique id and a patch."""
-  updateBillLineById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateBillLineByIdInput!
-  ): UpdateBillLinePayload
-
-  """Updates a single `BillLine` using a unique key and a patch."""
-  updateBillLine(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateBillLineInput!
-  ): UpdateBillLinePayload
-
   """
   Updates a single `EstimateLine` using its globally unique id and a patch.
   """
@@ -13044,6 +13029,22 @@ type Mutation {
     """
     input: UpdateProjectInput!
   ): UpdateProjectPayload
+
+  """Updates a single `BillLine` using its globally unique id and a patch."""
+  updateBillLineById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateBillLineByIdInput!
+  ): UpdateBillLinePayload
+
+  """Updates a single `BillLine` using a unique key and a patch."""
+  updateBillLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateBillLineInput!
+  ): UpdateBillLinePayload
 
   """
   Updates a single `CreditMemoLine` using its globally unique id and a patch.
@@ -13745,22 +13746,6 @@ type Mutation {
     input: DeletePayrollConnectionInput!
   ): DeletePayrollConnectionPayload
 
-  """Deletes a single `BillLine` using its globally unique id."""
-  deleteBillLineById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteBillLineByIdInput!
-  ): DeleteBillLinePayload
-
-  """Deletes a single `BillLine` using a unique key."""
-  deleteBillLine(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteBillLineInput!
-  ): DeleteBillLinePayload
-
   """Deletes a single `EstimateLine` using its globally unique id."""
   deleteEstimateLineById(
     """
@@ -13876,6 +13861,22 @@ type Mutation {
     """
     input: DeleteProjectInput!
   ): DeleteProjectPayload
+
+  """Deletes a single `BillLine` using its globally unique id."""
+  deleteBillLineById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteBillLineByIdInput!
+  ): DeleteBillLinePayload
+
+  """Deletes a single `BillLine` using a unique key."""
+  deleteBillLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteBillLineInput!
+  ): DeleteBillLinePayload
 
   """Deletes a single `CreditMemoLine` using its globally unique id."""
   deleteCreditMemoLineById(
@@ -15091,54 +15092,6 @@ input PayrollConnectionInput {
   createdAt: Datetime
 }
 
-"""The output of our create `BillLine` mutation."""
-type CreateBillLinePayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `BillLine` that was created by this mutation."""
-  billLine: BillLine
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `BillLine`. May be used by Relay 1."""
-  billLineEdge(
-    """The method to use when ordering `BillLine`."""
-    orderBy: [BillLineOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): BillLineEdge
-}
-
-"""All input for the create `BillLine` mutation."""
-input CreateBillLineInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `BillLine` to be created by this mutation."""
-  billLine: BillLineInput!
-}
-
-"""An input for mutations affecting `BillLine`"""
-input BillLineInput {
-  rowId: UUID
-  billId: UUID!
-  description: String!
-  quantity: BigFloat
-  unitPrice: BigFloat
-  amount: BigFloat
-  expenseAccountId: UUID!
-  taxJurisdictionId: UUID
-  sortOrder: Int
-}
-
 """The output of our create `EstimateLine` mutation."""
 type CreateEstimateLinePayload {
   """
@@ -15481,6 +15434,55 @@ input ProjectInput {
   notes: String
   createdAt: Datetime
   updatedAt: Datetime
+}
+
+"""The output of our create `BillLine` mutation."""
+type CreateBillLinePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `BillLine` that was created by this mutation."""
+  billLine: BillLine
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `BillLine`. May be used by Relay 1."""
+  billLineEdge(
+    """The method to use when ordering `BillLine`."""
+    orderBy: [BillLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BillLineEdge
+}
+
+"""All input for the create `BillLine` mutation."""
+input CreateBillLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `BillLine` to be created by this mutation."""
+  billLine: BillLineInput!
+}
+
+"""An input for mutations affecting `BillLine`"""
+input BillLineInput {
+  rowId: UUID
+  billId: UUID!
+  description: String!
+  quantity: BigFloat
+  unitPrice: BigFloat
+  amount: BigFloat
+  expenseAccountId: UUID!
+  taxJurisdictionId: UUID
+  sortOrder: Int
+  discountPercent: BigFloat
 }
 
 """The output of our create `CreditMemoLine` mutation."""
@@ -17995,78 +17997,6 @@ input UpdatePayrollConnectionInput {
   patch: PayrollConnectionPatch!
 }
 
-"""The output of our update `BillLine` mutation."""
-type UpdateBillLinePayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `BillLine` that was updated by this mutation."""
-  billLine: BillLine
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `BillLine`. May be used by Relay 1."""
-  billLineEdge(
-    """The method to use when ordering `BillLine`."""
-    orderBy: [BillLineOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): BillLineEdge
-}
-
-"""All input for the `updateBillLineById` mutation."""
-input UpdateBillLineByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `BillLine` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the `BillLine` being updated.
-  """
-  patch: BillLinePatch!
-}
-
-"""
-Represents an update to a `BillLine`. Fields that are set will be updated.
-"""
-input BillLinePatch {
-  rowId: UUID
-  billId: UUID
-  description: String
-  quantity: BigFloat
-  unitPrice: BigFloat
-  amount: BigFloat
-  expenseAccountId: UUID
-  taxJurisdictionId: UUID
-  sortOrder: Int
-}
-
-"""All input for the `updateBillLine` mutation."""
-input UpdateBillLineInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the `BillLine` being updated.
-  """
-  patch: BillLinePatch!
-}
-
 """The output of our update `EstimateLine` mutation."""
 type UpdateEstimateLinePayload {
   """
@@ -18577,6 +18507,79 @@ input UpdateProjectInput {
   An object where the defined keys will be set on the `Project` being updated.
   """
   patch: ProjectPatch!
+}
+
+"""The output of our update `BillLine` mutation."""
+type UpdateBillLinePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `BillLine` that was updated by this mutation."""
+  billLine: BillLine
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `BillLine`. May be used by Relay 1."""
+  billLineEdge(
+    """The method to use when ordering `BillLine`."""
+    orderBy: [BillLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BillLineEdge
+}
+
+"""All input for the `updateBillLineById` mutation."""
+input UpdateBillLineByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `BillLine` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `BillLine` being updated.
+  """
+  patch: BillLinePatch!
+}
+
+"""
+Represents an update to a `BillLine`. Fields that are set will be updated.
+"""
+input BillLinePatch {
+  rowId: UUID
+  billId: UUID
+  description: String
+  quantity: BigFloat
+  unitPrice: BigFloat
+  amount: BigFloat
+  expenseAccountId: UUID
+  taxJurisdictionId: UUID
+  sortOrder: Int
+  discountPercent: BigFloat
+}
+
+"""All input for the `updateBillLine` mutation."""
+input UpdateBillLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `BillLine` being updated.
+  """
+  patch: BillLinePatch!
 }
 
 """The output of our update `CreditMemoLine` mutation."""
@@ -21266,54 +21269,6 @@ input DeletePayrollConnectionInput {
   rowId: UUID!
 }
 
-"""The output of our delete `BillLine` mutation."""
-type DeleteBillLinePayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `BillLine` that was deleted by this mutation."""
-  billLine: BillLine
-  deletedBillLineId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `BillLine`. May be used by Relay 1."""
-  billLineEdge(
-    """The method to use when ordering `BillLine`."""
-    orderBy: [BillLineOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): BillLineEdge
-}
-
-"""All input for the `deleteBillLineById` mutation."""
-input DeleteBillLineByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `BillLine` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the `deleteBillLine` mutation."""
-input DeleteBillLineInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete `EstimateLine` mutation."""
 type DeleteEstimateLinePayload {
   """
@@ -21642,6 +21597,54 @@ input DeleteProjectByIdInput {
 
 """All input for the `deleteProject` mutation."""
 input DeleteProjectInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `BillLine` mutation."""
+type DeleteBillLinePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `BillLine` that was deleted by this mutation."""
+  billLine: BillLine
+  deletedBillLineId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `BillLine`. May be used by Relay 1."""
+  billLineEdge(
+    """The method to use when ordering `BillLine`."""
+    orderBy: [BillLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): BillLineEdge
+}
+
+"""All input for the `deleteBillLineById` mutation."""
+input DeleteBillLineByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `BillLine` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteBillLine` mutation."""
+input DeleteBillLineInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.

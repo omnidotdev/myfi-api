@@ -113,6 +113,7 @@ const billRoutes = new Elysia({ prefix: "/api/bills" })
             unitPrice: t.Number(),
             expenseAccountId: t.String(),
             taxJurisdictionId: t.Optional(t.String()),
+            discountPercent: t.Optional(t.Number({ minimum: 0, maximum: 1 })),
           }),
         ),
       }),

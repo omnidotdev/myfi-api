@@ -246,6 +246,13 @@
       "when": 1793224991402,
       "tag": "0034_tense_madame_hydra",
       "breakpoints": true
+    },
+    {
+      "idx": 35,
+      "version": "7",
+      "when": 1793242638671,
+      "tag": "0035_panoramic_talos",
+      "breakpoints": true
     }
   ]
 }

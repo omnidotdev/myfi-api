@@ -11,6 +11,7 @@ import {
   taxJurisdictionTable,
 } from "lib/db/schema";
 import {
+  applyLineDiscount,
   computeInvoiceTotals,
   computeLineAmount,
   computeLineTax,
@@ -76,6 +77,7 @@ export const postBill = async (
       quantity: billLineTable.quantity,
       unitPrice: billLineTable.unitPrice,
       expenseAccountId: billLineTable.expenseAccountId,
+      discountPercent: billLineTable.discountPercent,
       taxRate: taxJurisdictionTable.rate,
       taxPayableAccountId: taxJurisdictionTable.taxPayableAccountId,
     })
@@ -110,9 +112,9 @@ export const postBill = async (
   }
 
   const priced: PricedBillLine[] = lineRows.map((row) => {
-    const amount = computeLineAmount(
-      Number(row.quantity),
-      Number(row.unitPrice),
+    const amount = applyLineDiscount(
+      computeLineAmount(Number(row.quantity), Number(row.unitPrice)),
+      row.discountPercent === null ? null : Number(row.discountPercent),
     );
     const rate = row.taxRate === null ? 0 : Number(row.taxRate);
     const taxAmount = rate > 0 ? computeLineTax(amount, rate) : 0;
