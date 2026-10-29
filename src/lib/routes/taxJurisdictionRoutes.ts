@@ -10,6 +10,7 @@ import {
   taxJurisdictionTable,
 } from "lib/db/schema";
 import { authorizeBook } from "lib/middleware/bookAccess.middleware";
+import { recordSalesTaxPayment } from "lib/tax/recordSalesTaxPayment";
 
 // Tax jurisdiction CRUD routes
 const taxJurisdictionRoutes = new Elysia({
@@ -205,6 +206,52 @@ const taxJurisdictionRoutes = new Elysia({
     },
     {
       params: t.Object({ id: t.String() }),
+    },
+  )
+  // Record a remittance to this jurisdiction's tax agency
+  .post(
+    "/:id/payments",
+    async ({ params, body, set }) => {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(body.date)) {
+        set.status = 400;
+        return { error: "date must be a YYYY-MM-DD date" };
+      }
+      try {
+        const result = await recordSalesTaxPayment({
+          bookId: body.bookId,
+          jurisdictionId: params.id,
+          amount: body.amount,
+          paymentAccountId: body.paymentAccountId,
+          date: body.date,
+          memo: body.memo,
+        });
+        emitAudit({
+          type: "myfi.tax_jurisdiction.payment",
+          organizationId: body.bookId,
+          resource: { type: "tax_jurisdiction", id: params.id },
+          data: { amount: body.amount },
+        });
+        return result;
+      } catch (err) {
+        const message = err instanceof Error ? err.message : "Payment failed";
+        if (/positive|not found|closed period/i.test(message)) {
+          set.status = /not found/i.test(message) ? 404 : 400;
+          return { error: message };
+        }
+        console.error("[tax-jurisdictions] payment failed:", err);
+        set.status = 500;
+        return { error: "Could not record the tax payment" };
+      }
+    },
+    {
+      params: t.Object({ id: t.String() }),
+      body: t.Object({
+        bookId: t.String(),
+        amount: t.Number(),
+        paymentAccountId: t.String(),
+        date: t.String(),
+        memo: t.Optional(t.String()),
+      }),
     },
   );
 
