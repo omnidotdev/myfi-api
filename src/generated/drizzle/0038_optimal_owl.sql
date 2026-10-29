@@ -1,0 +1,3 @@
+ALTER TABLE "invoice_line" ADD COLUMN "secondary_tax_jurisdiction_id" uuid;--> statement-breakpoint
+ALTER TABLE "tax_jurisdiction" ADD COLUMN "compound" boolean DEFAULT false NOT NULL;--> statement-breakpoint
+ALTER TABLE "invoice_line" ADD CONSTRAINT "invoice_line_secondary_tax_jurisdiction_id_tax_jurisdiction_id_fk" FOREIGN KEY ("secondary_tax_jurisdiction_id") REFERENCES "public"."tax_jurisdiction"("id") ON DELETE no action ON UPDATE no action;

@@ -40,6 +40,11 @@ export const invoiceLineTable = pgTable(
     taxJurisdictionId: uuid("tax_jurisdiction_id").references(
       () => taxJurisdictionTable.id,
     ),
+    // optional second tax on the line; if its jurisdiction is compound it stacks
+    // on the primary tax (tax-on-tax), otherwise it is a second flat tax
+    secondaryTaxJurisdictionId: uuid("secondary_tax_jurisdiction_id").references(
+      () => taxJurisdictionTable.id,
+    ),
     // when set, posting the invoice also posts COGS and decrements this item's
     // stock at its weighted-average cost
     inventoryItemId: uuid("inventory_item_id").references(

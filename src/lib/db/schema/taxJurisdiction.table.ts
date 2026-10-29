@@ -1,4 +1,5 @@
 import {
+  boolean,
   index,
   numeric,
   pgTable,
@@ -25,6 +26,9 @@ export const taxJurisdictionTable = pgTable(
     // tax rate as a fraction (e.g. 0.0825 for 8.25%), used to auto-compute tax
     // on invoice lines; null when the jurisdiction has no single flat rate
     rate: numeric({ precision: 9, scale: 6 }),
+    // when true and used as a line's secondary tax, this tax is computed on the
+    // line amount PLUS the primary tax (tax-on-tax), e.g. a compound PST on GST
+    compound: boolean().notNull().default(false),
     filingFrequency: text("filing_frequency").notNull(),
     taxPayableAccountId: uuid("tax_payable_account_id")
       .notNull()

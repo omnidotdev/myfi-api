@@ -643,110 +643,6 @@ const spec_tag = {
   executor: executor
 };
 const tagCodec = recordCodec(spec_tag);
-const taxJurisdictionIdentifier = sql.identifier("public", "tax_jurisdiction");
-const spec_taxJurisdiction = {
-  name: "taxJurisdiction",
-  identifier: taxJurisdictionIdentifier,
-  attributes: {
-    __proto__: null,
-    id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    book_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    name: {
-      codec: TYPES.text,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    code: {
-      codec: TYPES.text,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    filing_frequency: {
-      codec: TYPES.text,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    tax_payable_account_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    created_at: {
-      codec: TYPES.timestamptz,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    rate: {
-      codec: TYPES.numeric,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    }
-  },
-  extensions: {
-    oid: "17186",
-    isTableLike: true,
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "tax_jurisdiction"
-    }
-  },
-  executor: executor
-};
-const taxJurisdictionCodec = recordCodec(spec_taxJurisdiction);
 const vehicleIdentifier = sql.identifier("public", "vehicle");
 const spec_vehicle = {
   name: "vehicle",
@@ -1051,6 +947,122 @@ const spec_importProfile = {
   executor: executor
 };
 const importProfileCodec = recordCodec(spec_importProfile);
+const taxJurisdictionIdentifier = sql.identifier("public", "tax_jurisdiction");
+const spec_taxJurisdiction = {
+  name: "taxJurisdiction",
+  identifier: taxJurisdictionIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    name: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    code: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    filing_frequency: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    tax_payable_account_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    rate: {
+      codec: TYPES.numeric,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    compound: {
+      codec: TYPES.boolean,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "17186",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "tax_jurisdiction"
+    }
+  },
+  executor: executor
+};
+const taxJurisdictionCodec = recordCodec(spec_taxJurisdiction);
 const journalLineIdentifier = sql.identifier("public", "journal_line");
 const spec_journalLine = {
   name: "journalLine",
@@ -3334,146 +3346,6 @@ const spec_creditMemoLine = {
   executor: executor
 };
 const creditMemoLineCodec = recordCodec(spec_creditMemoLine);
-const invoiceLineIdentifier = sql.identifier("public", "invoice_line");
-const spec_invoiceLine = {
-  name: "invoiceLine",
-  identifier: invoiceLineIdentifier,
-  attributes: {
-    __proto__: null,
-    id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    invoice_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    description: {
-      codec: TYPES.text,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    quantity: {
-      codec: TYPES.numeric,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    unit_price: {
-      codec: TYPES.numeric,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    amount: {
-      codec: TYPES.numeric,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    income_account_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    tax_jurisdiction_id: {
-      codec: TYPES.uuid,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    sort_order: {
-      codec: TYPES.int,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    inventory_item_id: {
-      codec: TYPES.uuid,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    discount_percent: {
-      codec: TYPES.numeric,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    }
-  },
-  extensions: {
-    oid: "17563",
-    isTableLike: true,
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "invoice_line"
-    }
-  },
-  executor: executor
-};
-const invoiceLineCodec = recordCodec(spec_invoiceLine);
 const journalEntryIdentifier = sql.identifier("public", "journal_entry");
 const spec_journalEntry = {
   name: "journalEntry",
@@ -4043,6 +3915,156 @@ const spec_document = {
   executor: executor
 };
 const documentCodec = recordCodec(spec_document);
+const invoiceLineIdentifier = sql.identifier("public", "invoice_line");
+const spec_invoiceLine = {
+  name: "invoiceLine",
+  identifier: invoiceLineIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    invoice_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    description: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    quantity: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    unit_price: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    amount: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    income_account_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    tax_jurisdiction_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    sort_order: {
+      codec: TYPES.int,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    inventory_item_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    discount_percent: {
+      codec: TYPES.numeric,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    secondary_tax_jurisdiction_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "17563",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "invoice_line"
+    }
+  },
+  executor: executor
+};
+const invoiceLineCodec = recordCodec(spec_invoiceLine);
 const estimateIdentifier = sql.identifier("public", "estimate");
 const spec_estimate = {
   name: "estimate",
@@ -6905,29 +6927,6 @@ const tag_resourceOptionsConfig = {
   },
   uniques: tagUniques
 };
-const tax_jurisdictionUniques = [{
-  attributes: ["id"],
-  isPrimary: true
-}];
-const tax_jurisdiction_resourceOptionsConfig = {
-  executor: executor,
-  name: "tax_jurisdiction",
-  identifier: "main.public.tax_jurisdiction",
-  from: taxJurisdictionIdentifier,
-  codec: taxJurisdictionCodec,
-  extensions: {
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "tax_jurisdiction"
-    },
-    canSelect: true,
-    canInsert: true,
-    canUpdate: true,
-    canDelete: true
-  },
-  uniques: tax_jurisdictionUniques
-};
 const vehicleUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -6996,6 +6995,29 @@ const import_profile_resourceOptionsConfig = {
     canDelete: true
   },
   uniques: import_profileUniques
+};
+const tax_jurisdictionUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const tax_jurisdiction_resourceOptionsConfig = {
+  executor: executor,
+  name: "tax_jurisdiction",
+  identifier: "main.public.tax_jurisdiction",
+  from: taxJurisdictionIdentifier,
+  codec: taxJurisdictionCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "tax_jurisdiction"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: tax_jurisdictionUniques
 };
 const journal_lineUniques = [{
   attributes: ["id"],
@@ -7411,29 +7433,6 @@ const credit_memo_line_resourceOptionsConfig = {
   },
   uniques: credit_memo_lineUniques
 };
-const invoice_lineUniques = [{
-  attributes: ["id"],
-  isPrimary: true
-}];
-const invoice_line_resourceOptionsConfig = {
-  executor: executor,
-  name: "invoice_line",
-  identifier: "main.public.invoice_line",
-  from: invoiceLineIdentifier,
-  codec: invoiceLineCodec,
-  extensions: {
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "invoice_line"
-    },
-    canSelect: true,
-    canInsert: true,
-    canUpdate: true,
-    canDelete: true
-  },
-  uniques: invoice_lineUniques
-};
 const journal_entryUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -7525,6 +7524,29 @@ const document_resourceOptionsConfig = {
     canDelete: true
   },
   uniques: documentUniques
+};
+const invoice_lineUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const invoice_line_resourceOptionsConfig = {
+  executor: executor,
+  name: "invoice_line",
+  identifier: "main.public.invoice_line",
+  from: invoiceLineIdentifier,
+  codec: invoiceLineCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "invoice_line"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: invoice_lineUniques
 };
 const estimateUniques = [{
   attributes: ["id"],
@@ -7893,11 +7915,11 @@ const registryConfig = {
     numeric: TYPES.numeric,
     tag: tagCodec,
     bool: TYPES.boolean,
-    taxJurisdiction: taxJurisdictionCodec,
     vehicle: vehicleCodec,
     savingsGoal: savingsGoalCodec,
     importProfile: importProfileCodec,
     jsonb: TYPES.jsonb,
+    taxJurisdiction: taxJurisdictionCodec,
     journalLine: journalLineCodec,
     netWorthSnapshot: netWorthSnapshotCodec,
     accountingPeriod: accountingPeriodCodec,
@@ -7916,12 +7938,12 @@ const registryConfig = {
     cryptoLot: cryptoLotCodec,
     connectedAccount: connectedAccountCodec,
     creditMemoLine: creditMemoLineCodec,
-    invoiceLine: invoiceLineCodec,
     journalEntry: journalEntryCodec,
     mileageLog: mileageLogCodec,
     budget: budgetCodec,
     budgetPeriod: budgetPeriodCodec,
     document: documentCodec,
+    invoiceLine: invoiceLineCodec,
     estimate: estimateCodec,
     reconciliationQueue: reconciliationQueueCodec,
     customer: customerCodec,
@@ -7970,10 +7992,10 @@ const registryConfig = {
     book_access: book_access_resourceOptionsConfig,
     credit_memo_application: credit_memo_application_resourceOptionsConfig,
     tag: tag_resourceOptionsConfig,
-    tax_jurisdiction: tax_jurisdiction_resourceOptionsConfig,
     vehicle: vehicle_resourceOptionsConfig,
     savings_goal: savings_goal_resourceOptionsConfig,
     import_profile: import_profile_resourceOptionsConfig,
+    tax_jurisdiction: tax_jurisdiction_resourceOptionsConfig,
     journal_line: journal_line_resourceOptionsConfig,
     net_worth_snapshot: net_worth_snapshot_resourceOptionsConfig,
     accounting_period: accounting_period_resourceOptionsConfig,
@@ -7992,11 +8014,11 @@ const registryConfig = {
     crypto_lot: crypto_lot_resourceOptionsConfig,
     connected_account: connected_account_resourceOptionsConfig,
     credit_memo_line: credit_memo_line_resourceOptionsConfig,
-    invoice_line: invoice_line_resourceOptionsConfig,
     journal_entry: journal_entry_resourceOptionsConfig,
     mileage_log: mileage_log_resourceOptionsConfig,
     budget: budget_resourceOptionsConfig,
     document: document_resourceOptionsConfig,
+    invoice_line: invoice_line_resourceOptionsConfig,
     estimate: estimate_resourceOptionsConfig,
     reconciliation_queue: reconciliation_queue_resourceOptionsConfig,
     customer: customer_resourceOptionsConfig,
@@ -9342,6 +9364,13 @@ const registryConfig = {
         remoteAttributes: ["id"],
         isUnique: true
       },
+      taxJurisdictionByMySecondaryTaxJurisdictionId: {
+        localCodec: invoiceLineCodec,
+        remoteResourceOptions: tax_jurisdiction_resourceOptionsConfig,
+        localAttributes: ["secondary_tax_jurisdiction_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
       taxJurisdictionByMyTaxJurisdictionId: {
         localCodec: invoiceLineCodec,
         remoteResourceOptions: tax_jurisdiction_resourceOptionsConfig,
@@ -9889,6 +9918,17 @@ const registryConfig = {
         remoteAttributes: ["tax_jurisdiction_id"],
         isReferencee: true
       },
+      invoiceLinesByTheirSecondaryTaxJurisdictionId: {
+        localCodec: taxJurisdictionCodec,
+        remoteResourceOptions: invoice_line_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["secondary_tax_jurisdiction_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
+      },
       invoiceLinesByTheirTaxJurisdictionId: {
         localCodec: taxJurisdictionCodec,
         remoteResourceOptions: invoice_line_resourceOptionsConfig,
@@ -9997,10 +10037,10 @@ const resource_account_mappingPgResource = registry.pgResources["account_mapping
 const resource_book_accessPgResource = registry.pgResources["book_access"];
 const resource_credit_memo_applicationPgResource = registry.pgResources["credit_memo_application"];
 const resource_tagPgResource = registry.pgResources["tag"];
-const resource_tax_jurisdictionPgResource = registry.pgResources["tax_jurisdiction"];
 const resource_vehiclePgResource = registry.pgResources["vehicle"];
 const resource_savings_goalPgResource = registry.pgResources["savings_goal"];
 const resource_import_profilePgResource = registry.pgResources["import_profile"];
+const resource_tax_jurisdictionPgResource = registry.pgResources["tax_jurisdiction"];
 const resource_journal_linePgResource = registry.pgResources["journal_line"];
 const resource_net_worth_snapshotPgResource = registry.pgResources["net_worth_snapshot"];
 const resource_accounting_periodPgResource = registry.pgResources["accounting_period"];
@@ -10019,11 +10059,11 @@ const resource_invoice_paymentPgResource = registry.pgResources["invoice_payment
 const resource_crypto_lotPgResource = registry.pgResources["crypto_lot"];
 const resource_connected_accountPgResource = registry.pgResources["connected_account"];
 const resource_credit_memo_linePgResource = registry.pgResources["credit_memo_line"];
-const resource_invoice_linePgResource = registry.pgResources["invoice_line"];
 const resource_journal_entryPgResource = registry.pgResources["journal_entry"];
 const resource_mileage_logPgResource = registry.pgResources["mileage_log"];
 const resource_budgetPgResource = registry.pgResources["budget"];
 const resource_documentPgResource = registry.pgResources["document"];
+const resource_invoice_linePgResource = registry.pgResources["invoice_line"];
 const resource_estimatePgResource = registry.pgResources["estimate"];
 const resource_reconciliation_queuePgResource = registry.pgResources["reconciliation_queue"];
 const resource_customerPgResource = registry.pgResources["customer"];
@@ -10171,17 +10211,6 @@ const nodeFetcher_Tag = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Tag));
   return nodeIdHandler_Tag.get(nodeIdHandler_Tag.getSpec($decoded));
 };
-const nodeIdHandler_TaxJurisdiction = makeTableNodeIdHandler({
-  typeName: "TaxJurisdiction",
-  identifier: "TaxJurisdiction",
-  nodeIdCodec: base64JSONNodeIdCodec,
-  resource: resource_tax_jurisdictionPgResource,
-  pk: tax_jurisdictionUniques[0].attributes
-});
-const nodeFetcher_TaxJurisdiction = $nodeId => {
-  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_TaxJurisdiction));
-  return nodeIdHandler_TaxJurisdiction.get(nodeIdHandler_TaxJurisdiction.getSpec($decoded));
-};
 const nodeIdHandler_Vehicle = makeTableNodeIdHandler({
   typeName: "Vehicle",
   identifier: "Vehicle",
@@ -10214,6 +10243,17 @@ const nodeIdHandler_ImportProfile = makeTableNodeIdHandler({
 const nodeFetcher_ImportProfile = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_ImportProfile));
   return nodeIdHandler_ImportProfile.get(nodeIdHandler_ImportProfile.getSpec($decoded));
+};
+const nodeIdHandler_TaxJurisdiction = makeTableNodeIdHandler({
+  typeName: "TaxJurisdiction",
+  identifier: "TaxJurisdiction",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_tax_jurisdictionPgResource,
+  pk: tax_jurisdictionUniques[0].attributes
+});
+const nodeFetcher_TaxJurisdiction = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_TaxJurisdiction));
+  return nodeIdHandler_TaxJurisdiction.get(nodeIdHandler_TaxJurisdiction.getSpec($decoded));
 };
 const nodeIdHandler_JournalLine = makeTableNodeIdHandler({
   typeName: "JournalLine",
@@ -10413,17 +10453,6 @@ const nodeFetcher_CreditMemoLine = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_CreditMemoLine));
   return nodeIdHandler_CreditMemoLine.get(nodeIdHandler_CreditMemoLine.getSpec($decoded));
 };
-const nodeIdHandler_InvoiceLine = makeTableNodeIdHandler({
-  typeName: "InvoiceLine",
-  identifier: "InvoiceLine",
-  nodeIdCodec: base64JSONNodeIdCodec,
-  resource: resource_invoice_linePgResource,
-  pk: invoice_lineUniques[0].attributes
-});
-const nodeFetcher_InvoiceLine = $nodeId => {
-  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_InvoiceLine));
-  return nodeIdHandler_InvoiceLine.get(nodeIdHandler_InvoiceLine.getSpec($decoded));
-};
 const nodeIdHandler_JournalEntry = makeTableNodeIdHandler({
   typeName: "JournalEntry",
   identifier: "JournalEntry",
@@ -10467,6 +10496,17 @@ const nodeIdHandler_Document = makeTableNodeIdHandler({
 const nodeFetcher_Document = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Document));
   return nodeIdHandler_Document.get(nodeIdHandler_Document.getSpec($decoded));
+};
+const nodeIdHandler_InvoiceLine = makeTableNodeIdHandler({
+  typeName: "InvoiceLine",
+  identifier: "InvoiceLine",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_invoice_linePgResource,
+  pk: invoice_lineUniques[0].attributes
+});
+const nodeFetcher_InvoiceLine = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_InvoiceLine));
+  return nodeIdHandler_InvoiceLine.get(nodeIdHandler_InvoiceLine.getSpec($decoded));
 };
 const nodeIdHandler_Estimate = makeTableNodeIdHandler({
   typeName: "Estimate",
@@ -10693,10 +10733,10 @@ const nodeIdHandlerByTypeName = {
   BookAccess: nodeIdHandler_BookAccess,
   CreditMemoApplication: nodeIdHandler_CreditMemoApplication,
   Tag: nodeIdHandler_Tag,
-  TaxJurisdiction: nodeIdHandler_TaxJurisdiction,
   Vehicle: nodeIdHandler_Vehicle,
   SavingsGoal: nodeIdHandler_SavingsGoal,
   ImportProfile: nodeIdHandler_ImportProfile,
+  TaxJurisdiction: nodeIdHandler_TaxJurisdiction,
   JournalLine: nodeIdHandler_JournalLine,
   NetWorthSnapshot: nodeIdHandler_NetWorthSnapshot,
   AccountingPeriod: nodeIdHandler_AccountingPeriod,
@@ -10715,11 +10755,11 @@ const nodeIdHandlerByTypeName = {
   CryptoLot: nodeIdHandler_CryptoLot,
   ConnectedAccount: nodeIdHandler_ConnectedAccount,
   CreditMemoLine: nodeIdHandler_CreditMemoLine,
-  InvoiceLine: nodeIdHandler_InvoiceLine,
   JournalEntry: nodeIdHandler_JournalEntry,
   MileageLog: nodeIdHandler_MileageLog,
   Budget: nodeIdHandler_Budget,
   Document: nodeIdHandler_Document,
+  InvoiceLine: nodeIdHandler_InvoiceLine,
   Estimate: nodeIdHandler_Estimate,
   ReconciliationQueue: nodeIdHandler_ReconciliationQueue,
   Customer: nodeIdHandler_Customer,
@@ -11449,10 +11489,6 @@ const specFromArgs_Tag = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Tag, $nodeId);
 };
-const specFromArgs_TaxJurisdiction = args => {
-  const $nodeId = args.getRaw(["input", "id"]);
-  return specFromNodeId(nodeIdHandler_TaxJurisdiction, $nodeId);
-};
 const specFromArgs_Vehicle = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Vehicle, $nodeId);
@@ -11464,6 +11500,10 @@ const specFromArgs_SavingsGoal = args => {
 const specFromArgs_ImportProfile = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_ImportProfile, $nodeId);
+};
+const specFromArgs_TaxJurisdiction = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_TaxJurisdiction, $nodeId);
 };
 const specFromArgs_JournalLine = args => {
   const $nodeId = args.getRaw(["input", "id"]);
@@ -11537,10 +11577,6 @@ const specFromArgs_CreditMemoLine = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_CreditMemoLine, $nodeId);
 };
-const specFromArgs_InvoiceLine = args => {
-  const $nodeId = args.getRaw(["input", "id"]);
-  return specFromNodeId(nodeIdHandler_InvoiceLine, $nodeId);
-};
 const specFromArgs_JournalEntry = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_JournalEntry, $nodeId);
@@ -11556,6 +11592,10 @@ const specFromArgs_Budget = args => {
 const specFromArgs_Document = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Document, $nodeId);
+};
+const specFromArgs_InvoiceLine = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_InvoiceLine, $nodeId);
 };
 const specFromArgs_Estimate = args => {
   const $nodeId = args.getRaw(["input", "id"]);
@@ -11727,16 +11767,6 @@ function TagInput_codeApply(obj, val, info) {
 function TagInput_isActiveApply(obj, val, info) {
   obj.set("is_active", bakedInputRuntime(info.schema, info.field.type, val));
 }
-const CreateTaxJurisdictionPayload_taxJurisdictionEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_tax_jurisdictionPgResource, tax_jurisdictionUniques[0].attributes, $mutation, fieldArgs);
-function TaxJurisdictionInput_filingFrequencyApply(obj, val, info) {
-  obj.set("filing_frequency", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function TaxJurisdictionInput_taxPayableAccountIdApply(obj, val, info) {
-  obj.set("tax_payable_account_id", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function TaxJurisdictionInput_rateApply(obj, val, info) {
-  obj.set("rate", bakedInputRuntime(info.schema, info.field.type, val));
-}
 const CreateVehiclePayload_vehicleEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_vehiclePgResource, vehicleUniques[0].attributes, $mutation, fieldArgs);
 function VehicleInput_yearApply(obj, val, info) {
   obj.set("year", bakedInputRuntime(info.schema, info.field.type, val));
@@ -11766,6 +11796,19 @@ function ImportProfileInput_columnMapApply(obj, val, info) {
 }
 function ImportProfileInput_headerRowsApply(obj, val, info) {
   obj.set("header_rows", bakedInputRuntime(info.schema, info.field.type, val));
+}
+const CreateTaxJurisdictionPayload_taxJurisdictionEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_tax_jurisdictionPgResource, tax_jurisdictionUniques[0].attributes, $mutation, fieldArgs);
+function TaxJurisdictionInput_filingFrequencyApply(obj, val, info) {
+  obj.set("filing_frequency", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function TaxJurisdictionInput_taxPayableAccountIdApply(obj, val, info) {
+  obj.set("tax_payable_account_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function TaxJurisdictionInput_rateApply(obj, val, info) {
+  obj.set("rate", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function TaxJurisdictionInput_compoundApply(obj, val, info) {
+  obj.set("compound", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateJournalLinePayload_journalLineEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_journal_linePgResource, journal_lineUniques[0].attributes, $mutation, fieldArgs);
 function JournalLineInput_journalEntryIdApply(obj, val, info) {
@@ -12022,7 +12065,6 @@ const CreateCreditMemoLinePayload_creditMemoLineEdgePlan = ($mutation, fieldArgs
 function CreditMemoLineInput_inventoryItemIdApply(obj, val, info) {
   obj.set("inventory_item_id", bakedInputRuntime(info.schema, info.field.type, val));
 }
-const CreateInvoiceLinePayload_invoiceLineEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_invoice_linePgResource, invoice_lineUniques[0].attributes, $mutation, fieldArgs);
 const CreateJournalEntryPayload_journalEntryEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_journal_entryPgResource, journal_entryUniques[0].attributes, $mutation, fieldArgs);
 function JournalEntryInput_sourceApply(obj, val, info) {
   obj.set("source", bakedInputRuntime(info.schema, info.field.type, val));
@@ -12069,6 +12111,10 @@ function BudgetInput_rolloverApply(obj, val, info) {
   obj.set("rollover", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateDocumentPayload_documentEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_documentPgResource, documentUniques[0].attributes, $mutation, fieldArgs);
+const CreateInvoiceLinePayload_invoiceLineEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_invoice_linePgResource, invoice_lineUniques[0].attributes, $mutation, fieldArgs);
+function InvoiceLineInput_secondaryTaxJurisdictionIdApply(obj, val, info) {
+  obj.set("secondary_tax_jurisdiction_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
 const CreateEstimatePayload_estimateEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_estimatePgResource, estimateUniques[0].attributes, $mutation, fieldArgs);
 function EstimateInput_customerIdApply(obj, val, info) {
   obj.set("customer_id", bakedInputRuntime(info.schema, info.field.type, val));
@@ -12364,9 +12410,6 @@ type Query implements Node {
   """Get a single \`Tag\`."""
   tag(rowId: UUID!): Tag
 
-  """Get a single \`TaxJurisdiction\`."""
-  taxJurisdiction(rowId: UUID!): TaxJurisdiction
-
   """Get a single \`Vehicle\`."""
   vehicle(rowId: UUID!): Vehicle
 
@@ -12375,6 +12418,9 @@ type Query implements Node {
 
   """Get a single \`ImportProfile\`."""
   importProfile(rowId: UUID!): ImportProfile
+
+  """Get a single \`TaxJurisdiction\`."""
+  taxJurisdiction(rowId: UUID!): TaxJurisdiction
 
   """Get a single \`JournalLine\`."""
   journalLine(rowId: UUID!): JournalLine
@@ -12430,9 +12476,6 @@ type Query implements Node {
   """Get a single \`CreditMemoLine\`."""
   creditMemoLine(rowId: UUID!): CreditMemoLine
 
-  """Get a single \`InvoiceLine\`."""
-  invoiceLine(rowId: UUID!): InvoiceLine
-
   """Get a single \`JournalEntry\`."""
   journalEntry(rowId: UUID!): JournalEntry
 
@@ -12444,6 +12487,9 @@ type Query implements Node {
 
   """Get a single \`Document\`."""
   document(rowId: UUID!): Document
+
+  """Get a single \`InvoiceLine\`."""
+  invoiceLine(rowId: UUID!): InvoiceLine
 
   """Get a single \`Estimate\`."""
   estimate(rowId: UUID!): Estimate
@@ -12550,14 +12596,6 @@ type Query implements Node {
     id: ID!
   ): Tag
 
-  """Reads a single \`TaxJurisdiction\` using its globally unique \`ID\`."""
-  taxJurisdictionById(
-    """
-    The globally unique \`ID\` to be used in selecting a single \`TaxJurisdiction\`.
-    """
-    id: ID!
-  ): TaxJurisdiction
-
   """Reads a single \`Vehicle\` using its globally unique \`ID\`."""
   vehicleById(
     """The globally unique \`ID\` to be used in selecting a single \`Vehicle\`."""
@@ -12579,6 +12617,14 @@ type Query implements Node {
     """
     id: ID!
   ): ImportProfile
+
+  """Reads a single \`TaxJurisdiction\` using its globally unique \`ID\`."""
+  taxJurisdictionById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`TaxJurisdiction\`.
+    """
+    id: ID!
+  ): TaxJurisdiction
 
   """Reads a single \`JournalLine\` using its globally unique \`ID\`."""
   journalLineById(
@@ -12720,14 +12766,6 @@ type Query implements Node {
     id: ID!
   ): CreditMemoLine
 
-  """Reads a single \`InvoiceLine\` using its globally unique \`ID\`."""
-  invoiceLineById(
-    """
-    The globally unique \`ID\` to be used in selecting a single \`InvoiceLine\`.
-    """
-    id: ID!
-  ): InvoiceLine
-
   """Reads a single \`JournalEntry\` using its globally unique \`ID\`."""
   journalEntryById(
     """
@@ -12755,6 +12793,14 @@ type Query implements Node {
     """The globally unique \`ID\` to be used in selecting a single \`Document\`."""
     id: ID!
   ): Document
+
+  """Reads a single \`InvoiceLine\` using its globally unique \`ID\`."""
+  invoiceLineById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`InvoiceLine\`.
+    """
+    id: ID!
+  ): InvoiceLine
 
   """Reads a single \`Estimate\` using its globally unique \`ID\`."""
   estimateById(
@@ -13132,40 +13178,6 @@ type Query implements Node {
     orderBy: [TagOrderBy!] = [PRIMARY_KEY_ASC]
   ): TagConnection
 
-  """Reads and enables pagination through a set of \`TaxJurisdiction\`."""
-  taxJurisdictions(
-    """Only read the first \`n\` values of the set."""
-    first: Int
-
-    """Only read the last \`n\` values of the set."""
-    last: Int
-
-    """
-    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
-    based pagination. May not be used with \`last\`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: TaxJurisdictionCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: TaxJurisdictionFilter
-
-    """The method to use when ordering \`TaxJurisdiction\`."""
-    orderBy: [TaxJurisdictionOrderBy!] = [PRIMARY_KEY_ASC]
-  ): TaxJurisdictionConnection
-
   """Reads and enables pagination through a set of \`Vehicle\`."""
   vehicles(
     """Only read the first \`n\` values of the set."""
@@ -13267,6 +13279,40 @@ type Query implements Node {
     """The method to use when ordering \`ImportProfile\`."""
     orderBy: [ImportProfileOrderBy!] = [PRIMARY_KEY_ASC]
   ): ImportProfileConnection
+
+  """Reads and enables pagination through a set of \`TaxJurisdiction\`."""
+  taxJurisdictions(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TaxJurisdictionCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: TaxJurisdictionFilter
+
+    """The method to use when ordering \`TaxJurisdiction\`."""
+    orderBy: [TaxJurisdictionOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TaxJurisdictionConnection
 
   """Reads and enables pagination through a set of \`JournalLine\`."""
   journalLines(
@@ -13884,40 +13930,6 @@ type Query implements Node {
     orderBy: [CreditMemoLineOrderBy!] = [PRIMARY_KEY_ASC]
   ): CreditMemoLineConnection
 
-  """Reads and enables pagination through a set of \`InvoiceLine\`."""
-  invoiceLines(
-    """Only read the first \`n\` values of the set."""
-    first: Int
-
-    """Only read the last \`n\` values of the set."""
-    last: Int
-
-    """
-    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
-    based pagination. May not be used with \`last\`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: InvoiceLineCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: InvoiceLineFilter
-
-    """The method to use when ordering \`InvoiceLine\`."""
-    orderBy: [InvoiceLineOrderBy!] = [PRIMARY_KEY_ASC]
-  ): InvoiceLineConnection
-
   """Reads and enables pagination through a set of \`JournalEntry\`."""
   journalEntries(
     """Only read the first \`n\` values of the set."""
@@ -14053,6 +14065,40 @@ type Query implements Node {
     """The method to use when ordering \`Document\`."""
     orderBy: [DocumentOrderBy!] = [PRIMARY_KEY_ASC]
   ): DocumentConnection
+
+  """Reads and enables pagination through a set of \`InvoiceLine\`."""
+  invoiceLines(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: InvoiceLineCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: InvoiceLineFilter
+
+    """The method to use when ordering \`InvoiceLine\`."""
+    orderBy: [InvoiceLineOrderBy!] = [PRIMARY_KEY_ASC]
+  ): InvoiceLineConnection
 
   """Reads and enables pagination through a set of \`Estimate\`."""
   estimates(
@@ -18858,6 +18904,12 @@ input InvoiceLineFilter {
   """Filter by the object’s \`invoice\` relation."""
   invoice: InvoiceFilter
 
+  """Filter by the object’s \`secondaryTaxJurisdiction\` relation."""
+  secondaryTaxJurisdiction: TaxJurisdictionFilter
+
+  """A related \`secondaryTaxJurisdiction\` exists."""
+  secondaryTaxJurisdictionExists: Boolean
+
   """Filter by the object’s \`taxJurisdiction\` relation."""
   taxJurisdiction: TaxJurisdictionFilter
 
@@ -20470,6 +20522,7 @@ type TaxJurisdiction implements Node {
   taxPayableAccountId: UUID!
   createdAt: Datetime
   rate: BigFloat
+  compound: Boolean!
 
   """Reads a single \`Book\` that is related to this \`TaxJurisdiction\`."""
   book: Book
@@ -23097,6 +23150,7 @@ type InvoiceLine implements Node {
   sortOrder: Int!
   inventoryItemId: UUID
   discountPercent: BigFloat
+  secondaryTaxJurisdictionId: UUID
 
   """Reads a single \`Account\` that is related to this \`InvoiceLine\`."""
   incomeAccount: Account
@@ -23106,6 +23160,11 @@ type InvoiceLine implements Node {
 
   """Reads a single \`Invoice\` that is related to this \`InvoiceLine\`."""
   invoice: Invoice
+
+  """
+  Reads a single \`TaxJurisdiction\` that is related to this \`InvoiceLine\`.
+  """
+  secondaryTaxJurisdiction: TaxJurisdiction
 
   """
   Reads a single \`TaxJurisdiction\` that is related to this \`InvoiceLine\`.
@@ -24584,14 +24643,6 @@ type Mutation {
     input: CreateTagInput!
   ): CreateTagPayload
 
-  """Creates a single \`TaxJurisdiction\`."""
-  createTaxJurisdiction(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateTaxJurisdictionInput!
-  ): CreateTaxJurisdictionPayload
-
   """Creates a single \`Vehicle\`."""
   createVehicle(
     """
@@ -24615,6 +24666,14 @@ type Mutation {
     """
     input: CreateImportProfileInput!
   ): CreateImportProfilePayload
+
+  """Creates a single \`TaxJurisdiction\`."""
+  createTaxJurisdiction(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateTaxJurisdictionInput!
+  ): CreateTaxJurisdictionPayload
 
   """Creates a single \`JournalLine\`."""
   createJournalLine(
@@ -24760,14 +24819,6 @@ type Mutation {
     input: CreateCreditMemoLineInput!
   ): CreateCreditMemoLinePayload
 
-  """Creates a single \`InvoiceLine\`."""
-  createInvoiceLine(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateInvoiceLineInput!
-  ): CreateInvoiceLinePayload
-
   """Creates a single \`JournalEntry\`."""
   createJournalEntry(
     """
@@ -24799,6 +24850,14 @@ type Mutation {
     """
     input: CreateDocumentInput!
   ): CreateDocumentPayload
+
+  """Creates a single \`InvoiceLine\`."""
+  createInvoiceLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateInvoiceLineInput!
+  ): CreateInvoiceLinePayload
 
   """Creates a single \`Estimate\`."""
   createEstimate(
@@ -25062,24 +25121,6 @@ type Mutation {
     input: UpdateTagInput!
   ): UpdateTagPayload
 
-  """
-  Updates a single \`TaxJurisdiction\` using its globally unique id and a patch.
-  """
-  updateTaxJurisdictionById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateTaxJurisdictionByIdInput!
-  ): UpdateTaxJurisdictionPayload
-
-  """Updates a single \`TaxJurisdiction\` using a unique key and a patch."""
-  updateTaxJurisdiction(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateTaxJurisdictionInput!
-  ): UpdateTaxJurisdictionPayload
-
   """Updates a single \`Vehicle\` using its globally unique id and a patch."""
   updateVehicleById(
     """
@@ -25131,6 +25172,24 @@ type Mutation {
     """
     input: UpdateImportProfileInput!
   ): UpdateImportProfilePayload
+
+  """
+  Updates a single \`TaxJurisdiction\` using its globally unique id and a patch.
+  """
+  updateTaxJurisdictionById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateTaxJurisdictionByIdInput!
+  ): UpdateTaxJurisdictionPayload
+
+  """Updates a single \`TaxJurisdiction\` using a unique key and a patch."""
+  updateTaxJurisdiction(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateTaxJurisdictionInput!
+  ): UpdateTaxJurisdictionPayload
 
   """
   Updates a single \`JournalLine\` using its globally unique id and a patch.
@@ -25455,24 +25514,6 @@ type Mutation {
   ): UpdateCreditMemoLinePayload
 
   """
-  Updates a single \`InvoiceLine\` using its globally unique id and a patch.
-  """
-  updateInvoiceLineById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateInvoiceLineByIdInput!
-  ): UpdateInvoiceLinePayload
-
-  """Updates a single \`InvoiceLine\` using a unique key and a patch."""
-  updateInvoiceLine(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateInvoiceLineInput!
-  ): UpdateInvoiceLinePayload
-
-  """
   Updates a single \`JournalEntry\` using its globally unique id and a patch.
   """
   updateJournalEntryById(
@@ -25539,6 +25580,24 @@ type Mutation {
     """
     input: UpdateDocumentInput!
   ): UpdateDocumentPayload
+
+  """
+  Updates a single \`InvoiceLine\` using its globally unique id and a patch.
+  """
+  updateInvoiceLineById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateInvoiceLineByIdInput!
+  ): UpdateInvoiceLinePayload
+
+  """Updates a single \`InvoiceLine\` using a unique key and a patch."""
+  updateInvoiceLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateInvoiceLineInput!
+  ): UpdateInvoiceLinePayload
 
   """Updates a single \`Estimate\` using its globally unique id and a patch."""
   updateEstimateById(
@@ -25924,22 +25983,6 @@ type Mutation {
     input: DeleteTagInput!
   ): DeleteTagPayload
 
-  """Deletes a single \`TaxJurisdiction\` using its globally unique id."""
-  deleteTaxJurisdictionById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteTaxJurisdictionByIdInput!
-  ): DeleteTaxJurisdictionPayload
-
-  """Deletes a single \`TaxJurisdiction\` using a unique key."""
-  deleteTaxJurisdiction(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteTaxJurisdictionInput!
-  ): DeleteTaxJurisdictionPayload
-
   """Deletes a single \`Vehicle\` using its globally unique id."""
   deleteVehicleById(
     """
@@ -25987,6 +26030,22 @@ type Mutation {
     """
     input: DeleteImportProfileInput!
   ): DeleteImportProfilePayload
+
+  """Deletes a single \`TaxJurisdiction\` using its globally unique id."""
+  deleteTaxJurisdictionById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteTaxJurisdictionByIdInput!
+  ): DeleteTaxJurisdictionPayload
+
+  """Deletes a single \`TaxJurisdiction\` using a unique key."""
+  deleteTaxJurisdiction(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteTaxJurisdictionInput!
+  ): DeleteTaxJurisdictionPayload
 
   """Deletes a single \`JournalLine\` using its globally unique id."""
   deleteJournalLineById(
@@ -26280,22 +26339,6 @@ type Mutation {
     input: DeleteCreditMemoLineInput!
   ): DeleteCreditMemoLinePayload
 
-  """Deletes a single \`InvoiceLine\` using its globally unique id."""
-  deleteInvoiceLineById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteInvoiceLineByIdInput!
-  ): DeleteInvoiceLinePayload
-
-  """Deletes a single \`InvoiceLine\` using a unique key."""
-  deleteInvoiceLine(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteInvoiceLineInput!
-  ): DeleteInvoiceLinePayload
-
   """Deletes a single \`JournalEntry\` using its globally unique id."""
   deleteJournalEntryById(
     """
@@ -26359,6 +26402,22 @@ type Mutation {
     """
     input: DeleteDocumentInput!
   ): DeleteDocumentPayload
+
+  """Deletes a single \`InvoiceLine\` using its globally unique id."""
+  deleteInvoiceLineById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteInvoiceLineByIdInput!
+  ): DeleteInvoiceLinePayload
+
+  """Deletes a single \`InvoiceLine\` using a unique key."""
+  deleteInvoiceLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteInvoiceLineInput!
+  ): DeleteInvoiceLinePayload
 
   """Deletes a single \`Estimate\` using its globally unique id."""
   deleteEstimateById(
@@ -26953,53 +27012,6 @@ input TagInput {
   createdAt: Datetime
 }
 
-"""The output of our create \`TaxJurisdiction\` mutation."""
-type CreateTaxJurisdictionPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`TaxJurisdiction\` that was created by this mutation."""
-  taxJurisdiction: TaxJurisdiction
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`TaxJurisdiction\`. May be used by Relay 1."""
-  taxJurisdictionEdge(
-    """The method to use when ordering \`TaxJurisdiction\`."""
-    orderBy: [TaxJurisdictionOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): TaxJurisdictionEdge
-}
-
-"""All input for the create \`TaxJurisdiction\` mutation."""
-input CreateTaxJurisdictionInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The \`TaxJurisdiction\` to be created by this mutation."""
-  taxJurisdiction: TaxJurisdictionInput!
-}
-
-"""An input for mutations affecting \`TaxJurisdiction\`"""
-input TaxJurisdictionInput {
-  rowId: UUID
-  bookId: UUID!
-  name: String!
-  code: String
-  filingFrequency: String!
-  taxPayableAccountId: UUID!
-  createdAt: Datetime
-  rate: BigFloat
-}
-
 """The output of our create \`Vehicle\` mutation."""
 type CreateVehiclePayload {
   """
@@ -27138,6 +27150,54 @@ input ImportProfileInput {
   headerRows: String
   createdAt: Datetime
   updatedAt: Datetime
+}
+
+"""The output of our create \`TaxJurisdiction\` mutation."""
+type CreateTaxJurisdictionPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`TaxJurisdiction\` that was created by this mutation."""
+  taxJurisdiction: TaxJurisdiction
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`TaxJurisdiction\`. May be used by Relay 1."""
+  taxJurisdictionEdge(
+    """The method to use when ordering \`TaxJurisdiction\`."""
+    orderBy: [TaxJurisdictionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): TaxJurisdictionEdge
+}
+
+"""All input for the create \`TaxJurisdiction\` mutation."""
+input CreateTaxJurisdictionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`TaxJurisdiction\` to be created by this mutation."""
+  taxJurisdiction: TaxJurisdictionInput!
+}
+
+"""An input for mutations affecting \`TaxJurisdiction\`"""
+input TaxJurisdictionInput {
+  rowId: UUID
+  bookId: UUID!
+  name: String!
+  code: String
+  filingFrequency: String!
+  taxPayableAccountId: UUID!
+  createdAt: Datetime
+  rate: BigFloat
+  compound: Boolean
 }
 
 """The output of our create \`JournalLine\` mutation."""
@@ -28024,56 +28084,6 @@ input CreditMemoLineInput {
   inventoryItemId: UUID
 }
 
-"""The output of our create \`InvoiceLine\` mutation."""
-type CreateInvoiceLinePayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`InvoiceLine\` that was created by this mutation."""
-  invoiceLine: InvoiceLine
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`InvoiceLine\`. May be used by Relay 1."""
-  invoiceLineEdge(
-    """The method to use when ordering \`InvoiceLine\`."""
-    orderBy: [InvoiceLineOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): InvoiceLineEdge
-}
-
-"""All input for the create \`InvoiceLine\` mutation."""
-input CreateInvoiceLineInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The \`InvoiceLine\` to be created by this mutation."""
-  invoiceLine: InvoiceLineInput!
-}
-
-"""An input for mutations affecting \`InvoiceLine\`"""
-input InvoiceLineInput {
-  rowId: UUID
-  invoiceId: UUID!
-  description: String!
-  quantity: BigFloat
-  unitPrice: BigFloat
-  amount: BigFloat
-  incomeAccountId: UUID!
-  taxJurisdictionId: UUID
-  sortOrder: Int
-  inventoryItemId: UUID
-  discountPercent: BigFloat
-}
-
 """The output of our create \`JournalEntry\` mutation."""
 type CreateJournalEntryPayload {
   """
@@ -28273,6 +28283,57 @@ input DocumentInput {
   notes: String
   createdBy: String!
   createdAt: Datetime
+}
+
+"""The output of our create \`InvoiceLine\` mutation."""
+type CreateInvoiceLinePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`InvoiceLine\` that was created by this mutation."""
+  invoiceLine: InvoiceLine
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`InvoiceLine\`. May be used by Relay 1."""
+  invoiceLineEdge(
+    """The method to use when ordering \`InvoiceLine\`."""
+    orderBy: [InvoiceLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): InvoiceLineEdge
+}
+
+"""All input for the create \`InvoiceLine\` mutation."""
+input CreateInvoiceLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`InvoiceLine\` to be created by this mutation."""
+  invoiceLine: InvoiceLineInput!
+}
+
+"""An input for mutations affecting \`InvoiceLine\`"""
+input InvoiceLineInput {
+  rowId: UUID
+  invoiceId: UUID!
+  description: String!
+  quantity: BigFloat
+  unitPrice: BigFloat
+  amount: BigFloat
+  incomeAccountId: UUID!
+  taxJurisdictionId: UUID
+  sortOrder: Int
+  inventoryItemId: UUID
+  discountPercent: BigFloat
+  secondaryTaxJurisdictionId: UUID
 }
 
 """The output of our create \`Estimate\` mutation."""
@@ -29621,77 +29682,6 @@ input UpdateTagInput {
   patch: TagPatch!
 }
 
-"""The output of our update \`TaxJurisdiction\` mutation."""
-type UpdateTaxJurisdictionPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`TaxJurisdiction\` that was updated by this mutation."""
-  taxJurisdiction: TaxJurisdiction
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`TaxJurisdiction\`. May be used by Relay 1."""
-  taxJurisdictionEdge(
-    """The method to use when ordering \`TaxJurisdiction\`."""
-    orderBy: [TaxJurisdictionOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): TaxJurisdictionEdge
-}
-
-"""All input for the \`updateTaxJurisdictionById\` mutation."""
-input UpdateTaxJurisdictionByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`TaxJurisdiction\` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the \`TaxJurisdiction\` being updated.
-  """
-  patch: TaxJurisdictionPatch!
-}
-
-"""
-Represents an update to a \`TaxJurisdiction\`. Fields that are set will be updated.
-"""
-input TaxJurisdictionPatch {
-  rowId: UUID
-  bookId: UUID
-  name: String
-  code: String
-  filingFrequency: String
-  taxPayableAccountId: UUID
-  createdAt: Datetime
-  rate: BigFloat
-}
-
-"""All input for the \`updateTaxJurisdiction\` mutation."""
-input UpdateTaxJurisdictionInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the \`TaxJurisdiction\` being updated.
-  """
-  patch: TaxJurisdictionPatch!
-}
-
 """The output of our update \`Vehicle\` mutation."""
 type UpdateVehiclePayload {
   """
@@ -29902,6 +29892,78 @@ input UpdateImportProfileInput {
   An object where the defined keys will be set on the \`ImportProfile\` being updated.
   """
   patch: ImportProfilePatch!
+}
+
+"""The output of our update \`TaxJurisdiction\` mutation."""
+type UpdateTaxJurisdictionPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`TaxJurisdiction\` that was updated by this mutation."""
+  taxJurisdiction: TaxJurisdiction
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`TaxJurisdiction\`. May be used by Relay 1."""
+  taxJurisdictionEdge(
+    """The method to use when ordering \`TaxJurisdiction\`."""
+    orderBy: [TaxJurisdictionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): TaxJurisdictionEdge
+}
+
+"""All input for the \`updateTaxJurisdictionById\` mutation."""
+input UpdateTaxJurisdictionByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`TaxJurisdiction\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`TaxJurisdiction\` being updated.
+  """
+  patch: TaxJurisdictionPatch!
+}
+
+"""
+Represents an update to a \`TaxJurisdiction\`. Fields that are set will be updated.
+"""
+input TaxJurisdictionPatch {
+  rowId: UUID
+  bookId: UUID
+  name: String
+  code: String
+  filingFrequency: String
+  taxPayableAccountId: UUID
+  createdAt: Datetime
+  rate: BigFloat
+  compound: Boolean
+}
+
+"""All input for the \`updateTaxJurisdiction\` mutation."""
+input UpdateTaxJurisdictionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`TaxJurisdiction\` being updated.
+  """
+  patch: TaxJurisdictionPatch!
 }
 
 """The output of our update \`JournalLine\` mutation."""
@@ -31220,80 +31282,6 @@ input UpdateCreditMemoLineInput {
   patch: CreditMemoLinePatch!
 }
 
-"""The output of our update \`InvoiceLine\` mutation."""
-type UpdateInvoiceLinePayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`InvoiceLine\` that was updated by this mutation."""
-  invoiceLine: InvoiceLine
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`InvoiceLine\`. May be used by Relay 1."""
-  invoiceLineEdge(
-    """The method to use when ordering \`InvoiceLine\`."""
-    orderBy: [InvoiceLineOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): InvoiceLineEdge
-}
-
-"""All input for the \`updateInvoiceLineById\` mutation."""
-input UpdateInvoiceLineByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`InvoiceLine\` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the \`InvoiceLine\` being updated.
-  """
-  patch: InvoiceLinePatch!
-}
-
-"""
-Represents an update to a \`InvoiceLine\`. Fields that are set will be updated.
-"""
-input InvoiceLinePatch {
-  rowId: UUID
-  invoiceId: UUID
-  description: String
-  quantity: BigFloat
-  unitPrice: BigFloat
-  amount: BigFloat
-  incomeAccountId: UUID
-  taxJurisdictionId: UUID
-  sortOrder: Int
-  inventoryItemId: UUID
-  discountPercent: BigFloat
-}
-
-"""All input for the \`updateInvoiceLine\` mutation."""
-input UpdateInvoiceLineInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the \`InvoiceLine\` being updated.
-  """
-  patch: InvoiceLinePatch!
-}
-
 """The output of our update \`JournalEntry\` mutation."""
 type UpdateJournalEntryPayload {
   """
@@ -31589,6 +31577,81 @@ input UpdateDocumentInput {
   An object where the defined keys will be set on the \`Document\` being updated.
   """
   patch: DocumentPatch!
+}
+
+"""The output of our update \`InvoiceLine\` mutation."""
+type UpdateInvoiceLinePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`InvoiceLine\` that was updated by this mutation."""
+  invoiceLine: InvoiceLine
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`InvoiceLine\`. May be used by Relay 1."""
+  invoiceLineEdge(
+    """The method to use when ordering \`InvoiceLine\`."""
+    orderBy: [InvoiceLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): InvoiceLineEdge
+}
+
+"""All input for the \`updateInvoiceLineById\` mutation."""
+input UpdateInvoiceLineByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`InvoiceLine\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`InvoiceLine\` being updated.
+  """
+  patch: InvoiceLinePatch!
+}
+
+"""
+Represents an update to a \`InvoiceLine\`. Fields that are set will be updated.
+"""
+input InvoiceLinePatch {
+  rowId: UUID
+  invoiceId: UUID
+  description: String
+  quantity: BigFloat
+  unitPrice: BigFloat
+  amount: BigFloat
+  incomeAccountId: UUID
+  taxJurisdictionId: UUID
+  sortOrder: Int
+  inventoryItemId: UUID
+  discountPercent: BigFloat
+  secondaryTaxJurisdictionId: UUID
+}
+
+"""All input for the \`updateInvoiceLine\` mutation."""
+input UpdateInvoiceLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`InvoiceLine\` being updated.
+  """
+  patch: InvoiceLinePatch!
 }
 
 """The output of our update \`Estimate\` mutation."""
@@ -33133,54 +33196,6 @@ input DeleteTagInput {
   rowId: UUID!
 }
 
-"""The output of our delete \`TaxJurisdiction\` mutation."""
-type DeleteTaxJurisdictionPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`TaxJurisdiction\` that was deleted by this mutation."""
-  taxJurisdiction: TaxJurisdiction
-  deletedTaxJurisdictionId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`TaxJurisdiction\`. May be used by Relay 1."""
-  taxJurisdictionEdge(
-    """The method to use when ordering \`TaxJurisdiction\`."""
-    orderBy: [TaxJurisdictionOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): TaxJurisdictionEdge
-}
-
-"""All input for the \`deleteTaxJurisdictionById\` mutation."""
-input DeleteTaxJurisdictionByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`TaxJurisdiction\` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the \`deleteTaxJurisdiction\` mutation."""
-input DeleteTaxJurisdictionInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete \`Vehicle\` mutation."""
 type DeleteVehiclePayload {
   """
@@ -33317,6 +33332,54 @@ input DeleteImportProfileByIdInput {
 
 """All input for the \`deleteImportProfile\` mutation."""
 input DeleteImportProfileInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`TaxJurisdiction\` mutation."""
+type DeleteTaxJurisdictionPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`TaxJurisdiction\` that was deleted by this mutation."""
+  taxJurisdiction: TaxJurisdiction
+  deletedTaxJurisdictionId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`TaxJurisdiction\`. May be used by Relay 1."""
+  taxJurisdictionEdge(
+    """The method to use when ordering \`TaxJurisdiction\`."""
+    orderBy: [TaxJurisdictionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): TaxJurisdictionEdge
+}
+
+"""All input for the \`deleteTaxJurisdictionById\` mutation."""
+input DeleteTaxJurisdictionByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`TaxJurisdiction\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteTaxJurisdiction\` mutation."""
+input DeleteTaxJurisdictionInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -34189,54 +34252,6 @@ input DeleteCreditMemoLineInput {
   rowId: UUID!
 }
 
-"""The output of our delete \`InvoiceLine\` mutation."""
-type DeleteInvoiceLinePayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`InvoiceLine\` that was deleted by this mutation."""
-  invoiceLine: InvoiceLine
-  deletedInvoiceLineId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`InvoiceLine\`. May be used by Relay 1."""
-  invoiceLineEdge(
-    """The method to use when ordering \`InvoiceLine\`."""
-    orderBy: [InvoiceLineOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): InvoiceLineEdge
-}
-
-"""All input for the \`deleteInvoiceLineById\` mutation."""
-input DeleteInvoiceLineByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`InvoiceLine\` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the \`deleteInvoiceLine\` mutation."""
-input DeleteInvoiceLineInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete \`JournalEntry\` mutation."""
 type DeleteJournalEntryPayload {
   """
@@ -34421,6 +34436,54 @@ input DeleteDocumentByIdInput {
 
 """All input for the \`deleteDocument\` mutation."""
 input DeleteDocumentInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`InvoiceLine\` mutation."""
+type DeleteInvoiceLinePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`InvoiceLine\` that was deleted by this mutation."""
+  invoiceLine: InvoiceLine
+  deletedInvoiceLineId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`InvoiceLine\`. May be used by Relay 1."""
+  invoiceLineEdge(
+    """The method to use when ordering \`InvoiceLine\`."""
+    orderBy: [InvoiceLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): InvoiceLineEdge
+}
+
+"""All input for the \`deleteInvoiceLineById\` mutation."""
+input DeleteInvoiceLineByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`InvoiceLine\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteInvoiceLine\` mutation."""
+input DeleteInvoiceLineInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -42837,6 +42900,14 @@ export const objects = {
       invoice: InvoiceLine_invoicePlan,
       invoiceId: InvoiceLine_invoiceIdPlan,
       rowId: JournalLineProject_rowIdPlan,
+      secondaryTaxJurisdiction($record) {
+        return resource_tax_jurisdictionPgResource.get({
+          id: $record.get("secondary_tax_jurisdiction_id")
+        });
+      },
+      secondaryTaxJurisdictionId($record) {
+        return $record.get("secondary_tax_jurisdiction_id");
+      },
       sortOrder: BillLine_sortOrderPlan,
       taxJurisdiction: JournalLine_taxJurisdictionPlan,
       taxJurisdictionId: JournalLine_taxJurisdictionIdPlan,
@@ -48656,6 +48727,12 @@ export const inputObjects = {
       rowId(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("rowId", "id", spec_invoiceLine.attributes.id, queryBuilder, value);
       },
+      secondaryTaxJurisdiction($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_tax_jurisdictionPgResource, taxJurisdictionIdentifier, registryConfig.pgRelations.invoiceLine.taxJurisdictionByMySecondaryTaxJurisdictionId.localAttributes, registryConfig.pgRelations.invoiceLine.taxJurisdictionByMySecondaryTaxJurisdictionId.remoteAttributes, $where, value);
+      },
+      secondaryTaxJurisdictionExists($where, value) {
+        return pgConnectionFilterApplyForwardRelationExists(resource_tax_jurisdictionPgResource, taxJurisdictionIdentifier, registryConfig.pgRelations.invoiceLine.taxJurisdictionByMySecondaryTaxJurisdictionId.localAttributes, registryConfig.pgRelations.invoiceLine.taxJurisdictionByMySecondaryTaxJurisdictionId.remoteAttributes, $where, value);
+      },
       taxJurisdiction($where, value) {
         return pgConnectionFilterApplySingleRelation(resource_tax_jurisdictionPgResource, taxJurisdictionIdentifier, registryConfig.pgRelations.invoiceLine.taxJurisdictionByMyTaxJurisdictionId.localAttributes, registryConfig.pgRelations.invoiceLine.taxJurisdictionByMyTaxJurisdictionId.remoteAttributes, $where, value);
       },
@@ -48675,6 +48752,7 @@ export const inputObjects = {
       invoiceId: CreditMemoApplicationInput_invoiceIdApply,
       quantity: InventoryTransactionInput_quantityApply,
       rowId: JournalLineProjectInput_rowIdApply,
+      secondaryTaxJurisdictionId: InvoiceLineInput_secondaryTaxJurisdictionIdApply,
       sortOrder: EstimateLineInput_sortOrderApply,
       taxJurisdictionId: JournalLineInput_taxJurisdictionIdApply,
       unitPrice: EstimateLineInput_unitPriceApply
@@ -48691,6 +48769,7 @@ export const inputObjects = {
       invoiceId: CreditMemoApplicationInput_invoiceIdApply,
       quantity: InventoryTransactionInput_quantityApply,
       rowId: JournalLineProjectInput_rowIdApply,
+      secondaryTaxJurisdictionId: InvoiceLineInput_secondaryTaxJurisdictionIdApply,
       sortOrder: EstimateLineInput_sortOrderApply,
       taxJurisdictionId: JournalLineInput_taxJurisdictionIdApply,
       unitPrice: EstimateLineInput_unitPriceApply
@@ -50197,6 +50276,7 @@ export const inputObjects = {
     plans: {
       bookId: TagGroupInput_bookIdApply,
       code: TagInput_codeApply,
+      compound: TaxJurisdictionInput_compoundApply,
       createdAt: TagGroupInput_createdAtApply,
       filingFrequency: TaxJurisdictionInput_filingFrequencyApply,
       name: TagGroupInput_nameApply,
@@ -50210,6 +50290,7 @@ export const inputObjects = {
     plans: {
       bookId: TagGroupInput_bookIdApply,
       code: TagInput_codeApply,
+      compound: TaxJurisdictionInput_compoundApply,
       createdAt: TagGroupInput_createdAtApply,
       filingFrequency: TaxJurisdictionInput_filingFrequencyApply,
       name: TagGroupInput_nameApply,

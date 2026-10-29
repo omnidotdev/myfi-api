@@ -35,11 +35,18 @@ export const applyLineDiscount = (
   return fromUnits(Math.round(toUnits(amount) * (1 - fraction)));
 };
 
+/** One tax charged on a line, attributed to a jurisdiction's payable account */
+export interface LineTax {
+  amount: number;
+  taxPayableAccountId: string;
+  taxJurisdictionId?: string | null;
+}
+
 /** A priced invoice line, ready for totaling and posting */
 export interface PricedLine {
   /** Pre-tax extended amount (quantity times unit price) */
   amount: number;
-  /** Tax charged on this line (0 when untaxed) */
+  /** Total tax charged on this line (0 when untaxed) */
   taxAmount: number;
   /** Income account the line's revenue credits */
   incomeAccountId: string;
@@ -47,7 +54,31 @@ export interface PricedLine {
   taxPayableAccountId?: string | null;
   /** Jurisdiction the line's tax belongs to, tagged onto the tax posting */
   taxJurisdictionId?: string | null;
+  /**
+   * Per-tax breakdown when a line carries more than one tax (e.g. a compound
+   * tax stacking on a base tax). When present it is authoritative for posting
+   * and totals; when absent the single taxAmount/taxPayableAccountId is used
+   */
+  taxes?: LineTax[];
 }
+
+/** The line's taxes, from the explicit breakdown or the legacy single tax */
+const normalizeLineTaxes = (line: PricedLine): LineTax[] => {
+  if (line.taxes && line.taxes.length > 0) return line.taxes;
+  if (toUnits(line.taxAmount) !== 0) {
+    if (!line.taxPayableAccountId) {
+      throw new Error("A taxed line has no tax payable account");
+    }
+    return [
+      {
+        amount: line.taxAmount,
+        taxPayableAccountId: line.taxPayableAccountId,
+        taxJurisdictionId: line.taxJurisdictionId ?? null,
+      },
+    ];
+  }
+  return [];
+};
 
 interface InvoiceTotals {
   subtotal: number;
@@ -61,7 +92,13 @@ export const computeInvoiceTotals = (lines: PricedLine[]): InvoiceTotals => {
   let taxUnits = 0;
   for (const line of lines) {
     subtotalUnits += toUnits(line.amount);
-    taxUnits += toUnits(line.taxAmount);
+    // Totals only need amounts, not payable accounts: sum the breakdown when
+    // present, otherwise the single taxAmount
+    if (line.taxes && line.taxes.length > 0) {
+      for (const tax of line.taxes) taxUnits += toUnits(tax.amount);
+    } else {
+      taxUnits += toUnits(line.taxAmount);
+    }
   }
   return {
     subtotal: fromUnits(subtotalUnits),
@@ -114,19 +151,17 @@ export const buildInvoicePostings = (opts: {
     );
     debitUnits += amount;
 
-    const tax = toUnits(line.taxAmount);
-    if (tax !== 0) {
-      if (!line.taxPayableAccountId) {
-        throw new Error("A taxed line has no tax payable account");
-      }
-      const jurisdictionId = line.taxJurisdictionId ?? null;
-      const key = `${line.taxPayableAccountId}\u0000${jurisdictionId ?? ""}`;
+    for (const lineTax of normalizeLineTaxes(line)) {
+      const tax = toUnits(lineTax.amount);
+      if (tax === 0) continue;
+      const jurisdictionId = lineTax.taxJurisdictionId ?? null;
+      const key = `${lineTax.taxPayableAccountId}\u0000${jurisdictionId ?? ""}`;
       const existing = taxUnits.get(key);
       if (existing) {
         existing.units += tax;
       } else {
         taxUnits.set(key, {
-          accountId: line.taxPayableAccountId,
+          accountId: lineTax.taxPayableAccountId,
           taxJurisdictionId: jurisdictionId,
           units: tax,
         });

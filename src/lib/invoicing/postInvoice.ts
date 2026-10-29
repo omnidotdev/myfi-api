@@ -1,4 +1,5 @@
 import { and, asc, eq, inArray } from "drizzle-orm";
+import { alias } from "drizzle-orm/pg-core";
 
 import { isPeriodLocked } from "lib/accounting/periodLock";
 import { dbPool } from "lib/db/db";
@@ -24,7 +25,7 @@ import {
 } from "./invoicePosting";
 
 import type { InferInsertModel } from "drizzle-orm";
-import type { PricedLine } from "./invoicePosting";
+import type { LineTax, PricedLine } from "./invoicePosting";
 
 /** Journal-entry source marking a posted customer invoice */
 const INVOICE_SOURCE = "invoice";
@@ -84,7 +85,9 @@ export const postInvoice = async (
     throw new Error("Cannot post an invoice into a closed period");
   }
 
-  // Lines joined to their tax jurisdiction for the rate and payable account
+  // Lines joined to their primary and (optional) secondary tax jurisdiction for
+  // the rates and payable accounts
+  const secondaryTax = alias(taxJurisdictionTable, "secondary_tax");
   const lineRows = await dbPool
     .select({
       quantity: invoiceLineTable.quantity,
@@ -95,11 +98,19 @@ export const postInvoice = async (
       discountPercent: invoiceLineTable.discountPercent,
       taxRate: taxJurisdictionTable.rate,
       taxPayableAccountId: taxJurisdictionTable.taxPayableAccountId,
+      secondaryTaxJurisdictionId: invoiceLineTable.secondaryTaxJurisdictionId,
+      secondaryRate: secondaryTax.rate,
+      secondaryPayableAccountId: secondaryTax.taxPayableAccountId,
+      secondaryCompound: secondaryTax.compound,
     })
     .from(invoiceLineTable)
     .leftJoin(
       taxJurisdictionTable,
       eq(invoiceLineTable.taxJurisdictionId, taxJurisdictionTable.id),
+    )
+    .leftJoin(
+      secondaryTax,
+      eq(invoiceLineTable.secondaryTaxJurisdictionId, secondaryTax.id),
     )
     .where(eq(invoiceLineTable.invoiceId, invoiceId));
 
@@ -136,13 +147,36 @@ export const postInvoice = async (
       row.discountPercent === null ? null : Number(row.discountPercent),
     );
     const rate = row.taxRate === null ? 0 : Number(row.taxRate);
-    const taxAmount = rate > 0 ? computeLineTax(amount, rate) : 0;
+    const taxes: LineTax[] = [];
+    if (rate > 0 && row.taxPayableAccountId) {
+      taxes.push({
+        amount: computeLineTax(amount, rate),
+        taxPayableAccountId: row.taxPayableAccountId,
+        taxJurisdictionId: row.taxJurisdictionId,
+      });
+    }
+    const secondaryRate =
+      row.secondaryRate === null ? 0 : Number(row.secondaryRate);
+    if (secondaryRate > 0 && row.secondaryPayableAccountId) {
+      // A compound secondary tax is charged on the amount plus the primary tax
+      // (tax-on-tax); otherwise it is a second flat tax on the amount alone
+      const base = row.secondaryCompound ? amount + (taxes[0]?.amount ?? 0) : amount;
+      taxes.push({
+        amount: computeLineTax(base, secondaryRate),
+        taxPayableAccountId: row.secondaryPayableAccountId,
+        taxJurisdictionId: row.secondaryTaxJurisdictionId,
+      });
+    }
+    const taxAmount = taxes.reduce((sum, t) => sum + t.amount, 0);
     return {
       amount,
       taxAmount,
       incomeAccountId: row.incomeAccountId,
       taxPayableAccountId: row.taxPayableAccountId,
       taxJurisdictionId: row.taxJurisdictionId,
+      // Only carry the breakdown when there is a second tax; a single tax uses
+      // the legacy fields unchanged
+      taxes: taxes.length > 1 ? taxes : undefined,
     };
   });
 

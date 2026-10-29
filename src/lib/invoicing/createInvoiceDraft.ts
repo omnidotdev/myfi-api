@@ -15,6 +15,8 @@ interface DraftLineInput {
   unitPrice: number;
   incomeAccountId: string;
   taxJurisdictionId?: string | null;
+  /** optional second tax on the line (stacks on the primary when compound) */
+  secondaryTaxJurisdictionId?: string | null;
   /** optional line discount as a fraction (0.1 = 10% off), applied before tax */
   discountPercent?: number | null;
   /** optional inventory item this line sells (drives auto-COGS on posting) */
@@ -118,6 +120,7 @@ export const createInvoiceDraft = async (
           line.discountPercent != null ? line.discountPercent.toFixed(6) : null,
         incomeAccountId: line.incomeAccountId,
         taxJurisdictionId: line.taxJurisdictionId ?? null,
+        secondaryTaxJurisdictionId: line.secondaryTaxJurisdictionId ?? null,
         inventoryItemId: line.inventoryItemId ?? null,
         sortOrder: line.sortOrder,
       } satisfies InferInsertModel<typeof invoiceLineTable>);

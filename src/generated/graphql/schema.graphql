@@ -41,9 +41,6 @@ type Query implements Node {
   """Get a single `Tag`."""
   tag(rowId: UUID!): Tag
 
-  """Get a single `TaxJurisdiction`."""
-  taxJurisdiction(rowId: UUID!): TaxJurisdiction
-
   """Get a single `Vehicle`."""
   vehicle(rowId: UUID!): Vehicle
 
@@ -52,6 +49,9 @@ type Query implements Node {
 
   """Get a single `ImportProfile`."""
   importProfile(rowId: UUID!): ImportProfile
+
+  """Get a single `TaxJurisdiction`."""
+  taxJurisdiction(rowId: UUID!): TaxJurisdiction
 
   """Get a single `JournalLine`."""
   journalLine(rowId: UUID!): JournalLine
@@ -107,9 +107,6 @@ type Query implements Node {
   """Get a single `CreditMemoLine`."""
   creditMemoLine(rowId: UUID!): CreditMemoLine
 
-  """Get a single `InvoiceLine`."""
-  invoiceLine(rowId: UUID!): InvoiceLine
-
   """Get a single `JournalEntry`."""
   journalEntry(rowId: UUID!): JournalEntry
 
@@ -121,6 +118,9 @@ type Query implements Node {
 
   """Get a single `Document`."""
   document(rowId: UUID!): Document
+
+  """Get a single `InvoiceLine`."""
+  invoiceLine(rowId: UUID!): InvoiceLine
 
   """Get a single `Estimate`."""
   estimate(rowId: UUID!): Estimate
@@ -227,14 +227,6 @@ type Query implements Node {
     id: ID!
   ): Tag
 
-  """Reads a single `TaxJurisdiction` using its globally unique `ID`."""
-  taxJurisdictionById(
-    """
-    The globally unique `ID` to be used in selecting a single `TaxJurisdiction`.
-    """
-    id: ID!
-  ): TaxJurisdiction
-
   """Reads a single `Vehicle` using its globally unique `ID`."""
   vehicleById(
     """The globally unique `ID` to be used in selecting a single `Vehicle`."""
@@ -256,6 +248,14 @@ type Query implements Node {
     """
     id: ID!
   ): ImportProfile
+
+  """Reads a single `TaxJurisdiction` using its globally unique `ID`."""
+  taxJurisdictionById(
+    """
+    The globally unique `ID` to be used in selecting a single `TaxJurisdiction`.
+    """
+    id: ID!
+  ): TaxJurisdiction
 
   """Reads a single `JournalLine` using its globally unique `ID`."""
   journalLineById(
@@ -397,14 +397,6 @@ type Query implements Node {
     id: ID!
   ): CreditMemoLine
 
-  """Reads a single `InvoiceLine` using its globally unique `ID`."""
-  invoiceLineById(
-    """
-    The globally unique `ID` to be used in selecting a single `InvoiceLine`.
-    """
-    id: ID!
-  ): InvoiceLine
-
   """Reads a single `JournalEntry` using its globally unique `ID`."""
   journalEntryById(
     """
@@ -432,6 +424,14 @@ type Query implements Node {
     """The globally unique `ID` to be used in selecting a single `Document`."""
     id: ID!
   ): Document
+
+  """Reads a single `InvoiceLine` using its globally unique `ID`."""
+  invoiceLineById(
+    """
+    The globally unique `ID` to be used in selecting a single `InvoiceLine`.
+    """
+    id: ID!
+  ): InvoiceLine
 
   """Reads a single `Estimate` using its globally unique `ID`."""
   estimateById(
@@ -809,40 +809,6 @@ type Query implements Node {
     orderBy: [TagOrderBy!] = [PRIMARY_KEY_ASC]
   ): TagConnection
 
-  """Reads and enables pagination through a set of `TaxJurisdiction`."""
-  taxJurisdictions(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: TaxJurisdictionCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: TaxJurisdictionFilter
-
-    """The method to use when ordering `TaxJurisdiction`."""
-    orderBy: [TaxJurisdictionOrderBy!] = [PRIMARY_KEY_ASC]
-  ): TaxJurisdictionConnection
-
   """Reads and enables pagination through a set of `Vehicle`."""
   vehicles(
     """Only read the first `n` values of the set."""
@@ -944,6 +910,40 @@ type Query implements Node {
     """The method to use when ordering `ImportProfile`."""
     orderBy: [ImportProfileOrderBy!] = [PRIMARY_KEY_ASC]
   ): ImportProfileConnection
+
+  """Reads and enables pagination through a set of `TaxJurisdiction`."""
+  taxJurisdictions(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TaxJurisdictionCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: TaxJurisdictionFilter
+
+    """The method to use when ordering `TaxJurisdiction`."""
+    orderBy: [TaxJurisdictionOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TaxJurisdictionConnection
 
   """Reads and enables pagination through a set of `JournalLine`."""
   journalLines(
@@ -1561,40 +1561,6 @@ type Query implements Node {
     orderBy: [CreditMemoLineOrderBy!] = [PRIMARY_KEY_ASC]
   ): CreditMemoLineConnection
 
-  """Reads and enables pagination through a set of `InvoiceLine`."""
-  invoiceLines(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: InvoiceLineCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: InvoiceLineFilter
-
-    """The method to use when ordering `InvoiceLine`."""
-    orderBy: [InvoiceLineOrderBy!] = [PRIMARY_KEY_ASC]
-  ): InvoiceLineConnection
-
   """Reads and enables pagination through a set of `JournalEntry`."""
   journalEntries(
     """Only read the first `n` values of the set."""
@@ -1730,6 +1696,40 @@ type Query implements Node {
     """The method to use when ordering `Document`."""
     orderBy: [DocumentOrderBy!] = [PRIMARY_KEY_ASC]
   ): DocumentConnection
+
+  """Reads and enables pagination through a set of `InvoiceLine`."""
+  invoiceLines(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: InvoiceLineCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: InvoiceLineFilter
+
+    """The method to use when ordering `InvoiceLine`."""
+    orderBy: [InvoiceLineOrderBy!] = [PRIMARY_KEY_ASC]
+  ): InvoiceLineConnection
 
   """Reads and enables pagination through a set of `Estimate`."""
   estimates(
@@ -6535,6 +6535,12 @@ input InvoiceLineFilter {
   """Filter by the object’s `invoice` relation."""
   invoice: InvoiceFilter
 
+  """Filter by the object’s `secondaryTaxJurisdiction` relation."""
+  secondaryTaxJurisdiction: TaxJurisdictionFilter
+
+  """A related `secondaryTaxJurisdiction` exists."""
+  secondaryTaxJurisdictionExists: Boolean
+
   """Filter by the object’s `taxJurisdiction` relation."""
   taxJurisdiction: TaxJurisdictionFilter
 
@@ -8147,6 +8153,7 @@ type TaxJurisdiction implements Node {
   taxPayableAccountId: UUID!
   createdAt: Datetime
   rate: BigFloat
+  compound: Boolean!
 
   """Reads a single `Book` that is related to this `TaxJurisdiction`."""
   book: Book
@@ -10774,6 +10781,7 @@ type InvoiceLine implements Node {
   sortOrder: Int!
   inventoryItemId: UUID
   discountPercent: BigFloat
+  secondaryTaxJurisdictionId: UUID
 
   """Reads a single `Account` that is related to this `InvoiceLine`."""
   incomeAccount: Account
@@ -10783,6 +10791,11 @@ type InvoiceLine implements Node {
 
   """Reads a single `Invoice` that is related to this `InvoiceLine`."""
   invoice: Invoice
+
+  """
+  Reads a single `TaxJurisdiction` that is related to this `InvoiceLine`.
+  """
+  secondaryTaxJurisdiction: TaxJurisdiction
 
   """
   Reads a single `TaxJurisdiction` that is related to this `InvoiceLine`.
@@ -12261,14 +12274,6 @@ type Mutation {
     input: CreateTagInput!
   ): CreateTagPayload
 
-  """Creates a single `TaxJurisdiction`."""
-  createTaxJurisdiction(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateTaxJurisdictionInput!
-  ): CreateTaxJurisdictionPayload
-
   """Creates a single `Vehicle`."""
   createVehicle(
     """
@@ -12292,6 +12297,14 @@ type Mutation {
     """
     input: CreateImportProfileInput!
   ): CreateImportProfilePayload
+
+  """Creates a single `TaxJurisdiction`."""
+  createTaxJurisdiction(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateTaxJurisdictionInput!
+  ): CreateTaxJurisdictionPayload
 
   """Creates a single `JournalLine`."""
   createJournalLine(
@@ -12437,14 +12450,6 @@ type Mutation {
     input: CreateCreditMemoLineInput!
   ): CreateCreditMemoLinePayload
 
-  """Creates a single `InvoiceLine`."""
-  createInvoiceLine(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateInvoiceLineInput!
-  ): CreateInvoiceLinePayload
-
   """Creates a single `JournalEntry`."""
   createJournalEntry(
     """
@@ -12476,6 +12481,14 @@ type Mutation {
     """
     input: CreateDocumentInput!
   ): CreateDocumentPayload
+
+  """Creates a single `InvoiceLine`."""
+  createInvoiceLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateInvoiceLineInput!
+  ): CreateInvoiceLinePayload
 
   """Creates a single `Estimate`."""
   createEstimate(
@@ -12739,24 +12752,6 @@ type Mutation {
     input: UpdateTagInput!
   ): UpdateTagPayload
 
-  """
-  Updates a single `TaxJurisdiction` using its globally unique id and a patch.
-  """
-  updateTaxJurisdictionById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateTaxJurisdictionByIdInput!
-  ): UpdateTaxJurisdictionPayload
-
-  """Updates a single `TaxJurisdiction` using a unique key and a patch."""
-  updateTaxJurisdiction(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateTaxJurisdictionInput!
-  ): UpdateTaxJurisdictionPayload
-
   """Updates a single `Vehicle` using its globally unique id and a patch."""
   updateVehicleById(
     """
@@ -12808,6 +12803,24 @@ type Mutation {
     """
     input: UpdateImportProfileInput!
   ): UpdateImportProfilePayload
+
+  """
+  Updates a single `TaxJurisdiction` using its globally unique id and a patch.
+  """
+  updateTaxJurisdictionById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateTaxJurisdictionByIdInput!
+  ): UpdateTaxJurisdictionPayload
+
+  """Updates a single `TaxJurisdiction` using a unique key and a patch."""
+  updateTaxJurisdiction(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateTaxJurisdictionInput!
+  ): UpdateTaxJurisdictionPayload
 
   """
   Updates a single `JournalLine` using its globally unique id and a patch.
@@ -13132,24 +13145,6 @@ type Mutation {
   ): UpdateCreditMemoLinePayload
 
   """
-  Updates a single `InvoiceLine` using its globally unique id and a patch.
-  """
-  updateInvoiceLineById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateInvoiceLineByIdInput!
-  ): UpdateInvoiceLinePayload
-
-  """Updates a single `InvoiceLine` using a unique key and a patch."""
-  updateInvoiceLine(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateInvoiceLineInput!
-  ): UpdateInvoiceLinePayload
-
-  """
   Updates a single `JournalEntry` using its globally unique id and a patch.
   """
   updateJournalEntryById(
@@ -13216,6 +13211,24 @@ type Mutation {
     """
     input: UpdateDocumentInput!
   ): UpdateDocumentPayload
+
+  """
+  Updates a single `InvoiceLine` using its globally unique id and a patch.
+  """
+  updateInvoiceLineById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateInvoiceLineByIdInput!
+  ): UpdateInvoiceLinePayload
+
+  """Updates a single `InvoiceLine` using a unique key and a patch."""
+  updateInvoiceLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateInvoiceLineInput!
+  ): UpdateInvoiceLinePayload
 
   """Updates a single `Estimate` using its globally unique id and a patch."""
   updateEstimateById(
@@ -13601,22 +13614,6 @@ type Mutation {
     input: DeleteTagInput!
   ): DeleteTagPayload
 
-  """Deletes a single `TaxJurisdiction` using its globally unique id."""
-  deleteTaxJurisdictionById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteTaxJurisdictionByIdInput!
-  ): DeleteTaxJurisdictionPayload
-
-  """Deletes a single `TaxJurisdiction` using a unique key."""
-  deleteTaxJurisdiction(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteTaxJurisdictionInput!
-  ): DeleteTaxJurisdictionPayload
-
   """Deletes a single `Vehicle` using its globally unique id."""
   deleteVehicleById(
     """
@@ -13664,6 +13661,22 @@ type Mutation {
     """
     input: DeleteImportProfileInput!
   ): DeleteImportProfilePayload
+
+  """Deletes a single `TaxJurisdiction` using its globally unique id."""
+  deleteTaxJurisdictionById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteTaxJurisdictionByIdInput!
+  ): DeleteTaxJurisdictionPayload
+
+  """Deletes a single `TaxJurisdiction` using a unique key."""
+  deleteTaxJurisdiction(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteTaxJurisdictionInput!
+  ): DeleteTaxJurisdictionPayload
 
   """Deletes a single `JournalLine` using its globally unique id."""
   deleteJournalLineById(
@@ -13957,22 +13970,6 @@ type Mutation {
     input: DeleteCreditMemoLineInput!
   ): DeleteCreditMemoLinePayload
 
-  """Deletes a single `InvoiceLine` using its globally unique id."""
-  deleteInvoiceLineById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteInvoiceLineByIdInput!
-  ): DeleteInvoiceLinePayload
-
-  """Deletes a single `InvoiceLine` using a unique key."""
-  deleteInvoiceLine(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteInvoiceLineInput!
-  ): DeleteInvoiceLinePayload
-
   """Deletes a single `JournalEntry` using its globally unique id."""
   deleteJournalEntryById(
     """
@@ -14036,6 +14033,22 @@ type Mutation {
     """
     input: DeleteDocumentInput!
   ): DeleteDocumentPayload
+
+  """Deletes a single `InvoiceLine` using its globally unique id."""
+  deleteInvoiceLineById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteInvoiceLineByIdInput!
+  ): DeleteInvoiceLinePayload
+
+  """Deletes a single `InvoiceLine` using a unique key."""
+  deleteInvoiceLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteInvoiceLineInput!
+  ): DeleteInvoiceLinePayload
 
   """Deletes a single `Estimate` using its globally unique id."""
   deleteEstimateById(
@@ -14630,53 +14643,6 @@ input TagInput {
   createdAt: Datetime
 }
 
-"""The output of our create `TaxJurisdiction` mutation."""
-type CreateTaxJurisdictionPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `TaxJurisdiction` that was created by this mutation."""
-  taxJurisdiction: TaxJurisdiction
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `TaxJurisdiction`. May be used by Relay 1."""
-  taxJurisdictionEdge(
-    """The method to use when ordering `TaxJurisdiction`."""
-    orderBy: [TaxJurisdictionOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): TaxJurisdictionEdge
-}
-
-"""All input for the create `TaxJurisdiction` mutation."""
-input CreateTaxJurisdictionInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `TaxJurisdiction` to be created by this mutation."""
-  taxJurisdiction: TaxJurisdictionInput!
-}
-
-"""An input for mutations affecting `TaxJurisdiction`"""
-input TaxJurisdictionInput {
-  rowId: UUID
-  bookId: UUID!
-  name: String!
-  code: String
-  filingFrequency: String!
-  taxPayableAccountId: UUID!
-  createdAt: Datetime
-  rate: BigFloat
-}
-
 """The output of our create `Vehicle` mutation."""
 type CreateVehiclePayload {
   """
@@ -14815,6 +14781,54 @@ input ImportProfileInput {
   headerRows: String
   createdAt: Datetime
   updatedAt: Datetime
+}
+
+"""The output of our create `TaxJurisdiction` mutation."""
+type CreateTaxJurisdictionPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `TaxJurisdiction` that was created by this mutation."""
+  taxJurisdiction: TaxJurisdiction
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `TaxJurisdiction`. May be used by Relay 1."""
+  taxJurisdictionEdge(
+    """The method to use when ordering `TaxJurisdiction`."""
+    orderBy: [TaxJurisdictionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): TaxJurisdictionEdge
+}
+
+"""All input for the create `TaxJurisdiction` mutation."""
+input CreateTaxJurisdictionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `TaxJurisdiction` to be created by this mutation."""
+  taxJurisdiction: TaxJurisdictionInput!
+}
+
+"""An input for mutations affecting `TaxJurisdiction`"""
+input TaxJurisdictionInput {
+  rowId: UUID
+  bookId: UUID!
+  name: String!
+  code: String
+  filingFrequency: String!
+  taxPayableAccountId: UUID!
+  createdAt: Datetime
+  rate: BigFloat
+  compound: Boolean
 }
 
 """The output of our create `JournalLine` mutation."""
@@ -15701,56 +15715,6 @@ input CreditMemoLineInput {
   inventoryItemId: UUID
 }
 
-"""The output of our create `InvoiceLine` mutation."""
-type CreateInvoiceLinePayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `InvoiceLine` that was created by this mutation."""
-  invoiceLine: InvoiceLine
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `InvoiceLine`. May be used by Relay 1."""
-  invoiceLineEdge(
-    """The method to use when ordering `InvoiceLine`."""
-    orderBy: [InvoiceLineOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): InvoiceLineEdge
-}
-
-"""All input for the create `InvoiceLine` mutation."""
-input CreateInvoiceLineInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `InvoiceLine` to be created by this mutation."""
-  invoiceLine: InvoiceLineInput!
-}
-
-"""An input for mutations affecting `InvoiceLine`"""
-input InvoiceLineInput {
-  rowId: UUID
-  invoiceId: UUID!
-  description: String!
-  quantity: BigFloat
-  unitPrice: BigFloat
-  amount: BigFloat
-  incomeAccountId: UUID!
-  taxJurisdictionId: UUID
-  sortOrder: Int
-  inventoryItemId: UUID
-  discountPercent: BigFloat
-}
-
 """The output of our create `JournalEntry` mutation."""
 type CreateJournalEntryPayload {
   """
@@ -15950,6 +15914,57 @@ input DocumentInput {
   notes: String
   createdBy: String!
   createdAt: Datetime
+}
+
+"""The output of our create `InvoiceLine` mutation."""
+type CreateInvoiceLinePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `InvoiceLine` that was created by this mutation."""
+  invoiceLine: InvoiceLine
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `InvoiceLine`. May be used by Relay 1."""
+  invoiceLineEdge(
+    """The method to use when ordering `InvoiceLine`."""
+    orderBy: [InvoiceLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): InvoiceLineEdge
+}
+
+"""All input for the create `InvoiceLine` mutation."""
+input CreateInvoiceLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `InvoiceLine` to be created by this mutation."""
+  invoiceLine: InvoiceLineInput!
+}
+
+"""An input for mutations affecting `InvoiceLine`"""
+input InvoiceLineInput {
+  rowId: UUID
+  invoiceId: UUID!
+  description: String!
+  quantity: BigFloat
+  unitPrice: BigFloat
+  amount: BigFloat
+  incomeAccountId: UUID!
+  taxJurisdictionId: UUID
+  sortOrder: Int
+  inventoryItemId: UUID
+  discountPercent: BigFloat
+  secondaryTaxJurisdictionId: UUID
 }
 
 """The output of our create `Estimate` mutation."""
@@ -17298,77 +17313,6 @@ input UpdateTagInput {
   patch: TagPatch!
 }
 
-"""The output of our update `TaxJurisdiction` mutation."""
-type UpdateTaxJurisdictionPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `TaxJurisdiction` that was updated by this mutation."""
-  taxJurisdiction: TaxJurisdiction
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `TaxJurisdiction`. May be used by Relay 1."""
-  taxJurisdictionEdge(
-    """The method to use when ordering `TaxJurisdiction`."""
-    orderBy: [TaxJurisdictionOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): TaxJurisdictionEdge
-}
-
-"""All input for the `updateTaxJurisdictionById` mutation."""
-input UpdateTaxJurisdictionByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `TaxJurisdiction` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the `TaxJurisdiction` being updated.
-  """
-  patch: TaxJurisdictionPatch!
-}
-
-"""
-Represents an update to a `TaxJurisdiction`. Fields that are set will be updated.
-"""
-input TaxJurisdictionPatch {
-  rowId: UUID
-  bookId: UUID
-  name: String
-  code: String
-  filingFrequency: String
-  taxPayableAccountId: UUID
-  createdAt: Datetime
-  rate: BigFloat
-}
-
-"""All input for the `updateTaxJurisdiction` mutation."""
-input UpdateTaxJurisdictionInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the `TaxJurisdiction` being updated.
-  """
-  patch: TaxJurisdictionPatch!
-}
-
 """The output of our update `Vehicle` mutation."""
 type UpdateVehiclePayload {
   """
@@ -17579,6 +17523,78 @@ input UpdateImportProfileInput {
   An object where the defined keys will be set on the `ImportProfile` being updated.
   """
   patch: ImportProfilePatch!
+}
+
+"""The output of our update `TaxJurisdiction` mutation."""
+type UpdateTaxJurisdictionPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `TaxJurisdiction` that was updated by this mutation."""
+  taxJurisdiction: TaxJurisdiction
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `TaxJurisdiction`. May be used by Relay 1."""
+  taxJurisdictionEdge(
+    """The method to use when ordering `TaxJurisdiction`."""
+    orderBy: [TaxJurisdictionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): TaxJurisdictionEdge
+}
+
+"""All input for the `updateTaxJurisdictionById` mutation."""
+input UpdateTaxJurisdictionByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `TaxJurisdiction` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `TaxJurisdiction` being updated.
+  """
+  patch: TaxJurisdictionPatch!
+}
+
+"""
+Represents an update to a `TaxJurisdiction`. Fields that are set will be updated.
+"""
+input TaxJurisdictionPatch {
+  rowId: UUID
+  bookId: UUID
+  name: String
+  code: String
+  filingFrequency: String
+  taxPayableAccountId: UUID
+  createdAt: Datetime
+  rate: BigFloat
+  compound: Boolean
+}
+
+"""All input for the `updateTaxJurisdiction` mutation."""
+input UpdateTaxJurisdictionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `TaxJurisdiction` being updated.
+  """
+  patch: TaxJurisdictionPatch!
 }
 
 """The output of our update `JournalLine` mutation."""
@@ -18897,80 +18913,6 @@ input UpdateCreditMemoLineInput {
   patch: CreditMemoLinePatch!
 }
 
-"""The output of our update `InvoiceLine` mutation."""
-type UpdateInvoiceLinePayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `InvoiceLine` that was updated by this mutation."""
-  invoiceLine: InvoiceLine
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `InvoiceLine`. May be used by Relay 1."""
-  invoiceLineEdge(
-    """The method to use when ordering `InvoiceLine`."""
-    orderBy: [InvoiceLineOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): InvoiceLineEdge
-}
-
-"""All input for the `updateInvoiceLineById` mutation."""
-input UpdateInvoiceLineByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `InvoiceLine` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the `InvoiceLine` being updated.
-  """
-  patch: InvoiceLinePatch!
-}
-
-"""
-Represents an update to a `InvoiceLine`. Fields that are set will be updated.
-"""
-input InvoiceLinePatch {
-  rowId: UUID
-  invoiceId: UUID
-  description: String
-  quantity: BigFloat
-  unitPrice: BigFloat
-  amount: BigFloat
-  incomeAccountId: UUID
-  taxJurisdictionId: UUID
-  sortOrder: Int
-  inventoryItemId: UUID
-  discountPercent: BigFloat
-}
-
-"""All input for the `updateInvoiceLine` mutation."""
-input UpdateInvoiceLineInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the `InvoiceLine` being updated.
-  """
-  patch: InvoiceLinePatch!
-}
-
 """The output of our update `JournalEntry` mutation."""
 type UpdateJournalEntryPayload {
   """
@@ -19266,6 +19208,81 @@ input UpdateDocumentInput {
   An object where the defined keys will be set on the `Document` being updated.
   """
   patch: DocumentPatch!
+}
+
+"""The output of our update `InvoiceLine` mutation."""
+type UpdateInvoiceLinePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `InvoiceLine` that was updated by this mutation."""
+  invoiceLine: InvoiceLine
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `InvoiceLine`. May be used by Relay 1."""
+  invoiceLineEdge(
+    """The method to use when ordering `InvoiceLine`."""
+    orderBy: [InvoiceLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): InvoiceLineEdge
+}
+
+"""All input for the `updateInvoiceLineById` mutation."""
+input UpdateInvoiceLineByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `InvoiceLine` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `InvoiceLine` being updated.
+  """
+  patch: InvoiceLinePatch!
+}
+
+"""
+Represents an update to a `InvoiceLine`. Fields that are set will be updated.
+"""
+input InvoiceLinePatch {
+  rowId: UUID
+  invoiceId: UUID
+  description: String
+  quantity: BigFloat
+  unitPrice: BigFloat
+  amount: BigFloat
+  incomeAccountId: UUID
+  taxJurisdictionId: UUID
+  sortOrder: Int
+  inventoryItemId: UUID
+  discountPercent: BigFloat
+  secondaryTaxJurisdictionId: UUID
+}
+
+"""All input for the `updateInvoiceLine` mutation."""
+input UpdateInvoiceLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `InvoiceLine` being updated.
+  """
+  patch: InvoiceLinePatch!
 }
 
 """The output of our update `Estimate` mutation."""
@@ -20810,54 +20827,6 @@ input DeleteTagInput {
   rowId: UUID!
 }
 
-"""The output of our delete `TaxJurisdiction` mutation."""
-type DeleteTaxJurisdictionPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `TaxJurisdiction` that was deleted by this mutation."""
-  taxJurisdiction: TaxJurisdiction
-  deletedTaxJurisdictionId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `TaxJurisdiction`. May be used by Relay 1."""
-  taxJurisdictionEdge(
-    """The method to use when ordering `TaxJurisdiction`."""
-    orderBy: [TaxJurisdictionOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): TaxJurisdictionEdge
-}
-
-"""All input for the `deleteTaxJurisdictionById` mutation."""
-input DeleteTaxJurisdictionByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `TaxJurisdiction` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the `deleteTaxJurisdiction` mutation."""
-input DeleteTaxJurisdictionInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete `Vehicle` mutation."""
 type DeleteVehiclePayload {
   """
@@ -20994,6 +20963,54 @@ input DeleteImportProfileByIdInput {
 
 """All input for the `deleteImportProfile` mutation."""
 input DeleteImportProfileInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `TaxJurisdiction` mutation."""
+type DeleteTaxJurisdictionPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `TaxJurisdiction` that was deleted by this mutation."""
+  taxJurisdiction: TaxJurisdiction
+  deletedTaxJurisdictionId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `TaxJurisdiction`. May be used by Relay 1."""
+  taxJurisdictionEdge(
+    """The method to use when ordering `TaxJurisdiction`."""
+    orderBy: [TaxJurisdictionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): TaxJurisdictionEdge
+}
+
+"""All input for the `deleteTaxJurisdictionById` mutation."""
+input DeleteTaxJurisdictionByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `TaxJurisdiction` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteTaxJurisdiction` mutation."""
+input DeleteTaxJurisdictionInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -21866,54 +21883,6 @@ input DeleteCreditMemoLineInput {
   rowId: UUID!
 }
 
-"""The output of our delete `InvoiceLine` mutation."""
-type DeleteInvoiceLinePayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `InvoiceLine` that was deleted by this mutation."""
-  invoiceLine: InvoiceLine
-  deletedInvoiceLineId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `InvoiceLine`. May be used by Relay 1."""
-  invoiceLineEdge(
-    """The method to use when ordering `InvoiceLine`."""
-    orderBy: [InvoiceLineOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): InvoiceLineEdge
-}
-
-"""All input for the `deleteInvoiceLineById` mutation."""
-input DeleteInvoiceLineByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `InvoiceLine` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the `deleteInvoiceLine` mutation."""
-input DeleteInvoiceLineInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete `JournalEntry` mutation."""
 type DeleteJournalEntryPayload {
   """
@@ -22098,6 +22067,54 @@ input DeleteDocumentByIdInput {
 
 """All input for the `deleteDocument` mutation."""
 input DeleteDocumentInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `InvoiceLine` mutation."""
+type DeleteInvoiceLinePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `InvoiceLine` that was deleted by this mutation."""
+  invoiceLine: InvoiceLine
+  deletedInvoiceLineId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `InvoiceLine`. May be used by Relay 1."""
+  invoiceLineEdge(
+    """The method to use when ordering `InvoiceLine`."""
+    orderBy: [InvoiceLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): InvoiceLineEdge
+}
+
+"""All input for the `deleteInvoiceLineById` mutation."""
+input DeleteInvoiceLineByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `InvoiceLine` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteInvoiceLine` mutation."""
+input DeleteInvoiceLineInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
