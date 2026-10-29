@@ -11,7 +11,6 @@ import { schema } from "generated/graphql/schema.executable";
 import { useGrafast } from "grafast/envelop";
 
 import billRoutes from "lib/billing/billRoutes";
-import creditMemoRoutes from "lib/creditMemo/creditMemoRoutes";
 import generateBudgetTracking from "lib/budgets/budgetTracking";
 import { runMonthlyClose } from "lib/close";
 import startScheduledClose from "lib/close/scheduledClose";
@@ -24,6 +23,7 @@ import {
   isDevEnv,
   isProdEnv,
 } from "lib/config/env.config";
+import creditMemoRoutes from "lib/creditMemo/creditMemoRoutes";
 import { cryptoRoutes, lotRoutes } from "lib/crypto";
 import { dbPool, pgPool } from "lib/db/db";
 import {
@@ -97,6 +97,7 @@ import journalRoutes from "lib/routes/journalRoutes";
 import loanRoutes, { getCurrentBalance } from "lib/routes/loanRoutes";
 import mappingRoutes from "lib/routes/mappingRoutes";
 import mileageRoutes from "lib/routes/mileageRoutes";
+import orgDataRoutes from "lib/routes/orgDataRoutes";
 import periodRoutes from "lib/routes/periodRoutes";
 import projectRoutes from "lib/routes/projectRoutes";
 import rdExpenseRoutes from "lib/routes/rdExpenseRoutes";
@@ -137,6 +138,14 @@ const commit = (() => {
 /**
  * Elysia server.
  */
+// Group the connection and organization-data routes under one unprefixed plugin
+// so the root app's mount chain gains no extra link (each child keeps its own
+// absolute prefix). Adding a separate root-level mount tips the whole builder
+// past TypeScript's type-instantiation-depth limit
+const connectionAndOrgRoutes = new Elysia()
+  .use(connectionRoutes)
+  .use(orgDataRoutes);
+
 const app = new Elysia()
   .onAfterHandle(({ set }) => {
     set.headers["X-Content-Type-Options"] = "nosniff";
@@ -212,7 +221,7 @@ const app = new Elysia()
   .use(savingsRoutes)
   .use(reconciliationRoutes)
   .use(statementReconciliationRoutes)
-  .use(connectionRoutes)
+  .use(connectionAndOrgRoutes)
   .use(mappingRoutes)
   .use(mileageRoutes)
   .use(categorizationRuleRoutes)
