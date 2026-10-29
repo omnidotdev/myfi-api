@@ -19,6 +19,8 @@ export * from "./creditMemoLine.table";
 export * from "./cryptoAsset.table";
 export * from "./cryptoLot.table";
 export * from "./customer.table";
+export * from "./customFieldDefinition.table";
+export * from "./customFieldValue.table";
 export * from "./document.table";
 export * from "./estimate.table";
 export * from "./estimateLine.table";

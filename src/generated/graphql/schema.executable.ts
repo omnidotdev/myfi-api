@@ -328,6 +328,98 @@ const spec___drizzleMigrations = {
   executor: executor
 };
 const __drizzleMigrationsCodec = recordCodec(spec___drizzleMigrations);
+const customFieldValueIdentifier = sql.identifier("public", "custom_field_value");
+const spec_customFieldValue = {
+  name: "customFieldValue",
+  identifier: customFieldValueIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    definition_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    entity_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    value: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "18727",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "custom_field_value"
+    }
+  },
+  executor: executor
+};
+const customFieldValueCodec = recordCodec(spec_customFieldValue);
 const accountMappingIdentifier = sql.identifier("public", "account_mapping");
 const spec_accountMapping = {
   name: "accountMapping",
@@ -1196,6 +1288,125 @@ const spec_trackingCategory = {
   executor: executor
 };
 const trackingCategoryCodec = recordCodec(spec_trackingCategory);
+const customFieldDefinitionIdentifier = sql.identifier("public", "custom_field_definition");
+const spec_customFieldDefinition = {
+  name: "customFieldDefinition",
+  identifier: customFieldDefinitionIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    entity_type: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    label: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    field_type: {
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    position: {
+      codec: TYPES.int,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    is_active: {
+      codec: TYPES.boolean,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "18741",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "custom_field_definition"
+    }
+  },
+  executor: executor
+};
+const customFieldDefinitionCodec = recordCodec(spec_customFieldDefinition);
 const taxJurisdictionIdentifier = sql.identifier("public", "tax_jurisdiction");
 const spec_taxJurisdiction = {
   name: "taxJurisdiction",
@@ -8176,6 +8387,29 @@ const __drizzle_migrationsUniques = [{
   attributes: ["id"],
   isPrimary: true
 }];
+const custom_field_valueUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const custom_field_value_resourceOptionsConfig = {
+  executor: executor,
+  name: "custom_field_value",
+  identifier: "main.public.custom_field_value",
+  from: customFieldValueIdentifier,
+  codec: customFieldValueCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "custom_field_value"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: custom_field_valueUniques
+};
 const account_mappingUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -8382,6 +8616,29 @@ const tracking_category_resourceOptionsConfig = {
     canDelete: true
   },
   uniques: tracking_categoryUniques
+};
+const custom_field_definitionUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const custom_field_definition_resourceOptionsConfig = {
+  executor: executor,
+  name: "custom_field_definition",
+  identifier: "main.public.custom_field_definition",
+  from: customFieldDefinitionIdentifier,
+  codec: customFieldDefinitionCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "custom_field_definition"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: custom_field_definitionUniques
 };
 const tax_jurisdictionUniques = [{
   attributes: ["id"],
@@ -9458,6 +9715,7 @@ const registryConfig = {
     "__drizzleMigrations": __drizzleMigrationsCodec,
     int4: TYPES.int,
     int8: TYPES.bigint,
+    customFieldValue: customFieldValueCodec,
     accountMapping: accountMappingCodec,
     bookAccess: bookAccessCodec,
     creditMemoApplication: creditMemoApplicationCodec,
@@ -9470,6 +9728,7 @@ const registryConfig = {
     importProfile: importProfileCodec,
     jsonb: TYPES.jsonb,
     trackingCategory: trackingCategoryCodec,
+    customFieldDefinition: customFieldDefinitionCodec,
     taxJurisdiction: taxJurisdictionCodec,
     journalLine: journalLineCodec,
     netWorthSnapshot: netWorthSnapshotCodec,
@@ -9547,6 +9806,7 @@ const registryConfig = {
       },
       uniques: __drizzle_migrationsUniques
     },
+    custom_field_value: custom_field_value_resourceOptionsConfig,
     account_mapping: account_mapping_resourceOptionsConfig,
     book_access: book_access_resourceOptionsConfig,
     credit_memo_application: credit_memo_application_resourceOptionsConfig,
@@ -9556,6 +9816,7 @@ const registryConfig = {
     savings_goal: savings_goal_resourceOptionsConfig,
     import_profile: import_profile_resourceOptionsConfig,
     tracking_category: tracking_category_resourceOptionsConfig,
+    custom_field_definition: custom_field_definition_resourceOptionsConfig,
     tax_jurisdiction: tax_jurisdiction_resourceOptionsConfig,
     journal_line: journal_line_resourceOptionsConfig,
     net_worth_snapshot: net_worth_snapshot_resourceOptionsConfig,
@@ -10519,6 +10780,20 @@ const registryConfig = {
         localAttributes: ["id"],
         remoteAttributes: ["book_id"],
         isReferencee: true
+      },
+      customFieldValuesByTheirBookId: {
+        localCodec: bookCodec,
+        remoteResourceOptions: custom_field_value_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["book_id"],
+        isReferencee: true
+      },
+      customFieldDefinitionsByTheirBookId: {
+        localCodec: bookCodec,
+        remoteResourceOptions: custom_field_definition_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["book_id"],
+        isReferencee: true
       }
     },
     bookAccess: {
@@ -10764,6 +11039,40 @@ const registryConfig = {
         localCodec: cryptoLotCodec,
         remoteResourceOptions: journal_entry_resourceOptionsConfig,
         localAttributes: ["journal_entry_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      }
+    },
+    customFieldDefinition: {
+      __proto__: null,
+      bookByMyBookId: {
+        localCodec: customFieldDefinitionCodec,
+        remoteResourceOptions: book_resourceOptionsConfig,
+        localAttributes: ["book_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      customFieldValuesByTheirDefinitionId: {
+        localCodec: customFieldDefinitionCodec,
+        remoteResourceOptions: custom_field_value_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["definition_id"],
+        isReferencee: true
+      }
+    },
+    customFieldValue: {
+      __proto__: null,
+      bookByMyBookId: {
+        localCodec: customFieldValueCodec,
+        remoteResourceOptions: book_resourceOptionsConfig,
+        localAttributes: ["book_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      customFieldDefinitionByMyDefinitionId: {
+        localCodec: customFieldValueCodec,
+        remoteResourceOptions: custom_field_definition_resourceOptionsConfig,
+        localAttributes: ["definition_id"],
         remoteAttributes: ["id"],
         isUnique: true
       }
@@ -12058,6 +12367,7 @@ const resource_journal_line_tagPgResource = registry.pgResources["journal_line_t
 const resource_journal_line_tracking_categoryPgResource = registry.pgResources["journal_line_tracking_category"];
 const resource_tag_groupPgResource = registry.pgResources["tag_group"];
 const resource___drizzle_migrationsPgResource = registry.pgResources["__drizzle_migrations"];
+const resource_custom_field_valuePgResource = registry.pgResources["custom_field_value"];
 const resource_account_mappingPgResource = registry.pgResources["account_mapping"];
 const resource_book_accessPgResource = registry.pgResources["book_access"];
 const resource_credit_memo_applicationPgResource = registry.pgResources["credit_memo_application"];
@@ -12067,6 +12377,7 @@ const resource_vehiclePgResource = registry.pgResources["vehicle"];
 const resource_savings_goalPgResource = registry.pgResources["savings_goal"];
 const resource_import_profilePgResource = registry.pgResources["import_profile"];
 const resource_tracking_categoryPgResource = registry.pgResources["tracking_category"];
+const resource_custom_field_definitionPgResource = registry.pgResources["custom_field_definition"];
 const resource_tax_jurisdictionPgResource = registry.pgResources["tax_jurisdiction"];
 const resource_journal_linePgResource = registry.pgResources["journal_line"];
 const resource_net_worth_snapshotPgResource = registry.pgResources["net_worth_snapshot"];
@@ -12212,6 +12523,17 @@ const nodeFetcher__DrizzleMigration = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler__DrizzleMigration));
   return nodeIdHandler__DrizzleMigration.get(nodeIdHandler__DrizzleMigration.getSpec($decoded));
 };
+const nodeIdHandler_CustomFieldValue = makeTableNodeIdHandler({
+  typeName: "CustomFieldValue",
+  identifier: "CustomFieldValue",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_custom_field_valuePgResource,
+  pk: custom_field_valueUniques[0].attributes
+});
+const nodeFetcher_CustomFieldValue = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_CustomFieldValue));
+  return nodeIdHandler_CustomFieldValue.get(nodeIdHandler_CustomFieldValue.getSpec($decoded));
+};
 const nodeIdHandler_AccountMapping = makeTableNodeIdHandler({
   typeName: "AccountMapping",
   identifier: "AccountMapping",
@@ -12310,6 +12632,17 @@ const nodeIdHandler_TrackingCategory = makeTableNodeIdHandler({
 const nodeFetcher_TrackingCategory = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_TrackingCategory));
   return nodeIdHandler_TrackingCategory.get(nodeIdHandler_TrackingCategory.getSpec($decoded));
+};
+const nodeIdHandler_CustomFieldDefinition = makeTableNodeIdHandler({
+  typeName: "CustomFieldDefinition",
+  identifier: "CustomFieldDefinition",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_custom_field_definitionPgResource,
+  pk: custom_field_definitionUniques[0].attributes
+});
+const nodeFetcher_CustomFieldDefinition = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_CustomFieldDefinition));
+  return nodeIdHandler_CustomFieldDefinition.get(nodeIdHandler_CustomFieldDefinition.getSpec($decoded));
 };
 const nodeIdHandler_TaxJurisdiction = makeTableNodeIdHandler({
   typeName: "TaxJurisdiction",
@@ -12874,6 +13207,7 @@ const nodeIdHandlerByTypeName = {
   JournalLineTrackingCategory: nodeIdHandler_JournalLineTrackingCategory,
   TagGroup: nodeIdHandler_TagGroup,
   _DrizzleMigration: nodeIdHandler__DrizzleMigration,
+  CustomFieldValue: nodeIdHandler_CustomFieldValue,
   AccountMapping: nodeIdHandler_AccountMapping,
   BookAccess: nodeIdHandler_BookAccess,
   CreditMemoApplication: nodeIdHandler_CreditMemoApplication,
@@ -12883,6 +13217,7 @@ const nodeIdHandlerByTypeName = {
   SavingsGoal: nodeIdHandler_SavingsGoal,
   ImportProfile: nodeIdHandler_ImportProfile,
   TrackingCategory: nodeIdHandler_TrackingCategory,
+  CustomFieldDefinition: nodeIdHandler_CustomFieldDefinition,
   TaxJurisdiction: nodeIdHandler_TaxJurisdiction,
   JournalLine: nodeIdHandler_JournalLine,
   NetWorthSnapshot: nodeIdHandler_NetWorthSnapshot,
@@ -13659,6 +13994,10 @@ const specFromArgs__DrizzleMigration = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler__DrizzleMigration, $nodeId);
 };
+const specFromArgs_CustomFieldValue = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_CustomFieldValue, $nodeId);
+};
 const specFromArgs_AccountMapping = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_AccountMapping, $nodeId);
@@ -13694,6 +14033,10 @@ const specFromArgs_ImportProfile = args => {
 const specFromArgs_TrackingCategory = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_TrackingCategory, $nodeId);
+};
+const specFromArgs_CustomFieldDefinition = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_CustomFieldDefinition, $nodeId);
 };
 const specFromArgs_TaxJurisdiction = args => {
   const $nodeId = args.getRaw(["input", "id"]);
@@ -13944,6 +14287,19 @@ const CreateDrizzleMigrationPayload__drizzleMigrationEdgePlan = ($mutation, fiel
 function _DrizzleMigrationInput_hashApply(obj, val, info) {
   obj.set("hash", bakedInputRuntime(info.schema, info.field.type, val));
 }
+const CreateCustomFieldValuePayload_customFieldValueEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_custom_field_valuePgResource, custom_field_valueUniques[0].attributes, $mutation, fieldArgs);
+function CustomFieldValueInput_definitionIdApply(obj, val, info) {
+  obj.set("definition_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function CustomFieldValueInput_entityIdApply(obj, val, info) {
+  obj.set("entity_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function CustomFieldValueInput_valueApply(obj, val, info) {
+  obj.set("value", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function CustomFieldValueInput_updatedAtApply(obj, val, info) {
+  obj.set("updated_at", bakedInputRuntime(info.schema, info.field.type, val));
+}
 const CreateAccountMappingPayload_accountMappingEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_account_mappingPgResource, account_mappingUniques[0].attributes, $mutation, fieldArgs);
 function AccountMappingInput_eventTypeApply(obj, val, info) {
   obj.set("event_type", bakedInputRuntime(info.schema, info.field.type, val));
@@ -13953,9 +14309,6 @@ function AccountMappingInput_debitAccountIdApply(obj, val, info) {
 }
 function AccountMappingInput_creditAccountIdApply(obj, val, info) {
   obj.set("credit_account_id", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function AccountMappingInput_updatedAtApply(obj, val, info) {
-  obj.set("updated_at", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateBookAccessPayload_bookAccessEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_book_accessPgResource, book_accessUniques[0].attributes, $mutation, fieldArgs);
 function BookAccessInput_userIdApply(obj, val, info) {
@@ -14033,6 +14386,19 @@ function ImportProfileInput_headerRowsApply(obj, val, info) {
 const CreateTrackingCategoryPayload_trackingCategoryEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_tracking_categoryPgResource, tracking_categoryUniques[0].attributes, $mutation, fieldArgs);
 function TrackingCategoryInput_kindApply(obj, val, info) {
   obj.set("kind", bakedInputRuntime(info.schema, info.field.type, val));
+}
+const CreateCustomFieldDefinitionPayload_customFieldDefinitionEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_custom_field_definitionPgResource, custom_field_definitionUniques[0].attributes, $mutation, fieldArgs);
+function CustomFieldDefinitionInput_entityTypeApply(obj, val, info) {
+  obj.set("entity_type", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function CustomFieldDefinitionInput_labelApply(obj, val, info) {
+  obj.set("label", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function CustomFieldDefinitionInput_fieldTypeApply(obj, val, info) {
+  obj.set("field_type", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function CustomFieldDefinitionInput_positionApply(obj, val, info) {
+  obj.set("position", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateTaxJurisdictionPayload_taxJurisdictionEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_tax_jurisdictionPgResource, tax_jurisdictionUniques[0].attributes, $mutation, fieldArgs);
 function TaxJurisdictionInput_filingFrequencyApply(obj, val, info) {
@@ -14675,6 +15041,9 @@ type Query implements Node {
   """Get a single \`_DrizzleMigration\`."""
   _drizzleMigration(rowId: Int!): _DrizzleMigration
 
+  """Get a single \`CustomFieldValue\`."""
+  customFieldValue(rowId: UUID!): CustomFieldValue
+
   """Get a single \`AccountMapping\`."""
   accountMapping(rowId: UUID!): AccountMapping
 
@@ -14701,6 +15070,9 @@ type Query implements Node {
 
   """Get a single \`TrackingCategory\`."""
   trackingCategory(rowId: UUID!): TrackingCategory
+
+  """Get a single \`CustomFieldDefinition\`."""
+  customFieldDefinition(rowId: UUID!): CustomFieldDefinition
 
   """Get a single \`TaxJurisdiction\`."""
   taxJurisdiction(rowId: UUID!): TaxJurisdiction
@@ -14880,6 +15252,14 @@ type Query implements Node {
     id: ID!
   ): _DrizzleMigration
 
+  """Reads a single \`CustomFieldValue\` using its globally unique \`ID\`."""
+  customFieldValueById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`CustomFieldValue\`.
+    """
+    id: ID!
+  ): CustomFieldValue
+
   """Reads a single \`AccountMapping\` using its globally unique \`ID\`."""
   accountMappingById(
     """
@@ -14949,6 +15329,14 @@ type Query implements Node {
     """
     id: ID!
   ): TrackingCategory
+
+  """Reads a single \`CustomFieldDefinition\` using its globally unique \`ID\`."""
+  customFieldDefinitionById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`CustomFieldDefinition\`.
+    """
+    id: ID!
+  ): CustomFieldDefinition
 
   """Reads a single \`TaxJurisdiction\` using its globally unique \`ID\`."""
   taxJurisdictionById(
@@ -15466,6 +15854,40 @@ type Query implements Node {
     orderBy: [_DrizzleMigrationOrderBy!] = [PRIMARY_KEY_ASC]
   ): _DrizzleMigrationConnection
 
+  """Reads and enables pagination through a set of \`CustomFieldValue\`."""
+  customFieldValues(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CustomFieldValueCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CustomFieldValueFilter
+
+    """The method to use when ordering \`CustomFieldValue\`."""
+    orderBy: [CustomFieldValueOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CustomFieldValueConnection
+
   """Reads and enables pagination through a set of \`AccountMapping\`."""
   accountMappings(
     """Only read the first \`n\` values of the set."""
@@ -15773,6 +16195,40 @@ type Query implements Node {
     """The method to use when ordering \`TrackingCategory\`."""
     orderBy: [TrackingCategoryOrderBy!] = [PRIMARY_KEY_ASC]
   ): TrackingCategoryConnection
+
+  """Reads and enables pagination through a set of \`CustomFieldDefinition\`."""
+  customFieldDefinitions(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CustomFieldDefinitionCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CustomFieldDefinitionFilter
+
+    """The method to use when ordering \`CustomFieldDefinition\`."""
+    orderBy: [CustomFieldDefinitionOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CustomFieldDefinitionConnection
 
   """Reads and enables pagination through a set of \`TaxJurisdiction\`."""
   taxJurisdictions(
@@ -19104,6 +19560,74 @@ type Book implements Node {
     """The method to use when ordering \`TrackingCategory\`."""
     orderBy: [TrackingCategoryOrderBy!] = [PRIMARY_KEY_ASC]
   ): TrackingCategoryConnection!
+
+  """Reads and enables pagination through a set of \`CustomFieldValue\`."""
+  customFieldValues(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CustomFieldValueCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CustomFieldValueFilter
+
+    """The method to use when ordering \`CustomFieldValue\`."""
+    orderBy: [CustomFieldValueOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CustomFieldValueConnection!
+
+  """Reads and enables pagination through a set of \`CustomFieldDefinition\`."""
+  customFieldDefinitions(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CustomFieldDefinitionCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CustomFieldDefinitionFilter
+
+    """The method to use when ordering \`CustomFieldDefinition\`."""
+    orderBy: [CustomFieldDefinitionOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CustomFieldDefinitionConnection!
 }
 
 """A connection to a list of \`Account\` values."""
@@ -19628,6 +20152,18 @@ input BookFilter {
 
   """Some related \`trackingCategories\` exist."""
   trackingCategoriesExist: Boolean
+
+  """Filter by the object’s \`customFieldValues\` relation."""
+  customFieldValues: BookToManyCustomFieldValueFilter
+
+  """Some related \`customFieldValues\` exist."""
+  customFieldValuesExist: Boolean
+
+  """Filter by the object’s \`customFieldDefinitions\` relation."""
+  customFieldDefinitions: BookToManyCustomFieldDefinitionFilter
+
+  """Some related \`customFieldDefinitions\` exist."""
+  customFieldDefinitionsExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [BookFilter!]
@@ -23420,6 +23956,130 @@ input BookToManyTrackingCategoryFilter {
   No related \`TrackingCategory\` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
   none: TrackingCategoryFilter
+}
+
+"""
+A filter to be used against many \`CustomFieldValue\` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyCustomFieldValueFilter {
+  """
+  Every related \`CustomFieldValue\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: CustomFieldValueFilter
+
+  """
+  Some related \`CustomFieldValue\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: CustomFieldValueFilter
+
+  """
+  No related \`CustomFieldValue\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: CustomFieldValueFilter
+}
+
+"""
+A filter to be used against \`CustomFieldValue\` object types. All fields are combined with a logical ‘and.’
+"""
+input CustomFieldValueFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`bookId\` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s \`definitionId\` field."""
+  definitionId: UUIDFilter
+
+  """Filter by the object’s \`entityId\` field."""
+  entityId: UUIDFilter
+
+  """Filter by the object’s \`book\` relation."""
+  book: BookFilter
+
+  """Filter by the object’s \`definition\` relation."""
+  definition: CustomFieldDefinitionFilter
+
+  """Checks for all expressions in this list."""
+  and: [CustomFieldValueFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [CustomFieldValueFilter!]
+
+  """Negates the expression."""
+  not: CustomFieldValueFilter
+}
+
+"""
+A filter to be used against \`CustomFieldDefinition\` object types. All fields are combined with a logical ‘and.’
+"""
+input CustomFieldDefinitionFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`bookId\` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s \`entityType\` field."""
+  entityType: StringFilter
+
+  """Filter by the object’s \`customFieldValuesByDefinitionId\` relation."""
+  customFieldValuesByDefinitionId: CustomFieldDefinitionToManyCustomFieldValueFilter
+
+  """Some related \`customFieldValuesByDefinitionId\` exist."""
+  customFieldValuesByDefinitionIdExist: Boolean
+
+  """Filter by the object’s \`book\` relation."""
+  book: BookFilter
+
+  """Checks for all expressions in this list."""
+  and: [CustomFieldDefinitionFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [CustomFieldDefinitionFilter!]
+
+  """Negates the expression."""
+  not: CustomFieldDefinitionFilter
+}
+
+"""
+A filter to be used against many \`CustomFieldValue\` object types. All fields are combined with a logical ‘and.’
+"""
+input CustomFieldDefinitionToManyCustomFieldValueFilter {
+  """
+  Every related \`CustomFieldValue\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: CustomFieldValueFilter
+
+  """
+  Some related \`CustomFieldValue\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: CustomFieldValueFilter
+
+  """
+  No related \`CustomFieldValue\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: CustomFieldValueFilter
+}
+
+"""
+A filter to be used against many \`CustomFieldDefinition\` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyCustomFieldDefinitionFilter {
+  """
+  Every related \`CustomFieldDefinition\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: CustomFieldDefinitionFilter
+
+  """
+  Some related \`CustomFieldDefinition\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: CustomFieldDefinitionFilter
+
+  """
+  No related \`CustomFieldDefinition\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: CustomFieldDefinitionFilter
 }
 
 """
@@ -29177,6 +29837,198 @@ enum TrackingCategoryOrderBy {
   KIND_DESC
 }
 
+"""A connection to a list of \`CustomFieldValue\` values."""
+type CustomFieldValueConnection {
+  """A list of \`CustomFieldValue\` objects."""
+  nodes: [CustomFieldValue]!
+
+  """
+  A list of edges which contains the \`CustomFieldValue\` and cursor to aid in pagination.
+  """
+  edges: [CustomFieldValueEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* \`CustomFieldValue\` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+type CustomFieldValue implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  definitionId: UUID!
+  entityId: UUID!
+  value: String
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """Reads a single \`Book\` that is related to this \`CustomFieldValue\`."""
+  book: Book
+
+  """
+  Reads a single \`CustomFieldDefinition\` that is related to this \`CustomFieldValue\`.
+  """
+  definition: CustomFieldDefinition
+}
+
+type CustomFieldDefinition implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  entityType: String!
+  label: String!
+  fieldType: String!
+  position: Int!
+  isActive: Boolean!
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """Reads a single \`Book\` that is related to this \`CustomFieldDefinition\`."""
+  book: Book
+
+  """Reads and enables pagination through a set of \`CustomFieldValue\`."""
+  customFieldValuesByDefinitionId(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CustomFieldValueCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: CustomFieldValueFilter
+
+    """The method to use when ordering \`CustomFieldValue\`."""
+    orderBy: [CustomFieldValueOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CustomFieldValueConnection!
+}
+
+"""
+A condition to be used against \`CustomFieldValue\` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input CustomFieldValueCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`bookId\` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s \`definitionId\` field."""
+  definitionId: UUID
+
+  """Checks for equality with the object’s \`entityId\` field."""
+  entityId: UUID
+}
+
+"""Methods to use when ordering \`CustomFieldValue\`."""
+enum CustomFieldValueOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+  DEFINITION_ID_ASC
+  DEFINITION_ID_DESC
+  ENTITY_ID_ASC
+  ENTITY_ID_DESC
+}
+
+"""A \`CustomFieldValue\` edge in the connection."""
+type CustomFieldValueEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`CustomFieldValue\` at the end of the edge."""
+  node: CustomFieldValue
+}
+
+"""A connection to a list of \`CustomFieldDefinition\` values."""
+type CustomFieldDefinitionConnection {
+  """A list of \`CustomFieldDefinition\` objects."""
+  nodes: [CustomFieldDefinition]!
+
+  """
+  A list of edges which contains the \`CustomFieldDefinition\` and cursor to aid in pagination.
+  """
+  edges: [CustomFieldDefinitionEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* \`CustomFieldDefinition\` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+"""A \`CustomFieldDefinition\` edge in the connection."""
+type CustomFieldDefinitionEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`CustomFieldDefinition\` at the end of the edge."""
+  node: CustomFieldDefinition
+}
+
+"""
+A condition to be used against \`CustomFieldDefinition\` object types. All fields
+are tested for equality and combined with a logical ‘and.’
+"""
+input CustomFieldDefinitionCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`bookId\` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s \`entityType\` field."""
+  entityType: String
+}
+
+"""Methods to use when ordering \`CustomFieldDefinition\`."""
+enum CustomFieldDefinitionOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+  ENTITY_TYPE_ASC
+  ENTITY_TYPE_DESC
+}
+
 type _DrizzleMigration implements Node {
   """
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
@@ -29430,6 +30282,14 @@ type Mutation {
     input: CreateDrizzleMigrationInput!
   ): CreateDrizzleMigrationPayload
 
+  """Creates a single \`CustomFieldValue\`."""
+  createCustomFieldValue(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateCustomFieldValueInput!
+  ): CreateCustomFieldValuePayload
+
   """Creates a single \`AccountMapping\`."""
   createAccountMapping(
     """
@@ -29501,6 +30361,14 @@ type Mutation {
     """
     input: CreateTrackingCategoryInput!
   ): CreateTrackingCategoryPayload
+
+  """Creates a single \`CustomFieldDefinition\`."""
+  createCustomFieldDefinition(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateCustomFieldDefinitionInput!
+  ): CreateCustomFieldDefinitionPayload
 
   """Creates a single \`TaxJurisdiction\`."""
   createTaxJurisdiction(
@@ -29961,6 +30829,24 @@ type Mutation {
   ): UpdateDrizzleMigrationPayload
 
   """
+  Updates a single \`CustomFieldValue\` using its globally unique id and a patch.
+  """
+  updateCustomFieldValueById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateCustomFieldValueByIdInput!
+  ): UpdateCustomFieldValuePayload
+
+  """Updates a single \`CustomFieldValue\` using a unique key and a patch."""
+  updateCustomFieldValue(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateCustomFieldValueInput!
+  ): UpdateCustomFieldValuePayload
+
+  """
   Updates a single \`AccountMapping\` using its globally unique id and a patch.
   """
   updateAccountMappingById(
@@ -30121,6 +31007,26 @@ type Mutation {
     """
     input: UpdateTrackingCategoryInput!
   ): UpdateTrackingCategoryPayload
+
+  """
+  Updates a single \`CustomFieldDefinition\` using its globally unique id and a patch.
+  """
+  updateCustomFieldDefinitionById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateCustomFieldDefinitionByIdInput!
+  ): UpdateCustomFieldDefinitionPayload
+
+  """
+  Updates a single \`CustomFieldDefinition\` using a unique key and a patch.
+  """
+  updateCustomFieldDefinition(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateCustomFieldDefinitionInput!
+  ): UpdateCustomFieldDefinitionPayload
 
   """
   Updates a single \`TaxJurisdiction\` using its globally unique id and a patch.
@@ -31014,6 +31920,22 @@ type Mutation {
     input: DeleteDrizzleMigrationInput!
   ): DeleteDrizzleMigrationPayload
 
+  """Deletes a single \`CustomFieldValue\` using its globally unique id."""
+  deleteCustomFieldValueById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCustomFieldValueByIdInput!
+  ): DeleteCustomFieldValuePayload
+
+  """Deletes a single \`CustomFieldValue\` using a unique key."""
+  deleteCustomFieldValue(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCustomFieldValueInput!
+  ): DeleteCustomFieldValuePayload
+
   """Deletes a single \`AccountMapping\` using its globally unique id."""
   deleteAccountMappingById(
     """
@@ -31159,6 +32081,22 @@ type Mutation {
     """
     input: DeleteTrackingCategoryInput!
   ): DeleteTrackingCategoryPayload
+
+  """Deletes a single \`CustomFieldDefinition\` using its globally unique id."""
+  deleteCustomFieldDefinitionById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCustomFieldDefinitionByIdInput!
+  ): DeleteCustomFieldDefinitionPayload
+
+  """Deletes a single \`CustomFieldDefinition\` using a unique key."""
+  deleteCustomFieldDefinition(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCustomFieldDefinitionInput!
+  ): DeleteCustomFieldDefinitionPayload
 
   """Deletes a single \`TaxJurisdiction\` using its globally unique id."""
   deleteTaxJurisdictionById(
@@ -32112,6 +33050,52 @@ input _DrizzleMigrationInput {
   createdAt: BigInt
 }
 
+"""The output of our create \`CustomFieldValue\` mutation."""
+type CreateCustomFieldValuePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`CustomFieldValue\` that was created by this mutation."""
+  customFieldValue: CustomFieldValue
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`CustomFieldValue\`. May be used by Relay 1."""
+  customFieldValueEdge(
+    """The method to use when ordering \`CustomFieldValue\`."""
+    orderBy: [CustomFieldValueOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CustomFieldValueEdge
+}
+
+"""All input for the create \`CustomFieldValue\` mutation."""
+input CreateCustomFieldValueInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`CustomFieldValue\` to be created by this mutation."""
+  customFieldValue: CustomFieldValueInput!
+}
+
+"""An input for mutations affecting \`CustomFieldValue\`"""
+input CustomFieldValueInput {
+  rowId: UUID
+  bookId: UUID!
+  definitionId: UUID!
+  entityId: UUID!
+  value: String
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
 """The output of our create \`AccountMapping\` mutation."""
 type CreateAccountMappingPayload {
   """
@@ -32523,6 +33507,54 @@ input TrackingCategoryInput {
   kind: String!
   name: String!
   code: String
+  isActive: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""The output of our create \`CustomFieldDefinition\` mutation."""
+type CreateCustomFieldDefinitionPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`CustomFieldDefinition\` that was created by this mutation."""
+  customFieldDefinition: CustomFieldDefinition
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`CustomFieldDefinition\`. May be used by Relay 1."""
+  customFieldDefinitionEdge(
+    """The method to use when ordering \`CustomFieldDefinition\`."""
+    orderBy: [CustomFieldDefinitionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CustomFieldDefinitionEdge
+}
+
+"""All input for the create \`CustomFieldDefinition\` mutation."""
+input CreateCustomFieldDefinitionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`CustomFieldDefinition\` to be created by this mutation."""
+  customFieldDefinition: CustomFieldDefinitionInput!
+}
+
+"""An input for mutations affecting \`CustomFieldDefinition\`"""
+input CustomFieldDefinitionInput {
+  rowId: UUID
+  bookId: UUID!
+  entityType: String!
+  label: String!
+  fieldType: String
+  position: Int
   isActive: Boolean
   createdAt: Datetime
   updatedAt: Datetime
@@ -35205,6 +36237,76 @@ input UpdateDrizzleMigrationInput {
   patch: _DrizzleMigrationPatch!
 }
 
+"""The output of our update \`CustomFieldValue\` mutation."""
+type UpdateCustomFieldValuePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`CustomFieldValue\` that was updated by this mutation."""
+  customFieldValue: CustomFieldValue
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`CustomFieldValue\`. May be used by Relay 1."""
+  customFieldValueEdge(
+    """The method to use when ordering \`CustomFieldValue\`."""
+    orderBy: [CustomFieldValueOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CustomFieldValueEdge
+}
+
+"""All input for the \`updateCustomFieldValueById\` mutation."""
+input UpdateCustomFieldValueByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`CustomFieldValue\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`CustomFieldValue\` being updated.
+  """
+  patch: CustomFieldValuePatch!
+}
+
+"""
+Represents an update to a \`CustomFieldValue\`. Fields that are set will be updated.
+"""
+input CustomFieldValuePatch {
+  rowId: UUID
+  bookId: UUID
+  definitionId: UUID
+  entityId: UUID
+  value: String
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the \`updateCustomFieldValue\` mutation."""
+input UpdateCustomFieldValueInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`CustomFieldValue\` being updated.
+  """
+  patch: CustomFieldValuePatch!
+}
+
 """The output of our update \`AccountMapping\` mutation."""
 type UpdateAccountMappingPayload {
   """
@@ -35833,6 +36935,78 @@ input UpdateTrackingCategoryInput {
   An object where the defined keys will be set on the \`TrackingCategory\` being updated.
   """
   patch: TrackingCategoryPatch!
+}
+
+"""The output of our update \`CustomFieldDefinition\` mutation."""
+type UpdateCustomFieldDefinitionPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`CustomFieldDefinition\` that was updated by this mutation."""
+  customFieldDefinition: CustomFieldDefinition
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`CustomFieldDefinition\`. May be used by Relay 1."""
+  customFieldDefinitionEdge(
+    """The method to use when ordering \`CustomFieldDefinition\`."""
+    orderBy: [CustomFieldDefinitionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CustomFieldDefinitionEdge
+}
+
+"""All input for the \`updateCustomFieldDefinitionById\` mutation."""
+input UpdateCustomFieldDefinitionByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`CustomFieldDefinition\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`CustomFieldDefinition\` being updated.
+  """
+  patch: CustomFieldDefinitionPatch!
+}
+
+"""
+Represents an update to a \`CustomFieldDefinition\`. Fields that are set will be updated.
+"""
+input CustomFieldDefinitionPatch {
+  rowId: UUID
+  bookId: UUID
+  entityType: String
+  label: String
+  fieldType: String
+  position: Int
+  isActive: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the \`updateCustomFieldDefinition\` mutation."""
+input UpdateCustomFieldDefinitionInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`CustomFieldDefinition\` being updated.
+  """
+  patch: CustomFieldDefinitionPatch!
 }
 
 """The output of our update \`TaxJurisdiction\` mutation."""
@@ -39519,6 +40693,54 @@ input DeleteDrizzleMigrationInput {
   rowId: Int!
 }
 
+"""The output of our delete \`CustomFieldValue\` mutation."""
+type DeleteCustomFieldValuePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`CustomFieldValue\` that was deleted by this mutation."""
+  customFieldValue: CustomFieldValue
+  deletedCustomFieldValueId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`CustomFieldValue\`. May be used by Relay 1."""
+  customFieldValueEdge(
+    """The method to use when ordering \`CustomFieldValue\`."""
+    orderBy: [CustomFieldValueOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CustomFieldValueEdge
+}
+
+"""All input for the \`deleteCustomFieldValueById\` mutation."""
+input DeleteCustomFieldValueByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`CustomFieldValue\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteCustomFieldValue\` mutation."""
+input DeleteCustomFieldValueInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete \`AccountMapping\` mutation."""
 type DeleteAccountMappingPayload {
   """
@@ -39943,6 +41165,54 @@ input DeleteTrackingCategoryByIdInput {
 
 """All input for the \`deleteTrackingCategory\` mutation."""
 input DeleteTrackingCategoryInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`CustomFieldDefinition\` mutation."""
+type DeleteCustomFieldDefinitionPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`CustomFieldDefinition\` that was deleted by this mutation."""
+  customFieldDefinition: CustomFieldDefinition
+  deletedCustomFieldDefinitionId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`CustomFieldDefinition\`. May be used by Relay 1."""
+  customFieldDefinitionEdge(
+    """The method to use when ordering \`CustomFieldDefinition\`."""
+    orderBy: [CustomFieldDefinitionOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): CustomFieldDefinitionEdge
+}
+
+"""All input for the \`deleteCustomFieldDefinitionById\` mutation."""
+input DeleteCustomFieldDefinitionByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`CustomFieldDefinition\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteCustomFieldDefinition\` mutation."""
+input DeleteCustomFieldDefinitionInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -42736,6 +44006,58 @@ export const objects = {
           orderBy: applyOrderByArgToConnection
         }
       },
+      customFieldDefinition(_$root, {
+        $rowId
+      }) {
+        return resource_custom_field_definitionPgResource.get({
+          id: $rowId
+        });
+      },
+      customFieldDefinitionById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_CustomFieldDefinition($nodeId);
+      },
+      customFieldDefinitions: {
+        plan() {
+          return connection(resource_custom_field_definitionPgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      customFieldValue(_$root, {
+        $rowId
+      }) {
+        return resource_custom_field_valuePgResource.get({
+          id: $rowId
+        });
+      },
+      customFieldValueById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_CustomFieldValue($nodeId);
+      },
+      customFieldValues: {
+        plan() {
+          return connection(resource_custom_field_valuePgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       document(_$root, {
         $rowId
       }) {
@@ -43991,6 +45313,30 @@ export const objects = {
           input: applyInputToInsert
         }
       },
+      createCustomFieldDefinition: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_custom_field_definitionPgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
+      createCustomFieldValue: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_custom_field_valuePgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
       createDocument: {
         plan(_, args) {
           const $insert = pgInsertSingle(resource_documentPgResource);
@@ -44996,6 +46342,58 @@ export const objects = {
       deleteCustomerById: {
         plan(_$root, args) {
           const $delete = pgDeleteSingle(resource_customerPgResource, specFromArgs_Customer(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteCustomFieldDefinition: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_custom_field_definitionPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteCustomFieldDefinitionById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_custom_field_definitionPgResource, specFromArgs_CustomFieldDefinition(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteCustomFieldValue: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_custom_field_valuePgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteCustomFieldValueById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_custom_field_valuePgResource, specFromArgs_CustomFieldValue(args));
           args.apply($delete);
           return object({
             result: $delete
@@ -46556,6 +47954,58 @@ export const objects = {
       updateCustomerById: {
         plan(_$root, args) {
           const $update = pgUpdateSingle(resource_customerPgResource, specFromArgs_Customer(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateCustomFieldDefinition: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_custom_field_definitionPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateCustomFieldDefinitionById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_custom_field_definitionPgResource, specFromArgs_CustomFieldDefinition(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateCustomFieldValue: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_custom_field_valuePgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateCustomFieldValueById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_custom_field_valuePgResource, specFromArgs_CustomFieldValue(args));
           args.apply($update);
           return object({
             result: $update
@@ -48301,6 +49751,42 @@ export const objects = {
           orderBy: applyOrderByArgToConnection
         }
       },
+      customFieldDefinitions: {
+        plan($record) {
+          const $records = resource_custom_field_definitionPgResource.find({
+            book_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      customFieldValues: {
+        plan($record) {
+          const $records = resource_custom_field_valuePgResource.find({
+            book_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       documents: {
         plan($record) {
           const $records = resource_documentPgResource.find({
@@ -49194,6 +50680,24 @@ export const objects = {
       query: queryPlan
     }
   },
+  CreateCustomFieldDefinitionPayload: {
+    assertStep: assertStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      customFieldDefinition: planCreatePayloadResult,
+      customFieldDefinitionEdge: CreateCustomFieldDefinitionPayload_customFieldDefinitionEdgePlan,
+      query: queryPlan
+    }
+  },
+  CreateCustomFieldValuePayload: {
+    assertStep: assertStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      customFieldValue: planCreatePayloadResult,
+      customFieldValueEdge: CreateCustomFieldValuePayload_customFieldValueEdgePlan,
+      query: queryPlan
+    }
+  },
   CreateDocumentPayload: {
     assertStep: assertStep,
     plans: {
@@ -49867,6 +51371,92 @@ export const objects = {
       totalCount: totalCountConnectionPlan
     }
   },
+  CustomFieldDefinition: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      book: Account_bookPlan,
+      bookId: Account_bookIdPlan,
+      createdAt: Account_createdAtPlan,
+      customFieldValuesByDefinitionId: {
+        plan($record) {
+          const $records = resource_custom_field_valuePgResource.find({
+            definition_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      entityType($record) {
+        return $record.get("entity_type");
+      },
+      fieldType($record) {
+        return $record.get("field_type");
+      },
+      id($parent) {
+        const specifier = nodeIdHandler_CustomFieldDefinition.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_CustomFieldDefinition.codec.name].encode);
+      },
+      isActive: Account_isActivePlan,
+      rowId: JournalLineProject_rowIdPlan,
+      updatedAt: Account_updatedAtPlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of custom_field_definitionUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_custom_field_definitionPgResource.get(spec);
+    }
+  },
+  CustomFieldDefinitionConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
+  CustomFieldValue: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      book: Account_bookPlan,
+      bookId: Account_bookIdPlan,
+      createdAt: Account_createdAtPlan,
+      definition($record) {
+        return resource_custom_field_definitionPgResource.get({
+          id: $record.get("definition_id")
+        });
+      },
+      definitionId($record) {
+        return $record.get("definition_id");
+      },
+      entityId($record) {
+        return $record.get("entity_id");
+      },
+      id($parent) {
+        const specifier = nodeIdHandler_CustomFieldValue.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_CustomFieldValue.codec.name].encode);
+      },
+      rowId: JournalLineProject_rowIdPlan,
+      updatedAt: Account_updatedAtPlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of custom_field_valueUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_custom_field_valuePgResource.get(spec);
+    }
+  },
+  CustomFieldValueConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
   DeleteAccountingPeriodPayload: {
     assertStep: ObjectStep,
     plans: {
@@ -50156,6 +51746,34 @@ export const objects = {
       deletedCustomerId($object) {
         const $record = $object.getStepForKey("result"),
           specifier = nodeIdHandler_Customer.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      query: queryPlan
+    }
+  },
+  DeleteCustomFieldDefinitionPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      customFieldDefinition: planCreatePayloadResult,
+      customFieldDefinitionEdge: CreateCustomFieldDefinitionPayload_customFieldDefinitionEdgePlan,
+      deletedCustomFieldDefinitionId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_CustomFieldDefinition.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      query: queryPlan
+    }
+  },
+  DeleteCustomFieldValuePayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      customFieldValue: planCreatePayloadResult,
+      customFieldValueEdge: CreateCustomFieldValuePayload_customFieldValueEdgePlan,
+      deletedCustomFieldValueId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_CustomFieldValue.plan($record);
         return lambda(specifier, base64JSONNodeIdCodec.encode);
       },
       query: queryPlan
@@ -52454,6 +54072,24 @@ export const objects = {
       query: queryPlan
     }
   },
+  UpdateCustomFieldDefinitionPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      customFieldDefinition: planCreatePayloadResult,
+      customFieldDefinitionEdge: CreateCustomFieldDefinitionPayload_customFieldDefinitionEdgePlan,
+      query: queryPlan
+    }
+  },
+  UpdateCustomFieldValuePayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      customFieldValue: planCreatePayloadResult,
+      customFieldValueEdge: CreateCustomFieldValuePayload_customFieldValueEdgePlan,
+      query: queryPlan
+    }
+  },
   UpdateDocumentPayload: {
     assertStep: ObjectStep,
     plans: {
@@ -53346,7 +54982,7 @@ export const inputObjects = {
       rowId: JournalLineProjectInput_rowIdApply,
       subType: AccountInput_subTypeApply,
       type: InventoryTransactionInput_typeApply,
-      updatedAt: AccountMappingInput_updatedAtApply
+      updatedAt: CustomFieldValueInput_updatedAtApply
     }
   },
   AccountMappingCondition: {
@@ -53392,7 +55028,7 @@ export const inputObjects = {
       debitAccountId: AccountMappingInput_debitAccountIdApply,
       eventType: AccountMappingInput_eventTypeApply,
       rowId: JournalLineProjectInput_rowIdApply,
-      updatedAt: AccountMappingInput_updatedAtApply
+      updatedAt: CustomFieldValueInput_updatedAtApply
     }
   },
   AccountMappingPatch: {
@@ -53404,7 +55040,7 @@ export const inputObjects = {
       debitAccountId: AccountMappingInput_debitAccountIdApply,
       eventType: AccountMappingInput_eventTypeApply,
       rowId: JournalLineProjectInput_rowIdApply,
-      updatedAt: AccountMappingInput_updatedAtApply
+      updatedAt: CustomFieldValueInput_updatedAtApply
     }
   },
   AccountPatch: {
@@ -53420,7 +55056,7 @@ export const inputObjects = {
       rowId: JournalLineProjectInput_rowIdApply,
       subType: AccountInput_subTypeApply,
       type: InventoryTransactionInput_typeApply,
-      updatedAt: AccountMappingInput_updatedAtApply
+      updatedAt: CustomFieldValueInput_updatedAtApply
     }
   },
   AccountToManyAccountFilter: {
@@ -53649,7 +55285,7 @@ export const inputObjects = {
       rowId: JournalLineProjectInput_rowIdApply,
       status: AccountingPeriodInput_statusApply,
       total: BankDepositInput_totalApply,
-      updatedAt: AccountMappingInput_updatedAtApply
+      updatedAt: CustomFieldValueInput_updatedAtApply
     }
   },
   BankDepositPatch: {
@@ -53664,7 +55300,7 @@ export const inputObjects = {
       rowId: JournalLineProjectInput_rowIdApply,
       status: AccountingPeriodInput_statusApply,
       total: BankDepositInput_totalApply,
-      updatedAt: AccountMappingInput_updatedAtApply
+      updatedAt: CustomFieldValueInput_updatedAtApply
     }
   },
   BillCondition: {
@@ -53800,7 +55436,7 @@ export const inputObjects = {
       subtotal: PurchaseOrderInput_subtotalApply,
       taxAmount: CreditMemoInput_taxAmountApply,
       total: BankDepositInput_totalApply,
-      updatedAt: AccountMappingInput_updatedAtApply,
+      updatedAt: CustomFieldValueInput_updatedAtApply,
       vendorId: PurchaseOrderInput_vendorIdApply
     }
   },
@@ -53883,7 +55519,7 @@ export const inputObjects = {
       subtotal: PurchaseOrderInput_subtotalApply,
       taxAmount: CreditMemoInput_taxAmountApply,
       total: BankDepositInput_totalApply,
-      updatedAt: AccountMappingInput_updatedAtApply,
+      updatedAt: CustomFieldValueInput_updatedAtApply,
       vendorId: PurchaseOrderInput_vendorIdApply
     }
   },
@@ -54374,6 +56010,54 @@ export const inputObjects = {
         });
         registryConfig.pgRelations.book.customersByTheirBookId.localAttributes.forEach((localAttribute, i) => {
           const remoteAttribute = registryConfig.pgRelations.book.customersByTheirBookId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
+      customFieldDefinitions($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: customFieldDefinitionIdentifier,
+          alias: resource_custom_field_definitionPgResource.name,
+          localAttributes: registryConfig.pgRelations.book.customFieldDefinitionsByTheirBookId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.book.customFieldDefinitionsByTheirBookId.remoteAttributes
+        };
+        return $rel;
+      },
+      customFieldDefinitionsExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: customFieldDefinitionIdentifier,
+          alias: resource_custom_field_definitionPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.book.customFieldDefinitionsByTheirBookId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.book.customFieldDefinitionsByTheirBookId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
+      customFieldValues($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: customFieldValueIdentifier,
+          alias: resource_custom_field_valuePgResource.name,
+          localAttributes: registryConfig.pgRelations.book.customFieldValuesByTheirBookId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.book.customFieldValuesByTheirBookId.remoteAttributes
+        };
+        return $rel;
+      },
+      customFieldValuesExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: customFieldValueIdentifier,
+          alias: resource_custom_field_valuePgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.book.customFieldValuesByTheirBookId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.book.customFieldValuesByTheirBookId.remoteAttributes[i];
           $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
         });
       },
@@ -55028,7 +56712,7 @@ export const inputObjects = {
       rowId: JournalLineProjectInput_rowIdApply,
       state: CustomerInput_stateApply,
       type: InventoryTransactionInput_typeApply,
-      updatedAt: AccountMappingInput_updatedAtApply,
+      updatedAt: CustomFieldValueInput_updatedAtApply,
       zip: CustomerInput_zipApply
     }
   },
@@ -55049,7 +56733,7 @@ export const inputObjects = {
       rowId: JournalLineProjectInput_rowIdApply,
       state: CustomerInput_stateApply,
       type: InventoryTransactionInput_typeApply,
-      updatedAt: AccountMappingInput_updatedAtApply,
+      updatedAt: CustomFieldValueInput_updatedAtApply,
       zip: CustomerInput_zipApply
     }
   },
@@ -55145,6 +56829,20 @@ export const inputObjects = {
     }
   },
   BookToManyCustomerFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
+  BookToManyCustomFieldDefinitionFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
+  BookToManyCustomFieldValueFilter: {
     plans: {
       every: AccountToManyAccountFilter_everyApply,
       none: AccountToManyAccountFilter_noneApply,
@@ -55372,7 +57070,7 @@ export const inputObjects = {
       period: BudgetInput_periodApply,
       rollover: BudgetInput_rolloverApply,
       rowId: JournalLineProjectInput_rowIdApply,
-      updatedAt: AccountMappingInput_updatedAtApply
+      updatedAt: CustomFieldValueInput_updatedAtApply
     }
   },
   BudgetPatch: {
@@ -55385,7 +57083,7 @@ export const inputObjects = {
       period: BudgetInput_periodApply,
       rollover: BudgetInput_rolloverApply,
       rowId: JournalLineProjectInput_rowIdApply,
-      updatedAt: AccountMappingInput_updatedAtApply
+      updatedAt: CustomFieldValueInput_updatedAtApply
     }
   },
   CategorizationRuleCondition: {
@@ -55770,6 +57468,18 @@ export const inputObjects = {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
       customer: applyCreateFields
+    }
+  },
+  CreateCustomFieldDefinitionInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      customFieldDefinition: applyCreateFields
+    }
+  },
+  CreateCustomFieldValueInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      customFieldValue: applyCreateFields
     }
   },
   CreateDocumentInput: {
@@ -56171,7 +57881,7 @@ export const inputObjects = {
       subtotal: PurchaseOrderInput_subtotalApply,
       taxAmount: CreditMemoInput_taxAmountApply,
       total: BankDepositInput_totalApply,
-      updatedAt: AccountMappingInput_updatedAtApply
+      updatedAt: CustomFieldValueInput_updatedAtApply
     }
   },
   CreditMemoLineCondition: {
@@ -56261,7 +57971,7 @@ export const inputObjects = {
       subtotal: PurchaseOrderInput_subtotalApply,
       taxAmount: CreditMemoInput_taxAmountApply,
       total: BankDepositInput_totalApply,
-      updatedAt: AccountMappingInput_updatedAtApply
+      updatedAt: CustomFieldValueInput_updatedAtApply
     }
   },
   CreditMemoToManyCreditMemoApplicationFilter: {
@@ -56342,7 +58052,7 @@ export const inputObjects = {
       network: CryptoAssetInput_networkApply,
       rowId: JournalLineProjectInput_rowIdApply,
       symbol: CryptoAssetInput_symbolApply,
-      updatedAt: AccountMappingInput_updatedAtApply,
+      updatedAt: CustomFieldValueInput_updatedAtApply,
       walletAddress: CryptoAssetInput_walletAddressApply
     }
   },
@@ -56358,7 +58068,7 @@ export const inputObjects = {
       network: CryptoAssetInput_networkApply,
       rowId: JournalLineProjectInput_rowIdApply,
       symbol: CryptoAssetInput_symbolApply,
-      updatedAt: AccountMappingInput_updatedAtApply,
+      updatedAt: CustomFieldValueInput_updatedAtApply,
       walletAddress: CryptoAssetInput_walletAddressApply
     }
   },
@@ -56562,7 +58272,7 @@ export const inputObjects = {
       phone: CustomerInput_phoneApply,
       rowId: JournalLineProjectInput_rowIdApply,
       state: CustomerInput_stateApply,
-      updatedAt: AccountMappingInput_updatedAtApply,
+      updatedAt: CustomFieldValueInput_updatedAtApply,
       zip: CustomerInput_zipApply
     }
   },
@@ -56581,7 +58291,7 @@ export const inputObjects = {
       phone: CustomerInput_phoneApply,
       rowId: JournalLineProjectInput_rowIdApply,
       state: CustomerInput_stateApply,
-      updatedAt: AccountMappingInput_updatedAtApply,
+      updatedAt: CustomFieldValueInput_updatedAtApply,
       zip: CustomerInput_zipApply
     }
   },
@@ -56611,6 +58321,154 @@ export const inputObjects = {
       every: AccountToManyAccountFilter_everyApply,
       none: AccountToManyAccountFilter_noneApply,
       some: AccountToManyAccountFilter_someApply
+    }
+  },
+  CustomFieldDefinitionCondition: {
+    plans: {
+      bookId: AccountCondition_bookIdApply,
+      entityType($condition, val) {
+        return applyAttributeCondition("entity_type", TYPES.text, $condition, val);
+      },
+      rowId: AccountCondition_rowIdApply
+    }
+  },
+  CustomFieldDefinitionFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      book($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_bookPgResource, bookIdentifier, registryConfig.pgRelations.customFieldDefinition.bookByMyBookId.localAttributes, registryConfig.pgRelations.customFieldDefinition.bookByMyBookId.remoteAttributes, $where, value);
+      },
+      bookId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("bookId", "book_id", spec_customFieldDefinition.attributes.book_id, queryBuilder, value);
+      },
+      customFieldValuesByDefinitionId($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: customFieldValueIdentifier,
+          alias: resource_custom_field_valuePgResource.name,
+          localAttributes: registryConfig.pgRelations.customFieldDefinition.customFieldValuesByTheirDefinitionId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.customFieldDefinition.customFieldValuesByTheirDefinitionId.remoteAttributes
+        };
+        return $rel;
+      },
+      customFieldValuesByDefinitionIdExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: customFieldValueIdentifier,
+          alias: resource_custom_field_valuePgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.customFieldDefinition.customFieldValuesByTheirDefinitionId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.customFieldDefinition.customFieldValuesByTheirDefinitionId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
+      entityType(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("entityType", "entity_type", spec_customFieldDefinition.attributes.entity_type, queryBuilder, value);
+      },
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_customFieldDefinition.attributes.id, queryBuilder, value);
+      }
+    }
+  },
+  CustomFieldDefinitionInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      bookId: TagGroupInput_bookIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      entityType: CustomFieldDefinitionInput_entityTypeApply,
+      fieldType: CustomFieldDefinitionInput_fieldTypeApply,
+      isActive: TagInput_isActiveApply,
+      label: CustomFieldDefinitionInput_labelApply,
+      position: CustomFieldDefinitionInput_positionApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      updatedAt: CustomFieldValueInput_updatedAtApply
+    }
+  },
+  CustomFieldDefinitionPatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      bookId: TagGroupInput_bookIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      entityType: CustomFieldDefinitionInput_entityTypeApply,
+      fieldType: CustomFieldDefinitionInput_fieldTypeApply,
+      isActive: TagInput_isActiveApply,
+      label: CustomFieldDefinitionInput_labelApply,
+      position: CustomFieldDefinitionInput_positionApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      updatedAt: CustomFieldValueInput_updatedAtApply
+    }
+  },
+  CustomFieldDefinitionToManyCustomFieldValueFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
+  CustomFieldValueCondition: {
+    plans: {
+      bookId: AccountCondition_bookIdApply,
+      definitionId($condition, val) {
+        return applyAttributeCondition("definition_id", TYPES.uuid, $condition, val);
+      },
+      entityId($condition, val) {
+        return applyAttributeCondition("entity_id", TYPES.uuid, $condition, val);
+      },
+      rowId: AccountCondition_rowIdApply
+    }
+  },
+  CustomFieldValueFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      book($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_bookPgResource, bookIdentifier, registryConfig.pgRelations.customFieldValue.bookByMyBookId.localAttributes, registryConfig.pgRelations.customFieldValue.bookByMyBookId.remoteAttributes, $where, value);
+      },
+      bookId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("bookId", "book_id", spec_customFieldValue.attributes.book_id, queryBuilder, value);
+      },
+      definition($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_custom_field_definitionPgResource, customFieldDefinitionIdentifier, registryConfig.pgRelations.customFieldValue.customFieldDefinitionByMyDefinitionId.localAttributes, registryConfig.pgRelations.customFieldValue.customFieldDefinitionByMyDefinitionId.remoteAttributes, $where, value);
+      },
+      definitionId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("definitionId", "definition_id", spec_customFieldValue.attributes.definition_id, queryBuilder, value);
+      },
+      entityId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("entityId", "entity_id", spec_customFieldValue.attributes.entity_id, queryBuilder, value);
+      },
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_customFieldValue.attributes.id, queryBuilder, value);
+      }
+    }
+  },
+  CustomFieldValueInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      bookId: TagGroupInput_bookIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      definitionId: CustomFieldValueInput_definitionIdApply,
+      entityId: CustomFieldValueInput_entityIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      updatedAt: CustomFieldValueInput_updatedAtApply,
+      value: CustomFieldValueInput_valueApply
+    }
+  },
+  CustomFieldValuePatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      bookId: TagGroupInput_bookIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      definitionId: CustomFieldValueInput_definitionIdApply,
+      entityId: CustomFieldValueInput_entityIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      updatedAt: CustomFieldValueInput_updatedAtApply,
+      value: CustomFieldValueInput_valueApply
     }
   },
   DatetimeFilter: {
@@ -56834,6 +58692,26 @@ export const inputObjects = {
     }
   },
   DeleteCustomerInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteCustomFieldDefinitionByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteCustomFieldDefinitionInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteCustomFieldValueByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteCustomFieldValueInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate
     }
@@ -57385,7 +59263,7 @@ export const inputObjects = {
       subtotal: PurchaseOrderInput_subtotalApply,
       terms: EstimateInput_termsApply,
       total: BankDepositInput_totalApply,
-      updatedAt: AccountMappingInput_updatedAtApply
+      updatedAt: CustomFieldValueInput_updatedAtApply
     }
   },
   EstimateLineCondition: {
@@ -57467,7 +59345,7 @@ export const inputObjects = {
       subtotal: PurchaseOrderInput_subtotalApply,
       terms: EstimateInput_termsApply,
       total: BankDepositInput_totalApply,
-      updatedAt: AccountMappingInput_updatedAtApply
+      updatedAt: CustomFieldValueInput_updatedAtApply
     }
   },
   EstimateToManyEstimateLineFilter: {
@@ -57583,7 +59461,7 @@ export const inputObjects = {
       headerRows: ImportProfileInput_headerRowsApply,
       name: TagGroupInput_nameApply,
       rowId: JournalLineProjectInput_rowIdApply,
-      updatedAt: AccountMappingInput_updatedAtApply
+      updatedAt: CustomFieldValueInput_updatedAtApply
     }
   },
   ImportProfilePatch: {
@@ -57595,7 +59473,7 @@ export const inputObjects = {
       headerRows: ImportProfileInput_headerRowsApply,
       name: TagGroupInput_nameApply,
       rowId: JournalLineProjectInput_rowIdApply,
-      updatedAt: AccountMappingInput_updatedAtApply
+      updatedAt: CustomFieldValueInput_updatedAtApply
     }
   },
   IntFilter: {
@@ -57692,7 +59570,7 @@ export const inputObjects = {
       rowId: JournalLineProjectInput_rowIdApply,
       salePrice: InventoryItemInput_salePriceApply,
       sku: InventoryItemInput_skuApply,
-      updatedAt: AccountMappingInput_updatedAtApply
+      updatedAt: CustomFieldValueInput_updatedAtApply
     }
   },
   InventoryItemPatch: {
@@ -57713,7 +59591,7 @@ export const inputObjects = {
       rowId: JournalLineProjectInput_rowIdApply,
       salePrice: InventoryItemInput_salePriceApply,
       sku: InventoryItemInput_skuApply,
-      updatedAt: AccountMappingInput_updatedAtApply
+      updatedAt: CustomFieldValueInput_updatedAtApply
     }
   },
   InventoryItemToManyInventoryTransactionFilter: {
@@ -57925,7 +59803,7 @@ export const inputObjects = {
       taxAmount: CreditMemoInput_taxAmountApply,
       terms: EstimateInput_termsApply,
       total: BankDepositInput_totalApply,
-      updatedAt: AccountMappingInput_updatedAtApply
+      updatedAt: CustomFieldValueInput_updatedAtApply
     }
   },
   InvoiceLineCondition: {
@@ -58025,7 +59903,7 @@ export const inputObjects = {
       taxAmount: CreditMemoInput_taxAmountApply,
       terms: EstimateInput_termsApply,
       total: BankDepositInput_totalApply,
-      updatedAt: AccountMappingInput_updatedAtApply
+      updatedAt: CustomFieldValueInput_updatedAtApply
     }
   },
   InvoicePaymentCondition: {
@@ -58231,7 +60109,7 @@ export const inputObjects = {
       rowId: JournalLineProjectInput_rowIdApply,
       source: JournalEntryInput_sourceApply,
       sourceReferenceId: JournalEntryInput_sourceReferenceIdApply,
-      updatedAt: AccountMappingInput_updatedAtApply,
+      updatedAt: CustomFieldValueInput_updatedAtApply,
       vendorId: PurchaseOrderInput_vendorIdApply
     }
   },
@@ -58247,7 +60125,7 @@ export const inputObjects = {
       rowId: JournalLineProjectInput_rowIdApply,
       source: JournalEntryInput_sourceApply,
       sourceReferenceId: JournalEntryInput_sourceReferenceIdApply,
-      updatedAt: AccountMappingInput_updatedAtApply,
+      updatedAt: CustomFieldValueInput_updatedAtApply,
       vendorId: PurchaseOrderInput_vendorIdApply
     }
   },
@@ -58642,7 +60520,7 @@ export const inputObjects = {
       startDate: ProjectInput_startDateApply,
       status: AccountingPeriodInput_statusApply,
       termMonths: LoanInput_termMonthsApply,
-      updatedAt: AccountMappingInput_updatedAtApply
+      updatedAt: CustomFieldValueInput_updatedAtApply
     }
   },
   LoanPatch: {
@@ -58664,7 +60542,7 @@ export const inputObjects = {
       startDate: ProjectInput_startDateApply,
       status: AccountingPeriodInput_statusApply,
       termMonths: LoanInput_termMonthsApply,
-      updatedAt: AccountMappingInput_updatedAtApply
+      updatedAt: CustomFieldValueInput_updatedAtApply
     }
   },
   LoanToManyAmortizationEntryFilter: {
@@ -58725,7 +60603,7 @@ export const inputObjects = {
       odometerStart: MileageLogInput_odometerStartApply,
       origin: MileageLogInput_originApply,
       rowId: JournalLineProjectInput_rowIdApply,
-      updatedAt: AccountMappingInput_updatedAtApply,
+      updatedAt: CustomFieldValueInput_updatedAtApply,
       vehicleId: MileageLogInput_vehicleIdApply
     }
   },
@@ -58743,7 +60621,7 @@ export const inputObjects = {
       odometerStart: MileageLogInput_odometerStartApply,
       origin: MileageLogInput_originApply,
       rowId: JournalLineProjectInput_rowIdApply,
-      updatedAt: AccountMappingInput_updatedAtApply,
+      updatedAt: CustomFieldValueInput_updatedAtApply,
       vehicleId: MileageLogInput_vehicleIdApply
     }
   },
@@ -58942,7 +60820,7 @@ export const inputObjects = {
       rowId: JournalLineProjectInput_rowIdApply,
       startDate: ProjectInput_startDateApply,
       status: AccountingPeriodInput_statusApply,
-      updatedAt: AccountMappingInput_updatedAtApply
+      updatedAt: CustomFieldValueInput_updatedAtApply
     }
   },
   ProjectPatch: {
@@ -58958,7 +60836,7 @@ export const inputObjects = {
       rowId: JournalLineProjectInput_rowIdApply,
       startDate: ProjectInput_startDateApply,
       status: AccountingPeriodInput_statusApply,
-      updatedAt: AccountMappingInput_updatedAtApply
+      updatedAt: CustomFieldValueInput_updatedAtApply
     }
   },
   ProjectToManyJournalLineProjectFilter: {
@@ -59055,7 +60933,7 @@ export const inputObjects = {
       status: AccountingPeriodInput_statusApply,
       subtotal: PurchaseOrderInput_subtotalApply,
       total: BankDepositInput_totalApply,
-      updatedAt: AccountMappingInput_updatedAtApply,
+      updatedAt: CustomFieldValueInput_updatedAtApply,
       vendorId: PurchaseOrderInput_vendorIdApply
     }
   },
@@ -59133,7 +61011,7 @@ export const inputObjects = {
       status: AccountingPeriodInput_statusApply,
       subtotal: PurchaseOrderInput_subtotalApply,
       total: BankDepositInput_totalApply,
-      updatedAt: AccountMappingInput_updatedAtApply,
+      updatedAt: CustomFieldValueInput_updatedAtApply,
       vendorId: PurchaseOrderInput_vendorIdApply
     }
   },
@@ -59192,7 +61070,7 @@ export const inputObjects = {
       notes: RdExpenseInput_notesApply,
       projectId: JournalLineProjectInput_projectIdApply,
       rowId: JournalLineProjectInput_rowIdApply,
-      updatedAt: AccountMappingInput_updatedAtApply,
+      updatedAt: CustomFieldValueInput_updatedAtApply,
       year: VehicleInput_yearApply
     }
   },
@@ -59208,7 +61086,7 @@ export const inputObjects = {
       notes: RdExpenseInput_notesApply,
       projectId: JournalLineProjectInput_projectIdApply,
       rowId: JournalLineProjectInput_rowIdApply,
-      updatedAt: AccountMappingInput_updatedAtApply,
+      updatedAt: CustomFieldValueInput_updatedAtApply,
       year: VehicleInput_yearApply
     }
   },
@@ -59417,7 +61295,7 @@ export const inputObjects = {
       nextRunDate: RecurringInvoiceInput_nextRunDateApply,
       numberPrefix: RecurringInvoiceInput_numberPrefixApply,
       rowId: JournalLineProjectInput_rowIdApply,
-      updatedAt: AccountMappingInput_updatedAtApply
+      updatedAt: CustomFieldValueInput_updatedAtApply
     }
   },
   RecurringInvoiceLineCondition: {
@@ -59495,7 +61373,7 @@ export const inputObjects = {
       nextRunDate: RecurringInvoiceInput_nextRunDateApply,
       numberPrefix: RecurringInvoiceInput_numberPrefixApply,
       rowId: JournalLineProjectInput_rowIdApply,
-      updatedAt: AccountMappingInput_updatedAtApply
+      updatedAt: CustomFieldValueInput_updatedAtApply
     }
   },
   RecurringInvoiceToManyRecurringInvoiceLineFilter: {
@@ -59550,7 +61428,7 @@ export const inputObjects = {
       name: TagGroupInput_nameApply,
       nextExpectedDate: RecurringTransactionInput_nextExpectedDateApply,
       rowId: JournalLineProjectInput_rowIdApply,
-      updatedAt: AccountMappingInput_updatedAtApply
+      updatedAt: CustomFieldValueInput_updatedAtApply
     }
   },
   RecurringTransactionPatch: {
@@ -59567,7 +61445,7 @@ export const inputObjects = {
       name: TagGroupInput_nameApply,
       nextExpectedDate: RecurringTransactionInput_nextExpectedDateApply,
       rowId: JournalLineProjectInput_rowIdApply,
-      updatedAt: AccountMappingInput_updatedAtApply
+      updatedAt: CustomFieldValueInput_updatedAtApply
     }
   },
   SavingsGoalCondition: {
@@ -59605,7 +61483,7 @@ export const inputObjects = {
       rowId: JournalLineProjectInput_rowIdApply,
       targetAmount: SavingsGoalInput_targetAmountApply,
       targetDate: SavingsGoalInput_targetDateApply,
-      updatedAt: AccountMappingInput_updatedAtApply
+      updatedAt: CustomFieldValueInput_updatedAtApply
     }
   },
   SavingsGoalPatch: {
@@ -59618,7 +61496,7 @@ export const inputObjects = {
       rowId: JournalLineProjectInput_rowIdApply,
       targetAmount: SavingsGoalInput_targetAmountApply,
       targetDate: SavingsGoalInput_targetDateApply,
-      updatedAt: AccountMappingInput_updatedAtApply
+      updatedAt: CustomFieldValueInput_updatedAtApply
     }
   },
   StringFilter: {
@@ -60008,7 +61886,7 @@ export const inputObjects = {
       kind: TrackingCategoryInput_kindApply,
       name: TagGroupInput_nameApply,
       rowId: JournalLineProjectInput_rowIdApply,
-      updatedAt: AccountMappingInput_updatedAtApply
+      updatedAt: CustomFieldValueInput_updatedAtApply
     }
   },
   TrackingCategoryPatch: {
@@ -60021,7 +61899,7 @@ export const inputObjects = {
       kind: TrackingCategoryInput_kindApply,
       name: TagGroupInput_nameApply,
       rowId: JournalLineProjectInput_rowIdApply,
-      updatedAt: AccountMappingInput_updatedAtApply
+      updatedAt: CustomFieldValueInput_updatedAtApply
     }
   },
   TrackingCategoryToManyJournalLineTrackingCategoryFilter: {
@@ -60278,6 +62156,30 @@ export const inputObjects = {
     }
   },
   UpdateCustomerInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateCustomFieldDefinitionByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateCustomFieldDefinitionInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateCustomFieldValueByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateCustomFieldValueInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
       patch: applyCreateFields
@@ -61015,7 +62917,7 @@ export const inputObjects = {
       subtotal: PurchaseOrderInput_subtotalApply,
       taxAmount: CreditMemoInput_taxAmountApply,
       total: BankDepositInput_totalApply,
-      updatedAt: AccountMappingInput_updatedAtApply,
+      updatedAt: CustomFieldValueInput_updatedAtApply,
       vendorId: PurchaseOrderInput_vendorIdApply
     }
   },
@@ -61097,7 +62999,7 @@ export const inputObjects = {
       subtotal: PurchaseOrderInput_subtotalApply,
       taxAmount: CreditMemoInput_taxAmountApply,
       total: BankDepositInput_totalApply,
-      updatedAt: AccountMappingInput_updatedAtApply,
+      updatedAt: CustomFieldValueInput_updatedAtApply,
       vendorId: PurchaseOrderInput_vendorIdApply
     }
   },
@@ -62108,6 +64010,94 @@ export const enums = {
       },
       PRIMARY_KEY_DESC(queryBuilder) {
         customerUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply
+    }
+  },
+  CustomFieldDefinitionOrderBy: {
+    values: {
+      BOOK_ID_ASC: AccountOrderBy_BOOK_ID_ASCApply,
+      BOOK_ID_DESC: AccountOrderBy_BOOK_ID_DESCApply,
+      ENTITY_TYPE_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "entity_type",
+          direction: "ASC"
+        });
+      },
+      ENTITY_TYPE_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "entity_type",
+          direction: "DESC"
+        });
+      },
+      PRIMARY_KEY_ASC(queryBuilder) {
+        custom_field_definitionUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        custom_field_definitionUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply
+    }
+  },
+  CustomFieldValueOrderBy: {
+    values: {
+      BOOK_ID_ASC: AccountOrderBy_BOOK_ID_ASCApply,
+      BOOK_ID_DESC: AccountOrderBy_BOOK_ID_DESCApply,
+      DEFINITION_ID_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "definition_id",
+          direction: "ASC"
+        });
+      },
+      DEFINITION_ID_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "definition_id",
+          direction: "DESC"
+        });
+      },
+      ENTITY_ID_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "entity_id",
+          direction: "ASC"
+        });
+      },
+      ENTITY_ID_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "entity_id",
+          direction: "DESC"
+        });
+      },
+      PRIMARY_KEY_ASC(queryBuilder) {
+        custom_field_valueUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        custom_field_valueUniques[0].attributes.forEach(attributeName => {
           queryBuilder.orderBy({
             attribute: attributeName,
             direction: "DESC"

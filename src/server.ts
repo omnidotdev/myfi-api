@@ -26,6 +26,7 @@ import {
 } from "lib/config/env.config";
 import creditMemoRoutes from "lib/creditMemo/creditMemoRoutes";
 import { cryptoRoutes, lotRoutes } from "lib/crypto";
+import customFieldRoutes from "lib/customFields/customFieldRoutes";
 import { dbPool, pgPool } from "lib/db/db";
 import {
   amortizationEntryTable,
@@ -155,7 +156,8 @@ const connectionAndOrgRoutes = new Elysia()
   .use(purchaseOrderRoutes)
   .use(recurringInvoiceRoutes)
   .use(bankDepositRoutes)
-  .use(trackingCategoryRoutes);
+  .use(trackingCategoryRoutes)
+  .use(customFieldRoutes);
 
 const app = new Elysia()
   .onAfterHandle(({ set }) => {
