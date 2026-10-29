@@ -559,6 +559,100 @@ const spec_creditMemoApplication = {
   executor: executor
 };
 const creditMemoApplicationCodec = recordCodec(spec_creditMemoApplication);
+const vendorCreditApplicationIdentifier = sql.identifier("public", "vendor_credit_application");
+const spec_vendorCreditApplication = {
+  name: "vendorCreditApplication",
+  identifier: vendorCreditApplicationIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    vendor_credit_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    bill_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    amount: {
+      codec: TYPES.numeric,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    date: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "18369",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "vendor_credit_application"
+    }
+  },
+  executor: executor
+};
+const vendorCreditApplicationCodec = recordCodec(spec_vendorCreditApplication);
 const tagIdentifier = sql.identifier("public", "tag");
 const spec_tag = {
   name: "tag",
@@ -2540,6 +2634,136 @@ const spec_billLine = {
   executor: executor
 };
 const billLineCodec = recordCodec(spec_billLine);
+const vendorCreditLineIdentifier = sql.identifier("public", "vendor_credit_line");
+const spec_vendorCreditLine = {
+  name: "vendorCreditLine",
+  identifier: vendorCreditLineIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    vendor_credit_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    description: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    quantity: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    unit_price: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    amount: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    discount_percent: {
+      codec: TYPES.numeric,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    expense_account_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    tax_jurisdiction_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    sort_order: {
+      codec: TYPES.int,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "18413",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "vendor_credit_line"
+    }
+  },
+  executor: executor
+};
+const vendorCreditLineCodec = recordCodec(spec_vendorCreditLine);
 const amortizationEntryIdentifier = sql.identifier("public", "amortization_entry");
 const spec_amortizationEntry = {
   name: "amortizationEntry",
@@ -5260,6 +5484,202 @@ const spec_creditMemo = {
   executor: executor
 };
 const creditMemoCodec = recordCodec(spec_creditMemo);
+const vendorCreditIdentifier = sql.identifier("public", "vendor_credit");
+const spec_vendorCredit = {
+  name: "vendorCredit",
+  identifier: vendorCreditIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    vendor_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    number: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    status: {
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    date: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    subtotal: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    tax_amount: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    total: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    amount_applied: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    currency: {
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    exchange_rate: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    memo: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    journal_entry_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "18384",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "vendor_credit"
+    }
+  },
+  executor: executor
+};
+const vendorCreditCodec = recordCodec(spec_vendorCredit);
 const fixedAssetIdentifier = sql.identifier("public", "fixed_asset");
 const spec_fixedAsset = {
   name: "fixedAsset",
@@ -6940,6 +7360,29 @@ const credit_memo_application_resourceOptionsConfig = {
   },
   uniques: credit_memo_applicationUniques
 };
+const vendor_credit_applicationUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const vendor_credit_application_resourceOptionsConfig = {
+  executor: executor,
+  name: "vendor_credit_application",
+  identifier: "main.public.vendor_credit_application",
+  from: vendorCreditApplicationIdentifier,
+  codec: vendorCreditApplicationCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "vendor_credit_application"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: vendor_credit_applicationUniques
+};
 const tagUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -7330,6 +7773,29 @@ const bill_line_resourceOptionsConfig = {
     canDelete: true
   },
   uniques: bill_lineUniques
+};
+const vendor_credit_lineUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const vendor_credit_line_resourceOptionsConfig = {
+  executor: executor,
+  name: "vendor_credit_line",
+  identifier: "main.public.vendor_credit_line",
+  from: vendorCreditLineIdentifier,
+  codec: vendorCreditLineCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "vendor_credit_line"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: vendor_credit_lineUniques
 };
 const amortization_entryUniques = [{
   attributes: ["id"],
@@ -7745,6 +8211,29 @@ const credit_memo_resourceOptionsConfig = {
   },
   uniques: credit_memoUniques
 };
+const vendor_creditUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const vendor_credit_resourceOptionsConfig = {
+  executor: executor,
+  name: "vendor_credit",
+  identifier: "main.public.vendor_credit",
+  from: vendorCreditIdentifier,
+  codec: vendorCreditCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "vendor_credit"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: vendor_creditUniques
+};
 const fixed_assetUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -7949,6 +8438,7 @@ const registryConfig = {
     bookAccess: bookAccessCodec,
     creditMemoApplication: creditMemoApplicationCodec,
     numeric: TYPES.numeric,
+    vendorCreditApplication: vendorCreditApplicationCodec,
     tag: tagCodec,
     bool: TYPES.boolean,
     vehicle: vehicleCodec,
@@ -7968,6 +8458,7 @@ const registryConfig = {
     rdExpense: rdExpenseCodec,
     project: projectCodec,
     billLine: billLineCodec,
+    vendorCreditLine: vendorCreditLineCodec,
     amortizationEntry: amortizationEntryCodec,
     billPayment: billPaymentCodec,
     invoicePayment: invoicePaymentCodec,
@@ -7988,6 +8479,7 @@ const registryConfig = {
     cryptoAsset: cryptoAssetCodec,
     costBasisMethod: costBasisMethodCodec,
     creditMemo: creditMemoCodec,
+    vendorCredit: vendorCreditCodec,
     fixedAsset: fixedAssetCodec,
     bill: billCodec,
     recurringTransaction: recurringTransactionCodec,
@@ -8027,6 +8519,7 @@ const registryConfig = {
     account_mapping: account_mapping_resourceOptionsConfig,
     book_access: book_access_resourceOptionsConfig,
     credit_memo_application: credit_memo_application_resourceOptionsConfig,
+    vendor_credit_application: vendor_credit_application_resourceOptionsConfig,
     tag: tag_resourceOptionsConfig,
     vehicle: vehicle_resourceOptionsConfig,
     savings_goal: savings_goal_resourceOptionsConfig,
@@ -8044,6 +8537,7 @@ const registryConfig = {
     rd_expense: rd_expense_resourceOptionsConfig,
     project: project_resourceOptionsConfig,
     bill_line: bill_line_resourceOptionsConfig,
+    vendor_credit_line: vendor_credit_line_resourceOptionsConfig,
     amortization_entry: amortization_entry_resourceOptionsConfig,
     bill_payment: bill_payment_resourceOptionsConfig,
     invoice_payment: invoice_payment_resourceOptionsConfig,
@@ -8062,6 +8556,7 @@ const registryConfig = {
     vendor: vendor_resourceOptionsConfig,
     crypto_asset: crypto_asset_resourceOptionsConfig,
     credit_memo: credit_memo_resourceOptionsConfig,
+    vendor_credit: vendor_credit_resourceOptionsConfig,
     fixed_asset: fixed_asset_resourceOptionsConfig,
     bill: bill_resourceOptionsConfig,
     recurring_transaction: recurring_transaction_resourceOptionsConfig,
@@ -8413,6 +8908,17 @@ const registryConfig = {
           __proto__: null,
           isIndexed: false
         }
+      },
+      vendorCreditLinesByTheirExpenseAccountId: {
+        localCodec: accountCodec,
+        remoteResourceOptions: vendor_credit_line_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["expense_account_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
       }
     },
     accountMapping: {
@@ -8516,6 +9022,13 @@ const registryConfig = {
       billPaymentsByTheirBillId: {
         localCodec: billCodec,
         remoteResourceOptions: bill_payment_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["bill_id"],
+        isReferencee: true
+      },
+      vendorCreditApplicationsByTheirBillId: {
+        localCodec: billCodec,
+        remoteResourceOptions: vendor_credit_application_resourceOptionsConfig,
         localAttributes: ["id"],
         remoteAttributes: ["bill_id"],
         isReferencee: true
@@ -8844,6 +9357,24 @@ const registryConfig = {
           __proto__: null,
           isIndexed: false
         }
+      },
+      vendorCreditApplicationsByTheirBookId: {
+        localCodec: bookCodec,
+        remoteResourceOptions: vendor_credit_application_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["book_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
+      },
+      vendorCreditsByTheirBookId: {
+        localCodec: bookCodec,
+        remoteResourceOptions: vendor_credit_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["book_id"],
+        isReferencee: true
       }
     },
     bookAccess: {
@@ -9574,6 +10105,17 @@ const registryConfig = {
           __proto__: null,
           isIndexed: false
         }
+      },
+      vendorCreditsByTheirJournalEntryId: {
+        localCodec: journalEntryCodec,
+        remoteResourceOptions: vendor_credit_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["journal_entry_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
       }
     },
     journalLine: {
@@ -10008,6 +10550,17 @@ const registryConfig = {
           __proto__: null,
           isIndexed: false
         }
+      },
+      vendorCreditLinesByTheirTaxJurisdictionId: {
+        localCodec: taxJurisdictionCodec,
+        remoteResourceOptions: vendor_credit_line_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["tax_jurisdiction_id"],
+        isReferencee: true,
+        extensions: {
+          __proto__: null,
+          isIndexed: false
+        }
       }
     },
     vehicle: {
@@ -10060,6 +10613,99 @@ const registryConfig = {
         localAttributes: ["id"],
         remoteAttributes: ["vendor_id"],
         isReferencee: true
+      },
+      vendorCreditsByTheirVendorId: {
+        localCodec: vendorCodec,
+        remoteResourceOptions: vendor_credit_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["vendor_id"],
+        isReferencee: true
+      }
+    },
+    vendorCredit: {
+      __proto__: null,
+      bookByMyBookId: {
+        localCodec: vendorCreditCodec,
+        remoteResourceOptions: book_resourceOptionsConfig,
+        localAttributes: ["book_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      journalEntryByMyJournalEntryId: {
+        localCodec: vendorCreditCodec,
+        remoteResourceOptions: journal_entry_resourceOptionsConfig,
+        localAttributes: ["journal_entry_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      vendorByMyVendorId: {
+        localCodec: vendorCreditCodec,
+        remoteResourceOptions: vendor_resourceOptionsConfig,
+        localAttributes: ["vendor_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      vendorCreditApplicationsByTheirVendorCreditId: {
+        localCodec: vendorCreditCodec,
+        remoteResourceOptions: vendor_credit_application_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["vendor_credit_id"],
+        isReferencee: true
+      },
+      vendorCreditLinesByTheirVendorCreditId: {
+        localCodec: vendorCreditCodec,
+        remoteResourceOptions: vendor_credit_line_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["vendor_credit_id"],
+        isReferencee: true
+      }
+    },
+    vendorCreditApplication: {
+      __proto__: null,
+      billByMyBillId: {
+        localCodec: vendorCreditApplicationCodec,
+        remoteResourceOptions: bill_resourceOptionsConfig,
+        localAttributes: ["bill_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      bookByMyBookId: {
+        localCodec: vendorCreditApplicationCodec,
+        remoteResourceOptions: book_resourceOptionsConfig,
+        localAttributes: ["book_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      vendorCreditByMyVendorCreditId: {
+        localCodec: vendorCreditApplicationCodec,
+        remoteResourceOptions: vendor_credit_resourceOptionsConfig,
+        localAttributes: ["vendor_credit_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      }
+    },
+    vendorCreditLine: {
+      __proto__: null,
+      accountByMyExpenseAccountId: {
+        localCodec: vendorCreditLineCodec,
+        remoteResourceOptions: account_resourceOptionsConfig,
+        localAttributes: ["expense_account_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      taxJurisdictionByMyTaxJurisdictionId: {
+        localCodec: vendorCreditLineCodec,
+        remoteResourceOptions: tax_jurisdiction_resourceOptionsConfig,
+        localAttributes: ["tax_jurisdiction_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      vendorCreditByMyVendorCreditId: {
+        localCodec: vendorCreditLineCodec,
+        remoteResourceOptions: vendor_credit_resourceOptionsConfig,
+        localAttributes: ["vendor_credit_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
       }
     }
   }
@@ -10072,6 +10718,7 @@ const resource___drizzle_migrationsPgResource = registry.pgResources["__drizzle_
 const resource_account_mappingPgResource = registry.pgResources["account_mapping"];
 const resource_book_accessPgResource = registry.pgResources["book_access"];
 const resource_credit_memo_applicationPgResource = registry.pgResources["credit_memo_application"];
+const resource_vendor_credit_applicationPgResource = registry.pgResources["vendor_credit_application"];
 const resource_tagPgResource = registry.pgResources["tag"];
 const resource_vehiclePgResource = registry.pgResources["vehicle"];
 const resource_savings_goalPgResource = registry.pgResources["savings_goal"];
@@ -10089,6 +10736,7 @@ const resource_reconciliation_statementPgResource = registry.pgResources["reconc
 const resource_rd_expensePgResource = registry.pgResources["rd_expense"];
 const resource_projectPgResource = registry.pgResources["project"];
 const resource_bill_linePgResource = registry.pgResources["bill_line"];
+const resource_vendor_credit_linePgResource = registry.pgResources["vendor_credit_line"];
 const resource_amortization_entryPgResource = registry.pgResources["amortization_entry"];
 const resource_bill_paymentPgResource = registry.pgResources["bill_payment"];
 const resource_invoice_paymentPgResource = registry.pgResources["invoice_payment"];
@@ -10107,6 +10755,7 @@ const resource_inventory_itemPgResource = registry.pgResources["inventory_item"]
 const resource_vendorPgResource = registry.pgResources["vendor"];
 const resource_crypto_assetPgResource = registry.pgResources["crypto_asset"];
 const resource_credit_memoPgResource = registry.pgResources["credit_memo"];
+const resource_vendor_creditPgResource = registry.pgResources["vendor_credit"];
 const resource_fixed_assetPgResource = registry.pgResources["fixed_asset"];
 const resource_billPgResource = registry.pgResources["bill"];
 const resource_recurring_transactionPgResource = registry.pgResources["recurring_transaction"];
@@ -10235,6 +10884,17 @@ const nodeIdHandler_CreditMemoApplication = makeTableNodeIdHandler({
 const nodeFetcher_CreditMemoApplication = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_CreditMemoApplication));
   return nodeIdHandler_CreditMemoApplication.get(nodeIdHandler_CreditMemoApplication.getSpec($decoded));
+};
+const nodeIdHandler_VendorCreditApplication = makeTableNodeIdHandler({
+  typeName: "VendorCreditApplication",
+  identifier: "VendorCreditApplication",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_vendor_credit_applicationPgResource,
+  pk: vendor_credit_applicationUniques[0].attributes
+});
+const nodeFetcher_VendorCreditApplication = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_VendorCreditApplication));
+  return nodeIdHandler_VendorCreditApplication.get(nodeIdHandler_VendorCreditApplication.getSpec($decoded));
 };
 const nodeIdHandler_Tag = makeTableNodeIdHandler({
   typeName: "Tag",
@@ -10422,6 +11082,17 @@ const nodeIdHandler_BillLine = makeTableNodeIdHandler({
 const nodeFetcher_BillLine = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_BillLine));
   return nodeIdHandler_BillLine.get(nodeIdHandler_BillLine.getSpec($decoded));
+};
+const nodeIdHandler_VendorCreditLine = makeTableNodeIdHandler({
+  typeName: "VendorCreditLine",
+  identifier: "VendorCreditLine",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_vendor_credit_linePgResource,
+  pk: vendor_credit_lineUniques[0].attributes
+});
+const nodeFetcher_VendorCreditLine = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_VendorCreditLine));
+  return nodeIdHandler_VendorCreditLine.get(nodeIdHandler_VendorCreditLine.getSpec($decoded));
 };
 const nodeIdHandler_AmortizationEntry = makeTableNodeIdHandler({
   typeName: "AmortizationEntry",
@@ -10621,6 +11292,17 @@ const nodeFetcher_CreditMemo = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_CreditMemo));
   return nodeIdHandler_CreditMemo.get(nodeIdHandler_CreditMemo.getSpec($decoded));
 };
+const nodeIdHandler_VendorCredit = makeTableNodeIdHandler({
+  typeName: "VendorCredit",
+  identifier: "VendorCredit",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_vendor_creditPgResource,
+  pk: vendor_creditUniques[0].attributes
+});
+const nodeFetcher_VendorCredit = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_VendorCredit));
+  return nodeIdHandler_VendorCredit.get(nodeIdHandler_VendorCredit.getSpec($decoded));
+};
 const nodeIdHandler_FixedAsset = makeTableNodeIdHandler({
   typeName: "FixedAsset",
   identifier: "FixedAsset",
@@ -10768,6 +11450,7 @@ const nodeIdHandlerByTypeName = {
   AccountMapping: nodeIdHandler_AccountMapping,
   BookAccess: nodeIdHandler_BookAccess,
   CreditMemoApplication: nodeIdHandler_CreditMemoApplication,
+  VendorCreditApplication: nodeIdHandler_VendorCreditApplication,
   Tag: nodeIdHandler_Tag,
   Vehicle: nodeIdHandler_Vehicle,
   SavingsGoal: nodeIdHandler_SavingsGoal,
@@ -10785,6 +11468,7 @@ const nodeIdHandlerByTypeName = {
   RdExpense: nodeIdHandler_RdExpense,
   Project: nodeIdHandler_Project,
   BillLine: nodeIdHandler_BillLine,
+  VendorCreditLine: nodeIdHandler_VendorCreditLine,
   AmortizationEntry: nodeIdHandler_AmortizationEntry,
   BillPayment: nodeIdHandler_BillPayment,
   InvoicePayment: nodeIdHandler_InvoicePayment,
@@ -10803,6 +11487,7 @@ const nodeIdHandlerByTypeName = {
   Vendor: nodeIdHandler_Vendor,
   CryptoAsset: nodeIdHandler_CryptoAsset,
   CreditMemo: nodeIdHandler_CreditMemo,
+  VendorCredit: nodeIdHandler_VendorCredit,
   FixedAsset: nodeIdHandler_FixedAsset,
   Bill: nodeIdHandler_Bill,
   RecurringTransaction: nodeIdHandler_RecurringTransaction,
@@ -11252,6 +11937,9 @@ const BillLine_billIdPlan = $record => {
 const BillLine_unitPricePlan = $record => {
   return $record.get("unit_price");
 };
+const BillLine_expenseAccountIdPlan = $record => {
+  return $record.get("expense_account_id");
+};
 const BillLine_sortOrderPlan = $record => {
   return $record.get("sort_order");
 };
@@ -11260,6 +11948,9 @@ const BillLine_discountPercentPlan = $record => {
 };
 const BillLine_billPlan = $record => resource_billPgResource.get({
   id: $record.get("bill_id")
+});
+const BillLine_expenseAccountPlan = $record => resource_accountPgResource.get({
+  id: $record.get("expense_account_id")
 });
 const JournalLineCondition_journalEntryIdApply = ($condition, val) => applyAttributeCondition("journal_entry_id", TYPES.uuid, $condition, val);
 const JournalLineOrderBy_JOURNAL_ENTRY_ID_ASCApply = queryBuilder => {
@@ -11293,6 +11984,28 @@ const BillPayment_paymentAccountIdPlan = $record => {
 const BillPayment_paymentAccountPlan = $record => resource_accountPgResource.get({
   id: $record.get("payment_account_id")
 });
+const VendorCreditApplication_vendorCreditIdPlan = $record => {
+  return $record.get("vendor_credit_id");
+};
+const VendorCreditApplication_vendorCreditPlan = $record => resource_vendor_creditPgResource.get({
+  id: $record.get("vendor_credit_id")
+});
+const VendorCredit_amountAppliedPlan = $record => {
+  return $record.get("amount_applied");
+};
+const VendorCreditApplicationCondition_vendorCreditIdApply = ($condition, val) => applyAttributeCondition("vendor_credit_id", TYPES.uuid, $condition, val);
+const VendorCreditApplicationOrderBy_VENDOR_CREDIT_ID_ASCApply = queryBuilder => {
+  queryBuilder.orderBy({
+    attribute: "vendor_credit_id",
+    direction: "ASC"
+  });
+};
+const VendorCreditApplicationOrderBy_VENDOR_CREDIT_ID_DESCApply = queryBuilder => {
+  queryBuilder.orderBy({
+    attribute: "vendor_credit_id",
+    direction: "DESC"
+  });
+};
 const BillCondition_vendorIdApply = ($condition, val) => applyAttributeCondition("vendor_id", TYPES.uuid, $condition, val);
 const BillCondition_numberApply = ($condition, val) => applyAttributeCondition("number", TYPES.text, $condition, val);
 const BillCondition_statusApply = ($condition, val) => applyAttributeCondition("status", TYPES.text, $condition, val);
@@ -11521,6 +12234,10 @@ const specFromArgs_CreditMemoApplication = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_CreditMemoApplication, $nodeId);
 };
+const specFromArgs_VendorCreditApplication = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_VendorCreditApplication, $nodeId);
+};
 const specFromArgs_Tag = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Tag, $nodeId);
@@ -11588,6 +12305,10 @@ const specFromArgs_Project = args => {
 const specFromArgs_BillLine = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_BillLine, $nodeId);
+};
+const specFromArgs_VendorCreditLine = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_VendorCreditLine, $nodeId);
 };
 const specFromArgs_AmortizationEntry = args => {
   const $nodeId = args.getRaw(["input", "id"]);
@@ -11660,6 +12381,10 @@ const specFromArgs_CryptoAsset = args => {
 const specFromArgs_CreditMemo = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_CreditMemo, $nodeId);
+};
+const specFromArgs_VendorCredit = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_VendorCredit, $nodeId);
 };
 const specFromArgs_FixedAsset = args => {
   const $nodeId = args.getRaw(["input", "id"]);
@@ -11792,6 +12517,13 @@ function CreditMemoApplicationInput_amountApply(obj, val, info) {
 }
 function CreditMemoApplicationInput_dateApply(obj, val, info) {
   obj.set("date", bakedInputRuntime(info.schema, info.field.type, val));
+}
+const CreateVendorCreditApplicationPayload_vendorCreditApplicationEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_vendor_credit_applicationPgResource, vendor_credit_applicationUniques[0].attributes, $mutation, fieldArgs);
+function VendorCreditApplicationInput_vendorCreditIdApply(obj, val, info) {
+  obj.set("vendor_credit_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function VendorCreditApplicationInput_billIdApply(obj, val, info) {
+  obj.set("bill_id", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateTagPayload_tagEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_tagPgResource, tagUniques[0].attributes, $mutation, fieldArgs);
 function TagInput_tagGroupIdApply(obj, val, info) {
@@ -12017,15 +12749,13 @@ function ProjectInput_endDateApply(obj, val, info) {
   obj.set("end_date", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateBillLinePayload_billLineEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_bill_linePgResource, bill_lineUniques[0].attributes, $mutation, fieldArgs);
-function BillLineInput_billIdApply(obj, val, info) {
-  obj.set("bill_id", bakedInputRuntime(info.schema, info.field.type, val));
-}
 function BillLineInput_expenseAccountIdApply(obj, val, info) {
   obj.set("expense_account_id", bakedInputRuntime(info.schema, info.field.type, val));
 }
 function BillLineInput_discountPercentApply(obj, val, info) {
   obj.set("discount_percent", bakedInputRuntime(info.schema, info.field.type, val));
 }
+const CreateVendorCreditLinePayload_vendorCreditLineEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_vendor_credit_linePgResource, vendor_credit_lineUniques[0].attributes, $mutation, fieldArgs);
 const CreateAmortizationEntryPayload_amortizationEntryEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_amortization_entryPgResource, amortization_entryUniques[0].attributes, $mutation, fieldArgs);
 function AmortizationEntryInput_loanIdApply(obj, val, info) {
   obj.set("loan_id", bakedInputRuntime(info.schema, info.field.type, val));
@@ -12284,6 +13014,7 @@ function CreditMemoInput_amountAppliedApply(obj, val, info) {
 function CreditMemoInput_currencyApply(obj, val, info) {
   obj.set("currency", bakedInputRuntime(info.schema, info.field.type, val));
 }
+const CreateVendorCreditPayload_vendorCreditEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_vendor_creditPgResource, vendor_creditUniques[0].attributes, $mutation, fieldArgs);
 const CreateFixedAssetPayload_fixedAssetEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_fixed_assetPgResource, fixed_assetUniques[0].attributes, $mutation, fieldArgs);
 function FixedAssetInput_depreciationExpenseAccountIdApply(obj, val, info) {
   obj.set("depreciation_expense_account_id", bakedInputRuntime(info.schema, info.field.type, val));
@@ -12443,6 +13174,9 @@ type Query implements Node {
   """Get a single \`CreditMemoApplication\`."""
   creditMemoApplication(rowId: UUID!): CreditMemoApplication
 
+  """Get a single \`VendorCreditApplication\`."""
+  vendorCreditApplication(rowId: UUID!): VendorCreditApplication
+
   """Get a single \`Tag\`."""
   tag(rowId: UUID!): Tag
 
@@ -12493,6 +13227,9 @@ type Query implements Node {
 
   """Get a single \`BillLine\`."""
   billLine(rowId: UUID!): BillLine
+
+  """Get a single \`VendorCreditLine\`."""
+  vendorCreditLine(rowId: UUID!): VendorCreditLine
 
   """Get a single \`AmortizationEntry\`."""
   amortizationEntry(rowId: UUID!): AmortizationEntry
@@ -12547,6 +13284,9 @@ type Query implements Node {
 
   """Get a single \`CreditMemo\`."""
   creditMemo(rowId: UUID!): CreditMemo
+
+  """Get a single \`VendorCredit\`."""
+  vendorCredit(rowId: UUID!): VendorCredit
 
   """Get a single \`FixedAsset\`."""
   fixedAsset(rowId: UUID!): FixedAsset
@@ -12625,6 +13365,16 @@ type Query implements Node {
     """
     id: ID!
   ): CreditMemoApplication
+
+  """
+  Reads a single \`VendorCreditApplication\` using its globally unique \`ID\`.
+  """
+  vendorCreditApplicationById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`VendorCreditApplication\`.
+    """
+    id: ID!
+  ): VendorCreditApplication
 
   """Reads a single \`Tag\` using its globally unique \`ID\`."""
   tagById(
@@ -12755,6 +13505,14 @@ type Query implements Node {
     """The globally unique \`ID\` to be used in selecting a single \`BillLine\`."""
     id: ID!
   ): BillLine
+
+  """Reads a single \`VendorCreditLine\` using its globally unique \`ID\`."""
+  vendorCreditLineById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`VendorCreditLine\`.
+    """
+    id: ID!
+  ): VendorCreditLine
 
   """Reads a single \`AmortizationEntry\` using its globally unique \`ID\`."""
   amortizationEntryById(
@@ -12887,6 +13645,14 @@ type Query implements Node {
     """
     id: ID!
   ): CreditMemo
+
+  """Reads a single \`VendorCredit\` using its globally unique \`ID\`."""
+  vendorCreditById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`VendorCredit\`.
+    """
+    id: ID!
+  ): VendorCredit
 
   """Reads a single \`FixedAsset\` using its globally unique \`ID\`."""
   fixedAssetById(
@@ -13179,6 +13945,42 @@ type Query implements Node {
     """The method to use when ordering \`CreditMemoApplication\`."""
     orderBy: [CreditMemoApplicationOrderBy!] = [PRIMARY_KEY_ASC]
   ): CreditMemoApplicationConnection
+
+  """
+  Reads and enables pagination through a set of \`VendorCreditApplication\`.
+  """
+  vendorCreditApplications(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: VendorCreditApplicationCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: VendorCreditApplicationFilter
+
+    """The method to use when ordering \`VendorCreditApplication\`."""
+    orderBy: [VendorCreditApplicationOrderBy!] = [PRIMARY_KEY_ASC]
+  ): VendorCreditApplicationConnection
 
   """Reads and enables pagination through a set of \`Tag\`."""
   tags(
@@ -13761,6 +14563,40 @@ type Query implements Node {
     """The method to use when ordering \`BillLine\`."""
     orderBy: [BillLineOrderBy!] = [PRIMARY_KEY_ASC]
   ): BillLineConnection
+
+  """Reads and enables pagination through a set of \`VendorCreditLine\`."""
+  vendorCreditLines(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: VendorCreditLineCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: VendorCreditLineFilter
+
+    """The method to use when ordering \`VendorCreditLine\`."""
+    orderBy: [VendorCreditLineOrderBy!] = [PRIMARY_KEY_ASC]
+  ): VendorCreditLineConnection
 
   """Reads and enables pagination through a set of \`AmortizationEntry\`."""
   amortizationEntries(
@@ -14373,6 +15209,40 @@ type Query implements Node {
     """The method to use when ordering \`CreditMemo\`."""
     orderBy: [CreditMemoOrderBy!] = [PRIMARY_KEY_ASC]
   ): CreditMemoConnection
+
+  """Reads and enables pagination through a set of \`VendorCredit\`."""
+  vendorCredits(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: VendorCreditCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: VendorCreditFilter
+
+    """The method to use when ordering \`VendorCredit\`."""
+    orderBy: [VendorCreditOrderBy!] = [PRIMARY_KEY_ASC]
+  ): VendorCreditConnection
 
   """Reads and enables pagination through a set of \`FixedAsset\`."""
   fixedAssets(
@@ -16201,6 +17071,40 @@ type Book implements Node {
     """The method to use when ordering \`CreditMemo\`."""
     orderBy: [CreditMemoOrderBy!] = [PRIMARY_KEY_ASC]
   ): CreditMemoConnection!
+
+  """Reads and enables pagination through a set of \`VendorCredit\`."""
+  vendorCredits(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: VendorCreditCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: VendorCreditFilter
+
+    """The method to use when ordering \`VendorCredit\`."""
+    orderBy: [VendorCreditOrderBy!] = [PRIMARY_KEY_ASC]
+  ): VendorCreditConnection!
 }
 
 """A connection to a list of \`Account\` values."""
@@ -16695,6 +17599,12 @@ input BookFilter {
 
   """Some related \`creditMemos\` exist."""
   creditMemosExist: Boolean
+
+  """Filter by the object’s \`vendorCredits\` relation."""
+  vendorCredits: BookToManyVendorCreditFilter
+
+  """Some related \`vendorCredits\` exist."""
+  vendorCreditsExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [BookFilter!]
@@ -17725,6 +18635,12 @@ input VendorFilter {
   """Some related \`documents\` exist."""
   documentsExist: Boolean
 
+  """Filter by the object’s \`vendorCredits\` relation."""
+  vendorCredits: VendorToManyVendorCreditFilter
+
+  """Some related \`vendorCredits\` exist."""
+  vendorCreditsExist: Boolean
+
   """Filter by the object’s \`book\` relation."""
   book: BookFilter
 
@@ -17788,6 +18704,12 @@ input BillFilter {
 
   """Some related \`billPayments\` exist."""
   billPaymentsExist: Boolean
+
+  """Filter by the object’s \`vendorCreditApplications\` relation."""
+  vendorCreditApplications: BillToManyVendorCreditApplicationFilter
+
+  """Some related \`vendorCreditApplications\` exist."""
+  vendorCreditApplicationsExist: Boolean
 
   """Filter by the object’s \`book\` relation."""
   book: BookFilter
@@ -17922,6 +18844,183 @@ input BillPaymentFilter {
 }
 
 """
+A filter to be used against many \`VendorCreditApplication\` object types. All fields are combined with a logical ‘and.’
+"""
+input BillToManyVendorCreditApplicationFilter {
+  """
+  Every related \`VendorCreditApplication\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: VendorCreditApplicationFilter
+
+  """
+  Some related \`VendorCreditApplication\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: VendorCreditApplicationFilter
+
+  """
+  No related \`VendorCreditApplication\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: VendorCreditApplicationFilter
+}
+
+"""
+A filter to be used against \`VendorCreditApplication\` object types. All fields are combined with a logical ‘and.’
+"""
+input VendorCreditApplicationFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`vendorCreditId\` field."""
+  vendorCreditId: UUIDFilter
+
+  """Filter by the object’s \`billId\` field."""
+  billId: UUIDFilter
+
+  """Filter by the object’s \`bill\` relation."""
+  bill: BillFilter
+
+  """Filter by the object’s \`book\` relation."""
+  book: BookFilter
+
+  """Filter by the object’s \`vendorCredit\` relation."""
+  vendorCredit: VendorCreditFilter
+
+  """Checks for all expressions in this list."""
+  and: [VendorCreditApplicationFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [VendorCreditApplicationFilter!]
+
+  """Negates the expression."""
+  not: VendorCreditApplicationFilter
+}
+
+"""
+A filter to be used against \`VendorCredit\` object types. All fields are combined with a logical ‘and.’
+"""
+input VendorCreditFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`bookId\` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s \`vendorId\` field."""
+  vendorId: UUIDFilter
+
+  """Filter by the object’s \`number\` field."""
+  number: StringFilter
+
+  """Filter by the object’s \`status\` field."""
+  status: StringFilter
+
+  """Filter by the object’s \`vendorCreditApplications\` relation."""
+  vendorCreditApplications: VendorCreditToManyVendorCreditApplicationFilter
+
+  """Some related \`vendorCreditApplications\` exist."""
+  vendorCreditApplicationsExist: Boolean
+
+  """Filter by the object’s \`vendorCreditLines\` relation."""
+  vendorCreditLines: VendorCreditToManyVendorCreditLineFilter
+
+  """Some related \`vendorCreditLines\` exist."""
+  vendorCreditLinesExist: Boolean
+
+  """Filter by the object’s \`book\` relation."""
+  book: BookFilter
+
+  """Filter by the object’s \`journalEntry\` relation."""
+  journalEntry: JournalEntryFilter
+
+  """A related \`journalEntry\` exists."""
+  journalEntryExists: Boolean
+
+  """Filter by the object’s \`vendor\` relation."""
+  vendor: VendorFilter
+
+  """Checks for all expressions in this list."""
+  and: [VendorCreditFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [VendorCreditFilter!]
+
+  """Negates the expression."""
+  not: VendorCreditFilter
+}
+
+"""
+A filter to be used against many \`VendorCreditApplication\` object types. All fields are combined with a logical ‘and.’
+"""
+input VendorCreditToManyVendorCreditApplicationFilter {
+  """
+  Every related \`VendorCreditApplication\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: VendorCreditApplicationFilter
+
+  """
+  Some related \`VendorCreditApplication\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: VendorCreditApplicationFilter
+
+  """
+  No related \`VendorCreditApplication\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: VendorCreditApplicationFilter
+}
+
+"""
+A filter to be used against many \`VendorCreditLine\` object types. All fields are combined with a logical ‘and.’
+"""
+input VendorCreditToManyVendorCreditLineFilter {
+  """
+  Every related \`VendorCreditLine\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: VendorCreditLineFilter
+
+  """
+  Some related \`VendorCreditLine\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: VendorCreditLineFilter
+
+  """
+  No related \`VendorCreditLine\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: VendorCreditLineFilter
+}
+
+"""
+A filter to be used against \`VendorCreditLine\` object types. All fields are combined with a logical ‘and.’
+"""
+input VendorCreditLineFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`vendorCreditId\` field."""
+  vendorCreditId: UUIDFilter
+
+  """Filter by the object’s \`expenseAccount\` relation."""
+  expenseAccount: AccountFilter
+
+  """Filter by the object’s \`taxJurisdiction\` relation."""
+  taxJurisdiction: TaxJurisdictionFilter
+
+  """A related \`taxJurisdiction\` exists."""
+  taxJurisdictionExists: Boolean
+
+  """Filter by the object’s \`vendorCredit\` relation."""
+  vendorCredit: VendorCreditFilter
+
+  """Checks for all expressions in this list."""
+  and: [VendorCreditLineFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [VendorCreditLineFilter!]
+
+  """Negates the expression."""
+  not: VendorCreditLineFilter
+}
+
+"""
 A filter to be used against many \`Document\` object types. All fields are combined with a logical ‘and.’
 """
 input VendorToManyDocumentFilter {
@@ -17974,6 +19073,26 @@ input DocumentFilter {
 
   """Negates the expression."""
   not: DocumentFilter
+}
+
+"""
+A filter to be used against many \`VendorCredit\` object types. All fields are combined with a logical ‘and.’
+"""
+input VendorToManyVendorCreditFilter {
+  """
+  Every related \`VendorCredit\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: VendorCreditFilter
+
+  """
+  Some related \`VendorCredit\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: VendorCreditFilter
+
+  """
+  No related \`VendorCredit\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: VendorCreditFilter
 }
 
 """
@@ -19792,6 +20911,26 @@ input BookToManyCreditMemoFilter {
 }
 
 """
+A filter to be used against many \`VendorCredit\` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyVendorCreditFilter {
+  """
+  Every related \`VendorCredit\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: VendorCreditFilter
+
+  """
+  Some related \`VendorCredit\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: VendorCreditFilter
+
+  """
+  No related \`VendorCredit\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: VendorCreditFilter
+}
+
+"""
 A filter to be used against many \`JournalLine\` object types. All fields are combined with a logical ‘and.’
 """
 input AccountToManyJournalLineFilter {
@@ -20383,6 +21522,40 @@ type Vendor implements Node {
     """The method to use when ordering \`Document\`."""
     orderBy: [DocumentOrderBy!] = [PRIMARY_KEY_ASC]
   ): DocumentConnection!
+
+  """Reads and enables pagination through a set of \`VendorCredit\`."""
+  vendorCredits(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: VendorCreditCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: VendorCreditFilter
+
+    """The method to use when ordering \`VendorCredit\`."""
+    orderBy: [VendorCreditOrderBy!] = [PRIMARY_KEY_ASC]
+  ): VendorCreditConnection!
 }
 
 """A connection to a list of \`Bill\` values."""
@@ -20501,6 +21674,42 @@ type Bill implements Node {
     """The method to use when ordering \`BillPayment\`."""
     orderBy: [BillPaymentOrderBy!] = [PRIMARY_KEY_ASC]
   ): BillPaymentConnection!
+
+  """
+  Reads and enables pagination through a set of \`VendorCreditApplication\`.
+  """
+  vendorCreditApplications(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: VendorCreditApplicationCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: VendorCreditApplicationFilter
+
+    """The method to use when ordering \`VendorCreditApplication\`."""
+    orderBy: [VendorCreditApplicationOrderBy!] = [PRIMARY_KEY_ASC]
+  ): VendorCreditApplicationConnection!
 }
 
 """A connection to a list of \`BillLine\` values."""
@@ -20777,6 +21986,274 @@ enum BillPaymentOrderBy {
   BILL_ID_DESC
 }
 
+"""A connection to a list of \`VendorCreditApplication\` values."""
+type VendorCreditApplicationConnection {
+  """A list of \`VendorCreditApplication\` objects."""
+  nodes: [VendorCreditApplication]!
+
+  """
+  A list of edges which contains the \`VendorCreditApplication\` and cursor to aid in pagination.
+  """
+  edges: [VendorCreditApplicationEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* \`VendorCreditApplication\` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+type VendorCreditApplication implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  vendorCreditId: UUID!
+  billId: UUID!
+  amount: BigFloat!
+  date: String!
+  createdAt: Datetime
+
+  """
+  Reads a single \`Bill\` that is related to this \`VendorCreditApplication\`.
+  """
+  bill: Bill
+
+  """
+  Reads a single \`Book\` that is related to this \`VendorCreditApplication\`.
+  """
+  book: Book
+
+  """
+  Reads a single \`VendorCredit\` that is related to this \`VendorCreditApplication\`.
+  """
+  vendorCredit: VendorCredit
+}
+
+type VendorCredit implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  vendorId: UUID!
+  number: String!
+  status: String!
+  date: String!
+  subtotal: BigFloat!
+  taxAmount: BigFloat!
+  total: BigFloat!
+  amountApplied: BigFloat!
+  currency: String!
+  exchangeRate: BigFloat!
+  memo: String
+  journalEntryId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """Reads a single \`Book\` that is related to this \`VendorCredit\`."""
+  book: Book
+
+  """Reads a single \`JournalEntry\` that is related to this \`VendorCredit\`."""
+  journalEntry: JournalEntry
+
+  """Reads a single \`Vendor\` that is related to this \`VendorCredit\`."""
+  vendor: Vendor
+
+  """
+  Reads and enables pagination through a set of \`VendorCreditApplication\`.
+  """
+  vendorCreditApplications(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: VendorCreditApplicationCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: VendorCreditApplicationFilter
+
+    """The method to use when ordering \`VendorCreditApplication\`."""
+    orderBy: [VendorCreditApplicationOrderBy!] = [PRIMARY_KEY_ASC]
+  ): VendorCreditApplicationConnection!
+
+  """Reads and enables pagination through a set of \`VendorCreditLine\`."""
+  vendorCreditLines(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: VendorCreditLineCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: VendorCreditLineFilter
+
+    """The method to use when ordering \`VendorCreditLine\`."""
+    orderBy: [VendorCreditLineOrderBy!] = [PRIMARY_KEY_ASC]
+  ): VendorCreditLineConnection!
+}
+
+"""
+A condition to be used against \`VendorCreditApplication\` object types. All
+fields are tested for equality and combined with a logical ‘and.’
+"""
+input VendorCreditApplicationCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`vendorCreditId\` field."""
+  vendorCreditId: UUID
+
+  """Checks for equality with the object’s \`billId\` field."""
+  billId: UUID
+}
+
+"""Methods to use when ordering \`VendorCreditApplication\`."""
+enum VendorCreditApplicationOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  VENDOR_CREDIT_ID_ASC
+  VENDOR_CREDIT_ID_DESC
+  BILL_ID_ASC
+  BILL_ID_DESC
+}
+
+"""A connection to a list of \`VendorCreditLine\` values."""
+type VendorCreditLineConnection {
+  """A list of \`VendorCreditLine\` objects."""
+  nodes: [VendorCreditLine]!
+
+  """
+  A list of edges which contains the \`VendorCreditLine\` and cursor to aid in pagination.
+  """
+  edges: [VendorCreditLineEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* \`VendorCreditLine\` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+type VendorCreditLine implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  vendorCreditId: UUID!
+  description: String!
+  quantity: BigFloat!
+  unitPrice: BigFloat!
+  amount: BigFloat!
+  discountPercent: BigFloat
+  expenseAccountId: UUID!
+  taxJurisdictionId: UUID
+  sortOrder: Int!
+
+  """Reads a single \`Account\` that is related to this \`VendorCreditLine\`."""
+  expenseAccount: Account
+
+  """
+  Reads a single \`TaxJurisdiction\` that is related to this \`VendorCreditLine\`.
+  """
+  taxJurisdiction: TaxJurisdiction
+
+  """
+  Reads a single \`VendorCredit\` that is related to this \`VendorCreditLine\`.
+  """
+  vendorCredit: VendorCredit
+}
+
+"""A \`VendorCreditLine\` edge in the connection."""
+type VendorCreditLineEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`VendorCreditLine\` at the end of the edge."""
+  node: VendorCreditLine
+}
+
+"""
+A condition to be used against \`VendorCreditLine\` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input VendorCreditLineCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`vendorCreditId\` field."""
+  vendorCreditId: UUID
+}
+
+"""Methods to use when ordering \`VendorCreditLine\`."""
+enum VendorCreditLineOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  VENDOR_CREDIT_ID_ASC
+  VENDOR_CREDIT_ID_DESC
+}
+
+"""A \`VendorCreditApplication\` edge in the connection."""
+type VendorCreditApplicationEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`VendorCreditApplication\` at the end of the edge."""
+  node: VendorCreditApplication
+}
+
 """A \`Bill\` edge in the connection."""
 type BillEdge {
   """A cursor for use in pagination."""
@@ -20906,6 +22383,70 @@ enum DocumentOrderBy {
   CATEGORY_DESC
   VENDOR_ID_ASC
   VENDOR_ID_DESC
+}
+
+"""A connection to a list of \`VendorCredit\` values."""
+type VendorCreditConnection {
+  """A list of \`VendorCredit\` objects."""
+  nodes: [VendorCredit]!
+
+  """
+  A list of edges which contains the \`VendorCredit\` and cursor to aid in pagination.
+  """
+  edges: [VendorCreditEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* \`VendorCredit\` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A \`VendorCredit\` edge in the connection."""
+type VendorCreditEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`VendorCredit\` at the end of the edge."""
+  node: VendorCredit
+}
+
+"""
+A condition to be used against \`VendorCredit\` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input VendorCreditCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`bookId\` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s \`vendorId\` field."""
+  vendorId: UUID
+
+  """Checks for equality with the object’s \`number\` field."""
+  number: String
+
+  """Checks for equality with the object’s \`status\` field."""
+  status: String
+}
+
+"""Methods to use when ordering \`VendorCredit\`."""
+enum VendorCreditOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+  VENDOR_ID_ASC
+  VENDOR_ID_DESC
+  NUMBER_ASC
+  NUMBER_DESC
+  STATUS_ASC
+  STATUS_DESC
 }
 
 """A connection to a list of \`Attachment\` values."""
@@ -24674,6 +26215,14 @@ type Mutation {
     input: CreateCreditMemoApplicationInput!
   ): CreateCreditMemoApplicationPayload
 
+  """Creates a single \`VendorCreditApplication\`."""
+  createVendorCreditApplication(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateVendorCreditApplicationInput!
+  ): CreateVendorCreditApplicationPayload
+
   """Creates a single \`Tag\`."""
   createTag(
     """
@@ -24809,6 +26358,14 @@ type Mutation {
     """
     input: CreateBillLineInput!
   ): CreateBillLinePayload
+
+  """Creates a single \`VendorCreditLine\`."""
+  createVendorCreditLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateVendorCreditLineInput!
+  ): CreateVendorCreditLinePayload
 
   """Creates a single \`AmortizationEntry\`."""
   createAmortizationEntry(
@@ -24953,6 +26510,14 @@ type Mutation {
     """
     input: CreateCreditMemoInput!
   ): CreateCreditMemoPayload
+
+  """Creates a single \`VendorCredit\`."""
+  createVendorCredit(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateVendorCreditInput!
+  ): CreateVendorCreditPayload
 
   """Creates a single \`FixedAsset\`."""
   createFixedAsset(
@@ -25143,6 +26708,26 @@ type Mutation {
     """
     input: UpdateCreditMemoApplicationInput!
   ): UpdateCreditMemoApplicationPayload
+
+  """
+  Updates a single \`VendorCreditApplication\` using its globally unique id and a patch.
+  """
+  updateVendorCreditApplicationById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateVendorCreditApplicationByIdInput!
+  ): UpdateVendorCreditApplicationPayload
+
+  """
+  Updates a single \`VendorCreditApplication\` using a unique key and a patch.
+  """
+  updateVendorCreditApplication(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateVendorCreditApplicationInput!
+  ): UpdateVendorCreditApplicationPayload
 
   """Updates a single \`Tag\` using its globally unique id and a patch."""
   updateTagById(
@@ -25445,6 +27030,24 @@ type Mutation {
     """
     input: UpdateBillLineInput!
   ): UpdateBillLinePayload
+
+  """
+  Updates a single \`VendorCreditLine\` using its globally unique id and a patch.
+  """
+  updateVendorCreditLineById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateVendorCreditLineByIdInput!
+  ): UpdateVendorCreditLinePayload
+
+  """Updates a single \`VendorCreditLine\` using a unique key and a patch."""
+  updateVendorCreditLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateVendorCreditLineInput!
+  ): UpdateVendorCreditLinePayload
 
   """
   Updates a single \`AmortizationEntry\` using its globally unique id and a patch.
@@ -25759,6 +27362,24 @@ type Mutation {
   ): UpdateCreditMemoPayload
 
   """
+  Updates a single \`VendorCredit\` using its globally unique id and a patch.
+  """
+  updateVendorCreditById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateVendorCreditByIdInput!
+  ): UpdateVendorCreditPayload
+
+  """Updates a single \`VendorCredit\` using a unique key and a patch."""
+  updateVendorCredit(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateVendorCreditInput!
+  ): UpdateVendorCreditPayload
+
+  """
   Updates a single \`FixedAsset\` using its globally unique id and a patch.
   """
   updateFixedAssetById(
@@ -26005,6 +27626,24 @@ type Mutation {
     """
     input: DeleteCreditMemoApplicationInput!
   ): DeleteCreditMemoApplicationPayload
+
+  """
+  Deletes a single \`VendorCreditApplication\` using its globally unique id.
+  """
+  deleteVendorCreditApplicationById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteVendorCreditApplicationByIdInput!
+  ): DeleteVendorCreditApplicationPayload
+
+  """Deletes a single \`VendorCreditApplication\` using a unique key."""
+  deleteVendorCreditApplication(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteVendorCreditApplicationInput!
+  ): DeleteVendorCreditApplicationPayload
 
   """Deletes a single \`Tag\` using its globally unique id."""
   deleteTagById(
@@ -26281,6 +27920,22 @@ type Mutation {
     """
     input: DeleteBillLineInput!
   ): DeleteBillLinePayload
+
+  """Deletes a single \`VendorCreditLine\` using its globally unique id."""
+  deleteVendorCreditLineById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteVendorCreditLineByIdInput!
+  ): DeleteVendorCreditLinePayload
+
+  """Deletes a single \`VendorCreditLine\` using a unique key."""
+  deleteVendorCreditLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteVendorCreditLineInput!
+  ): DeleteVendorCreditLinePayload
 
   """Deletes a single \`AmortizationEntry\` using its globally unique id."""
   deleteAmortizationEntryById(
@@ -26569,6 +28224,22 @@ type Mutation {
     """
     input: DeleteCreditMemoInput!
   ): DeleteCreditMemoPayload
+
+  """Deletes a single \`VendorCredit\` using its globally unique id."""
+  deleteVendorCreditById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteVendorCreditByIdInput!
+  ): DeleteVendorCreditPayload
+
+  """Deletes a single \`VendorCredit\` using a unique key."""
+  deleteVendorCredit(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteVendorCreditInput!
+  ): DeleteVendorCreditPayload
 
   """Deletes a single \`FixedAsset\` using its globally unique id."""
   deleteFixedAssetById(
@@ -27001,6 +28672,52 @@ input CreditMemoApplicationInput {
   bookId: UUID!
   creditMemoId: UUID!
   invoiceId: UUID!
+  amount: BigFloat!
+  date: String!
+  createdAt: Datetime
+}
+
+"""The output of our create \`VendorCreditApplication\` mutation."""
+type CreateVendorCreditApplicationPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`VendorCreditApplication\` that was created by this mutation."""
+  vendorCreditApplication: VendorCreditApplication
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`VendorCreditApplication\`. May be used by Relay 1."""
+  vendorCreditApplicationEdge(
+    """The method to use when ordering \`VendorCreditApplication\`."""
+    orderBy: [VendorCreditApplicationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): VendorCreditApplicationEdge
+}
+
+"""All input for the create \`VendorCreditApplication\` mutation."""
+input CreateVendorCreditApplicationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`VendorCreditApplication\` to be created by this mutation."""
+  vendorCreditApplication: VendorCreditApplicationInput!
+}
+
+"""An input for mutations affecting \`VendorCreditApplication\`"""
+input VendorCreditApplicationInput {
+  rowId: UUID
+  bookId: UUID!
+  vendorCreditId: UUID!
+  billId: UUID!
   amount: BigFloat!
   date: String!
   createdAt: Datetime
@@ -27822,6 +29539,55 @@ input BillLineInput {
   taxJurisdictionId: UUID
   sortOrder: Int
   discountPercent: BigFloat
+}
+
+"""The output of our create \`VendorCreditLine\` mutation."""
+type CreateVendorCreditLinePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`VendorCreditLine\` that was created by this mutation."""
+  vendorCreditLine: VendorCreditLine
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`VendorCreditLine\`. May be used by Relay 1."""
+  vendorCreditLineEdge(
+    """The method to use when ordering \`VendorCreditLine\`."""
+    orderBy: [VendorCreditLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): VendorCreditLineEdge
+}
+
+"""All input for the create \`VendorCreditLine\` mutation."""
+input CreateVendorCreditLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`VendorCreditLine\` to be created by this mutation."""
+  vendorCreditLine: VendorCreditLineInput!
+}
+
+"""An input for mutations affecting \`VendorCreditLine\`"""
+input VendorCreditLineInput {
+  rowId: UUID
+  vendorCreditId: UUID!
+  description: String!
+  quantity: BigFloat
+  unitPrice: BigFloat
+  amount: BigFloat
+  discountPercent: BigFloat
+  expenseAccountId: UUID!
+  taxJurisdictionId: UUID
+  sortOrder: Int
 }
 
 """The output of our create \`AmortizationEntry\` mutation."""
@@ -28746,6 +30512,61 @@ input CreditMemoInput {
   exchangeRate: BigFloat
 }
 
+"""The output of our create \`VendorCredit\` mutation."""
+type CreateVendorCreditPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`VendorCredit\` that was created by this mutation."""
+  vendorCredit: VendorCredit
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`VendorCredit\`. May be used by Relay 1."""
+  vendorCreditEdge(
+    """The method to use when ordering \`VendorCredit\`."""
+    orderBy: [VendorCreditOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): VendorCreditEdge
+}
+
+"""All input for the create \`VendorCredit\` mutation."""
+input CreateVendorCreditInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`VendorCredit\` to be created by this mutation."""
+  vendorCredit: VendorCreditInput!
+}
+
+"""An input for mutations affecting \`VendorCredit\`"""
+input VendorCreditInput {
+  rowId: UUID
+  bookId: UUID!
+  vendorId: UUID!
+  number: String!
+  status: String
+  date: String!
+  subtotal: BigFloat
+  taxAmount: BigFloat
+  total: BigFloat
+  amountApplied: BigFloat
+  currency: String
+  exchangeRate: BigFloat
+  memo: String
+  journalEntryId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
 """The output of our create \`FixedAsset\` mutation."""
 type CreateFixedAssetPayload {
   """
@@ -29655,6 +31476,76 @@ input UpdateCreditMemoApplicationInput {
   An object where the defined keys will be set on the \`CreditMemoApplication\` being updated.
   """
   patch: CreditMemoApplicationPatch!
+}
+
+"""The output of our update \`VendorCreditApplication\` mutation."""
+type UpdateVendorCreditApplicationPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`VendorCreditApplication\` that was updated by this mutation."""
+  vendorCreditApplication: VendorCreditApplication
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`VendorCreditApplication\`. May be used by Relay 1."""
+  vendorCreditApplicationEdge(
+    """The method to use when ordering \`VendorCreditApplication\`."""
+    orderBy: [VendorCreditApplicationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): VendorCreditApplicationEdge
+}
+
+"""All input for the \`updateVendorCreditApplicationById\` mutation."""
+input UpdateVendorCreditApplicationByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`VendorCreditApplication\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`VendorCreditApplication\` being updated.
+  """
+  patch: VendorCreditApplicationPatch!
+}
+
+"""
+Represents an update to a \`VendorCreditApplication\`. Fields that are set will be updated.
+"""
+input VendorCreditApplicationPatch {
+  rowId: UUID
+  bookId: UUID
+  vendorCreditId: UUID
+  billId: UUID
+  amount: BigFloat
+  date: String
+  createdAt: Datetime
+}
+
+"""All input for the \`updateVendorCreditApplication\` mutation."""
+input UpdateVendorCreditApplicationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`VendorCreditApplication\` being updated.
+  """
+  patch: VendorCreditApplicationPatch!
 }
 
 """The output of our update \`Tag\` mutation."""
@@ -30879,6 +32770,79 @@ input UpdateBillLineInput {
   An object where the defined keys will be set on the \`BillLine\` being updated.
   """
   patch: BillLinePatch!
+}
+
+"""The output of our update \`VendorCreditLine\` mutation."""
+type UpdateVendorCreditLinePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`VendorCreditLine\` that was updated by this mutation."""
+  vendorCreditLine: VendorCreditLine
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`VendorCreditLine\`. May be used by Relay 1."""
+  vendorCreditLineEdge(
+    """The method to use when ordering \`VendorCreditLine\`."""
+    orderBy: [VendorCreditLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): VendorCreditLineEdge
+}
+
+"""All input for the \`updateVendorCreditLineById\` mutation."""
+input UpdateVendorCreditLineByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`VendorCreditLine\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`VendorCreditLine\` being updated.
+  """
+  patch: VendorCreditLinePatch!
+}
+
+"""
+Represents an update to a \`VendorCreditLine\`. Fields that are set will be updated.
+"""
+input VendorCreditLinePatch {
+  rowId: UUID
+  vendorCreditId: UUID
+  description: String
+  quantity: BigFloat
+  unitPrice: BigFloat
+  amount: BigFloat
+  discountPercent: BigFloat
+  expenseAccountId: UUID
+  taxJurisdictionId: UUID
+  sortOrder: Int
+}
+
+"""All input for the \`updateVendorCreditLine\` mutation."""
+input UpdateVendorCreditLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`VendorCreditLine\` being updated.
+  """
+  patch: VendorCreditLinePatch!
 }
 
 """The output of our update \`AmortizationEntry\` mutation."""
@@ -32235,6 +34199,85 @@ input UpdateCreditMemoInput {
   patch: CreditMemoPatch!
 }
 
+"""The output of our update \`VendorCredit\` mutation."""
+type UpdateVendorCreditPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`VendorCredit\` that was updated by this mutation."""
+  vendorCredit: VendorCredit
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`VendorCredit\`. May be used by Relay 1."""
+  vendorCreditEdge(
+    """The method to use when ordering \`VendorCredit\`."""
+    orderBy: [VendorCreditOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): VendorCreditEdge
+}
+
+"""All input for the \`updateVendorCreditById\` mutation."""
+input UpdateVendorCreditByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`VendorCredit\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`VendorCredit\` being updated.
+  """
+  patch: VendorCreditPatch!
+}
+
+"""
+Represents an update to a \`VendorCredit\`. Fields that are set will be updated.
+"""
+input VendorCreditPatch {
+  rowId: UUID
+  bookId: UUID
+  vendorId: UUID
+  number: String
+  status: String
+  date: String
+  subtotal: BigFloat
+  taxAmount: BigFloat
+  total: BigFloat
+  amountApplied: BigFloat
+  currency: String
+  exchangeRate: BigFloat
+  memo: String
+  journalEntryId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the \`updateVendorCredit\` mutation."""
+input UpdateVendorCreditInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`VendorCredit\` being updated.
+  """
+  patch: VendorCreditPatch!
+}
+
 """The output of our update \`FixedAsset\` mutation."""
 type UpdateFixedAssetPayload {
   """
@@ -33193,6 +35236,54 @@ input DeleteCreditMemoApplicationInput {
   rowId: UUID!
 }
 
+"""The output of our delete \`VendorCreditApplication\` mutation."""
+type DeleteVendorCreditApplicationPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`VendorCreditApplication\` that was deleted by this mutation."""
+  vendorCreditApplication: VendorCreditApplication
+  deletedVendorCreditApplicationId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`VendorCreditApplication\`. May be used by Relay 1."""
+  vendorCreditApplicationEdge(
+    """The method to use when ordering \`VendorCreditApplication\`."""
+    orderBy: [VendorCreditApplicationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): VendorCreditApplicationEdge
+}
+
+"""All input for the \`deleteVendorCreditApplicationById\` mutation."""
+input DeleteVendorCreditApplicationByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`VendorCreditApplication\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteVendorCreditApplication\` mutation."""
+input DeleteVendorCreditApplicationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete \`Tag\` mutation."""
 type DeleteTagPayload {
   """
@@ -34001,6 +36092,54 @@ input DeleteBillLineByIdInput {
 
 """All input for the \`deleteBillLine\` mutation."""
 input DeleteBillLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`VendorCreditLine\` mutation."""
+type DeleteVendorCreditLinePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`VendorCreditLine\` that was deleted by this mutation."""
+  vendorCreditLine: VendorCreditLine
+  deletedVendorCreditLineId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`VendorCreditLine\`. May be used by Relay 1."""
+  vendorCreditLineEdge(
+    """The method to use when ordering \`VendorCreditLine\`."""
+    orderBy: [VendorCreditLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): VendorCreditLineEdge
+}
+
+"""All input for the \`deleteVendorCreditLineById\` mutation."""
+input DeleteVendorCreditLineByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`VendorCreditLine\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteVendorCreditLine\` mutation."""
+input DeleteVendorCreditLineInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -34865,6 +37004,54 @@ input DeleteCreditMemoByIdInput {
 
 """All input for the \`deleteCreditMemo\` mutation."""
 input DeleteCreditMemoInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`VendorCredit\` mutation."""
+type DeleteVendorCreditPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`VendorCredit\` that was deleted by this mutation."""
+  vendorCredit: VendorCredit
+  deletedVendorCreditId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`VendorCredit\`. May be used by Relay 1."""
+  vendorCreditEdge(
+    """The method to use when ordering \`VendorCredit\`."""
+    orderBy: [VendorCreditOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): VendorCreditEdge
+}
+
+"""All input for the \`deleteVendorCreditById\` mutation."""
+input DeleteVendorCreditByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`VendorCredit\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteVendorCredit\` mutation."""
+input DeleteVendorCreditInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -36557,6 +38744,84 @@ export const objects = {
         const $nodeId = args.getRaw("id");
         return nodeFetcher_Vendor($nodeId);
       },
+      vendorCredit(_$root, {
+        $rowId
+      }) {
+        return resource_vendor_creditPgResource.get({
+          id: $rowId
+        });
+      },
+      vendorCreditApplication(_$root, {
+        $rowId
+      }) {
+        return resource_vendor_credit_applicationPgResource.get({
+          id: $rowId
+        });
+      },
+      vendorCreditApplicationById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_VendorCreditApplication($nodeId);
+      },
+      vendorCreditApplications: {
+        plan() {
+          return connection(resource_vendor_credit_applicationPgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      vendorCreditById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_VendorCredit($nodeId);
+      },
+      vendorCreditLine(_$root, {
+        $rowId
+      }) {
+        return resource_vendor_credit_linePgResource.get({
+          id: $rowId
+        });
+      },
+      vendorCreditLineById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_VendorCreditLine($nodeId);
+      },
+      vendorCreditLines: {
+        plan() {
+          return connection(resource_vendor_credit_linePgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      vendorCredits: {
+        plan() {
+          return connection(resource_vendor_creditPgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       vendors: {
         plan() {
           return connection(resource_vendorPgResource.find());
@@ -37168,6 +39433,42 @@ export const objects = {
       createVendor: {
         plan(_, args) {
           const $insert = pgInsertSingle(resource_vendorPgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
+      createVendorCredit: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_vendor_creditPgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
+      createVendorCreditApplication: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_vendor_credit_applicationPgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
+      createVendorCreditLine: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_vendor_credit_linePgResource);
           args.apply($insert);
           return object({
             result: $insert
@@ -38477,6 +40778,84 @@ export const objects = {
           input: applyInputToUpdateOrDelete
         }
       },
+      deleteVendorCredit: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_vendor_creditPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteVendorCreditApplication: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_vendor_credit_applicationPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteVendorCreditApplicationById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_vendor_credit_applicationPgResource, specFromArgs_VendorCreditApplication(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteVendorCreditById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_vendor_creditPgResource, specFromArgs_VendorCredit(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteVendorCreditLine: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_vendor_credit_linePgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteVendorCreditLineById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_vendor_credit_linePgResource, specFromArgs_VendorCreditLine(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
       updateAccount: {
         plan(_$root, args) {
           const $update = pgUpdateSingle(resource_accountPgResource, {
@@ -39776,6 +42155,84 @@ export const objects = {
         args: {
           input: applyInputToUpdateOrDelete
         }
+      },
+      updateVendorCredit: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_vendor_creditPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateVendorCreditApplication: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_vendor_credit_applicationPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateVendorCreditApplicationById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_vendor_credit_applicationPgResource, specFromArgs_VendorCreditApplication(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateVendorCreditById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_vendor_creditPgResource, specFromArgs_VendorCredit(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateVendorCreditLine: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_vendor_credit_linePgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateVendorCreditLineById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_vendor_credit_linePgResource, specFromArgs_VendorCreditLine(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
       }
     }
   },
@@ -40115,6 +42572,24 @@ export const objects = {
       taxAmount: Bill_taxAmountPlan,
       updatedAt: Account_updatedAtPlan,
       vendor: JournalEntry_vendorPlan,
+      vendorCreditApplications: {
+        plan($record) {
+          const $records = resource_vendor_credit_applicationPgResource.find({
+            bill_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       vendorId: JournalEntry_vendorIdPlan
     },
     planType($specifier) {
@@ -40135,14 +42610,8 @@ export const objects = {
       bill: BillLine_billPlan,
       billId: BillLine_billIdPlan,
       discountPercent: BillLine_discountPercentPlan,
-      expenseAccount($record) {
-        return resource_accountPgResource.get({
-          id: $record.get("expense_account_id")
-        });
-      },
-      expenseAccountId($record) {
-        return $record.get("expense_account_id");
-      },
+      expenseAccount: BillLine_expenseAccountPlan,
+      expenseAccountId: BillLine_expenseAccountIdPlan,
       id($parent) {
         const specifier = nodeIdHandler_BillLine.plan($parent);
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_BillLine.codec.name].encode);
@@ -40815,6 +43284,24 @@ export const objects = {
       vehicles: {
         plan($record) {
           const $records = resource_vehiclePgResource.find({
+            book_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      vendorCredits: {
+        plan($record) {
+          const $records = resource_vendor_creditPgResource.find({
             book_id: $record.get("id")
           });
           return connection($records);
@@ -41507,6 +43994,33 @@ export const objects = {
       vehicleEdge: CreateVehiclePayload_vehicleEdgePlan
     }
   },
+  CreateVendorCreditApplicationPayload: {
+    assertStep: assertStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan,
+      vendorCreditApplication: planCreatePayloadResult,
+      vendorCreditApplicationEdge: CreateVendorCreditApplicationPayload_vendorCreditApplicationEdgePlan
+    }
+  },
+  CreateVendorCreditLinePayload: {
+    assertStep: assertStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan,
+      vendorCreditLine: planCreatePayloadResult,
+      vendorCreditLineEdge: CreateVendorCreditLinePayload_vendorCreditLineEdgePlan
+    }
+  },
+  CreateVendorCreditPayload: {
+    assertStep: assertStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan,
+      vendorCredit: planCreatePayloadResult,
+      vendorCreditEdge: CreateVendorCreditPayload_vendorCreditEdgePlan
+    }
+  },
   CreateVendorPayload: {
     assertStep: assertStep,
     plans: {
@@ -41519,9 +44033,7 @@ export const objects = {
   CreditMemo: {
     assertStep: assertPgClassSingleStep,
     plans: {
-      amountApplied($record) {
-        return $record.get("amount_applied");
-      },
+      amountApplied: VendorCredit_amountAppliedPlan,
       book: Account_bookPlan,
       bookId: Account_bookIdPlan,
       createdAt: Account_createdAtPlan,
@@ -42506,6 +45018,48 @@ export const objects = {
       query: queryPlan,
       vehicle: planCreatePayloadResult,
       vehicleEdge: CreateVehiclePayload_vehicleEdgePlan
+    }
+  },
+  DeleteVendorCreditApplicationPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedVendorCreditApplicationId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_VendorCreditApplication.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      query: queryPlan,
+      vendorCreditApplication: planCreatePayloadResult,
+      vendorCreditApplicationEdge: CreateVendorCreditApplicationPayload_vendorCreditApplicationEdgePlan
+    }
+  },
+  DeleteVendorCreditLinePayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedVendorCreditLineId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_VendorCreditLine.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      query: queryPlan,
+      vendorCreditLine: planCreatePayloadResult,
+      vendorCreditLineEdge: CreateVendorCreditLinePayload_vendorCreditLineEdgePlan
+    }
+  },
+  DeleteVendorCreditPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedVendorCreditId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_VendorCredit.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      query: queryPlan,
+      vendorCredit: planCreatePayloadResult,
+      vendorCreditEdge: CreateVendorCreditPayload_vendorCreditEdgePlan
     }
   },
   DeleteVendorPayload: {
@@ -44232,6 +46786,33 @@ export const objects = {
       vehicleEdge: CreateVehiclePayload_vehicleEdgePlan
     }
   },
+  UpdateVendorCreditApplicationPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan,
+      vendorCreditApplication: planCreatePayloadResult,
+      vendorCreditApplicationEdge: CreateVendorCreditApplicationPayload_vendorCreditApplicationEdgePlan
+    }
+  },
+  UpdateVendorCreditLinePayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan,
+      vendorCreditLine: planCreatePayloadResult,
+      vendorCreditLineEdge: CreateVendorCreditLinePayload_vendorCreditLineEdgePlan
+    }
+  },
+  UpdateVendorCreditPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan,
+      vendorCredit: planCreatePayloadResult,
+      vendorCreditEdge: CreateVendorCreditPayload_vendorCreditEdgePlan
+    }
+  },
   UpdateVendorPayload: {
     assertStep: ObjectStep,
     plans: {
@@ -44342,6 +46923,24 @@ export const objects = {
       },
       taxIdType($record) {
         return $record.get("tax_id_type");
+      },
+      vendorCredits: {
+        plan($record) {
+          const $records = resource_vendor_creditPgResource.find({
+            vendor_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
       }
     },
     planType($specifier) {
@@ -44351,6 +46950,132 @@ export const objects = {
     }
   },
   VendorConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
+  VendorCredit: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      amountApplied: VendorCredit_amountAppliedPlan,
+      book: Account_bookPlan,
+      bookId: Account_bookIdPlan,
+      createdAt: Account_createdAtPlan,
+      exchangeRate: Bill_exchangeRatePlan,
+      id($parent) {
+        const specifier = nodeIdHandler_VendorCredit.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_VendorCredit.codec.name].encode);
+      },
+      journalEntry: JournalLine_journalEntryPlan,
+      journalEntryId: JournalLine_journalEntryIdPlan,
+      rowId: JournalLineProject_rowIdPlan,
+      taxAmount: Bill_taxAmountPlan,
+      updatedAt: Account_updatedAtPlan,
+      vendor: JournalEntry_vendorPlan,
+      vendorCreditApplications: {
+        plan($record) {
+          const $records = resource_vendor_credit_applicationPgResource.find({
+            vendor_credit_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      vendorCreditLines: {
+        plan($record) {
+          const $records = resource_vendor_credit_linePgResource.find({
+            vendor_credit_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      vendorId: JournalEntry_vendorIdPlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of vendor_creditUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_vendor_creditPgResource.get(spec);
+    }
+  },
+  VendorCreditApplication: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      bill: BillLine_billPlan,
+      billId: BillLine_billIdPlan,
+      book: Account_bookPlan,
+      bookId: Account_bookIdPlan,
+      createdAt: Account_createdAtPlan,
+      id($parent) {
+        const specifier = nodeIdHandler_VendorCreditApplication.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_VendorCreditApplication.codec.name].encode);
+      },
+      rowId: JournalLineProject_rowIdPlan,
+      vendorCredit: VendorCreditApplication_vendorCreditPlan,
+      vendorCreditId: VendorCreditApplication_vendorCreditIdPlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of vendor_credit_applicationUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_vendor_credit_applicationPgResource.get(spec);
+    }
+  },
+  VendorCreditApplicationConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
+  VendorCreditConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
+  VendorCreditLine: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      discountPercent: BillLine_discountPercentPlan,
+      expenseAccount: BillLine_expenseAccountPlan,
+      expenseAccountId: BillLine_expenseAccountIdPlan,
+      id($parent) {
+        const specifier = nodeIdHandler_VendorCreditLine.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_VendorCreditLine.codec.name].encode);
+      },
+      rowId: JournalLineProject_rowIdPlan,
+      sortOrder: BillLine_sortOrderPlan,
+      taxJurisdiction: JournalLine_taxJurisdictionPlan,
+      taxJurisdictionId: JournalLine_taxJurisdictionIdPlan,
+      unitPrice: BillLine_unitPricePlan,
+      vendorCredit: VendorCreditApplication_vendorCreditPlan,
+      vendorCreditId: VendorCreditApplication_vendorCreditIdPlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of vendor_credit_lineUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_vendor_credit_linePgResource.get(spec);
+    }
+  },
+  VendorCreditLineConnection: {
     assertStep: ConnectionStep,
     plans: {
       totalCount: totalCountConnectionPlan
@@ -44966,6 +47691,30 @@ export const inputObjects = {
       vendor($where, value) {
         return pgConnectionFilterApplySingleRelation(resource_vendorPgResource, vendorIdentifier, registryConfig.pgRelations.bill.vendorByMyVendorId.localAttributes, registryConfig.pgRelations.bill.vendorByMyVendorId.remoteAttributes, $where, value);
       },
+      vendorCreditApplications($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: vendorCreditApplicationIdentifier,
+          alias: resource_vendor_credit_applicationPgResource.name,
+          localAttributes: registryConfig.pgRelations.bill.vendorCreditApplicationsByTheirBillId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.bill.vendorCreditApplicationsByTheirBillId.remoteAttributes
+        };
+        return $rel;
+      },
+      vendorCreditApplicationsExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: vendorCreditApplicationIdentifier,
+          alias: resource_vendor_credit_applicationPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.bill.vendorCreditApplicationsByTheirBillId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.bill.vendorCreditApplicationsByTheirBillId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
       vendorId(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("vendorId", "vendor_id", spec_bill.attributes.vendor_id, queryBuilder, value);
       }
@@ -45028,7 +47777,7 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       amount: CreditMemoApplicationInput_amountApply,
-      billId: BillLineInput_billIdApply,
+      billId: VendorCreditApplicationInput_billIdApply,
       description: EstimateLineInput_descriptionApply,
       discountPercent: BillLineInput_discountPercentApply,
       expenseAccountId: BillLineInput_expenseAccountIdApply,
@@ -45043,7 +47792,7 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       amount: CreditMemoApplicationInput_amountApply,
-      billId: BillLineInput_billIdApply,
+      billId: VendorCreditApplicationInput_billIdApply,
       description: EstimateLineInput_descriptionApply,
       discountPercent: BillLineInput_discountPercentApply,
       expenseAccountId: BillLineInput_expenseAccountIdApply,
@@ -45118,7 +47867,7 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       amount: CreditMemoApplicationInput_amountApply,
-      billId: BillLineInput_billIdApply,
+      billId: VendorCreditApplicationInput_billIdApply,
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
       date: CreditMemoApplicationInput_dateApply,
@@ -45134,7 +47883,7 @@ export const inputObjects = {
     baked: createObjectAndApplyChildren,
     plans: {
       amount: CreditMemoApplicationInput_amountApply,
-      billId: BillLineInput_billIdApply,
+      billId: VendorCreditApplicationInput_billIdApply,
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
       date: CreditMemoApplicationInput_dateApply,
@@ -45154,6 +47903,13 @@ export const inputObjects = {
     }
   },
   BillToManyBillPaymentFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
+  BillToManyVendorCreditApplicationFilter: {
     plans: {
       every: AccountToManyAccountFilter_everyApply,
       none: AccountToManyAccountFilter_noneApply,
@@ -46047,6 +48803,30 @@ export const inputObjects = {
           $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
         });
       },
+      vendorCredits($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: vendorCreditIdentifier,
+          alias: resource_vendor_creditPgResource.name,
+          localAttributes: registryConfig.pgRelations.book.vendorCreditsByTheirBookId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.book.vendorCreditsByTheirBookId.remoteAttributes
+        };
+        return $rel;
+      },
+      vendorCreditsExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: vendorCreditIdentifier,
+          alias: resource_vendor_creditPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.book.vendorCreditsByTheirBookId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.book.vendorCreditsByTheirBookId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
       vendors($where, value) {
         assertAllowed(value, "object");
         const $rel = $where.andPlan();
@@ -46347,6 +49127,13 @@ export const inputObjects = {
     }
   },
   BookToManyVehicleFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
+  BookToManyVendorCreditFilter: {
     plans: {
       every: AccountToManyAccountFilter_everyApply,
       none: AccountToManyAccountFilter_noneApply,
@@ -46965,6 +49752,24 @@ export const inputObjects = {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
       vehicle: applyCreateFields
+    }
+  },
+  CreateVendorCreditApplicationInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      vendorCreditApplication: applyCreateFields
+    }
+  },
+  CreateVendorCreditInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      vendorCredit: applyCreateFields
+    }
+  },
+  CreateVendorCreditLineInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      vendorCreditLine: applyCreateFields
     }
   },
   CreateVendorInput: {
@@ -48055,6 +50860,36 @@ export const inputObjects = {
     }
   },
   DeleteVendorByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteVendorCreditApplicationByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteVendorCreditApplicationInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteVendorCreditByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteVendorCreditInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteVendorCreditLineByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteVendorCreditLineInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate
     }
@@ -50954,6 +53789,42 @@ export const inputObjects = {
       patch: applyCreateFields
     }
   },
+  UpdateVendorCreditApplicationByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateVendorCreditApplicationInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateVendorCreditByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateVendorCreditInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateVendorCreditLineByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateVendorCreditLineInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
   UpdateVendorInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
@@ -51060,6 +53931,270 @@ export const inputObjects = {
       rowId: AccountCondition_rowIdApply
     }
   },
+  VendorCreditApplicationCondition: {
+    plans: {
+      billId: BillLineCondition_billIdApply,
+      rowId: AccountCondition_rowIdApply,
+      vendorCreditId: VendorCreditApplicationCondition_vendorCreditIdApply
+    }
+  },
+  VendorCreditApplicationFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      bill($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_billPgResource, billIdentifier, registryConfig.pgRelations.vendorCreditApplication.billByMyBillId.localAttributes, registryConfig.pgRelations.vendorCreditApplication.billByMyBillId.remoteAttributes, $where, value);
+      },
+      billId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("billId", "bill_id", spec_vendorCreditApplication.attributes.bill_id, queryBuilder, value);
+      },
+      book($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_bookPgResource, bookIdentifier, registryConfig.pgRelations.vendorCreditApplication.bookByMyBookId.localAttributes, registryConfig.pgRelations.vendorCreditApplication.bookByMyBookId.remoteAttributes, $where, value);
+      },
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_vendorCreditApplication.attributes.id, queryBuilder, value);
+      },
+      vendorCredit($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_vendor_creditPgResource, vendorCreditIdentifier, registryConfig.pgRelations.vendorCreditApplication.vendorCreditByMyVendorCreditId.localAttributes, registryConfig.pgRelations.vendorCreditApplication.vendorCreditByMyVendorCreditId.remoteAttributes, $where, value);
+      },
+      vendorCreditId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("vendorCreditId", "vendor_credit_id", spec_vendorCreditApplication.attributes.vendor_credit_id, queryBuilder, value);
+      }
+    }
+  },
+  VendorCreditApplicationInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      amount: CreditMemoApplicationInput_amountApply,
+      billId: VendorCreditApplicationInput_billIdApply,
+      bookId: TagGroupInput_bookIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      date: CreditMemoApplicationInput_dateApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      vendorCreditId: VendorCreditApplicationInput_vendorCreditIdApply
+    }
+  },
+  VendorCreditApplicationPatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      amount: CreditMemoApplicationInput_amountApply,
+      billId: VendorCreditApplicationInput_billIdApply,
+      bookId: TagGroupInput_bookIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      date: CreditMemoApplicationInput_dateApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      vendorCreditId: VendorCreditApplicationInput_vendorCreditIdApply
+    }
+  },
+  VendorCreditCondition: {
+    plans: {
+      bookId: AccountCondition_bookIdApply,
+      number: BillCondition_numberApply,
+      rowId: AccountCondition_rowIdApply,
+      status: BillCondition_statusApply,
+      vendorId: BillCondition_vendorIdApply
+    }
+  },
+  VendorCreditFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      book($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_bookPgResource, bookIdentifier, registryConfig.pgRelations.vendorCredit.bookByMyBookId.localAttributes, registryConfig.pgRelations.vendorCredit.bookByMyBookId.remoteAttributes, $where, value);
+      },
+      bookId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("bookId", "book_id", spec_vendorCredit.attributes.book_id, queryBuilder, value);
+      },
+      journalEntry($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_journal_entryPgResource, journalEntryIdentifier, registryConfig.pgRelations.vendorCredit.journalEntryByMyJournalEntryId.localAttributes, registryConfig.pgRelations.vendorCredit.journalEntryByMyJournalEntryId.remoteAttributes, $where, value);
+      },
+      journalEntryExists($where, value) {
+        return pgConnectionFilterApplyForwardRelationExists(resource_journal_entryPgResource, journalEntryIdentifier, registryConfig.pgRelations.vendorCredit.journalEntryByMyJournalEntryId.localAttributes, registryConfig.pgRelations.vendorCredit.journalEntryByMyJournalEntryId.remoteAttributes, $where, value);
+      },
+      not: AccountFilter_notApply,
+      number(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("number", "number", spec_vendorCredit.attributes.number, queryBuilder, value);
+      },
+      or: AccountFilter_orApply,
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_vendorCredit.attributes.id, queryBuilder, value);
+      },
+      status(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("status", "status", spec_vendorCredit.attributes.status, queryBuilder, value);
+      },
+      vendor($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_vendorPgResource, vendorIdentifier, registryConfig.pgRelations.vendorCredit.vendorByMyVendorId.localAttributes, registryConfig.pgRelations.vendorCredit.vendorByMyVendorId.remoteAttributes, $where, value);
+      },
+      vendorCreditApplications($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: vendorCreditApplicationIdentifier,
+          alias: resource_vendor_credit_applicationPgResource.name,
+          localAttributes: registryConfig.pgRelations.vendorCredit.vendorCreditApplicationsByTheirVendorCreditId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.vendorCredit.vendorCreditApplicationsByTheirVendorCreditId.remoteAttributes
+        };
+        return $rel;
+      },
+      vendorCreditApplicationsExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: vendorCreditApplicationIdentifier,
+          alias: resource_vendor_credit_applicationPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.vendorCredit.vendorCreditApplicationsByTheirVendorCreditId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.vendorCredit.vendorCreditApplicationsByTheirVendorCreditId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
+      vendorCreditLines($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: vendorCreditLineIdentifier,
+          alias: resource_vendor_credit_linePgResource.name,
+          localAttributes: registryConfig.pgRelations.vendorCredit.vendorCreditLinesByTheirVendorCreditId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.vendorCredit.vendorCreditLinesByTheirVendorCreditId.remoteAttributes
+        };
+        return $rel;
+      },
+      vendorCreditLinesExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: vendorCreditLineIdentifier,
+          alias: resource_vendor_credit_linePgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.vendorCredit.vendorCreditLinesByTheirVendorCreditId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.vendorCredit.vendorCreditLinesByTheirVendorCreditId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
+      vendorId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("vendorId", "vendor_id", spec_vendorCredit.attributes.vendor_id, queryBuilder, value);
+      }
+    }
+  },
+  VendorCreditInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      amountApplied: CreditMemoInput_amountAppliedApply,
+      bookId: TagGroupInput_bookIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      currency: CreditMemoInput_currencyApply,
+      date: CreditMemoApplicationInput_dateApply,
+      exchangeRate: BillPaymentInput_exchangeRateApply,
+      journalEntryId: JournalLineInput_journalEntryIdApply,
+      memo: JournalLineInput_memoApply,
+      number: EstimateInput_numberApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      status: AccountingPeriodInput_statusApply,
+      subtotal: EstimateInput_subtotalApply,
+      taxAmount: CreditMemoInput_taxAmountApply,
+      total: EstimateInput_totalApply,
+      updatedAt: AccountMappingInput_updatedAtApply,
+      vendorId: JournalEntryInput_vendorIdApply
+    }
+  },
+  VendorCreditLineCondition: {
+    plans: {
+      rowId: AccountCondition_rowIdApply,
+      vendorCreditId: VendorCreditApplicationCondition_vendorCreditIdApply
+    }
+  },
+  VendorCreditLineFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      expenseAccount($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_accountPgResource, accountIdentifier, registryConfig.pgRelations.vendorCreditLine.accountByMyExpenseAccountId.localAttributes, registryConfig.pgRelations.vendorCreditLine.accountByMyExpenseAccountId.remoteAttributes, $where, value);
+      },
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_vendorCreditLine.attributes.id, queryBuilder, value);
+      },
+      taxJurisdiction($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_tax_jurisdictionPgResource, taxJurisdictionIdentifier, registryConfig.pgRelations.vendorCreditLine.taxJurisdictionByMyTaxJurisdictionId.localAttributes, registryConfig.pgRelations.vendorCreditLine.taxJurisdictionByMyTaxJurisdictionId.remoteAttributes, $where, value);
+      },
+      taxJurisdictionExists($where, value) {
+        return pgConnectionFilterApplyForwardRelationExists(resource_tax_jurisdictionPgResource, taxJurisdictionIdentifier, registryConfig.pgRelations.vendorCreditLine.taxJurisdictionByMyTaxJurisdictionId.localAttributes, registryConfig.pgRelations.vendorCreditLine.taxJurisdictionByMyTaxJurisdictionId.remoteAttributes, $where, value);
+      },
+      vendorCredit($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_vendor_creditPgResource, vendorCreditIdentifier, registryConfig.pgRelations.vendorCreditLine.vendorCreditByMyVendorCreditId.localAttributes, registryConfig.pgRelations.vendorCreditLine.vendorCreditByMyVendorCreditId.remoteAttributes, $where, value);
+      },
+      vendorCreditId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("vendorCreditId", "vendor_credit_id", spec_vendorCreditLine.attributes.vendor_credit_id, queryBuilder, value);
+      }
+    }
+  },
+  VendorCreditLineInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      amount: CreditMemoApplicationInput_amountApply,
+      description: EstimateLineInput_descriptionApply,
+      discountPercent: BillLineInput_discountPercentApply,
+      expenseAccountId: BillLineInput_expenseAccountIdApply,
+      quantity: InventoryTransactionInput_quantityApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      sortOrder: EstimateLineInput_sortOrderApply,
+      taxJurisdictionId: JournalLineInput_taxJurisdictionIdApply,
+      unitPrice: EstimateLineInput_unitPriceApply,
+      vendorCreditId: VendorCreditApplicationInput_vendorCreditIdApply
+    }
+  },
+  VendorCreditLinePatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      amount: CreditMemoApplicationInput_amountApply,
+      description: EstimateLineInput_descriptionApply,
+      discountPercent: BillLineInput_discountPercentApply,
+      expenseAccountId: BillLineInput_expenseAccountIdApply,
+      quantity: InventoryTransactionInput_quantityApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      sortOrder: EstimateLineInput_sortOrderApply,
+      taxJurisdictionId: JournalLineInput_taxJurisdictionIdApply,
+      unitPrice: EstimateLineInput_unitPriceApply,
+      vendorCreditId: VendorCreditApplicationInput_vendorCreditIdApply
+    }
+  },
+  VendorCreditPatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      amountApplied: CreditMemoInput_amountAppliedApply,
+      bookId: TagGroupInput_bookIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      currency: CreditMemoInput_currencyApply,
+      date: CreditMemoApplicationInput_dateApply,
+      exchangeRate: BillPaymentInput_exchangeRateApply,
+      journalEntryId: JournalLineInput_journalEntryIdApply,
+      memo: JournalLineInput_memoApply,
+      number: EstimateInput_numberApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      status: AccountingPeriodInput_statusApply,
+      subtotal: EstimateInput_subtotalApply,
+      taxAmount: CreditMemoInput_taxAmountApply,
+      total: EstimateInput_totalApply,
+      updatedAt: AccountMappingInput_updatedAtApply,
+      vendorId: JournalEntryInput_vendorIdApply
+    }
+  },
+  VendorCreditToManyVendorCreditApplicationFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
+  VendorCreditToManyVendorCreditLineFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
   VendorFilter: {
     plans: {
       and: AccountFilter_andApply,
@@ -51121,6 +54256,30 @@ export const inputObjects = {
       or: AccountFilter_orApply,
       rowId(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("rowId", "id", spec_vendor.attributes.id, queryBuilder, value);
+      },
+      vendorCredits($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: vendorCreditIdentifier,
+          alias: resource_vendor_creditPgResource.name,
+          localAttributes: registryConfig.pgRelations.vendor.vendorCreditsByTheirVendorId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.vendor.vendorCreditsByTheirVendorId.remoteAttributes
+        };
+        return $rel;
+      },
+      vendorCreditsExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: vendorCreditIdentifier,
+          alias: resource_vendor_creditPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.vendor.vendorCreditsByTheirVendorId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.vendor.vendorCreditsByTheirVendorId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
       }
     }
   },
@@ -51170,6 +54329,13 @@ export const inputObjects = {
     }
   },
   VendorToManyDocumentFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
+  VendorToManyVendorCreditFilter: {
     plans: {
       every: AccountToManyAccountFilter_everyApply,
       none: AccountToManyAccountFilter_noneApply,
@@ -52856,6 +56022,92 @@ export const enums = {
       },
       ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
       ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply
+    }
+  },
+  VendorCreditApplicationOrderBy: {
+    values: {
+      BILL_ID_ASC: BillLineOrderBy_BILL_ID_ASCApply,
+      BILL_ID_DESC: BillLineOrderBy_BILL_ID_DESCApply,
+      PRIMARY_KEY_ASC(queryBuilder) {
+        vendor_credit_applicationUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        vendor_credit_applicationUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply,
+      VENDOR_CREDIT_ID_ASC: VendorCreditApplicationOrderBy_VENDOR_CREDIT_ID_ASCApply,
+      VENDOR_CREDIT_ID_DESC: VendorCreditApplicationOrderBy_VENDOR_CREDIT_ID_DESCApply
+    }
+  },
+  VendorCreditLineOrderBy: {
+    values: {
+      PRIMARY_KEY_ASC(queryBuilder) {
+        vendor_credit_lineUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        vendor_credit_lineUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply,
+      VENDOR_CREDIT_ID_ASC: VendorCreditApplicationOrderBy_VENDOR_CREDIT_ID_ASCApply,
+      VENDOR_CREDIT_ID_DESC: VendorCreditApplicationOrderBy_VENDOR_CREDIT_ID_DESCApply
+    }
+  },
+  VendorCreditOrderBy: {
+    values: {
+      BOOK_ID_ASC: AccountOrderBy_BOOK_ID_ASCApply,
+      BOOK_ID_DESC: AccountOrderBy_BOOK_ID_DESCApply,
+      NUMBER_ASC: BillOrderBy_NUMBER_ASCApply,
+      NUMBER_DESC: BillOrderBy_NUMBER_DESCApply,
+      PRIMARY_KEY_ASC(queryBuilder) {
+        vendor_creditUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        vendor_creditUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply,
+      STATUS_ASC: BillOrderBy_STATUS_ASCApply,
+      STATUS_DESC: BillOrderBy_STATUS_DESCApply,
+      VENDOR_ID_ASC: BillOrderBy_VENDOR_ID_ASCApply,
+      VENDOR_ID_DESC: BillOrderBy_VENDOR_ID_DESCApply
     }
   },
   VendorOrderBy: {

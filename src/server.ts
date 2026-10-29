@@ -124,6 +124,7 @@ import {
   generateTaxLossHarvesting,
   maskForm1099NecReport,
 } from "lib/tax";
+import vendorCreditRoutes from "lib/vendorCredit/vendorCreditRoutes";
 
 import type { ExportFormat } from "lib/reports";
 
@@ -144,7 +145,8 @@ const commit = (() => {
 // past TypeScript's type-instantiation-depth limit
 const connectionAndOrgRoutes = new Elysia()
   .use(connectionRoutes)
-  .use(orgDataRoutes);
+  .use(orgDataRoutes)
+  .use(vendorCreditRoutes);
 
 const app = new Elysia()
   .onAfterHandle(({ set }) => {

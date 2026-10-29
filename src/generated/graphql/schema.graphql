@@ -38,6 +38,9 @@ type Query implements Node {
   """Get a single `CreditMemoApplication`."""
   creditMemoApplication(rowId: UUID!): CreditMemoApplication
 
+  """Get a single `VendorCreditApplication`."""
+  vendorCreditApplication(rowId: UUID!): VendorCreditApplication
+
   """Get a single `Tag`."""
   tag(rowId: UUID!): Tag
 
@@ -88,6 +91,9 @@ type Query implements Node {
 
   """Get a single `BillLine`."""
   billLine(rowId: UUID!): BillLine
+
+  """Get a single `VendorCreditLine`."""
+  vendorCreditLine(rowId: UUID!): VendorCreditLine
 
   """Get a single `AmortizationEntry`."""
   amortizationEntry(rowId: UUID!): AmortizationEntry
@@ -142,6 +148,9 @@ type Query implements Node {
 
   """Get a single `CreditMemo`."""
   creditMemo(rowId: UUID!): CreditMemo
+
+  """Get a single `VendorCredit`."""
+  vendorCredit(rowId: UUID!): VendorCredit
 
   """Get a single `FixedAsset`."""
   fixedAsset(rowId: UUID!): FixedAsset
@@ -220,6 +229,16 @@ type Query implements Node {
     """
     id: ID!
   ): CreditMemoApplication
+
+  """
+  Reads a single `VendorCreditApplication` using its globally unique `ID`.
+  """
+  vendorCreditApplicationById(
+    """
+    The globally unique `ID` to be used in selecting a single `VendorCreditApplication`.
+    """
+    id: ID!
+  ): VendorCreditApplication
 
   """Reads a single `Tag` using its globally unique `ID`."""
   tagById(
@@ -350,6 +369,14 @@ type Query implements Node {
     """The globally unique `ID` to be used in selecting a single `BillLine`."""
     id: ID!
   ): BillLine
+
+  """Reads a single `VendorCreditLine` using its globally unique `ID`."""
+  vendorCreditLineById(
+    """
+    The globally unique `ID` to be used in selecting a single `VendorCreditLine`.
+    """
+    id: ID!
+  ): VendorCreditLine
 
   """Reads a single `AmortizationEntry` using its globally unique `ID`."""
   amortizationEntryById(
@@ -482,6 +509,14 @@ type Query implements Node {
     """
     id: ID!
   ): CreditMemo
+
+  """Reads a single `VendorCredit` using its globally unique `ID`."""
+  vendorCreditById(
+    """
+    The globally unique `ID` to be used in selecting a single `VendorCredit`.
+    """
+    id: ID!
+  ): VendorCredit
 
   """Reads a single `FixedAsset` using its globally unique `ID`."""
   fixedAssetById(
@@ -774,6 +809,42 @@ type Query implements Node {
     """The method to use when ordering `CreditMemoApplication`."""
     orderBy: [CreditMemoApplicationOrderBy!] = [PRIMARY_KEY_ASC]
   ): CreditMemoApplicationConnection
+
+  """
+  Reads and enables pagination through a set of `VendorCreditApplication`.
+  """
+  vendorCreditApplications(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: VendorCreditApplicationCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: VendorCreditApplicationFilter
+
+    """The method to use when ordering `VendorCreditApplication`."""
+    orderBy: [VendorCreditApplicationOrderBy!] = [PRIMARY_KEY_ASC]
+  ): VendorCreditApplicationConnection
 
   """Reads and enables pagination through a set of `Tag`."""
   tags(
@@ -1356,6 +1427,40 @@ type Query implements Node {
     """The method to use when ordering `BillLine`."""
     orderBy: [BillLineOrderBy!] = [PRIMARY_KEY_ASC]
   ): BillLineConnection
+
+  """Reads and enables pagination through a set of `VendorCreditLine`."""
+  vendorCreditLines(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: VendorCreditLineCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: VendorCreditLineFilter
+
+    """The method to use when ordering `VendorCreditLine`."""
+    orderBy: [VendorCreditLineOrderBy!] = [PRIMARY_KEY_ASC]
+  ): VendorCreditLineConnection
 
   """Reads and enables pagination through a set of `AmortizationEntry`."""
   amortizationEntries(
@@ -1968,6 +2073,40 @@ type Query implements Node {
     """The method to use when ordering `CreditMemo`."""
     orderBy: [CreditMemoOrderBy!] = [PRIMARY_KEY_ASC]
   ): CreditMemoConnection
+
+  """Reads and enables pagination through a set of `VendorCredit`."""
+  vendorCredits(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: VendorCreditCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: VendorCreditFilter
+
+    """The method to use when ordering `VendorCredit`."""
+    orderBy: [VendorCreditOrderBy!] = [PRIMARY_KEY_ASC]
+  ): VendorCreditConnection
 
   """Reads and enables pagination through a set of `FixedAsset`."""
   fixedAssets(
@@ -3796,6 +3935,40 @@ type Book implements Node {
     """The method to use when ordering `CreditMemo`."""
     orderBy: [CreditMemoOrderBy!] = [PRIMARY_KEY_ASC]
   ): CreditMemoConnection!
+
+  """Reads and enables pagination through a set of `VendorCredit`."""
+  vendorCredits(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: VendorCreditCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: VendorCreditFilter
+
+    """The method to use when ordering `VendorCredit`."""
+    orderBy: [VendorCreditOrderBy!] = [PRIMARY_KEY_ASC]
+  ): VendorCreditConnection!
 }
 
 """A connection to a list of `Account` values."""
@@ -4290,6 +4463,12 @@ input BookFilter {
 
   """Some related `creditMemos` exist."""
   creditMemosExist: Boolean
+
+  """Filter by the object’s `vendorCredits` relation."""
+  vendorCredits: BookToManyVendorCreditFilter
+
+  """Some related `vendorCredits` exist."""
+  vendorCreditsExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [BookFilter!]
@@ -5320,6 +5499,12 @@ input VendorFilter {
   """Some related `documents` exist."""
   documentsExist: Boolean
 
+  """Filter by the object’s `vendorCredits` relation."""
+  vendorCredits: VendorToManyVendorCreditFilter
+
+  """Some related `vendorCredits` exist."""
+  vendorCreditsExist: Boolean
+
   """Filter by the object’s `book` relation."""
   book: BookFilter
 
@@ -5383,6 +5568,12 @@ input BillFilter {
 
   """Some related `billPayments` exist."""
   billPaymentsExist: Boolean
+
+  """Filter by the object’s `vendorCreditApplications` relation."""
+  vendorCreditApplications: BillToManyVendorCreditApplicationFilter
+
+  """Some related `vendorCreditApplications` exist."""
+  vendorCreditApplicationsExist: Boolean
 
   """Filter by the object’s `book` relation."""
   book: BookFilter
@@ -5517,6 +5708,183 @@ input BillPaymentFilter {
 }
 
 """
+A filter to be used against many `VendorCreditApplication` object types. All fields are combined with a logical ‘and.’
+"""
+input BillToManyVendorCreditApplicationFilter {
+  """
+  Every related `VendorCreditApplication` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: VendorCreditApplicationFilter
+
+  """
+  Some related `VendorCreditApplication` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: VendorCreditApplicationFilter
+
+  """
+  No related `VendorCreditApplication` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: VendorCreditApplicationFilter
+}
+
+"""
+A filter to be used against `VendorCreditApplication` object types. All fields are combined with a logical ‘and.’
+"""
+input VendorCreditApplicationFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `vendorCreditId` field."""
+  vendorCreditId: UUIDFilter
+
+  """Filter by the object’s `billId` field."""
+  billId: UUIDFilter
+
+  """Filter by the object’s `bill` relation."""
+  bill: BillFilter
+
+  """Filter by the object’s `book` relation."""
+  book: BookFilter
+
+  """Filter by the object’s `vendorCredit` relation."""
+  vendorCredit: VendorCreditFilter
+
+  """Checks for all expressions in this list."""
+  and: [VendorCreditApplicationFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [VendorCreditApplicationFilter!]
+
+  """Negates the expression."""
+  not: VendorCreditApplicationFilter
+}
+
+"""
+A filter to be used against `VendorCredit` object types. All fields are combined with a logical ‘and.’
+"""
+input VendorCreditFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `bookId` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s `vendorId` field."""
+  vendorId: UUIDFilter
+
+  """Filter by the object’s `number` field."""
+  number: StringFilter
+
+  """Filter by the object’s `status` field."""
+  status: StringFilter
+
+  """Filter by the object’s `vendorCreditApplications` relation."""
+  vendorCreditApplications: VendorCreditToManyVendorCreditApplicationFilter
+
+  """Some related `vendorCreditApplications` exist."""
+  vendorCreditApplicationsExist: Boolean
+
+  """Filter by the object’s `vendorCreditLines` relation."""
+  vendorCreditLines: VendorCreditToManyVendorCreditLineFilter
+
+  """Some related `vendorCreditLines` exist."""
+  vendorCreditLinesExist: Boolean
+
+  """Filter by the object’s `book` relation."""
+  book: BookFilter
+
+  """Filter by the object’s `journalEntry` relation."""
+  journalEntry: JournalEntryFilter
+
+  """A related `journalEntry` exists."""
+  journalEntryExists: Boolean
+
+  """Filter by the object’s `vendor` relation."""
+  vendor: VendorFilter
+
+  """Checks for all expressions in this list."""
+  and: [VendorCreditFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [VendorCreditFilter!]
+
+  """Negates the expression."""
+  not: VendorCreditFilter
+}
+
+"""
+A filter to be used against many `VendorCreditApplication` object types. All fields are combined with a logical ‘and.’
+"""
+input VendorCreditToManyVendorCreditApplicationFilter {
+  """
+  Every related `VendorCreditApplication` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: VendorCreditApplicationFilter
+
+  """
+  Some related `VendorCreditApplication` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: VendorCreditApplicationFilter
+
+  """
+  No related `VendorCreditApplication` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: VendorCreditApplicationFilter
+}
+
+"""
+A filter to be used against many `VendorCreditLine` object types. All fields are combined with a logical ‘and.’
+"""
+input VendorCreditToManyVendorCreditLineFilter {
+  """
+  Every related `VendorCreditLine` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: VendorCreditLineFilter
+
+  """
+  Some related `VendorCreditLine` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: VendorCreditLineFilter
+
+  """
+  No related `VendorCreditLine` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: VendorCreditLineFilter
+}
+
+"""
+A filter to be used against `VendorCreditLine` object types. All fields are combined with a logical ‘and.’
+"""
+input VendorCreditLineFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `vendorCreditId` field."""
+  vendorCreditId: UUIDFilter
+
+  """Filter by the object’s `expenseAccount` relation."""
+  expenseAccount: AccountFilter
+
+  """Filter by the object’s `taxJurisdiction` relation."""
+  taxJurisdiction: TaxJurisdictionFilter
+
+  """A related `taxJurisdiction` exists."""
+  taxJurisdictionExists: Boolean
+
+  """Filter by the object’s `vendorCredit` relation."""
+  vendorCredit: VendorCreditFilter
+
+  """Checks for all expressions in this list."""
+  and: [VendorCreditLineFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [VendorCreditLineFilter!]
+
+  """Negates the expression."""
+  not: VendorCreditLineFilter
+}
+
+"""
 A filter to be used against many `Document` object types. All fields are combined with a logical ‘and.’
 """
 input VendorToManyDocumentFilter {
@@ -5569,6 +5937,26 @@ input DocumentFilter {
 
   """Negates the expression."""
   not: DocumentFilter
+}
+
+"""
+A filter to be used against many `VendorCredit` object types. All fields are combined with a logical ‘and.’
+"""
+input VendorToManyVendorCreditFilter {
+  """
+  Every related `VendorCredit` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: VendorCreditFilter
+
+  """
+  Some related `VendorCredit` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: VendorCreditFilter
+
+  """
+  No related `VendorCredit` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: VendorCreditFilter
 }
 
 """
@@ -7387,6 +7775,26 @@ input BookToManyCreditMemoFilter {
 }
 
 """
+A filter to be used against many `VendorCredit` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyVendorCreditFilter {
+  """
+  Every related `VendorCredit` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: VendorCreditFilter
+
+  """
+  Some related `VendorCredit` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: VendorCreditFilter
+
+  """
+  No related `VendorCredit` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: VendorCreditFilter
+}
+
+"""
 A filter to be used against many `JournalLine` object types. All fields are combined with a logical ‘and.’
 """
 input AccountToManyJournalLineFilter {
@@ -7978,6 +8386,40 @@ type Vendor implements Node {
     """The method to use when ordering `Document`."""
     orderBy: [DocumentOrderBy!] = [PRIMARY_KEY_ASC]
   ): DocumentConnection!
+
+  """Reads and enables pagination through a set of `VendorCredit`."""
+  vendorCredits(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: VendorCreditCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: VendorCreditFilter
+
+    """The method to use when ordering `VendorCredit`."""
+    orderBy: [VendorCreditOrderBy!] = [PRIMARY_KEY_ASC]
+  ): VendorCreditConnection!
 }
 
 """A connection to a list of `Bill` values."""
@@ -8096,6 +8538,42 @@ type Bill implements Node {
     """The method to use when ordering `BillPayment`."""
     orderBy: [BillPaymentOrderBy!] = [PRIMARY_KEY_ASC]
   ): BillPaymentConnection!
+
+  """
+  Reads and enables pagination through a set of `VendorCreditApplication`.
+  """
+  vendorCreditApplications(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: VendorCreditApplicationCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: VendorCreditApplicationFilter
+
+    """The method to use when ordering `VendorCreditApplication`."""
+    orderBy: [VendorCreditApplicationOrderBy!] = [PRIMARY_KEY_ASC]
+  ): VendorCreditApplicationConnection!
 }
 
 """A connection to a list of `BillLine` values."""
@@ -8372,6 +8850,274 @@ enum BillPaymentOrderBy {
   BILL_ID_DESC
 }
 
+"""A connection to a list of `VendorCreditApplication` values."""
+type VendorCreditApplicationConnection {
+  """A list of `VendorCreditApplication` objects."""
+  nodes: [VendorCreditApplication]!
+
+  """
+  A list of edges which contains the `VendorCreditApplication` and cursor to aid in pagination.
+  """
+  edges: [VendorCreditApplicationEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `VendorCreditApplication` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+type VendorCreditApplication implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  vendorCreditId: UUID!
+  billId: UUID!
+  amount: BigFloat!
+  date: String!
+  createdAt: Datetime
+
+  """
+  Reads a single `Bill` that is related to this `VendorCreditApplication`.
+  """
+  bill: Bill
+
+  """
+  Reads a single `Book` that is related to this `VendorCreditApplication`.
+  """
+  book: Book
+
+  """
+  Reads a single `VendorCredit` that is related to this `VendorCreditApplication`.
+  """
+  vendorCredit: VendorCredit
+}
+
+type VendorCredit implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  vendorId: UUID!
+  number: String!
+  status: String!
+  date: String!
+  subtotal: BigFloat!
+  taxAmount: BigFloat!
+  total: BigFloat!
+  amountApplied: BigFloat!
+  currency: String!
+  exchangeRate: BigFloat!
+  memo: String
+  journalEntryId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """Reads a single `Book` that is related to this `VendorCredit`."""
+  book: Book
+
+  """Reads a single `JournalEntry` that is related to this `VendorCredit`."""
+  journalEntry: JournalEntry
+
+  """Reads a single `Vendor` that is related to this `VendorCredit`."""
+  vendor: Vendor
+
+  """
+  Reads and enables pagination through a set of `VendorCreditApplication`.
+  """
+  vendorCreditApplications(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: VendorCreditApplicationCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: VendorCreditApplicationFilter
+
+    """The method to use when ordering `VendorCreditApplication`."""
+    orderBy: [VendorCreditApplicationOrderBy!] = [PRIMARY_KEY_ASC]
+  ): VendorCreditApplicationConnection!
+
+  """Reads and enables pagination through a set of `VendorCreditLine`."""
+  vendorCreditLines(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: VendorCreditLineCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: VendorCreditLineFilter
+
+    """The method to use when ordering `VendorCreditLine`."""
+    orderBy: [VendorCreditLineOrderBy!] = [PRIMARY_KEY_ASC]
+  ): VendorCreditLineConnection!
+}
+
+"""
+A condition to be used against `VendorCreditApplication` object types. All
+fields are tested for equality and combined with a logical ‘and.’
+"""
+input VendorCreditApplicationCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `vendorCreditId` field."""
+  vendorCreditId: UUID
+
+  """Checks for equality with the object’s `billId` field."""
+  billId: UUID
+}
+
+"""Methods to use when ordering `VendorCreditApplication`."""
+enum VendorCreditApplicationOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  VENDOR_CREDIT_ID_ASC
+  VENDOR_CREDIT_ID_DESC
+  BILL_ID_ASC
+  BILL_ID_DESC
+}
+
+"""A connection to a list of `VendorCreditLine` values."""
+type VendorCreditLineConnection {
+  """A list of `VendorCreditLine` objects."""
+  nodes: [VendorCreditLine]!
+
+  """
+  A list of edges which contains the `VendorCreditLine` and cursor to aid in pagination.
+  """
+  edges: [VendorCreditLineEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* `VendorCreditLine` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+type VendorCreditLine implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  vendorCreditId: UUID!
+  description: String!
+  quantity: BigFloat!
+  unitPrice: BigFloat!
+  amount: BigFloat!
+  discountPercent: BigFloat
+  expenseAccountId: UUID!
+  taxJurisdictionId: UUID
+  sortOrder: Int!
+
+  """Reads a single `Account` that is related to this `VendorCreditLine`."""
+  expenseAccount: Account
+
+  """
+  Reads a single `TaxJurisdiction` that is related to this `VendorCreditLine`.
+  """
+  taxJurisdiction: TaxJurisdiction
+
+  """
+  Reads a single `VendorCredit` that is related to this `VendorCreditLine`.
+  """
+  vendorCredit: VendorCredit
+}
+
+"""A `VendorCreditLine` edge in the connection."""
+type VendorCreditLineEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `VendorCreditLine` at the end of the edge."""
+  node: VendorCreditLine
+}
+
+"""
+A condition to be used against `VendorCreditLine` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input VendorCreditLineCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `vendorCreditId` field."""
+  vendorCreditId: UUID
+}
+
+"""Methods to use when ordering `VendorCreditLine`."""
+enum VendorCreditLineOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  VENDOR_CREDIT_ID_ASC
+  VENDOR_CREDIT_ID_DESC
+}
+
+"""A `VendorCreditApplication` edge in the connection."""
+type VendorCreditApplicationEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `VendorCreditApplication` at the end of the edge."""
+  node: VendorCreditApplication
+}
+
 """A `Bill` edge in the connection."""
 type BillEdge {
   """A cursor for use in pagination."""
@@ -8501,6 +9247,70 @@ enum DocumentOrderBy {
   CATEGORY_DESC
   VENDOR_ID_ASC
   VENDOR_ID_DESC
+}
+
+"""A connection to a list of `VendorCredit` values."""
+type VendorCreditConnection {
+  """A list of `VendorCredit` objects."""
+  nodes: [VendorCredit]!
+
+  """
+  A list of edges which contains the `VendorCredit` and cursor to aid in pagination.
+  """
+  edges: [VendorCreditEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `VendorCredit` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `VendorCredit` edge in the connection."""
+type VendorCreditEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `VendorCredit` at the end of the edge."""
+  node: VendorCredit
+}
+
+"""
+A condition to be used against `VendorCredit` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input VendorCreditCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `bookId` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s `vendorId` field."""
+  vendorId: UUID
+
+  """Checks for equality with the object’s `number` field."""
+  number: String
+
+  """Checks for equality with the object’s `status` field."""
+  status: String
+}
+
+"""Methods to use when ordering `VendorCredit`."""
+enum VendorCreditOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+  VENDOR_ID_ASC
+  VENDOR_ID_DESC
+  NUMBER_ASC
+  NUMBER_DESC
+  STATUS_ASC
+  STATUS_DESC
 }
 
 """A connection to a list of `Attachment` values."""
@@ -12269,6 +13079,14 @@ type Mutation {
     input: CreateCreditMemoApplicationInput!
   ): CreateCreditMemoApplicationPayload
 
+  """Creates a single `VendorCreditApplication`."""
+  createVendorCreditApplication(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateVendorCreditApplicationInput!
+  ): CreateVendorCreditApplicationPayload
+
   """Creates a single `Tag`."""
   createTag(
     """
@@ -12404,6 +13222,14 @@ type Mutation {
     """
     input: CreateBillLineInput!
   ): CreateBillLinePayload
+
+  """Creates a single `VendorCreditLine`."""
+  createVendorCreditLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateVendorCreditLineInput!
+  ): CreateVendorCreditLinePayload
 
   """Creates a single `AmortizationEntry`."""
   createAmortizationEntry(
@@ -12548,6 +13374,14 @@ type Mutation {
     """
     input: CreateCreditMemoInput!
   ): CreateCreditMemoPayload
+
+  """Creates a single `VendorCredit`."""
+  createVendorCredit(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateVendorCreditInput!
+  ): CreateVendorCreditPayload
 
   """Creates a single `FixedAsset`."""
   createFixedAsset(
@@ -12738,6 +13572,26 @@ type Mutation {
     """
     input: UpdateCreditMemoApplicationInput!
   ): UpdateCreditMemoApplicationPayload
+
+  """
+  Updates a single `VendorCreditApplication` using its globally unique id and a patch.
+  """
+  updateVendorCreditApplicationById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateVendorCreditApplicationByIdInput!
+  ): UpdateVendorCreditApplicationPayload
+
+  """
+  Updates a single `VendorCreditApplication` using a unique key and a patch.
+  """
+  updateVendorCreditApplication(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateVendorCreditApplicationInput!
+  ): UpdateVendorCreditApplicationPayload
 
   """Updates a single `Tag` using its globally unique id and a patch."""
   updateTagById(
@@ -13040,6 +13894,24 @@ type Mutation {
     """
     input: UpdateBillLineInput!
   ): UpdateBillLinePayload
+
+  """
+  Updates a single `VendorCreditLine` using its globally unique id and a patch.
+  """
+  updateVendorCreditLineById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateVendorCreditLineByIdInput!
+  ): UpdateVendorCreditLinePayload
+
+  """Updates a single `VendorCreditLine` using a unique key and a patch."""
+  updateVendorCreditLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateVendorCreditLineInput!
+  ): UpdateVendorCreditLinePayload
 
   """
   Updates a single `AmortizationEntry` using its globally unique id and a patch.
@@ -13354,6 +14226,24 @@ type Mutation {
   ): UpdateCreditMemoPayload
 
   """
+  Updates a single `VendorCredit` using its globally unique id and a patch.
+  """
+  updateVendorCreditById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateVendorCreditByIdInput!
+  ): UpdateVendorCreditPayload
+
+  """Updates a single `VendorCredit` using a unique key and a patch."""
+  updateVendorCredit(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateVendorCreditInput!
+  ): UpdateVendorCreditPayload
+
+  """
   Updates a single `FixedAsset` using its globally unique id and a patch.
   """
   updateFixedAssetById(
@@ -13600,6 +14490,24 @@ type Mutation {
     """
     input: DeleteCreditMemoApplicationInput!
   ): DeleteCreditMemoApplicationPayload
+
+  """
+  Deletes a single `VendorCreditApplication` using its globally unique id.
+  """
+  deleteVendorCreditApplicationById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteVendorCreditApplicationByIdInput!
+  ): DeleteVendorCreditApplicationPayload
+
+  """Deletes a single `VendorCreditApplication` using a unique key."""
+  deleteVendorCreditApplication(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteVendorCreditApplicationInput!
+  ): DeleteVendorCreditApplicationPayload
 
   """Deletes a single `Tag` using its globally unique id."""
   deleteTagById(
@@ -13876,6 +14784,22 @@ type Mutation {
     """
     input: DeleteBillLineInput!
   ): DeleteBillLinePayload
+
+  """Deletes a single `VendorCreditLine` using its globally unique id."""
+  deleteVendorCreditLineById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteVendorCreditLineByIdInput!
+  ): DeleteVendorCreditLinePayload
+
+  """Deletes a single `VendorCreditLine` using a unique key."""
+  deleteVendorCreditLine(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteVendorCreditLineInput!
+  ): DeleteVendorCreditLinePayload
 
   """Deletes a single `AmortizationEntry` using its globally unique id."""
   deleteAmortizationEntryById(
@@ -14164,6 +15088,22 @@ type Mutation {
     """
     input: DeleteCreditMemoInput!
   ): DeleteCreditMemoPayload
+
+  """Deletes a single `VendorCredit` using its globally unique id."""
+  deleteVendorCreditById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteVendorCreditByIdInput!
+  ): DeleteVendorCreditPayload
+
+  """Deletes a single `VendorCredit` using a unique key."""
+  deleteVendorCredit(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteVendorCreditInput!
+  ): DeleteVendorCreditPayload
 
   """Deletes a single `FixedAsset` using its globally unique id."""
   deleteFixedAssetById(
@@ -14596,6 +15536,52 @@ input CreditMemoApplicationInput {
   bookId: UUID!
   creditMemoId: UUID!
   invoiceId: UUID!
+  amount: BigFloat!
+  date: String!
+  createdAt: Datetime
+}
+
+"""The output of our create `VendorCreditApplication` mutation."""
+type CreateVendorCreditApplicationPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `VendorCreditApplication` that was created by this mutation."""
+  vendorCreditApplication: VendorCreditApplication
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `VendorCreditApplication`. May be used by Relay 1."""
+  vendorCreditApplicationEdge(
+    """The method to use when ordering `VendorCreditApplication`."""
+    orderBy: [VendorCreditApplicationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): VendorCreditApplicationEdge
+}
+
+"""All input for the create `VendorCreditApplication` mutation."""
+input CreateVendorCreditApplicationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `VendorCreditApplication` to be created by this mutation."""
+  vendorCreditApplication: VendorCreditApplicationInput!
+}
+
+"""An input for mutations affecting `VendorCreditApplication`"""
+input VendorCreditApplicationInput {
+  rowId: UUID
+  bookId: UUID!
+  vendorCreditId: UUID!
+  billId: UUID!
   amount: BigFloat!
   date: String!
   createdAt: Datetime
@@ -15417,6 +16403,55 @@ input BillLineInput {
   taxJurisdictionId: UUID
   sortOrder: Int
   discountPercent: BigFloat
+}
+
+"""The output of our create `VendorCreditLine` mutation."""
+type CreateVendorCreditLinePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `VendorCreditLine` that was created by this mutation."""
+  vendorCreditLine: VendorCreditLine
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `VendorCreditLine`. May be used by Relay 1."""
+  vendorCreditLineEdge(
+    """The method to use when ordering `VendorCreditLine`."""
+    orderBy: [VendorCreditLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): VendorCreditLineEdge
+}
+
+"""All input for the create `VendorCreditLine` mutation."""
+input CreateVendorCreditLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `VendorCreditLine` to be created by this mutation."""
+  vendorCreditLine: VendorCreditLineInput!
+}
+
+"""An input for mutations affecting `VendorCreditLine`"""
+input VendorCreditLineInput {
+  rowId: UUID
+  vendorCreditId: UUID!
+  description: String!
+  quantity: BigFloat
+  unitPrice: BigFloat
+  amount: BigFloat
+  discountPercent: BigFloat
+  expenseAccountId: UUID!
+  taxJurisdictionId: UUID
+  sortOrder: Int
 }
 
 """The output of our create `AmortizationEntry` mutation."""
@@ -16341,6 +17376,61 @@ input CreditMemoInput {
   exchangeRate: BigFloat
 }
 
+"""The output of our create `VendorCredit` mutation."""
+type CreateVendorCreditPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `VendorCredit` that was created by this mutation."""
+  vendorCredit: VendorCredit
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `VendorCredit`. May be used by Relay 1."""
+  vendorCreditEdge(
+    """The method to use when ordering `VendorCredit`."""
+    orderBy: [VendorCreditOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): VendorCreditEdge
+}
+
+"""All input for the create `VendorCredit` mutation."""
+input CreateVendorCreditInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `VendorCredit` to be created by this mutation."""
+  vendorCredit: VendorCreditInput!
+}
+
+"""An input for mutations affecting `VendorCredit`"""
+input VendorCreditInput {
+  rowId: UUID
+  bookId: UUID!
+  vendorId: UUID!
+  number: String!
+  status: String
+  date: String!
+  subtotal: BigFloat
+  taxAmount: BigFloat
+  total: BigFloat
+  amountApplied: BigFloat
+  currency: String
+  exchangeRate: BigFloat
+  memo: String
+  journalEntryId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
 """The output of our create `FixedAsset` mutation."""
 type CreateFixedAssetPayload {
   """
@@ -17250,6 +18340,76 @@ input UpdateCreditMemoApplicationInput {
   An object where the defined keys will be set on the `CreditMemoApplication` being updated.
   """
   patch: CreditMemoApplicationPatch!
+}
+
+"""The output of our update `VendorCreditApplication` mutation."""
+type UpdateVendorCreditApplicationPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `VendorCreditApplication` that was updated by this mutation."""
+  vendorCreditApplication: VendorCreditApplication
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `VendorCreditApplication`. May be used by Relay 1."""
+  vendorCreditApplicationEdge(
+    """The method to use when ordering `VendorCreditApplication`."""
+    orderBy: [VendorCreditApplicationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): VendorCreditApplicationEdge
+}
+
+"""All input for the `updateVendorCreditApplicationById` mutation."""
+input UpdateVendorCreditApplicationByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `VendorCreditApplication` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `VendorCreditApplication` being updated.
+  """
+  patch: VendorCreditApplicationPatch!
+}
+
+"""
+Represents an update to a `VendorCreditApplication`. Fields that are set will be updated.
+"""
+input VendorCreditApplicationPatch {
+  rowId: UUID
+  bookId: UUID
+  vendorCreditId: UUID
+  billId: UUID
+  amount: BigFloat
+  date: String
+  createdAt: Datetime
+}
+
+"""All input for the `updateVendorCreditApplication` mutation."""
+input UpdateVendorCreditApplicationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `VendorCreditApplication` being updated.
+  """
+  patch: VendorCreditApplicationPatch!
 }
 
 """The output of our update `Tag` mutation."""
@@ -18474,6 +19634,79 @@ input UpdateBillLineInput {
   An object where the defined keys will be set on the `BillLine` being updated.
   """
   patch: BillLinePatch!
+}
+
+"""The output of our update `VendorCreditLine` mutation."""
+type UpdateVendorCreditLinePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `VendorCreditLine` that was updated by this mutation."""
+  vendorCreditLine: VendorCreditLine
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `VendorCreditLine`. May be used by Relay 1."""
+  vendorCreditLineEdge(
+    """The method to use when ordering `VendorCreditLine`."""
+    orderBy: [VendorCreditLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): VendorCreditLineEdge
+}
+
+"""All input for the `updateVendorCreditLineById` mutation."""
+input UpdateVendorCreditLineByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `VendorCreditLine` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `VendorCreditLine` being updated.
+  """
+  patch: VendorCreditLinePatch!
+}
+
+"""
+Represents an update to a `VendorCreditLine`. Fields that are set will be updated.
+"""
+input VendorCreditLinePatch {
+  rowId: UUID
+  vendorCreditId: UUID
+  description: String
+  quantity: BigFloat
+  unitPrice: BigFloat
+  amount: BigFloat
+  discountPercent: BigFloat
+  expenseAccountId: UUID
+  taxJurisdictionId: UUID
+  sortOrder: Int
+}
+
+"""All input for the `updateVendorCreditLine` mutation."""
+input UpdateVendorCreditLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `VendorCreditLine` being updated.
+  """
+  patch: VendorCreditLinePatch!
 }
 
 """The output of our update `AmortizationEntry` mutation."""
@@ -19830,6 +21063,85 @@ input UpdateCreditMemoInput {
   patch: CreditMemoPatch!
 }
 
+"""The output of our update `VendorCredit` mutation."""
+type UpdateVendorCreditPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `VendorCredit` that was updated by this mutation."""
+  vendorCredit: VendorCredit
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `VendorCredit`. May be used by Relay 1."""
+  vendorCreditEdge(
+    """The method to use when ordering `VendorCredit`."""
+    orderBy: [VendorCreditOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): VendorCreditEdge
+}
+
+"""All input for the `updateVendorCreditById` mutation."""
+input UpdateVendorCreditByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `VendorCredit` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `VendorCredit` being updated.
+  """
+  patch: VendorCreditPatch!
+}
+
+"""
+Represents an update to a `VendorCredit`. Fields that are set will be updated.
+"""
+input VendorCreditPatch {
+  rowId: UUID
+  bookId: UUID
+  vendorId: UUID
+  number: String
+  status: String
+  date: String
+  subtotal: BigFloat
+  taxAmount: BigFloat
+  total: BigFloat
+  amountApplied: BigFloat
+  currency: String
+  exchangeRate: BigFloat
+  memo: String
+  journalEntryId: UUID
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the `updateVendorCredit` mutation."""
+input UpdateVendorCreditInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `VendorCredit` being updated.
+  """
+  patch: VendorCreditPatch!
+}
+
 """The output of our update `FixedAsset` mutation."""
 type UpdateFixedAssetPayload {
   """
@@ -20788,6 +22100,54 @@ input DeleteCreditMemoApplicationInput {
   rowId: UUID!
 }
 
+"""The output of our delete `VendorCreditApplication` mutation."""
+type DeleteVendorCreditApplicationPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `VendorCreditApplication` that was deleted by this mutation."""
+  vendorCreditApplication: VendorCreditApplication
+  deletedVendorCreditApplicationId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `VendorCreditApplication`. May be used by Relay 1."""
+  vendorCreditApplicationEdge(
+    """The method to use when ordering `VendorCreditApplication`."""
+    orderBy: [VendorCreditApplicationOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): VendorCreditApplicationEdge
+}
+
+"""All input for the `deleteVendorCreditApplicationById` mutation."""
+input DeleteVendorCreditApplicationByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `VendorCreditApplication` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteVendorCreditApplication` mutation."""
+input DeleteVendorCreditApplicationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete `Tag` mutation."""
 type DeleteTagPayload {
   """
@@ -21596,6 +22956,54 @@ input DeleteBillLineByIdInput {
 
 """All input for the `deleteBillLine` mutation."""
 input DeleteBillLineInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `VendorCreditLine` mutation."""
+type DeleteVendorCreditLinePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `VendorCreditLine` that was deleted by this mutation."""
+  vendorCreditLine: VendorCreditLine
+  deletedVendorCreditLineId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `VendorCreditLine`. May be used by Relay 1."""
+  vendorCreditLineEdge(
+    """The method to use when ordering `VendorCreditLine`."""
+    orderBy: [VendorCreditLineOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): VendorCreditLineEdge
+}
+
+"""All input for the `deleteVendorCreditLineById` mutation."""
+input DeleteVendorCreditLineByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `VendorCreditLine` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteVendorCreditLine` mutation."""
+input DeleteVendorCreditLineInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -22460,6 +23868,54 @@ input DeleteCreditMemoByIdInput {
 
 """All input for the `deleteCreditMemo` mutation."""
 input DeleteCreditMemoInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `VendorCredit` mutation."""
+type DeleteVendorCreditPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `VendorCredit` that was deleted by this mutation."""
+  vendorCredit: VendorCredit
+  deletedVendorCreditId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `VendorCredit`. May be used by Relay 1."""
+  vendorCreditEdge(
+    """The method to use when ordering `VendorCredit`."""
+    orderBy: [VendorCreditOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): VendorCreditEdge
+}
+
+"""All input for the `deleteVendorCreditById` mutation."""
+input DeleteVendorCreditByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `VendorCredit` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteVendorCredit` mutation."""
+input DeleteVendorCreditInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.

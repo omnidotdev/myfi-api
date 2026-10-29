@@ -47,3 +47,6 @@ export * from "./tagGroup.table";
 export * from "./taxJurisdiction.table";
 export * from "./vehicle.table";
 export * from "./vendor.table";
+export * from "./vendorCredit.table";
+export * from "./vendorCreditApplication.table";
+export * from "./vendorCreditLine.table";
