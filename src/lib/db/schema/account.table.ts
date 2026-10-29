@@ -50,6 +50,7 @@ export const accountSubTypeEnum = pgEnum("account_sub_type", [
   "payroll",
   "tax_expense",
   "crypto_losses",
+  "fx_gain_loss",
   "other_expense",
 ]);
 

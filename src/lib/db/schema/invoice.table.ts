@@ -39,6 +39,13 @@ export const invoiceTable = pgTable(
       .notNull()
       .default("0"),
     currency: text().notNull().default("USD"),
+    // home-currency units per one unit of `currency` at the issue date (e.g.
+    // 1.08 USD per EUR). The invoice's stored amounts are in `currency`; the
+    // ledger posts in the book's home currency, converted at this rate. 1 for a
+    // home-currency invoice
+    exchangeRate: numeric("exchange_rate", { precision: 19, scale: 8 })
+      .notNull()
+      .default("1"),
     memo: text(),
     terms: text(),
     // set when the invoice is posted to the ledger

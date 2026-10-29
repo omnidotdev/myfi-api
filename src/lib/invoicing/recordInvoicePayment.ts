@@ -8,21 +8,63 @@ import {
   journalEntryTable,
   journalLineTable,
 } from "lib/db/schema";
-import { MONEY_SCALE, toUnits } from "./invoicePosting";
+import { fromUnits, MONEY_SCALE, toUnits } from "./invoicePosting";
 
 import type { InferInsertModel } from "drizzle-orm";
 
 /** Journal-entry source marking a customer invoice payment (receipt) */
 const INVOICE_PAYMENT_SOURCE = "invoice_payment";
 
+type Tx = Parameters<Parameters<typeof dbPool.transaction>[0]>[0];
+
+/**
+ * Resolve the book's foreign-exchange gain/loss account, creating it the first
+ * time a realized FX difference needs to post. One account carries both gains
+ * (credits) and losses (debits), matching how accounting software nets FX
+ */
+const resolveFxAccount = async (tx: Tx, bookId: string): Promise<string> => {
+  const [existing] = await tx
+    .select({ id: accountTable.id })
+    .from(accountTable)
+    .where(
+      and(
+        eq(accountTable.bookId, bookId),
+        eq(accountTable.subType, "fx_gain_loss"),
+      ),
+    )
+    .limit(1);
+  if (existing) return existing.id;
+
+  const [created] = await tx
+    .insert(accountTable)
+    .values({
+      bookId,
+      name: "Foreign Exchange Gain/Loss",
+      type: "expense",
+      subType: "fx_gain_loss",
+    })
+    .returning({ id: accountTable.id });
+  if (!created) {
+    throw new Error("Failed to create the FX gain/loss account");
+  }
+  return created.id;
+};
+
 interface RecordInvoicePaymentOptions {
   invoiceId: string;
   /** Owning book, checked against the invoice to prevent cross-book writes */
   bookId: string;
+  /** Payment amount in the invoice's currency */
   amount: number;
   /** Cash or bank account the received funds debit */
   depositAccountId: string;
   date: string;
+  /**
+   * Home-currency units per one unit of the invoice currency at the payment
+   * date. Defaults to the invoice's own rate (so a home-currency payment, or a
+   * foreign payment at an unchanged rate, books no FX gain/loss)
+   */
+  exchangeRate?: number | null;
   method?: string | null;
   reference?: string | null;
 }
@@ -50,6 +92,7 @@ export const recordInvoicePayment = async (
     amount,
     depositAccountId,
     date,
+    exchangeRate,
     method,
     reference,
   } = opts;
@@ -142,6 +185,16 @@ export const recordInvoicePayment = async (
     const invoiceStatus: "partial" | "paid" =
       newPaidUnits >= toUnits(Number(locked.total)) ? "paid" : "partial";
 
+    // Cash is received at the payment-date rate; AR was booked at the invoice
+    // rate. Their difference in home currency is the realized FX gain/loss. The
+    // payment amount is in the invoice currency; the deposit account is home
+    const invoiceRate = Number(locked.exchangeRate) || 1;
+    const paymentRate = exchangeRate != null ? exchangeRate : invoiceRate;
+    const amountUnits = toUnits(amount);
+    const cashHomeUnits = Math.round(amountUnits * paymentRate);
+    const arHomeUnits = Math.round(amountUnits * invoiceRate);
+    const fxUnits = arHomeUnits - cashHomeUnits;
+
     const [paymentRow] = await tx
       .insert(invoicePaymentTable)
       .values({
@@ -149,6 +202,7 @@ export const recordInvoicePayment = async (
         invoiceId,
         date,
         amount: amount.toFixed(4),
+        exchangeRate: paymentRate.toFixed(8),
         depositAccountId,
         method: method ?? null,
         reference: reference ?? null,
@@ -175,15 +229,26 @@ export const recordInvoicePayment = async (
     await tx.insert(journalLineTable).values({
       journalEntryId: entryRow.id,
       accountId: depositAccountId,
-      debit: amount.toFixed(4),
+      debit: fromUnits(cashHomeUnits).toFixed(4),
       credit: "0.0000",
     } satisfies InferInsertModel<typeof journalLineTable>);
     await tx.insert(journalLineTable).values({
       journalEntryId: entryRow.id,
       accountId: arAccount.id,
       debit: "0.0000",
-      credit: amount.toFixed(4),
+      credit: fromUnits(arHomeUnits).toFixed(4),
     } satisfies InferInsertModel<typeof journalLineTable>);
+    // A rate change between invoicing and payment is a realized FX gain/loss:
+    // more AR relieved than cash received is a loss (debit), the reverse a gain
+    if (fxUnits !== 0) {
+      const fxAccountId = await resolveFxAccount(tx, bookId);
+      await tx.insert(journalLineTable).values({
+        journalEntryId: entryRow.id,
+        accountId: fxAccountId,
+        debit: fxUnits > 0 ? fromUnits(fxUnits).toFixed(4) : "0.0000",
+        credit: fxUnits < 0 ? fromUnits(-fxUnits).toFixed(4) : "0.0000",
+      } satisfies InferInsertModel<typeof journalLineTable>);
+    }
 
     await tx
       .update(invoicePaymentTable)

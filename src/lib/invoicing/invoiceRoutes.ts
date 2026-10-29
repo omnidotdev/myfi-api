@@ -126,6 +126,8 @@ const invoiceRoutes = new Elysia({ prefix: "/api/invoices" })
         dueDate: t.String(),
         memo: t.Optional(t.String()),
         terms: t.Optional(t.String()),
+        currency: t.Optional(t.String()),
+        exchangeRate: t.Optional(t.Number({ exclusiveMinimum: 0 })),
         lines: t.Array(
           t.Object({
             description: t.String(),
@@ -188,6 +190,7 @@ const invoiceRoutes = new Elysia({ prefix: "/api/invoices" })
           amount: body.amount,
           depositAccountId: body.depositAccountId,
           date: body.date,
+          exchangeRate: body.exchangeRate,
           method: body.method,
           reference: body.reference,
         });
@@ -216,6 +219,7 @@ const invoiceRoutes = new Elysia({ prefix: "/api/invoices" })
         amount: t.Number(),
         depositAccountId: t.String(),
         date: t.String(),
+        exchangeRate: t.Optional(t.Number({ exclusiveMinimum: 0 })),
         method: t.Optional(t.String()),
         reference: t.Optional(t.String()),
       }),

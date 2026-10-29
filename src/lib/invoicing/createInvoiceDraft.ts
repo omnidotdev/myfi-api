@@ -29,6 +29,10 @@ interface CreateInvoiceDraftOptions {
   dueDate: string;
   memo?: string | null;
   terms?: string | null;
+  /** Invoice currency; defaults to the book's home currency (USD) */
+  currency?: string | null;
+  /** Home-currency units per one unit of `currency` at the issue date; 1 for home */
+  exchangeRate?: number | null;
   lines: DraftLineInput[];
 }
 
@@ -48,8 +52,18 @@ interface CreateInvoiceDraftResult {
 export const createInvoiceDraft = async (
   opts: CreateInvoiceDraftOptions,
 ): Promise<CreateInvoiceDraftResult> => {
-  const { bookId, customerId, number, issueDate, dueDate, memo, terms, lines } =
-    opts;
+  const {
+    bookId,
+    customerId,
+    number,
+    issueDate,
+    dueDate,
+    memo,
+    terms,
+    currency,
+    exchangeRate,
+    lines,
+  } = opts;
 
   if (lines.length === 0) {
     throw new Error("An invoice needs at least one line");
@@ -85,6 +99,8 @@ export const createInvoiceDraft = async (
         total: subtotal.toFixed(4),
         memo: memo ?? null,
         terms: terms ?? null,
+        ...(currency ? { currency } : {}),
+        ...(exchangeRate != null ? { exchangeRate: exchangeRate.toFixed(8) } : {}),
       } satisfies InferInsertModel<typeof invoiceTable>)
       .returning();
     if (!invoiceRow) {

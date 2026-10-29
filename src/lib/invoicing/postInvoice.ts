@@ -19,6 +19,8 @@ import {
   computeInvoiceTotals,
   computeLineAmount,
   computeLineTax,
+  fromUnits,
+  toUnits,
 } from "./invoicePosting";
 
 import type { InferInsertModel } from "drizzle-orm";
@@ -217,13 +219,32 @@ export const postInvoice = async (
       throw new Error("Failed to write the invoice journal entry");
     }
 
+    // Convert the AR/income/tax postings from the invoice currency to the book's
+    // home currency at the invoice rate. The income and tax credits are each
+    // rounded to home currency, and the single AR debit is set to their sum, so
+    // the entry balances exactly despite per-line rounding. Rate 1 (a
+    // home-currency invoice) leaves every amount unchanged
+    const rate = Number(invoice.exchangeRate) || 1;
+    let arHomeUnits = 0;
     for (const posting of postings) {
+      if (posting.credit <= 0) continue;
+      const homeUnits = Math.round(toUnits(posting.credit) * rate);
+      arHomeUnits += homeUnits;
       await tx.insert(journalLineTable).values({
         journalEntryId: entryRow.id,
         accountId: posting.accountId,
-        debit: posting.debit.toFixed(4),
-        credit: posting.credit.toFixed(4),
+        debit: "0.0000",
+        credit: fromUnits(homeUnits).toFixed(4),
         taxJurisdictionId: posting.taxJurisdictionId ?? null,
+      } satisfies InferInsertModel<typeof journalLineTable>);
+    }
+    const arPosting = postings.find((p) => p.debit > 0);
+    if (arPosting) {
+      await tx.insert(journalLineTable).values({
+        journalEntryId: entryRow.id,
+        accountId: arPosting.accountId,
+        debit: fromUnits(arHomeUnits).toFixed(4),
+        credit: "0.0000",
       } satisfies InferInsertModel<typeof journalLineTable>);
     }
 
