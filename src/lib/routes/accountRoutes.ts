@@ -1,6 +1,7 @@
 import { asc, eq } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 
+import { transferFunds } from "lib/accounting/transferFunds";
 import { emitAudit } from "lib/audit";
 import { dbPool } from "lib/db/db";
 import { accountTable } from "lib/db/schema";
@@ -233,6 +234,52 @@ const accountRoutes = new Elysia({ prefix: "/api/accounts" })
     },
     {
       params: t.Object({ id: t.String() }),
+    },
+  )
+  // Transfer money between two of the book's accounts (one balanced entry)
+  .post(
+    "/transfer",
+    async ({ body, set }) => {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(body.date)) {
+        set.status = 400;
+        return { error: "date must be a YYYY-MM-DD date" };
+      }
+      try {
+        const result = await transferFunds({
+          bookId: body.bookId,
+          fromAccountId: body.fromAccountId,
+          toAccountId: body.toAccountId,
+          amount: body.amount,
+          date: body.date,
+          memo: body.memo,
+        });
+        emitAudit({
+          type: "myfi.account.transfer",
+          organizationId: body.bookId,
+          resource: { type: "account", id: body.fromAccountId },
+          data: { toAccountId: body.toAccountId, amount: body.amount },
+        });
+        return result;
+      } catch (err) {
+        const message = err instanceof Error ? err.message : "Transfer failed";
+        if (/positive|same account|belong to this book|closed period/i.test(message)) {
+          set.status = 400;
+          return { error: message };
+        }
+        console.error("[accounts] transfer failed:", err);
+        set.status = 500;
+        return { error: "Could not record the transfer" };
+      }
+    },
+    {
+      body: t.Object({
+        bookId: t.String(),
+        fromAccountId: t.String(),
+        toAccountId: t.String(),
+        amount: t.Number(),
+        date: t.String(),
+        memo: t.Optional(t.String()),
+      }),
     },
   );
 
