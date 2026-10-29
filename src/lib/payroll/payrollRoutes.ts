@@ -20,6 +20,7 @@ import {
 } from "lib/db/schema";
 import { encryptToken } from "lib/encryption/tokenEncryption";
 import { validateJournalLines } from "lib/journal/validateEntry";
+import { authorizeBook } from "lib/middleware/bookAccess.middleware";
 import { buildOauthRedirect } from "lib/oauth/redirect";
 import { signOauthState, verifyOauthState } from "lib/oauth/state";
 import { revokeGustoToken } from "./revokeGustoToken";
@@ -225,7 +226,7 @@ const payrollRoutes = new Elysia({ prefix: "/api/payroll" })
   )
   .delete(
     "/disconnect/:id",
-    async ({ params, set }) => {
+    async ({ params, set, request }) => {
       const { id } = params;
 
       const [connection] = await dbPool
@@ -241,6 +242,18 @@ const payrollRoutes = new Elysia({ prefix: "/api/payroll" })
         set.status = 404;
         return { error: "Payroll connection not found" };
       }
+
+      // Addressed by connection id, not a bookId field, so the global
+      // middleware does not guard it: require editor on the connection's book.
+      // Disconnecting revokes the Gusto token irreversibly, so this must be
+      // authorized to the owning workspace, never any authenticated user
+      const auth = await authorizeBook(
+        request,
+        connection.bookId,
+        "editor",
+        set,
+      );
+      if (!auth) return { error: "Forbidden" };
 
       // Revoke the Gusto token before disconnecting so a stored OAuth token
       // cannot keep reaching the company's payroll data (best effort), then
