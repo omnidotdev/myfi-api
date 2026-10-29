@@ -5,6 +5,7 @@ import {
   journalLineProjectTable,
   journalLineTable,
   journalLineTagTable,
+  journalLineTrackingCategoryTable,
 } from "lib/db/schema";
 
 /**
@@ -33,4 +34,19 @@ export const lineHasAnyProject = (projectIds: string[]) =>
       .select({ id: journalLineProjectTable.journalLineId })
       .from(journalLineProjectTable)
       .where(inArray(journalLineProjectTable.projectId, projectIds)),
+  );
+
+/** Same membership-test approach for tracking-category (class/location) filtering */
+export const lineHasAnyTrackingCategory = (categoryIds: string[]) =>
+  inArray(
+    journalLineTable.id,
+    dbPool
+      .select({ id: journalLineTrackingCategoryTable.journalLineId })
+      .from(journalLineTrackingCategoryTable)
+      .where(
+        inArray(
+          journalLineTrackingCategoryTable.trackingCategoryId,
+          categoryIds,
+        ),
+      ),
   );

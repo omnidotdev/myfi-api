@@ -11,7 +11,11 @@ import {
   paidExpensesByAccount,
 } from "./cashBasisAdjustments";
 import { entryDateBetween } from "./entryDateFilters";
-import { lineHasAnyProject, lineHasAnyTag } from "./journalLineFilters";
+import {
+  lineHasAnyProject,
+  lineHasAnyTag,
+  lineHasAnyTrackingCategory,
+} from "./journalLineFilters";
 
 type ReportBasis = "accrual" | "cash";
 
@@ -85,9 +89,17 @@ const generateProfitAndLoss = async (params: {
   endDate: string;
   tagIds?: string[];
   projectIds?: string[];
+  trackingCategoryIds?: string[];
   basis?: ReportBasis;
 }): Promise<ProfitAndLossReport> => {
-  const { bookId, startDate, endDate, tagIds, projectIds } = params;
+  const {
+    bookId,
+    startDate,
+    endDate,
+    tagIds,
+    projectIds,
+    trackingCategoryIds,
+  } = params;
   const basis: ReportBasis = params.basis === "cash" ? "cash" : "accrual";
   const cash = basis === "cash";
 
@@ -127,6 +139,9 @@ const generateProfitAndLoss = async (params: {
           : undefined,
         !cash && tagIds?.length ? lineHasAnyTag(tagIds) : undefined,
         !cash && projectIds?.length ? lineHasAnyProject(projectIds) : undefined,
+        !cash && trackingCategoryIds?.length
+          ? lineHasAnyTrackingCategory(trackingCategoryIds)
+          : undefined,
       ),
     )
     .groupBy(

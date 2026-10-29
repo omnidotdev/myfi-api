@@ -165,6 +165,56 @@ const spec_journalLineTag = {
   executor: executor
 };
 const journalLineTagCodec = recordCodec(spec_journalLineTag);
+const journalLineTrackingCategoryIdentifier = sql.identifier("public", "journal_line_tracking_category");
+const spec_journalLineTrackingCategory = {
+  name: "journalLineTrackingCategory",
+  identifier: journalLineTrackingCategoryIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    journal_line_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    tracking_category_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    }
+  },
+  extensions: {
+    oid: "18697",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "journal_line_tracking_category"
+    }
+  },
+  executor: executor
+};
+const journalLineTrackingCategoryCodec = recordCodec(spec_journalLineTrackingCategory);
 const tagGroupIdentifier = sql.identifier("public", "tag_group");
 const spec_tagGroup = {
   name: "tagGroup",
@@ -1041,6 +1091,111 @@ const spec_importProfile = {
   executor: executor
 };
 const importProfileCodec = recordCodec(spec_importProfile);
+const trackingCategoryIdentifier = sql.identifier("public", "tracking_category");
+const spec_trackingCategory = {
+  name: "trackingCategory",
+  identifier: trackingCategoryIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    kind: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    name: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    code: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    is_active: {
+      codec: TYPES.boolean,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "18681",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "tracking_category"
+    }
+  },
+  executor: executor
+};
+const trackingCategoryCodec = recordCodec(spec_trackingCategory);
 const taxJurisdictionIdentifier = sql.identifier("public", "tax_jurisdiction");
 const spec_taxJurisdiction = {
   name: "taxJurisdiction",
@@ -7971,6 +8126,29 @@ const journal_line_tag_resourceOptionsConfig = {
   },
   uniques: journal_line_tagUniques
 };
+const journal_line_tracking_categoryUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const journal_line_tracking_category_resourceOptionsConfig = {
+  executor: executor,
+  name: "journal_line_tracking_category",
+  identifier: "main.public.journal_line_tracking_category",
+  from: journalLineTrackingCategoryIdentifier,
+  codec: journalLineTrackingCategoryCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "journal_line_tracking_category"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: journal_line_tracking_categoryUniques
+};
 const tag_groupUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -8181,6 +8359,29 @@ const import_profile_resourceOptionsConfig = {
     canDelete: true
   },
   uniques: import_profileUniques
+};
+const tracking_categoryUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const tracking_category_resourceOptionsConfig = {
+  executor: executor,
+  name: "tracking_category",
+  identifier: "main.public.tracking_category",
+  from: trackingCategoryIdentifier,
+  codec: trackingCategoryCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "tracking_category"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: tracking_categoryUniques
 };
 const tax_jurisdictionUniques = [{
   attributes: ["id"],
@@ -9250,6 +9451,7 @@ const registryConfig = {
     journalLineProject: journalLineProjectCodec,
     uuid: TYPES.uuid,
     journalLineTag: journalLineTagCodec,
+    journalLineTrackingCategory: journalLineTrackingCategoryCodec,
     tagGroup: tagGroupCodec,
     text: TYPES.text,
     timestamptz: TYPES.timestamptz,
@@ -9267,6 +9469,7 @@ const registryConfig = {
     savingsGoal: savingsGoalCodec,
     importProfile: importProfileCodec,
     jsonb: TYPES.jsonb,
+    trackingCategory: trackingCategoryCodec,
     taxJurisdiction: taxJurisdictionCodec,
     journalLine: journalLineCodec,
     netWorthSnapshot: netWorthSnapshotCodec,
@@ -9323,6 +9526,7 @@ const registryConfig = {
     __proto__: null,
     journal_line_project: journal_line_project_resourceOptionsConfig,
     journal_line_tag: journal_line_tag_resourceOptionsConfig,
+    journal_line_tracking_category: journal_line_tracking_category_resourceOptionsConfig,
     tag_group: tag_group_resourceOptionsConfig,
     "__drizzle_migrations": {
       executor: executor,
@@ -9351,6 +9555,7 @@ const registryConfig = {
     vehicle: vehicle_resourceOptionsConfig,
     savings_goal: savings_goal_resourceOptionsConfig,
     import_profile: import_profile_resourceOptionsConfig,
+    tracking_category: tracking_category_resourceOptionsConfig,
     tax_jurisdiction: tax_jurisdiction_resourceOptionsConfig,
     journal_line: journal_line_resourceOptionsConfig,
     net_worth_snapshot: net_worth_snapshot_resourceOptionsConfig,
@@ -10307,6 +10512,13 @@ const registryConfig = {
         localAttributes: ["id"],
         remoteAttributes: ["book_id"],
         isReferencee: true
+      },
+      trackingCategoriesByTheirBookId: {
+        localCodec: bookCodec,
+        remoteResourceOptions: tracking_category_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["book_id"],
+        isReferencee: true
       }
     },
     bookAccess: {
@@ -11111,6 +11323,13 @@ const registryConfig = {
         localAttributes: ["id"],
         remoteAttributes: ["journal_line_id"],
         isReferencee: true
+      },
+      journalLineTrackingCategoriesByTheirJournalLineId: {
+        localCodec: journalLineCodec,
+        remoteResourceOptions: journal_line_tracking_category_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["journal_line_id"],
+        isReferencee: true
       }
     },
     journalLineProject: {
@@ -11143,6 +11362,23 @@ const registryConfig = {
         localCodec: journalLineTagCodec,
         remoteResourceOptions: tag_resourceOptionsConfig,
         localAttributes: ["tag_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      }
+    },
+    journalLineTrackingCategory: {
+      __proto__: null,
+      journalLineByMyJournalLineId: {
+        localCodec: journalLineTrackingCategoryCodec,
+        remoteResourceOptions: journal_line_resourceOptionsConfig,
+        localAttributes: ["journal_line_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      trackingCategoryByMyTrackingCategoryId: {
+        localCodec: journalLineTrackingCategoryCodec,
+        remoteResourceOptions: tracking_category_resourceOptionsConfig,
+        localAttributes: ["tracking_category_id"],
         remoteAttributes: ["id"],
         isUnique: true
       }
@@ -11645,6 +11881,23 @@ const registryConfig = {
         }
       }
     },
+    trackingCategory: {
+      __proto__: null,
+      bookByMyBookId: {
+        localCodec: trackingCategoryCodec,
+        remoteResourceOptions: book_resourceOptionsConfig,
+        localAttributes: ["book_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      },
+      journalLineTrackingCategoriesByTheirTrackingCategoryId: {
+        localCodec: trackingCategoryCodec,
+        remoteResourceOptions: journal_line_tracking_category_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["tracking_category_id"],
+        isReferencee: true
+      }
+    },
     vehicle: {
       __proto__: null,
       bookByMyBookId: {
@@ -11802,6 +12055,7 @@ const registryConfig = {
 const registry = makeRegistry(registryConfig);
 const resource_journal_line_projectPgResource = registry.pgResources["journal_line_project"];
 const resource_journal_line_tagPgResource = registry.pgResources["journal_line_tag"];
+const resource_journal_line_tracking_categoryPgResource = registry.pgResources["journal_line_tracking_category"];
 const resource_tag_groupPgResource = registry.pgResources["tag_group"];
 const resource___drizzle_migrationsPgResource = registry.pgResources["__drizzle_migrations"];
 const resource_account_mappingPgResource = registry.pgResources["account_mapping"];
@@ -11812,6 +12066,7 @@ const resource_tagPgResource = registry.pgResources["tag"];
 const resource_vehiclePgResource = registry.pgResources["vehicle"];
 const resource_savings_goalPgResource = registry.pgResources["savings_goal"];
 const resource_import_profilePgResource = registry.pgResources["import_profile"];
+const resource_tracking_categoryPgResource = registry.pgResources["tracking_category"];
 const resource_tax_jurisdictionPgResource = registry.pgResources["tax_jurisdiction"];
 const resource_journal_linePgResource = registry.pgResources["journal_line"];
 const resource_net_worth_snapshotPgResource = registry.pgResources["net_worth_snapshot"];
@@ -11924,6 +12179,17 @@ const nodeFetcher_JournalLineTag = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_JournalLineTag));
   return nodeIdHandler_JournalLineTag.get(nodeIdHandler_JournalLineTag.getSpec($decoded));
 };
+const nodeIdHandler_JournalLineTrackingCategory = makeTableNodeIdHandler({
+  typeName: "JournalLineTrackingCategory",
+  identifier: "JournalLineTrackingCategory",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_journal_line_tracking_categoryPgResource,
+  pk: journal_line_tracking_categoryUniques[0].attributes
+});
+const nodeFetcher_JournalLineTrackingCategory = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_JournalLineTrackingCategory));
+  return nodeIdHandler_JournalLineTrackingCategory.get(nodeIdHandler_JournalLineTrackingCategory.getSpec($decoded));
+};
 const nodeIdHandler_TagGroup = makeTableNodeIdHandler({
   typeName: "TagGroup",
   identifier: "TagGroup",
@@ -12033,6 +12299,17 @@ const nodeIdHandler_ImportProfile = makeTableNodeIdHandler({
 const nodeFetcher_ImportProfile = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_ImportProfile));
   return nodeIdHandler_ImportProfile.get(nodeIdHandler_ImportProfile.getSpec($decoded));
+};
+const nodeIdHandler_TrackingCategory = makeTableNodeIdHandler({
+  typeName: "TrackingCategory",
+  identifier: "TrackingCategory",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_tracking_categoryPgResource,
+  pk: tracking_categoryUniques[0].attributes
+});
+const nodeFetcher_TrackingCategory = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_TrackingCategory));
+  return nodeIdHandler_TrackingCategory.get(nodeIdHandler_TrackingCategory.getSpec($decoded));
 };
 const nodeIdHandler_TaxJurisdiction = makeTableNodeIdHandler({
   typeName: "TaxJurisdiction",
@@ -12594,6 +12871,7 @@ const nodeIdHandlerByTypeName = {
   Query: nodeIdHandler_Query,
   JournalLineProject: nodeIdHandler_JournalLineProject,
   JournalLineTag: nodeIdHandler_JournalLineTag,
+  JournalLineTrackingCategory: nodeIdHandler_JournalLineTrackingCategory,
   TagGroup: nodeIdHandler_TagGroup,
   _DrizzleMigration: nodeIdHandler__DrizzleMigration,
   AccountMapping: nodeIdHandler_AccountMapping,
@@ -12604,6 +12882,7 @@ const nodeIdHandlerByTypeName = {
   Vehicle: nodeIdHandler_Vehicle,
   SavingsGoal: nodeIdHandler_SavingsGoal,
   ImportProfile: nodeIdHandler_ImportProfile,
+  TrackingCategory: nodeIdHandler_TrackingCategory,
   TaxJurisdiction: nodeIdHandler_TaxJurisdiction,
   JournalLine: nodeIdHandler_JournalLine,
   NetWorthSnapshot: nodeIdHandler_NetWorthSnapshot,
@@ -13368,6 +13647,10 @@ const specFromArgs_JournalLineTag = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_JournalLineTag, $nodeId);
 };
+const specFromArgs_JournalLineTrackingCategory = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_JournalLineTrackingCategory, $nodeId);
+};
 const specFromArgs_TagGroup = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_TagGroup, $nodeId);
@@ -13407,6 +13690,10 @@ const specFromArgs_SavingsGoal = args => {
 const specFromArgs_ImportProfile = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_ImportProfile, $nodeId);
+};
+const specFromArgs_TrackingCategory = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_TrackingCategory, $nodeId);
 };
 const specFromArgs_TaxJurisdiction = args => {
   const $nodeId = args.getRaw(["input", "id"]);
@@ -13639,6 +13926,10 @@ const CreateJournalLineTagPayload_journalLineTagEdgePlan = ($mutation, fieldArgs
 function JournalLineTagInput_tagIdApply(obj, val, info) {
   obj.set("tag_id", bakedInputRuntime(info.schema, info.field.type, val));
 }
+const CreateJournalLineTrackingCategoryPayload_journalLineTrackingCategoryEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_journal_line_tracking_categoryPgResource, journal_line_tracking_categoryUniques[0].attributes, $mutation, fieldArgs);
+function JournalLineTrackingCategoryInput_trackingCategoryIdApply(obj, val, info) {
+  obj.set("tracking_category_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
 const CreateTagGroupPayload_tagGroupEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_tag_groupPgResource, tag_groupUniques[0].attributes, $mutation, fieldArgs);
 function TagGroupInput_bookIdApply(obj, val, info) {
   obj.set("book_id", bakedInputRuntime(info.schema, info.field.type, val));
@@ -13738,6 +14029,10 @@ function ImportProfileInput_columnMapApply(obj, val, info) {
 }
 function ImportProfileInput_headerRowsApply(obj, val, info) {
   obj.set("header_rows", bakedInputRuntime(info.schema, info.field.type, val));
+}
+const CreateTrackingCategoryPayload_trackingCategoryEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_tracking_categoryPgResource, tracking_categoryUniques[0].attributes, $mutation, fieldArgs);
+function TrackingCategoryInput_kindApply(obj, val, info) {
+  obj.set("kind", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateTaxJurisdictionPayload_taxJurisdictionEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_tax_jurisdictionPgResource, tax_jurisdictionUniques[0].attributes, $mutation, fieldArgs);
 function TaxJurisdictionInput_filingFrequencyApply(obj, val, info) {
@@ -14371,6 +14666,9 @@ type Query implements Node {
   """Get a single \`JournalLineTag\`."""
   journalLineTag(rowId: UUID!): JournalLineTag
 
+  """Get a single \`JournalLineTrackingCategory\`."""
+  journalLineTrackingCategory(rowId: UUID!): JournalLineTrackingCategory
+
   """Get a single \`TagGroup\`."""
   tagGroup(rowId: UUID!): TagGroup
 
@@ -14400,6 +14698,9 @@ type Query implements Node {
 
   """Get a single \`ImportProfile\`."""
   importProfile(rowId: UUID!): ImportProfile
+
+  """Get a single \`TrackingCategory\`."""
+  trackingCategory(rowId: UUID!): TrackingCategory
 
   """Get a single \`TaxJurisdiction\`."""
   taxJurisdiction(rowId: UUID!): TaxJurisdiction
@@ -14555,6 +14856,16 @@ type Query implements Node {
     id: ID!
   ): JournalLineTag
 
+  """
+  Reads a single \`JournalLineTrackingCategory\` using its globally unique \`ID\`.
+  """
+  journalLineTrackingCategoryById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`JournalLineTrackingCategory\`.
+    """
+    id: ID!
+  ): JournalLineTrackingCategory
+
   """Reads a single \`TagGroup\` using its globally unique \`ID\`."""
   tagGroupById(
     """The globally unique \`ID\` to be used in selecting a single \`TagGroup\`."""
@@ -14630,6 +14941,14 @@ type Query implements Node {
     """
     id: ID!
   ): ImportProfile
+
+  """Reads a single \`TrackingCategory\` using its globally unique \`ID\`."""
+  trackingCategoryById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`TrackingCategory\`.
+    """
+    id: ID!
+  ): TrackingCategory
 
   """Reads a single \`TaxJurisdiction\` using its globally unique \`ID\`."""
   taxJurisdictionById(
@@ -15043,6 +15362,42 @@ type Query implements Node {
     orderBy: [JournalLineTagOrderBy!] = [PRIMARY_KEY_ASC]
   ): JournalLineTagConnection
 
+  """
+  Reads and enables pagination through a set of \`JournalLineTrackingCategory\`.
+  """
+  journalLineTrackingCategories(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: JournalLineTrackingCategoryCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: JournalLineTrackingCategoryFilter
+
+    """The method to use when ordering \`JournalLineTrackingCategory\`."""
+    orderBy: [JournalLineTrackingCategoryOrderBy!] = [PRIMARY_KEY_ASC]
+  ): JournalLineTrackingCategoryConnection
+
   """Reads and enables pagination through a set of \`TagGroup\`."""
   tagGroups(
     """Only read the first \`n\` values of the set."""
@@ -15384,6 +15739,40 @@ type Query implements Node {
     """The method to use when ordering \`ImportProfile\`."""
     orderBy: [ImportProfileOrderBy!] = [PRIMARY_KEY_ASC]
   ): ImportProfileConnection
+
+  """Reads and enables pagination through a set of \`TrackingCategory\`."""
+  trackingCategories(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TrackingCategoryCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: TrackingCategoryFilter
+
+    """The method to use when ordering \`TrackingCategory\`."""
+    orderBy: [TrackingCategoryOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TrackingCategoryConnection
 
   """Reads and enables pagination through a set of \`TaxJurisdiction\`."""
   taxJurisdictions(
@@ -17077,6 +17466,42 @@ type JournalLine implements Node {
     """The method to use when ordering \`JournalLineProject\`."""
     orderBy: [JournalLineProjectOrderBy!] = [PRIMARY_KEY_ASC]
   ): JournalLineProjectConnection!
+
+  """
+  Reads and enables pagination through a set of \`JournalLineTrackingCategory\`.
+  """
+  journalLineTrackingCategories(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: JournalLineTrackingCategoryCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: JournalLineTrackingCategoryFilter
+
+    """The method to use when ordering \`JournalLineTrackingCategory\`."""
+    orderBy: [JournalLineTrackingCategoryOrderBy!] = [PRIMARY_KEY_ASC]
+  ): JournalLineTrackingCategoryConnection!
 }
 
 """
@@ -18645,6 +19070,40 @@ type Book implements Node {
     """The method to use when ordering \`BankDeposit\`."""
     orderBy: [BankDepositOrderBy!] = [PRIMARY_KEY_ASC]
   ): BankDepositConnection!
+
+  """Reads and enables pagination through a set of \`TrackingCategory\`."""
+  trackingCategories(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TrackingCategoryCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: TrackingCategoryFilter
+
+    """The method to use when ordering \`TrackingCategory\`."""
+    orderBy: [TrackingCategoryOrderBy!] = [PRIMARY_KEY_ASC]
+  ): TrackingCategoryConnection!
 }
 
 """A connection to a list of \`Account\` values."""
@@ -19163,6 +19622,12 @@ input BookFilter {
 
   """Some related \`bankDeposits\` exist."""
   bankDepositsExist: Boolean
+
+  """Filter by the object’s \`trackingCategories\` relation."""
+  trackingCategories: BookToManyTrackingCategoryFilter
+
+  """Some related \`trackingCategories\` exist."""
+  trackingCategoriesExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [BookFilter!]
@@ -19691,6 +20156,12 @@ input JournalLineFilter {
   """Some related \`journalLineProjects\` exist."""
   journalLineProjectsExist: Boolean
 
+  """Filter by the object’s \`journalLineTrackingCategories\` relation."""
+  journalLineTrackingCategories: JournalLineToManyJournalLineTrackingCategoryFilter
+
+  """Some related \`journalLineTrackingCategories\` exist."""
+  journalLineTrackingCategoriesExist: Boolean
+
   """Filter by the object’s \`account\` relation."""
   account: AccountFilter
 
@@ -20062,6 +20533,107 @@ input IntFilter {
 
   """Greater than or equal to the specified value."""
   greaterThanOrEqualTo: Int
+}
+
+"""
+A filter to be used against many \`JournalLineTrackingCategory\` object types. All fields are combined with a logical ‘and.’
+"""
+input JournalLineToManyJournalLineTrackingCategoryFilter {
+  """
+  Every related \`JournalLineTrackingCategory\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: JournalLineTrackingCategoryFilter
+
+  """
+  Some related \`JournalLineTrackingCategory\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: JournalLineTrackingCategoryFilter
+
+  """
+  No related \`JournalLineTrackingCategory\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: JournalLineTrackingCategoryFilter
+}
+
+"""
+A filter to be used against \`JournalLineTrackingCategory\` object types. All fields are combined with a logical ‘and.’
+"""
+input JournalLineTrackingCategoryFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`journalLineId\` field."""
+  journalLineId: UUIDFilter
+
+  """Filter by the object’s \`trackingCategoryId\` field."""
+  trackingCategoryId: UUIDFilter
+
+  """Filter by the object’s \`journalLine\` relation."""
+  journalLine: JournalLineFilter
+
+  """Filter by the object’s \`trackingCategory\` relation."""
+  trackingCategory: TrackingCategoryFilter
+
+  """Checks for all expressions in this list."""
+  and: [JournalLineTrackingCategoryFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [JournalLineTrackingCategoryFilter!]
+
+  """Negates the expression."""
+  not: JournalLineTrackingCategoryFilter
+}
+
+"""
+A filter to be used against \`TrackingCategory\` object types. All fields are combined with a logical ‘and.’
+"""
+input TrackingCategoryFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`bookId\` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s \`kind\` field."""
+  kind: StringFilter
+
+  """Filter by the object’s \`journalLineTrackingCategories\` relation."""
+  journalLineTrackingCategories: TrackingCategoryToManyJournalLineTrackingCategoryFilter
+
+  """Some related \`journalLineTrackingCategories\` exist."""
+  journalLineTrackingCategoriesExist: Boolean
+
+  """Filter by the object’s \`book\` relation."""
+  book: BookFilter
+
+  """Checks for all expressions in this list."""
+  and: [TrackingCategoryFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [TrackingCategoryFilter!]
+
+  """Negates the expression."""
+  not: TrackingCategoryFilter
+}
+
+"""
+A filter to be used against many \`JournalLineTrackingCategory\` object types. All fields are combined with a logical ‘and.’
+"""
+input TrackingCategoryToManyJournalLineTrackingCategoryFilter {
+  """
+  Every related \`JournalLineTrackingCategory\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: JournalLineTrackingCategoryFilter
+
+  """
+  Some related \`JournalLineTrackingCategory\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: JournalLineTrackingCategoryFilter
+
+  """
+  No related \`JournalLineTrackingCategory\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: JournalLineTrackingCategoryFilter
 }
 
 """
@@ -22828,6 +23400,26 @@ input BookToManyBankDepositFilter {
   No related \`BankDeposit\` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
   none: BankDepositFilter
+}
+
+"""
+A filter to be used against many \`TrackingCategory\` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyTrackingCategoryFilter {
+  """
+  Every related \`TrackingCategory\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: TrackingCategoryFilter
+
+  """
+  Some related \`TrackingCategory\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: TrackingCategoryFilter
+
+  """
+  No related \`TrackingCategory\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: TrackingCategoryFilter
 }
 
 """
@@ -28399,6 +28991,192 @@ enum BankDepositOrderBy {
   BOOK_ID_DESC
 }
 
+"""A connection to a list of \`TrackingCategory\` values."""
+type TrackingCategoryConnection {
+  """A list of \`TrackingCategory\` objects."""
+  nodes: [TrackingCategory]!
+
+  """
+  A list of edges which contains the \`TrackingCategory\` and cursor to aid in pagination.
+  """
+  edges: [TrackingCategoryEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* \`TrackingCategory\` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+type TrackingCategory implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  kind: String!
+  name: String!
+  code: String
+  isActive: Boolean!
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """Reads a single \`Book\` that is related to this \`TrackingCategory\`."""
+  book: Book
+
+  """
+  Reads and enables pagination through a set of \`JournalLineTrackingCategory\`.
+  """
+  journalLineTrackingCategories(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: JournalLineTrackingCategoryCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: JournalLineTrackingCategoryFilter
+
+    """The method to use when ordering \`JournalLineTrackingCategory\`."""
+    orderBy: [JournalLineTrackingCategoryOrderBy!] = [PRIMARY_KEY_ASC]
+  ): JournalLineTrackingCategoryConnection!
+}
+
+"""A connection to a list of \`JournalLineTrackingCategory\` values."""
+type JournalLineTrackingCategoryConnection {
+  """A list of \`JournalLineTrackingCategory\` objects."""
+  nodes: [JournalLineTrackingCategory]!
+
+  """
+  A list of edges which contains the \`JournalLineTrackingCategory\` and cursor to aid in pagination.
+  """
+  edges: [JournalLineTrackingCategoryEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """
+  The count of *all* \`JournalLineTrackingCategory\` you could get from the connection.
+  """
+  totalCount: Int!
+}
+
+type JournalLineTrackingCategory implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  journalLineId: UUID!
+  trackingCategoryId: UUID!
+
+  """
+  Reads a single \`JournalLine\` that is related to this \`JournalLineTrackingCategory\`.
+  """
+  journalLine: JournalLine
+
+  """
+  Reads a single \`TrackingCategory\` that is related to this \`JournalLineTrackingCategory\`.
+  """
+  trackingCategory: TrackingCategory
+}
+
+"""A \`JournalLineTrackingCategory\` edge in the connection."""
+type JournalLineTrackingCategoryEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`JournalLineTrackingCategory\` at the end of the edge."""
+  node: JournalLineTrackingCategory
+}
+
+"""
+A condition to be used against \`JournalLineTrackingCategory\` object types. All
+fields are tested for equality and combined with a logical ‘and.’
+"""
+input JournalLineTrackingCategoryCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`journalLineId\` field."""
+  journalLineId: UUID
+
+  """Checks for equality with the object’s \`trackingCategoryId\` field."""
+  trackingCategoryId: UUID
+}
+
+"""Methods to use when ordering \`JournalLineTrackingCategory\`."""
+enum JournalLineTrackingCategoryOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  JOURNAL_LINE_ID_ASC
+  JOURNAL_LINE_ID_DESC
+  TRACKING_CATEGORY_ID_ASC
+  TRACKING_CATEGORY_ID_DESC
+}
+
+"""A \`TrackingCategory\` edge in the connection."""
+type TrackingCategoryEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`TrackingCategory\` at the end of the edge."""
+  node: TrackingCategory
+}
+
+"""
+A condition to be used against \`TrackingCategory\` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input TrackingCategoryCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`bookId\` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s \`kind\` field."""
+  kind: String
+}
+
+"""Methods to use when ordering \`TrackingCategory\`."""
+enum TrackingCategoryOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+  KIND_ASC
+  KIND_DESC
+}
+
 type _DrizzleMigration implements Node {
   """
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
@@ -28628,6 +29406,14 @@ type Mutation {
     input: CreateJournalLineTagInput!
   ): CreateJournalLineTagPayload
 
+  """Creates a single \`JournalLineTrackingCategory\`."""
+  createJournalLineTrackingCategory(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateJournalLineTrackingCategoryInput!
+  ): CreateJournalLineTrackingCategoryPayload
+
   """Creates a single \`TagGroup\`."""
   createTagGroup(
     """
@@ -28707,6 +29493,14 @@ type Mutation {
     """
     input: CreateImportProfileInput!
   ): CreateImportProfilePayload
+
+  """Creates a single \`TrackingCategory\`."""
+  createTrackingCategory(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateTrackingCategoryInput!
+  ): CreateTrackingCategoryPayload
 
   """Creates a single \`TaxJurisdiction\`."""
   createTaxJurisdiction(
@@ -29112,6 +29906,26 @@ type Mutation {
     input: UpdateJournalLineTagInput!
   ): UpdateJournalLineTagPayload
 
+  """
+  Updates a single \`JournalLineTrackingCategory\` using its globally unique id and a patch.
+  """
+  updateJournalLineTrackingCategoryById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateJournalLineTrackingCategoryByIdInput!
+  ): UpdateJournalLineTrackingCategoryPayload
+
+  """
+  Updates a single \`JournalLineTrackingCategory\` using a unique key and a patch.
+  """
+  updateJournalLineTrackingCategory(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateJournalLineTrackingCategoryInput!
+  ): UpdateJournalLineTrackingCategoryPayload
+
   """Updates a single \`TagGroup\` using its globally unique id and a patch."""
   updateTagGroupById(
     """
@@ -29289,6 +30103,24 @@ type Mutation {
     """
     input: UpdateImportProfileInput!
   ): UpdateImportProfilePayload
+
+  """
+  Updates a single \`TrackingCategory\` using its globally unique id and a patch.
+  """
+  updateTrackingCategoryById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateTrackingCategoryByIdInput!
+  ): UpdateTrackingCategoryPayload
+
+  """Updates a single \`TrackingCategory\` using a unique key and a patch."""
+  updateTrackingCategory(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateTrackingCategoryInput!
+  ): UpdateTrackingCategoryPayload
 
   """
   Updates a single \`TaxJurisdiction\` using its globally unique id and a patch.
@@ -30132,6 +30964,24 @@ type Mutation {
     input: DeleteJournalLineTagInput!
   ): DeleteJournalLineTagPayload
 
+  """
+  Deletes a single \`JournalLineTrackingCategory\` using its globally unique id.
+  """
+  deleteJournalLineTrackingCategoryById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteJournalLineTrackingCategoryByIdInput!
+  ): DeleteJournalLineTrackingCategoryPayload
+
+  """Deletes a single \`JournalLineTrackingCategory\` using a unique key."""
+  deleteJournalLineTrackingCategory(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteJournalLineTrackingCategoryInput!
+  ): DeleteJournalLineTrackingCategoryPayload
+
   """Deletes a single \`TagGroup\` using its globally unique id."""
   deleteTagGroupById(
     """
@@ -30293,6 +31143,22 @@ type Mutation {
     """
     input: DeleteImportProfileInput!
   ): DeleteImportProfilePayload
+
+  """Deletes a single \`TrackingCategory\` using its globally unique id."""
+  deleteTrackingCategoryById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteTrackingCategoryByIdInput!
+  ): DeleteTrackingCategoryPayload
+
+  """Deletes a single \`TrackingCategory\` using a unique key."""
+  deleteTrackingCategory(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteTrackingCategoryInput!
+  ): DeleteTrackingCategoryPayload
 
   """Deletes a single \`TaxJurisdiction\` using its globally unique id."""
   deleteTaxJurisdictionById(
@@ -31119,6 +31985,48 @@ input JournalLineTagInput {
   tagId: UUID!
 }
 
+"""The output of our create \`JournalLineTrackingCategory\` mutation."""
+type CreateJournalLineTrackingCategoryPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`JournalLineTrackingCategory\` that was created by this mutation."""
+  journalLineTrackingCategory: JournalLineTrackingCategory
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`JournalLineTrackingCategory\`. May be used by Relay 1."""
+  journalLineTrackingCategoryEdge(
+    """The method to use when ordering \`JournalLineTrackingCategory\`."""
+    orderBy: [JournalLineTrackingCategoryOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): JournalLineTrackingCategoryEdge
+}
+
+"""All input for the create \`JournalLineTrackingCategory\` mutation."""
+input CreateJournalLineTrackingCategoryInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`JournalLineTrackingCategory\` to be created by this mutation."""
+  journalLineTrackingCategory: JournalLineTrackingCategoryInput!
+}
+
+"""An input for mutations affecting \`JournalLineTrackingCategory\`"""
+input JournalLineTrackingCategoryInput {
+  rowId: UUID
+  journalLineId: UUID!
+  trackingCategoryId: UUID!
+}
+
 """The output of our create \`TagGroup\` mutation."""
 type CreateTagGroupPayload {
   """
@@ -31569,6 +32477,53 @@ input ImportProfileInput {
   name: String!
   columnMap: JSON!
   headerRows: String
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""The output of our create \`TrackingCategory\` mutation."""
+type CreateTrackingCategoryPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`TrackingCategory\` that was created by this mutation."""
+  trackingCategory: TrackingCategory
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`TrackingCategory\`. May be used by Relay 1."""
+  trackingCategoryEdge(
+    """The method to use when ordering \`TrackingCategory\`."""
+    orderBy: [TrackingCategoryOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): TrackingCategoryEdge
+}
+
+"""All input for the create \`TrackingCategory\` mutation."""
+input CreateTrackingCategoryInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`TrackingCategory\` to be created by this mutation."""
+  trackingCategory: TrackingCategoryInput!
+}
+
+"""An input for mutations affecting \`TrackingCategory\`"""
+input TrackingCategoryInput {
+  rowId: UUID
+  bookId: UUID!
+  kind: String!
+  name: String!
+  code: String
+  isActive: Boolean
   createdAt: Datetime
   updatedAt: Datetime
 }
@@ -34051,6 +35006,72 @@ input UpdateJournalLineTagInput {
   patch: JournalLineTagPatch!
 }
 
+"""The output of our update \`JournalLineTrackingCategory\` mutation."""
+type UpdateJournalLineTrackingCategoryPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`JournalLineTrackingCategory\` that was updated by this mutation."""
+  journalLineTrackingCategory: JournalLineTrackingCategory
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`JournalLineTrackingCategory\`. May be used by Relay 1."""
+  journalLineTrackingCategoryEdge(
+    """The method to use when ordering \`JournalLineTrackingCategory\`."""
+    orderBy: [JournalLineTrackingCategoryOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): JournalLineTrackingCategoryEdge
+}
+
+"""All input for the \`updateJournalLineTrackingCategoryById\` mutation."""
+input UpdateJournalLineTrackingCategoryByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`JournalLineTrackingCategory\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`JournalLineTrackingCategory\` being updated.
+  """
+  patch: JournalLineTrackingCategoryPatch!
+}
+
+"""
+Represents an update to a \`JournalLineTrackingCategory\`. Fields that are set will be updated.
+"""
+input JournalLineTrackingCategoryPatch {
+  rowId: UUID
+  journalLineId: UUID
+  trackingCategoryId: UUID
+}
+
+"""All input for the \`updateJournalLineTrackingCategory\` mutation."""
+input UpdateJournalLineTrackingCategoryInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`JournalLineTrackingCategory\` being updated.
+  """
+  patch: JournalLineTrackingCategoryPatch!
+}
+
 """The output of our update \`TagGroup\` mutation."""
 type UpdateTagGroupPayload {
   """
@@ -34741,6 +35762,77 @@ input UpdateImportProfileInput {
   An object where the defined keys will be set on the \`ImportProfile\` being updated.
   """
   patch: ImportProfilePatch!
+}
+
+"""The output of our update \`TrackingCategory\` mutation."""
+type UpdateTrackingCategoryPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`TrackingCategory\` that was updated by this mutation."""
+  trackingCategory: TrackingCategory
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`TrackingCategory\`. May be used by Relay 1."""
+  trackingCategoryEdge(
+    """The method to use when ordering \`TrackingCategory\`."""
+    orderBy: [TrackingCategoryOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): TrackingCategoryEdge
+}
+
+"""All input for the \`updateTrackingCategoryById\` mutation."""
+input UpdateTrackingCategoryByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`TrackingCategory\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`TrackingCategory\` being updated.
+  """
+  patch: TrackingCategoryPatch!
+}
+
+"""
+Represents an update to a \`TrackingCategory\`. Fields that are set will be updated.
+"""
+input TrackingCategoryPatch {
+  rowId: UUID
+  bookId: UUID
+  kind: String
+  name: String
+  code: String
+  isActive: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the \`updateTrackingCategory\` mutation."""
+input UpdateTrackingCategoryInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`TrackingCategory\` being updated.
+  """
+  patch: TrackingCategoryPatch!
 }
 
 """The output of our update \`TaxJurisdiction\` mutation."""
@@ -38283,6 +39375,54 @@ input DeleteJournalLineTagInput {
   rowId: UUID!
 }
 
+"""The output of our delete \`JournalLineTrackingCategory\` mutation."""
+type DeleteJournalLineTrackingCategoryPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`JournalLineTrackingCategory\` that was deleted by this mutation."""
+  journalLineTrackingCategory: JournalLineTrackingCategory
+  deletedJournalLineTrackingCategoryId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`JournalLineTrackingCategory\`. May be used by Relay 1."""
+  journalLineTrackingCategoryEdge(
+    """The method to use when ordering \`JournalLineTrackingCategory\`."""
+    orderBy: [JournalLineTrackingCategoryOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): JournalLineTrackingCategoryEdge
+}
+
+"""All input for the \`deleteJournalLineTrackingCategoryById\` mutation."""
+input DeleteJournalLineTrackingCategoryByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`JournalLineTrackingCategory\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteJournalLineTrackingCategory\` mutation."""
+input DeleteJournalLineTrackingCategoryInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete \`TagGroup\` mutation."""
 type DeleteTagGroupPayload {
   """
@@ -38755,6 +39895,54 @@ input DeleteImportProfileByIdInput {
 
 """All input for the \`deleteImportProfile\` mutation."""
 input DeleteImportProfileInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`TrackingCategory\` mutation."""
+type DeleteTrackingCategoryPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`TrackingCategory\` that was deleted by this mutation."""
+  trackingCategory: TrackingCategory
+  deletedTrackingCategoryId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`TrackingCategory\`. May be used by Relay 1."""
+  trackingCategoryEdge(
+    """The method to use when ordering \`TrackingCategory\`."""
+    orderBy: [TrackingCategoryOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): TrackingCategoryEdge
+}
+
+"""All input for the \`deleteTrackingCategoryById\` mutation."""
+input DeleteTrackingCategoryByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`TrackingCategory\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteTrackingCategory\` mutation."""
+input DeleteTrackingCategoryInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -41916,6 +43104,32 @@ export const objects = {
           orderBy: applyOrderByArgToConnection
         }
       },
+      journalLineTrackingCategories: {
+        plan() {
+          return connection(resource_journal_line_tracking_categoryPgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      journalLineTrackingCategory(_$root, {
+        $rowId
+      }) {
+        return resource_journal_line_tracking_categoryPgResource.get({
+          id: $rowId
+        });
+      },
+      journalLineTrackingCategoryById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_JournalLineTrackingCategory($nodeId);
+      },
       loan(_$root, {
         $rowId
       }) {
@@ -42363,6 +43577,32 @@ export const objects = {
           filter: Query_journalLineProjectsfilterApplyPlan,
           orderBy: applyOrderByArgToConnection
         }
+      },
+      trackingCategories: {
+        plan() {
+          return connection(resource_tracking_categoryPgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      trackingCategory(_$root, {
+        $rowId
+      }) {
+        return resource_tracking_categoryPgResource.get({
+          id: $rowId
+        });
+      },
+      trackingCategoryById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_TrackingCategory($nodeId);
       },
       vehicle(_$root, {
         $rowId
@@ -42931,6 +44171,18 @@ export const objects = {
           input: applyInputToInsert
         }
       },
+      createJournalLineTrackingCategory: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_journal_line_tracking_categoryPgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
       createLoan: {
         plan(_, args) {
           const $insert = pgInsertSingle(resource_loanPgResource);
@@ -43126,6 +44378,18 @@ export const objects = {
       createTaxJurisdiction: {
         plan(_, args) {
           const $insert = pgInsertSingle(resource_tax_jurisdictionPgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
+      createTrackingCategory: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_tracking_categoryPgResource);
           args.apply($insert);
           return object({
             result: $insert
@@ -44131,6 +45395,32 @@ export const objects = {
           input: applyInputToUpdateOrDelete
         }
       },
+      deleteJournalLineTrackingCategory: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_journal_line_tracking_categoryPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteJournalLineTrackingCategoryById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_journal_line_tracking_categoryPgResource, specFromArgs_JournalLineTrackingCategory(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
       deleteLoan: {
         plan(_$root, args) {
           const $delete = pgDeleteSingle(resource_loanPgResource, {
@@ -44564,6 +45854,32 @@ export const objects = {
       deleteTaxJurisdictionById: {
         plan(_$root, args) {
           const $delete = pgDeleteSingle(resource_tax_jurisdictionPgResource, specFromArgs_TaxJurisdiction(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteTrackingCategory: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_tracking_categoryPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteTrackingCategoryById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_tracking_categoryPgResource, specFromArgs_TrackingCategory(args));
           args.apply($delete);
           return object({
             result: $delete
@@ -45639,6 +46955,32 @@ export const objects = {
           input: applyInputToUpdateOrDelete
         }
       },
+      updateJournalLineTrackingCategory: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_journal_line_tracking_categoryPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateJournalLineTrackingCategoryById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_journal_line_tracking_categoryPgResource, specFromArgs_JournalLineTrackingCategory(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
       updateLoan: {
         plan(_$root, args) {
           const $update = pgUpdateSingle(resource_loanPgResource, {
@@ -46072,6 +47414,32 @@ export const objects = {
       updateTaxJurisdictionById: {
         plan(_$root, args) {
           const $update = pgUpdateSingle(resource_tax_jurisdictionPgResource, specFromArgs_TaxJurisdiction(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateTrackingCategory: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_tracking_categoryPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateTrackingCategoryById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_tracking_categoryPgResource, specFromArgs_TrackingCategory(args));
           args.apply($update);
           return object({
             result: $update
@@ -47346,6 +48714,24 @@ export const objects = {
           orderBy: applyOrderByArgToConnection
         }
       },
+      trackingCategories: {
+        plan($record) {
+          const $records = resource_tracking_categoryPgResource.find({
+            book_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       updatedAt: Account_updatedAtPlan,
       vehicles: {
         plan($record) {
@@ -47943,6 +49329,15 @@ export const objects = {
       query: queryPlan
     }
   },
+  CreateJournalLineTrackingCategoryPayload: {
+    assertStep: assertStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      journalLineTrackingCategory: planCreatePayloadResult,
+      journalLineTrackingCategoryEdge: CreateJournalLineTrackingCategoryPayload_journalLineTrackingCategoryEdgePlan,
+      query: queryPlan
+    }
+  },
   CreateLoanPayload: {
     assertStep: assertStep,
     plans: {
@@ -48094,6 +49489,15 @@ export const objects = {
       query: queryPlan,
       taxJurisdiction: planCreatePayloadResult,
       taxJurisdictionEdge: CreateTaxJurisdictionPayload_taxJurisdictionEdgePlan
+    }
+  },
+  CreateTrackingCategoryPayload: {
+    assertStep: assertStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan,
+      trackingCategory: planCreatePayloadResult,
+      trackingCategoryEdge: CreateTrackingCategoryPayload_trackingCategoryEdgePlan
     }
   },
   CreateVehiclePayload: {
@@ -48967,6 +50371,20 @@ export const objects = {
       query: queryPlan
     }
   },
+  DeleteJournalLineTrackingCategoryPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedJournalLineTrackingCategoryId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_JournalLineTrackingCategory.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      journalLineTrackingCategory: planCreatePayloadResult,
+      journalLineTrackingCategoryEdge: CreateJournalLineTrackingCategoryPayload_journalLineTrackingCategoryEdgePlan,
+      query: queryPlan
+    }
+  },
   DeleteLoanPayload: {
     assertStep: ObjectStep,
     plans: {
@@ -49203,6 +50621,20 @@ export const objects = {
       query: queryPlan,
       taxJurisdiction: planCreatePayloadResult,
       taxJurisdictionEdge: CreateTaxJurisdictionPayload_taxJurisdictionEdgePlan
+    }
+  },
+  DeleteTrackingCategoryPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedTrackingCategoryId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_TrackingCategory.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      query: queryPlan,
+      trackingCategory: planCreatePayloadResult,
+      trackingCategoryEdge: CreateTrackingCategoryPayload_trackingCategoryEdgePlan
     }
   },
   DeleteVehiclePayload: {
@@ -49899,6 +51331,24 @@ export const objects = {
           orderBy: applyOrderByArgToConnection
         }
       },
+      journalLineTrackingCategories: {
+        plan($record) {
+          const $records = resource_journal_line_tracking_categoryPgResource.find({
+            journal_line_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       rowId: JournalLineProject_rowIdPlan,
       taxJurisdiction: JournalLine_taxJurisdictionPlan,
       taxJurisdictionId: JournalLine_taxJurisdictionIdPlan
@@ -49960,6 +51410,37 @@ export const objects = {
     }
   },
   JournalLineTagConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
+  JournalLineTrackingCategory: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      id($parent) {
+        const specifier = nodeIdHandler_JournalLineTrackingCategory.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_JournalLineTrackingCategory.codec.name].encode);
+      },
+      journalLine: JournalLineProject_journalLinePlan,
+      journalLineId: JournalLineProject_journalLineIdPlan,
+      rowId: JournalLineProject_rowIdPlan,
+      trackingCategory($record) {
+        return resource_tracking_categoryPgResource.get({
+          id: $record.get("tracking_category_id")
+        });
+      },
+      trackingCategoryId($record) {
+        return $record.get("tracking_category_id");
+      }
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of journal_line_tracking_categoryUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_journal_line_tracking_categoryPgResource.get(spec);
+    }
+  },
+  JournalLineTrackingCategoryConnection: {
     assertStep: ConnectionStep,
     plans: {
       totalCount: totalCountConnectionPlan
@@ -50740,6 +52221,50 @@ export const objects = {
       totalCount: totalCountConnectionPlan
     }
   },
+  TrackingCategory: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      book: Account_bookPlan,
+      bookId: Account_bookIdPlan,
+      createdAt: Account_createdAtPlan,
+      id($parent) {
+        const specifier = nodeIdHandler_TrackingCategory.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_TrackingCategory.codec.name].encode);
+      },
+      isActive: Account_isActivePlan,
+      journalLineTrackingCategories: {
+        plan($record) {
+          const $records = resource_journal_line_tracking_categoryPgResource.find({
+            tracking_category_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
+      rowId: JournalLineProject_rowIdPlan,
+      updatedAt: Account_updatedAtPlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of tracking_categoryUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_tracking_categoryPgResource.get(spec);
+    }
+  },
+  TrackingCategoryConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
   UpdateAccountingPeriodPayload: {
     assertStep: ObjectStep,
     plans: {
@@ -51064,6 +52589,15 @@ export const objects = {
       query: queryPlan
     }
   },
+  UpdateJournalLineTrackingCategoryPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      journalLineTrackingCategory: planCreatePayloadResult,
+      journalLineTrackingCategoryEdge: CreateJournalLineTrackingCategoryPayload_journalLineTrackingCategoryEdgePlan,
+      query: queryPlan
+    }
+  },
   UpdateLoanPayload: {
     assertStep: ObjectStep,
     plans: {
@@ -51215,6 +52749,15 @@ export const objects = {
       query: queryPlan,
       taxJurisdiction: planCreatePayloadResult,
       taxJurisdictionEdge: CreateTaxJurisdictionPayload_taxJurisdictionEdgePlan
+    }
+  },
+  UpdateTrackingCategoryPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan,
+      trackingCategory: planCreatePayloadResult,
+      trackingCategoryEdge: CreateTrackingCategoryPayload_trackingCategoryEdgePlan
     }
   },
   UpdateVehiclePayload: {
@@ -53370,6 +54913,30 @@ export const inputObjects = {
           $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
         });
       },
+      trackingCategories($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: trackingCategoryIdentifier,
+          alias: resource_tracking_categoryPgResource.name,
+          localAttributes: registryConfig.pgRelations.book.trackingCategoriesByTheirBookId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.book.trackingCategoriesByTheirBookId.remoteAttributes
+        };
+        return $rel;
+      },
+      trackingCategoriesExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: trackingCategoryIdentifier,
+          alias: resource_tracking_categoryPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.book.trackingCategoriesByTheirBookId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.book.trackingCategoriesByTheirBookId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
       vehicles($where, value) {
         assertAllowed(value, "object");
         const $rel = $where.andPlan();
@@ -53732,6 +55299,13 @@ export const inputObjects = {
     }
   },
   BookToManyTaxJurisdictionFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
+  BookToManyTrackingCategoryFilter: {
     plans: {
       every: AccountToManyAccountFilter_everyApply,
       none: AccountToManyAccountFilter_noneApply,
@@ -54288,6 +55862,12 @@ export const inputObjects = {
       journalLineTag: applyCreateFields
     }
   },
+  CreateJournalLineTrackingCategoryInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      journalLineTrackingCategory: applyCreateFields
+    }
+  },
   CreateLoanInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
@@ -54388,6 +55968,12 @@ export const inputObjects = {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
       taxJurisdiction: applyCreateFields
+    }
+  },
+  CreateTrackingCategoryInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      trackingCategory: applyCreateFields
     }
   },
   CreateVehicleInput: {
@@ -55402,6 +56988,16 @@ export const inputObjects = {
       clientMutationId: applyClientMutationIdForCreate
     }
   },
+  DeleteJournalLineTrackingCategoryByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteJournalLineTrackingCategoryInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
   DeleteLoanByIdInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate
@@ -55568,6 +57164,16 @@ export const inputObjects = {
     }
   },
   DeleteTaxJurisdictionInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteTrackingCategoryByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteTrackingCategoryInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate
     }
@@ -56732,6 +58338,30 @@ export const inputObjects = {
           $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
         });
       },
+      journalLineTrackingCategories($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: journalLineTrackingCategoryIdentifier,
+          alias: resource_journal_line_tracking_categoryPgResource.name,
+          localAttributes: registryConfig.pgRelations.journalLine.journalLineTrackingCategoriesByTheirJournalLineId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.journalLine.journalLineTrackingCategoriesByTheirJournalLineId.remoteAttributes
+        };
+        return $rel;
+      },
+      journalLineTrackingCategoriesExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: journalLineTrackingCategoryIdentifier,
+          alias: resource_journal_line_tracking_categoryPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.journalLine.journalLineTrackingCategoriesByTheirJournalLineId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.journalLine.journalLineTrackingCategoriesByTheirJournalLineId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
       not: AccountFilter_notApply,
       or: AccountFilter_orApply,
       rowId(queryBuilder, value) {
@@ -56878,6 +58508,60 @@ export const inputObjects = {
       every: AccountToManyAccountFilter_everyApply,
       none: AccountToManyAccountFilter_noneApply,
       some: AccountToManyAccountFilter_someApply
+    }
+  },
+  JournalLineToManyJournalLineTrackingCategoryFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
+  JournalLineTrackingCategoryCondition: {
+    plans: {
+      journalLineId: JournalLineProjectCondition_journalLineIdApply,
+      rowId: AccountCondition_rowIdApply,
+      trackingCategoryId($condition, val) {
+        return applyAttributeCondition("tracking_category_id", TYPES.uuid, $condition, val);
+      }
+    }
+  },
+  JournalLineTrackingCategoryFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      journalLine($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_journal_linePgResource, journalLineIdentifier, registryConfig.pgRelations.journalLineTrackingCategory.journalLineByMyJournalLineId.localAttributes, registryConfig.pgRelations.journalLineTrackingCategory.journalLineByMyJournalLineId.remoteAttributes, $where, value);
+      },
+      journalLineId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("journalLineId", "journal_line_id", spec_journalLineTrackingCategory.attributes.journal_line_id, queryBuilder, value);
+      },
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_journalLineTrackingCategory.attributes.id, queryBuilder, value);
+      },
+      trackingCategory($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_tracking_categoryPgResource, trackingCategoryIdentifier, registryConfig.pgRelations.journalLineTrackingCategory.trackingCategoryByMyTrackingCategoryId.localAttributes, registryConfig.pgRelations.journalLineTrackingCategory.trackingCategoryByMyTrackingCategoryId.remoteAttributes, $where, value);
+      },
+      trackingCategoryId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("trackingCategoryId", "tracking_category_id", spec_journalLineTrackingCategory.attributes.tracking_category_id, queryBuilder, value);
+      }
+    }
+  },
+  JournalLineTrackingCategoryInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      journalLineId: JournalLineProjectInput_journalLineIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      trackingCategoryId: JournalLineTrackingCategoryInput_trackingCategoryIdApply
+    }
+  },
+  JournalLineTrackingCategoryPatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      journalLineId: JournalLineProjectInput_journalLineIdApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      trackingCategoryId: JournalLineTrackingCategoryInput_trackingCategoryIdApply
     }
   },
   LoanCondition: {
@@ -58262,6 +59946,91 @@ export const inputObjects = {
       some: AccountToManyAccountFilter_someApply
     }
   },
+  TrackingCategoryCondition: {
+    plans: {
+      bookId: AccountCondition_bookIdApply,
+      kind($condition, val) {
+        return applyAttributeCondition("kind", TYPES.text, $condition, val);
+      },
+      rowId: AccountCondition_rowIdApply
+    }
+  },
+  TrackingCategoryFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      book($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_bookPgResource, bookIdentifier, registryConfig.pgRelations.trackingCategory.bookByMyBookId.localAttributes, registryConfig.pgRelations.trackingCategory.bookByMyBookId.remoteAttributes, $where, value);
+      },
+      bookId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("bookId", "book_id", spec_trackingCategory.attributes.book_id, queryBuilder, value);
+      },
+      journalLineTrackingCategories($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: journalLineTrackingCategoryIdentifier,
+          alias: resource_journal_line_tracking_categoryPgResource.name,
+          localAttributes: registryConfig.pgRelations.trackingCategory.journalLineTrackingCategoriesByTheirTrackingCategoryId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.trackingCategory.journalLineTrackingCategoriesByTheirTrackingCategoryId.remoteAttributes
+        };
+        return $rel;
+      },
+      journalLineTrackingCategoriesExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: journalLineTrackingCategoryIdentifier,
+          alias: resource_journal_line_tracking_categoryPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.trackingCategory.journalLineTrackingCategoriesByTheirTrackingCategoryId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.trackingCategory.journalLineTrackingCategoriesByTheirTrackingCategoryId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
+      kind(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("kind", "kind", spec_trackingCategory.attributes.kind, queryBuilder, value);
+      },
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_trackingCategory.attributes.id, queryBuilder, value);
+      }
+    }
+  },
+  TrackingCategoryInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      bookId: TagGroupInput_bookIdApply,
+      code: TagInput_codeApply,
+      createdAt: TagGroupInput_createdAtApply,
+      isActive: TagInput_isActiveApply,
+      kind: TrackingCategoryInput_kindApply,
+      name: TagGroupInput_nameApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      updatedAt: AccountMappingInput_updatedAtApply
+    }
+  },
+  TrackingCategoryPatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      bookId: TagGroupInput_bookIdApply,
+      code: TagInput_codeApply,
+      createdAt: TagGroupInput_createdAtApply,
+      isActive: TagInput_isActiveApply,
+      kind: TrackingCategoryInput_kindApply,
+      name: TagGroupInput_nameApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      updatedAt: AccountMappingInput_updatedAtApply
+    }
+  },
+  TrackingCategoryToManyJournalLineTrackingCategoryFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
   UpdateAccountByIdInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
@@ -58694,6 +60463,18 @@ export const inputObjects = {
       patch: applyCreateFields
     }
   },
+  UpdateJournalLineTrackingCategoryByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateJournalLineTrackingCategoryInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
   UpdateLoanByIdInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
@@ -58893,6 +60674,18 @@ export const inputObjects = {
     }
   },
   UpdateTaxJurisdictionInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateTrackingCategoryByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateTrackingCategoryInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
       patch: applyCreateFields
@@ -60804,6 +62597,44 @@ export const enums = {
       }
     }
   },
+  JournalLineTrackingCategoryOrderBy: {
+    values: {
+      JOURNAL_LINE_ID_ASC: JournalLineProjectOrderBy_JOURNAL_LINE_ID_ASCApply,
+      JOURNAL_LINE_ID_DESC: JournalLineProjectOrderBy_JOURNAL_LINE_ID_DESCApply,
+      PRIMARY_KEY_ASC(queryBuilder) {
+        journal_line_tracking_categoryUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        journal_line_tracking_categoryUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply,
+      TRACKING_CATEGORY_ID_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "tracking_category_id",
+          direction: "ASC"
+        });
+      },
+      TRACKING_CATEGORY_ID_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "tracking_category_id",
+          direction: "DESC"
+        });
+      }
+    }
+  },
   LoanOrderBy: {
     values: {
       BOOK_ID_ASC: AccountOrderBy_BOOK_ID_ASCApply,
@@ -61303,6 +63134,44 @@ export const enums = {
       },
       PRIMARY_KEY_DESC(queryBuilder) {
         tax_jurisdictionUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply
+    }
+  },
+  TrackingCategoryOrderBy: {
+    values: {
+      BOOK_ID_ASC: AccountOrderBy_BOOK_ID_ASCApply,
+      BOOK_ID_DESC: AccountOrderBy_BOOK_ID_DESCApply,
+      KIND_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "kind",
+          direction: "ASC"
+        });
+      },
+      KIND_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "kind",
+          direction: "DESC"
+        });
+      },
+      PRIMARY_KEY_ASC(queryBuilder) {
+        tracking_categoryUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        tracking_categoryUniques[0].attributes.forEach(attributeName => {
           queryBuilder.orderBy({
             attribute: attributeName,
             direction: "DESC"

@@ -110,6 +110,7 @@ import savingsRoutes from "lib/routes/savingsRoutes";
 import statementReconciliationRoutes from "lib/routes/statementReconciliationRoutes";
 import tagRoutes from "lib/routes/tagRoutes";
 import taxJurisdictionRoutes from "lib/routes/taxJurisdictionRoutes";
+import trackingCategoryRoutes from "lib/routes/trackingCategoryRoutes";
 import vendorRoutes from "lib/routes/vendorRoutes";
 import {
   detectRecurringTransactions,
@@ -153,7 +154,8 @@ const connectionAndOrgRoutes = new Elysia()
   .use(vendorCreditRoutes)
   .use(purchaseOrderRoutes)
   .use(recurringInvoiceRoutes)
-  .use(bankDepositRoutes);
+  .use(bankDepositRoutes)
+  .use(trackingCategoryRoutes);
 
 const app = new Elysia()
   .onAfterHandle(({ set }) => {
@@ -277,12 +279,16 @@ const app = new Elysia()
     const projectIds = query.projectIds
       ? query.projectIds.split(",").filter(Boolean)
       : undefined;
+    const trackingCategoryIds = query.trackingCategoryIds
+      ? query.trackingCategoryIds.split(",").filter(Boolean)
+      : undefined;
     return generateProfitAndLoss({
       bookId,
       startDate,
       endDate,
       tagIds,
       projectIds,
+      trackingCategoryIds,
       basis: query.basis === "cash" ? "cash" : "accrual",
     });
   })
