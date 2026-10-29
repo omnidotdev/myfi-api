@@ -1,7 +1,13 @@
 import { afterAll, beforeAll, describe, expect, mock, test } from "bun:test";
+
 import { eq } from "drizzle-orm";
 
-import { accountTable, bookTable, inventoryItemTable, journalLineTable } from "lib/db/schema";
+import {
+  accountTable,
+  bookTable,
+  inventoryItemTable,
+  journalLineTable,
+} from "lib/db/schema";
 import { createTestDb } from "lib/test/realDb";
 
 import type { InsertAccount } from "lib/db/schema";
@@ -25,7 +31,10 @@ const acct = (
 describe("adjustInventory", () => {
   beforeAll(async () => {
     harness = await createTestDb();
-    mock.module("lib/db/db", () => ({ dbPool: harness.db, pgPool: harness.client }));
+    mock.module("lib/db/db", () => ({
+      dbPool: harness.db,
+      pgPool: harness.client,
+    }));
     ({ adjustInventory } = await import("./adjustInventory"));
   });
   afterAll(async () => {
@@ -65,9 +74,15 @@ describe("adjustInventory", () => {
     });
     expect(down.quantityOnHand).toBe(8);
     const dl = await db
-      .select({ accountId: journalLineTable.accountId, debit: journalLineTable.debit, credit: journalLineTable.credit })
+      .select({
+        accountId: journalLineTable.accountId,
+        debit: journalLineTable.debit,
+        credit: journalLineTable.credit,
+      })
       .from(journalLineTable)
-      .where(eq(journalLineTable.journalEntryId, down.journalEntryId as string));
+      .where(
+        eq(journalLineTable.journalEntryId, down.journalEntryId as string),
+      );
     expect(dl.find((l) => l.accountId === cogs.id)?.debit).toBe("10.0000");
     expect(dl.find((l) => l.accountId === asset.id)?.credit).toBe("10.0000");
 
@@ -79,17 +94,58 @@ describe("adjustInventory", () => {
       date: "2026-03-02",
     });
     const ul = await db
-      .select({ accountId: journalLineTable.accountId, debit: journalLineTable.debit, credit: journalLineTable.credit })
+      .select({
+        accountId: journalLineTable.accountId,
+        debit: journalLineTable.debit,
+        credit: journalLineTable.credit,
+      })
       .from(journalLineTable)
       .where(eq(journalLineTable.journalEntryId, up.journalEntryId as string));
     expect(ul.find((l) => l.accountId === asset.id)?.debit).toBe("20.0000");
     expect(ul.find((l) => l.accountId === cogs.id)?.credit).toBe("20.0000");
 
     const [after] = await db
-      .select({ qty: inventoryItemTable.quantityOnHand, avg: inventoryItemTable.averageCost })
+      .select({
+        qty: inventoryItemTable.quantityOnHand,
+        avg: inventoryItemTable.averageCost,
+      })
       .from(inventoryItemTable)
       .where(eq(inventoryItemTable.id, item!.id));
     expect(after?.qty).toBe("12.0000");
     expect(after?.avg).toBe("5.0000");
+  });
+
+  test("rejects adjusting a service (non-inventory) item", async () => {
+    const { db } = harness;
+    const [book] = await db
+      .insert(bookTable)
+      .values({ organizationId: "org_adj_svc", name: "Adj Svc", type: "llc" })
+      .returning();
+    const bookId = book!.id;
+    const income = await acct(
+      bookId,
+      "Consulting",
+      "expense",
+      "operating_expense",
+    );
+    const [svc] = await db
+      .insert(inventoryItemTable)
+      .values({
+        bookId,
+        name: "Consulting hour",
+        itemType: "service",
+        salePrice: "150.0000",
+        incomeAccountId: income.id,
+      })
+      .returning();
+
+    await expect(
+      adjustInventory({
+        itemId: svc!.id,
+        bookId,
+        newQuantityOnHand: 5,
+        date: "2026-03-01",
+      }),
+    ).rejects.toThrow(/only.*inventory items|inventory items only/i);
   });
 });

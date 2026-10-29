@@ -316,6 +316,13 @@
       "when": 1793299227096,
       "tag": "0044_silly_phantom_reporter",
       "breakpoints": true
+    },
+    {
+      "idx": 45,
+      "version": "7",
+      "when": 1793299858907,
+      "tag": "0045_item_types",
+      "breakpoints": true
     }
   ]
 }

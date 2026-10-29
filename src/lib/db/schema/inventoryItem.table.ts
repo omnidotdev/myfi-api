@@ -37,12 +37,15 @@ export const inventoryItemTable = pgTable(
     averageCost: numeric("average_cost", { precision: 19, scale: 4 })
       .notNull()
       .default("0"),
-    assetAccountId: uuid("asset_account_id")
-      .notNull()
-      .references(() => accountTable.id),
-    cogsAccountId: uuid("cogs_account_id")
-      .notNull()
-      .references(() => accountTable.id),
+    // "inventory" (stock-tracked, needs asset + COGS accounts), "service", or
+    // "non_inventory" (sold but not stock-tracked, no asset/COGS). App-validated
+    itemType: text("item_type").notNull().default("inventory"),
+    // optional low-stock threshold for inventory items
+    reorderPoint: numeric("reorder_point", { precision: 19, scale: 4 }),
+    // asset and COGS accounts are required for inventory items and null for
+    // service/non-inventory items, which post no stock movement or COGS
+    assetAccountId: uuid("asset_account_id").references(() => accountTable.id),
+    cogsAccountId: uuid("cogs_account_id").references(() => accountTable.id),
     incomeAccountId: uuid("income_account_id")
       .notNull()
       .references(() => accountTable.id),

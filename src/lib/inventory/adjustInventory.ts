@@ -50,6 +50,11 @@ export const adjustInventory = async (params: {
   if (!item || item.bookId !== bookId) {
     throw new Error("Inventory item not found");
   }
+  // service and non-inventory items carry no stock and no asset/COGS accounts
+  const { assetAccountId, cogsAccountId } = item;
+  if (item.itemType !== "inventory" || !assetAccountId || !cogsAccountId) {
+    throw new Error("Stock movements apply to inventory items only");
+  }
 
   if (await isPeriodLocked(bookId, date)) {
     throw new Error("Cannot adjust inventory in a closed period");
@@ -99,13 +104,13 @@ export const adjustInventory = async (params: {
       await tx.insert(journalLineTable).values([
         {
           journalEntryId: entryRow.id,
-          accountId: assetDebit ? item.assetAccountId : item.cogsAccountId,
+          accountId: assetDebit ? assetAccountId : cogsAccountId,
           debit: value.toFixed(4),
           credit: "0.0000",
         },
         {
           journalEntryId: entryRow.id,
-          accountId: assetDebit ? item.cogsAccountId : item.assetAccountId,
+          accountId: assetDebit ? cogsAccountId : assetAccountId,
           debit: "0.0000",
           credit: value.toFixed(4),
         },

@@ -42,6 +42,7 @@ const item = {
   id: "item-1",
   bookId: "book-1",
   name: "Widget",
+  itemType: "inventory",
   quantityOnHand: "20",
   averageCost: "3",
   assetAccountId: "asset",
@@ -102,6 +103,23 @@ describe("recordInventorySale", () => {
     setSelectResults([[{ ...item, bookId: "other" }]]);
     await expect(recordInventorySale({ ...base, quantity: 1 })).rejects.toThrow(
       /not found/,
+    );
+    expect(mockTransaction).not.toHaveBeenCalled();
+  });
+
+  test("rejects a service (non-inventory) item", async () => {
+    setSelectResults([
+      [
+        {
+          ...item,
+          itemType: "service",
+          assetAccountId: null,
+          cogsAccountId: null,
+        },
+      ],
+    ]);
+    await expect(recordInventorySale({ ...base, quantity: 1 })).rejects.toThrow(
+      /only.*inventory items|inventory items only/i,
     );
     expect(mockTransaction).not.toHaveBeenCalled();
   });

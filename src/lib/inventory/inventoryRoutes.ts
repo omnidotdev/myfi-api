@@ -8,6 +8,7 @@ import {
   isMantleManaged,
 } from "lib/mantle/invoiceSource";
 import { adjustInventory } from "./adjustInventory";
+import { ITEM_TYPES, isValidItemType, resolveItemAccounts } from "./itemType";
 import { receiveStock } from "./receiveStock";
 import { recordInventorySale } from "./recordInventorySale";
 
@@ -68,6 +69,26 @@ const inventoryRoutes = new Elysia({ prefix: "/api/inventory-items" })
         set.status = 409;
         return { error: MANTLE_MANAGED_MESSAGE };
       }
+      const itemType = body.itemType ?? "inventory";
+      if (!isValidItemType(itemType)) {
+        set.status = 400;
+        return { error: `itemType must be one of ${ITEM_TYPES.join(", ")}` };
+      }
+      let accounts: {
+        assetAccountId: string | null;
+        cogsAccountId: string | null;
+      };
+      try {
+        accounts = resolveItemAccounts(itemType, {
+          assetAccountId: body.assetAccountId,
+          cogsAccountId: body.cogsAccountId,
+        });
+      } catch (err) {
+        set.status = 400;
+        return {
+          error: err instanceof Error ? err.message : "Invalid item accounts",
+        };
+      }
       const [item] = await dbPool
         .insert(inventoryItemTable)
         .values({
@@ -75,9 +96,14 @@ const inventoryRoutes = new Elysia({ prefix: "/api/inventory-items" })
           sku: body.sku ?? null,
           name: body.name,
           description: body.description ?? null,
+          itemType,
           salePrice: (body.salePrice ?? 0).toFixed(4),
-          assetAccountId: body.assetAccountId,
-          cogsAccountId: body.cogsAccountId,
+          reorderPoint:
+            body.reorderPoint !== undefined
+              ? body.reorderPoint.toFixed(4)
+              : null,
+          assetAccountId: accounts.assetAccountId,
+          cogsAccountId: accounts.cogsAccountId,
           incomeAccountId: body.incomeAccountId,
         })
         .returning();
@@ -88,11 +114,13 @@ const inventoryRoutes = new Elysia({ prefix: "/api/inventory-items" })
       body: t.Object({
         bookId: t.String(),
         name: t.String(),
+        itemType: t.Optional(t.String()),
         sku: t.Optional(t.String()),
         description: t.Optional(t.String()),
         salePrice: t.Optional(t.Number()),
-        assetAccountId: t.String(),
-        cogsAccountId: t.String(),
+        reorderPoint: t.Optional(t.Number()),
+        assetAccountId: t.Optional(t.String()),
+        cogsAccountId: t.Optional(t.String()),
         incomeAccountId: t.String(),
       }),
     },
@@ -117,6 +145,9 @@ const inventoryRoutes = new Elysia({ prefix: "/api/inventory-items" })
         updates.description = body.description;
       if (body.salePrice !== undefined)
         updates.salePrice = body.salePrice.toFixed(4);
+      if (body.reorderPoint !== undefined)
+        updates.reorderPoint =
+          body.reorderPoint === null ? null : body.reorderPoint.toFixed(4);
       if (body.isActive !== undefined) updates.isActive = body.isActive;
 
       const [item] = await dbPool
@@ -134,6 +165,7 @@ const inventoryRoutes = new Elysia({ prefix: "/api/inventory-items" })
         sku: t.Optional(t.String()),
         description: t.Optional(t.String()),
         salePrice: t.Optional(t.Number()),
+        reorderPoint: t.Optional(t.Union([t.Number(), t.Null()])),
         isActive: t.Optional(t.Boolean()),
       }),
     },
@@ -243,7 +275,8 @@ const inventoryRoutes = new Elysia({ prefix: "/api/inventory-items" })
           note: body.note,
         });
       } catch (err) {
-        const message = err instanceof Error ? err.message : "Adjustment failed";
+        const message =
+          err instanceof Error ? err.message : "Adjustment failed";
         if (/not found|negative|closed period/i.test(message)) {
           set.status = /not found/i.test(message) ? 404 : 400;
           return { error: message };

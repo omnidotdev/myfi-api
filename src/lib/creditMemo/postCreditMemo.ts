@@ -12,6 +12,7 @@ import {
   journalLineTable,
   taxJurisdictionTable,
 } from "lib/db/schema";
+import { movementValue } from "lib/inventory/valuation";
 import {
   applyLineDiscount,
   buildInvoicePostings,
@@ -21,7 +22,6 @@ import {
   fromUnits,
   toUnits,
 } from "lib/invoicing/invoicePosting";
-import { movementValue } from "lib/inventory/valuation";
 
 import type { InferInsertModel } from "drizzle-orm";
 import type { PricedLine } from "lib/invoicing/invoicePosting";
@@ -165,7 +165,18 @@ export const postCreditMemo = async (
     for (const [itemId, quantity] of returnedByItem) {
       const item = itemById.get(itemId);
       if (!item || item.bookId !== memo.bookId) {
-        throw new Error("Credit memo references an inventory item not in this book");
+        throw new Error(
+          "Credit memo references an inventory item not in this book",
+        );
+      }
+      // service and non-inventory items hold no stock, so there is nothing to
+      // restock: the memo reverses revenue and tax only
+      if (
+        item.itemType !== "inventory" ||
+        !item.assetAccountId ||
+        !item.cogsAccountId
+      ) {
+        continue;
       }
       const unitCost = Number(item.averageCost);
       restockPlan.push({

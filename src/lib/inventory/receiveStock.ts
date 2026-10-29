@@ -59,6 +59,11 @@ export const receiveStock = async (
   if (!item || item.bookId !== bookId) {
     throw new Error("Inventory item not found");
   }
+  // service and non-inventory items carry no stock and no asset account
+  const assetAccountId = item.assetAccountId;
+  if (item.itemType !== "inventory" || !assetAccountId) {
+    throw new Error("Stock movements apply to inventory items only");
+  }
 
   const [source] = await dbPool
     .select({ id: accountTable.id })
@@ -116,7 +121,7 @@ export const receiveStock = async (
 
     await tx.insert(journalLineTable).values({
       journalEntryId: entryRow.id,
-      accountId: item.assetAccountId,
+      accountId: assetAccountId,
       debit: value.toFixed(4),
       credit: "0.0000",
     } satisfies InferInsertModel<typeof journalLineTable>);

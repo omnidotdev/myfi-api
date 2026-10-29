@@ -149,9 +149,6 @@ type Query implements Node {
   """Get a single `Customer`."""
   customer(rowId: UUID!): Customer
 
-  """Get a single `InventoryItem`."""
-  inventoryItem(rowId: UUID!): InventoryItem
-
   """Get a single `Vendor`."""
   vendor(rowId: UUID!): Vendor
 
@@ -166,6 +163,9 @@ type Query implements Node {
 
   """Get a single `FixedAsset`."""
   fixedAsset(rowId: UUID!): FixedAsset
+
+  """Get a single `InventoryItem`."""
+  inventoryItem(rowId: UUID!): InventoryItem
 
   """Get a single `Bill`."""
   bill(rowId: UUID!): Bill
@@ -524,14 +524,6 @@ type Query implements Node {
     id: ID!
   ): Customer
 
-  """Reads a single `InventoryItem` using its globally unique `ID`."""
-  inventoryItemById(
-    """
-    The globally unique `ID` to be used in selecting a single `InventoryItem`.
-    """
-    id: ID!
-  ): InventoryItem
-
   """Reads a single `Vendor` using its globally unique `ID`."""
   vendorById(
     """The globally unique `ID` to be used in selecting a single `Vendor`."""
@@ -569,6 +561,14 @@ type Query implements Node {
     """
     id: ID!
   ): FixedAsset
+
+  """Reads a single `InventoryItem` using its globally unique `ID`."""
+  inventoryItemById(
+    """
+    The globally unique `ID` to be used in selecting a single `InventoryItem`.
+    """
+    id: ID!
+  ): InventoryItem
 
   """Reads a single `Bill` using its globally unique `ID`."""
   billById(
@@ -2118,40 +2118,6 @@ type Query implements Node {
     orderBy: [CustomerOrderBy!] = [PRIMARY_KEY_ASC]
   ): CustomerConnection
 
-  """Reads and enables pagination through a set of `InventoryItem`."""
-  inventoryItems(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: InventoryItemCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: InventoryItemFilter
-
-    """The method to use when ordering `InventoryItem`."""
-    orderBy: [InventoryItemOrderBy!] = [PRIMARY_KEY_ASC]
-  ): InventoryItemConnection
-
   """Reads and enables pagination through a set of `Vendor`."""
   vendors(
     """Only read the first `n` values of the set."""
@@ -2321,6 +2287,40 @@ type Query implements Node {
     """The method to use when ordering `FixedAsset`."""
     orderBy: [FixedAssetOrderBy!] = [PRIMARY_KEY_ASC]
   ): FixedAssetConnection
+
+  """Reads and enables pagination through a set of `InventoryItem`."""
+  inventoryItems(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: InventoryItemCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: InventoryItemFilter
+
+    """The method to use when ordering `InventoryItem`."""
+    orderBy: [InventoryItemOrderBy!] = [PRIMARY_KEY_ASC]
+  ): InventoryItemConnection
 
   """Reads and enables pagination through a set of `Bill`."""
   bills(
@@ -7355,11 +7355,17 @@ input InventoryItemFilter {
   """Filter by the object’s `assetAccount` relation."""
   assetAccount: AccountFilter
 
+  """A related `assetAccount` exists."""
+  assetAccountExists: Boolean
+
   """Filter by the object’s `book` relation."""
   book: BookFilter
 
   """Filter by the object’s `cogsAccount` relation."""
   cogsAccount: AccountFilter
+
+  """A related `cogsAccount` exists."""
+  cogsAccountExists: Boolean
 
   """Filter by the object’s `incomeAccount` relation."""
   incomeAccount: AccountFilter
@@ -12440,12 +12446,14 @@ type InventoryItem implements Node {
   salePrice: BigFloat!
   quantityOnHand: BigFloat!
   averageCost: BigFloat!
-  assetAccountId: UUID!
-  cogsAccountId: UUID!
+  assetAccountId: UUID
+  cogsAccountId: UUID
   incomeAccountId: UUID!
   isActive: Boolean!
   createdAt: Datetime
   updatedAt: Datetime
+  itemType: String!
+  reorderPoint: BigFloat
 
   """Reads a single `Account` that is related to this `InventoryItem`."""
   assetAccount: Account
@@ -14385,14 +14393,6 @@ type Mutation {
     input: CreateCustomerInput!
   ): CreateCustomerPayload
 
-  """Creates a single `InventoryItem`."""
-  createInventoryItem(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateInventoryItemInput!
-  ): CreateInventoryItemPayload
-
   """Creates a single `Vendor`."""
   createVendor(
     """
@@ -14432,6 +14432,14 @@ type Mutation {
     """
     input: CreateFixedAssetInput!
   ): CreateFixedAssetPayload
+
+  """Creates a single `InventoryItem`."""
+  createInventoryItem(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateInventoryItemInput!
+  ): CreateInventoryItemPayload
 
   """Creates a single `Bill`."""
   createBill(
@@ -15271,24 +15279,6 @@ type Mutation {
     input: UpdateCustomerInput!
   ): UpdateCustomerPayload
 
-  """
-  Updates a single `InventoryItem` using its globally unique id and a patch.
-  """
-  updateInventoryItemById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateInventoryItemByIdInput!
-  ): UpdateInventoryItemPayload
-
-  """Updates a single `InventoryItem` using a unique key and a patch."""
-  updateInventoryItem(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateInventoryItemInput!
-  ): UpdateInventoryItemPayload
-
   """Updates a single `Vendor` using its globally unique id and a patch."""
   updateVendorById(
     """
@@ -15376,6 +15366,24 @@ type Mutation {
     """
     input: UpdateFixedAssetInput!
   ): UpdateFixedAssetPayload
+
+  """
+  Updates a single `InventoryItem` using its globally unique id and a patch.
+  """
+  updateInventoryItemById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateInventoryItemByIdInput!
+  ): UpdateInventoryItemPayload
+
+  """Updates a single `InventoryItem` using a unique key and a patch."""
+  updateInventoryItem(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateInventoryItemInput!
+  ): UpdateInventoryItemPayload
 
   """Updates a single `Bill` using its globally unique id and a patch."""
   updateBillById(
@@ -16205,22 +16213,6 @@ type Mutation {
     input: DeleteCustomerInput!
   ): DeleteCustomerPayload
 
-  """Deletes a single `InventoryItem` using its globally unique id."""
-  deleteInventoryItemById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteInventoryItemByIdInput!
-  ): DeleteInventoryItemPayload
-
-  """Deletes a single `InventoryItem` using a unique key."""
-  deleteInventoryItem(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteInventoryItemInput!
-  ): DeleteInventoryItemPayload
-
   """Deletes a single `Vendor` using its globally unique id."""
   deleteVendorById(
     """
@@ -16300,6 +16292,22 @@ type Mutation {
     """
     input: DeleteFixedAssetInput!
   ): DeleteFixedAssetPayload
+
+  """Deletes a single `InventoryItem` using its globally unique id."""
+  deleteInventoryItemById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteInventoryItemByIdInput!
+  ): DeleteInventoryItemPayload
+
+  """Deletes a single `InventoryItem` using a unique key."""
+  deleteInventoryItem(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteInventoryItemInput!
+  ): DeleteInventoryItemPayload
 
   """Deletes a single `Bill` using its globally unique id."""
   deleteBillById(
@@ -18544,59 +18552,6 @@ input CustomerInput {
   updatedAt: Datetime
 }
 
-"""The output of our create `InventoryItem` mutation."""
-type CreateInventoryItemPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `InventoryItem` that was created by this mutation."""
-  inventoryItem: InventoryItem
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `InventoryItem`. May be used by Relay 1."""
-  inventoryItemEdge(
-    """The method to use when ordering `InventoryItem`."""
-    orderBy: [InventoryItemOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): InventoryItemEdge
-}
-
-"""All input for the create `InventoryItem` mutation."""
-input CreateInventoryItemInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `InventoryItem` to be created by this mutation."""
-  inventoryItem: InventoryItemInput!
-}
-
-"""An input for mutations affecting `InventoryItem`"""
-input InventoryItemInput {
-  rowId: UUID
-  bookId: UUID!
-  sku: String
-  name: String!
-  description: String
-  salePrice: BigFloat
-  quantityOnHand: BigFloat
-  averageCost: BigFloat
-  assetAccountId: UUID!
-  cogsAccountId: UUID!
-  incomeAccountId: UUID!
-  isActive: Boolean
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
 """The output of our create `Vendor` mutation."""
 type CreateVendorPayload {
   """
@@ -18863,6 +18818,61 @@ input FixedAssetInput {
   disposedAt: String
   disposalProceeds: BigFloat
   createdAt: Datetime
+}
+
+"""The output of our create `InventoryItem` mutation."""
+type CreateInventoryItemPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `InventoryItem` that was created by this mutation."""
+  inventoryItem: InventoryItem
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `InventoryItem`. May be used by Relay 1."""
+  inventoryItemEdge(
+    """The method to use when ordering `InventoryItem`."""
+    orderBy: [InventoryItemOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): InventoryItemEdge
+}
+
+"""All input for the create `InventoryItem` mutation."""
+input CreateInventoryItemInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `InventoryItem` to be created by this mutation."""
+  inventoryItem: InventoryItemInput!
+}
+
+"""An input for mutations affecting `InventoryItem`"""
+input InventoryItemInput {
+  rowId: UUID
+  bookId: UUID!
+  sku: String
+  name: String!
+  description: String
+  salePrice: BigFloat
+  quantityOnHand: BigFloat
+  averageCost: BigFloat
+  assetAccountId: UUID
+  cogsAccountId: UUID
+  incomeAccountId: UUID!
+  isActive: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
+  itemType: String
+  reorderPoint: BigFloat
 }
 
 """The output of our create `Bill` mutation."""
@@ -22430,83 +22440,6 @@ input UpdateCustomerInput {
   patch: CustomerPatch!
 }
 
-"""The output of our update `InventoryItem` mutation."""
-type UpdateInventoryItemPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `InventoryItem` that was updated by this mutation."""
-  inventoryItem: InventoryItem
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `InventoryItem`. May be used by Relay 1."""
-  inventoryItemEdge(
-    """The method to use when ordering `InventoryItem`."""
-    orderBy: [InventoryItemOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): InventoryItemEdge
-}
-
-"""All input for the `updateInventoryItemById` mutation."""
-input UpdateInventoryItemByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `InventoryItem` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the `InventoryItem` being updated.
-  """
-  patch: InventoryItemPatch!
-}
-
-"""
-Represents an update to a `InventoryItem`. Fields that are set will be updated.
-"""
-input InventoryItemPatch {
-  rowId: UUID
-  bookId: UUID
-  sku: String
-  name: String
-  description: String
-  salePrice: BigFloat
-  quantityOnHand: BigFloat
-  averageCost: BigFloat
-  assetAccountId: UUID
-  cogsAccountId: UUID
-  incomeAccountId: UUID
-  isActive: Boolean
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
-"""All input for the `updateInventoryItem` mutation."""
-input UpdateInventoryItemInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the `InventoryItem` being updated.
-  """
-  patch: InventoryItemPatch!
-}
-
 """The output of our update `Vendor` mutation."""
 type UpdateVendorPayload {
   """
@@ -22893,6 +22826,85 @@ input UpdateFixedAssetInput {
   An object where the defined keys will be set on the `FixedAsset` being updated.
   """
   patch: FixedAssetPatch!
+}
+
+"""The output of our update `InventoryItem` mutation."""
+type UpdateInventoryItemPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `InventoryItem` that was updated by this mutation."""
+  inventoryItem: InventoryItem
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `InventoryItem`. May be used by Relay 1."""
+  inventoryItemEdge(
+    """The method to use when ordering `InventoryItem`."""
+    orderBy: [InventoryItemOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): InventoryItemEdge
+}
+
+"""All input for the `updateInventoryItemById` mutation."""
+input UpdateInventoryItemByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `InventoryItem` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `InventoryItem` being updated.
+  """
+  patch: InventoryItemPatch!
+}
+
+"""
+Represents an update to a `InventoryItem`. Fields that are set will be updated.
+"""
+input InventoryItemPatch {
+  rowId: UUID
+  bookId: UUID
+  sku: String
+  name: String
+  description: String
+  salePrice: BigFloat
+  quantityOnHand: BigFloat
+  averageCost: BigFloat
+  assetAccountId: UUID
+  cogsAccountId: UUID
+  incomeAccountId: UUID
+  isActive: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
+  itemType: String
+  reorderPoint: BigFloat
+}
+
+"""All input for the `updateInventoryItem` mutation."""
+input UpdateInventoryItemInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `InventoryItem` being updated.
+  """
+  patch: InventoryItemPatch!
 }
 
 """The output of our update `Bill` mutation."""
@@ -25550,54 +25562,6 @@ input DeleteCustomerInput {
   rowId: UUID!
 }
 
-"""The output of our delete `InventoryItem` mutation."""
-type DeleteInventoryItemPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `InventoryItem` that was deleted by this mutation."""
-  inventoryItem: InventoryItem
-  deletedInventoryItemId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `InventoryItem`. May be used by Relay 1."""
-  inventoryItemEdge(
-    """The method to use when ordering `InventoryItem`."""
-    orderBy: [InventoryItemOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): InventoryItemEdge
-}
-
-"""All input for the `deleteInventoryItemById` mutation."""
-input DeleteInventoryItemByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `InventoryItem` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the `deleteInventoryItem` mutation."""
-input DeleteInventoryItemInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete `Vendor` mutation."""
 type DeleteVendorPayload {
   """
@@ -25830,6 +25794,54 @@ input DeleteFixedAssetByIdInput {
 
 """All input for the `deleteFixedAsset` mutation."""
 input DeleteFixedAssetInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `InventoryItem` mutation."""
+type DeleteInventoryItemPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `InventoryItem` that was deleted by this mutation."""
+  inventoryItem: InventoryItem
+  deletedInventoryItemId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `InventoryItem`. May be used by Relay 1."""
+  inventoryItemEdge(
+    """The method to use when ordering `InventoryItem`."""
+    orderBy: [InventoryItemOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): InventoryItemEdge
+}
+
+"""All input for the `deleteInventoryItemById` mutation."""
+input DeleteInventoryItemByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `InventoryItem` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteInventoryItem` mutation."""
+input DeleteInventoryItemInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.

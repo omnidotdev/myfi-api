@@ -51,6 +51,11 @@ export const recordInventorySale = async (
   if (!item || item.bookId !== bookId) {
     throw new Error("Inventory item not found");
   }
+  // service and non-inventory items carry no stock and no asset/COGS accounts
+  const { assetAccountId, cogsAccountId } = item;
+  if (item.itemType !== "inventory" || !assetAccountId || !cogsAccountId) {
+    throw new Error("Stock movements apply to inventory items only");
+  }
 
   if (!hasSufficientStock(Number(item.quantityOnHand), quantity)) {
     throw new Error("Not enough stock on hand");
@@ -93,13 +98,13 @@ export const recordInventorySale = async (
 
     await tx.insert(journalLineTable).values({
       journalEntryId: entryRow.id,
-      accountId: item.cogsAccountId,
+      accountId: cogsAccountId,
       debit: cogs.toFixed(4),
       credit: "0.0000",
     } satisfies InferInsertModel<typeof journalLineTable>);
     await tx.insert(journalLineTable).values({
       journalEntryId: entryRow.id,
-      accountId: item.assetAccountId,
+      accountId: assetAccountId,
       debit: "0.0000",
       credit: cogs.toFixed(4),
     } satisfies InferInsertModel<typeof journalLineTable>);

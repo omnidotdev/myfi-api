@@ -161,6 +161,63 @@ describe("postInvoice auto-COGS", () => {
     expect(invoice?.status).toBe("open");
   });
 
+  test("a service item line posts revenue but no COGS or stock movement", async () => {
+    const { bookId, ar, sales, customerId } = await seedBook("org_cogs_svc");
+    const [svc] = await harness.db
+      .insert(inventoryItemTable)
+      .values({
+        bookId,
+        name: "Consulting",
+        itemType: "service",
+        incomeAccountId: sales.id,
+        salePrice: "150.0000",
+      })
+      .returning();
+
+    const draft = await createInvoiceDraft({
+      bookId,
+      customerId,
+      number: "1003",
+      issueDate: "2026-09-01",
+      dueDate: "2026-10-01",
+      lines: [
+        {
+          description: "Consulting",
+          quantity: 2,
+          unitPrice: 150,
+          incomeAccountId: sales.id,
+          inventoryItemId: svc!.id,
+        },
+      ],
+    });
+
+    const result = await postInvoice(draft.invoiceId, bookId);
+
+    const lines = await harness.db
+      .select({
+        accountId: journalLineTable.accountId,
+        debit: journalLineTable.debit,
+        credit: journalLineTable.credit,
+      })
+      .from(journalLineTable)
+      .where(eq(journalLineTable.journalEntryId, result.journalEntryId));
+    // AR debit 300, sales credit 300, and nothing else (no COGS pair)
+    expect(lines).toHaveLength(2);
+    expect(lines.find((l) => l.accountId === ar.id)?.debit).toBe("300.0000");
+    expect(lines.find((l) => l.accountId === sales.id)?.credit).toBe(
+      "300.0000",
+    );
+
+    // no stock movement recorded for the service line
+    const txns = await harness.db
+      .select()
+      .from(inventoryTransactionTable)
+      .where(
+        eq(inventoryTransactionTable.journalEntryId, result.journalEntryId),
+      );
+    expect(txns).toHaveLength(0);
+  });
+
   test("throws when a line references an item from another book", async () => {
     const { bookId, sales, customerId } = await seedBook("org_cogs_main");
     const other = await seedBook("org_cogs_other");

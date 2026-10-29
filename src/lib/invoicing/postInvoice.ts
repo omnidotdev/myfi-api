@@ -160,7 +160,9 @@ export const postInvoice = async (
     if (secondaryRate > 0 && row.secondaryPayableAccountId) {
       // A compound secondary tax is charged on the amount plus the primary tax
       // (tax-on-tax); otherwise it is a second flat tax on the amount alone
-      const base = row.secondaryCompound ? amount + (taxes[0]?.amount ?? 0) : amount;
+      const base = row.secondaryCompound
+        ? amount + (taxes[0]?.amount ?? 0)
+        : amount;
       taxes.push({
         amount: computeLineTax(base, secondaryRate),
         taxPayableAccountId: row.secondaryPayableAccountId,
@@ -223,6 +225,15 @@ export const postInvoice = async (
         throw new Error(
           "Invoice references an inventory item not in this book",
         );
+      }
+      // service and non-inventory items carry no stock: they post revenue only,
+      // with no COGS pair or stock decrement
+      if (
+        item.itemType !== "inventory" ||
+        !item.assetAccountId ||
+        !item.cogsAccountId
+      ) {
+        continue;
       }
       const unitCost = Number(item.averageCost);
       cogsPlan.push({

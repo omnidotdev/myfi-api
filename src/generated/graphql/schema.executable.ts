@@ -5349,180 +5349,6 @@ const spec_customer = {
   executor: executor
 };
 const customerCodec = recordCodec(spec_customer);
-const inventoryItemIdentifier = sql.identifier("public", "inventory_item");
-const spec_inventoryItem = {
-  name: "inventoryItem",
-  identifier: inventoryItemIdentifier,
-  attributes: {
-    __proto__: null,
-    id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    book_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true
-      }
-    },
-    sku: {
-      codec: TYPES.text,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    name: {
-      codec: TYPES.text,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    description: {
-      codec: TYPES.text,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    sale_price: {
-      codec: TYPES.numeric,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    quantity_on_hand: {
-      codec: TYPES.numeric,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    average_cost: {
-      codec: TYPES.numeric,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    asset_account_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    cogs_account_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    income_account_id: {
-      codec: TYPES.uuid,
-      notNull: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    is_active: {
-      codec: TYPES.boolean,
-      notNull: true,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    created_at: {
-      codec: TYPES.timestamptz,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    },
-    updated_at: {
-      codec: TYPES.timestamptz,
-      hasDefault: true,
-      extensions: {
-        __proto__: null,
-        canSelect: true,
-        canInsert: true,
-        canUpdate: true,
-        isIndexed: false
-      }
-    }
-  },
-  extensions: {
-    oid: "17866",
-    isTableLike: true,
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "inventory_item"
-    }
-  },
-  executor: executor
-};
-const inventoryItemCodec = recordCodec(spec_inventoryItem);
 const vendorIdentifier = sql.identifier("public", "vendor");
 const spec_vendor = {
   name: "vendor",
@@ -6420,6 +6246,200 @@ const spec_fixedAsset = {
   executor: executor
 };
 const fixedAssetCodec = recordCodec(spec_fixedAsset);
+const inventoryItemIdentifier = sql.identifier("public", "inventory_item");
+const spec_inventoryItem = {
+  name: "inventoryItem",
+  identifier: inventoryItemIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    sku: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    name: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    description: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    sale_price: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    quantity_on_hand: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    average_cost: {
+      codec: TYPES.numeric,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    asset_account_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    cogs_account_id: {
+      codec: TYPES.uuid,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    income_account_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    is_active: {
+      codec: TYPES.boolean,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    item_type: {
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    reorder_point: {
+      codec: TYPES.numeric,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "17866",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "inventory_item"
+    }
+  },
+  executor: executor
+};
+const inventoryItemCodec = recordCodec(spec_inventoryItem);
 const billIdentifier = sql.identifier("public", "bill");
 const spec_bill = {
   name: "bill",
@@ -8761,29 +8781,6 @@ const customer_resourceOptionsConfig = {
   },
   uniques: customerUniques
 };
-const inventory_itemUniques = [{
-  attributes: ["id"],
-  isPrimary: true
-}];
-const inventory_item_resourceOptionsConfig = {
-  executor: executor,
-  name: "inventory_item",
-  identifier: "main.public.inventory_item",
-  from: inventoryItemIdentifier,
-  codec: inventoryItemCodec,
-  extensions: {
-    pg: {
-      serviceName: "main",
-      schemaName: "public",
-      name: "inventory_item"
-    },
-    canSelect: true,
-    canInsert: true,
-    canUpdate: true,
-    canDelete: true
-  },
-  uniques: inventory_itemUniques
-};
 const vendorUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -8898,6 +8895,29 @@ const fixed_asset_resourceOptionsConfig = {
     canDelete: true
   },
   uniques: fixed_assetUniques
+};
+const inventory_itemUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const inventory_item_resourceOptionsConfig = {
+  executor: executor,
+  name: "inventory_item",
+  identifier: "main.public.inventory_item",
+  from: inventoryItemIdentifier,
+  codec: inventoryItemCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "inventory_item"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: inventory_itemUniques
 };
 const billUniques = [{
   attributes: ["id"],
@@ -9120,13 +9140,13 @@ const registryConfig = {
     estimate: estimateCodec,
     reconciliationQueue: reconciliationQueueCodec,
     customer: customerCodec,
-    inventoryItem: inventoryItemCodec,
     vendor: vendorCodec,
     cryptoAsset: cryptoAssetCodec,
     costBasisMethod: costBasisMethodCodec,
     creditMemo: creditMemoCodec,
     vendorCredit: vendorCreditCodec,
     fixedAsset: fixedAssetCodec,
+    inventoryItem: inventoryItemCodec,
     bill: billCodec,
     recurringTransaction: recurringTransactionCodec,
     recurringFrequency: recurringFrequencyCodec,
@@ -9202,12 +9222,12 @@ const registryConfig = {
     estimate: estimate_resourceOptionsConfig,
     reconciliation_queue: reconciliation_queue_resourceOptionsConfig,
     customer: customer_resourceOptionsConfig,
-    inventory_item: inventory_item_resourceOptionsConfig,
     vendor: vendor_resourceOptionsConfig,
     crypto_asset: crypto_asset_resourceOptionsConfig,
     credit_memo: credit_memo_resourceOptionsConfig,
     vendor_credit: vendor_credit_resourceOptionsConfig,
     fixed_asset: fixed_asset_resourceOptionsConfig,
+    inventory_item: inventory_item_resourceOptionsConfig,
     bill: bill_resourceOptionsConfig,
     recurring_transaction: recurring_transaction_resourceOptionsConfig,
     book: book_resourceOptionsConfig,
@@ -11591,12 +11611,12 @@ const resource_invoice_linePgResource = registry.pgResources["invoice_line"];
 const resource_estimatePgResource = registry.pgResources["estimate"];
 const resource_reconciliation_queuePgResource = registry.pgResources["reconciliation_queue"];
 const resource_customerPgResource = registry.pgResources["customer"];
-const resource_inventory_itemPgResource = registry.pgResources["inventory_item"];
 const resource_vendorPgResource = registry.pgResources["vendor"];
 const resource_crypto_assetPgResource = registry.pgResources["crypto_asset"];
 const resource_credit_memoPgResource = registry.pgResources["credit_memo"];
 const resource_vendor_creditPgResource = registry.pgResources["vendor_credit"];
 const resource_fixed_assetPgResource = registry.pgResources["fixed_asset"];
+const resource_inventory_itemPgResource = registry.pgResources["inventory_item"];
 const resource_billPgResource = registry.pgResources["bill"];
 const resource_recurring_transactionPgResource = registry.pgResources["recurring_transaction"];
 const resource_bookPgResource = registry.pgResources["book"];
@@ -12132,17 +12152,6 @@ const nodeFetcher_Customer = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_Customer));
   return nodeIdHandler_Customer.get(nodeIdHandler_Customer.getSpec($decoded));
 };
-const nodeIdHandler_InventoryItem = makeTableNodeIdHandler({
-  typeName: "InventoryItem",
-  identifier: "InventoryItem",
-  nodeIdCodec: base64JSONNodeIdCodec,
-  resource: resource_inventory_itemPgResource,
-  pk: inventory_itemUniques[0].attributes
-});
-const nodeFetcher_InventoryItem = $nodeId => {
-  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_InventoryItem));
-  return nodeIdHandler_InventoryItem.get(nodeIdHandler_InventoryItem.getSpec($decoded));
-};
 const nodeIdHandler_Vendor = makeTableNodeIdHandler({
   typeName: "Vendor",
   identifier: "Vendor",
@@ -12197,6 +12206,17 @@ const nodeIdHandler_FixedAsset = makeTableNodeIdHandler({
 const nodeFetcher_FixedAsset = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_FixedAsset));
   return nodeIdHandler_FixedAsset.get(nodeIdHandler_FixedAsset.getSpec($decoded));
+};
+const nodeIdHandler_InventoryItem = makeTableNodeIdHandler({
+  typeName: "InventoryItem",
+  identifier: "InventoryItem",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_inventory_itemPgResource,
+  pk: inventory_itemUniques[0].attributes
+});
+const nodeFetcher_InventoryItem = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_InventoryItem));
+  return nodeIdHandler_InventoryItem.get(nodeIdHandler_InventoryItem.getSpec($decoded));
 };
 const nodeIdHandler_Bill = makeTableNodeIdHandler({
   typeName: "Bill",
@@ -12371,12 +12391,12 @@ const nodeIdHandlerByTypeName = {
   Estimate: nodeIdHandler_Estimate,
   ReconciliationQueue: nodeIdHandler_ReconciliationQueue,
   Customer: nodeIdHandler_Customer,
-  InventoryItem: nodeIdHandler_InventoryItem,
   Vendor: nodeIdHandler_Vendor,
   CryptoAsset: nodeIdHandler_CryptoAsset,
   CreditMemo: nodeIdHandler_CreditMemo,
   VendorCredit: nodeIdHandler_VendorCredit,
   FixedAsset: nodeIdHandler_FixedAsset,
+  InventoryItem: nodeIdHandler_InventoryItem,
   Bill: nodeIdHandler_Bill,
   RecurringTransaction: nodeIdHandler_RecurringTransaction,
   Book: nodeIdHandler_Book,
@@ -13270,10 +13290,6 @@ const specFromArgs_Customer = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Customer, $nodeId);
 };
-const specFromArgs_InventoryItem = args => {
-  const $nodeId = args.getRaw(["input", "id"]);
-  return specFromNodeId(nodeIdHandler_InventoryItem, $nodeId);
-};
 const specFromArgs_Vendor = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Vendor, $nodeId);
@@ -13293,6 +13309,10 @@ const specFromArgs_VendorCredit = args => {
 const specFromArgs_FixedAsset = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_FixedAsset, $nodeId);
+};
+const specFromArgs_InventoryItem = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_InventoryItem, $nodeId);
 };
 const specFromArgs_Bill = args => {
   const $nodeId = args.getRaw(["input", "id"]);
@@ -13891,25 +13911,6 @@ function CustomerInput_stateApply(obj, val, info) {
 function CustomerInput_zipApply(obj, val, info) {
   obj.set("zip", bakedInputRuntime(info.schema, info.field.type, val));
 }
-const CreateInventoryItemPayload_inventoryItemEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_inventory_itemPgResource, inventory_itemUniques[0].attributes, $mutation, fieldArgs);
-function InventoryItemInput_skuApply(obj, val, info) {
-  obj.set("sku", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function InventoryItemInput_salePriceApply(obj, val, info) {
-  obj.set("sale_price", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function InventoryItemInput_quantityOnHandApply(obj, val, info) {
-  obj.set("quantity_on_hand", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function InventoryItemInput_averageCostApply(obj, val, info) {
-  obj.set("average_cost", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function InventoryItemInput_assetAccountIdApply(obj, val, info) {
-  obj.set("asset_account_id", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function InventoryItemInput_cogsAccountIdApply(obj, val, info) {
-  obj.set("cogs_account_id", bakedInputRuntime(info.schema, info.field.type, val));
-}
 const CreateVendorPayload_vendorEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_vendorPgResource, vendorUniques[0].attributes, $mutation, fieldArgs);
 function VendorInput_taxIdTypeApply(obj, val, info) {
   obj.set("tax_id_type", bakedInputRuntime(info.schema, info.field.type, val));
@@ -13948,6 +13949,9 @@ function CreditMemoInput_amountAppliedApply(obj, val, info) {
 }
 const CreateVendorCreditPayload_vendorCreditEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_vendor_creditPgResource, vendor_creditUniques[0].attributes, $mutation, fieldArgs);
 const CreateFixedAssetPayload_fixedAssetEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_fixed_assetPgResource, fixed_assetUniques[0].attributes, $mutation, fieldArgs);
+function FixedAssetInput_assetAccountIdApply(obj, val, info) {
+  obj.set("asset_account_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
 function FixedAssetInput_depreciationExpenseAccountIdApply(obj, val, info) {
   obj.set("depreciation_expense_account_id", bakedInputRuntime(info.schema, info.field.type, val));
 }
@@ -13974,6 +13978,28 @@ function FixedAssetInput_macrsClassApply(obj, val, info) {
 }
 function FixedAssetInput_disposalProceedsApply(obj, val, info) {
   obj.set("disposal_proceeds", bakedInputRuntime(info.schema, info.field.type, val));
+}
+const CreateInventoryItemPayload_inventoryItemEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_inventory_itemPgResource, inventory_itemUniques[0].attributes, $mutation, fieldArgs);
+function InventoryItemInput_skuApply(obj, val, info) {
+  obj.set("sku", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function InventoryItemInput_salePriceApply(obj, val, info) {
+  obj.set("sale_price", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function InventoryItemInput_quantityOnHandApply(obj, val, info) {
+  obj.set("quantity_on_hand", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function InventoryItemInput_averageCostApply(obj, val, info) {
+  obj.set("average_cost", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function InventoryItemInput_cogsAccountIdApply(obj, val, info) {
+  obj.set("cogs_account_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function InventoryItemInput_itemTypeApply(obj, val, info) {
+  obj.set("item_type", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function InventoryItemInput_reorderPointApply(obj, val, info) {
+  obj.set("reorder_point", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateBillPayload_billEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_billPgResource, billUniques[0].attributes, $mutation, fieldArgs);
 function BillInput_billDateApply(obj, val, info) {
@@ -14214,9 +14240,6 @@ type Query implements Node {
   """Get a single \`Customer\`."""
   customer(rowId: UUID!): Customer
 
-  """Get a single \`InventoryItem\`."""
-  inventoryItem(rowId: UUID!): InventoryItem
-
   """Get a single \`Vendor\`."""
   vendor(rowId: UUID!): Vendor
 
@@ -14231,6 +14254,9 @@ type Query implements Node {
 
   """Get a single \`FixedAsset\`."""
   fixedAsset(rowId: UUID!): FixedAsset
+
+  """Get a single \`InventoryItem\`."""
+  inventoryItem(rowId: UUID!): InventoryItem
 
   """Get a single \`Bill\`."""
   bill(rowId: UUID!): Bill
@@ -14589,14 +14615,6 @@ type Query implements Node {
     id: ID!
   ): Customer
 
-  """Reads a single \`InventoryItem\` using its globally unique \`ID\`."""
-  inventoryItemById(
-    """
-    The globally unique \`ID\` to be used in selecting a single \`InventoryItem\`.
-    """
-    id: ID!
-  ): InventoryItem
-
   """Reads a single \`Vendor\` using its globally unique \`ID\`."""
   vendorById(
     """The globally unique \`ID\` to be used in selecting a single \`Vendor\`."""
@@ -14634,6 +14652,14 @@ type Query implements Node {
     """
     id: ID!
   ): FixedAsset
+
+  """Reads a single \`InventoryItem\` using its globally unique \`ID\`."""
+  inventoryItemById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`InventoryItem\`.
+    """
+    id: ID!
+  ): InventoryItem
 
   """Reads a single \`Bill\` using its globally unique \`ID\`."""
   billById(
@@ -16183,40 +16209,6 @@ type Query implements Node {
     orderBy: [CustomerOrderBy!] = [PRIMARY_KEY_ASC]
   ): CustomerConnection
 
-  """Reads and enables pagination through a set of \`InventoryItem\`."""
-  inventoryItems(
-    """Only read the first \`n\` values of the set."""
-    first: Int
-
-    """Only read the last \`n\` values of the set."""
-    last: Int
-
-    """
-    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
-    based pagination. May not be used with \`last\`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: InventoryItemCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: InventoryItemFilter
-
-    """The method to use when ordering \`InventoryItem\`."""
-    orderBy: [InventoryItemOrderBy!] = [PRIMARY_KEY_ASC]
-  ): InventoryItemConnection
-
   """Reads and enables pagination through a set of \`Vendor\`."""
   vendors(
     """Only read the first \`n\` values of the set."""
@@ -16386,6 +16378,40 @@ type Query implements Node {
     """The method to use when ordering \`FixedAsset\`."""
     orderBy: [FixedAssetOrderBy!] = [PRIMARY_KEY_ASC]
   ): FixedAssetConnection
+
+  """Reads and enables pagination through a set of \`InventoryItem\`."""
+  inventoryItems(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: InventoryItemCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: InventoryItemFilter
+
+    """The method to use when ordering \`InventoryItem\`."""
+    orderBy: [InventoryItemOrderBy!] = [PRIMARY_KEY_ASC]
+  ): InventoryItemConnection
 
   """Reads and enables pagination through a set of \`Bill\`."""
   bills(
@@ -21420,11 +21446,17 @@ input InventoryItemFilter {
   """Filter by the object’s \`assetAccount\` relation."""
   assetAccount: AccountFilter
 
+  """A related \`assetAccount\` exists."""
+  assetAccountExists: Boolean
+
   """Filter by the object’s \`book\` relation."""
   book: BookFilter
 
   """Filter by the object’s \`cogsAccount\` relation."""
   cogsAccount: AccountFilter
+
+  """A related \`cogsAccount\` exists."""
+  cogsAccountExists: Boolean
 
   """Filter by the object’s \`incomeAccount\` relation."""
   incomeAccount: AccountFilter
@@ -26505,12 +26537,14 @@ type InventoryItem implements Node {
   salePrice: BigFloat!
   quantityOnHand: BigFloat!
   averageCost: BigFloat!
-  assetAccountId: UUID!
-  cogsAccountId: UUID!
+  assetAccountId: UUID
+  cogsAccountId: UUID
   incomeAccountId: UUID!
   isActive: Boolean!
   createdAt: Datetime
   updatedAt: Datetime
+  itemType: String!
+  reorderPoint: BigFloat
 
   """Reads a single \`Account\` that is related to this \`InventoryItem\`."""
   assetAccount: Account
@@ -28450,14 +28484,6 @@ type Mutation {
     input: CreateCustomerInput!
   ): CreateCustomerPayload
 
-  """Creates a single \`InventoryItem\`."""
-  createInventoryItem(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateInventoryItemInput!
-  ): CreateInventoryItemPayload
-
   """Creates a single \`Vendor\`."""
   createVendor(
     """
@@ -28497,6 +28523,14 @@ type Mutation {
     """
     input: CreateFixedAssetInput!
   ): CreateFixedAssetPayload
+
+  """Creates a single \`InventoryItem\`."""
+  createInventoryItem(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateInventoryItemInput!
+  ): CreateInventoryItemPayload
 
   """Creates a single \`Bill\`."""
   createBill(
@@ -29336,24 +29370,6 @@ type Mutation {
     input: UpdateCustomerInput!
   ): UpdateCustomerPayload
 
-  """
-  Updates a single \`InventoryItem\` using its globally unique id and a patch.
-  """
-  updateInventoryItemById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateInventoryItemByIdInput!
-  ): UpdateInventoryItemPayload
-
-  """Updates a single \`InventoryItem\` using a unique key and a patch."""
-  updateInventoryItem(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateInventoryItemInput!
-  ): UpdateInventoryItemPayload
-
   """Updates a single \`Vendor\` using its globally unique id and a patch."""
   updateVendorById(
     """
@@ -29441,6 +29457,24 @@ type Mutation {
     """
     input: UpdateFixedAssetInput!
   ): UpdateFixedAssetPayload
+
+  """
+  Updates a single \`InventoryItem\` using its globally unique id and a patch.
+  """
+  updateInventoryItemById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateInventoryItemByIdInput!
+  ): UpdateInventoryItemPayload
+
+  """Updates a single \`InventoryItem\` using a unique key and a patch."""
+  updateInventoryItem(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateInventoryItemInput!
+  ): UpdateInventoryItemPayload
 
   """Updates a single \`Bill\` using its globally unique id and a patch."""
   updateBillById(
@@ -30270,22 +30304,6 @@ type Mutation {
     input: DeleteCustomerInput!
   ): DeleteCustomerPayload
 
-  """Deletes a single \`InventoryItem\` using its globally unique id."""
-  deleteInventoryItemById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteInventoryItemByIdInput!
-  ): DeleteInventoryItemPayload
-
-  """Deletes a single \`InventoryItem\` using a unique key."""
-  deleteInventoryItem(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteInventoryItemInput!
-  ): DeleteInventoryItemPayload
-
   """Deletes a single \`Vendor\` using its globally unique id."""
   deleteVendorById(
     """
@@ -30365,6 +30383,22 @@ type Mutation {
     """
     input: DeleteFixedAssetInput!
   ): DeleteFixedAssetPayload
+
+  """Deletes a single \`InventoryItem\` using its globally unique id."""
+  deleteInventoryItemById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteInventoryItemByIdInput!
+  ): DeleteInventoryItemPayload
+
+  """Deletes a single \`InventoryItem\` using a unique key."""
+  deleteInventoryItem(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteInventoryItemInput!
+  ): DeleteInventoryItemPayload
 
   """Deletes a single \`Bill\` using its globally unique id."""
   deleteBillById(
@@ -32609,59 +32643,6 @@ input CustomerInput {
   updatedAt: Datetime
 }
 
-"""The output of our create \`InventoryItem\` mutation."""
-type CreateInventoryItemPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`InventoryItem\` that was created by this mutation."""
-  inventoryItem: InventoryItem
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`InventoryItem\`. May be used by Relay 1."""
-  inventoryItemEdge(
-    """The method to use when ordering \`InventoryItem\`."""
-    orderBy: [InventoryItemOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): InventoryItemEdge
-}
-
-"""All input for the create \`InventoryItem\` mutation."""
-input CreateInventoryItemInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The \`InventoryItem\` to be created by this mutation."""
-  inventoryItem: InventoryItemInput!
-}
-
-"""An input for mutations affecting \`InventoryItem\`"""
-input InventoryItemInput {
-  rowId: UUID
-  bookId: UUID!
-  sku: String
-  name: String!
-  description: String
-  salePrice: BigFloat
-  quantityOnHand: BigFloat
-  averageCost: BigFloat
-  assetAccountId: UUID!
-  cogsAccountId: UUID!
-  incomeAccountId: UUID!
-  isActive: Boolean
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
 """The output of our create \`Vendor\` mutation."""
 type CreateVendorPayload {
   """
@@ -32928,6 +32909,61 @@ input FixedAssetInput {
   disposedAt: String
   disposalProceeds: BigFloat
   createdAt: Datetime
+}
+
+"""The output of our create \`InventoryItem\` mutation."""
+type CreateInventoryItemPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`InventoryItem\` that was created by this mutation."""
+  inventoryItem: InventoryItem
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`InventoryItem\`. May be used by Relay 1."""
+  inventoryItemEdge(
+    """The method to use when ordering \`InventoryItem\`."""
+    orderBy: [InventoryItemOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): InventoryItemEdge
+}
+
+"""All input for the create \`InventoryItem\` mutation."""
+input CreateInventoryItemInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`InventoryItem\` to be created by this mutation."""
+  inventoryItem: InventoryItemInput!
+}
+
+"""An input for mutations affecting \`InventoryItem\`"""
+input InventoryItemInput {
+  rowId: UUID
+  bookId: UUID!
+  sku: String
+  name: String!
+  description: String
+  salePrice: BigFloat
+  quantityOnHand: BigFloat
+  averageCost: BigFloat
+  assetAccountId: UUID
+  cogsAccountId: UUID
+  incomeAccountId: UUID!
+  isActive: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
+  itemType: String
+  reorderPoint: BigFloat
 }
 
 """The output of our create \`Bill\` mutation."""
@@ -36495,83 +36531,6 @@ input UpdateCustomerInput {
   patch: CustomerPatch!
 }
 
-"""The output of our update \`InventoryItem\` mutation."""
-type UpdateInventoryItemPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`InventoryItem\` that was updated by this mutation."""
-  inventoryItem: InventoryItem
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`InventoryItem\`. May be used by Relay 1."""
-  inventoryItemEdge(
-    """The method to use when ordering \`InventoryItem\`."""
-    orderBy: [InventoryItemOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): InventoryItemEdge
-}
-
-"""All input for the \`updateInventoryItemById\` mutation."""
-input UpdateInventoryItemByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`InventoryItem\` to be updated.
-  """
-  id: ID!
-
-  """
-  An object where the defined keys will be set on the \`InventoryItem\` being updated.
-  """
-  patch: InventoryItemPatch!
-}
-
-"""
-Represents an update to a \`InventoryItem\`. Fields that are set will be updated.
-"""
-input InventoryItemPatch {
-  rowId: UUID
-  bookId: UUID
-  sku: String
-  name: String
-  description: String
-  salePrice: BigFloat
-  quantityOnHand: BigFloat
-  averageCost: BigFloat
-  assetAccountId: UUID
-  cogsAccountId: UUID
-  incomeAccountId: UUID
-  isActive: Boolean
-  createdAt: Datetime
-  updatedAt: Datetime
-}
-
-"""All input for the \`updateInventoryItem\` mutation."""
-input UpdateInventoryItemInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-
-  """
-  An object where the defined keys will be set on the \`InventoryItem\` being updated.
-  """
-  patch: InventoryItemPatch!
-}
-
 """The output of our update \`Vendor\` mutation."""
 type UpdateVendorPayload {
   """
@@ -36958,6 +36917,85 @@ input UpdateFixedAssetInput {
   An object where the defined keys will be set on the \`FixedAsset\` being updated.
   """
   patch: FixedAssetPatch!
+}
+
+"""The output of our update \`InventoryItem\` mutation."""
+type UpdateInventoryItemPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`InventoryItem\` that was updated by this mutation."""
+  inventoryItem: InventoryItem
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`InventoryItem\`. May be used by Relay 1."""
+  inventoryItemEdge(
+    """The method to use when ordering \`InventoryItem\`."""
+    orderBy: [InventoryItemOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): InventoryItemEdge
+}
+
+"""All input for the \`updateInventoryItemById\` mutation."""
+input UpdateInventoryItemByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`InventoryItem\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`InventoryItem\` being updated.
+  """
+  patch: InventoryItemPatch!
+}
+
+"""
+Represents an update to a \`InventoryItem\`. Fields that are set will be updated.
+"""
+input InventoryItemPatch {
+  rowId: UUID
+  bookId: UUID
+  sku: String
+  name: String
+  description: String
+  salePrice: BigFloat
+  quantityOnHand: BigFloat
+  averageCost: BigFloat
+  assetAccountId: UUID
+  cogsAccountId: UUID
+  incomeAccountId: UUID
+  isActive: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
+  itemType: String
+  reorderPoint: BigFloat
+}
+
+"""All input for the \`updateInventoryItem\` mutation."""
+input UpdateInventoryItemInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`InventoryItem\` being updated.
+  """
+  patch: InventoryItemPatch!
 }
 
 """The output of our update \`Bill\` mutation."""
@@ -39615,54 +39653,6 @@ input DeleteCustomerInput {
   rowId: UUID!
 }
 
-"""The output of our delete \`InventoryItem\` mutation."""
-type DeleteInventoryItemPayload {
-  """
-  The exact same \`clientMutationId\` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The \`InventoryItem\` that was deleted by this mutation."""
-  inventoryItem: InventoryItem
-  deletedInventoryItemId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our \`InventoryItem\`. May be used by Relay 1."""
-  inventoryItemEdge(
-    """The method to use when ordering \`InventoryItem\`."""
-    orderBy: [InventoryItemOrderBy!]! = [PRIMARY_KEY_ASC]
-  ): InventoryItemEdge
-}
-
-"""All input for the \`deleteInventoryItemById\` mutation."""
-input DeleteInventoryItemByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique \`ID\` which will identify a single \`InventoryItem\` to be deleted.
-  """
-  id: ID!
-}
-
-"""All input for the \`deleteInventoryItem\` mutation."""
-input DeleteInventoryItemInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  rowId: UUID!
-}
-
 """The output of our delete \`Vendor\` mutation."""
 type DeleteVendorPayload {
   """
@@ -39895,6 +39885,54 @@ input DeleteFixedAssetByIdInput {
 
 """All input for the \`deleteFixedAsset\` mutation."""
 input DeleteFixedAssetInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete \`InventoryItem\` mutation."""
+type DeleteInventoryItemPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`InventoryItem\` that was deleted by this mutation."""
+  inventoryItem: InventoryItem
+  deletedInventoryItemId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`InventoryItem\`. May be used by Relay 1."""
+  inventoryItemEdge(
+    """The method to use when ordering \`InventoryItem\`."""
+    orderBy: [InventoryItemOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): InventoryItemEdge
+}
+
+"""All input for the \`deleteInventoryItemById\` mutation."""
+input DeleteInventoryItemByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`InventoryItem\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteInventoryItem\` mutation."""
+input DeleteInventoryItemInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -48643,8 +48681,14 @@ export const objects = {
         }
       },
       isActive: Account_isActivePlan,
+      itemType($record) {
+        return $record.get("item_type");
+      },
       quantityOnHand($record) {
         return $record.get("quantity_on_hand");
+      },
+      reorderPoint($record) {
+        return $record.get("reorder_point");
       },
       rowId: JournalLineProject_rowIdPlan,
       salePrice($record) {
@@ -54885,7 +54929,7 @@ export const inputObjects = {
       accumulatedDepreciationAccountId: FixedAssetInput_accumulatedDepreciationAccountIdApply,
       acquisitionCost: FixedAssetInput_acquisitionCostApply,
       acquisitionDate: FixedAssetInput_acquisitionDateApply,
-      assetAccountId: InventoryItemInput_assetAccountIdApply,
+      assetAccountId: FixedAssetInput_assetAccountIdApply,
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
       depreciationExpenseAccountId: FixedAssetInput_depreciationExpenseAccountIdApply,
@@ -54906,7 +54950,7 @@ export const inputObjects = {
       accumulatedDepreciationAccountId: FixedAssetInput_accumulatedDepreciationAccountIdApply,
       acquisitionCost: FixedAssetInput_acquisitionCostApply,
       acquisitionDate: FixedAssetInput_acquisitionDateApply,
-      assetAccountId: InventoryItemInput_assetAccountIdApply,
+      assetAccountId: FixedAssetInput_assetAccountIdApply,
       bookId: TagGroupInput_bookIdApply,
       createdAt: TagGroupInput_createdAtApply,
       depreciationExpenseAccountId: FixedAssetInput_depreciationExpenseAccountIdApply,
@@ -54990,6 +55034,9 @@ export const inputObjects = {
       assetAccount($where, value) {
         return pgConnectionFilterApplySingleRelation(resource_accountPgResource, accountIdentifier, registryConfig.pgRelations.inventoryItem.accountByMyAssetAccountId.localAttributes, registryConfig.pgRelations.inventoryItem.accountByMyAssetAccountId.remoteAttributes, $where, value);
       },
+      assetAccountExists($where, value) {
+        return pgConnectionFilterApplyForwardRelationExists(resource_accountPgResource, accountIdentifier, registryConfig.pgRelations.inventoryItem.accountByMyAssetAccountId.localAttributes, registryConfig.pgRelations.inventoryItem.accountByMyAssetAccountId.remoteAttributes, $where, value);
+      },
       book($where, value) {
         return pgConnectionFilterApplySingleRelation(resource_bookPgResource, bookIdentifier, registryConfig.pgRelations.inventoryItem.bookByMyBookId.localAttributes, registryConfig.pgRelations.inventoryItem.bookByMyBookId.remoteAttributes, $where, value);
       },
@@ -54998,6 +55045,9 @@ export const inputObjects = {
       },
       cogsAccount($where, value) {
         return pgConnectionFilterApplySingleRelation(resource_accountPgResource, accountIdentifier, registryConfig.pgRelations.inventoryItem.accountByMyCogsAccountId.localAttributes, registryConfig.pgRelations.inventoryItem.accountByMyCogsAccountId.remoteAttributes, $where, value);
+      },
+      cogsAccountExists($where, value) {
+        return pgConnectionFilterApplyForwardRelationExists(resource_accountPgResource, accountIdentifier, registryConfig.pgRelations.inventoryItem.accountByMyCogsAccountId.localAttributes, registryConfig.pgRelations.inventoryItem.accountByMyCogsAccountId.remoteAttributes, $where, value);
       },
       incomeAccount($where, value) {
         return pgConnectionFilterApplySingleRelation(resource_accountPgResource, accountIdentifier, registryConfig.pgRelations.inventoryItem.accountByMyIncomeAccountId.localAttributes, registryConfig.pgRelations.inventoryItem.accountByMyIncomeAccountId.remoteAttributes, $where, value);
@@ -55036,7 +55086,7 @@ export const inputObjects = {
   InventoryItemInput: {
     baked: createObjectAndApplyChildren,
     plans: {
-      assetAccountId: InventoryItemInput_assetAccountIdApply,
+      assetAccountId: FixedAssetInput_assetAccountIdApply,
       averageCost: InventoryItemInput_averageCostApply,
       bookId: TagGroupInput_bookIdApply,
       cogsAccountId: InventoryItemInput_cogsAccountIdApply,
@@ -55044,8 +55094,10 @@ export const inputObjects = {
       description: PurchaseOrderLineInput_descriptionApply,
       incomeAccountId: RecurringInvoiceLineInput_incomeAccountIdApply,
       isActive: TagInput_isActiveApply,
+      itemType: InventoryItemInput_itemTypeApply,
       name: TagGroupInput_nameApply,
       quantityOnHand: InventoryItemInput_quantityOnHandApply,
+      reorderPoint: InventoryItemInput_reorderPointApply,
       rowId: JournalLineProjectInput_rowIdApply,
       salePrice: InventoryItemInput_salePriceApply,
       sku: InventoryItemInput_skuApply,
@@ -55055,7 +55107,7 @@ export const inputObjects = {
   InventoryItemPatch: {
     baked: createObjectAndApplyChildren,
     plans: {
-      assetAccountId: InventoryItemInput_assetAccountIdApply,
+      assetAccountId: FixedAssetInput_assetAccountIdApply,
       averageCost: InventoryItemInput_averageCostApply,
       bookId: TagGroupInput_bookIdApply,
       cogsAccountId: InventoryItemInput_cogsAccountIdApply,
@@ -55063,8 +55115,10 @@ export const inputObjects = {
       description: PurchaseOrderLineInput_descriptionApply,
       incomeAccountId: RecurringInvoiceLineInput_incomeAccountIdApply,
       isActive: TagInput_isActiveApply,
+      itemType: InventoryItemInput_itemTypeApply,
       name: TagGroupInput_nameApply,
       quantityOnHand: InventoryItemInput_quantityOnHandApply,
+      reorderPoint: InventoryItemInput_reorderPointApply,
       rowId: JournalLineProjectInput_rowIdApply,
       salePrice: InventoryItemInput_salePriceApply,
       sku: InventoryItemInput_skuApply,
