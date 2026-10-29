@@ -1,9 +1,12 @@
 import { and, eq } from "drizzle-orm";
 import { Elysia, t } from "elysia";
 
+import { revalueForeignBalances } from "lib/accounting/revalueForeignBalances";
 import { emitAudit } from "lib/audit";
 import { dbPool } from "lib/db/db";
 import { accountingPeriodTable, reconciliationQueueTable } from "lib/db/schema";
+
+const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
 
 // Period management routes
 const periodRoutes = new Elysia({ prefix: "/api/periods" })
@@ -159,6 +162,50 @@ const periodRoutes = new Elysia({ prefix: "/api/periods" })
         bookId: t.String(),
         year: t.Number(),
         month: t.Number(),
+      }),
+    },
+  )
+  // Period-end unrealized FX revaluation (Home Currency Adjustment): revalue
+  // open foreign receivables/payables to the supplied current rates and post
+  // the unrealized gain/loss, auto-reversed the next day
+  .post(
+    "/revalue-fx",
+    async ({ body, set }) => {
+      if (!ISO_DATE.test(body.asOfDate)) {
+        set.status = 400;
+        return { error: "asOfDate must be a YYYY-MM-DD date" };
+      }
+      try {
+        const result = await revalueForeignBalances({
+          bookId: body.bookId,
+          asOfDate: body.asOfDate,
+          rates: body.rates,
+          reverseDate: body.reverseDate,
+        });
+        emitAudit({
+          type: "myfi.period.fx_revalued",
+          organizationId: body.bookId,
+          resource: { type: "book", id: body.bookId },
+          data: { asOfDate: body.asOfDate, netGainLoss: result.netGainLoss },
+        });
+        return result;
+      } catch (err) {
+        const message = err instanceof Error ? err.message : "Revaluation failed";
+        if (/not found|account exists/i.test(message)) {
+          set.status = /not found/i.test(message) ? 404 : 400;
+          return { error: message };
+        }
+        console.error("[periods] fx revaluation failed:", err);
+        set.status = 500;
+        return { error: "Could not revalue foreign balances" };
+      }
+    },
+    {
+      body: t.Object({
+        bookId: t.String(),
+        asOfDate: t.String(),
+        rates: t.Record(t.String(), t.Number({ exclusiveMinimum: 0 })),
+        reverseDate: t.Optional(t.String()),
       }),
     },
   );
