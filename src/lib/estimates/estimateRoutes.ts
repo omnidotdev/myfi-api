@@ -9,6 +9,7 @@ import {
 } from "lib/mantle/invoiceSource";
 import { convertEstimateToInvoice } from "./convertEstimateToInvoice";
 import { createEstimateDraft } from "./createEstimateDraft";
+import { createProgressInvoice } from "./createProgressInvoice";
 import { updateEstimateStatus } from "./updateEstimateStatus";
 
 import type { SettableEstimateStatus } from "./updateEstimateStatus";
@@ -185,6 +186,52 @@ const estimateRoutes = new Elysia({ prefix: "/api/estimates" })
         invoiceNumber: t.String(),
         issueDate: t.String(),
         dueDate: t.String(),
+      }),
+    },
+  )
+  // Progress invoice: bill a percentage of the estimate on a draft invoice
+  .post(
+    "/:id/progress-invoice",
+    async ({ params, body, set }) => {
+      if (!ISO_DATE.test(body.issueDate) || !ISO_DATE.test(body.dueDate)) {
+        set.status = 400;
+        return { error: "issueDate and dueDate must be YYYY-MM-DD dates" };
+      }
+      if (await isMantleManaged(body.bookId)) {
+        set.status = 409;
+        return { error: MANTLE_MANAGED_MESSAGE };
+      }
+      try {
+        return await createProgressInvoice({
+          estimateId: params.id,
+          bookId: body.bookId,
+          invoiceNumber: body.invoiceNumber,
+          issueDate: body.issueDate,
+          dueDate: body.dueDate,
+          percent: body.percent,
+        });
+      } catch (err) {
+        const message = err instanceof Error ? err.message : "Progress invoice failed";
+        if (
+          isClientError(message) ||
+          /between 0 and 100|already fully|nothing left|declined/i.test(message)
+        ) {
+          set.status = /not found/i.test(message) ? 404 : 400;
+          return { error: message };
+        }
+        console.error("[estimates] progress invoice failed:", err);
+        set.status = 500;
+        return { error: "Could not create the progress invoice" };
+      }
+    },
+    {
+      params: t.Object({ id: t.String() }),
+      body: t.Object({
+        bookId: t.String(),
+        invoiceNumber: t.String(),
+        issueDate: t.String(),
+        dueDate: t.String(),
+        percent: t.Number({ exclusiveMinimum: 0, maximum: 100 }),
       }),
     },
   );

@@ -28,6 +28,11 @@ export const estimateLineTable = pgTable(
       .notNull()
       .default("0"),
     amount: numeric({ precision: 19, scale: 4 }).notNull().default("0"),
+    // cumulative amount of this line already billed via progress invoices; the
+    // line is fully billed when this equals amount
+    billedAmount: numeric("billed_amount", { precision: 19, scale: 4 })
+      .notNull()
+      .default("0"),
     // income account the line carries over to the invoice on conversion
     incomeAccountId: uuid("income_account_id")
       .notNull()

@@ -302,6 +302,13 @@
       "when": 1793298071890,
       "tag": "0042_dapper_cloak",
       "breakpoints": true
+    },
+    {
+      "idx": 43,
+      "version": "7",
+      "when": 1793298545830,
+      "tag": "0043_glorious_the_liberteens",
+      "breakpoints": true
     }
   ]
 }

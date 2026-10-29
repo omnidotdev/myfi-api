@@ -1,0 +1,1 @@
+ALTER TABLE "estimate_line" ADD COLUMN "billed_amount" numeric(19, 4) DEFAULT '0' NOT NULL;

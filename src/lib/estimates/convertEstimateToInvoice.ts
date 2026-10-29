@@ -56,6 +56,14 @@ export const convertEstimateToInvoice = async (
   if (estimate.status === "declined") {
     throw new Error("A declined estimate cannot be converted");
   }
+  if (
+    estimate.status === "partially_invoiced" ||
+    estimate.status === "invoiced"
+  ) {
+    throw new Error(
+      "Estimate is being progress-invoiced; use progress invoicing to bill the rest",
+    );
+  }
 
   const lineRows = await dbPool
     .select()
