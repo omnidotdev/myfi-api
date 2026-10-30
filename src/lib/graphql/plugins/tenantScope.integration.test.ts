@@ -7,7 +7,13 @@ import { createYoga } from "graphql-yoga";
 let accessibleBooks = new Set<string>();
 let memberOrgs = new Set<string>();
 
+import * as bookAccessMiddlewareModule from "lib/middleware/bookAccess.middleware";
+
+// Spread the real module so only checkBookAccess is overridden: a partial mock
+// here leaks (bun mock.module is process-global) and strips the default
+// middleware export, breaking the middleware's own mounted integration test
 mock.module("lib/middleware/bookAccess.middleware", () => ({
+  ...bookAccessMiddlewareModule,
   checkBookAccess: (_userId: string, bookId: string) =>
     Promise.resolve(accessibleBooks.has(bookId) ? "viewer" : null),
 }));

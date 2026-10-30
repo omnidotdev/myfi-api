@@ -19,7 +19,13 @@ mock.module("lib/audit", () => ({
 
 // Grant book access so per-handler `authorizeBook` guards pass; access control
 // itself is covered by the middleware's own mounted integration test
+import * as bookAccessMiddlewareModule from "lib/middleware/bookAccess.middleware";
+
+// Spread the real module so only authorizeBook is overridden: a partial mock
+// here leaks (bun mock.module is process-global) and strips the default
+// middleware export, breaking the middleware's own mounted integration test
 mock.module("lib/middleware/bookAccess.middleware", () => ({
+  ...bookAccessMiddlewareModule,
   authorizeBook: mock(async () => ({ userId: "user-1" })),
 }));
 
