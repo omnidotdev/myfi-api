@@ -858,6 +858,102 @@ const spec_vendorCreditApplication = {
   executor: executor
 };
 const vendorCreditApplicationCodec = recordCodec(spec_vendorCreditApplication);
+const savedReportIdentifier = sql.identifier("public", "saved_report");
+const spec_savedReport = {
+  name: "savedReport",
+  identifier: savedReportIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    name: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    report_type: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    params: {
+      codec: TYPES.jsonb,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "18898",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "saved_report"
+    }
+  },
+  executor: executor
+};
+const savedReportCodec = recordCodec(spec_savedReport);
 const tagIdentifier = sql.identifier("public", "tag");
 const spec_tag = {
   name: "tag",
@@ -8938,6 +9034,29 @@ const vendor_credit_application_resourceOptionsConfig = {
   },
   uniques: vendor_credit_applicationUniques
 };
+const saved_reportUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const saved_report_resourceOptionsConfig = {
+  executor: executor,
+  name: "saved_report",
+  identifier: "main.public.saved_report",
+  from: savedReportIdentifier,
+  codec: savedReportCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "saved_report"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: saved_reportUniques
+};
 const tagUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -10227,12 +10346,13 @@ const registryConfig = {
     bookAccess: bookAccessCodec,
     creditMemoApplication: creditMemoApplicationCodec,
     vendorCreditApplication: vendorCreditApplicationCodec,
+    savedReport: savedReportCodec,
+    jsonb: TYPES.jsonb,
     tag: tagCodec,
     bool: TYPES.boolean,
     vehicle: vehicleCodec,
     savingsGoal: savingsGoalCodec,
     importProfile: importProfileCodec,
-    jsonb: TYPES.jsonb,
     itemBundle: itemBundleCodec,
     trackingCategory: trackingCategoryCodec,
     priceLevel: priceLevelCodec,
@@ -10321,6 +10441,7 @@ const registryConfig = {
     book_access: book_access_resourceOptionsConfig,
     credit_memo_application: credit_memo_application_resourceOptionsConfig,
     vendor_credit_application: vendor_credit_application_resourceOptionsConfig,
+    saved_report: saved_report_resourceOptionsConfig,
     tag: tag_resourceOptionsConfig,
     vehicle: vehicle_resourceOptionsConfig,
     savings_goal: savings_goal_resourceOptionsConfig,
@@ -11325,6 +11446,13 @@ const registryConfig = {
       itemBundlesByTheirBookId: {
         localCodec: bookCodec,
         remoteResourceOptions: item_bundle_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["book_id"],
+        isReferencee: true
+      },
+      savedReportsByTheirBookId: {
+        localCodec: bookCodec,
+        remoteResourceOptions: saved_report_resourceOptionsConfig,
         localAttributes: ["id"],
         remoteAttributes: ["book_id"],
         isReferencee: true
@@ -12641,6 +12769,16 @@ const registryConfig = {
         isUnique: true
       }
     },
+    savedReport: {
+      __proto__: null,
+      bookByMyBookId: {
+        localCodec: savedReportCodec,
+        remoteResourceOptions: book_resourceOptionsConfig,
+        localAttributes: ["book_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      }
+    },
     savingsGoal: {
       __proto__: null,
       accountByMyAccountId: {
@@ -13040,6 +13178,7 @@ const resource_account_mappingPgResource = registry.pgResources["account_mapping
 const resource_book_accessPgResource = registry.pgResources["book_access"];
 const resource_credit_memo_applicationPgResource = registry.pgResources["credit_memo_application"];
 const resource_vendor_credit_applicationPgResource = registry.pgResources["vendor_credit_application"];
+const resource_saved_reportPgResource = registry.pgResources["saved_report"];
 const resource_tagPgResource = registry.pgResources["tag"];
 const resource_vehiclePgResource = registry.pgResources["vehicle"];
 const resource_savings_goalPgResource = registry.pgResources["savings_goal"];
@@ -13259,6 +13398,17 @@ const nodeIdHandler_VendorCreditApplication = makeTableNodeIdHandler({
 const nodeFetcher_VendorCreditApplication = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_VendorCreditApplication));
   return nodeIdHandler_VendorCreditApplication.get(nodeIdHandler_VendorCreditApplication.getSpec($decoded));
+};
+const nodeIdHandler_SavedReport = makeTableNodeIdHandler({
+  typeName: "SavedReport",
+  identifier: "SavedReport",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_saved_reportPgResource,
+  pk: saved_reportUniques[0].attributes
+});
+const nodeFetcher_SavedReport = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_SavedReport));
+  return nodeIdHandler_SavedReport.get(nodeIdHandler_SavedReport.getSpec($decoded));
 };
 const nodeIdHandler_Tag = makeTableNodeIdHandler({
   typeName: "Tag",
@@ -13928,6 +14078,7 @@ const nodeIdHandlerByTypeName = {
   BookAccess: nodeIdHandler_BookAccess,
   CreditMemoApplication: nodeIdHandler_CreditMemoApplication,
   VendorCreditApplication: nodeIdHandler_VendorCreditApplication,
+  SavedReport: nodeIdHandler_SavedReport,
   Tag: nodeIdHandler_Tag,
   Vehicle: nodeIdHandler_Vehicle,
   SavingsGoal: nodeIdHandler_SavingsGoal,
@@ -14737,6 +14888,10 @@ const specFromArgs_VendorCreditApplication = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_VendorCreditApplication, $nodeId);
 };
+const specFromArgs_SavedReport = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_SavedReport, $nodeId);
+};
 const specFromArgs_Tag = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Tag, $nodeId);
@@ -15087,6 +15242,13 @@ function VendorCreditApplicationInput_vendorCreditIdApply(obj, val, info) {
 }
 function VendorCreditApplicationInput_billIdApply(obj, val, info) {
   obj.set("bill_id", bakedInputRuntime(info.schema, info.field.type, val));
+}
+const CreateSavedReportPayload_savedReportEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_saved_reportPgResource, saved_reportUniques[0].attributes, $mutation, fieldArgs);
+function SavedReportInput_reportTypeApply(obj, val, info) {
+  obj.set("report_type", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function SavedReportInput_paramsApply(obj, val, info) {
+  obj.set("params", bakedInputRuntime(info.schema, info.field.type, val));
 }
 const CreateTagPayload_tagEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_tagPgResource, tagUniques[0].attributes, $mutation, fieldArgs);
 function TagInput_tagGroupIdApply(obj, val, info) {
@@ -15816,6 +15978,9 @@ type Query implements Node {
   """Get a single \`VendorCreditApplication\`."""
   vendorCreditApplication(rowId: UUID!): VendorCreditApplication
 
+  """Get a single \`SavedReport\`."""
+  savedReport(rowId: UUID!): SavedReport
+
   """Get a single \`Tag\`."""
   tag(rowId: UUID!): Tag
 
@@ -16070,6 +16235,14 @@ type Query implements Node {
     """
     id: ID!
   ): VendorCreditApplication
+
+  """Reads a single \`SavedReport\` using its globally unique \`ID\`."""
+  savedReportById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`SavedReport\`.
+    """
+    id: ID!
+  ): SavedReport
 
   """Reads a single \`Tag\` using its globally unique \`ID\`."""
   tagById(
@@ -16858,6 +17031,40 @@ type Query implements Node {
     """The method to use when ordering \`VendorCreditApplication\`."""
     orderBy: [VendorCreditApplicationOrderBy!] = [PRIMARY_KEY_ASC]
   ): VendorCreditApplicationConnection
+
+  """Reads and enables pagination through a set of \`SavedReport\`."""
+  savedReports(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: SavedReportCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: SavedReportFilter
+
+    """The method to use when ordering \`SavedReport\`."""
+    orderBy: [SavedReportOrderBy!] = [PRIMARY_KEY_ASC]
+  ): SavedReportConnection
 
   """Reads and enables pagination through a set of \`Tag\`."""
   tags(
@@ -20665,6 +20872,40 @@ type Book implements Node {
     """The method to use when ordering \`ItemBundle\`."""
     orderBy: [ItemBundleOrderBy!] = [PRIMARY_KEY_ASC]
   ): ItemBundleConnection!
+
+  """Reads and enables pagination through a set of \`SavedReport\`."""
+  savedReports(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: SavedReportCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: SavedReportFilter
+
+    """The method to use when ordering \`SavedReport\`."""
+    orderBy: [SavedReportOrderBy!] = [PRIMARY_KEY_ASC]
+  ): SavedReportConnection!
 }
 
 """A connection to a list of \`Account\` values."""
@@ -21219,6 +21460,12 @@ input BookFilter {
 
   """Some related \`itemBundles\` exist."""
   itemBundlesExist: Boolean
+
+  """Filter by the object’s \`savedReports\` relation."""
+  savedReports: BookToManySavedReportFilter
+
+  """Some related \`savedReports\` exist."""
+  savedReportsExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [BookFilter!]
@@ -25369,6 +25616,49 @@ input BundleComponentFilter {
 
   """Negates the expression."""
   not: BundleComponentFilter
+}
+
+"""
+A filter to be used against many \`SavedReport\` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManySavedReportFilter {
+  """
+  Every related \`SavedReport\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: SavedReportFilter
+
+  """
+  Some related \`SavedReport\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: SavedReportFilter
+
+  """
+  No related \`SavedReport\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: SavedReportFilter
+}
+
+"""
+A filter to be used against \`SavedReport\` object types. All fields are combined with a logical ‘and.’
+"""
+input SavedReportFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`bookId\` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s \`book\` relation."""
+  book: BookFilter
+
+  """Checks for all expressions in this list."""
+  and: [SavedReportFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [SavedReportFilter!]
+
+  """Negates the expression."""
+  not: SavedReportFilter
 }
 
 """
@@ -31677,6 +31967,72 @@ enum ItemBundleOrderBy {
   BOOK_ID_DESC
 }
 
+"""A connection to a list of \`SavedReport\` values."""
+type SavedReportConnection {
+  """A list of \`SavedReport\` objects."""
+  nodes: [SavedReport]!
+
+  """
+  A list of edges which contains the \`SavedReport\` and cursor to aid in pagination.
+  """
+  edges: [SavedReportEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* \`SavedReport\` you could get from the connection."""
+  totalCount: Int!
+}
+
+type SavedReport implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  name: String!
+  reportType: String!
+  params: JSON!
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """Reads a single \`Book\` that is related to this \`SavedReport\`."""
+  book: Book
+}
+
+"""A \`SavedReport\` edge in the connection."""
+type SavedReportEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`SavedReport\` at the end of the edge."""
+  node: SavedReport
+}
+
+"""
+A condition to be used against \`SavedReport\` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input SavedReportCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`bookId\` field."""
+  bookId: UUID
+}
+
+"""Methods to use when ordering \`SavedReport\`."""
+enum SavedReportOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+}
+
 type _DrizzleMigration implements Node {
   """
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
@@ -31977,6 +32333,14 @@ type Mutation {
     """
     input: CreateVendorCreditApplicationInput!
   ): CreateVendorCreditApplicationPayload
+
+  """Creates a single \`SavedReport\`."""
+  createSavedReport(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateSavedReportInput!
+  ): CreateSavedReportPayload
 
   """Creates a single \`Tag\`."""
   createTag(
@@ -32619,6 +32983,24 @@ type Mutation {
     """
     input: UpdateVendorCreditApplicationInput!
   ): UpdateVendorCreditApplicationPayload
+
+  """
+  Updates a single \`SavedReport\` using its globally unique id and a patch.
+  """
+  updateSavedReportById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateSavedReportByIdInput!
+  ): UpdateSavedReportPayload
+
+  """Updates a single \`SavedReport\` using a unique key and a patch."""
+  updateSavedReport(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateSavedReportInput!
+  ): UpdateSavedReportPayload
 
   """Updates a single \`Tag\` using its globally unique id and a patch."""
   updateTagById(
@@ -33767,6 +34149,22 @@ type Mutation {
     """
     input: DeleteVendorCreditApplicationInput!
   ): DeleteVendorCreditApplicationPayload
+
+  """Deletes a single \`SavedReport\` using its globally unique id."""
+  deleteSavedReportById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteSavedReportByIdInput!
+  ): DeleteSavedReportPayload
+
+  """Deletes a single \`SavedReport\` using a unique key."""
+  deleteSavedReport(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteSavedReportInput!
+  ): DeleteSavedReportPayload
 
   """Deletes a single \`Tag\` using its globally unique id."""
   deleteTagById(
@@ -35135,6 +35533,52 @@ input VendorCreditApplicationInput {
   amount: BigFloat!
   date: String!
   createdAt: Datetime
+}
+
+"""The output of our create \`SavedReport\` mutation."""
+type CreateSavedReportPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`SavedReport\` that was created by this mutation."""
+  savedReport: SavedReport
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`SavedReport\`. May be used by Relay 1."""
+  savedReportEdge(
+    """The method to use when ordering \`SavedReport\`."""
+    orderBy: [SavedReportOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): SavedReportEdge
+}
+
+"""All input for the create \`SavedReport\` mutation."""
+input CreateSavedReportInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`SavedReport\` to be created by this mutation."""
+  savedReport: SavedReportInput!
+}
+
+"""An input for mutations affecting \`SavedReport\`"""
+input SavedReportInput {
+  rowId: UUID
+  bookId: UUID!
+  name: String!
+  reportType: String!
+  params: JSON
+  createdAt: Datetime
+  updatedAt: Datetime
 }
 
 """The output of our create \`Tag\` mutation."""
@@ -38653,6 +39097,76 @@ input UpdateVendorCreditApplicationInput {
   An object where the defined keys will be set on the \`VendorCreditApplication\` being updated.
   """
   patch: VendorCreditApplicationPatch!
+}
+
+"""The output of our update \`SavedReport\` mutation."""
+type UpdateSavedReportPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`SavedReport\` that was updated by this mutation."""
+  savedReport: SavedReport
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`SavedReport\`. May be used by Relay 1."""
+  savedReportEdge(
+    """The method to use when ordering \`SavedReport\`."""
+    orderBy: [SavedReportOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): SavedReportEdge
+}
+
+"""All input for the \`updateSavedReportById\` mutation."""
+input UpdateSavedReportByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`SavedReport\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`SavedReport\` being updated.
+  """
+  patch: SavedReportPatch!
+}
+
+"""
+Represents an update to a \`SavedReport\`. Fields that are set will be updated.
+"""
+input SavedReportPatch {
+  rowId: UUID
+  bookId: UUID
+  name: String
+  reportType: String
+  params: JSON
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the \`updateSavedReport\` mutation."""
+input UpdateSavedReportInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`SavedReport\` being updated.
+  """
+  patch: SavedReportPatch!
 }
 
 """The output of our update \`Tag\` mutation."""
@@ -43265,6 +43779,54 @@ input DeleteVendorCreditApplicationInput {
   rowId: UUID!
 }
 
+"""The output of our delete \`SavedReport\` mutation."""
+type DeleteSavedReportPayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`SavedReport\` that was deleted by this mutation."""
+  savedReport: SavedReport
+  deletedSavedReportId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`SavedReport\`. May be used by Relay 1."""
+  savedReportEdge(
+    """The method to use when ordering \`SavedReport\`."""
+    orderBy: [SavedReportOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): SavedReportEdge
+}
+
+"""All input for the \`deleteSavedReportById\` mutation."""
+input DeleteSavedReportByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`SavedReport\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteSavedReport\` mutation."""
+input DeleteSavedReportInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete \`Tag\` mutation."""
 type DeleteTagPayload {
   """
@@ -47350,6 +47912,32 @@ export const objects = {
           orderBy: applyOrderByArgToConnection
         }
       },
+      savedReport(_$root, {
+        $rowId
+      }) {
+        return resource_saved_reportPgResource.get({
+          id: $rowId
+        });
+      },
+      savedReportById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_SavedReport($nodeId);
+      },
+      savedReports: {
+        plan() {
+          return connection(resource_saved_reportPgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       savingsGoal(_$root, {
         $rowId
       }) {
@@ -48292,6 +48880,18 @@ export const objects = {
       createRecurringTransaction: {
         plan(_, args) {
           const $insert = pgInsertSingle(resource_recurring_transactionPgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
+      createSavedReport: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_saved_reportPgResource);
           args.apply($insert);
           return object({
             result: $insert
@@ -49854,6 +50454,32 @@ export const objects = {
       deleteRecurringTransactionById: {
         plan(_$root, args) {
           const $delete = pgDeleteSingle(resource_recurring_transactionPgResource, specFromArgs_RecurringTransaction(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteSavedReport: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_saved_reportPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteSavedReportById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_saved_reportPgResource, specFromArgs_SavedReport(args));
           args.apply($delete);
           return object({
             result: $delete
@@ -51579,6 +52205,32 @@ export const objects = {
           input: applyInputToUpdateOrDelete
         }
       },
+      updateSavedReport: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_saved_reportPgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateSavedReportById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_saved_reportPgResource, specFromArgs_SavedReport(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
       updateSavingsGoal: {
         plan(_$root, args) {
           const $update = pgUpdateSingle(resource_savings_goalPgResource, {
@@ -53018,6 +53670,24 @@ export const objects = {
         }
       },
       rowId: JournalLineProject_rowIdPlan,
+      savedReports: {
+        plan($record) {
+          const $records = resource_saved_reportPgResource.find({
+            book_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       savingsGoals: {
         plan($record) {
           const $records = resource_savings_goalPgResource.find({
@@ -53905,6 +54575,15 @@ export const objects = {
       query: queryPlan,
       recurringTransaction: planCreatePayloadResult,
       recurringTransactionEdge: CreateRecurringTransactionPayload_recurringTransactionEdgePlan
+    }
+  },
+  CreateSavedReportPayload: {
+    assertStep: assertStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan,
+      savedReport: planCreatePayloadResult,
+      savedReportEdge: CreateSavedReportPayload_savedReportEdgePlan
     }
   },
   CreateSavingsGoalPayload: {
@@ -55208,6 +55887,20 @@ export const objects = {
       query: queryPlan,
       recurringTransaction: planCreatePayloadResult,
       recurringTransactionEdge: CreateRecurringTransactionPayload_recurringTransactionEdgePlan
+    }
+  },
+  DeleteSavedReportPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedSavedReportId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_SavedReport.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      query: queryPlan,
+      savedReport: planCreatePayloadResult,
+      savedReportEdge: CreateSavedReportPayload_savedReportEdgePlan
     }
   },
   DeleteSavingsGoalPayload: {
@@ -56774,6 +57467,34 @@ export const objects = {
       totalCount: totalCountConnectionPlan
     }
   },
+  SavedReport: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      book: Account_bookPlan,
+      bookId: Account_bookIdPlan,
+      createdAt: Account_createdAtPlan,
+      id($parent) {
+        const specifier = nodeIdHandler_SavedReport.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_SavedReport.codec.name].encode);
+      },
+      reportType($record) {
+        return $record.get("report_type");
+      },
+      rowId: JournalLineProject_rowIdPlan,
+      updatedAt: Account_updatedAtPlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of saved_reportUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_saved_reportPgResource.get(spec);
+    }
+  },
+  SavedReportConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
   SavingsGoal: {
     assertStep: assertPgClassSingleStep,
     plans: {
@@ -57525,6 +58246,15 @@ export const objects = {
       query: queryPlan,
       recurringTransaction: planCreatePayloadResult,
       recurringTransactionEdge: CreateRecurringTransactionPayload_recurringTransactionEdgePlan
+    }
+  },
+  UpdateSavedReportPayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      query: queryPlan,
+      savedReport: planCreatePayloadResult,
+      savedReportEdge: CreateSavedReportPayload_savedReportEdgePlan
     }
   },
   UpdateSavingsGoalPayload: {
@@ -59758,6 +60488,30 @@ export const inputObjects = {
       rowId(queryBuilder, value) {
         return pgConnectionFilterApplyAttribute("rowId", "id", spec_book.attributes.id, queryBuilder, value);
       },
+      savedReports($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: savedReportIdentifier,
+          alias: resource_saved_reportPgResource.name,
+          localAttributes: registryConfig.pgRelations.book.savedReportsByTheirBookId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.book.savedReportsByTheirBookId.remoteAttributes
+        };
+        return $rel;
+      },
+      savedReportsExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: savedReportIdentifier,
+          alias: resource_saved_reportPgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.book.savedReportsByTheirBookId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.book.savedReportsByTheirBookId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
       savingsGoals($where, value) {
         assertAllowed(value, "object");
         const $rel = $where.andPlan();
@@ -60247,6 +61001,13 @@ export const inputObjects = {
     }
   },
   BookToManyRecurringTransactionFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
+  BookToManySavedReportFilter: {
     plans: {
       every: AccountToManyAccountFilter_everyApply,
       none: AccountToManyAccountFilter_noneApply,
@@ -60995,6 +61756,12 @@ export const inputObjects = {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
       recurringTransaction: applyCreateFields
+    }
+  },
+  CreateSavedReportInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      savedReport: applyCreateFields
     }
   },
   CreateSavingsGoalInput: {
@@ -62418,6 +63185,16 @@ export const inputObjects = {
     }
   },
   DeleteRecurringTransactionInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteSavedReportByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteSavedReportInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate
     }
@@ -64997,6 +65774,52 @@ export const inputObjects = {
       updatedAt: CustomFieldValueInput_updatedAtApply
     }
   },
+  SavedReportCondition: {
+    plans: {
+      bookId: AccountCondition_bookIdApply,
+      rowId: AccountCondition_rowIdApply
+    }
+  },
+  SavedReportFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      book($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_bookPgResource, bookIdentifier, registryConfig.pgRelations.savedReport.bookByMyBookId.localAttributes, registryConfig.pgRelations.savedReport.bookByMyBookId.remoteAttributes, $where, value);
+      },
+      bookId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("bookId", "book_id", spec_savedReport.attributes.book_id, queryBuilder, value);
+      },
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_savedReport.attributes.id, queryBuilder, value);
+      }
+    }
+  },
+  SavedReportInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      bookId: TagGroupInput_bookIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      name: TagGroupInput_nameApply,
+      params: SavedReportInput_paramsApply,
+      reportType: SavedReportInput_reportTypeApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      updatedAt: CustomFieldValueInput_updatedAtApply
+    }
+  },
+  SavedReportPatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      bookId: TagGroupInput_bookIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      name: TagGroupInput_nameApply,
+      params: SavedReportInput_paramsApply,
+      reportType: SavedReportInput_reportTypeApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      updatedAt: CustomFieldValueInput_updatedAtApply
+    }
+  },
   SavingsGoalCondition: {
     plans: {
       bookId: AccountCondition_bookIdApply,
@@ -66191,6 +67014,18 @@ export const inputObjects = {
     }
   },
   UpdateRecurringTransactionInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateSavedReportByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateSavedReportInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
       patch: applyCreateFields
@@ -68773,6 +69608,32 @@ export const enums = {
       },
       PRIMARY_KEY_DESC(queryBuilder) {
         recurring_transactionUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply
+    }
+  },
+  SavedReportOrderBy: {
+    values: {
+      BOOK_ID_ASC: AccountOrderBy_BOOK_ID_ASCApply,
+      BOOK_ID_DESC: AccountOrderBy_BOOK_ID_DESCApply,
+      PRIMARY_KEY_ASC(queryBuilder) {
+        saved_reportUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        saved_reportUniques[0].attributes.forEach(attributeName => {
           queryBuilder.orderBy({
             attribute: attributeName,
             direction: "DESC"

@@ -52,6 +52,7 @@ export * from "./reconciliationStatement.table";
 export * from "./recurringInvoice.table";
 export * from "./recurringInvoiceLine.table";
 export * from "./recurringTransaction.table";
+export * from "./savedReport.table";
 export * from "./savingsGoal.table";
 export * from "./tag.table";
 export * from "./tagGroup.table";

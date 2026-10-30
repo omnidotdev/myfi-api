@@ -50,6 +50,9 @@ type Query implements Node {
   """Get a single `VendorCreditApplication`."""
   vendorCreditApplication(rowId: UUID!): VendorCreditApplication
 
+  """Get a single `SavedReport`."""
+  savedReport(rowId: UUID!): SavedReport
+
   """Get a single `Tag`."""
   tag(rowId: UUID!): Tag
 
@@ -304,6 +307,14 @@ type Query implements Node {
     """
     id: ID!
   ): VendorCreditApplication
+
+  """Reads a single `SavedReport` using its globally unique `ID`."""
+  savedReportById(
+    """
+    The globally unique `ID` to be used in selecting a single `SavedReport`.
+    """
+    id: ID!
+  ): SavedReport
 
   """Reads a single `Tag` using its globally unique `ID`."""
   tagById(
@@ -1092,6 +1103,40 @@ type Query implements Node {
     """The method to use when ordering `VendorCreditApplication`."""
     orderBy: [VendorCreditApplicationOrderBy!] = [PRIMARY_KEY_ASC]
   ): VendorCreditApplicationConnection
+
+  """Reads and enables pagination through a set of `SavedReport`."""
+  savedReports(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: SavedReportCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: SavedReportFilter
+
+    """The method to use when ordering `SavedReport`."""
+    orderBy: [SavedReportOrderBy!] = [PRIMARY_KEY_ASC]
+  ): SavedReportConnection
 
   """Reads and enables pagination through a set of `Tag`."""
   tags(
@@ -4899,6 +4944,40 @@ type Book implements Node {
     """The method to use when ordering `ItemBundle`."""
     orderBy: [ItemBundleOrderBy!] = [PRIMARY_KEY_ASC]
   ): ItemBundleConnection!
+
+  """Reads and enables pagination through a set of `SavedReport`."""
+  savedReports(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: SavedReportCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: SavedReportFilter
+
+    """The method to use when ordering `SavedReport`."""
+    orderBy: [SavedReportOrderBy!] = [PRIMARY_KEY_ASC]
+  ): SavedReportConnection!
 }
 
 """A connection to a list of `Account` values."""
@@ -5453,6 +5532,12 @@ input BookFilter {
 
   """Some related `itemBundles` exist."""
   itemBundlesExist: Boolean
+
+  """Filter by the object’s `savedReports` relation."""
+  savedReports: BookToManySavedReportFilter
+
+  """Some related `savedReports` exist."""
+  savedReportsExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [BookFilter!]
@@ -9603,6 +9688,49 @@ input BundleComponentFilter {
 
   """Negates the expression."""
   not: BundleComponentFilter
+}
+
+"""
+A filter to be used against many `SavedReport` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManySavedReportFilter {
+  """
+  Every related `SavedReport` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: SavedReportFilter
+
+  """
+  Some related `SavedReport` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: SavedReportFilter
+
+  """
+  No related `SavedReport` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: SavedReportFilter
+}
+
+"""
+A filter to be used against `SavedReport` object types. All fields are combined with a logical ‘and.’
+"""
+input SavedReportFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `bookId` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s `book` relation."""
+  book: BookFilter
+
+  """Checks for all expressions in this list."""
+  and: [SavedReportFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [SavedReportFilter!]
+
+  """Negates the expression."""
+  not: SavedReportFilter
 }
 
 """
@@ -15911,6 +16039,72 @@ enum ItemBundleOrderBy {
   BOOK_ID_DESC
 }
 
+"""A connection to a list of `SavedReport` values."""
+type SavedReportConnection {
+  """A list of `SavedReport` objects."""
+  nodes: [SavedReport]!
+
+  """
+  A list of edges which contains the `SavedReport` and cursor to aid in pagination.
+  """
+  edges: [SavedReportEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `SavedReport` you could get from the connection."""
+  totalCount: Int!
+}
+
+type SavedReport implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  name: String!
+  reportType: String!
+  params: JSON!
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """Reads a single `Book` that is related to this `SavedReport`."""
+  book: Book
+}
+
+"""A `SavedReport` edge in the connection."""
+type SavedReportEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `SavedReport` at the end of the edge."""
+  node: SavedReport
+}
+
+"""
+A condition to be used against `SavedReport` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input SavedReportCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `bookId` field."""
+  bookId: UUID
+}
+
+"""Methods to use when ordering `SavedReport`."""
+enum SavedReportOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+}
+
 type _DrizzleMigration implements Node {
   """
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
@@ -16211,6 +16405,14 @@ type Mutation {
     """
     input: CreateVendorCreditApplicationInput!
   ): CreateVendorCreditApplicationPayload
+
+  """Creates a single `SavedReport`."""
+  createSavedReport(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateSavedReportInput!
+  ): CreateSavedReportPayload
 
   """Creates a single `Tag`."""
   createTag(
@@ -16853,6 +17055,24 @@ type Mutation {
     """
     input: UpdateVendorCreditApplicationInput!
   ): UpdateVendorCreditApplicationPayload
+
+  """
+  Updates a single `SavedReport` using its globally unique id and a patch.
+  """
+  updateSavedReportById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateSavedReportByIdInput!
+  ): UpdateSavedReportPayload
+
+  """Updates a single `SavedReport` using a unique key and a patch."""
+  updateSavedReport(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateSavedReportInput!
+  ): UpdateSavedReportPayload
 
   """Updates a single `Tag` using its globally unique id and a patch."""
   updateTagById(
@@ -18001,6 +18221,22 @@ type Mutation {
     """
     input: DeleteVendorCreditApplicationInput!
   ): DeleteVendorCreditApplicationPayload
+
+  """Deletes a single `SavedReport` using its globally unique id."""
+  deleteSavedReportById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteSavedReportByIdInput!
+  ): DeleteSavedReportPayload
+
+  """Deletes a single `SavedReport` using a unique key."""
+  deleteSavedReport(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteSavedReportInput!
+  ): DeleteSavedReportPayload
 
   """Deletes a single `Tag` using its globally unique id."""
   deleteTagById(
@@ -19369,6 +19605,52 @@ input VendorCreditApplicationInput {
   amount: BigFloat!
   date: String!
   createdAt: Datetime
+}
+
+"""The output of our create `SavedReport` mutation."""
+type CreateSavedReportPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `SavedReport` that was created by this mutation."""
+  savedReport: SavedReport
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `SavedReport`. May be used by Relay 1."""
+  savedReportEdge(
+    """The method to use when ordering `SavedReport`."""
+    orderBy: [SavedReportOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): SavedReportEdge
+}
+
+"""All input for the create `SavedReport` mutation."""
+input CreateSavedReportInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `SavedReport` to be created by this mutation."""
+  savedReport: SavedReportInput!
+}
+
+"""An input for mutations affecting `SavedReport`"""
+input SavedReportInput {
+  rowId: UUID
+  bookId: UUID!
+  name: String!
+  reportType: String!
+  params: JSON
+  createdAt: Datetime
+  updatedAt: Datetime
 }
 
 """The output of our create `Tag` mutation."""
@@ -22887,6 +23169,76 @@ input UpdateVendorCreditApplicationInput {
   An object where the defined keys will be set on the `VendorCreditApplication` being updated.
   """
   patch: VendorCreditApplicationPatch!
+}
+
+"""The output of our update `SavedReport` mutation."""
+type UpdateSavedReportPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `SavedReport` that was updated by this mutation."""
+  savedReport: SavedReport
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `SavedReport`. May be used by Relay 1."""
+  savedReportEdge(
+    """The method to use when ordering `SavedReport`."""
+    orderBy: [SavedReportOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): SavedReportEdge
+}
+
+"""All input for the `updateSavedReportById` mutation."""
+input UpdateSavedReportByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `SavedReport` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `SavedReport` being updated.
+  """
+  patch: SavedReportPatch!
+}
+
+"""
+Represents an update to a `SavedReport`. Fields that are set will be updated.
+"""
+input SavedReportPatch {
+  rowId: UUID
+  bookId: UUID
+  name: String
+  reportType: String
+  params: JSON
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the `updateSavedReport` mutation."""
+input UpdateSavedReportInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `SavedReport` being updated.
+  """
+  patch: SavedReportPatch!
 }
 
 """The output of our update `Tag` mutation."""
@@ -27491,6 +27843,54 @@ input DeleteVendorCreditApplicationByIdInput {
 
 """All input for the `deleteVendorCreditApplication` mutation."""
 input DeleteVendorCreditApplicationInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `SavedReport` mutation."""
+type DeleteSavedReportPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `SavedReport` that was deleted by this mutation."""
+  savedReport: SavedReport
+  deletedSavedReportId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `SavedReport`. May be used by Relay 1."""
+  savedReportEdge(
+    """The method to use when ordering `SavedReport`."""
+    orderBy: [SavedReportOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): SavedReportEdge
+}
+
+"""All input for the `deleteSavedReportById` mutation."""
+input DeleteSavedReportByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `SavedReport` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteSavedReport` mutation."""
+input DeleteSavedReportInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.

@@ -85,6 +85,7 @@ import {
   generateTrialBalance,
   getSalesByState,
 } from "lib/reports";
+import savedReportRoutes from "lib/reports/savedReportRoutes";
 import accountRoutes from "lib/routes/accountRoutes";
 import attachmentRoutes from "lib/routes/attachmentRoutes";
 import bookAccessRoutes from "lib/routes/bookAccessRoutes";
@@ -163,7 +164,8 @@ const connectionAndOrgRoutes = new Elysia()
   .use(customFieldRoutes)
   .use(priceLevelRoutes)
   .use(timeEntryRoutes)
-  .use(bundleRoutes);
+  .use(bundleRoutes)
+  .use(savedReportRoutes);
 
 const app = new Elysia()
   .onAfterHandle(({ set }) => {
