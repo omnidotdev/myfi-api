@@ -37,6 +37,7 @@ import {
 } from "lib/db/schema";
 import { decryptToken } from "lib/encryption/tokenEncryption";
 import estimateRoutes from "lib/estimates/estimateRoutes";
+import formTemplateRoutes from "lib/formTemplates/formTemplateRoutes";
 import createGraphqlContext from "lib/graphql/createGraphqlContext";
 import {
   armorPlugin,
@@ -165,7 +166,8 @@ const connectionAndOrgRoutes = new Elysia()
   .use(priceLevelRoutes)
   .use(timeEntryRoutes)
   .use(bundleRoutes)
-  .use(savedReportRoutes);
+  .use(savedReportRoutes)
+  .use(formTemplateRoutes);
 
 const app = new Elysia()
   .onAfterHandle(({ set }) => {

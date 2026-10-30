@@ -26,6 +26,7 @@ export * from "./document.table";
 export * from "./estimate.table";
 export * from "./estimateLine.table";
 export * from "./fixedAsset.table";
+export * from "./formTemplate.table";
 export * from "./importProfile.table";
 export * from "./inventoryItem.table";
 export * from "./inventoryTransaction.table";

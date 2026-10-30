@@ -3332,6 +3332,146 @@ const spec_rdExpense = {
   executor: executor
 };
 const rdExpenseCodec = recordCodec(spec_rdExpense);
+const formTemplateIdentifier = sql.identifier("public", "form_template");
+const spec_formTemplate = {
+  name: "formTemplate",
+  identifier: formTemplateIdentifier,
+  attributes: {
+    __proto__: null,
+    id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    book_id: {
+      codec: TYPES.uuid,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    name: {
+      codec: TYPES.text,
+      notNull: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    document_type: {
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true
+      }
+    },
+    accent_color: {
+      codec: TYPES.text,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    footer_text: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    terms: {
+      codec: TYPES.text,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    show_logo: {
+      codec: TYPES.boolean,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    is_default: {
+      codec: TYPES.boolean,
+      notNull: true,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    created_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    },
+    updated_at: {
+      codec: TYPES.timestamptz,
+      hasDefault: true,
+      extensions: {
+        __proto__: null,
+        canSelect: true,
+        canInsert: true,
+        canUpdate: true,
+        isIndexed: false
+      }
+    }
+  },
+  extensions: {
+    oid: "18921",
+    isTableLike: true,
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "form_template"
+    }
+  },
+  executor: executor
+};
+const formTemplateCodec = recordCodec(spec_formTemplate);
 const projectIdentifier = sql.identifier("public", "project");
 const spec_project = {
   name: "project",
@@ -9540,6 +9680,29 @@ const rd_expense_resourceOptionsConfig = {
   },
   uniques: rd_expenseUniques
 };
+const form_templateUniques = [{
+  attributes: ["id"],
+  isPrimary: true
+}];
+const form_template_resourceOptionsConfig = {
+  executor: executor,
+  name: "form_template",
+  identifier: "main.public.form_template",
+  from: formTemplateIdentifier,
+  codec: formTemplateCodec,
+  extensions: {
+    pg: {
+      serviceName: "main",
+      schemaName: "public",
+      name: "form_template"
+    },
+    canSelect: true,
+    canInsert: true,
+    canUpdate: true,
+    canDelete: true
+  },
+  uniques: form_templateUniques
+};
 const projectUniques = [{
   attributes: ["id"],
   isPrimary: true
@@ -10370,6 +10533,7 @@ const registryConfig = {
     categorizationRuleSplit: categorizationRuleSplitCodec,
     reconciliationStatement: reconciliationStatementCodec,
     rdExpense: rdExpenseCodec,
+    formTemplate: formTemplateCodec,
     project: projectCodec,
     billLine: billLineCodec,
     estimateLine: estimateLineCodec,
@@ -10463,6 +10627,7 @@ const registryConfig = {
     categorization_rule_split: categorization_rule_split_resourceOptionsConfig,
     reconciliation_statement: reconciliation_statement_resourceOptionsConfig,
     rd_expense: rd_expense_resourceOptionsConfig,
+    form_template: form_template_resourceOptionsConfig,
     project: project_resourceOptionsConfig,
     bill_line: bill_line_resourceOptionsConfig,
     estimate_line: estimate_line_resourceOptionsConfig,
@@ -11456,6 +11621,13 @@ const registryConfig = {
         localAttributes: ["id"],
         remoteAttributes: ["book_id"],
         isReferencee: true
+      },
+      formTemplatesByTheirBookId: {
+        localCodec: bookCodec,
+        remoteResourceOptions: form_template_resourceOptionsConfig,
+        localAttributes: ["id"],
+        remoteAttributes: ["book_id"],
+        isReferencee: true
       }
     },
     bookAccess: {
@@ -11907,6 +12079,16 @@ const registryConfig = {
         localCodec: fixedAssetCodec,
         remoteResourceOptions: account_resourceOptionsConfig,
         localAttributes: ["depreciation_expense_account_id"],
+        remoteAttributes: ["id"],
+        isUnique: true
+      }
+    },
+    formTemplate: {
+      __proto__: null,
+      bookByMyBookId: {
+        localCodec: formTemplateCodec,
+        remoteResourceOptions: book_resourceOptionsConfig,
+        localAttributes: ["book_id"],
         remoteAttributes: ["id"],
         isUnique: true
       }
@@ -13200,6 +13382,7 @@ const resource_recurring_invoice_linePgResource = registry.pgResources["recurrin
 const resource_categorization_rule_splitPgResource = registry.pgResources["categorization_rule_split"];
 const resource_reconciliation_statementPgResource = registry.pgResources["reconciliation_statement"];
 const resource_rd_expensePgResource = registry.pgResources["rd_expense"];
+const resource_form_templatePgResource = registry.pgResources["form_template"];
 const resource_projectPgResource = registry.pgResources["project"];
 const resource_bill_linePgResource = registry.pgResources["bill_line"];
 const resource_estimate_linePgResource = registry.pgResources["estimate_line"];
@@ -13640,6 +13823,17 @@ const nodeIdHandler_RdExpense = makeTableNodeIdHandler({
 const nodeFetcher_RdExpense = $nodeId => {
   const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_RdExpense));
   return nodeIdHandler_RdExpense.get(nodeIdHandler_RdExpense.getSpec($decoded));
+};
+const nodeIdHandler_FormTemplate = makeTableNodeIdHandler({
+  typeName: "FormTemplate",
+  identifier: "FormTemplate",
+  nodeIdCodec: base64JSONNodeIdCodec,
+  resource: resource_form_templatePgResource,
+  pk: form_templateUniques[0].attributes
+});
+const nodeFetcher_FormTemplate = $nodeId => {
+  const $decoded = lambda($nodeId, specForHandler(nodeIdHandler_FormTemplate));
+  return nodeIdHandler_FormTemplate.get(nodeIdHandler_FormTemplate.getSpec($decoded));
 };
 const nodeIdHandler_Project = makeTableNodeIdHandler({
   typeName: "Project",
@@ -14100,6 +14294,7 @@ const nodeIdHandlerByTypeName = {
   CategorizationRuleSplit: nodeIdHandler_CategorizationRuleSplit,
   ReconciliationStatement: nodeIdHandler_ReconciliationStatement,
   RdExpense: nodeIdHandler_RdExpense,
+  FormTemplate: nodeIdHandler_FormTemplate,
   Project: nodeIdHandler_Project,
   BillLine: nodeIdHandler_BillLine,
   EstimateLine: nodeIdHandler_EstimateLine,
@@ -14976,6 +15171,10 @@ const specFromArgs_RdExpense = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_RdExpense, $nodeId);
 };
+const specFromArgs_FormTemplate = args => {
+  const $nodeId = args.getRaw(["input", "id"]);
+  return specFromNodeId(nodeIdHandler_FormTemplate, $nodeId);
+};
 const specFromArgs_Project = args => {
   const $nodeId = args.getRaw(["input", "id"]);
   return specFromNodeId(nodeIdHandler_Project, $nodeId);
@@ -15499,6 +15698,25 @@ function RdExpenseInput_isForeignApply(obj, val, info) {
 function RdExpenseInput_notesApply(obj, val, info) {
   obj.set("notes", bakedInputRuntime(info.schema, info.field.type, val));
 }
+const CreateFormTemplatePayload_formTemplateEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_form_templatePgResource, form_templateUniques[0].attributes, $mutation, fieldArgs);
+function FormTemplateInput_documentTypeApply(obj, val, info) {
+  obj.set("document_type", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function FormTemplateInput_accentColorApply(obj, val, info) {
+  obj.set("accent_color", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function FormTemplateInput_footerTextApply(obj, val, info) {
+  obj.set("footer_text", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function FormTemplateInput_termsApply(obj, val, info) {
+  obj.set("terms", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function FormTemplateInput_showLogoApply(obj, val, info) {
+  obj.set("show_logo", bakedInputRuntime(info.schema, info.field.type, val));
+}
+function FormTemplateInput_isDefaultApply(obj, val, info) {
+  obj.set("is_default", bakedInputRuntime(info.schema, info.field.type, val));
+}
 const CreateProjectPayload_projectEdgePlan = ($mutation, fieldArgs) => pgMutationPayloadEdge(resource_projectPgResource, projectUniques[0].attributes, $mutation, fieldArgs);
 function ProjectInput_budgetAmountApply(obj, val, info) {
   obj.set("budget_amount", bakedInputRuntime(info.schema, info.field.type, val));
@@ -15688,9 +15906,6 @@ function EstimateInput_estimateDateApply(obj, val, info) {
 }
 function EstimateInput_expiryDateApply(obj, val, info) {
   obj.set("expiry_date", bakedInputRuntime(info.schema, info.field.type, val));
-}
-function EstimateInput_termsApply(obj, val, info) {
-  obj.set("terms", bakedInputRuntime(info.schema, info.field.type, val));
 }
 function EstimateInput_convertedInvoiceIdApply(obj, val, info) {
   obj.set("converted_invoice_id", bakedInputRuntime(info.schema, info.field.type, val));
@@ -16043,6 +16258,9 @@ type Query implements Node {
 
   """Get a single \`RdExpense\`."""
   rdExpense(rowId: UUID!): RdExpense
+
+  """Get a single \`FormTemplate\`."""
+  formTemplate(rowId: UUID!): FormTemplate
 
   """Get a single \`Project\`."""
   project(rowId: UUID!): Project
@@ -16409,6 +16627,14 @@ type Query implements Node {
     """The globally unique \`ID\` to be used in selecting a single \`RdExpense\`."""
     id: ID!
   ): RdExpense
+
+  """Reads a single \`FormTemplate\` using its globally unique \`ID\`."""
+  formTemplateById(
+    """
+    The globally unique \`ID\` to be used in selecting a single \`FormTemplate\`.
+    """
+    id: ID!
+  ): FormTemplate
 
   """Reads a single \`Project\` using its globally unique \`ID\`."""
   projectById(
@@ -17783,6 +18009,40 @@ type Query implements Node {
     """The method to use when ordering \`RdExpense\`."""
     orderBy: [RdExpenseOrderBy!] = [PRIMARY_KEY_ASC]
   ): RdExpenseConnection
+
+  """Reads and enables pagination through a set of \`FormTemplate\`."""
+  formTemplates(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: FormTemplateCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: FormTemplateFilter
+
+    """The method to use when ordering \`FormTemplate\`."""
+    orderBy: [FormTemplateOrderBy!] = [PRIMARY_KEY_ASC]
+  ): FormTemplateConnection
 
   """Reads and enables pagination through a set of \`Project\`."""
   projects(
@@ -20906,6 +21166,40 @@ type Book implements Node {
     """The method to use when ordering \`SavedReport\`."""
     orderBy: [SavedReportOrderBy!] = [PRIMARY_KEY_ASC]
   ): SavedReportConnection!
+
+  """Reads and enables pagination through a set of \`FormTemplate\`."""
+  formTemplates(
+    """Only read the first \`n\` values of the set."""
+    first: Int
+
+    """Only read the last \`n\` values of the set."""
+    last: Int
+
+    """
+    Skip the first \`n\` values from our \`after\` cursor, an alternative to cursor
+    based pagination. May not be used with \`last\`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: FormTemplateCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: FormTemplateFilter
+
+    """The method to use when ordering \`FormTemplate\`."""
+    orderBy: [FormTemplateOrderBy!] = [PRIMARY_KEY_ASC]
+  ): FormTemplateConnection!
 }
 
 """A connection to a list of \`Account\` values."""
@@ -21466,6 +21760,12 @@ input BookFilter {
 
   """Some related \`savedReports\` exist."""
   savedReportsExist: Boolean
+
+  """Filter by the object’s \`formTemplates\` relation."""
+  formTemplates: BookToManyFormTemplateFilter
+
+  """Some related \`formTemplates\` exist."""
+  formTemplatesExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [BookFilter!]
@@ -25659,6 +25959,52 @@ input SavedReportFilter {
 
   """Negates the expression."""
   not: SavedReportFilter
+}
+
+"""
+A filter to be used against many \`FormTemplate\` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyFormTemplateFilter {
+  """
+  Every related \`FormTemplate\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: FormTemplateFilter
+
+  """
+  Some related \`FormTemplate\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: FormTemplateFilter
+
+  """
+  No related \`FormTemplate\` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: FormTemplateFilter
+}
+
+"""
+A filter to be used against \`FormTemplate\` object types. All fields are combined with a logical ‘and.’
+"""
+input FormTemplateFilter {
+  """Filter by the object’s \`rowId\` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s \`bookId\` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s \`documentType\` field."""
+  documentType: StringFilter
+
+  """Filter by the object’s \`book\` relation."""
+  book: BookFilter
+
+  """Checks for all expressions in this list."""
+  and: [FormTemplateFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [FormTemplateFilter!]
+
+  """Negates the expression."""
+  not: FormTemplateFilter
 }
 
 """
@@ -32033,6 +32379,81 @@ enum SavedReportOrderBy {
   BOOK_ID_DESC
 }
 
+"""A connection to a list of \`FormTemplate\` values."""
+type FormTemplateConnection {
+  """A list of \`FormTemplate\` objects."""
+  nodes: [FormTemplate]!
+
+  """
+  A list of edges which contains the \`FormTemplate\` and cursor to aid in pagination.
+  """
+  edges: [FormTemplateEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* \`FormTemplate\` you could get from the connection."""
+  totalCount: Int!
+}
+
+type FormTemplate implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  name: String!
+  documentType: String!
+  accentColor: String!
+  footerText: String
+  terms: String
+  showLogo: Boolean!
+  isDefault: Boolean!
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """Reads a single \`Book\` that is related to this \`FormTemplate\`."""
+  book: Book
+}
+
+"""A \`FormTemplate\` edge in the connection."""
+type FormTemplateEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The \`FormTemplate\` at the end of the edge."""
+  node: FormTemplate
+}
+
+"""
+A condition to be used against \`FormTemplate\` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input FormTemplateCondition {
+  """Checks for equality with the object’s \`rowId\` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s \`bookId\` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s \`documentType\` field."""
+  documentType: String
+}
+
+"""Methods to use when ordering \`FormTemplate\`."""
+enum FormTemplateOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+  DOCUMENT_TYPE_ASC
+  DOCUMENT_TYPE_DESC
+}
+
 type _DrizzleMigration implements Node {
   """
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
@@ -32509,6 +32930,14 @@ type Mutation {
     """
     input: CreateRdExpenseInput!
   ): CreateRdExpensePayload
+
+  """Creates a single \`FormTemplate\`."""
+  createFormTemplate(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateFormTemplateInput!
+  ): CreateFormTemplatePayload
 
   """Creates a single \`Project\`."""
   createProject(
@@ -33383,6 +33812,24 @@ type Mutation {
     """
     input: UpdateRdExpenseInput!
   ): UpdateRdExpensePayload
+
+  """
+  Updates a single \`FormTemplate\` using its globally unique id and a patch.
+  """
+  updateFormTemplateById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateFormTemplateByIdInput!
+  ): UpdateFormTemplatePayload
+
+  """Updates a single \`FormTemplate\` using a unique key and a patch."""
+  updateFormTemplate(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateFormTemplateInput!
+  ): UpdateFormTemplatePayload
 
   """Updates a single \`Project\` using its globally unique id and a patch."""
   updateProjectById(
@@ -34505,6 +34952,22 @@ type Mutation {
     """
     input: DeleteRdExpenseInput!
   ): DeleteRdExpensePayload
+
+  """Deletes a single \`FormTemplate\` using its globally unique id."""
+  deleteFormTemplateById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteFormTemplateByIdInput!
+  ): DeleteFormTemplatePayload
+
+  """Deletes a single \`FormTemplate\` using a unique key."""
+  deleteFormTemplate(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteFormTemplateInput!
+  ): DeleteFormTemplatePayload
 
   """Deletes a single \`Project\` using its globally unique id."""
   deleteProjectById(
@@ -36580,6 +37043,56 @@ input RdExpenseInput {
   isForeign: Boolean
   projectId: UUID
   notes: String
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""The output of our create \`FormTemplate\` mutation."""
+type CreateFormTemplatePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`FormTemplate\` that was created by this mutation."""
+  formTemplate: FormTemplate
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`FormTemplate\`. May be used by Relay 1."""
+  formTemplateEdge(
+    """The method to use when ordering \`FormTemplate\`."""
+    orderBy: [FormTemplateOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): FormTemplateEdge
+}
+
+"""All input for the create \`FormTemplate\` mutation."""
+input CreateFormTemplateInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The \`FormTemplate\` to be created by this mutation."""
+  formTemplate: FormTemplateInput!
+}
+
+"""An input for mutations affecting \`FormTemplate\`"""
+input FormTemplateInput {
+  rowId: UUID
+  bookId: UUID!
+  name: String!
+  documentType: String
+  accentColor: String
+  footerText: String
+  terms: String
+  showLogo: Boolean
+  isDefault: Boolean
   createdAt: Datetime
   updatedAt: Datetime
 }
@@ -40672,6 +41185,80 @@ input UpdateRdExpenseInput {
   An object where the defined keys will be set on the \`RdExpense\` being updated.
   """
   patch: RdExpensePatch!
+}
+
+"""The output of our update \`FormTemplate\` mutation."""
+type UpdateFormTemplatePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`FormTemplate\` that was updated by this mutation."""
+  formTemplate: FormTemplate
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`FormTemplate\`. May be used by Relay 1."""
+  formTemplateEdge(
+    """The method to use when ordering \`FormTemplate\`."""
+    orderBy: [FormTemplateOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): FormTemplateEdge
+}
+
+"""All input for the \`updateFormTemplateById\` mutation."""
+input UpdateFormTemplateByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`FormTemplate\` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the \`FormTemplate\` being updated.
+  """
+  patch: FormTemplatePatch!
+}
+
+"""
+Represents an update to a \`FormTemplate\`. Fields that are set will be updated.
+"""
+input FormTemplatePatch {
+  rowId: UUID
+  bookId: UUID
+  name: String
+  documentType: String
+  accentColor: String
+  footerText: String
+  terms: String
+  showLogo: Boolean
+  isDefault: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the \`updateFormTemplate\` mutation."""
+input UpdateFormTemplateInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the \`FormTemplate\` being updated.
+  """
+  patch: FormTemplatePatch!
 }
 
 """The output of our update \`Project\` mutation."""
@@ -44835,6 +45422,54 @@ input DeleteRdExpenseInput {
   rowId: UUID!
 }
 
+"""The output of our delete \`FormTemplate\` mutation."""
+type DeleteFormTemplatePayload {
+  """
+  The exact same \`clientMutationId\` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The \`FormTemplate\` that was deleted by this mutation."""
+  formTemplate: FormTemplate
+  deletedFormTemplateId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our \`FormTemplate\`. May be used by Relay 1."""
+  formTemplateEdge(
+    """The method to use when ordering \`FormTemplate\`."""
+    orderBy: [FormTemplateOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): FormTemplateEdge
+}
+
+"""All input for the \`deleteFormTemplateById\` mutation."""
+input DeleteFormTemplateByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique \`ID\` which will identify a single \`FormTemplate\` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the \`deleteFormTemplate\` mutation."""
+input DeleteFormTemplateInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
 """The output of our delete \`Project\` mutation."""
 type DeleteProjectPayload {
   """
@@ -47226,6 +47861,32 @@ export const objects = {
           orderBy: applyOrderByArgToConnection
         }
       },
+      formTemplate(_$root, {
+        $rowId
+      }) {
+        return resource_form_templatePgResource.get({
+          id: $rowId
+        });
+      },
+      formTemplateById(_$parent, args) {
+        const $nodeId = args.getRaw("id");
+        return nodeFetcher_FormTemplate($nodeId);
+      },
+      formTemplates: {
+        plan() {
+          return connection(resource_form_templatePgResource.find());
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       id($parent) {
         const specifier = nodeIdHandler_Query.plan($parent);
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_Query.codec.name].encode);
@@ -48577,6 +49238,18 @@ export const objects = {
           input: applyInputToInsert
         }
       },
+      createFormTemplate: {
+        plan(_, args) {
+          const $insert = pgInsertSingle(resource_form_templatePgResource);
+          args.apply($insert);
+          return object({
+            result: $insert
+          });
+        },
+        args: {
+          input: applyInputToInsert
+        }
+      },
       createImportProfile: {
         plan(_, args) {
           const $insert = pgInsertSingle(resource_import_profilePgResource);
@@ -49778,6 +50451,32 @@ export const objects = {
       deleteFixedAssetById: {
         plan(_$root, args) {
           const $delete = pgDeleteSingle(resource_fixed_assetPgResource, specFromArgs_FixedAsset(args));
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteFormTemplate: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_form_templatePgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($delete);
+          return object({
+            result: $delete
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      deleteFormTemplateById: {
+        plan(_$root, args) {
+          const $delete = pgDeleteSingle(resource_form_templatePgResource, specFromArgs_FormTemplate(args));
           args.apply($delete);
           return object({
             result: $delete
@@ -51520,6 +52219,32 @@ export const objects = {
       updateFixedAssetById: {
         plan(_$root, args) {
           const $update = pgUpdateSingle(resource_fixed_assetPgResource, specFromArgs_FixedAsset(args));
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateFormTemplate: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_form_templatePgResource, {
+            id: args.getRaw(['input', "rowId"])
+          });
+          args.apply($update);
+          return object({
+            result: $update
+          });
+        },
+        args: {
+          input: applyInputToUpdateOrDelete
+        }
+      },
+      updateFormTemplateById: {
+        plan(_$root, args) {
+          const $update = pgUpdateSingle(resource_form_templatePgResource, specFromArgs_FormTemplate(args));
           args.apply($update);
           return object({
             result: $update
@@ -53332,6 +54057,24 @@ export const objects = {
           orderBy: applyOrderByArgToConnection
         }
       },
+      formTemplates: {
+        plan($record) {
+          const $records = resource_form_templatePgResource.find({
+            book_id: $record.get("id")
+          });
+          return connection($records);
+        },
+        args: {
+          first: applyFirstArg,
+          last: applyLastArg,
+          offset: applyOffsetArg,
+          before: applyBeforeArg,
+          after: applyAfterArg,
+          condition: applyConditionArgToConnection,
+          filter: Query_journalLineProjectsfilterApplyPlan,
+          orderBy: applyOrderByArgToConnection
+        }
+      },
       id($parent) {
         const specifier = nodeIdHandler_Book.plan($parent);
         return lambda(specifier, nodeIdCodecs[nodeIdHandler_Book.codec.name].encode);
@@ -54340,6 +55083,15 @@ export const objects = {
       clientMutationId: getClientMutationIdForCreatePlan,
       fixedAsset: planCreatePayloadResult,
       fixedAssetEdge: CreateFixedAssetPayload_fixedAssetEdgePlan,
+      query: queryPlan
+    }
+  },
+  CreateFormTemplatePayload: {
+    assertStep: assertStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      formTemplate: planCreatePayloadResult,
+      formTemplateEdge: CreateFormTemplatePayload_formTemplateEdgePlan,
       query: queryPlan
     }
   },
@@ -55525,6 +56277,20 @@ export const objects = {
       query: queryPlan
     }
   },
+  DeleteFormTemplatePayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      deletedFormTemplateId($object) {
+        const $record = $object.getStepForKey("result"),
+          specifier = nodeIdHandler_FormTemplate.plan($record);
+        return lambda(specifier, base64JSONNodeIdCodec.encode);
+      },
+      formTemplate: planCreatePayloadResult,
+      formTemplateEdge: CreateFormTemplatePayload_formTemplateEdgePlan,
+      query: queryPlan
+    }
+  },
   DeleteImportProfilePayload: {
     assertStep: ObjectStep,
     plans: {
@@ -56243,6 +57009,46 @@ export const objects = {
     }
   },
   FixedAssetConnection: {
+    assertStep: ConnectionStep,
+    plans: {
+      totalCount: totalCountConnectionPlan
+    }
+  },
+  FormTemplate: {
+    assertStep: assertPgClassSingleStep,
+    plans: {
+      accentColor($record) {
+        return $record.get("accent_color");
+      },
+      book: Account_bookPlan,
+      bookId: Account_bookIdPlan,
+      createdAt: Account_createdAtPlan,
+      documentType($record) {
+        return $record.get("document_type");
+      },
+      footerText($record) {
+        return $record.get("footer_text");
+      },
+      id($parent) {
+        const specifier = nodeIdHandler_FormTemplate.plan($parent);
+        return lambda(specifier, nodeIdCodecs[nodeIdHandler_FormTemplate.codec.name].encode);
+      },
+      isDefault($record) {
+        return $record.get("is_default");
+      },
+      rowId: JournalLineProject_rowIdPlan,
+      showLogo($record) {
+        return $record.get("show_logo");
+      },
+      updatedAt: Account_updatedAtPlan
+    },
+    planType($specifier) {
+      const spec = Object.create(null);
+      for (const pkCol of form_templateUniques[0].attributes) spec[pkCol] = get2($specifier, pkCol);
+      return resource_form_templatePgResource.get(spec);
+    }
+  },
+  FormTemplateConnection: {
     assertStep: ConnectionStep,
     plans: {
       totalCount: totalCountConnectionPlan
@@ -58011,6 +58817,15 @@ export const objects = {
       clientMutationId: getClientMutationIdForCreatePlan,
       fixedAsset: planCreatePayloadResult,
       fixedAssetEdge: CreateFixedAssetPayload_fixedAssetEdgePlan,
+      query: queryPlan
+    }
+  },
+  UpdateFormTemplatePayload: {
+    assertStep: ObjectStep,
+    plans: {
+      clientMutationId: getClientMutationIdForCreatePlan,
+      formTemplate: planCreatePayloadResult,
+      formTemplateEdge: CreateFormTemplatePayload_formTemplateEdgePlan,
       query: queryPlan
     }
   },
@@ -60048,6 +60863,30 @@ export const inputObjects = {
           $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
         });
       },
+      formTemplates($where, value) {
+        assertAllowed(value, "object");
+        const $rel = $where.andPlan();
+        $rel.extensions.pgFilterRelation = {
+          tableExpression: formTemplateIdentifier,
+          alias: resource_form_templatePgResource.name,
+          localAttributes: registryConfig.pgRelations.book.formTemplatesByTheirBookId.localAttributes,
+          remoteAttributes: registryConfig.pgRelations.book.formTemplatesByTheirBookId.remoteAttributes
+        };
+        return $rel;
+      },
+      formTemplatesExist($where, value) {
+        assertAllowed(value, "scalar");
+        if (value == null) return;
+        const $subQuery = $where.existsPlan({
+          tableExpression: formTemplateIdentifier,
+          alias: resource_form_templatePgResource.name,
+          equals: value
+        });
+        registryConfig.pgRelations.book.formTemplatesByTheirBookId.localAttributes.forEach((localAttribute, i) => {
+          const remoteAttribute = registryConfig.pgRelations.book.formTemplatesByTheirBookId.remoteAttributes[i];
+          $subQuery.where(sql`${$where.alias}.${sql.identifier(localAttribute)} = ${$subQuery.alias}.${sql.identifier(remoteAttribute)}`);
+        });
+      },
       inventoryItems($where, value) {
         assertAllowed(value, "object");
         const $rel = $where.andPlan();
@@ -60881,6 +61720,13 @@ export const inputObjects = {
       some: AccountToManyAccountFilter_someApply
     }
   },
+  BookToManyFormTemplateFilter: {
+    plans: {
+      every: AccountToManyAccountFilter_everyApply,
+      none: AccountToManyAccountFilter_noneApply,
+      some: AccountToManyAccountFilter_someApply
+    }
+  },
   BookToManyInventoryItemFilter: {
     plans: {
       every: AccountToManyAccountFilter_everyApply,
@@ -61600,6 +62446,12 @@ export const inputObjects = {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
       fixedAsset: applyCreateFields
+    }
+  },
+  CreateFormTemplateInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      formTemplate: applyCreateFields
     }
   },
   CreateImportProfileInput: {
@@ -62929,6 +63781,16 @@ export const inputObjects = {
       clientMutationId: applyClientMutationIdForCreate
     }
   },
+  DeleteFormTemplateByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
+  DeleteFormTemplateInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate
+    }
+  },
   DeleteImportProfileByIdInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate
@@ -63464,7 +64326,7 @@ export const inputObjects = {
       rowId: JournalLineProjectInput_rowIdApply,
       status: AccountingPeriodInput_statusApply,
       subtotal: PurchaseOrderInput_subtotalApply,
-      terms: EstimateInput_termsApply,
+      terms: FormTemplateInput_termsApply,
       total: BankDepositInput_totalApply,
       updatedAt: CustomFieldValueInput_updatedAtApply
     }
@@ -63546,7 +64408,7 @@ export const inputObjects = {
       rowId: JournalLineProjectInput_rowIdApply,
       status: AccountingPeriodInput_statusApply,
       subtotal: PurchaseOrderInput_subtotalApply,
-      terms: EstimateInput_termsApply,
+      terms: FormTemplateInput_termsApply,
       total: BankDepositInput_totalApply,
       updatedAt: CustomFieldValueInput_updatedAtApply
     }
@@ -63635,6 +64497,66 @@ export const inputObjects = {
       rowId: JournalLineProjectInput_rowIdApply,
       salvageValue: FixedAssetInput_salvageValueApply,
       usefulLifeMonths: FixedAssetInput_usefulLifeMonthsApply
+    }
+  },
+  FormTemplateCondition: {
+    plans: {
+      bookId: AccountCondition_bookIdApply,
+      documentType($condition, val) {
+        return applyAttributeCondition("document_type", TYPES.text, $condition, val);
+      },
+      rowId: AccountCondition_rowIdApply
+    }
+  },
+  FormTemplateFilter: {
+    plans: {
+      and: AccountFilter_andApply,
+      book($where, value) {
+        return pgConnectionFilterApplySingleRelation(resource_bookPgResource, bookIdentifier, registryConfig.pgRelations.formTemplate.bookByMyBookId.localAttributes, registryConfig.pgRelations.formTemplate.bookByMyBookId.remoteAttributes, $where, value);
+      },
+      bookId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("bookId", "book_id", spec_formTemplate.attributes.book_id, queryBuilder, value);
+      },
+      documentType(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("documentType", "document_type", spec_formTemplate.attributes.document_type, queryBuilder, value);
+      },
+      not: AccountFilter_notApply,
+      or: AccountFilter_orApply,
+      rowId(queryBuilder, value) {
+        return pgConnectionFilterApplyAttribute("rowId", "id", spec_formTemplate.attributes.id, queryBuilder, value);
+      }
+    }
+  },
+  FormTemplateInput: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      accentColor: FormTemplateInput_accentColorApply,
+      bookId: TagGroupInput_bookIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      documentType: FormTemplateInput_documentTypeApply,
+      footerText: FormTemplateInput_footerTextApply,
+      isDefault: FormTemplateInput_isDefaultApply,
+      name: TagGroupInput_nameApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      showLogo: FormTemplateInput_showLogoApply,
+      terms: FormTemplateInput_termsApply,
+      updatedAt: CustomFieldValueInput_updatedAtApply
+    }
+  },
+  FormTemplatePatch: {
+    baked: createObjectAndApplyChildren,
+    plans: {
+      accentColor: FormTemplateInput_accentColorApply,
+      bookId: TagGroupInput_bookIdApply,
+      createdAt: TagGroupInput_createdAtApply,
+      documentType: FormTemplateInput_documentTypeApply,
+      footerText: FormTemplateInput_footerTextApply,
+      isDefault: FormTemplateInput_isDefaultApply,
+      name: TagGroupInput_nameApply,
+      rowId: JournalLineProjectInput_rowIdApply,
+      showLogo: FormTemplateInput_showLogoApply,
+      terms: FormTemplateInput_termsApply,
+      updatedAt: CustomFieldValueInput_updatedAtApply
     }
   },
   ImportProfileCondition: {
@@ -64004,7 +64926,7 @@ export const inputObjects = {
       status: AccountingPeriodInput_statusApply,
       subtotal: PurchaseOrderInput_subtotalApply,
       taxAmount: CreditMemoInput_taxAmountApply,
-      terms: EstimateInput_termsApply,
+      terms: FormTemplateInput_termsApply,
       total: BankDepositInput_totalApply,
       updatedAt: CustomFieldValueInput_updatedAtApply
     }
@@ -64104,7 +65026,7 @@ export const inputObjects = {
       status: AccountingPeriodInput_statusApply,
       subtotal: PurchaseOrderInput_subtotalApply,
       taxAmount: CreditMemoInput_taxAmountApply,
-      terms: EstimateInput_termsApply,
+      terms: FormTemplateInput_termsApply,
       total: BankDepositInput_totalApply,
       updatedAt: CustomFieldValueInput_updatedAtApply
     }
@@ -66707,6 +67629,18 @@ export const inputObjects = {
       patch: applyCreateFields
     }
   },
+  UpdateFormTemplateByIdInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
+  UpdateFormTemplateInput: {
+    plans: {
+      clientMutationId: applyClientMutationIdForCreate,
+      patch: applyCreateFields
+    }
+  },
   UpdateImportProfileByIdInput: {
     plans: {
       clientMutationId: applyClientMutationIdForCreate,
@@ -68790,6 +69724,44 @@ export const enums = {
       },
       PRIMARY_KEY_DESC(queryBuilder) {
         fixed_assetUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "DESC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      ROW_ID_ASC: AccountOrderBy_ROW_ID_ASCApply,
+      ROW_ID_DESC: AccountOrderBy_ROW_ID_DESCApply
+    }
+  },
+  FormTemplateOrderBy: {
+    values: {
+      BOOK_ID_ASC: AccountOrderBy_BOOK_ID_ASCApply,
+      BOOK_ID_DESC: AccountOrderBy_BOOK_ID_DESCApply,
+      DOCUMENT_TYPE_ASC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "document_type",
+          direction: "ASC"
+        });
+      },
+      DOCUMENT_TYPE_DESC(queryBuilder) {
+        queryBuilder.orderBy({
+          attribute: "document_type",
+          direction: "DESC"
+        });
+      },
+      PRIMARY_KEY_ASC(queryBuilder) {
+        form_templateUniques[0].attributes.forEach(attributeName => {
+          queryBuilder.orderBy({
+            attribute: attributeName,
+            direction: "ASC"
+          });
+        });
+        queryBuilder.setOrderIsUnique();
+      },
+      PRIMARY_KEY_DESC(queryBuilder) {
+        form_templateUniques[0].attributes.forEach(attributeName => {
           queryBuilder.orderBy({
             attribute: attributeName,
             direction: "DESC"

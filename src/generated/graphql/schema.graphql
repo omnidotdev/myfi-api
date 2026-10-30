@@ -116,6 +116,9 @@ type Query implements Node {
   """Get a single `RdExpense`."""
   rdExpense(rowId: UUID!): RdExpense
 
+  """Get a single `FormTemplate`."""
+  formTemplate(rowId: UUID!): FormTemplate
+
   """Get a single `Project`."""
   project(rowId: UUID!): Project
 
@@ -481,6 +484,14 @@ type Query implements Node {
     """The globally unique `ID` to be used in selecting a single `RdExpense`."""
     id: ID!
   ): RdExpense
+
+  """Reads a single `FormTemplate` using its globally unique `ID`."""
+  formTemplateById(
+    """
+    The globally unique `ID` to be used in selecting a single `FormTemplate`.
+    """
+    id: ID!
+  ): FormTemplate
 
   """Reads a single `Project` using its globally unique `ID`."""
   projectById(
@@ -1855,6 +1866,40 @@ type Query implements Node {
     """The method to use when ordering `RdExpense`."""
     orderBy: [RdExpenseOrderBy!] = [PRIMARY_KEY_ASC]
   ): RdExpenseConnection
+
+  """Reads and enables pagination through a set of `FormTemplate`."""
+  formTemplates(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: FormTemplateCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: FormTemplateFilter
+
+    """The method to use when ordering `FormTemplate`."""
+    orderBy: [FormTemplateOrderBy!] = [PRIMARY_KEY_ASC]
+  ): FormTemplateConnection
 
   """Reads and enables pagination through a set of `Project`."""
   projects(
@@ -4978,6 +5023,40 @@ type Book implements Node {
     """The method to use when ordering `SavedReport`."""
     orderBy: [SavedReportOrderBy!] = [PRIMARY_KEY_ASC]
   ): SavedReportConnection!
+
+  """Reads and enables pagination through a set of `FormTemplate`."""
+  formTemplates(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: FormTemplateCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: FormTemplateFilter
+
+    """The method to use when ordering `FormTemplate`."""
+    orderBy: [FormTemplateOrderBy!] = [PRIMARY_KEY_ASC]
+  ): FormTemplateConnection!
 }
 
 """A connection to a list of `Account` values."""
@@ -5538,6 +5617,12 @@ input BookFilter {
 
   """Some related `savedReports` exist."""
   savedReportsExist: Boolean
+
+  """Filter by the object’s `formTemplates` relation."""
+  formTemplates: BookToManyFormTemplateFilter
+
+  """Some related `formTemplates` exist."""
+  formTemplatesExist: Boolean
 
   """Checks for all expressions in this list."""
   and: [BookFilter!]
@@ -9731,6 +9816,52 @@ input SavedReportFilter {
 
   """Negates the expression."""
   not: SavedReportFilter
+}
+
+"""
+A filter to be used against many `FormTemplate` object types. All fields are combined with a logical ‘and.’
+"""
+input BookToManyFormTemplateFilter {
+  """
+  Every related `FormTemplate` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  every: FormTemplateFilter
+
+  """
+  Some related `FormTemplate` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  some: FormTemplateFilter
+
+  """
+  No related `FormTemplate` matches the filter criteria. All fields are combined with a logical ‘and.’
+  """
+  none: FormTemplateFilter
+}
+
+"""
+A filter to be used against `FormTemplate` object types. All fields are combined with a logical ‘and.’
+"""
+input FormTemplateFilter {
+  """Filter by the object’s `rowId` field."""
+  rowId: UUIDFilter
+
+  """Filter by the object’s `bookId` field."""
+  bookId: UUIDFilter
+
+  """Filter by the object’s `documentType` field."""
+  documentType: StringFilter
+
+  """Filter by the object’s `book` relation."""
+  book: BookFilter
+
+  """Checks for all expressions in this list."""
+  and: [FormTemplateFilter!]
+
+  """Checks for any expressions in this list."""
+  or: [FormTemplateFilter!]
+
+  """Negates the expression."""
+  not: FormTemplateFilter
 }
 
 """
@@ -16105,6 +16236,81 @@ enum SavedReportOrderBy {
   BOOK_ID_DESC
 }
 
+"""A connection to a list of `FormTemplate` values."""
+type FormTemplateConnection {
+  """A list of `FormTemplate` objects."""
+  nodes: [FormTemplate]!
+
+  """
+  A list of edges which contains the `FormTemplate` and cursor to aid in pagination.
+  """
+  edges: [FormTemplateEdge]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `FormTemplate` you could get from the connection."""
+  totalCount: Int!
+}
+
+type FormTemplate implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  id: ID!
+  rowId: UUID!
+  bookId: UUID!
+  name: String!
+  documentType: String!
+  accentColor: String!
+  footerText: String
+  terms: String
+  showLogo: Boolean!
+  isDefault: Boolean!
+  createdAt: Datetime
+  updatedAt: Datetime
+
+  """Reads a single `Book` that is related to this `FormTemplate`."""
+  book: Book
+}
+
+"""A `FormTemplate` edge in the connection."""
+type FormTemplateEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `FormTemplate` at the end of the edge."""
+  node: FormTemplate
+}
+
+"""
+A condition to be used against `FormTemplate` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input FormTemplateCondition {
+  """Checks for equality with the object’s `rowId` field."""
+  rowId: UUID
+
+  """Checks for equality with the object’s `bookId` field."""
+  bookId: UUID
+
+  """Checks for equality with the object’s `documentType` field."""
+  documentType: String
+}
+
+"""Methods to use when ordering `FormTemplate`."""
+enum FormTemplateOrderBy {
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  ROW_ID_ASC
+  ROW_ID_DESC
+  BOOK_ID_ASC
+  BOOK_ID_DESC
+  DOCUMENT_TYPE_ASC
+  DOCUMENT_TYPE_DESC
+}
+
 type _DrizzleMigration implements Node {
   """
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
@@ -16581,6 +16787,14 @@ type Mutation {
     """
     input: CreateRdExpenseInput!
   ): CreateRdExpensePayload
+
+  """Creates a single `FormTemplate`."""
+  createFormTemplate(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateFormTemplateInput!
+  ): CreateFormTemplatePayload
 
   """Creates a single `Project`."""
   createProject(
@@ -17455,6 +17669,24 @@ type Mutation {
     """
     input: UpdateRdExpenseInput!
   ): UpdateRdExpensePayload
+
+  """
+  Updates a single `FormTemplate` using its globally unique id and a patch.
+  """
+  updateFormTemplateById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateFormTemplateByIdInput!
+  ): UpdateFormTemplatePayload
+
+  """Updates a single `FormTemplate` using a unique key and a patch."""
+  updateFormTemplate(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateFormTemplateInput!
+  ): UpdateFormTemplatePayload
 
   """Updates a single `Project` using its globally unique id and a patch."""
   updateProjectById(
@@ -18577,6 +18809,22 @@ type Mutation {
     """
     input: DeleteRdExpenseInput!
   ): DeleteRdExpensePayload
+
+  """Deletes a single `FormTemplate` using its globally unique id."""
+  deleteFormTemplateById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteFormTemplateByIdInput!
+  ): DeleteFormTemplatePayload
+
+  """Deletes a single `FormTemplate` using a unique key."""
+  deleteFormTemplate(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteFormTemplateInput!
+  ): DeleteFormTemplatePayload
 
   """Deletes a single `Project` using its globally unique id."""
   deleteProjectById(
@@ -20652,6 +20900,56 @@ input RdExpenseInput {
   isForeign: Boolean
   projectId: UUID
   notes: String
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""The output of our create `FormTemplate` mutation."""
+type CreateFormTemplatePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `FormTemplate` that was created by this mutation."""
+  formTemplate: FormTemplate
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `FormTemplate`. May be used by Relay 1."""
+  formTemplateEdge(
+    """The method to use when ordering `FormTemplate`."""
+    orderBy: [FormTemplateOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): FormTemplateEdge
+}
+
+"""All input for the create `FormTemplate` mutation."""
+input CreateFormTemplateInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `FormTemplate` to be created by this mutation."""
+  formTemplate: FormTemplateInput!
+}
+
+"""An input for mutations affecting `FormTemplate`"""
+input FormTemplateInput {
+  rowId: UUID
+  bookId: UUID!
+  name: String!
+  documentType: String
+  accentColor: String
+  footerText: String
+  terms: String
+  showLogo: Boolean
+  isDefault: Boolean
   createdAt: Datetime
   updatedAt: Datetime
 }
@@ -24744,6 +25042,80 @@ input UpdateRdExpenseInput {
   An object where the defined keys will be set on the `RdExpense` being updated.
   """
   patch: RdExpensePatch!
+}
+
+"""The output of our update `FormTemplate` mutation."""
+type UpdateFormTemplatePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `FormTemplate` that was updated by this mutation."""
+  formTemplate: FormTemplate
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `FormTemplate`. May be used by Relay 1."""
+  formTemplateEdge(
+    """The method to use when ordering `FormTemplate`."""
+    orderBy: [FormTemplateOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): FormTemplateEdge
+}
+
+"""All input for the `updateFormTemplateById` mutation."""
+input UpdateFormTemplateByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `FormTemplate` to be updated.
+  """
+  id: ID!
+
+  """
+  An object where the defined keys will be set on the `FormTemplate` being updated.
+  """
+  patch: FormTemplatePatch!
+}
+
+"""
+Represents an update to a `FormTemplate`. Fields that are set will be updated.
+"""
+input FormTemplatePatch {
+  rowId: UUID
+  bookId: UUID
+  name: String
+  documentType: String
+  accentColor: String
+  footerText: String
+  terms: String
+  showLogo: Boolean
+  isDefault: Boolean
+  createdAt: Datetime
+  updatedAt: Datetime
+}
+
+"""All input for the `updateFormTemplate` mutation."""
+input UpdateFormTemplateInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+
+  """
+  An object where the defined keys will be set on the `FormTemplate` being updated.
+  """
+  patch: FormTemplatePatch!
 }
 
 """The output of our update `Project` mutation."""
@@ -28899,6 +29271,54 @@ input DeleteRdExpenseByIdInput {
 
 """All input for the `deleteRdExpense` mutation."""
 input DeleteRdExpenseInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  rowId: UUID!
+}
+
+"""The output of our delete `FormTemplate` mutation."""
+type DeleteFormTemplatePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `FormTemplate` that was deleted by this mutation."""
+  formTemplate: FormTemplate
+  deletedFormTemplateId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `FormTemplate`. May be used by Relay 1."""
+  formTemplateEdge(
+    """The method to use when ordering `FormTemplate`."""
+    orderBy: [FormTemplateOrderBy!]! = [PRIMARY_KEY_ASC]
+  ): FormTemplateEdge
+}
+
+"""All input for the `deleteFormTemplateById` mutation."""
+input DeleteFormTemplateByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `FormTemplate` to be deleted.
+  """
+  id: ID!
+}
+
+"""All input for the `deleteFormTemplate` mutation."""
+input DeleteFormTemplateInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
