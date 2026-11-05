@@ -7,8 +7,8 @@ import {
 
 /**
  * AI-assisted categorization: suggests a debit/credit pairing + rationale for a
- * transaction, for the owner to approve. Degrades gracefully (503) when no
- * ANTHROPIC_API_KEY is configured. Book access enforced by the global middleware
+ * transaction, for the owner to approve. Degrades gracefully (503) when the
+ * Synapse gateway is not configured. Book access enforced by the global middleware
  */
 const categorizationSuggestRoutes = new Elysia({
   prefix: "/api/categorization",

@@ -1,3 +1,7 @@
+import { createSynapseClient } from "@omnidotdev/providers/ai";
+
+import { SYNAPSE_API_KEY, SYNAPSE_BASE_URL } from "lib/ai/synapse";
+
 /** Result returned by LLM inference */
 interface InferenceResult {
   debitAccountId: string;
@@ -22,8 +26,22 @@ interface InferCategoryInput {
   accounts: AccountInfo[];
 }
 
-const ANTHROPIC_API_URL = "https://api.anthropic.com/v1/messages";
-const MODEL = "claude-haiku-4-5-20251001";
+// Provider-prefixed model id (the Synapse gateway routes by it). Haiku by
+// default for high-volume categorization; override via env
+const MODEL =
+  process.env.MYFI_INFER_MODEL ?? "anthropic/claude-haiku-4-5-20251001";
+
+// Route through the Synapse gateway (central metering/billing/abuse guard), not
+// a direct provider call. Null when Synapse is not configured, which disables
+// LLM inference (categorization falls back to deterministic rules upstream)
+const client =
+  SYNAPSE_BASE_URL && SYNAPSE_API_KEY
+    ? createSynapseClient({
+        baseUrl: SYNAPSE_BASE_URL,
+        apiKey: SYNAPSE_API_KEY,
+        model: MODEL,
+      })
+    : null;
 
 /**
  * Use LLM inference to categorize a transaction.
@@ -33,12 +51,7 @@ const MODEL = "claude-haiku-4-5-20251001";
 const inferCategory = async (
   input: InferCategoryInput,
 ): Promise<InferenceResult | null> => {
-  const apiKey = process.env.ANTHROPIC_API_KEY;
-
-  if (!apiKey) {
-    console.warn("ANTHROPIC_API_KEY not set, LLM categorization disabled");
-    return null;
-  }
+  if (!client) return null;
 
   const accountList = input.accounts
     .map((a) => `${a.code ?? "N/A"} | ${a.name} (${a.type})`)
@@ -65,30 +78,12 @@ Respond with ONLY a JSON object (no markdown, no explanation outside JSON):
 }`;
 
   try {
-    const response = await fetch(ANTHROPIC_API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": apiKey,
-        "anthropic-version": "2023-06-01",
-      },
-      body: JSON.stringify({
-        model: MODEL,
-        max_tokens: 256,
-        messages: [{ role: "user", content: prompt }],
-      }),
+    const { text } = await client.messages({
+      system: "",
+      messages: [{ role: "user", content: prompt }],
+      maxTokens: 256,
     });
 
-    if (!response.ok) {
-      console.warn(`LLM inference failed with status ${response.status}`);
-      return null;
-    }
-
-    const data = (await response.json()) as {
-      content: { type: string; text: string }[];
-    };
-
-    const text = data.content?.[0]?.text;
     if (!text) return null;
 
     const parsed = JSON.parse(text) as {
