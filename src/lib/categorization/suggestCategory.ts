@@ -1,21 +1,17 @@
-import Anthropic from "@anthropic-ai/sdk";
 import { and, eq } from "drizzle-orm";
 
+import { synapseAnthropic } from "lib/ai/synapse";
 import { dbPool } from "lib/db/db";
 import { accountTable } from "lib/db/schema";
 
-// Default to the most capable model; override to a cheaper one (e.g.
-// claude-haiku-4-5) for high-volume categorization via env
-const MODEL = process.env.MYFI_CATEGORIZATION_MODEL ?? "claude-opus-5";
-const API_KEY = process.env.ANTHROPIC_API_KEY;
+// Provider-prefixed model id (the Synapse gateway routes by it). Default to a
+// capable model; override to a cheaper one for high-volume categorization
+const MODEL =
+  process.env.MYFI_CATEGORIZATION_MODEL ?? "anthropic/claude-opus-4-6";
 
-if (!API_KEY) {
-  console.warn(
-    "ANTHROPIC_API_KEY not set, AI categorization suggestions disabled",
-  );
-}
-
-const client = API_KEY ? new Anthropic({ apiKey: API_KEY }) : null;
+// The tool-use path runs through the Synapse gateway (central metering/billing/
+// abuse guard), not a direct provider call. Null when Synapse is not configured
+const client = synapseAnthropic;
 
 export const isCategorizationAiEnabled = () => client !== null;
 
