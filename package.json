@@ -22,7 +22,7 @@
     "db:push": "bun --env-file .env.local drizzle-kit push --config src/lib/config/drizzle.config.ts",
     "db:studio": "bun --env-file .env.local drizzle-kit studio --config src/lib/config/drizzle.config.ts",
     "graphql:generate": "GRAPHILE_ENV=development bun run --env-file .env.local src/scripts/generateGraphqlSchema.ts",
-    "test": "bun test",
+    "test": "bun test --isolate",
     "prepare": "husky"
   },
   "dependencies": {
