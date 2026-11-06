@@ -1,15 +1,21 @@
-import { beforeEach, describe, expect, mock, test } from "bun:test";
+import { beforeEach, describe, expect, spyOn, test } from "bun:test";
 
-const mockEmit = mock(() =>
-  Promise.resolve({ eventId: "test-1", timestamp: "2026-01-01" }),
-);
+import { events } from "lib/providers";
+import { setAuditActor } from "./auditContext";
+import { SYSTEM_ACTOR, emitAudit } from "./auditEmitter";
 
-mock.module("lib/providers", () => ({
-  events: { emit: mockEmit },
-}));
+// Spy on the real `events` singleton rather than swapping the module with
+// mock.module: bun's module registry is process-global and cached across files,
+// so if any earlier test imports lib/providers (or auditEmitter) first, a
+// mock.module registered here never reaches the already-evaluated binding and
+// emitAudit calls the real (network) emit. Spying mutates the shared object
+// auditEmitter holds a live reference to, so it works regardless of file order.
+const emitSpy = spyOn(events, "emit");
 
-const { emitAudit, SYSTEM_ACTOR } = await import("./auditEmitter");
-const { setAuditActor } = await import("./auditContext");
+const getEmitArg = () =>
+  (emitSpy.mock.calls[0] as unknown[])[0] as Record<string, unknown>;
+
+const getEmitData = () => (getEmitArg().data ?? {}) as Record<string, unknown>;
 
 const baseEvent = {
   type: "myfi.test.created",
@@ -18,21 +24,17 @@ const baseEvent = {
   resource: { type: "test", id: "res-1", name: "Test Resource" },
 };
 
-const getEmitArg = () =>
-  (mockEmit.mock.calls[0] as unknown[])[0] as Record<string, unknown>;
-
-const getEmitData = () => (getEmitArg().data ?? {}) as Record<string, unknown>;
-
 describe("emitAudit", () => {
   beforeEach(() => {
-    mockEmit.mockClear();
+    emitSpy.mockReset();
+    emitSpy.mockResolvedValue({ eventId: "test-1", timestamp: "2026-01-01" });
   });
 
   test("emits event with correct type", async () => {
     emitAudit(baseEvent);
     await new Promise((r) => setTimeout(r, 10));
 
-    expect(mockEmit).toHaveBeenCalledTimes(1);
+    expect(emitSpy).toHaveBeenCalledTimes(1);
     expect(getEmitArg().type).toBe("myfi.test.created");
   });
 
@@ -80,7 +82,7 @@ describe("emitAudit", () => {
   });
 
   test("does not throw on emit failure", () => {
-    mockEmit.mockImplementationOnce(() =>
+    emitSpy.mockImplementationOnce(() =>
       Promise.reject(new Error("network error")),
     );
 
@@ -92,7 +94,8 @@ describe("emitAudit", () => {
 // actor, so the store starts empty here
 describe("emitAudit actor resolution", () => {
   beforeEach(() => {
-    mockEmit.mockClear();
+    emitSpy.mockReset();
+    emitSpy.mockResolvedValue({ eventId: "test-1", timestamp: "2026-01-01" });
   });
 
   test("falls back to the system actor when none is provided or bound", async () => {
