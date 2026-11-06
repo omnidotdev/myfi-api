@@ -1,4 +1,5 @@
 import { afterAll, beforeAll, describe, expect, test } from "bun:test";
+
 import { sql } from "drizzle-orm";
 
 import {
@@ -53,18 +54,36 @@ describe("real-postgres test harness (PGlite)", () => {
       .returning();
     const [sales] = await db
       .insert(accountTable)
-      .values({ bookId: book.id, name: "Sales", type: "revenue", subType: "sales" })
+      .values({
+        bookId: book.id,
+        name: "Sales",
+        type: "revenue",
+        subType: "sales",
+      })
       .returning();
     const [entry] = await db
       .insert(journalEntryTable)
       .values({ bookId: book.id, date: "2026-01-01T00:00:00.000Z" })
       .returning();
     await db.insert(journalLineTable).values([
-      { journalEntryId: entry.id, accountId: ar.id, debit: "100.0000", credit: "0" },
-      { journalEntryId: entry.id, accountId: sales.id, debit: "0", credit: "100.0000" },
+      {
+        journalEntryId: entry.id,
+        accountId: ar.id,
+        debit: "100.0000",
+        credit: "0",
+      },
+      {
+        journalEntryId: entry.id,
+        accountId: sales.id,
+        debit: "0",
+        credit: "100.0000",
+      },
     ]);
 
-    const totals = await db.execute<{ total_debit: string; total_credit: string }>(
+    const totals = await db.execute<{
+      total_debit: string;
+      total_credit: string;
+    }>(
       sql`select sum(debit) as total_debit, sum(credit) as total_credit from journal_line`,
     );
     expect(Number(totals.rows[0]?.total_debit)).toBe(100);

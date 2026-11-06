@@ -44,7 +44,9 @@ const generateCustomerStatement = async (params: {
   const [customer] = await dbPool
     .select({ name: customerTable.name })
     .from(customerTable)
-    .where(and(eq(customerTable.id, customerId), eq(customerTable.bookId, bookId)));
+    .where(
+      and(eq(customerTable.id, customerId), eq(customerTable.bookId, bookId)),
+    );
   if (!customer) {
     throw new Error("Customer not found for this book");
   }

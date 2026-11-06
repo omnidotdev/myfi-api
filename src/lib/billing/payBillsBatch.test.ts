@@ -26,7 +26,10 @@ const acct = (
 describe("payBillsBatch", () => {
   beforeAll(async () => {
     harness = await createTestDb();
-    mock.module("lib/db/db", () => ({ dbPool: harness.db, pgPool: harness.client }));
+    mock.module("lib/db/db", () => ({
+      dbPool: harness.db,
+      pgPool: harness.client,
+    }));
     ({ payBillsBatch } = await import("./payBillsBatch"));
     ({ createBillDraft } = await import("./createBillDraft"));
     ({ postBill } = await import("./postBill"));
@@ -43,7 +46,12 @@ describe("payBillsBatch", () => {
       .returning();
     const bookId = book!.id;
     await acct(bookId, "AP", "liability", "accounts_payable");
-    const expense = await acct(bookId, "Supplies", "expense", "operating_expense");
+    const expense = await acct(
+      bookId,
+      "Supplies",
+      "expense",
+      "operating_expense",
+    );
     const bank = await acct(bookId, "Bank", "asset", "bank");
     const [vendor] = await db
       .insert(vendorTable)
@@ -57,7 +65,14 @@ describe("payBillsBatch", () => {
         number,
         billDate: "2026-03-01",
         dueDate: "2026-04-01",
-        lines: [{ description: "x", quantity: 1, unitPrice: 100, expenseAccountId: expense.id }],
+        lines: [
+          {
+            description: "x",
+            quantity: 1,
+            unitPrice: 100,
+            expenseAccountId: expense.id,
+          },
+        ],
       });
       await postBill(draft.billId, bookId);
       return draft.billId;

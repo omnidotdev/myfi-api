@@ -1,4 +1,5 @@
 import { afterAll, beforeAll, describe, expect, mock, test } from "bun:test";
+
 import { eq } from "drizzle-orm";
 
 import {
@@ -52,7 +53,12 @@ describe("bill line discounts", () => {
       .returning();
     const bookId = book!.id;
     const ap = await acct(bookId, "AP", "liability", "accounts_payable");
-    const expense = await acct(bookId, "Supplies", "expense", "operating_expense");
+    const expense = await acct(
+      bookId,
+      "Supplies",
+      "expense",
+      "operating_expense",
+    );
     const payable = await acct(bookId, "Tax", "liability", "other_liability");
     const [jur] = await db
       .insert(taxJurisdictionTable)

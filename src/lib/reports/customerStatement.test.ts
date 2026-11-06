@@ -11,8 +11,13 @@ let harness: TestDb;
 describe("generateCustomerStatement", () => {
   beforeAll(async () => {
     harness = await createTestDb();
-    mock.module("lib/db/db", () => ({ dbPool: harness.db, pgPool: harness.client }));
-    ({ default: generateCustomerStatement } = await import("./customerStatement"));
+    mock.module("lib/db/db", () => ({
+      dbPool: harness.db,
+      pgPool: harness.client,
+    }));
+    ({ default: generateCustomerStatement } = await import(
+      "./customerStatement"
+    ));
   });
   afterAll(async () => {
     await harness.client.close();
@@ -36,10 +41,28 @@ describe("generateCustomerStatement", () => {
       dueDate: "2026-03-01",
     };
     await db.insert(invoiceTable).values([
-      { ...base, number: "A", status: "open", total: "100.0000", amountPaid: "0.0000" },
-      { ...base, number: "B", status: "partial", total: "300.0000", amountPaid: "100.0000" },
+      {
+        ...base,
+        number: "A",
+        status: "open",
+        total: "100.0000",
+        amountPaid: "0.0000",
+      },
+      {
+        ...base,
+        number: "B",
+        status: "partial",
+        total: "300.0000",
+        amountPaid: "100.0000",
+      },
       // Paid invoice is excluded
-      { ...base, number: "C", status: "paid", total: "50.0000", amountPaid: "50.0000" },
+      {
+        ...base,
+        number: "C",
+        status: "paid",
+        total: "50.0000",
+        amountPaid: "50.0000",
+      },
     ]);
 
     const stmt = await generateCustomerStatement({

@@ -211,7 +211,8 @@ const estimateRoutes = new Elysia({ prefix: "/api/estimates" })
           percent: body.percent,
         });
       } catch (err) {
-        const message = err instanceof Error ? err.message : "Progress invoice failed";
+        const message =
+          err instanceof Error ? err.message : "Progress invoice failed";
         if (
           isClientError(message) ||
           /between 0 and 100|already fully|nothing left|declined/i.test(message)

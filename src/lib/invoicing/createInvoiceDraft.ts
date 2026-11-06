@@ -102,7 +102,9 @@ export const createInvoiceDraft = async (
         memo: memo ?? null,
         terms: terms ?? null,
         ...(currency ? { currency } : {}),
-        ...(exchangeRate != null ? { exchangeRate: exchangeRate.toFixed(8) } : {}),
+        ...(exchangeRate != null
+          ? { exchangeRate: exchangeRate.toFixed(8) }
+          : {}),
       } satisfies InferInsertModel<typeof invoiceTable>)
       .returning();
     if (!invoiceRow) {

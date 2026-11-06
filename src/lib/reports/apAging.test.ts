@@ -16,7 +16,10 @@ const AS_OF = "2026-06-01";
 describe("generateApAging", () => {
   beforeAll(async () => {
     harness = await createTestDb();
-    mock.module("lib/db/db", () => ({ dbPool: harness.db, pgPool: harness.client }));
+    mock.module("lib/db/db", () => ({
+      dbPool: harness.db,
+      pgPool: harness.client,
+    }));
     ({ default: generateApAging } = await import("./apAging"));
 
     const { db } = harness;

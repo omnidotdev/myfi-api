@@ -1,4 +1,5 @@
 import { afterAll, beforeAll, describe, expect, mock, test } from "bun:test";
+
 import { eq } from "drizzle-orm";
 
 import {
@@ -66,7 +67,12 @@ describe("multi-currency bills", () => {
       .returning();
     const bookId = book!.id;
     const ap = await acct(bookId, "AP", "liability", "accounts_payable");
-    const expense = await acct(bookId, "Supplies", "expense", "operating_expense");
+    const expense = await acct(
+      bookId,
+      "Supplies",
+      "expense",
+      "operating_expense",
+    );
     const bank = await acct(bookId, "Bank", "asset", "bank");
     const [vendor] = await db
       .insert(vendorTable)
@@ -82,14 +88,20 @@ describe("multi-currency bills", () => {
       currency: "EUR",
       exchangeRate: 1.1,
       lines: [
-        { description: "Parts", quantity: 1, unitPrice: 100, expenseAccountId: expense.id },
+        {
+          description: "Parts",
+          quantity: 1,
+          unitPrice: 100,
+          expenseAccountId: expense.id,
+        },
       ],
     });
     const posted = await postBill(draft.billId, bookId);
 
     // 100 EUR x 1.1 = 110 USD posted
     const postLines = await linesFor(posted.journalEntryId);
-    const byAccountPost = (id: string) => postLines.find((l) => l.accountId === id);
+    const byAccountPost = (id: string) =>
+      postLines.find((l) => l.accountId === id);
     expect(byAccountPost(expense.id)?.debit).toBe("110.0000");
     expect(byAccountPost(ap.id)?.credit).toBe("110.0000");
 
@@ -104,7 +116,8 @@ describe("multi-currency bills", () => {
       exchangeRate: 1.05,
     });
     const payLines = await linesFor(payment.journalEntryId);
-    const byAccountPay = (id: string) => payLines.find((l) => l.accountId === id);
+    const byAccountPay = (id: string) =>
+      payLines.find((l) => l.accountId === id);
     expect(byAccountPay(ap.id)?.debit).toBe("110.0000");
     expect(byAccountPay(bank.id)?.credit).toBe("105.0000");
     const [fx] = await db
@@ -122,7 +135,12 @@ describe("multi-currency bills", () => {
       .returning();
     const bookId = book!.id;
     await acct(bookId, "AP", "liability", "accounts_payable");
-    const expense = await acct(bookId, "Supplies", "expense", "operating_expense");
+    const expense = await acct(
+      bookId,
+      "Supplies",
+      "expense",
+      "operating_expense",
+    );
     const bank = await acct(bookId, "Bank", "asset", "bank");
     const [vendor] = await db
       .insert(vendorTable)
@@ -136,7 +154,12 @@ describe("multi-currency bills", () => {
       billDate: "2026-03-01",
       dueDate: "2026-04-01",
       lines: [
-        { description: "Parts", quantity: 1, unitPrice: 100, expenseAccountId: expense.id },
+        {
+          description: "Parts",
+          quantity: 1,
+          unitPrice: 100,
+          expenseAccountId: expense.id,
+        },
       ],
     });
     await postBill(draft.billId, bookId);

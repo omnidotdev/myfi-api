@@ -262,7 +262,11 @@ const accountRoutes = new Elysia({ prefix: "/api/accounts" })
         return result;
       } catch (err) {
         const message = err instanceof Error ? err.message : "Transfer failed";
-        if (/positive|same account|belong to this book|closed period/i.test(message)) {
+        if (
+          /positive|same account|belong to this book|closed period/i.test(
+            message,
+          )
+        ) {
           set.status = 400;
           return { error: message };
         }

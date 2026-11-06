@@ -1,5 +1,6 @@
 import { and, eq } from "drizzle-orm";
 
+import { resolveFxAccount } from "lib/accounting/fxAccount";
 import { dbPool } from "lib/db/db";
 import {
   accountTable,
@@ -8,8 +9,7 @@ import {
   journalEntryTable,
   journalLineTable,
 } from "lib/db/schema";
-import { resolveFxAccount } from "lib/accounting/fxAccount";
-import { fromUnits, MONEY_SCALE, toUnits } from "lib/invoicing/invoicePosting";
+import { MONEY_SCALE, fromUnits, toUnits } from "lib/invoicing/invoicePosting";
 
 import type { InferInsertModel } from "drizzle-orm";
 
