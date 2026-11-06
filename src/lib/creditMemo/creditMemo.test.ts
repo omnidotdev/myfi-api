@@ -1,4 +1,5 @@
 import { afterAll, beforeAll, describe, expect, mock, test } from "bun:test";
+
 import { eq, sql } from "drizzle-orm";
 
 import {
@@ -136,7 +137,12 @@ describe("credit memos", () => {
       issueDate: "2026-03-01",
       dueDate: "2026-04-01",
       lines: [
-        { description: "Widget", quantity: 1, unitPrice: 100, incomeAccountId: income.id },
+        {
+          description: "Widget",
+          quantity: 1,
+          unitPrice: 100,
+          incomeAccountId: income.id,
+        },
       ],
     });
     await postInvoice(invDraft.invoiceId, bookId);
@@ -148,7 +154,12 @@ describe("credit memos", () => {
       number: "CM-2",
       date: "2026-03-05",
       lines: [
-        { description: "Credit", quantity: 1, unitPrice: 100, incomeAccountId: income.id },
+        {
+          description: "Credit",
+          quantity: 1,
+          unitPrice: 100,
+          incomeAccountId: income.id,
+        },
       ],
     });
     await postCreditMemo(cmDraft.creditMemoId, bookId);

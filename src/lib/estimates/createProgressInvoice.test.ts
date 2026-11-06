@@ -1,4 +1,5 @@
 import { afterAll, beforeAll, describe, expect, mock, test } from "bun:test";
+
 import { eq } from "drizzle-orm";
 
 import {
@@ -19,7 +20,10 @@ let harness: TestDb;
 describe("createProgressInvoice", () => {
   beforeAll(async () => {
     harness = await createTestDb();
-    mock.module("lib/db/db", () => ({ dbPool: harness.db, pgPool: harness.client }));
+    mock.module("lib/db/db", () => ({
+      dbPool: harness.db,
+      pgPool: harness.client,
+    }));
     ({ createProgressInvoice } = await import("./createProgressInvoice"));
   });
   afterAll(async () => {

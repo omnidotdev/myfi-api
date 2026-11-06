@@ -1,4 +1,5 @@
 import { afterAll, beforeAll, describe, expect, mock, test } from "bun:test";
+
 import { eq } from "drizzle-orm";
 
 import {
@@ -67,7 +68,12 @@ describe("multi-currency credit memos", () => {
       currency: "EUR",
       exchangeRate: 1.1,
       lines: [
-        { description: "Credit", quantity: 1, unitPrice: 100, incomeAccountId: income.id },
+        {
+          description: "Credit",
+          quantity: 1,
+          unitPrice: 100,
+          incomeAccountId: income.id,
+        },
       ],
     });
     const posted = await postCreditMemo(draft.creditMemoId, bookId);

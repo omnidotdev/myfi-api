@@ -223,7 +223,10 @@ const billRoutes = new Elysia({ prefix: "/api/bills" })
         });
       } catch (err) {
         const message = err instanceof Error ? err.message : "Batch pay failed";
-        if (isClientError(message) || /at least one bill|more than once/i.test(message)) {
+        if (
+          isClientError(message) ||
+          /at least one bill|more than once/i.test(message)
+        ) {
           set.status = /not found/i.test(message) ? 404 : 400;
           return { error: message };
         }

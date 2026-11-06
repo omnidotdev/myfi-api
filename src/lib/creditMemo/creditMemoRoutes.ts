@@ -47,7 +47,10 @@ const creditMemoRoutes = new Elysia({ prefix: "/api/credit-memos" })
         customerName: customerTable.name,
       })
       .from(creditMemoTable)
-      .innerJoin(customerTable, eq(creditMemoTable.customerId, customerTable.id))
+      .innerJoin(
+        customerTable,
+        eq(creditMemoTable.customerId, customerTable.id),
+      )
       .where(eq(creditMemoTable.bookId, bookId))
       .orderBy(desc(creditMemoTable.date));
     return {

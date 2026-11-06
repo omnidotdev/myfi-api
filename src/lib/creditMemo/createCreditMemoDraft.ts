@@ -51,8 +51,16 @@ interface CreateCreditMemoDraftResult {
 export const createCreditMemoDraft = async (
   opts: CreateCreditMemoDraftOptions,
 ): Promise<CreateCreditMemoDraftResult> => {
-  const { bookId, customerId, number, date, memo, currency, exchangeRate, lines } =
-    opts;
+  const {
+    bookId,
+    customerId,
+    number,
+    date,
+    memo,
+    currency,
+    exchangeRate,
+    lines,
+  } = opts;
 
   if (lines.length === 0) {
     throw new Error("A credit memo needs at least one line");

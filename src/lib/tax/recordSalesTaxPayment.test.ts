@@ -1,4 +1,5 @@
 import { afterAll, beforeAll, describe, expect, mock, test } from "bun:test";
+
 import { eq } from "drizzle-orm";
 
 import {
@@ -30,7 +31,10 @@ const acct = (
 describe("recordSalesTaxPayment", () => {
   beforeAll(async () => {
     harness = await createTestDb();
-    mock.module("lib/db/db", () => ({ dbPool: harness.db, pgPool: harness.client }));
+    mock.module("lib/db/db", () => ({
+      dbPool: harness.db,
+      pgPool: harness.client,
+    }));
     ({ recordSalesTaxPayment } = await import("./recordSalesTaxPayment"));
   });
   afterAll(async () => {
@@ -44,7 +48,12 @@ describe("recordSalesTaxPayment", () => {
       .values({ organizationId: "org_stp", name: "STP Co", type: "llc" })
       .returning();
     const bookId = book!.id;
-    const payable = await acct(bookId, "Sales Tax Payable", "liability", "other_liability");
+    const payable = await acct(
+      bookId,
+      "Sales Tax Payable",
+      "liability",
+      "other_liability",
+    );
     const bank = await acct(bookId, "Bank", "asset", "bank");
     const [jur] = await db
       .insert(taxJurisdictionTable)
@@ -73,7 +82,9 @@ describe("recordSalesTaxPayment", () => {
       })
       .from(journalLineTable)
       .where(eq(journalLineTable.journalEntryId, result.journalEntryId));
-    expect(lines.find((l) => l.accountId === payable.id)?.debit).toBe("250.0000");
+    expect(lines.find((l) => l.accountId === payable.id)?.debit).toBe(
+      "250.0000",
+    );
     expect(lines.find((l) => l.accountId === bank.id)?.credit).toBe("250.0000");
   });
 });

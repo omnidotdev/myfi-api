@@ -190,7 +190,8 @@ const periodRoutes = new Elysia({ prefix: "/api/periods" })
         });
         return result;
       } catch (err) {
-        const message = err instanceof Error ? err.message : "Revaluation failed";
+        const message =
+          err instanceof Error ? err.message : "Revaluation failed";
         if (/not found|account exists/i.test(message)) {
           set.status = /not found/i.test(message) ? 404 : 400;
           return { error: message };

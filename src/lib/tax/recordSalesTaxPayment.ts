@@ -61,7 +61,12 @@ export const recordSalesTaxPayment = async (params: {
   const [paymentAccount] = await dbPool
     .select({ id: accountTable.id })
     .from(accountTable)
-    .where(and(eq(accountTable.id, paymentAccountId), eq(accountTable.bookId, bookId)))
+    .where(
+      and(
+        eq(accountTable.id, paymentAccountId),
+        eq(accountTable.bookId, bookId),
+      ),
+    )
     .limit(1);
   if (!paymentAccount) {
     throw new Error("Payment account not found for this book");

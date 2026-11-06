@@ -1,4 +1,5 @@
 import { afterAll, beforeAll, describe, expect, mock, test } from "bun:test";
+
 import { eq } from "drizzle-orm";
 
 import {
@@ -83,7 +84,12 @@ describe("multi-currency invoices", () => {
       currency: "EUR",
       exchangeRate: 1.1,
       lines: [
-        { description: "Service", quantity: 1, unitPrice: 100, incomeAccountId: income.id },
+        {
+          description: "Service",
+          quantity: 1,
+          unitPrice: 100,
+          incomeAccountId: income.id,
+        },
       ],
     });
     const posted = await postInvoice(draft.invoiceId, bookId);
@@ -127,7 +133,12 @@ describe("multi-currency invoices", () => {
       currency: "EUR",
       exchangeRate: 1.1,
       lines: [
-        { description: "Service", quantity: 1, unitPrice: 100, incomeAccountId: income.id },
+        {
+          description: "Service",
+          quantity: 1,
+          unitPrice: 100,
+          incomeAccountId: income.id,
+        },
       ],
     });
     await postInvoice(draft.invoiceId, bookId);
@@ -179,7 +190,12 @@ describe("multi-currency invoices", () => {
       issueDate: "2026-03-01",
       dueDate: "2026-04-01",
       lines: [
-        { description: "Service", quantity: 1, unitPrice: 100, incomeAccountId: income.id },
+        {
+          description: "Service",
+          quantity: 1,
+          unitPrice: 100,
+          incomeAccountId: income.id,
+        },
       ],
     });
     const posted = await postInvoice(draft.invoiceId, bookId);

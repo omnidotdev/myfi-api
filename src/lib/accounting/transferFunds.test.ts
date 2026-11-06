@@ -1,4 +1,5 @@
 import { afterAll, beforeAll, describe, expect, mock, test } from "bun:test";
+
 import { eq } from "drizzle-orm";
 
 import { accountTable, bookTable, journalLineTable } from "lib/db/schema";
@@ -10,7 +11,11 @@ import type { TestDb } from "lib/test/realDb";
 let transferFunds: typeof import("./transferFunds").transferFunds;
 let harness: TestDb;
 
-const acct = (bookId: string, name: string, subType: NonNullable<InsertAccount["subType"]>) =>
+const acct = (
+  bookId: string,
+  name: string,
+  subType: NonNullable<InsertAccount["subType"]>,
+) =>
   harness.db
     .insert(accountTable)
     .values({ bookId, name, type: "asset", subType })
@@ -20,7 +25,10 @@ const acct = (bookId: string, name: string, subType: NonNullable<InsertAccount["
 describe("transferFunds", () => {
   beforeAll(async () => {
     harness = await createTestDb();
-    mock.module("lib/db/db", () => ({ dbPool: harness.db, pgPool: harness.client }));
+    mock.module("lib/db/db", () => ({
+      dbPool: harness.db,
+      pgPool: harness.client,
+    }));
     ({ transferFunds } = await import("./transferFunds"));
   });
   afterAll(async () => {
@@ -53,8 +61,12 @@ describe("transferFunds", () => {
       })
       .from(journalLineTable)
       .where(eq(journalLineTable.journalEntryId, result.journalEntryId));
-    expect(lines.find((l) => l.accountId === savings.id)?.debit).toBe("500.0000");
-    expect(lines.find((l) => l.accountId === checking.id)?.credit).toBe("500.0000");
+    expect(lines.find((l) => l.accountId === savings.id)?.debit).toBe(
+      "500.0000",
+    );
+    expect(lines.find((l) => l.accountId === checking.id)?.credit).toBe(
+      "500.0000",
+    );
   });
 
   test("rejects a transfer to the same account and a cross-book account", async () => {

@@ -71,7 +71,9 @@ export const applyCreditMemo = async (
       throw new Error("Credit memo and invoice belong to different customers");
     }
     if (invoice.status !== "open" && invoice.status !== "partial") {
-      throw new Error("Only an open or partially paid invoice can take a credit");
+      throw new Error(
+        "Only an open or partially paid invoice can take a credit",
+      );
     }
 
     const memoRemaining =
@@ -102,7 +104,9 @@ export const applyCreditMemo = async (
     const newInvoicePaidUnits =
       toUnits(Number(invoice.amountPaid)) + amountUnits;
     const invoiceStatus =
-      newInvoicePaidUnits >= toUnits(Number(invoice.total)) ? "paid" : "partial";
+      newInvoicePaidUnits >= toUnits(Number(invoice.total))
+        ? "paid"
+        : "partial";
     await tx
       .update(invoiceTable)
       .set({

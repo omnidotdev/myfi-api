@@ -1,5 +1,6 @@
 import { and, asc, eq, inArray, ne } from "drizzle-orm";
 
+import { resolveFxAccount } from "lib/accounting/fxAccount";
 import { dbPool } from "lib/db/db";
 import {
   accountTable,
@@ -9,7 +10,6 @@ import {
   journalEntryTable,
   journalLineTable,
 } from "lib/db/schema";
-import { resolveFxAccount } from "lib/accounting/fxAccount";
 import { fromUnits, toUnits } from "lib/invoicing/invoicePosting";
 
 import type { InferInsertModel } from "drizzle-orm";
@@ -68,7 +68,12 @@ export const revalueForeignBalances = async (params: {
   // Home-currency delta = outstanding (foreign) x (current rate - booked rate),
   // summed across all still-open foreign documents
   const deltaUnits = (
-    rows: { total: string; amountPaid: string; currency: string; rate: string }[],
+    rows: {
+      total: string;
+      amountPaid: string;
+      currency: string;
+      rate: string;
+    }[],
   ): number => {
     let units = 0;
     for (const row of rows) {
@@ -78,7 +83,9 @@ export const revalueForeignBalances = async (params: {
         (Number.parseFloat(row.total) || 0) -
         (Number.parseFloat(row.amountPaid) || 0);
       if (outstanding <= 0) continue;
-      units += toUnits(outstanding * (current - (Number.parseFloat(row.rate) || 1)));
+      units += toUnits(
+        outstanding * (current - (Number.parseFloat(row.rate) || 1)),
+      );
     }
     return units;
   };
@@ -140,11 +147,15 @@ export const revalueForeignBalances = async (params: {
   };
 
   const arAccountId =
-    arDeltaUnits !== 0 ? await resolveBalanceAccount("accounts_receivable") : null;
+    arDeltaUnits !== 0
+      ? await resolveBalanceAccount("accounts_receivable")
+      : null;
   const apAccountId =
     apDeltaUnits !== 0 ? await resolveBalanceAccount("accounts_payable") : null;
   if (arDeltaUnits !== 0 && !arAccountId) {
-    throw new Error("No active Accounts Receivable account exists for this book");
+    throw new Error(
+      "No active Accounts Receivable account exists for this book",
+    );
   }
   if (apDeltaUnits !== 0 && !apAccountId) {
     throw new Error("No active Accounts Payable account exists for this book");
