@@ -14,8 +14,9 @@ import {
   personalTemplate,
   soleProprietorTemplate,
 } from "lib/db/templates";
-import { decryptToken, encryptToken } from "lib/encryption/tokenEncryption";
+import { encryptToken } from "lib/encryption/tokenEncryption";
 import { authorizeBook } from "lib/middleware/bookAccess.middleware";
+import { toPublicBook } from "./bookSerialization";
 
 import type { InsertAccount } from "lib/db/schema";
 import type { AccountTemplate } from "lib/db/templates";
@@ -72,26 +73,6 @@ const TEMPLATE_MAP: Record<string, AccountTemplate[]> = {
   personal: personalTemplate,
   sole_proprietor: soleProprietorTemplate,
   llc: llcTemplate,
-};
-
-/** Mask a stored (encrypted) filer EIN to its last four digits for display. */
-const maskEin = (encrypted: string | null): string | null => {
-  if (!encrypted) return null;
-  try {
-    const last4 = decryptToken(encrypted).replace(/\D/g, "").slice(-4);
-    return last4 ? `**-***${last4}` : null;
-  } catch {
-    return null;
-  }
-};
-
-/**
- * Shape a book row for the API: never return the encrypted EIN, only a masked
- * hint so the owner can confirm what is on file.
- */
-const toPublicBook = <T extends { ein: string | null }>(book: T) => {
-  const { ein, ...rest } = book;
-  return { ...rest, einMasked: maskEin(ein) };
 };
 
 // Book CRUD routes
