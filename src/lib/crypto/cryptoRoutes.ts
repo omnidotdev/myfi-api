@@ -4,8 +4,18 @@ import { Elysia, t } from "elysia";
 import { dbPool } from "lib/db/db";
 import { cryptoAssetTable } from "lib/db/schema";
 import { authorizeBook } from "lib/middleware/bookAccess.middleware";
+import { rateLimit } from "lib/middleware/rateLimit";
 import { fetchHistoricalPrice, fetchPrices } from "./priceService";
 import { fetchWalletBalance, validateWalletAddress } from "./walletService";
+
+// The price endpoints proxy the upstream CoinGecko API, which has its own
+// rate limits; cap per-caller traffic so one tenant cannot exhaust the shared
+// upstream budget. Generous for interactive use, 60 requests/minute/identity
+const priceRateLimit = rateLimit({
+  name: "crypto-prices",
+  windowMs: 60_000,
+  max: 60,
+});
 
 // Crypto REST routes for price feeds, wallet management, and asset tracking
 const cryptoRoutes = new Elysia({ prefix: "/api/crypto" })
@@ -31,6 +41,8 @@ const cryptoRoutes = new Elysia({ prefix: "/api/crypto" })
       }
     },
     {
+      beforeHandle: ({ request, server, set }) =>
+        priceRateLimit({ request, server, set }),
       query: t.Object({
         coins: t.String(),
       }),
@@ -64,6 +76,8 @@ const cryptoRoutes = new Elysia({ prefix: "/api/crypto" })
       }
     },
     {
+      beforeHandle: ({ request, server, set }) =>
+        priceRateLimit({ request, server, set }),
       query: t.Object({
         coin: t.String(),
         date: t.String(),

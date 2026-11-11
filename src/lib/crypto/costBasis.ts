@@ -2,10 +2,10 @@ import { and, asc, desc, eq, gt } from "drizzle-orm";
 
 import { dbPool } from "lib/db/db";
 import { cryptoAssetTable, cryptoLotTable } from "lib/db/schema";
+import { computeRealizedDisposal } from "./costBasisCalc";
 
 import type { SelectCryptoLot } from "lib/db/schema";
-
-type CostBasisMethod = "fifo" | "lifo" | "hifo" | "acb";
+import type { CostBasisMethod } from "./costBasisCalc";
 
 type AcquireLotParams = {
   cryptoAssetId: string;
@@ -109,27 +109,6 @@ const selectLots = async (
 };
 
 /**
- * Calculate the weighted average cost per unit across all available lots.
- * @param lots - Available lots to average
- * @returns Weighted average cost per unit as a string
- */
-const calculateAverageCost = (lots: SelectCryptoLot[]): string => {
-  let totalCost = 0;
-  let totalQuantity = 0;
-
-  for (const lot of lots) {
-    const remaining = Number(lot.remainingQuantity);
-    const cost = Number(lot.costPerUnit);
-    totalCost += remaining * cost;
-    totalQuantity += remaining;
-  }
-
-  if (totalQuantity === 0) return "0";
-
-  return (totalCost / totalQuantity).toFixed(4);
-};
-
-/**
  * Dispose lots using a specific cost basis method, calculating realized gain/loss.
  *
  * For FIFO/LIFO/HIFO, lots are consumed in the method-defined order until the
@@ -158,71 +137,27 @@ const disposeLot = async (
   const method = asset.costBasisMethod as CostBasisMethod;
   const lots = await selectLots(cryptoAssetId, method);
 
-  let remainingToDispose = Number(quantity);
-  const proceeds = Number(proceedsPerUnit);
-  const lotsUsed: LotDisposal[] = [];
+  // The realized gain/loss math (and insufficient-lots guard) is pure and
+  // fixture-tested in costBasisCalc; here we only persist the consumption
+  const { result, consumption } = computeRealizedDisposal({
+    lots,
+    quantity,
+    proceedsPerUnit,
+    method,
+  });
 
-  // For ACB, use weighted average cost instead of individual lot costs
-  const avgCost = method === "acb" ? Number(calculateAverageCost(lots)) : 0;
-
-  for (const lot of lots) {
-    if (remainingToDispose <= 0) break;
-
-    const available = Number(lot.remainingQuantity);
-    const quantityFromLot = Math.min(available, remainingToDispose);
-    const costPerUnit = method === "acb" ? avgCost : Number(lot.costPerUnit);
-    const lotCostBasis = quantityFromLot * costPerUnit;
-    const lotProceeds = quantityFromLot * proceeds;
-    const gainLoss = lotProceeds - lotCostBasis;
-
-    const newRemaining = available - quantityFromLot;
-
-    // Update the lot's remaining quantity (and mark fully disposed)
+  for (const { lotId, newRemaining, fullyConsumed } of consumption) {
     await dbPool
       .update(cryptoLotTable)
       .set({
         remainingQuantity: newRemaining.toFixed(18),
-        ...(newRemaining === 0
-          ? {
-              disposedAt,
-              proceedsPerUnit: proceedsPerUnit,
-            }
-          : {}),
+        // Mark fully disposed lots with the disposal date and proceeds
+        ...(fullyConsumed ? { disposedAt, proceedsPerUnit } : {}),
       })
-      .where(eq(cryptoLotTable.id, lot.id));
-
-    lotsUsed.push({
-      lotId: lot.id,
-      quantityDisposed: quantityFromLot.toFixed(18),
-      costBasis: lotCostBasis.toFixed(4),
-      proceeds: lotProceeds.toFixed(4),
-      gainLoss: gainLoss.toFixed(4),
-    });
-
-    remainingToDispose -= quantityFromLot;
+      .where(eq(cryptoLotTable.id, lotId));
   }
 
-  if (remainingToDispose > 1e-12) {
-    throw new Error(
-      `Insufficient lots: ${remainingToDispose.toFixed(18)} units remaining to dispose`,
-    );
-  }
-
-  const totalCostBasis = lotsUsed.reduce(
-    (sum, l) => sum + Number(l.costBasis),
-    0,
-  );
-  const totalProceeds = lotsUsed.reduce(
-    (sum, l) => sum + Number(l.proceeds),
-    0,
-  );
-
-  return {
-    lotsUsed,
-    totalCostBasis: totalCostBasis.toFixed(4),
-    totalProceeds: totalProceeds.toFixed(4),
-    realizedGainLoss: (totalProceeds - totalCostBasis).toFixed(4),
-  };
+  return result;
 };
 
 /**

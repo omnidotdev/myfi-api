@@ -4,6 +4,15 @@ import {
   isCategorizationAiEnabled,
   suggestCategory,
 } from "lib/categorization/suggestCategory";
+import { rateLimit } from "lib/middleware/rateLimit";
+
+// Each suggestion is a metered LLM call through the Synapse gateway, so cap
+// per-caller volume to bound AI spend and abuse. 30 suggestions/minute/identity
+const suggestRateLimit = rateLimit({
+  name: "categorization-suggest",
+  windowMs: 60_000,
+  max: 30,
+});
 
 /**
  * AI-assisted categorization: suggests a debit/credit pairing + rationale for a
@@ -40,6 +49,8 @@ const categorizationSuggestRoutes = new Elysia({
     }
   },
   {
+    beforeHandle: ({ request, server, set }) =>
+      suggestRateLimit({ request, server, set }),
     body: t.Object({
       bookId: t.String(),
       description: t.String(),

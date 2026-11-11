@@ -24,6 +24,7 @@ import {
   PORT,
   isDevEnv,
   isProdEnv,
+  validateEnv,
 } from "lib/config/env.config";
 import creditMemoRoutes from "lib/creditMemo/creditMemoRoutes";
 import { cryptoRoutes, lotRoutes } from "lib/crypto";
@@ -138,6 +139,10 @@ import timeEntryRoutes from "lib/timeTracking/timeEntryRoutes";
 import vendorCreditRoutes from "lib/vendorCredit/vendorCreditRoutes";
 
 import type { ExportFormat } from "lib/reports";
+
+// Fail loudly at startup if the required environment is missing or malformed,
+// rather than booting healthy and 500ing on the first request that needs it
+validateEnv();
 
 const commit = (() => {
   try {

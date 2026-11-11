@@ -6,8 +6,18 @@ import { dbPool } from "lib/db/db";
 import { connectedAccountTable } from "lib/db/schema";
 import { encryptToken } from "lib/encryption/tokenEncryption";
 import { authorizeBook } from "lib/middleware/bookAccess.middleware";
+import { rateLimit } from "lib/middleware/rateLimit";
 import plaidClient from "./plaidClient";
 import syncTransactions from "./syncTransactions";
+
+// Syncing pulls transactions from Plaid (a paid, rate-limited upstream) and
+// writes them, so cap per-caller sync frequency. Generous for manual refreshes,
+// 20 syncs/minute/identity (scheduled background syncs do not go through here)
+const syncRateLimit = rateLimit({
+  name: "plaid-sync",
+  windowMs: 60_000,
+  max: 20,
+});
 
 // Plaid REST routes for link token creation, token exchange, and sync
 const plaidRoutes = new Elysia({ prefix: "/api/plaid" })
@@ -94,6 +104,8 @@ const plaidRoutes = new Elysia({ prefix: "/api/plaid" })
       return result;
     },
     {
+      beforeHandle: ({ request, server, set }) =>
+        syncRateLimit({ request, server, set }),
       body: t.Object({
         connectedAccountId: t.String(),
       }),
