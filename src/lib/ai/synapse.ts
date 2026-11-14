@@ -11,9 +11,8 @@ import { createSynapseProvisioner } from "@omnidotdev/providers/ai";
  * book. There is no shared/static key: when provisioning is not configured or
  * fails, AI categorization is unavailable and deterministic rules apply.
  *
- * All three envs must be set for AI categorization to run. Model ids are
- * provider-prefixed (the gateway routes by them, e.g.
- * anthropic/claude-haiku-4-5-20251001)
+ * All three envs must be set for AI categorization to run. The model is the
+ * gateway's myfi default (see lib/ai/models)
  */
 
 /** Aether app id the gateway meters and enforces myfi's AI allowance under. */
