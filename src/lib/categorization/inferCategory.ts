@@ -1,5 +1,6 @@
 import { createSynapseClient } from "@omnidotdev/providers/ai";
 
+import { INFER_MAX_TOKENS, inferModel } from "lib/ai/models";
 import { SYNAPSE_BASE_URL } from "lib/ai/synapse";
 
 /** Result returned by LLM inference */
@@ -26,10 +27,9 @@ interface InferCategoryInput {
   accounts: AccountInfo[];
 }
 
-// Provider-prefixed model id (the Synapse gateway routes by it). Haiku by
-// default for high-volume categorization; override via env
-const MODEL =
-  process.env.MYFI_INFER_MODEL ?? "anthropic/claude-haiku-4-5-20251001";
+// The gateway's myfi default (a small model suited to high-volume
+// categorization) unless MYFI_INFER_MODEL overrides it
+const MODEL = inferModel();
 
 // Route through the Synapse gateway (allowance enforcement, metering, billing),
 // not a direct provider call. No default key: every call carries the
@@ -81,7 +81,7 @@ Respond with ONLY a JSON object (no markdown, no explanation outside JSON):
   const { text } = await client.messages({
     system: "",
     messages: [{ role: "user", content: prompt }],
-    maxTokens: 256,
+    maxTokens: INFER_MAX_TOKENS,
     apiKey,
   });
 

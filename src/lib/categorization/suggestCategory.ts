@@ -2,16 +2,17 @@ import Anthropic from "@anthropic-ai/sdk";
 import { and, eq } from "drizzle-orm";
 
 import bookAi from "lib/ai/bookAi";
+import { suggestModel } from "lib/ai/models";
 import { SYNAPSE_BASE_URL, synapseProvisioner } from "lib/ai/synapse";
 import { dbPool } from "lib/db/db";
 import { accountTable } from "lib/db/schema";
 
 import type { BookAiOutcome } from "lib/ai/bookAi";
 
-// Provider-prefixed model id (the Synapse gateway routes by it). Default to a
-// capable model; override to a cheaper one for high-volume categorization
-const MODEL =
-  process.env.MYFI_CATEGORIZATION_MODEL ?? "anthropic/claude-opus-4-6";
+// The gateway's myfi default unless MYFI_CATEGORIZATION_MODEL overrides it.
+// Picking two accounts from a chart is well within a small model, and the
+// gateway policy keeps myfi on it
+const MODEL = suggestModel();
 
 /**
  * Anthropic SDK pointed at the Synapse gateway with a product-scoped key, for
