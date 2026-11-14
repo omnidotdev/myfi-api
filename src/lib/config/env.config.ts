@@ -56,7 +56,7 @@ const OPTIONAL_INTEGRATIONS: ReadonlyArray<{
     feature: "payroll (Gusto)",
   },
   {
-    vars: ["SYNAPSE_BASE_URL", "SYNAPSE_API_KEY"],
+    vars: ["SYNAPSE_BASE_URL", "SYNAPSE_API_URL", "SYNAPSE_GATEWAY_SECRET"],
     feature: "AI categorization (Synapse)",
   },
 ];

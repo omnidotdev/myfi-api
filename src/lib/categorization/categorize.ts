@@ -1,5 +1,6 @@
 import { and, eq } from "drizzle-orm";
 
+import bookAi from "lib/ai/bookAi";
 import { dbPool } from "lib/db/db";
 import { accountTable } from "lib/db/schema";
 import inferCategory from "./inferCategory";
@@ -59,7 +60,9 @@ const categorize = async (
     };
   }
 
-  // 2. Fall back to LLM inference
+  // 2. Fall back to LLM inference, billed to the book's workspace under its
+  // included AI allowance. At the cap (or when AI is unavailable) this is a
+  // silent rules-only result, never an error to the user
   const accounts = await dbPool
     .select({
       id: accountTable.id,
@@ -74,14 +77,21 @@ const categorize = async (
 
   const isIncome = ctx.amount < 0;
 
-  const llmResult = await inferCategory({
-    merchantName: ctx.merchantName,
-    memo: ctx.memo,
-    amount: Math.abs(ctx.amount),
-    isIncome,
-    bookType,
-    accounts,
-  });
+  const outcome = await bookAi.run({ bookId, mode: "bulk" }, (apiKey) =>
+    inferCategory(
+      {
+        merchantName: ctx.merchantName,
+        memo: ctx.memo,
+        amount: Math.abs(ctx.amount),
+        isIncome,
+        bookType,
+        accounts,
+      },
+      apiKey,
+    ),
+  );
+
+  const llmResult = outcome.status === "ok" ? outcome.value : null;
 
   if (llmResult) {
     return {

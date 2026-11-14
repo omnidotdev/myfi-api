@@ -1,6 +1,6 @@
 import { createSynapseClient } from "@omnidotdev/providers/ai";
 
-import { SYNAPSE_API_KEY, SYNAPSE_BASE_URL } from "lib/ai/synapse";
+import { SYNAPSE_BASE_URL } from "lib/ai/synapse";
 
 /** Result returned by LLM inference */
 interface InferenceResult {
@@ -31,25 +31,26 @@ interface InferCategoryInput {
 const MODEL =
   process.env.MYFI_INFER_MODEL ?? "anthropic/claude-haiku-4-5-20251001";
 
-// Route through the Synapse gateway (central metering/billing/abuse guard), not
-// a direct provider call. Null when Synapse is not configured, which disables
-// LLM inference (categorization falls back to deterministic rules upstream)
-const client =
-  SYNAPSE_BASE_URL && SYNAPSE_API_KEY
-    ? createSynapseClient({
-        baseUrl: SYNAPSE_BASE_URL,
-        apiKey: SYNAPSE_API_KEY,
-        model: MODEL,
-      })
-    : null;
+// Route through the Synapse gateway (allowance enforcement, metering, billing),
+// not a direct provider call. No default key: every call carries the
+// product-scoped key for the book's workspace. Null when the gateway is not
+// configured, which disables LLM inference (rules apply upstream)
+const client = SYNAPSE_BASE_URL
+  ? createSynapseClient({ baseUrl: SYNAPSE_BASE_URL, model: MODEL })
+  : null;
 
 /**
  * Use LLM inference to categorize a transaction.
- * Returns suggested debit/credit accounts with confidence, or null on failure.
+ * Returns suggested debit/credit accounts with confidence, or null when the
+ * model's answer is unusable. Gateway failures (e.g. 402 when the included AI
+ * allowance is used) throw a SynapseRequestError carrying the status, for the
+ * caller's book AI runner to classify
  * @param input - Transaction details and available accounts
+ * @param apiKey - Product-scoped Synapse key billed to the book's workspace
  */
 const inferCategory = async (
   input: InferCategoryInput,
+  apiKey: string,
 ): Promise<InferenceResult | null> => {
   if (!client) return null;
 
@@ -77,15 +78,16 @@ Respond with ONLY a JSON object (no markdown, no explanation outside JSON):
   "reasoning": "<brief explanation>"
 }`;
 
+  const { text } = await client.messages({
+    system: "",
+    messages: [{ role: "user", content: prompt }],
+    maxTokens: 256,
+    apiKey,
+  });
+
+  if (!text) return null;
+
   try {
-    const { text } = await client.messages({
-      system: "",
-      messages: [{ role: "user", content: prompt }],
-      maxTokens: 256,
-    });
-
-    if (!text) return null;
-
     const parsed = JSON.parse(text) as {
       debitAccountCode: string;
       creditAccountCode: string;
@@ -109,8 +111,8 @@ Respond with ONLY a JSON object (no markdown, no explanation outside JSON):
       confidence: parsed.confidence,
       reasoning: parsed.reasoning,
     };
-  } catch (err) {
-    console.warn("LLM inference error:", err);
+  } catch {
+    console.warn("LLM inference returned an unparseable answer");
     return null;
   }
 };

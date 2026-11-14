@@ -1,19 +1,28 @@
+import Anthropic from "@anthropic-ai/sdk";
 import { and, eq } from "drizzle-orm";
 
-import { synapseAnthropic } from "lib/ai/synapse";
+import bookAi from "lib/ai/bookAi";
+import { SYNAPSE_BASE_URL, synapseProvisioner } from "lib/ai/synapse";
 import { dbPool } from "lib/db/db";
 import { accountTable } from "lib/db/schema";
+
+import type { BookAiOutcome } from "lib/ai/bookAi";
 
 // Provider-prefixed model id (the Synapse gateway routes by it). Default to a
 // capable model; override to a cheaper one for high-volume categorization
 const MODEL =
   process.env.MYFI_CATEGORIZATION_MODEL ?? "anthropic/claude-opus-4-6";
 
-// The tool-use path runs through the Synapse gateway (central metering/billing/
-// abuse guard), not a direct provider call. Null when Synapse is not configured
-const client = synapseAnthropic;
-
-export const isCategorizationAiEnabled = () => client !== null;
+/**
+ * Anthropic SDK pointed at the Synapse gateway with a product-scoped key, for
+ * the tool-use path (forced `tool_choice`, which the plain-text client does not
+ * support). It posts to `{baseURL}/v1/messages`, so the gateway enforces the
+ * workspace's included AI allowance and meters it like every other call
+ * @param apiKey - Product-scoped key billed to the book's workspace
+ * @param baseURL - Synapse gateway base URL
+ */
+const gatewayAnthropic = (apiKey: string, baseURL: string) =>
+  new Anthropic({ apiKey, baseURL });
 
 export type SuggestAccount = {
   id: string;
@@ -115,15 +124,23 @@ const SYSTEM_PROMPT =
   "the provided chart of accounts. You never invent account ids.";
 
 /**
- * Suggest a categorization for a transaction using Claude. Returns null when AI
- * is not configured or the model's answer does not validate against the book's
- * chart of accounts. Reads are book-scoped by the caller's bookAccess check
+ * Suggest a categorization for a transaction using Claude, billed to the book's
+ * workspace under its included AI allowance. Returns `allowance_used` when the
+ * gateway refuses with 402 and `unavailable` when AI is not configured or the
+ * gateway fails; an `ok` value is null when the model's answer does not
+ * validate against the book's chart of accounts. Reads are book-scoped by the
+ * caller's bookAccess check
+ * @param bookId - Book the transaction belongs to
+ * @param txn - Transaction to categorize
+ * @param actorId - Requesting user's identity-provider id (the key holder)
  */
 export const suggestCategory = async (
   bookId: string,
   txn: SuggestTransaction,
-): Promise<CategorySuggestion | null> => {
-  if (!client) return null;
+  actorId: string,
+): Promise<BookAiOutcome<CategorySuggestion | null>> => {
+  const baseURL = SYNAPSE_BASE_URL;
+  if (!baseURL || !synapseProvisioner) return { status: "unavailable" };
 
   const accounts = await dbPool
     .select({
@@ -138,52 +155,58 @@ export const suggestCategory = async (
       and(eq(accountTable.bookId, bookId), eq(accountTable.isActive, true)),
     );
 
-  if (accounts.length === 0) return null;
+  if (accounts.length === 0) return { status: "ok", value: null };
 
-  const response = await client.messages.create({
-    model: MODEL,
-    max_tokens: 1024,
-    system: SYSTEM_PROMPT,
-    tools: [
-      {
-        name: "categorize_transaction",
-        description:
-          "Record the chosen debit and credit accounts for the transaction.",
-        input_schema: {
-          type: "object",
-          properties: {
-            debitAccountId: {
-              type: "string",
-              description: "Account id to debit (from the provided chart)",
-            },
-            creditAccountId: {
-              type: "string",
-              description: "Account id to credit (from the provided chart)",
-            },
-            confidence: {
-              type: "number",
-              description: "Confidence from 0 to 1",
-            },
-            rationale: {
-              type: "string",
-              description: "One-sentence explanation",
+  return bookAi.run(
+    { bookId, actorId, mode: "interactive" },
+    async (apiKey) => {
+      const client = gatewayAnthropic(apiKey, baseURL);
+      const response = await client.messages.create({
+        model: MODEL,
+        max_tokens: 1024,
+        system: SYSTEM_PROMPT,
+        tools: [
+          {
+            name: "categorize_transaction",
+            description:
+              "Record the chosen debit and credit accounts for the transaction.",
+            input_schema: {
+              type: "object",
+              properties: {
+                debitAccountId: {
+                  type: "string",
+                  description: "Account id to debit (from the provided chart)",
+                },
+                creditAccountId: {
+                  type: "string",
+                  description: "Account id to credit (from the provided chart)",
+                },
+                confidence: {
+                  type: "number",
+                  description: "Confidence from 0 to 1",
+                },
+                rationale: {
+                  type: "string",
+                  description: "One-sentence explanation",
+                },
+              },
+              required: [
+                "debitAccountId",
+                "creditAccountId",
+                "confidence",
+                "rationale",
+              ],
             },
           },
-          required: [
-            "debitAccountId",
-            "creditAccountId",
-            "confidence",
-            "rationale",
-          ],
-        },
-      },
-    ],
-    tool_choice: { type: "tool", name: "categorize_transaction" },
-    messages: [{ role: "user", content: buildPrompt(accounts, txn) }],
-  });
+        ],
+        tool_choice: { type: "tool", name: "categorize_transaction" },
+        messages: [{ role: "user", content: buildPrompt(accounts, txn) }],
+      });
 
-  const toolUse = response.content.find((b) => b.type === "tool_use");
-  if (!toolUse || toolUse.type !== "tool_use") return null;
+      const toolUse = response.content.find((b) => b.type === "tool_use");
+      if (!toolUse || toolUse.type !== "tool_use") return null;
 
-  return validateSuggestion(toolUse.input, accounts);
+      return validateSuggestion(toolUse.input, accounts);
+    },
+  );
 };
