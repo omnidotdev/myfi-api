@@ -1,36 +1,49 @@
-import Anthropic from "@anthropic-ai/sdk";
+import { createSynapseProvisioner } from "@omnidotdev/providers/ai";
 
 /**
- * Synapse is the Omni AI gateway: it holds provider keys and enforces budgets,
- * rate limits, and usage metering (billed via Aether). All of myfi's LLM traffic
- * routes through it rather than calling a provider directly, so AI spend is
- * centrally metered, billed, and abuse-guarded like every other fleet product.
+ * Synapse is the Omni AI gateway: it holds provider keys and enforces
+ * entitlements, the included AI allowance, metering, and billing (via Aether).
+ * All of myfi's LLM traffic routes through it rather than calling a provider
+ * directly.
  *
- * Both envs must be set for AI categorization to run; otherwise it is disabled
- * (categorization degrades to deterministic rules). The key is a managed Synapse
- * key, never a raw provider key, and model ids are provider-prefixed (the
- * gateway routes by them, e.g. anthropic/claude-haiku-4-5-20251001)
+ * Every call uses a product-scoped managed key: provisioned per user under the
+ * `myfi` Aether app and billed to the workspace (organization) that owns the
+ * book. There is no shared/static key: when provisioning is not configured or
+ * fails, AI categorization is unavailable and deterministic rules apply.
+ *
+ * All three envs must be set for AI categorization to run. Model ids are
+ * provider-prefixed (the gateway routes by them, e.g.
+ * anthropic/claude-haiku-4-5-20251001)
  */
+
+/** Aether app id the gateway meters and enforces myfi's AI allowance under. */
+const MYFI_APP_ID = "myfi";
 
 /** Synapse gateway base URL (root; clients append `/v1/messages`). */
 export const SYNAPSE_BASE_URL = process.env.SYNAPSE_BASE_URL;
 
-/** Managed Synapse key authorizing gateway calls. */
-export const SYNAPSE_API_KEY = process.env.SYNAPSE_API_KEY;
+/** Synapse provisioning API base URL (api.synapse, not the gateway). */
+const SYNAPSE_API_URL = process.env.SYNAPSE_API_URL;
 
-if (!SYNAPSE_BASE_URL || !SYNAPSE_API_KEY) {
+/** Fleet gateway secret authorizing managed-key provisioning. */
+const SYNAPSE_GATEWAY_SECRET = process.env.SYNAPSE_GATEWAY_SECRET;
+
+if (!SYNAPSE_BASE_URL || !SYNAPSE_API_URL || !SYNAPSE_GATEWAY_SECRET) {
   console.warn(
-    "SYNAPSE_BASE_URL/SYNAPSE_API_KEY not set, AI categorization disabled",
+    "SYNAPSE_BASE_URL/SYNAPSE_API_URL/SYNAPSE_GATEWAY_SECRET not set, AI categorization disabled",
   );
 }
 
 /**
- * Anthropic SDK pointed at the Synapse gateway, for the tool-use categorization
- * path (forced `tool_choice`, which the plain-text client does not support). It
- * posts to `{baseURL}/v1/messages` with the Synapse key, so it is metered like
- * every other gateway call. Null when Synapse is not configured
+ * Product-scoped managed-key provisioner (keys cached per user and billing
+ * entity). Null when provisioning is not configured
  */
-export const synapseAnthropic: Anthropic | null =
-  SYNAPSE_BASE_URL && SYNAPSE_API_KEY
-    ? new Anthropic({ apiKey: SYNAPSE_API_KEY, baseURL: SYNAPSE_BASE_URL })
+export const synapseProvisioner =
+  SYNAPSE_API_URL && SYNAPSE_GATEWAY_SECRET
+    ? createSynapseProvisioner({
+        apiUrl: SYNAPSE_API_URL,
+        gatewaySecret: SYNAPSE_GATEWAY_SECRET,
+        source: "MyFi",
+        appId: MYFI_APP_ID,
+      })
     : null;

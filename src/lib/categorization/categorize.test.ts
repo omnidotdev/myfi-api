@@ -3,12 +3,27 @@ import { beforeEach, describe, expect, mock, test } from "bun:test";
 import { mockDbPool, resetDbMock, setSelectResults } from "lib/test/mockDb";
 
 // Mock inferCategory (LLM calls)
-const mockInferCategory = mock((): Promise<unknown> => Promise.resolve(null));
+const mockInferCategory = mock(
+  (..._args: unknown[]): Promise<unknown> => Promise.resolve(null),
+);
 mock.module("./inferCategory", () => ({
   default: mockInferCategory,
 }));
 
 mock.module("lib/db/db", () => ({ dbPool: mockDbPool }));
+
+// Mock the book-scoped AI runner: by default it hands the call a scoped key
+type Outcome =
+  | { status: "ok"; value: unknown }
+  | { status: "allowance_used" }
+  | { status: "unavailable" };
+const mockRun = mock(
+  async (
+    _req: { bookId: string; mode: string },
+    call: (apiKey: string) => Promise<unknown>,
+  ): Promise<Outcome> => ({ status: "ok", value: await call("sk-scoped") }),
+);
+mock.module("lib/ai/bookAi", () => ({ default: { run: mockRun } }));
 
 const { default: categorize } = await import("./categorize");
 
@@ -23,6 +38,7 @@ describe("categorize", () => {
   beforeEach(() => {
     resetDbMock();
     mockInferCategory.mockClear();
+    mockRun.mockClear();
   });
 
   test("returns rule result when rule matches", async () => {
@@ -115,5 +131,37 @@ describe("categorize", () => {
 
     await categorize(baseCtx, "book-1", "personal");
     expect(mockInferCategory).not.toHaveBeenCalled();
+  });
+
+  test("runs the LLM as bulk work for the book with the scoped key", async () => {
+    setSelectResults([[], [{ id: "a", name: "A", code: "1", type: "asset" }]]);
+
+    await categorize(baseCtx, "book-1", "personal");
+
+    expect(mockRun).toHaveBeenCalledTimes(1);
+    expect(mockRun.mock.calls[0]?.[0]).toEqual({
+      bookId: "book-1",
+      mode: "bulk",
+    });
+    expect(mockInferCategory.mock.calls[0]?.[1]).toBe("sk-scoped");
+  });
+
+  test("uses rules only (no error) once the included AI allowance is used", async () => {
+    setSelectResults([[], [{ id: "a", name: "A", code: "1", type: "asset" }]]);
+    mockRun.mockResolvedValueOnce({ status: "allowance_used" });
+
+    const result = await categorize(baseCtx, "book-1", "personal");
+
+    expect(result).toBeNull();
+    expect(mockInferCategory).not.toHaveBeenCalled();
+  });
+
+  test("uses rules only when AI is unavailable", async () => {
+    setSelectResults([[], [{ id: "a", name: "A", code: "1", type: "asset" }]]);
+    mockRun.mockResolvedValueOnce({ status: "unavailable" });
+
+    const result = await categorize(baseCtx, "book-1", "personal");
+
+    expect(result).toBeNull();
   });
 });
