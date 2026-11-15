@@ -18,12 +18,24 @@ const MODEL = suggestModel();
  * Anthropic SDK pointed at the Synapse gateway with a product-scoped key, for
  * the tool-use path (forced `tool_choice`, which the plain-text client does not
  * support). It posts to `{baseURL}/v1/messages`, so the gateway enforces the
- * workspace's included AI allowance and meters it like every other call
+ * workspace's included AI allowance and meters it like every other call. The
+ * gateway authenticates only `Authorization: Bearer`, so the key goes in as the
+ * auth token and the SDK's `x-api-key` header is left off
  * @param apiKey - Product-scoped key billed to the book's workspace
  * @param baseURL - Synapse gateway base URL
+ * @param fetchImpl - Fetch override (tests)
  */
-const gatewayAnthropic = (apiKey: string, baseURL: string) =>
-  new Anthropic({ apiKey, baseURL });
+export const gatewayAnthropic = (
+  apiKey: string,
+  baseURL: string,
+  fetchImpl?: typeof fetch,
+) =>
+  new Anthropic({
+    apiKey: null,
+    authToken: apiKey,
+    baseURL,
+    ...(fetchImpl && { fetch: fetchImpl }),
+  });
 
 export type SuggestAccount = {
   id: string;
