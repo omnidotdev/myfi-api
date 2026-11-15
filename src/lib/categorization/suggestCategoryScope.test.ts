@@ -72,8 +72,9 @@ describe("suggestCategory scoping", () => {
       actorId: ACTOR_ID,
       mode: "interactive",
     });
+    // The gateway authenticates the scoped key as a Bearer token only
     expect(anthropicOptions).toEqual([
-      { apiKey: "sk-scoped", baseURL: "https://gateway.test" },
+      { apiKey: null, authToken: "sk-scoped", baseURL: "https://gateway.test" },
     ]);
     expect(outcome.status).toBe("ok");
   });
