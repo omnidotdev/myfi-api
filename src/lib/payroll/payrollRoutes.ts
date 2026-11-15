@@ -50,8 +50,11 @@ export const payrollCallbackRoute = new Elysia().get(
     }
 
     if (!GUSTO_CLIENT_ID || !GUSTO_CLIENT_SECRET || !GUSTO_REDIRECT_URI) {
-      set.status = 500;
-      return { error: "Gusto OAuth not configured" };
+      // TODO(launch): Gusto is not provisioned in production yet; the app hides
+      // the connect button until it is (VITE_GUSTO_ENABLED)
+      console.warn("GUSTO_* not set, payroll connection disabled");
+      set.status = 503;
+      return { error: "Payroll connection is not available yet" };
     }
 
     // The state must be a valid HMAC-signed token this server minted at connect
@@ -142,8 +145,11 @@ const payrollRoutes = new Elysia({ prefix: "/api/payroll" })
       const { bookId, returnPath } = body;
 
       if (!GUSTO_CLIENT_ID || !GUSTO_REDIRECT_URI) {
-        set.status = 500;
-        return { error: "Gusto OAuth not configured" };
+        // TODO(launch): Gusto is not provisioned in production yet; the app hides
+        // the connect button until it is (VITE_GUSTO_ENABLED)
+        console.warn("GUSTO_* not set, payroll connection disabled");
+        set.status = 503;
+        return { error: "Payroll connection is not available yet" };
       }
 
       // Carry the bookId in an HMAC-signed state (not the raw id) so the
