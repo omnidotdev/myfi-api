@@ -9,7 +9,7 @@ import type {
 // auto-generated Postgraphile schema (e.g. allVendors, connectedAccounts) is an
 // unscoped cross-tenant read surface, so it is not permitted here. Writes go
 // through REST, so mutations/subscriptions are blocked entirely
-const ALLOWED_QUERY_FIELDS = new Set([
+export const ALLOWED_QUERY_FIELDS = new Set([
   "accounts",
   "accountMappings",
   "books",
@@ -21,7 +21,7 @@ const ALLOWED_QUERY_FIELDS = new Set([
 ]);
 
 // `books` and `auditLog` are scoped by organizationId; the rest by bookId
-const ORG_SCOPED_FIELDS = new Set(["books", "auditLog"]);
+export const ORG_SCOPED_FIELDS = new Set(["books", "auditLog"]);
 
 type ScopeRequirements =
   | { error: string }
