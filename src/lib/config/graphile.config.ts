@@ -17,7 +17,10 @@ const graphilePreset: GraphileConfig.Preset = {
   pgServices: [makePgService({ connectionString: DATABASE_URL })],
   grafast: { explain: isDevEnv },
   schema: {
-    defaultBehavior: "+manyRelation:resource:connection",
+    // Fail closed: no generated create/update/delete. Writes go through REST
+    // (tenantScope also refuses every GraphQL mutation at execution)
+    defaultBehavior:
+      "+manyRelation:resource:connection -insert -update -delete",
   },
 };
 
