@@ -58,6 +58,38 @@ describe("aiFailureKind", () => {
     const err = Object.assign(new Error("payment required"), { status: 402 });
     expect(aiFailureKind(err)).toBe("allowance_used");
   });
+
+  /** SDK error carrying the gateway's OpenAI-style 402 body */
+  const gateway402 = (error: Record<string, unknown>) =>
+    Object.assign(new Error("402"), { status: 402, error: { error } });
+
+  test("a 402 payment_required refusal is distinct from out of credits", () => {
+    expect(
+      aiFailureKind(gateway402({ code: "payment_required", type: "x" })),
+    ).toBe("payment_required");
+    expect(aiFailureKind(gateway402({ type: "payment_required" }))).toBe(
+      "payment_required",
+    );
+    expect(aiFailureKind(gateway402({ type: "payment_required_error" }))).toBe(
+      "payment_required",
+    );
+  });
+
+  test("any other 402 stays allowance_used", () => {
+    expect(
+      aiFailureKind(
+        gateway402({ type: "insufficient_credits_error", code: null }),
+      ),
+    ).toBe("allowance_used");
+  });
+
+  test("payment_required is only read off a 402", () => {
+    const err = Object.assign(new Error("503"), {
+      status: 503,
+      error: { error: { code: "payment_required" } },
+    });
+    expect(aiFailureKind(err)).toBe("unavailable");
+  });
 });
 
 describe("createBookAi", () => {
@@ -105,6 +137,50 @@ describe("createBookAi", () => {
     expect(call).toHaveBeenCalledTimes(1);
     expect(info).toHaveBeenCalledTimes(1);
     expect(warn).not.toHaveBeenCalled();
+  });
+
+  test("a gateway payment_required refusal is reported as payment_required", async () => {
+    const { deps, info, warn } = makeDeps();
+    const bookAi = createBookAi(deps);
+
+    const call = mock(async () => {
+      throw Object.assign(new Error("402"), {
+        status: 402,
+        error: {
+          error: { type: "payment_required", code: "payment_required" },
+        },
+      });
+    });
+    const outcome = await bookAi.run(
+      { bookId: "book-1", mode: "interactive" },
+      call,
+    );
+
+    expect(outcome).toEqual({ status: "payment_required" });
+    expect(call).toHaveBeenCalledTimes(1);
+    expect(info).toHaveBeenCalledTimes(1);
+    expect(warn).not.toHaveBeenCalled();
+  });
+
+  test("after a payment_required refusal, bulk skips the gateway with the same outcome", async () => {
+    const { deps, resolveKey } = makeDeps();
+    const bookAi = createBookAi(deps);
+
+    await bookAi.run({ bookId: "book-1", mode: "bulk" }, async () => {
+      throw Object.assign(new Error("402"), {
+        status: 402,
+        error: { error: { code: "payment_required" } },
+      });
+    });
+
+    const skipped = mock(async () => "never");
+    const second = await bookAi.run(
+      { bookId: "book-1", mode: "bulk" },
+      skipped,
+    );
+    expect(second).toEqual({ status: "payment_required" });
+    expect(skipped).not.toHaveBeenCalled();
+    expect(resolveKey).toHaveBeenCalledTimes(1);
   });
 
   test("a gateway 503 is unavailable", async () => {

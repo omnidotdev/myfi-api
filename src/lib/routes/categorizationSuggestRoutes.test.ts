@@ -7,6 +7,7 @@ const ACTOR_ID = "3f2e1d0c-9b8a-4796-a5b4-c3d2e1f0a9b8";
 type Outcome =
   | { status: "ok"; value: unknown }
   | { status: "allowance_used" }
+  | { status: "payment_required" }
   | { status: "unavailable" };
 
 const mockSuggest = mock(
@@ -77,6 +78,19 @@ describe("POST /api/categorization/suggest", () => {
     expect(await res.json()).toEqual({
       code: "ai_allowance_used",
       error: "AI categorization used for this period",
+    });
+  });
+
+  test("passes a payment_required refusal through with its stable code", async () => {
+    mockSuggest.mockResolvedValueOnce({ status: "payment_required" });
+
+    const res = await post();
+
+    expect(res.status).toBe(402);
+    expect(await res.json()).toEqual({
+      code: "payment_required",
+      error:
+        "AI categorization uses Omni credits. Buy credits or upgrade to Pro to start.",
     });
   });
 
