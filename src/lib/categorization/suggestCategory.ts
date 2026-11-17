@@ -138,11 +138,12 @@ const SYSTEM_PROMPT =
 
 /**
  * Suggest a categorization for a transaction using Claude, billed to the book's
- * workspace under its included AI allowance. Returns `allowance_used` when the
- * gateway refuses with 402 and `unavailable` when AI is not configured or the
- * gateway fails; an `ok` value is null when the model's answer does not
- * validate against the book's chart of accounts. Reads are book-scoped by the
- * caller's bookAccess check
+ * workspace under its included AI allowance. Returns `payment_required` when
+ * the gateway refuses because the workspace is not paying for managed AI,
+ * `allowance_used` on any other 402, and `unavailable` when AI is not
+ * configured or the gateway fails; an `ok` value is null when the model's
+ * answer does not validate against the book's chart of accounts. Reads are
+ * book-scoped by the caller's bookAccess check
  * @param bookId - Book the transaction belongs to
  * @param txn - Transaction to categorize
  * @param actorId - Requesting user's identity-provider id (the key holder)

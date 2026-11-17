@@ -11,12 +11,17 @@ import type { BookAiScope } from "./bookAiScope";
  * - `allowance_used`: the gateway refused with 402 (the workspace's included AI
  *   allowance for the period is used). Bulk work silently uses rules only, the
  *   interactive suggest surfaces an upgrade prompt
+ * - `payment_required`: the gateway refused with a 402 `payment_required`
+ *   (managed AI is for paying workspaces and this one is not paying yet). Bulk
+ *   work silently uses rules only, the interactive suggest surfaces a buy
+ *   credits or upgrade prompt
  * - `unavailable`: AI is not configured, provisioning failed, or the gateway
  *   failed (e.g. 503). Callers fall back to deterministic rules
  */
 export type BookAiOutcome<T> =
   | { status: "ok"; value: T }
   | { status: "allowance_used" }
+  | { status: "payment_required" }
   | { status: "unavailable" };
 
 /**
@@ -49,10 +54,10 @@ export interface BookAiDeps {
 /**
  * After a 402, bulk work for that workspace skips the gateway for this window,
  * so a large sync does not ask once per transaction for an answer it already
- * has. This only remembers the gateway's refusal; the allowance itself lives in
- * the gateway and Aether, never here
+ * has. This only remembers the gateway's refusal; the allowance and paying
+ * status live in the gateway and Aether, never here
  */
-const ALLOWANCE_USED_SKIP_MS = 15 * 60 * 1000;
+const REFUSED_SKIP_MS = 15 * 60 * 1000;
 
 /** HTTP status carried by a Synapse or provider SDK error, when present */
 const errorStatus = (err: unknown): number | undefined => {
@@ -61,16 +66,46 @@ const errorStatus = (err: unknown): number | undefined => {
   return typeof status === "number" ? status : undefined;
 };
 
+/** Gateway refusal codes meaning the workspace is not paying for managed AI */
+const PAYMENT_REQUIRED_CODES = new Set([
+  "payment_required",
+  "payment_required_error",
+]);
+
 /**
- * Classify a failed managed AI call. Only a gateway 402 means the included
+ * Whether an error carries the gateway's `payment_required` refusal. The
+ * gateway answers OpenAI-style (`{ error: { type, code, message } }`), which
+ * the Anthropic SDK exposes as the error's `error` field
+ */
+const isPaymentRequired = (err: unknown): boolean => {
+  if (!err || typeof err !== "object" || !("error" in err)) return false;
+  const body = err.error;
+  if (!body || typeof body !== "object" || !("error" in body)) return false;
+  const detail = body.error;
+  if (!detail || typeof detail !== "object") return false;
+  const { code, type } = detail as { code?: unknown; type?: unknown };
+
+  return (
+    code === "payment_required" ||
+    (typeof type === "string" && PAYMENT_REQUIRED_CODES.has(type))
+  );
+};
+
+/** Why a managed AI call did not return a value */
+type AiFailureKind = "allowance_used" | "payment_required" | "unavailable";
+
+/**
+ * Classify a failed managed AI call. A gateway 402 `payment_required` means
+ * the workspace is not paying for managed AI; any other 402 means the included
  * allowance is used; everything else (503, other statuses, transport errors,
  * provisioning failures) is treated as AI being unavailable
  * @param err - Error thrown by provisioning or the gateway call
  */
-export const aiFailureKind = (
-  err: unknown,
-): "allowance_used" | "unavailable" =>
-  errorStatus(err) === 402 ? "allowance_used" : "unavailable";
+export const aiFailureKind = (err: unknown): AiFailureKind => {
+  if (errorStatus(err) !== 402) return "unavailable";
+
+  return isPaymentRequired(err) ? "payment_required" : "allowance_used";
+};
 
 /**
  * Create the book-scoped AI runner. Each call resolves a product-scoped key
@@ -84,7 +119,10 @@ export const createBookAi = (deps: BookAiDeps) => {
     info: (message: string) => console.info(message),
     warn: (message: string) => console.warn(message),
   };
-  const allowanceUsedUntil = new Map<string, number>();
+  const refusedUntil = new Map<
+    string,
+    { until: number; kind: "allowance_used" | "payment_required" }
+  >();
 
   const run = async <T>(
     request: BookAiRequest,
@@ -102,10 +140,10 @@ export const createBookAi = (deps: BookAiDeps) => {
     }
 
     const { organizationId } = scope;
-    const skipUntil = allowanceUsedUntil.get(organizationId);
-    if (request.mode === "bulk" && skipUntil !== undefined) {
-      if (now() < skipUntil) return { status: "allowance_used" };
-      allowanceUsedUntil.delete(organizationId);
+    const refusal = refusedUntil.get(organizationId);
+    if (request.mode === "bulk" && refusal !== undefined) {
+      if (now() < refusal.until) return { status: refusal.kind };
+      refusedUntil.delete(organizationId);
     }
 
     try {
@@ -118,14 +156,19 @@ export const createBookAi = (deps: BookAiDeps) => {
         },
       );
       const value = await call(apiKey);
-      allowanceUsedUntil.delete(organizationId);
+      refusedUntil.delete(organizationId);
       return { status: "ok", value };
     } catch (err) {
       const kind = aiFailureKind(err);
-      if (kind === "allowance_used") {
-        allowanceUsedUntil.set(organizationId, now() + ALLOWANCE_USED_SKIP_MS);
+      if (kind === "allowance_used" || kind === "payment_required") {
+        refusedUntil.set(organizationId, {
+          until: now() + REFUSED_SKIP_MS,
+          kind,
+        });
         log.info(
-          `[ai] included AI allowance used for organization ${organizationId}, using rules only`,
+          kind === "payment_required"
+            ? `[ai] managed AI requires payment for organization ${organizationId}, using rules only`
+            : `[ai] included AI allowance used for organization ${organizationId}, using rules only`,
         );
       } else {
         const reason = err instanceof Error ? err.message : "unknown error";

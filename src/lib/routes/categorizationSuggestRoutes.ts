@@ -22,10 +22,23 @@ const ALLOWANCE_USED_BODY = {
 } as const;
 
 /**
+ * Typed body for the gateway's `payment_required` refusal (managed AI is for
+ * paying workspaces), so the app can offer buying credits or upgrading rather
+ * than treating it as out of credits
+ */
+const PAYMENT_REQUIRED_BODY = {
+  code: "payment_required",
+  error:
+    "AI categorization uses Omni credits. Buy credits or upgrade to Pro to start.",
+} as const;
+
+/**
  * AI-assisted categorization: suggests a debit/credit pairing + rationale for a
  * transaction, for the owner to approve. Billed to the book's workspace under
  * its included AI allowance. Returns 402 with a typed `ai_allowance_used` body
- * once that allowance is used for the period, and 503 when AI is unavailable
+ * once that allowance is used for the period, 402 with a typed
+ * `payment_required` body when the workspace is not paying for managed AI, and
+ * 503 when AI is unavailable
  * (not configured or the gateway failed). Book access is enforced by the global
  * middleware; the handler resolves the caller to mint the key under them
  */
@@ -51,6 +64,11 @@ const categorizationSuggestRoutes = new Elysia({
       if (outcome.status === "allowance_used") {
         set.status = 402;
         return ALLOWANCE_USED_BODY;
+      }
+
+      if (outcome.status === "payment_required") {
+        set.status = 402;
+        return PAYMENT_REQUIRED_BODY;
       }
 
       if (outcome.status === "unavailable") {
