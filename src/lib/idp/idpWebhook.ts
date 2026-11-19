@@ -51,8 +51,10 @@ export const createIdpWebhook = ({
 }: IdpWebhookDeps = {}) =>
   new Elysia({ name: "idp-webhook" }).post(
     "/webhooks/idp",
-    async ({ request, headers, set }) => {
-      const rawBody = await request.text();
+    async ({ body, headers, set }) => {
+      // The raw text the parse hook below captured; the request stream itself
+      // is already consumed when a global hook (book access) reads the body
+      const rawBody = typeof body === "string" ? body : "";
       const signature = headers["x-idp-signature"];
 
       if (!webhookSecret) {
@@ -114,6 +116,9 @@ export const createIdpWebhook = ({
         "x-idp-signature": t.Optional(t.String()),
         "x-idp-event": t.Optional(t.String()),
       }),
+      // Capture the body as raw text, once, so the signature check sees the
+      // exact signed bytes
+      parse: ({ request }) => request.text(),
     },
   );
 

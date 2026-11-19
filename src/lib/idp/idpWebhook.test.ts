@@ -9,6 +9,7 @@ import {
 import { createHmac } from "node:crypto";
 
 import { eq } from "drizzle-orm";
+import { Elysia } from "elysia";
 
 import {
   accountTable,
@@ -63,10 +64,20 @@ const app = (webhookSecret = SECRET) =>
 
 const post = (
   body: unknown,
-  { signature, secret }: { signature?: string | null; secret?: string } = {},
+  {
+    signature,
+    secret,
+    mount = (plugin) => plugin,
+  }: {
+    signature?: string | null;
+    secret?: string;
+    mount?: (plugin: ReturnType<typeof app>) => {
+      handle: (r: Request) => Promise<Response>;
+    };
+  } = {},
 ) => {
   const raw = JSON.stringify(body);
-  return app(secret).handle(
+  return mount(app(secret)).handle(
     new Request("http://localhost/webhooks/idp", {
       method: "POST",
       headers: {
@@ -237,6 +248,23 @@ describe("POST /webhooks/idp organization.deleted", () => {
     const bookId = await seedBook(ORG);
     expect((await post(deleted(ORG), { secret: "" })).status).toBe(503);
     expect((await rowsFor(bookId)).books).toBe(1);
+  });
+
+  test("still reads the signed body when a global hook has already parsed it", async () => {
+    // The server's book-access middleware reads every request's body in a
+    // global hook, which consumes the stream before this route runs
+    const bookId = await seedBook(ORG);
+    const res = await post(deleted(ORG), {
+      mount: (plugin) =>
+        new Elysia()
+          .onBeforeHandle({ as: "global" }, ({ body }) => {
+            void body;
+          })
+          .use(plugin),
+    });
+
+    expect(res.status).toBe(200);
+    expect((await rowsFor(bookId)).books).toBe(0);
   });
 
   test("rejects an event without an organization id (400)", async () => {
