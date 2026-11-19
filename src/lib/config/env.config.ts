@@ -13,6 +13,9 @@ export const {
   PLAID_ENV = "sandbox",
   TOKEN_ENCRYPTION_KEY,
   MANTLE_WEBHOOK_SECRET,
+  // Shared secret Vortex signs Gatekeeper identity events (workspace deletion)
+  // with, for POST /webhooks/idp
+  IDP_WEBHOOK_SECRET,
   GUSTO_CLIENT_ID,
   GUSTO_CLIENT_SECRET,
   GUSTO_REDIRECT_URI,
@@ -54,6 +57,10 @@ const OPTIONAL_INTEGRATIONS: ReadonlyArray<{
   {
     vars: ["GUSTO_CLIENT_ID", "GUSTO_CLIENT_SECRET"],
     feature: "payroll (Gusto)",
+  },
+  {
+    vars: ["IDP_WEBHOOK_SECRET"],
+    feature: "deleting a deleted workspace's books (/webhooks/idp)",
   },
   {
     vars: ["SYNAPSE_BASE_URL", "SYNAPSE_API_URL", "SYNAPSE_GATEWAY_SECRET"],

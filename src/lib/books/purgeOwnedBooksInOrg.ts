@@ -1,5 +1,6 @@
 import { and, eq } from "drizzle-orm";
 
+import { deleteBooks } from "lib/books/deleteBooks";
 import { dbPool } from "lib/db/db";
 import { bookAccessTable, bookTable } from "lib/db/schema";
 
@@ -16,7 +17,8 @@ interface PurgeResult {
  * else's) are left untouched, so this can only ever remove data the caller
  * already controls. The caller's organization membership and an explicit
  * confirmation are enforced by the route; this function performs the scoped
- * deletion itself
+ * deletion itself, releasing each book's bank and payroll connections and
+ * stored files on the way (see deleteBooks)
  */
 export const purgeOwnedBooksInOrg = async (
   userId: string,
@@ -42,12 +44,13 @@ export const purgeOwnedBooksInOrg = async (
       );
 
     if (access?.role === "owner") {
-      await dbPool.delete(bookTable).where(eq(bookTable.id, book.id));
       deletedBookIds.push(book.id);
     } else {
       skippedBookIds.push(book.id);
     }
   }
+
+  await deleteBooks(deletedBookIds);
 
   return { deletedBookIds, skippedBookIds };
 };

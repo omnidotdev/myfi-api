@@ -46,6 +46,7 @@ import {
   denySensitiveFieldsPlugin,
   tenantScopePlugin,
 } from "lib/graphql/plugins";
+import idpWebhook from "lib/idp/idpWebhook";
 import importRoutes from "lib/import/importRoutes";
 import profileRoutes from "lib/import/profileRoutes";
 import inventoryRoutes from "lib/inventory/inventoryRoutes";
@@ -152,6 +153,14 @@ const commit = (() => {
   }
 })();
 
+// Signed inbound webhooks (Mantle invoicing events, Gatekeeper identity events)
+// share one mount. The root mount chain below sits at TypeScript's
+// type-instantiation-depth limit, so the group keeps the Mantle webhook's own
+// type and the chain typechecks exactly as before the identity webhook joined
+const publicWebhooks = new Elysia()
+  .use(mantleWebhook)
+  .use(idpWebhook) as unknown as typeof mantleWebhook;
+
 /**
  * Elysia server.
  */
@@ -212,7 +221,7 @@ const app = new Elysia()
     }
   })
   // Public (no auth)
-  .use(mantleWebhook)
+  .use(publicWebhooks)
   .use(payrollCallbackRoute)
   // GraphQL (has its own @envelop/generic-auth plugin)
   .use(
