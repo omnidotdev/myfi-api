@@ -18,6 +18,7 @@ import {
   documentTable,
   payrollConnectionTable,
 } from "lib/db/schema";
+import { createIdpWebhook } from "lib/idp/idpWebhook";
 import { createTestDb } from "lib/test/realDb";
 
 import type { TestDb } from "lib/test/realDb";
@@ -25,7 +26,6 @@ import type { TestDb } from "lib/test/realDb";
 // Workspace deletion removes real financial records and reaches Plaid, Gusto,
 // and object storage, so run it against real Postgres with the providers faked
 let harness: TestDb;
-let createIdpWebhook: typeof import("./idpWebhook").createIdpWebhook;
 
 const SECRET = "test-idp-secret";
 const ORG = "org-deleted";
@@ -158,7 +158,6 @@ const rowsFor = async (bookId: string) => {
 describe("POST /webhooks/idp organization.deleted", () => {
   beforeAll(async () => {
     harness = await createTestDb();
-    ({ createIdpWebhook } = await import("./idpWebhook"));
   });
 
   afterAll(async () => {

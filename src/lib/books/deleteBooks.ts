@@ -21,7 +21,7 @@ export interface DeleteBooksDeps {
   storageConfigured?: () => boolean;
 }
 
-export interface DeleteBooksResult {
+interface DeleteBooksResult {
   deletedBookIds: string[];
   /** Bank (Plaid) items asked to be removed */
   plaidItems: number;

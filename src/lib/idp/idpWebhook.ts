@@ -23,7 +23,7 @@ const verifySignature = (
   }
 };
 
-export interface IdpWebhookDeps extends DeleteBooksDeps {
+interface IdpWebhookDeps extends DeleteBooksDeps {
   /**
    * Shared secret Vortex signs identity events with, defaults to
    * IDP_WEBHOOK_SECRET. When unset every request is refused (fail closed)
