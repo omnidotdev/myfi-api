@@ -7,6 +7,7 @@ import {
   resolveUserFromToken,
   resolveUserOrgIds,
 } from "lib/auth";
+import { deleteBooks } from "lib/books/deleteBooks";
 import { dbPool } from "lib/db/db";
 import { accountTable, bookAccessTable, bookTable } from "lib/db/schema";
 import {
@@ -286,7 +287,9 @@ const bookRoutes = new Elysia({ prefix: "/api/books" })
       const auth = await authorizeBook(request, id, "owner", set);
       if (!auth) return { error: "Forbidden" };
 
-      await dbPool.delete(bookTable).where(eq(bookTable.id, id));
+      // Releases the book's bank and payroll connections and stored files,
+      // then deletes it with all of its data
+      await deleteBooks([id]);
 
       emitAudit({
         type: "myfi.book.deleted",
