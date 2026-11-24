@@ -1,36 +1,52 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 
-import { Elysia, t } from "elysia";
+import { Elysia } from "elysia";
+import { TypeCompiler, t } from "elysia/type-system";
 
 import { MANTLE_WEBHOOK_SECRET, isDevEnv } from "lib/config/env.config";
 import handleMantleEvent from "./eventHandlers";
 
 import type { WebhookResult } from "./eventHandlers";
 
+// Optional string field that also accepts `null`: Mantle emits nullable
+// columns (e.g. an unpaid invoice's `paidAt`) as JSON null, not as absent keys
+const optionalString = () => t.Optional(t.Nullable(t.String()));
+
+// Decimal amounts arrive as strings (Postgres numeric) or numbers
+const optionalAmount = () =>
+  t.Optional(t.Nullable(t.Union([t.String(), t.Number()])));
+
 const mantleWebhookBody = t.Object({
   event: t.String(),
   data: t.Object({
     // Legacy format fields
-    organizationId: t.Optional(t.String()),
-    referenceId: t.Optional(t.String()),
-    amount: t.Optional(t.Number()),
-    currency: t.Optional(t.String()),
-    memo: t.Optional(t.String()),
-    metadata: t.Optional(t.Record(t.String(), t.Unknown())),
+    organizationId: optionalString(),
+    referenceId: optionalString(),
+    amount: optionalAmount(),
+    currency: optionalString(),
+    memo: optionalString(),
+    metadata: t.Optional(t.Nullable(t.Record(t.String(), t.Unknown()))),
     // Mantle native format fields
-    id: t.Optional(t.String()),
-    companyId: t.Optional(t.String()),
-    contactId: t.Optional(t.String()),
-    invoiceNumber: t.Optional(t.String()),
-    status: t.Optional(t.String()),
-    total: t.Optional(t.Union([t.String(), t.Number()])),
-    issueDate: t.Optional(t.String()),
-    dueDate: t.Optional(t.String()),
-    paidAt: t.Optional(t.String()),
-    paymentReference: t.Optional(t.String()),
+    id: optionalString(),
+    companyId: optionalString(),
+    contactId: optionalString(),
+    invoiceNumber: optionalString(),
+    status: optionalString(),
+    total: optionalAmount(),
+    issueDate: optionalString(),
+    dueDate: optionalString(),
+    paidAt: optionalString(),
+    paymentReference: optionalString(),
+    // Payment and credit fields
+    invoiceId: optionalString(),
+    paymentId: optionalString(),
+    kind: optionalString(),
+    reference: optionalString(),
+    method: optionalString(),
     // Quote fields
-    quoteNumber: t.Optional(t.String()),
-    convertedInvoiceId: t.Optional(t.String()),
+    quoteNumber: optionalString(),
+    validUntil: optionalString(),
+    convertedInvoiceId: optionalString(),
   }),
 });
 
@@ -55,6 +71,19 @@ export const verifySignature = (
 
   return timingSafeEqual(sigBuf, expectedBuf);
 };
+
+/**
+ * Drop `null` fields so a nullable Mantle column reads as absent downstream,
+ * matching how the handlers treat a missing value.
+ * @param data - Event data as delivered.
+ * @returns The data without its `null` fields.
+ */
+const dropNullFields = <T extends Record<string, unknown>>(
+  data: T,
+): { [K in keyof T]?: Exclude<T[K], null> } =>
+  Object.fromEntries(
+    Object.entries(data).filter(([, value]) => value !== null),
+  ) as { [K in keyof T]?: Exclude<T[K], null> };
 
 /** Result of an authorization decision for an incoming Mantle webhook. */
 type MantleAuthResult =
@@ -134,39 +163,60 @@ export const authorizeMantleWebhook = ({
 export const webhookStatusForResult = (result: WebhookResult): number =>
   result.retryable ? 503 : 200;
 
-// Vortex webhook endpoint for receiving Mantle events
-const mantleWebhook = new Elysia({ prefix: "/api/webhooks" })
-  .onBeforeHandle(async ({ request, set }) => {
-    const signature = request.headers.get("X-Webhook-Signature");
-    // Clone the request to read the raw body without consuming it
-    const rawBody = await request.clone().text();
+const mantleWebhookBodyValidator = TypeCompiler.Compile(mantleWebhookBody);
 
-    const result = authorizeMantleWebhook({
+// Vortex webhook endpoint for receiving Mantle events. The signature is
+// verified over the exact bytes Vortex signed before anything is parsed or
+// validated, so the body is captured as raw text by the parse hook below and
+// parsed by hand. Reading it any later fails: the book access middleware's
+// global hook has already consumed the stream ("Body is disturbed or locked"),
+// which answered every delivery with a 500
+const mantleWebhook = new Elysia({ prefix: "/api/webhooks" }).post(
+  "/mantle",
+  async ({ body: rawBodyText, request, set }) => {
+    const rawBody = typeof rawBodyText === "string" ? rawBodyText : "";
+
+    const auth = authorizeMantleWebhook({
       isDev: isDevEnv,
       secret: MANTLE_WEBHOOK_SECRET,
-      signature,
+      signature: request.headers.get("X-Webhook-Signature"),
       rawBody,
     });
 
-    if (!result.authorized) {
-      set.status = result.status;
-      return { error: result.error };
+    if (!auth.authorized) {
+      set.status = auth.status;
+      return { error: auth.error };
     }
-  })
-  .post(
-    "/mantle",
-    async ({ body, set }) => {
-      const result = await handleMantleEvent(body);
 
-      // Map the outcome to an HTTP status so Vortex retries transient failures
-      // instead of acking a lost event (default 200)
-      set.status = webhookStatusForResult(result);
+    let body: unknown;
+    try {
+      body = JSON.parse(rawBody);
+    } catch {
+      set.status = 400;
+      return { error: "Invalid JSON" };
+    }
 
-      return result;
-    },
-    {
-      body: mantleWebhookBody,
-    },
-  );
+    if (!mantleWebhookBodyValidator.Check(body)) {
+      set.status = 422;
+      return { error: "Invalid webhook payload" };
+    }
+
+    const result = await handleMantleEvent({
+      event: body.event,
+      data: dropNullFields(body.data),
+    });
+
+    // Map the outcome to an HTTP status so Vortex retries transient failures
+    // instead of acking a lost event (default 200)
+    set.status = webhookStatusForResult(result);
+
+    return result;
+  },
+  {
+    // Capture the body as raw text, once, so the signature check sees the
+    // exact signed bytes
+    parse: ({ request }) => request.text(),
+  },
+);
 
 export default mantleWebhook;
